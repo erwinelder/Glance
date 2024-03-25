@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">WalletGlance</string>
+
+    <!-- navigation bar buttons -->
+    <string name="home">Головна</string>
+    <string name="make_record">Зробити запис</string>
+    <string name="settings">Налаштування</string>
+    <string name="setup">Налаштування</string>
+
+    <!-- Buttons -->
+    <string name="save">Зберегти</string>
+    <string name="apply">Застосувати</string>
+    <string name="confirm">Підтвердити</string>
+    <string name="cancel">Скасувати</string>
+    <string name="_continue">Продовжити</string>
+    <string name="save_and_continue">Зберегти та продовжити</string>
+    <string name="save_and_finish">Зберегти і завершити</string>
+    <string name="edit">Редагувати</string>
+    <string name="reset">Скинути</string>
+    <string name="delete">Видалити</string>
+    <string name="back">Назад</string>
+    <string name="close">Закрити</string>
+    <string name="add_account">Додати рахунок</string>
+    <string name="add_category">Додати категорію</string>
+    <string name="add_subcategory">Додати підкатегорію</string>
+    <string name="save_record">Зберегти запис</string>
+    <string name="make_transfer">Зробити переказ</string>
+    <string name="repeat">Повторити</string>
+    <string name="this_month">Цей місяць</string>
+    <string name="last_month">Попередній</string>
+    <string name="other">Інший</string>
+    <string name="view_all">Все</string>
+    <string name="recent">Недавні</string>
+
+    <!-- Settings categories -->
+    <string name="accounts">Рахунки</string>
+    <string name="appearance">Зовнішній вигляд</string>
+    <string name="language">Мова</string>
+    <string name="reset_data">Скинути дані</string>
+    <string name="export_data">Експортувати дані</string>
+
+    <!-- Setting up -->
+    <string name="start">Старт</string>
+    <string name="categories">Категорії</string>
+    <string name="finish">Завершити</string>
+    <string name="_import">Імпорт</string>
+    <string name="import_data">Імпортувати дані</string>
+    <string name="start_setup">Почати налаштування</string>
+
+    <!-- Fields -->
+    <string name="use_device_theme">Використовувати тему пристрою</string>
+    <string name="color">Колір</string>
+    <string name="name">Назва</string>
+    <string name="currency">Валюта</string>
+    <string name="balance">Баланс</string>
+    <string name="hide_from_top_bar">Приховувати з верхньої панелі</string>
+    <string name="hide_balance">Приховати баланс</string>
+    <string name="without_balance">Без балансу</string>
+    <string name="date">Дата</string>
+    <string name="account">Рахунок</string>
+    <string name="from_account">З рахунку</string>
+    <string name="to_account">На рахунок</string>
+    <string name="note">Примітка</string>
+    <string name="note_placeholder">для більшої конкретики …</string>
+    <string name="category">Категорія</string>
+    <string name="amount">Сума</string>
+    <string name="start_amount">Стартова сума</string>
+    <string name="final_amount">Остаточна сума</string>
+    <string name="rate">Курс</string>
+    <string name="quantity">Кількість</string>
+    <string name="quantity_placeholder">Без кількості</string>
+
+    <!-- Widgets -->
+    <string name="greetings_title_morning">Доброго ранку!</string>
+    <string name="greetings_title_afternoon">Доброго дня!</string>
+    <string name="greetings_title_evening">Доброго вечора!</string>
+    <string name="greetings_title_night">Доброго вечора!</string>
+    <string name="greetings_empty_message">Сьогодні ще не було жодних витрат</string>
+    <string name="greetings_expenses_message">Сьогодні ви витратили %.2f %s</string>
+    <string name="from_capital">Від</string>
+    <string name="to">до</string>
+    <string name="from_account_meaning">з</string>
+    <string name="to_account_meaning">на</string>
+    <string name="total">Всього:</string>
+
+    <!-- Date ranges -->
+    <string name="this_week">Цей тиждень</string>
+    <string name="seven_days">7 днів</string>
+    <string name="this_year">Цей рік</string>
+    <string name="last_year">Минулий рік</string>
+    <string name="january_short">Січ</string>
+    <string name="february_short">Лют</string>
+    <string name="march_short">Бер</string>
+    <string name="april_short">Квіт</string>
+    <string name="may_short">Трав</string>
+    <string name="june_short">Черв</string>
+    <string name="july_short">Лип</string>
+    <string name="august_short">Серп</string>
+    <string name="september_short">Вер</string>
+    <string name="october_short">Жовт</string>
+    <string name="november_short">Лист</string>
+    <string name="december_short">Груд</string>
+
+    <!-- Other -->
+    <string name="hello">Привіт</string>
+    <string name="or">або</string>
+    <string name="version">Версія</string>
+    <string name="expense">Витрата</string>
+    <string name="expenses">Витрати</string>
+    <string name="income_singular">Дохід</string>
+    <string name="income_plural">Доходи</string>
+    <string name="transfer">Переказ</string>
+    <string name="new_category_name">Нова категорія</string>
+    <string name="new_subcategory_name">Нова підкатегорія</string>
+    <string name="category_not_found">Категорія не знайдена</string>
+    <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>
+    <string name="export_data_description">Експортувати дані програми до файла.</string>
+    <string name="you_have_no_records_in_date_range">У вас немає записів за цей період.</string>
+    <string name="you_have_no_expenses_in_date_range">У вас немає витрат за цей період.</string>
+    <string name="you_have_no_income_in_date_range">У вас немає доходів за цей період.</string>
+
+
+
+    <!-- Categories names -->
+
+    <!-- Parent categories expenses -->
+    <string name="food_and_drinks">Їжа та напої</string>
+    <string name="housing">Житло</string>
+    <string name="shopping">Покупки</string>
+    <string name="transport">Транспорт</string>
+    <string name="vehicle">Транспортний засіб</string>
+    <string name="digital_life">Цифрове життя</string>
+    <string name="medicine">Медицина</string>
+    <string name="education">Освіта</string>
+    <string name="travels">Подорожі</string>
+    <string name="entertainment">Розваги</string>
+    <string name="investments">Інвестиції</string>
+    <string name="other_category">Інше</string>
+
+    <!-- Subcategories expenses -->
+    <string name="groceries">Продукти</string>
+    <string name="restaurant">Ресторан, кафе, фастфуд, бар</string>
+    <string name="utilities">Комунальні послуги</string>
+    <string name="services">Послуги</string>
+    <string name="rent">Оренда</string>
+    <string name="mortgage">Іпотека</string>
+    <string name="maintenance">Тех. обслуговування</string>
+    <string name="purchase">Покупка</string>
+    <string name="insurance">Страхування</string>
+    <string name="clothes_and_shoes">Одяг та взуття</string>
+    <string name="electronics_accessories">Електроніка та аксесуари</string>
+    <string name="cleaning_and_laundry">Прибирання та прання</string>
+    <string name="health_and_beauty">Здоров’я та краса</string>
+    <string name="home_and_garden">Дім і сад</string>
+    <string name="books">Книги</string>
+    <string name="joy_and_gifts">Подарунки та радість</string>
+    <string name="kids">Діти</string>
+    <string name="pets_and_animals">Домашні тварини</string>
+    <string name="public_transport">Громадський транспорт</string>
+    <string name="taxi">Таксі</string>
+    <string name="business_trips">Відрядження</string>
+    <string name="parking">Паркування</string>
+    <string name="fuel">Паливо</string>
+    <string name="leasing">Лізинг</string>
+    <string name="rent_vehicle_category">Оренда автомобіля</string>
+    <string name="internet_communication">Інтернет та зв\'язок</string>
+    <string name="professional_subs">Проф підписки</string>
+    <string name="entertainment_subs">Розваж. підписки</string>
+    <string name="games">Ігри</string>
+    <string name="drugs_and_vitamins">Ліки та вітаміни</string>
+    <string name="doctor">Лікар</string>
+    <string name="vaccination">Вакцинація</string>
+    <string name="school_and_university">Школа та університет</string>
+    <string name="courses">Курси</string>
+    <string name="studding_materials">Навчальні матеріали</string>
+    <string name="tickets">Квитки</string>
+    <string name="accommodation">Проживання</string>
+    <string name="hobbies">Хобі</string>
+    <string name="cinema_theater_concerts">Кіно, театр, концерти</string>
+    <string name="sport">Спорт</string>
+    <string name="events_hanging_out">Заходи та зустрічі</string>
+    <string name="alcohol_and_smoking">Алкоголь та куріння</string>
+    <string name="gifts_and_charity">Подарунки та благодійність</string>
+    <string name="shares">Акції</string>
+    <string name="cryptocurrencies">Криптовалюти</string>
+    <string name="realty">Нерухомість</string>
+    <string name="savings">Заощадження</string>
+    <string name="missing">Зникле</string>
+    <string name="public_toilets">Громадські туалети</string>
+
+    <!-- Parent categories income -->
+    <string name="salary">Зарплатня</string>
+    <string name="scholarship">Стидендія</string>
+    <string name="sale">Продаж</string>
+    <string name="realty_income">Дохід від нерухомості</string>
+    <string name="refunds">Повернення коштів</string>
+    <string name="gifts">Подарунки</string>
+    <string name="transfers">Перекази</string>
+
+</resources>

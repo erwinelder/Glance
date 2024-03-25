@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">WalletGlance</string>
+
+    <!-- navigation bar buttons -->
+    <string name="home">Главная</string>
+    <string name="make_record">Сделать запись</string>
+    <string name="settings">Настройки</string>
+    <string name="setup">Настройка</string>
+
+    <!-- Buttons -->
+    <string name="save">Сохранить</string>
+    <string name="apply">Применить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
+    <string name="_continue">Продолжить</string>
+    <string name="save_and_continue">Сохранить и продолжить</string>
+    <string name="save_and_finish">Сохранить и завершить</string>
+    <string name="edit">Изменить</string>
+    <string name="reset">Сбросить</string>
+    <string name="delete">Удалить</string>
+    <string name="back">Назад</string>
+    <string name="close">Закрыть</string>
+    <string name="add_account">Добавить аккаунт</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="add_subcategory">Добавить подкатегорию</string>
+    <string name="save_record">Сохранить запись</string>
+    <string name="make_transfer">Сделать перевод</string>
+    <string name="repeat">Повторить</string>
+    <string name="this_month">Этот месяц</string>
+    <string name="last_month">Предыдущий</string>
+    <string name="other">Другой</string>
+    <string name="view_all">Все</string>
+    <string name="recent">Недавние</string>
+
+    <!-- Settings categories -->
+    <string name="accounts">Счета</string>
+    <string name="appearance">Внешний вид</string>
+    <string name="language">Язык</string>
+    <string name="reset_data">Сбросить данные</string>
+    <string name="export_data">Экспортировать данные</string>
+
+    <!-- Setting up -->
+    <string name="start">Старт</string>
+    <string name="categories">Категории</string>
+    <string name="finish">Завершить</string>
+    <string name="_import">Импорт</string>
+    <string name="import_data">Импортировать данные</string>
+    <string name="start_setup">Начать настройку</string>
+
+    <!-- Fields -->
+    <string name="use_device_theme">Использовать тему устройства</string>
+    <string name="color">Цвет</string>
+    <string name="name">Название</string>
+    <string name="currency">Валюта</string>
+    <string name="balance">Баланс</string>
+    <string name="hide_from_top_bar">Скрыть из верхней панели</string>
+    <string name="hide_balance">Скрыть баланс</string>
+    <string name="without_balance">Без баланса</string>
+    <string name="date">Дата</string>
+    <string name="account">Счёт</string>
+    <string name="from_account">Со счёта</string>
+    <string name="to_account">На счёт</string>
+    <string name="note">Примечание</string>
+    <string name="note_placeholder">для большей конкретики …</string>
+    <string name="category">Категория</string>
+    <string name="amount">Сумма</string>
+    <string name="start_amount">Стартовая сумма</string>
+    <string name="final_amount">Итоговая сумма</string>
+    <string name="rate">Курс</string>
+    <string name="quantity">Количество</string>
+    <string name="quantity_placeholder">Без количества</string>
+
+    <!-- Widgets -->
+    <string name="greetings_title_morning">Доброе утро!</string>
+    <string name="greetings_title_afternoon">Добрый день!</string>
+    <string name="greetings_title_evening">Добрый вечер!</string>
+    <string name="greetings_title_night">Добрый вечер!</string>
+    <string name="greetings_empty_message">Сегодня еще не было никаких расходов</string>
+    <string name="greetings_expenses_message">Сегодня вы потратили %.2f %s</string>
+    <string name="from_capital">От</string>
+    <string name="to">до</string>
+    <string name="from_account_meaning">с</string>
+    <string name="to_account_meaning">на</string>
+    <string name="total">Всего:</string>
+
+    <!-- Date ranges -->
+    <string name="this_week">Эта неделя</string>
+    <string name="seven_days">7 дней</string>
+    <string name="this_year">Этот год</string>
+    <string name="last_year">Пред год</string>
+    <string name="january_short">Янв</string>
+    <string name="february_short">Фев</string>
+    <string name="march_short">Мар</string>
+    <string name="april_short">Апр</string>
+    <string name="may_short">Май</string>
+    <string name="june_short">Июн</string>
+    <string name="july_short">Июл</string>
+    <string name="august_short">Авг</string>
+    <string name="september_short">Сен</string>
+    <string name="october_short">Окт</string>
+    <string name="november_short">Ноя</string>
+    <string name="december_short">Дек</string>
+
+    <!-- Other -->
+    <string name="hello">Привет</string>
+    <string name="or">или</string>
+    <string name="version">Версия</string>
+    <string name="expense">Расход</string>
+    <string name="expenses">Расходы</string>
+    <string name="income_singular">Доход</string>
+    <string name="income_plural">Доходы</string>
+    <string name="transfer">Перевод</string>
+    <string name="new_category_name">Новая категория</string>
+    <string name="new_subcategory_name">Новая подкатегория</string>
+    <string name="category_not_found">Категория не найдена</string>
+    <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>
+    <string name="export_data_description">Экспортировать данные приложения в файл.</string>
+    <string name="you_have_no_records_in_date_range">У вас нет записей за этот период.</string>
+    <string name="you_have_no_expenses_in_date_range">У вас нет расходов за этот период.</string>
+    <string name="you_have_no_income_in_date_range">У вас нет доходов за этот период.</string>
+
+
+
+    <!-- Categories names -->
+
+    <!-- Parent categories expenses -->
+    <string name="food_and_drinks">Еда и напитки</string>
+    <string name="housing">Жилье</string>
+    <string name="shopping">Покупки</string>
+    <string name="transport">Транспорт</string>
+    <string name="vehicle">Транспортное средство</string>
+    <string name="digital_life">Цифровая жизнь</string>
+    <string name="medicine">Медицина</string>
+    <string name="education">Образование</string>
+    <string name="travels">Путешествия</string>
+    <string name="entertainment">Развлечения</string>
+    <string name="investments">Инвестиции</string>
+    <string name="other_category">Другое</string>
+
+    <!-- Subcategories expenses -->
+    <string name="groceries">Продукты</string>
+    <string name="restaurant">Ресторан, кафе, фастфуд, бар</string>
+    <string name="utilities">Коммунальные услуги</string>
+    <string name="services">Услуги</string>
+    <string name="rent">Аренда</string>
+    <string name="mortgage">Ипотека</string>
+    <string name="maintenance">Тех. обслуживание</string>
+    <string name="purchase">Покупка</string>
+    <string name="insurance">Страхование</string>
+    <string name="clothes_and_shoes">Одежда и обувь</string>
+    <string name="electronics_accessories">Электроника и аксессуары</string>
+    <string name="cleaning_and_laundry">Уборка и стирка</string>
+    <string name="health_and_beauty">Здоровье и красота</string>
+    <string name="home_and_garden">Дом и сад</string>
+    <string name="books">Книги</string>
+    <string name="joy_and_gifts">Подарки и радость</string>
+    <string name="kids">Дети</string>
+    <string name="pets_and_animals">Питомци и животные</string>
+    <string name="public_transport">Общественный транспорт</string>
+    <string name="taxi">Такси</string>
+    <string name="business_trips">Командировки</string>
+    <string name="parking">Парковка</string>
+    <string name="fuel">Топливо</string>
+    <string name="leasing">Лизинг</string>
+    <string name="rent_vehicle_category">Аренда автомобиля</string>
+    <string name="internet_communication">Интернет и связь</string>
+    <string name="professional_subs">Проф подписки</string>
+    <string name="entertainment_subs">Развлек. подписки</string>
+    <string name="games">Игры</string>
+    <string name="drugs_and_vitamins">Лекарства и витамины</string>
+    <string name="doctor">Врач</string>
+    <string name="vaccination">Вакцинация</string>
+    <string name="school_and_university">Школа и университет</string>
+    <string name="courses">Курсы</string>
+    <string name="studding_materials">Учебные материалы</string>
+    <string name="tickets">Билеты</string>
+    <string name="accommodation">Проживание</string>
+    <string name="hobbies">Хобби</string>
+    <string name="cinema_theater_concerts">Кино, театр, концерты</string>
+    <string name="sport">Спорт</string>
+    <string name="events_hanging_out">Мероприятия и встречи</string>
+    <string name="alcohol_and_smoking">Алкоголь и курение</string>
+    <string name="gifts_and_charity">Подарки и благотворительность</string>
+    <string name="shares">Акции</string>
+    <string name="cryptocurrencies">Криптовалюты</string>
+    <string name="realty">Недвижимость</string>
+    <string name="savings">Сбережения</string>
+    <string name="missing">Пропавшее</string>
+    <string name="public_toilets">Общественные туалеты</string>
+
+    <!-- Parent categories income -->
+    <string name="salary">Зарплата</string>
+    <string name="scholarship">Стидендия</string>
+    <string name="sale">Продажа</string>
+    <string name="realty_income">Доход от недвижимости</string>
+    <string name="refunds">Возврат денег</string>
+    <string name="gifts">Подарки</string>
+    <string name="transfers">Переводы</string>
+
+</resources>

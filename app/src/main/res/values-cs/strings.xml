@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">WalletGlance</string>
+
+    <!-- navigation bar buttons -->
+    <string name="home">Domů</string>
+    <string name="make_record">Udělelat záznam</string>
+    <string name="settings">Nastavení</string>
+    <string name="setup">Nastavování</string>
+
+    <!-- Buttons -->
+    <string name="save">Uložit</string>
+    <string name="apply">Použít</string>
+    <string name="confirm">Potvrdit</string>
+    <string name="cancel">Zrušit</string>
+    <string name="_continue">Pokračovat</string>
+    <string name="save_and_continue">Uložit a pokračovat</string>
+    <string name="save_and_finish">Uložit a dokončit</string>
+    <string name="edit">Upravit</string>
+    <string name="reset">Resetovat</string>
+    <string name="delete">Smazat</string>
+    <string name="back">Zpět</string>
+    <string name="close">Zavřít</string>
+    <string name="add_account">Přidat účet</string>
+    <string name="add_category">Přidat kategorii</string>
+    <string name="add_subcategory">Přidat podkategorii</string>
+    <string name="save_record">Uložit záznam</string>
+    <string name="make_transfer">Udělat převod</string>
+    <string name="repeat">Zopakovat</string>
+    <string name="this_month">Tento měsíc</string>
+    <string name="last_month">Před měsíc</string>
+    <string name="other">Jiný</string>
+    <string name="view_all">Vše</string>
+    <string name="recent">Nedávné</string>
+
+    <!-- Settings categories -->
+    <string name="accounts">Účty</string>
+    <string name="appearance">Vzhled</string>
+    <string name="language">Jazyk</string>
+    <string name="reset_data">Resetovat data</string>
+    <string name="export_data">Exportovat data</string>
+
+    <!-- Setting up -->
+    <string name="start">Start</string>
+    <string name="categories">Kategorie</string>
+    <string name="finish">Dokončit</string>
+    <string name="_import">Import</string>
+    <string name="import_data">Importovat data</string>
+    <string name="start_setup">Začít nastavení</string>
+
+    <!-- Fields -->
+    <string name="use_device_theme">Použít téma zařízení</string>
+    <string name="color">Barva</string>
+    <string name="name">Jméno</string>
+    <string name="currency">Měna</string>
+    <string name="balance">Zůstatek</string>
+    <string name="hide_from_top_bar">Skrýt z horního panelu</string>
+    <string name="hide_balance">Skrýt zůstatek</string>
+    <string name="without_balance">Bez zůstatku</string>
+    <string name="date">Datum</string>
+    <string name="account">Účet</string>
+    <string name="from_account">Z účtu</string>
+    <string name="to_account">Na účet</string>
+    <string name="note">Poznámka</string>
+    <string name="note_placeholder">pro upřesnění …</string>
+    <string name="category">Kategorie</string>
+    <string name="amount">Částka</string>
+    <string name="start_amount">Počáteční částka</string>
+    <string name="final_amount">Konečná částka</string>
+    <string name="rate">Kurz</string>
+    <string name="quantity">Množství</string>
+    <string name="quantity_placeholder">Bez množství</string>
+
+    <!-- Widgets -->
+    <string name="greetings_title_morning">Dobré ráno!</string>
+    <string name="greetings_title_afternoon">Dobré poledne!</string>
+    <string name="greetings_title_evening">Dobré odpoledne!</string>
+    <string name="greetings_title_night">Dobrý večer!</string>
+    <string name="greetings_empty_message">Dnes ještě nebyly žádné výdaje</string>
+    <string name="greetings_expenses_message">Dnes jste utratil(-a) %.2f %s</string>
+    <string name="from_capital">Od</string>
+    <string name="to">do</string>
+    <string name="from_account_meaning">z</string>
+    <string name="to_account_meaning">na</string>
+    <string name="total">Celkem:</string>
+
+    <!-- Date ranges -->
+    <string name="this_week">Tento týden</string>
+    <string name="seven_days">7 dní</string>
+    <string name="this_year">Tento rok</string>
+    <string name="last_year">Minulý rok</string>
+    <string name="january_short">Led</string>
+    <string name="february_short">Ún</string>
+    <string name="march_short">Brez</string>
+    <string name="april_short">Dub</string>
+    <string name="may_short">Kvet</string>
+    <string name="june_short">Cerv</string>
+    <string name="july_short">Cerven</string>
+    <string name="august_short">Srp</string>
+    <string name="september_short">Září</string>
+    <string name="october_short">Říj</string>
+    <string name="november_short">List</string>
+    <string name="december_short">Pros</string>
+
+    <!-- Other -->
+    <string name="hello">Ahoj</string>
+    <string name="or">nebo</string>
+    <string name="version">Verze</string>
+    <string name="expense">Výdaj</string>
+    <string name="expenses">Výdaje</string>
+    <string name="income_singular">Příjem</string>
+    <string name="income_plural">Příjmy</string>
+    <string name="transfer">Převod</string>
+    <string name="new_category_name">Nová kategorie</string>
+    <string name="new_subcategory_name">Nová podkategorie</string>
+    <string name="category_not_found">Kategorie nebyla nalezena</string>
+    <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
+    <string name="export_data_description">Exportovat data aplikace do souboru.</string>
+    <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období.</string>
+    <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období.</string>
+    <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období.</string>
+
+
+
+    <!-- Categories names -->
+
+    <!-- Parent categories expenses -->
+    <string name="food_and_drinks">Jídlo a nápoje</string>
+    <string name="housing">Bydlení</string>
+    <string name="shopping">Nakupování</string>
+    <string name="transport">Doprava</string>
+    <string name="vehicle">Vozidlo</string>
+    <string name="digital_life">Digitální život</string>
+    <string name="medicine">Medicína</string>
+    <string name="education">Vzdělání</string>
+    <string name="travels">Cestování</string>
+    <string name="entertainment">Zábava</string>
+    <string name="investments">Investice</string>
+    <string name="other_category">Jiné</string>
+
+    <!-- Subcategories expenses -->
+    <string name="groceries">Potraviny</string>
+    <string name="restaurant">Restaurace, kavárna, fast-food, bar</string>
+    <string name="utilities">Poplatky</string>
+    <string name="services">Služby</string>
+    <string name="rent">Nájem</string>
+    <string name="mortgage">Hypotéka</string>
+    <string name="maintenance">Údržba</string>
+    <string name="purchase">Koupě</string>
+    <string name="insurance">Pojištění</string>
+    <string name="clothes_and_shoes">Oblečení a obuv</string>
+    <string name="electronics_accessories">Elektronika a příslušenství</string>
+    <string name="cleaning_and_laundry">Úklid a prání</string>
+    <string name="health_and_beauty">Zdraví a krása</string>
+    <string name="home_and_garden">Dům a zahrada</string>
+    <string name="books">Knihy</string>
+    <string name="joy_and_gifts">Dárky a radost</string>
+    <string name="kids">Děti</string>
+    <string name="pets_and_animals">Mazlíčci a zvířata</string>
+    <string name="public_transport">Hromadná doprava</string>
+    <string name="taxi">Taxi</string>
+    <string name="business_trips">Obchodní cesty</string>
+    <string name="parking">Parkování</string>
+    <string name="fuel">Palivo</string>
+    <string name="leasing">Leasing</string>
+    <string name="rent_vehicle_category">Půjčovné vozidlo</string>
+    <string name="internet_communication">Internet a komunikace</string>
+    <string name="professional_subs">Profesní předplatné</string>
+    <string name="entertainment_subs">Zábavné předplatné</string>
+    <string name="games">Hry</string>
+    <string name="drugs_and_vitamins">Léky a vitamíny</string>
+    <string name="doctor">Lékař</string>
+    <string name="vaccination">Očkování</string>
+    <string name="school_and_university">Škola a univerzita</string>
+    <string name="courses">Kurzy</string>
+    <string name="studding_materials">Učební materiály</string>
+    <string name="tickets">Jízdenky</string>
+    <string name="accommodation">Ubytování</string>
+    <string name="hobbies">Koníčky</string>
+    <string name="cinema_theater_concerts">Kino, divadlo, koncerty</string>
+    <string name="sport">Sport</string>
+    <string name="events_hanging_out">Akce a setkání</string>
+    <string name="alcohol_and_smoking">Alkohol a kouření</string>
+    <string name="gifts_and_charity">Dary a charita</string>
+    <string name="shares">Akcie</string>
+    <string name="cryptocurrencies">Kryptoměny</string>
+    <string name="realty">Nemovitost</string>
+    <string name="savings">Spoření</string>
+    <string name="missing">Chybějící</string>
+    <string name="public_toilets">Veřejné záchody</string>
+
+    <!-- Parent categories income -->
+    <string name="salary">Plat</string>
+    <string name="scholarship">Stipendium</string>
+    <string name="sale">Prodej</string>
+    <string name="realty_income">Příjmy z nemovitosti</string>
+    <string name="refunds">Vrácení peněz</string>
+    <string name="gifts">Dárky</string>
+    <string name="transfers">Převody</string>
+
+</resources>

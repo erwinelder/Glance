@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">WalletGlance</string>
+
+    <!-- navigation bar buttons -->
+    <string name="home">Startseite</string>
+    <string name="make_record">Eintrag erstellen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="setup">Einrichten</string>
+
+    <!-- Buttons -->
+    <string name="save">Speichern</string>
+    <string name="apply">Anwenden</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="_continue">Fortsetzen</string>
+    <string name="save_and_continue">Speichern und Fortsetzen</string>
+    <string name="save_and_finish">Speichern und beenden</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="delete">Löschen</string>
+    <string name="back">Zurück</string>
+    <string name="close">schließen</string>
+    <string name="add_account">Konto hinzufügen</string>
+    <string name="add_category">Kategorie hinzufügen</string>
+    <string name="add_subcategory">Unterkategorie hinzufügen</string>
+    <string name="save_record">Eintrag speichern</string>
+    <string name="make_transfer">Überweisen</string>
+    <string name="repeat">Wiederholen</string>
+    <string name="this_month">Dieser Monat</string>
+    <string name="last_month">Vormonat</string>
+    <string name="other">Anderer</string>
+    <string name="view_all">Alle</string>
+    <string name="recent">Letzte</string>
+
+    <!-- Settings categories -->
+    <string name="accounts">Konten</string>
+    <string name="appearance">Aussehen</string>
+    <string name="language">Sprachen</string>
+    <string name="reset_data">Daten zurücksetzen</string>
+    <string name="export_data">Daten exportieren</string>
+
+    <!-- Setting up -->
+    <string name="start">Start</string>
+    <string name="categories">Kategorien</string>
+    <string name="finish">Abschließen</string>
+    <string name="_import">Importieren</string>
+    <string name="import_data">Daten importieren</string>
+    <string name="start_setup">Setup starten</string>
+
+    <!-- Fields -->
+    <string name="use_device_theme">Gerät-Thema verwenden</string>
+    <string name="color">Farbe</string>
+    <string name="name">Name</string>
+    <string name="currency">Währung</string>
+    <string name="balance">Saldo</string>
+    <string name="hide_from_top_bar">Aus der Menüleiste ausblenden</string>
+    <string name="hide_balance">Saldo verbergen</string>
+    <string name="without_balance">Ohne Saldo</string>
+    <string name="date">Datum</string>
+    <string name="account">Konto</string>
+    <string name="from_account">Von Konto</string>
+    <string name="to_account">Auf Konto</string>
+    <string name="note">Anmerkung</string>
+    <string name="note_placeholder">für weitere Einzelheiten …</string>
+    <string name="category">Kategorie</string>
+    <string name="amount">Summe</string>
+    <string name="start_amount">Startbetrag</string>
+    <string name="final_amount">Endbetrag</string>
+    <string name="rate">Kurs</string>
+    <string name="quantity">Menge</string>
+    <string name="quantity_placeholder">Ohne Menge</string>
+
+    <!-- Widgets -->
+    <string name="greetings_title_morning">Guten Morgen!</string>
+    <string name="greetings_title_afternoon">Guten Tag!</string>
+    <string name="greetings_title_evening">Guten Abend!</string>
+    <string name="greetings_title_night">Schönen Abend!</string>
+    <string name="greetings_empty_message">Heute Es wurden noch keine Spesen gemacht</string>
+    <string name="greetings_expenses_message">Heute Sie haben bereits %.2f %s ausgegeben</string>
+    <string name="from_capital">Von</string>
+    <string name="to">bis</string>
+    <string name="from_account_meaning">von</string>
+    <string name="to_account_meaning">auf</string>
+    <string name="total">Gesamt:</string>
+
+    <!-- Date ranges -->
+    <string name="this_week">Diese Woche</string>
+    <string name="seven_days">7 Tage</string>
+    <string name="this_year">Dieses Jahr</string>
+    <string name="last_year">Vorjahr</string>
+    <string name="january_short">Jan</string>
+    <string name="february_short">Feb</string>
+    <string name="march_short">Mär</string>
+    <string name="april_short">Apr</string>
+    <string name="may_short">Mai</string>
+    <string name="june_short">Jun</string>
+    <string name="july_short">Jul</string>
+    <string name="august_short">Aug</string>
+    <string name="september_short">Sep</string>
+    <string name="october_short">Okt</string>
+    <string name="november_short">Nov</string>
+    <string name="december_short">Dez</string>
+
+    <!-- Other -->
+    <string name="hello">Hallo</string>
+    <string name="or">oder</string>
+    <string name="version">Version</string>
+    <string name="expense">Spesen</string>
+    <string name="expenses">Spesen</string>
+    <string name="income_singular">Einkommen</string>
+    <string name="income_plural">Einkünfte</string>
+    <string name="transfer">Übersetzung</string>
+    <string name="new_category_name">Neue Kategorie</string>
+    <string name="new_subcategory_name">Neue Unterkategorie</string>
+    <string name="category_not_found">Kategorie wurde nicht gefunden</string>
+    <string name="reset_data_description">Setzen Sie alle App-Daten zurück, einschließlich Konten, Datensätze, Kategorien und Einstellungen.</string>
+    <string name="export_data_description">App-Daten in eine Datei exportieren.</string>
+    <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum.</string>
+    <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum.</string>
+    <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum.</string>
+
+
+
+    <!-- Categories names -->
+
+    <!-- Parent categories expenses -->
+    <string name="food_and_drinks">Essen &amp; Getränke</string>
+    <string name="housing">Wohnen</string>
+    <string name="shopping">Einkaufen</string>
+    <string name="transport">Transport</string>
+    <string name="vehicle">Fahrzeug</string>
+    <string name="digital_life">Digitales Leben</string>
+    <string name="medicine">Medizin</string>
+    <string name="education">Bildung</string>
+    <string name="travels">Reisen</string>
+    <string name="entertainment">Unterhaltung</string>
+    <string name="investments">Investitionen</string>
+    <string name="other_category">Andere</string>
+
+    <!-- Subcategories expenses -->
+    <string name="groceries">Groceries</string>
+    <string name="restaurant">Restaurant, Café, Fastfood, Bar</string>
+    <string name="utilities">Nebenkosten</string>
+    <string name="services">Dienstleistungen</string>
+    <string name="rent">Miete</string>
+    <string name="mortgage">Hypothek</string>
+    <string name="maintenance">Wartung</string>
+    <string name="purchase">Kauf</string>
+    <string name="insurance">Versicherung</string>
+    <string name="clothes_and_shoes">Kleidung und Schuhe</string>
+    <string name="electronics_accessories">Elektronik und Zubehör</string>
+    <string name="cleaning_and_laundry">Reinigung und Wäsche</string>
+    <string name="health_and_beauty">Gesundheit und Schönheit</string>
+    <string name="home_and_garden">Haus und Garten</string>
+    <string name="books">Bücher</string>
+    <string name="joy_and_gifts">Geschenke und Freude</string>
+    <string name="kids">Kinder</string>
+    <string name="pets_and_animals">Haustiere &amp; Tiere</string>
+    <string name="public_transport">Öffentlicher Nahverkehr</string>
+    <string name="taxi">Taxi</string>
+    <string name="business_trips">Geschäftsreisen</string>
+    <string name="parking">Parken</string>
+    <string name="fuel">Kraftstoff</string>
+    <string name="leasing">Leasing</string>
+    <string name="rent_vehicle_category">Mietwagen</string>
+    <string name="internet_communication">Internet und Kommunikation</string>
+    <string name="professional_subs">Profi Abos</string>
+    <string name="entertainment_subs">Unterhalt. Abos</string>
+    <string name="games">Spiele</string>
+    <string name="drugs_and_vitamins">Medikamente &amp; Vitamine</string>
+    <string name="doctor">Arzt</string>
+    <string name="vaccination">Impfung</string>
+    <string name="school_and_university">Schule &amp; Universität</string>
+    <string name="courses">Kurse</string>
+    <string name="studding_materials">Lernmaterialien</string>
+    <string name="tickets">Tickets</string>
+    <string name="accommodation">Unterkunft</string>
+    <string name="hobbies">Hobbys</string>
+    <string name="cinema_theater_concerts">Kino, Theater, Konzerte</string>
+    <string name="sport">Sport</string>
+    <string name="events_hanging_out">Veranstaltungen &amp; Treffen</string>
+    <string name="alcohol_and_smoking">Alkohol &amp; Rauchen</string>
+    <string name="gifts_and_charity">Geschenke &amp; Wohltätigkeit</string>
+    <string name="shares">Aktien</string>
+    <string name="cryptocurrencies">Kryptowährungen</string>
+    <string name="realty">Immobilien</string>
+    <string name="savings">Sparen</string>
+    <string name="missing">Fehlend</string>
+    <string name="public_toilets">Öffentliche Toiletten</string>
+
+    <!-- Parent categories income -->
+    <string name="salary">Gehalt</string>
+    <string name="scholarship">Stipendium</string>
+    <string name="sale">Verkauf</string>
+    <string name="realty_income">Immobilienerträge</string>
+    <string name="refunds">Rückgabe</string>
+    <string name="gifts">Geschenke</string>
+    <string name="transfers">Überweisungen</string>
+
+</resources>
