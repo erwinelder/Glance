@@ -3,6 +3,7 @@ package com.ataglance.walletglance.model
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.data.AccountRepository
 import com.ataglance.walletglance.data.CategoryRepository
+import com.ataglance.walletglance.data.GeneralRepository
 import com.ataglance.walletglance.data.RecordAndAccountRepository
 import com.ataglance.walletglance.data.RecordRepository
 import com.ataglance.walletglance.data.SettingsRepository
@@ -22,12 +23,14 @@ class AppViewModelTest {
     private val mockCategoryRepository = mock(CategoryRepository::class.java)
     private val mockRecordRepository = mock(RecordRepository::class.java)
     private val mockRecordAndAccountRepository = mock(RecordAndAccountRepository::class.java)
+    private val mockGeneralRepository = mock(GeneralRepository::class.java)
     private val viewModel = AppViewModel(
         mockSettingsRepository,
         mockAccountRepository,
         mockCategoryRepository,
         mockRecordRepository,
-        mockRecordAndAccountRepository
+        mockRecordAndAccountRepository,
+        mockGeneralRepository
     )
 
     private fun getAccountListByBalances(balanceList: List<Double>): List<Account> {
@@ -47,6 +50,8 @@ class AppViewModelTest {
         finalAmount: Double,
     ): MadeTransferState {
         return MadeTransferState(
+            idFrom = fromAccount.id,
+            idTo = toAccount.id,
             recordStatus = MakeRecordStatus.Edit,
             fromAccount = fromAccount,
             toAccount = toAccount,
