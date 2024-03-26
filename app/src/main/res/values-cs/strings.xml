@@ -89,17 +89,29 @@
     <string name="this_year">Tento rok</string>
     <string name="last_year">Minulý rok</string>
     <string name="january_short">Led</string>
+    <string name="january_full">Leden</string>
     <string name="february_short">Ún</string>
+    <string name="february_full">Únor</string>
     <string name="march_short">Brez</string>
+    <string name="march_full">Březen</string>
     <string name="april_short">Dub</string>
+    <string name="april_full">Duben</string>
     <string name="may_short">Kvet</string>
+    <string name="may_full">Květen</string>
     <string name="june_short">Cerv</string>
+    <string name="june_full">Červen</string>
     <string name="july_short">Cerven</string>
+    <string name="july_full">Červenec</string>
     <string name="august_short">Srp</string>
+    <string name="august_full">Srpen</string>
     <string name="september_short">Září</string>
+    <string name="september_full">Září</string>
     <string name="october_short">Říj</string>
+    <string name="october_full">Říjen</string>
     <string name="november_short">List</string>
+    <string name="november_full">Listopad</string>
     <string name="december_short">Pros</string>
+    <string name="december_full">Prosinec</string>
 
     <!-- Other -->
     <string name="hello">Ahoj</string>

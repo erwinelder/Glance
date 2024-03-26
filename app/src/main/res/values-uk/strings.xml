@@ -89,17 +89,29 @@
     <string name="this_year">Цей рік</string>
     <string name="last_year">Минулий рік</string>
     <string name="january_short">Січ</string>
+    <string name="january_full">Січень</string>
     <string name="february_short">Лют</string>
+    <string name="february_full">Лютий</string>
     <string name="march_short">Бер</string>
+    <string name="march_full">Березень</string>
     <string name="april_short">Квіт</string>
+    <string name="april_full">Квітень</string>
     <string name="may_short">Трав</string>
+    <string name="may_full">Травень</string>
     <string name="june_short">Черв</string>
+    <string name="june_full">Червень</string>
     <string name="july_short">Лип</string>
+    <string name="july_full">Липень</string>
     <string name="august_short">Серп</string>
+    <string name="august_full">Серпень</string>
     <string name="september_short">Вер</string>
+    <string name="september_full">Вересень</string>
     <string name="october_short">Жовт</string>
+    <string name="october_full">Жовтень</string>
     <string name="november_short">Лист</string>
+    <string name="november_full">Листопад</string>
     <string name="december_short">Груд</string>
+    <string name="december_full">Грудень</string>
 
     <!-- Other -->
     <string name="hello">Привіт</string>

@@ -89,17 +89,29 @@
     <string name="this_year">Dieses Jahr</string>
     <string name="last_year">Vorjahr</string>
     <string name="january_short">Jan</string>
+    <string name="january_full">Januar</string>
     <string name="february_short">Feb</string>
+    <string name="february_full">Februar</string>
     <string name="march_short">Mär</string>
+    <string name="march_full">März</string>
     <string name="april_short">Apr</string>
+    <string name="april_full">April</string>
     <string name="may_short">Mai</string>
+    <string name="may_full">Mai</string>
     <string name="june_short">Jun</string>
+    <string name="june_full">Juni</string>
     <string name="july_short">Jul</string>
+    <string name="july_full">Juli</string>
     <string name="august_short">Aug</string>
+    <string name="august_full">August</string>
     <string name="september_short">Sep</string>
+    <string name="september_full">September</string>
     <string name="october_short">Okt</string>
+    <string name="october_full">Oktober</string>
     <string name="november_short">Nov</string>
+    <string name="november_full">November</string>
     <string name="december_short">Dez</string>
+    <string name="december_full">Dezember</string>
 
     <!-- Other -->
     <string name="hello">Hallo</string>
