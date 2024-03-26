@@ -184,7 +184,9 @@ fun MakeRecordScreen(
                                 viewModel.changeNoteValue(recordUnit.index, value)
                             },
                             categoryToShow = recordUnit.subcategory ?: recordUnit.category,
-                            categoryIconRes = categoryNameAndIconMap[recordUnit.category?.iconName],
+                            categoryIconRes = categoryNameAndIconMap[
+                                recordUnit.subcategory?.iconName ?: recordUnit.category?.iconName
+                            ],
                             onCategoryClick = {
                                 viewModel.changeClickedUnitIndex(recordUnit.index)
                                 openCategoryDialog.value = true
