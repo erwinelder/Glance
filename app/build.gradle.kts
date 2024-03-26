@@ -12,8 +12,8 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = 28
         targetSdk = 34
-        versionCode = 6
-        versionName = "0.0.2"
+        versionCode = 7
+        versionName = "0.0.3"
         resourceConfigurations += arrayOf("en", "cs", "de", "ru", "uk")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -71,8 +71,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
-    implementation("androidx.compose.foundation:foundation:1.6.3")
+    implementation(platform("androidx.compose:compose-bom:2024.03.00"))
+    implementation("androidx.compose.foundation:foundation:1.6.4")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -88,10 +88,10 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.02"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.3")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.4")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
