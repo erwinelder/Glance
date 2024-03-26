@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.model.AccountController
+import com.ataglance.walletglance.model.DateRangeController
 import com.ataglance.walletglance.model.RecordController
 import com.ataglance.walletglance.model.RecordStack
 import com.ataglance.walletglance.model.RecordType
@@ -48,7 +49,7 @@ fun TransferComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = RecordController().formatRecordDateForHistory(
+                text = DateRangeController().convertDateLongToDayMonthYear(
                     recordStack.date, includeYearToDate
                 ),
                 color = GlanceTheme.outline,

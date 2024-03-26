@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.data.Category
+import com.ataglance.walletglance.model.DateRangeController
 import com.ataglance.walletglance.model.RecordController
 import com.ataglance.walletglance.model.RecordStack
 import com.ataglance.walletglance.model.RecordType
@@ -35,7 +36,7 @@ fun RecordStackComponent(
     RecordContainer({ onRecordClick(recordStack.recordNum) }) {
         // date
         Text(
-            text = RecordController().formatRecordDateForHistory(recordStack.date, includeYearToDate),
+            text = DateRangeController().convertDateLongToDayMonthYear(recordStack.date, includeYearToDate),
             color = GlanceTheme.outline,
             fontSize = 16.sp
         )

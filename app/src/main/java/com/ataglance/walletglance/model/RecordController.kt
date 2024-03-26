@@ -30,14 +30,6 @@ class RecordController {
         return null
     }
 
-    fun formatRecordDateForHistory(date: Long, includeYear: Boolean): String {
-        val year = (date / 100000000).toInt()
-        val month = date / 1000000 - year * 100
-        val day = date / 10000 - year * 10000 - month * 100
-
-        return if (includeYear) "$day.$month.$year" else "$day.$month"
-    }
-
     fun includeYearToRecordDate(recordStackList: List<RecordStack>): Boolean {
         return if (recordStackList.isNotEmpty()) {
             recordStackList.first().date / 100000000 == recordStackList.last().date / 100000000

@@ -20,12 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.DateRange
+import com.ataglance.walletglance.model.DateRangeController
 import com.ataglance.walletglance.model.DateRangeEnum
 import com.ataglance.walletglance.model.DateRangeState
 import com.ataglance.walletglance.model.ExpensesIncomeWidgetUiState
@@ -52,9 +55,10 @@ fun ExpensesIncomeWidget(
         DateRangeEnum.April, DateRangeEnum.May, DateRangeEnum.June,
         DateRangeEnum.July, DateRangeEnum.August, DateRangeEnum.September,
         DateRangeEnum.October, DateRangeEnum.November, DateRangeEnum.December ->
-            stringResource(DateRange.LastYear.nameRes)
-        DateRangeEnum.Custom -> stringResource(R.string.from_capital) + (dateRangeState.fromPast / 100000000) +
-            "\n" + stringResource(R.string.to) + (dateRangeState.toFuture / 100000000)
+            dateRangeState.getFormattedMonth(LocalContext.current)
+        DateRangeEnum.Custom -> DateRangeController().getFormattedDateFromAndToByFormatDayMonthYear(
+            dateRangeState.fromPast, dateRangeState.toFuture, LocalContext.current
+        )
     }
     val greenColorGradient = Brush.linearGradient(
         when (appTheme) {
@@ -108,7 +112,9 @@ fun ExpensesIncomeWidget(
                     text = targetPeriod,
                     color = GlanceTheme.onSurface,
                     fontSize = 25.sp,
-                    fontWeight = FontWeight.Light
+                    lineHeight = 30.sp,
+                    fontWeight = FontWeight.Light,
+                    textAlign = TextAlign.Center,
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))

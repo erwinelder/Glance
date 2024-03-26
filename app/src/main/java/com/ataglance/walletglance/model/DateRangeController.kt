@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.model
 
+import android.content.Context
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import java.time.LocalDate
@@ -305,13 +306,47 @@ class DateRangeController {
         }
     }
 
+    fun convertDateLongToDayMonthYear(date: Long, includeYear: Boolean = true): String {
+        val year = (date / 100000000).toInt()
+        val month = date / 1000000 - year * 100
+        val day = date / 10000 - year * 10000 - month * 100
+
+        return if (includeYear) "$day.$month.$year" else "$day.$month"
+    }
+
+    fun getFormattedDateFromAndToByFormatDayMonthYear(
+        fromPast: Long, toFuture: Long, context: Context
+    ): String {
+        return context.getString(R.string.from_capital) + " " +
+                DateRangeController().convertDateLongToDayMonthYear(fromPast) + "\n" +
+                context.getString(R.string.to) + " " +
+                DateRangeController().convertDateLongToDayMonthYear(toFuture)
+    }
+
 }
 
 data class DateRangeState(
     val enum: DateRangeEnum,
     val fromPast: Long,
     val toFuture: Long
-)
+) {
+    fun getFormattedMonth(context: Context): String {
+        return when (enum) {
+            DateRangeEnum.January -> context.getString(R.string.january_full)
+            DateRangeEnum.February -> context.getString(R.string.february_full)
+            DateRangeEnum.March -> context.getString(R.string.march_full)
+            DateRangeEnum.April -> context.getString(R.string.april_full)
+            DateRangeEnum.May -> context.getString(R.string.may_full)
+            DateRangeEnum.June -> context.getString(R.string.june_full)
+            DateRangeEnum.July -> context.getString(R.string.july_full)
+            DateRangeEnum.August -> context.getString(R.string.august_full)
+            DateRangeEnum.September -> context.getString(R.string.september_full)
+            DateRangeEnum.October -> context.getString(R.string.october_full)
+            DateRangeEnum.November -> context.getString(R.string.november_full)
+            else -> context.getString(R.string.december_full)
+        } + " ${fromPast / 100000000}"
+    }
+}
 
 private data class LocalDateRange(
     val startPast: LocalDate,
