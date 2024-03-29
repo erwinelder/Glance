@@ -332,6 +332,7 @@ class AppViewModel(
         CategoryIcon.FoodAndDrinks.name to CategoryIcon.FoodAndDrinks.res,
         CategoryIcon.Restaurant.name to CategoryIcon.Restaurant.res,
         CategoryIcon.Housing.name to CategoryIcon.Housing.res,
+        CategoryIcon.HousingPurchase.name to CategoryIcon.HousingPurchase.res,
         CategoryIcon.Shopping.name to CategoryIcon.Shopping.res,
         CategoryIcon.Transport.name to CategoryIcon.Transport.res,
         CategoryIcon.Vehicle.name to CategoryIcon.Vehicle.res,

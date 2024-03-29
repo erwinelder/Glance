@@ -191,7 +191,7 @@ class SetupCategoriesViewModel : ViewModel() {
                         ),
                         Category(
                             id = 20, type = '-', rank = 's', orderNum = 6, parentCategoryId = 2,
-                            name = context.getString(R.string.purchase), iconName = "housing"
+                            name = context.getString(R.string.purchase), iconName = "housing_purchase"
                         )
                     ),
                     listOf(
