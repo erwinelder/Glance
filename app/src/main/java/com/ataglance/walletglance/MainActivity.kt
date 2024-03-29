@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                                         if (appUiState.appTheme == AppTheme.LightDefault) R.drawable.main_background_light
                                         else R.drawable.main_background_dark
                                     ),
-                                    contentDescription = null,
+                                    contentDescription = "application background",
                                     contentScale = ContentScale.FillBounds,
                                     modifier = Modifier.fillMaxSize()
                                 )
