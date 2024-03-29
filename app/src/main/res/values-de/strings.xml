@@ -60,15 +60,15 @@
     <string name="account">Konto</string>
     <string name="from_account">Von Konto</string>
     <string name="to_account">Auf Konto</string>
-    <string name="note">Anmerkung</string>
+    <string name="note">Notiz</string>
     <string name="note_placeholder">für weitere Einzelheiten …</string>
     <string name="category">Kategorie</string>
     <string name="amount">Summe</string>
     <string name="start_amount">Startbetrag</string>
     <string name="final_amount">Endbetrag</string>
     <string name="rate">Kurs</string>
-    <string name="quantity">Menge</string>
-    <string name="quantity_placeholder">Ohne Menge</string>
+    <string name="quantity">Anzahl</string>
+    <string name="quantity_placeholder">Ohne Anzahl</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>
@@ -120,8 +120,8 @@
     <string name="expense">Spesen</string>
     <string name="expenses">Spesen</string>
     <string name="income_singular">Einkommen</string>
-    <string name="income_plural">Einkünfte</string>
-    <string name="transfer">Übersetzung</string>
+    <string name="income_plural">Einkommen</string>
+    <string name="transfer">Transfer</string>
     <string name="new_category_name">Neue Kategorie</string>
     <string name="new_subcategory_name">Neue Unterkategorie</string>
     <string name="category_not_found">Kategorie wurde nicht gefunden</string>
