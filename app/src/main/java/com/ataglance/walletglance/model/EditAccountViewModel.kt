@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 
 class EditAccountViewModel(
     uiState: EditAccountUiState
@@ -35,7 +36,7 @@ class EditAccountViewModel(
                 orderNum = account.orderNum,
                 name = account.name,
                 currency = account.currency,
-                balance = "%.2f".format(account.balance),
+                balance = "%.2f".format(Locale.US, account.balance),
                 color = account.color,
                 hide = account.hide,
                 hideBalance = account.hideBalance,

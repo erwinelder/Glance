@@ -3,6 +3,7 @@ package com.ataglance.walletglance.model
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.data.Category
 import com.ataglance.walletglance.data.Record
+import java.util.Locale
 
 enum class RecordType {
     Expense, Income
@@ -143,6 +144,7 @@ class RecordController {
                         type = if (uiState.type == RecordType.Expense) '-' else '+',
                         amount = if (unit.quantity.isNotBlank()) {
                             "%.2f".format(
+                                Locale.US,
                                 unit.amount.toDouble() * unit.quantity.toInt()
                             ).toDouble()
                         } else {
@@ -178,6 +180,7 @@ class RecordController {
                         type = if (uiState.type == RecordType.Expense) '-' else '+',
                         amount = if (unit.quantity.isNotBlank()) {
                             "%.2f".format(
+                                Locale.US,
                                 unit.amount.toDouble() * unit.quantity.toInt()
                             ).toDouble()
                         } else {
@@ -289,7 +292,7 @@ class RecordController {
                         }
                     },
                     note = unit.note ?: "",
-                    amount = "%.2f".format(unit.amount / (unit.quantity ?: 1)),
+                    amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
                     quantity = unit.quantity?.toString() ?: ""
                 )
             )
@@ -353,10 +356,10 @@ class RecordController {
             toAccount = AccountController().getAccountById(
                 recordStackTo.accountId, accountList
             ),
-            startAmount = "%.2f".format(recordStackFrom.totalAmount),
-            finalAmount = "%.2f".format(recordStackTo.totalAmount),
-            startRate = "%.2f".format(startAndFinalRate.first),
-            finalRate = "%.2f".format(startAndFinalRate.second),
+            startAmount = "%.2f".format(Locale.US, recordStackFrom.totalAmount),
+            finalAmount = "%.2f".format(Locale.US, recordStackTo.totalAmount),
+            startRate = "%.2f".format(Locale.US, startAndFinalRate.first),
+            finalRate = "%.2f".format(Locale.US, startAndFinalRate.second),
             dateTimeState = DateTimeController().getNewDateByRecordLongDate(
                 recordStackFrom.date
             ),

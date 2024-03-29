@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.util.Locale
 
 class AppViewModel(
     private val settingsRepository: SettingsRepository,
@@ -1268,7 +1269,7 @@ data class ExpensesIncomeWidgetUiState(
     val incomePercentageFloat: Float = 0.0f,
 ) {
     private fun getFormattedNumberWithSpaces(number: Double): String {
-        var numberString = "%.2f".format(number)
+        var numberString = "%.2f".format(Locale.US, number)
         var formattedNumber = numberString.let {
             it.substring(startIndex = it.length - 3)
         }

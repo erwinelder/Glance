@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 
 class MakeTransferViewModel(
     private val accountList: List<Account>,
@@ -107,6 +108,7 @@ class MakeTransferViewModel(
             uiState.value.finalAmount
         } else {
             "%.2f".format(
+                Locale.US,
                 startAmount.toDouble() / startRate.toDouble() * finalRate.toDouble()
             )
         }
@@ -121,6 +123,7 @@ class MakeTransferViewModel(
             uiState.value.finalRate
         } else {
             "%.2f".format(
+                Locale.US,
                 finalAmount.toDouble() *
                 uiState.value.startRate.toDouble() /
                 uiState.value.startAmount.toDouble()

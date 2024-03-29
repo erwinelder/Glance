@@ -36,6 +36,7 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
+import java.util.Locale
 
 @Composable
 fun ExpensesIncomeWidget(
@@ -164,7 +165,7 @@ private fun StatisticBlock(
             .fillMaxWidth()
     ) {
         AnimatedContent(
-            targetState = "${stringResource(titleRes)} ${"%.2f".format(percentage)}%",
+            targetState = "${stringResource(titleRes)} ${"%.2f".format(Locale.US, percentage)}%",
             label = "expenses or income percent for a period"
         ) { targetContent ->
             Text(

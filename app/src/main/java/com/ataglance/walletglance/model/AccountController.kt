@@ -4,6 +4,9 @@ import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 class AccountController {
 
@@ -50,14 +53,14 @@ class AccountController {
         balance: Double,
         amount: Double
     ): Double {
-        return "%.2f".format(balance + amount).toDouble()
+        return "%.2f".format(Locale.US, balance + amount).toDouble()
     }
 
     fun subtractFromBalance(
         balance: Double,
         amount: Double
     ): Double {
-        return "%.2f".format(balance - amount).toDouble()
+        return "%.2f".format(Locale.US, balance - amount).toDouble()
     }
 
     fun addToOrSubtractFromBalance(
@@ -66,6 +69,7 @@ class AccountController {
         recordType: RecordType
     ): Double {
         return "%.2f".format(
+            Locale.US,
             balance + if (recordType == RecordType.Expense) -amount else amount
         ).toDouble()
     }
@@ -77,6 +81,7 @@ class AccountController {
         recordType: RecordType
     ): Double {
         return "%.2f".format(
+            Locale.US,
             balance +
                     (if (recordType == RecordType.Expense) prevAmount else -prevAmount) +
                     if (recordType == RecordType.Expense) -newAmount else newAmount
@@ -91,8 +96,10 @@ class AccountController {
         recordType: RecordType
     ): Pair<Double, Double> {
         return "%.2f".format(
+            Locale.US,
             balancePrevAccount + if (recordType == RecordType.Expense) prevAmount else -prevAmount
         ).toDouble() to "%.2f".format(
+            Locale.US,
             balanceNewAccount + if (recordType == RecordType.Expense) -newAmount else newAmount
         ).toDouble()
     }

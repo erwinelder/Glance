@@ -3,6 +3,7 @@ package com.ataglance.walletglance.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.model.AccountColorName
+import java.util.Locale
 
 @Entity(tableName = "Account")
 data class Account(
@@ -24,7 +25,7 @@ data class Account(
             return "***"
         }
 
-        var numberString = "%.2f".format(balance)
+        var numberString = "%.2f".format(Locale.US, balance)
         var formattedNumber = numberString.let {
             it.substring(startIndex = it.length - 3)
         }

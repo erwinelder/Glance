@@ -1,5 +1,7 @@
 package com.ataglance.walletglance.model
 
+import java.util.Locale
+
 data class RecordStack(
     val recordNum: Int,
     val date: Long,
@@ -9,7 +11,7 @@ data class RecordStack(
     val stack: List<RecordStackUnit>
 ) {
     fun getFormattedAmountWithSpaces(currency: String?): String {
-        var numberString = "%.2f".format(totalAmount)
+        var numberString = "%.2f".format(Locale.US, totalAmount)
         var formattedNumber = numberString.let {
             it.substring(startIndex = it.length - 3)
         }
