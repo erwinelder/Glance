@@ -61,7 +61,11 @@ fun MakeTransferScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val savingIsAllowed = uiState.startAmount.isNotBlank() &&
+        uiState.startAmount.last() != '.' &&
+        uiState.startAmount.toDouble() != 0.0
         uiState.finalAmount.isNotBlank() &&
+        uiState.finalAmount.last() != '.' &&
+        uiState.finalAmount.toDouble() != 0.0 &&
         uiState.fromAccount != null &&
         uiState.toAccount != null
 

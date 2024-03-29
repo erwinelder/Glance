@@ -61,7 +61,7 @@ class MakeTransferViewModel(
 
     fun changeStartRate(value: String) {
         val newValue = value.takeIf {
-            Regex("^(?:[1-9]\\d{0,9}(?:[.,]\\d{0,2})?)?\$").matches(it)
+            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
         } ?: return
         _uiState.update { it.copy(
             startRate = newValue,
@@ -71,7 +71,7 @@ class MakeTransferViewModel(
 
     fun changeFinalRate(value: String) {
         val newValue = value.takeIf {
-            Regex("^(?:[1-9]\\d{0,9}(?:[.,]\\d{0,2})?)?\$").matches(it)
+            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
         } ?: return
         _uiState.update { it.copy(
             finalRate = newValue,
@@ -81,7 +81,7 @@ class MakeTransferViewModel(
 
     fun changeStartAmount(value: String) {
         val newValue = value.takeIf {
-            Regex("^(?:[1-9]\\d{0,9}(?:[.,]\\d{0,2})?)?\$").matches(it)
+            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
         } ?: return
         _uiState.update { it.copy(
             startAmount = newValue,
@@ -91,7 +91,7 @@ class MakeTransferViewModel(
 
     fun changeFinalAmount(value: String) {
         val newValue = value.takeIf {
-            Regex("^(?:[1-9]\\d{0,9}(?:[.,]\\d{0,2})?)?\$").matches(it)
+            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
         } ?: return
         _uiState.update { it.copy(
             finalAmount = newValue,

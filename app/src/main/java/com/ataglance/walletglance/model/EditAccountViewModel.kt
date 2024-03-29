@@ -26,7 +26,11 @@ class EditAccountViewModel(
         currency: String = uiState.value.currency,
         balance: String = uiState.value.balance
     ): Boolean {
-        return name.isNotBlank() && currency.isNotBlank() && balance.isNotBlank()
+        return name.isNotBlank() &&
+                currency.isNotBlank() &&
+                balance.isNotBlank() &&
+                balance.last() != '.' &&
+                balance.toDouble() != 0.0
     }
 
     fun applyAccountData(account: Account) {
@@ -75,7 +79,7 @@ class EditAccountViewModel(
         _uiState.update {
             it.copy(
                 balance = value.takeIf {
-                    Regex("^(?:[1-9]\\d{0,9}(?:[.,]\\d{0,2})?)?\$").matches(value)
+                    Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(value)
                 } ?: return,
                 allowSaving = validateAccountData(balance = value)
             )

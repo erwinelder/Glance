@@ -91,7 +91,10 @@ fun MakeRecordScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val recordUnitList by viewModel.recordUnitList.collectAsStateWithLifecycle()
     val savingIsAllowed = recordUnitList.none { recordUnit ->
-        recordUnit.amount.isBlank() || recordUnit.category == null
+        recordUnit.amount.isBlank() ||
+                recordUnit.amount.last() == '.' ||
+                recordUnit.amount.toDouble() == 0.0 ||
+                recordUnit.category == null
     } && uiState.account != null
 
     val openDateDialog = remember { mutableStateOf(false) }
