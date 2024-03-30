@@ -29,8 +29,7 @@ class EditAccountViewModel(
         return name.isNotBlank() &&
                 currency.isNotBlank() &&
                 balance.isNotBlank() &&
-                balance.last() != '.' &&
-                balance.toDouble() != 0.0
+                balance.last() != '.'
     }
 
     fun applyAccountData(account: Account) {
