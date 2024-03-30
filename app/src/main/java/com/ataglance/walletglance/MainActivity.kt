@@ -31,9 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var app: WalletGlanceApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        Log.d(ContentValues.TAG, "onCreate called")
 
         app = application as WalletGlanceApplication
         val appViewModel = app.appViewModel
@@ -64,7 +62,8 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         AnimatedVisibility(
                             visible = appUiState.appTheme != null,
-                            enter = fadeIn(tween(1000))
+                            enter = fadeIn(tween(1000)),
+                            label = "UI visibility"
                         ) {
                             Box(
                                 modifier = Modifier.fillMaxSize()

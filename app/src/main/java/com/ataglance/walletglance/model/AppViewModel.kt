@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.model
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -16,6 +17,8 @@ import com.ataglance.walletglance.data.RecordAndAccountRepository
 import com.ataglance.walletglance.data.RecordRepository
 import com.ataglance.walletglance.data.SettingsRepository
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.SplitInstallRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -86,10 +89,16 @@ class AppViewModel(
             initialValue = null
         )
 
-    fun setLanguage(langCode: String) {
+    fun setLanguage(langCode: String, context: Context) {
         viewModelScope.launch {
             settingsRepository.saveLanguagePreference(langCode)
         }
+
+        /*val request = SplitInstallRequest.newBuilder()
+            .addLanguage(Locale.forLanguageTag(langCode))
+            .build()
+        val splitInstallManager = SplitInstallManagerFactory.create(context)
+        splitInstallManager.startInstall(request)*/
 
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
         AppCompatDelegate.setApplicationLocales(appLocale)

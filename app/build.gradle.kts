@@ -12,8 +12,8 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = 28
         targetSdk = 34
-        versionCode = 8
-        versionName = "0.0.4"
+        versionCode = 10
+        versionName = "0.0.6"
         resourceConfigurations += arrayOf("en", "cs", "de", "ru", "uk")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -45,9 +45,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
     buildFeatures {
         compose = true
-
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
@@ -79,6 +83,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.android.play:core:1.10.3")
+    implementation("com.google.android.play:core-ktx:1.8.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")

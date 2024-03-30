@@ -557,6 +557,7 @@ fun NavGraphBuilder.setupGraph(
             if (chosenLanguage == null) {
                 viewModel.chooseNewLanguage(appUiSettings.langCode)
             }
+            val context = LocalContext.current
 
             SetupLanguageScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -565,7 +566,7 @@ fun NavGraphBuilder.setupGraph(
                 chosenLanguage = chosenLanguage,
                 chooseNewLanguage = viewModel::chooseNewLanguage,
                 onApplyButton = { langCode: String ->
-                    appViewModel.setLanguage(langCode)
+                    appViewModel.setLanguage(langCode, context)
                 },
                 onNextNavigationButton = {
                     onNavigateToScreen(SettingsScreen.Appearance.route)
