@@ -671,40 +671,40 @@ fun NavGraphBuilder.setupGraph(
                 }
             }
 
-            account?.let {
-                EditAccountScreen(
-                    scaffoldPadding = scaffoldPadding,
-                    uiState = editAccountUiState,
-                    appTheme = appUiSettings.appTheme,
-                    showDeleteAccountButton = showDeleteAccountButton,
-                    onColorChange = editAccountViewModel::changeColor,
-                    onNameChange = editAccountViewModel::changeName,
-                    onNavigateToCurrencyPickerWindow = {
-                        navController.navigate(
-                            "${SettingsScreen.CurrencyPicker.route}/${editAccountUiState.currency}"
-                        )
-                    },
-                    onBalanceChange = editAccountViewModel::changeBalance,
-                    onHideChange = editAccountViewModel::changeHide,
-                    onHideBalanceChange = editAccountViewModel::changeHideBalance,
-                    onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
-                    onDeleteButton = { id ->
-                        val updatedAccountList = setupAccountsViewModel.deleteAccountById(id)
-                        updatedAccountList?.let {
-                            coroutineScope.launch {
-                                appViewModel.deleteAccountWithItsRecords(id, updatedAccountList)
-                            }
+            EditAccountScreen(
+                scaffoldPadding = scaffoldPadding,
+                uiState = editAccountUiState,
+                appTheme = appUiSettings.appTheme,
+                showDeleteAccountButton = showDeleteAccountButton,
+                onColorChange = editAccountViewModel::changeColor,
+                onNameChange = editAccountViewModel::changeName,
+                onNavigateToCurrencyPickerWindow = {
+                    navController.navigate(
+                        "${SettingsScreen.CurrencyPicker.route}/${editAccountUiState.currency}"
+                    )
+                },
+                onBalanceChange = editAccountViewModel::changeBalance,
+                onHideChange = editAccountViewModel::changeHide,
+                onHideBalanceChange = editAccountViewModel::changeHideBalance,
+                onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
+                onDeleteButton = { id ->
+                    navController.popBackStack()
+                    val updatedAccountList = setupAccountsViewModel.deleteAccountById(id)
+                    updatedAccountList?.let {
+                        coroutineScope.launch {
+                            appViewModel.deleteAccountWithItsRecords(id, updatedAccountList)
                         }
-                        navController.popBackStack()
-                    },
-                    onSaveButton = {
+                    }
+                },
+                onSaveButton = {
+                    if (account != null) {
                         setupAccountsViewModel.saveAccountData(
                             editAccountViewModel.getAccountObject()
                         )
-                        navController.popBackStack()
                     }
-                )
-            }
+                    navController.popBackStack()
+                }
+            )
         }
         composable(
             route = "${SettingsScreen.CurrencyPicker.route}/{${CurrencyPickerScreenArgs.Currency.name}}",

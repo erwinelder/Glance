@@ -50,16 +50,16 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.AccountColorName
 import com.ataglance.walletglance.model.AccountColors
 import com.ataglance.walletglance.model.AccountController
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.model.EditAccountUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
+import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.fields.FieldLabel
+import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
 
 @Composable
 fun EditAccountScreen(
