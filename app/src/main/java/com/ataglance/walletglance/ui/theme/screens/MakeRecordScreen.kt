@@ -128,11 +128,13 @@ fun MakeRecordScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    BarButton(
-                        onClick = onMakeTransferButtonClick,
-                        active = false,
-                        text = stringResource(R.string.transfer)
-                    )
+                    if (accountList.size > 1) {
+                        BarButton(
+                            onClick = onMakeTransferButtonClick,
+                            active = false,
+                            text = stringResource(R.string.transfer)
+                        )
+                    }
                     BarButton(
                         onClick = {
                             viewModel.changeRecordType(RecordType.Expense, categoriesUiState)
