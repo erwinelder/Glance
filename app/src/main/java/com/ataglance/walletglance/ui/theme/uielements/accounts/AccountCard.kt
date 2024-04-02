@@ -43,8 +43,8 @@ import com.ataglance.walletglance.model.AccountColors
 import com.ataglance.walletglance.model.AccountController
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import java.util.Locale
 
 @Composable

@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.ui.theme.screens.settings
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.ThemePicker
 
 @Composable
 fun SetupAppearanceScreen(
-    scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
     onContinueButton: () -> Unit,
     onSetUseDeviceTheme: (Boolean) -> Unit,
@@ -29,7 +27,7 @@ fun SetupAppearanceScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = scaffoldPadding.calculateBottomPadding() + dimensionResource(R.dimen.screen_vertical_padding))
+            .padding(bottom = dimensionResource(R.dimen.screen_vertical_padding))
     ) {
         Spacer(modifier = Modifier.weight(1f))
         ThemePicker(

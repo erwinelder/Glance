@@ -131,7 +131,6 @@ fun AppScreen(
     )
 
     Scaffold(
-        containerColor = Color.Transparent,
         topBar = {
             SetupProgressTopBar(
                 visible = appUiSettings.startMainDestination != AppScreen.Home.route &&
@@ -155,7 +154,8 @@ fun AppScreen(
                     }
                 }
             )
-        }
+        },
+        containerColor = Color.Transparent
     ) { scaffoldPadding ->
         HomeNavHost(
             navController = navController,
@@ -581,7 +581,6 @@ fun NavGraphBuilder.setupGraph(
             popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
         ) {
             SetupAppearanceScreen(
-                scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
                 onContinueButton = {
                     onNavigateToScreen(SettingsScreen.Accounts.route)

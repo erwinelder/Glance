@@ -4,6 +4,9 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.navigation.NavBackStackEntry
 
 class CustomAnimation {
@@ -35,4 +38,13 @@ class CustomAnimation {
             animationSpec = tween(400)
         )
     }
+
+
+
+    fun widgetEnterTransition(): EnterTransition {
+        return fadeIn(tween(400)) +
+                slideInVertically { -(it*0.2).toInt() } +
+                scaleIn(initialScale = .6f)
+    }
+
 }

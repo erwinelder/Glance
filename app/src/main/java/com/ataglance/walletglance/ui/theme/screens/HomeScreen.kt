@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.ui.theme.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import com.ataglance.walletglance.model.RecordStack
 import com.ataglance.walletglance.model.RecordType
 import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.model.WidgetsUiState
+import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.AppMainTopBar
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
@@ -62,15 +64,20 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            AppMainTopBar(
-                accountList = accountsUiState.accountList.filter { !it.hide },
-                currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
-                onDateRangeChange = onDateRangeChange,
-                isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
-                appTheme = appTheme,
-                onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                onAccountClick = onTopBarAccountClick
-            )
+            AnimatedVisibility(
+                visible = appTheme != null,
+                enter = CustomAnimation().widgetEnterTransition(),
+            ) {
+                AppMainTopBar(
+                    accountList = accountsUiState.accountList.filter { !it.hide },
+                    currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
+                    onDateRangeChange = onDateRangeChange,
+                    isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
+                    appTheme = appTheme,
+                    onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
+                    onAccountClick = onTopBarAccountClick
+                )
+            }
         },
         containerColor = Color.Transparent
     ) { scaffoldHomeScreenPadding ->
@@ -127,12 +134,20 @@ private fun CompactLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            GreetingsMessage(widgetsUiState.greetings.titleRes)
+            AnimatedVisibility(
+                visible = appTheme != null,
+                enter = CustomAnimation().widgetEnterTransition(),
+            ) {
+                GreetingsMessage(widgetsUiState.greetings.titleRes)
+            }
         }
-        accountsUiState.activeAccount?.let {
-            item {
+        item {
+            AnimatedVisibility(
+                visible = appTheme != null && accountsUiState.activeAccount != null,
+                enter = CustomAnimation().widgetEnterTransition(),
+            ) {
                 AccountCard(
-                    account = it,
+                    account = accountsUiState.activeAccount!!,
                     appTheme = appTheme,
                     todayExpenses = widgetsUiState.greetings.expensesTotal,
                     onHideBalanceButton = onChangeHideActiveAccountBalance
@@ -140,43 +155,53 @@ private fun CompactLayout(
             }
         }
         item {
-            ExpensesIncomeWidget(
-                uiState = widgetsUiState.expensesIncome,
-                appTheme = appTheme,
-                dateRangeState = dateRangeMenuUiState.dateRangeState,
-                accountCurrency = accountsUiState.activeAccount?.currency ?: ""
-            )
+            AnimatedVisibility(
+                visible = appTheme != null,
+                enter = CustomAnimation().widgetEnterTransition(),
+            ) {
+                ExpensesIncomeWidget(
+                    uiState = widgetsUiState.expensesIncome,
+                    appTheme = appTheme,
+                    dateRangeState = dateRangeMenuUiState.dateRangeState,
+                    accountCurrency = accountsUiState.activeAccount?.currency ?: ""
+                )
+            }
         }
         item {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+            AnimatedVisibility(
+                visible = appTheme != null,
+                enter = CustomAnimation().widgetEnterTransition(),
             ) {
-                RecordHistory(
-                    recordStackList = filteredRecordStackList.take(3),
-                    appTheme = appTheme,
-                    recordsTypeFilter = recordsTypeFilter,
-                    getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                        CategoryController().getCategoryAndIconRes(
-                            categoriesUiState = categoriesUiState,
-                            categoryNameAndIconMap = categoryNameAndIconMap,
-                            categoryId = categoryId,
-                            subcategoryId = subcategoryId,
-                            recordType = type
-                        )
-                    },
-                    getAccount = { accountId: Int ->
-                        AccountController().getAccountById(accountId, accountsUiState.accountList)
-                    },
-                    onRecordClick = onRecordClick,
-                    onTransferClick = onTransferClick,
-                    modifier = Modifier.height(370.dp),
-                    title = stringResource(R.string.recent)
-                )
-                NavigationTextArrowButton(
-                    text = stringResource(R.string.view_all),
-                    onClick = onNavigateToRecordsScreen
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    RecordHistory(
+                        recordStackList = filteredRecordStackList.take(3),
+                        appTheme = appTheme,
+                        recordsTypeFilter = recordsTypeFilter,
+                        getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
+                            CategoryController().getCategoryAndIconRes(
+                                categoriesUiState = categoriesUiState,
+                                categoryNameAndIconMap = categoryNameAndIconMap,
+                                categoryId = categoryId,
+                                subcategoryId = subcategoryId,
+                                recordType = type
+                            )
+                        },
+                        getAccount = { accountId: Int ->
+                            AccountController().getAccountById(accountId, accountsUiState.accountList)
+                        },
+                        onRecordClick = onRecordClick,
+                        onTransferClick = onTransferClick,
+                        modifier = Modifier.height(370.dp),
+                        title = stringResource(R.string.recent)
+                    )
+                    NavigationTextArrowButton(
+                        text = stringResource(R.string.view_all),
+                        onClick = onNavigateToRecordsScreen
+                    )
+                }
             }
         }
     }

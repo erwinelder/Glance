@@ -4,8 +4,6 @@ import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.util.Locale
 
 class AccountController {

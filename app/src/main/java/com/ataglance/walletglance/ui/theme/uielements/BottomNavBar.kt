@@ -57,8 +57,7 @@ fun BottomNavBar(
         visible = isAppSetUp &&
                 (currentScreen == AppScreen.Home.route ||
                         currentScreen == SettingsScreen.SettingsHome.route ||
-                        currentScreen == SettingsScreen.Language.route ||
-                        currentScreen == SettingsScreen.Appearance.route),
+                        currentScreen == SettingsScreen.Language.route),
         enter = slideInVertically { (it * 1.5).toInt() },
         exit = slideOutVertically { (it * 1.5).toInt() }
     ) {
