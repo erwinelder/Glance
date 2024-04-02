@@ -45,6 +45,7 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import java.util.Locale
 
 @Composable
 fun AccountCard(
@@ -202,7 +203,11 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
         targetState = if (todayExpenses == 0.0) {
             stringResource(R.string.greetings_empty_message)
         } else {
-            stringResource(R.string.greetings_expenses_message, todayExpenses, currency)
+            stringResource(
+                R.string.greetings_expenses_message,
+                "%.2f".format(Locale.US, todayExpenses),
+                currency
+            )
         },
         label = "account today statistics"
     ) { targetContent ->

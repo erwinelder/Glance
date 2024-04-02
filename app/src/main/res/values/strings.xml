@@ -77,7 +77,7 @@
     <string name="greetings_title_evening">Good evening!</string>
     <string name="greetings_title_night">Good evening!</string>
     <string name="greetings_empty_message">No expenses yet today</string>
-    <string name="greetings_expenses_message">Today you spent %.2f %s</string>
+    <string name="greetings_expenses_message">Today you spent %s %s</string>
     <string name="from_capital">From</string>
     <string name="to">to</string>
     <string name="from_account_meaning">from</string>

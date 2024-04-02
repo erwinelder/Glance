@@ -76,7 +76,7 @@
     <string name="greetings_title_evening">Dobré odpoledne!</string>
     <string name="greetings_title_night">Dobrý večer!</string>
     <string name="greetings_empty_message">Dnes ještě nebyly žádné výdaje</string>
-    <string name="greetings_expenses_message">Dnes jste utratil(-a) %.2f %s</string>
+    <string name="greetings_expenses_message">Dnes jste utratil(-a) %s %s</string>
     <string name="from_capital">Od</string>
     <string name="to">do</string>
     <string name="from_account_meaning">z</string>
