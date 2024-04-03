@@ -540,9 +540,13 @@ fun NavGraphBuilder.setupGraph(
             popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
         ) {
             SettingsHomeScreen(
-                navController = navController,
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
+                onNavigateToScreen = { screen: SettingsScreen ->
+                    if (navController.currentDestination?.route == SettingsScreen.SettingsHome.route) {
+                        navController.navigate(screen.route) { launchSingleTop = true }
+                    }
+                }
             )
         }
         composable(

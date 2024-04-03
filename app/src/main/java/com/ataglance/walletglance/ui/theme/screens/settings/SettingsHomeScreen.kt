@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.SettingsCategories
 import com.ataglance.walletglance.model.SettingsCategory
@@ -42,9 +41,9 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
 @Composable
 fun SettingsHomeScreen(
-    navController: NavHostController,
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?
+    appTheme: AppTheme?,
+    onNavigateToScreen: (SettingsScreen) -> Unit
 ) {
     val gap = 20.dp
     val scrollState = rememberScrollState()
@@ -90,19 +89,19 @@ fun SettingsHomeScreen(
                     .padding(horizontal = 24.dp)
             ) {
                 SettingPlate(category = settingsCategories.resetData) {
-                    navController.navigate(SettingsScreen.Data.route) { launchSingleTop = true }
+                    onNavigateToScreen(SettingsScreen.Data)
                 }
                 SettingPlate(category = settingsCategories.language) {
-                    navController.navigate(SettingsScreen.Language.route) { launchSingleTop = true }
+                    onNavigateToScreen(SettingsScreen.Language)
                 }
                 SettingPlate(category = settingsCategories.appearance) {
-                    navController.navigate(SettingsScreen.Appearance.route) { launchSingleTop = true }
+                    onNavigateToScreen(SettingsScreen.Appearance)
                 }
                 SettingPlate(category = settingsCategories.categories) {
-                    navController.navigate(SettingsScreen.Categories.route) { launchSingleTop = true }
+                    onNavigateToScreen(SettingsScreen.Categories)
                 }
                 SettingPlate(category = settingsCategories.accounts) {
-                    navController.navigate(SettingsScreen.Accounts.route) { launchSingleTop = true }
+                    onNavigateToScreen(SettingsScreen.Accounts)
                 }
             }
         } else {
@@ -119,27 +118,27 @@ fun SettingsHomeScreen(
             ) {
                 item {
                     SettingPlate(category = settingsCategories.accounts) {
-                        navController.navigate(SettingsScreen.Accounts.route) { launchSingleTop = true }
+                        onNavigateToScreen(SettingsScreen.Data)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.categories) {
-                        navController.navigate(SettingsScreen.Categories.route) { launchSingleTop = true }
+                        onNavigateToScreen(SettingsScreen.Language)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.appearance) {
-                        navController.navigate(SettingsScreen.Appearance.route) { launchSingleTop = true }
+                        onNavigateToScreen(SettingsScreen.Appearance)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.language) {
-                        navController.navigate(SettingsScreen.Language.route) { launchSingleTop = true }
+                        onNavigateToScreen(SettingsScreen.Categories)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.resetData) {
-                        navController.navigate(SettingsScreen.Data.route) { launchSingleTop = true }
+                        onNavigateToScreen(SettingsScreen.Accounts)
                     }
                 }
             }
