@@ -32,7 +32,7 @@ fun NavigationTextArrowButton(
         Text(
             text = text,
             color = GlanceTheme.primary,
-            fontSize = 19.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = Manrope
         )
