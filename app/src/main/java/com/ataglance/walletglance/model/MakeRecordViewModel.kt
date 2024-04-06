@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.data.Category
+import com.ataglance.walletglance.data.Record
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 
 class MakeRecordViewModel(
     category: Category?,
@@ -200,7 +202,78 @@ data class MakeRecordUiState(
     val type: RecordType = RecordType.Expense,
     val clickedUnitIndex: Int = 0,
     val dateTimeState: DateTimeState = DateTimeState()
-)
+) {
+
+    fun toRecordList(
+        unitList: List<MakeRecordUnitUiState>,
+        lastRecordNum: Int
+    ): List<Record> {
+        val recordList = mutableListOf<Record>()
+
+        unitList.forEach { unit ->
+            if (account != null && unit.category != null) {
+                recordList.add(
+                    Record(
+                        recordNum = recordNum ?: (lastRecordNum + 1),
+                        date = dateTimeState.dateLong,
+                        type = if (type == RecordType.Expense) '-' else '+',
+                        amount = if (unit.quantity.isNotBlank()) {
+                            "%.2f".format(
+                                Locale.US,
+                                unit.amount.toDouble() * unit.quantity.toInt()
+                            ).toDouble()
+                        } else {
+                            unit.amount.toDouble()
+                        },
+                        quantity = unit.quantity.ifBlank { null }?.toInt(),
+                        categoryId = unit.category.id,
+                        subcategoryId = unit.subcategory?.id,
+                        accountId = account.id,
+                        note = unit.note.ifBlank { null }
+                    )
+                )
+            }
+        }
+
+        return recordList
+    }
+
+    fun toRecordListWithOldIds(
+        unitList: List<MakeRecordUnitUiState>,
+        recordStack: RecordStack
+    ): List<Record> {
+        val recordList = mutableListOf<Record>()
+
+        unitList.forEach { unit ->
+            if (account != null && unit.category != null) {
+                recordList.add(
+                    Record(
+                        id = recordStack.stack[unit.index].id,
+                        recordNum = recordStack.recordNum,
+                        date = dateTimeState.dateLong,
+                        type = if (type == RecordType.Expense) '-' else '+',
+                        amount = if (unit.quantity.isNotBlank()) {
+                            "%.2f".format(
+                                Locale.US,
+                                unit.amount.toDouble() * unit.quantity.toInt()
+                            ).toDouble()
+                        } else {
+                            unit.amount.toDouble()
+                        },
+                        quantity = unit.quantity.ifBlank { null }?.toInt(),
+                        categoryId = unit.category.id,
+                        subcategoryId = unit.subcategory?.id,
+                        accountId = account.id,
+                        note = unit.note.ifBlank { null }
+                    )
+                )
+            }
+        }
+
+        return recordList
+    }
+
+}
 
 data class MakeRecordUnitUiState(
     val index: Int,
