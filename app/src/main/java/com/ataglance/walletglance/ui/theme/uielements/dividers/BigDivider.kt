@@ -10,10 +10,13 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 
 @Composable
-fun BigDivider(modifier: Modifier = Modifier) {
+fun BigDivider(
+    modifier: Modifier = Modifier,
+    filledWidth: Float = .75f
+) {
     HorizontalDivider(
         modifier = modifier
-            .fillMaxWidth(.75f)
+            .fillMaxWidth(filledWidth)
             .clip(RoundedCornerShape(1.dp)),
         thickness = 1.dp,
         color = GlanceTheme.outline
