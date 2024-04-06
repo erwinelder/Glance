@@ -41,10 +41,10 @@ class CustomAnimation {
 
 
 
-    fun widgetEnterTransition(): EnterTransition {
-        return fadeIn(tween(400)) +
-                slideInVertically { -(it*0.2).toInt() } +
-                scaleIn(initialScale = .6f)
+    fun widgetEnterTransition(delayMillis: Int = 0): EnterTransition {
+        return fadeIn(tween(400, delayMillis)) +
+                slideInVertically(tween(400, delayMillis)) { -(it*0.2).toInt() } +
+                scaleIn(animationSpec = tween(400, delayMillis), initialScale = .6f)
     }
 
 }
