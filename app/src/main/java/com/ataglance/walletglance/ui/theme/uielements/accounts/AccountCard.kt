@@ -233,7 +233,7 @@ private fun AccountCardPreview() {
             modifier = Modifier.fillMaxSize()
         )
         AccountCard(
-            account = Account(color = AccountColors.Blue(AppTheme.DarkDefault).name.name),
+            account = Account(color = AccountColors.Blue(AppTheme.DarkDefault).color.name),
             appTheme = AppTheme.DarkDefault,
             todayExpenses = 0.0
         )

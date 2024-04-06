@@ -40,7 +40,7 @@ class EditAccountViewModel(
                 name = account.name,
                 currency = account.currency,
                 balance = "%.2f".format(Locale.US, account.balance),
-                color = account.color,
+                colorName = account.color,
                 hide = account.hide,
                 hideBalance = account.hideBalance,
                 withoutBalance = account.withoutBalance,
@@ -52,9 +52,9 @@ class EditAccountViewModel(
         }
     }
 
-    fun changeColor(colorName: AccountColorName) {
+    fun changeColor(colorName: String) {
         _uiState.update {
-            it.copy(color = colorName.name)
+            it.copy(colorName = colorName)
         }
     }
 
@@ -107,7 +107,7 @@ class EditAccountViewModel(
             name = uiState.value.name,
             currency = uiState.value.currency,
             balance = uiState.value.balance.toDouble(),
-            color = uiState.value.color,
+            color = uiState.value.colorName,
             hide = uiState.value.hide,
             hideBalance = uiState.value.hideBalance,
             withoutBalance = uiState.value.withoutBalance,
@@ -131,7 +131,7 @@ data class EditAccountUiState(
     val name: String = "",
     val currency: String = "",
     val balance: String = "0.00",
-    val color: String = AccountColorName.Default.name,
+    val colorName: String = AccountColorName.Default.name,
     val hide: Boolean = false,
     val hideBalance: Boolean = false,
     val withoutBalance: Boolean = false,

@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.model
 
 import com.ataglance.walletglance.data.Category
+import com.ataglance.walletglance.ui.theme.theme.AppTheme
 
 enum class CategoryType {
     Expense, Income
@@ -10,13 +11,13 @@ enum class CategoryRank {
 }
 
 data class ParentCategoriesLists(
-    val expense: List<Category>,
-    val income: List<Category>
+    val expense: List<Category> = emptyList(),
+    val income: List<Category> = emptyList()
 )
 
 data class SubcategoriesLists(
-    val expense: List<List<Category>>,
-    val income: List<List<Category>>
+    val expense: List<List<Category>> = emptyList(),
+    val income: List<List<Category>> = emptyList()
 )
 
 class CategoryController {
@@ -178,6 +179,120 @@ class CategoryController {
         }
 
         return finalList
+    }
+
+    fun getCategoriesStatistics(
+        recordStackList: List<RecordStack>,
+        parentCategoriesLists: ParentCategoriesLists,
+        subcategoriesLists: SubcategoriesLists,
+        categoryIconNameToIconResMap: Map<String, Int>,
+        categoryColorNameToColorMap: Map<String, Colors>,
+        appTheme: AppTheme?,
+        accountCurrency: String
+    ): CategoryStatisticsLists {
+        return CategoryStatisticsLists(
+            expense = getCategoriesStatisticsByType(
+                recordStackList = recordStackList,
+                type = RecordType.Expense,
+                categoryList = parentCategoriesLists.expense,
+                subcategoriesLists = subcategoriesLists.expense,
+                categoryIconNameToIconResMap = categoryIconNameToIconResMap,
+                categoryColorNameToColorMap = categoryColorNameToColorMap,
+                appTheme = appTheme,
+                accountCurrency = accountCurrency
+            ),
+            income = getCategoriesStatisticsByType(
+                recordStackList = recordStackList,
+                type = RecordType.Income,
+                categoryList = parentCategoriesLists.income,
+                subcategoriesLists = subcategoriesLists.income,
+                categoryIconNameToIconResMap = categoryIconNameToIconResMap,
+                categoryColorNameToColorMap = categoryColorNameToColorMap,
+                appTheme = appTheme,
+                accountCurrency = accountCurrency
+            )
+        )
+    }
+
+    private fun getCategoriesStatisticsByType(
+        recordStackList: List<RecordStack>,
+        type: RecordType,
+        categoryList: List<Category>,
+        subcategoriesLists: List<List<Category>>,
+        categoryIconNameToIconResMap: Map<String, Int>,
+        categoryColorNameToColorMap: Map<String, Colors>,
+        appTheme: AppTheme?,
+        accountCurrency: String
+    ): List<CategoryStatisticsElementUiState> {
+        val categoryStatsMap = mutableMapOf<Int, CategoriesStatsMapItem>()
+        val subcategoriesStatsMap = mutableMapOf<Int, MutableMap<Int, CategoriesStatsMapItem>>()
+
+        recordStackList.forEach { recordStack ->
+            if (
+                recordStack.isExpense() && type == RecordType.Expense ||
+                recordStack.isIncome() && type == RecordType.Income
+            ) {
+                recordStack.stack.forEach { stackUnit ->
+                    if (categoryStatsMap.containsKey(stackUnit.categoryId)) {
+                        categoryStatsMap[stackUnit.categoryId]!!.totalAmount += stackUnit.amount
+                    } else {
+                        categoryList.find { it.id == stackUnit.categoryId }?.let { category ->
+                            categoryStatsMap[stackUnit.categoryId] = CategoriesStatsMapItem(
+                                category = category,
+                                totalAmount = stackUnit.amount
+                            )
+                        }
+                    }
+                    if (stackUnit.subcategoryId != null) {
+                        if (subcategoriesStatsMap.containsKey(stackUnit.categoryId)) {
+                            if (subcategoriesStatsMap[stackUnit.categoryId]!!.containsKey(stackUnit.subcategoryId)) {
+                                subcategoriesStatsMap[stackUnit.categoryId]!![stackUnit.subcategoryId]!!.totalAmount += stackUnit.amount
+                            } else {
+                                subcategoriesLists.getOrNull(
+                                    categoryStatsMap[stackUnit.categoryId]!!.category.orderNum - 1
+                                )
+                                    ?.find { it.id == stackUnit.subcategoryId }
+                                    ?.let { subcategory ->
+                                        subcategoriesStatsMap[stackUnit.categoryId]!![stackUnit.subcategoryId] =
+                                            CategoriesStatsMapItem(
+                                                category = subcategory,
+                                                totalAmount = stackUnit.amount
+                                            )
+                                    }
+                            }
+                        } else {
+                            subcategoriesLists.getOrNull(
+                                categoryStatsMap[stackUnit.categoryId]!!.category.orderNum - 1
+                            )
+                                ?.find { it.id == stackUnit.subcategoryId }
+                                ?.let { subcategory ->
+                                subcategoriesStatsMap[stackUnit.categoryId] = mutableMapOf(
+                                    stackUnit.subcategoryId to CategoriesStatsMapItem(
+                                        category = subcategory,
+                                        totalAmount = stackUnit.amount
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        val totalAmount = categoryStatsMap.values.sumOf { it.totalAmount }
+
+        return categoryStatsMap.values
+            .sortedByDescending { it.totalAmount }
+            .map { categoryStatsMapItem ->
+                categoryStatsMapItem.toCategoryStatisticsElementUiState(
+                    categoryIconNameToIconResMap = categoryIconNameToIconResMap,
+                    categoryColorNameToColorMap = categoryColorNameToColorMap,
+                    appTheme = appTheme,
+                    accountCurrency = accountCurrency,
+                    allCategoriesTotalAmount = totalAmount,
+                    subcategoriesStatistics = subcategoriesStatsMap[categoryStatsMapItem.category.id]
+                )
+            }
     }
 
 }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
@@ -25,11 +26,13 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 
 @Composable
 fun ParentCategorySetupElement(
     category: Category,
     iconRes: Int?,
+    color: LighterDarkerColors?,
     onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
     onEditButton: (Int) -> Unit,
     onUpButtonClick: () -> Unit,
@@ -62,23 +65,32 @@ fun ParentCategorySetupElement(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.clickable { onNavigateToEditSubcategoryListScreen(category.orderNum) }
         ) {
-            iconRes?.let {
+            if (iconRes != null && color != null) {
                 Icon(
-                    painter = painterResource(it),
-                    contentDescription = category.name + " category icon",
-                    tint = GlanceTheme.onSurface,
-                    modifier = Modifier.size(24.dp, 24.dp)
+                    painter = painterResource(iconRes),
+                    contentDescription = "category ${category.name} icon",
+                    tint = GlanceTheme.surface,
+                    modifier = Modifier
+                        .shadow(
+                            elevation = 8.dp,
+                            spotColor = color.darker,
+                            shape = RoundedCornerShape(30)
+                        )
+                        .clip(RoundedCornerShape(30))
+                        .background(color.darker)
+                        .size(32.dp)
+                        .padding(5.dp)
                 )
             }
             Text(
                 text = category.name,
                 color = GlanceTheme.onSurface,
-                fontSize = 19.sp,
+                fontSize = 20.sp,
                 modifier = Modifier.padding(bottom = 1.dp)
             )
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
-                contentDescription = "arrow right",
+                contentDescription = "right arrow",
                 tint = GlanceTheme.onSurface,
                 modifier = Modifier.size(12.dp, 20.dp)
             )

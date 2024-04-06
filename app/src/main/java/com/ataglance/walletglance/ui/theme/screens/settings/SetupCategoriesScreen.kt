@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.CategoryType
+import com.ataglance.walletglance.model.Colors
 import com.ataglance.walletglance.model.SetupCategoriesUiState
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
@@ -30,6 +31,7 @@ fun SetupCategoriesScreen(
     isAppSetUp: Boolean,
     uiState: SetupCategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
+    categoryColorNameToColorMap: Map<String, Colors>,
     onResetButton: () -> Unit,
     onSaveAndFinishSetupButton: () -> Unit,
     onShowCategoriesByType: (CategoryType) -> Unit,
@@ -51,6 +53,7 @@ fun SetupCategoriesScreen(
         CategoriesSetupContainer(
             uiState = uiState,
             categoryNameAndIconMap = categoryNameAndIconMap,
+            categoryColorNameToColorMap = categoryColorNameToColorMap,
             onShowCategoriesByType = onShowCategoriesByType,
             onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoryListScreen,
             onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,

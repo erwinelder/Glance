@@ -17,8 +17,7 @@ import com.ataglance.walletglance.data.RecordAndAccountRepository
 import com.ataglance.walletglance.data.RecordRepository
 import com.ataglance.walletglance.data.SettingsRepository
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
-import com.google.android.play.core.splitinstall.SplitInstallRequest
+import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -222,7 +221,6 @@ class AppViewModel(
         viewModelScope.launch {
             accountRepository.getAllAccounts().collect { accountsList ->
                 applyAccountListToUiState(accountsList)
-                updateWidgetsStatistic(recordStackList.value)
             }
         }
     }
@@ -318,7 +316,7 @@ class AppViewModel(
                 }?.copy(isActive = true)
             )
         }
-        updateWidgetsStatistic(recordStackList.value)
+        /*updateWidgetsStatistic(recordStackList.value)*/
     }
 
     private fun getTransferSecondUnitRecordNumbers(transferList: List<Record>): List<Int> {
@@ -338,7 +336,7 @@ class AppViewModel(
     private val _categoriesUiState: MutableStateFlow<CategoriesUiState> = MutableStateFlow(CategoriesUiState())
     val categoriesUiState: StateFlow<CategoriesUiState> = _categoriesUiState.asStateFlow()
 
-    val categoryNameAndIconMap = mapOf(
+    val categoryIconNameToIconResMap = mapOf(
         CategoryIcon.FoodAndDrinks.name to CategoryIcon.FoodAndDrinks.res,
         CategoryIcon.Restaurant.name to CategoryIcon.Restaurant.res,
         CategoryIcon.Housing.name to CategoryIcon.Housing.res,
@@ -360,6 +358,28 @@ class AppViewModel(
         CategoryIcon.Sales.name to CategoryIcon.Sales.res,
         CategoryIcon.Refunds.name to CategoryIcon.Refunds.res,
         CategoryIcon.Gifts.name to CategoryIcon.Gifts.res,
+    )
+
+    val categoryColorNameToColorMap = combine(_appTheme) { appThemeArray ->
+        val theme = appThemeArray.first()
+        mapOf(
+            CategoryColors.Olive(theme).let { it.color.name to it.color },
+            CategoryColors.Camel(theme).let { it.color.name to it.color },
+            CategoryColors.Pink(theme).let { it.color.name to it.color },
+            CategoryColors.Green(theme).let { it.color.name to it.color },
+            CategoryColors.Red(theme).let { it.color.name to it.color },
+            CategoryColors.LightBlue(theme).let { it.color.name to it.color },
+            CategoryColors.Lavender(theme).let { it.color.name to it.color },
+            CategoryColors.Blue(theme).let { it.color.name to it.color },
+            CategoryColors.Aquamarine(theme).let { it.color.name to it.color },
+            CategoryColors.Orange(theme).let { it.color.name to it.color },
+            CategoryColors.Yellow(theme).let { it.color.name to it.color },
+            CategoryColors.GrayDefault(theme).let { it.color.name to it.color }
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyMap()
     )
 
     private fun fetchCategoriesFromDb() {
@@ -538,13 +558,28 @@ class AppViewModel(
     private val _recordStackList: MutableStateFlow<List<RecordStack>> = MutableStateFlow(emptyList())
     val recordStackList: StateFlow<List<RecordStack>> = _recordStackList.asStateFlow()
 
+    val filteredRecordStackList: StateFlow<List<RecordStack>> =
+        combine(
+            _recordStackList,
+            _dateRangeMenuUiState,
+            _accountsUiState
+        ) { thisRecordStackList, thisDateRangeMenuUiState, thisAccountsUiState ->
+            thisRecordStackList.filter {
+                it.date in thisDateRangeMenuUiState.dateRangeState.fromPast..thisDateRangeMenuUiState.dateRangeState.toFuture &&
+                        it.accountId == thisAccountsUiState.activeAccount?.id
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
     private fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
         viewModelScope.launch {
             recordRepository.getRecordsInDateRange(dateRangeState).collect { recordList ->
                 val recordStackList =
                     RecordController().convertRecordListToRecordStackList(recordList)
                 _recordStackList.update { recordStackList }
-                updateWidgetsStatistic(recordStackList)
             }
         }
     }
@@ -579,11 +614,7 @@ class AppViewModel(
     ) {
         uiState.account ?: return
 
-        val recordList = RecordController().convertMakeRecordStateAndUnitListToRecordList(
-            uiState = uiState,
-            unitList = unitList,
-            lastRecordNum = appUiSettings.value.lastRecordNum,
-        )
+        val recordList = uiState.toRecordList(unitList, appUiSettings.value.lastRecordNum)
         val updatedAccountList = mergeAccountsList(
             listOf(
                 uiState.account.copy(
@@ -615,11 +646,7 @@ class AppViewModel(
         if (unitList.size == currentRecordStack.stack.size) {
             updateEditedRecord(
                 uiState = uiState,
-                newRecordList = RecordController().convertMakeRecordStateAndUnitListToRecordListWithOldIds(
-                    uiState = uiState,
-                    unitList = unitList,
-                    recordStack = currentRecordStack
-                ),
+                newRecordList = uiState.toRecordListWithOldIds(unitList, currentRecordStack),
                 recordStack = currentRecordStack,
                 thisRecordTotalAmount = thisRecordTotalAmount,
             )
@@ -627,14 +654,8 @@ class AppViewModel(
             deleteRecordAndSaveNewOne(
                 uiState = uiState,
                 currentRecordStack = currentRecordStack,
-                currentRecordList = RecordController().convertRecordStackToRecordList(
-                    currentRecordStack
-                ),
-                newRecordList = RecordController().convertMakeRecordStateAndUnitListToRecordList(
-                    uiState = uiState,
-                    unitList = unitList,
-                    lastRecordNum = appUiSettings.value.lastRecordNum,
-                ),
+                currentRecordList = currentRecordStack.toRecordList(),
+                newRecordList = uiState.toRecordList(unitList, appUiSettings.value.lastRecordNum),
                 thisRecordTotalAmount = thisRecordTotalAmount
             )
         }
@@ -806,10 +827,8 @@ class AppViewModel(
     suspend fun deleteRecord(recordNum: Int) {
 
         val recordStack = recordStackList.value.find { it.recordNum == recordNum } ?: return
-        val recordList = RecordController().convertRecordStackToRecordList(recordStack)
-        val recordType = RecordController().recordTypeCharToRecordType(
-            recordStack.type
-        ) ?: return
+        val recordList = recordStack.toRecordList()
+        val recordType = recordStack.getRecordType() ?: return
 
         val account = AccountController().getAccountById(
             recordStack.accountId, accountsUiState.value.accountList
@@ -873,7 +892,7 @@ class AppViewModel(
     private fun getRecordListAndUpdatedAccountListAfterNewTransfer(
         state: MadeTransferState
     ): Pair<List<Record>, List<Account>> {
-        val recordList = RecordController().convertMadeTransferStateToRecordsPair(state).toList()
+        val recordList = state.toRecordsPair().toList()
         val updatedAccountList = mergeAccountsList(
             listOf(
                 state.fromAccount.copy(
@@ -900,20 +919,20 @@ class AppViewModel(
         val firstRecordStack = recordStackList.value.find {
             it.recordNum == state.recordNum
         } ?: return null
-        val recordNumDifference = if (firstRecordStack.type == '>') 1 else -1
+        val recordNumDifference = if (firstRecordStack.isOutTransfer()) 1 else -1
         val secondRecordStack = recordStackList.value.find {
             it.recordNum == state.recordNum.plus(recordNumDifference)
         } ?: return null
 
-        val recordList = RecordController().convertMadeTransferStateToRecordsPair(
-            state.copy(
-                recordNum = if (firstRecordStack.type == '>') state.recordNum else state.recordNum - 1
-            )
-        ).toList()
+        val recordList = state.copy(
+            recordNum = state.recordNum - (if (firstRecordStack.isOutTransfer()) 0 else 1)
+        ).toRecordsPair().toList()
         val updatedAccountList = getUpdatedAccountsAfterEditedTransfer(
             uiState = state,
-            currRecordStackFrom = if (firstRecordStack.type == '>') firstRecordStack else secondRecordStack,
-            currRecordStackTo = if (firstRecordStack.type == '>') secondRecordStack else firstRecordStack
+            currRecordStackFrom = if (firstRecordStack.isOutTransfer()) firstRecordStack
+                else secondRecordStack,
+            currRecordStackTo = if (firstRecordStack.isOutTransfer()) secondRecordStack
+                else firstRecordStack
         )?.let {
             mergeAccountsList(it)
         }
@@ -1053,30 +1072,29 @@ class AppViewModel(
         val firstRecordStack = recordStackList.value.find {
             it.recordNum == recordNum
         } ?: return
-        val recordNumDifference = if (firstRecordStack.type == '>') 1 else -1
+        val recordNumDifference = if (firstRecordStack.isOutTransfer()) 1 else -1
         val secondRecordStack = recordStackList.value.find {
             it.recordNum == recordNum + recordNumDifference
         } ?: return
 
-        val recordList = RecordController().convertRecordStackToRecordList(firstRecordStack) +
-                RecordController().convertRecordStackToRecordList(secondRecordStack)
+        val recordList = firstRecordStack.toRecordList() + secondRecordStack.toRecordList()
 
         val updatedAccountList = returnAmountsToAccountsAfterEditedTransfer(
             prevAccounts = Pair(
                 AccountController().getAccountById(
-                    id = if (firstRecordStack.type == '>') firstRecordStack.accountId
+                    id = if (firstRecordStack.isOutTransfer()) firstRecordStack.accountId
                         else secondRecordStack.accountId,
                     accountList = accountsUiState.value.accountList
                 ) ?: return,
                 AccountController().getAccountById(
-                    id = if (firstRecordStack.type == '>') secondRecordStack.accountId
+                    id = if (firstRecordStack.isOutTransfer()) secondRecordStack.accountId
                         else firstRecordStack.accountId,
                     accountList = accountsUiState.value.accountList
                 ) ?: return
             ),
-            fromAmount = if (firstRecordStack.type == '>') firstRecordStack.totalAmount
+            fromAmount = if (firstRecordStack.isOutTransfer()) firstRecordStack.totalAmount
                 else secondRecordStack.totalAmount,
-            toAmount = if (firstRecordStack.type == '>') secondRecordStack.totalAmount
+            toAmount = if (firstRecordStack.isOutTransfer()) secondRecordStack.totalAmount
                 else firstRecordStack.totalAmount
         ).let { accountList ->
             mergeAccountsList(accountList)
@@ -1089,87 +1107,64 @@ class AppViewModel(
         }
     }
 
-    private val _recordsTypeFilter: MutableStateFlow<RecordsTypeFilter> =
-        MutableStateFlow(RecordsTypeFilter.All)
-    val recordsTypeFilter: StateFlow<RecordsTypeFilter> = _recordsTypeFilter.asStateFlow()
 
-    fun changeRecordsTypeFilter(type: RecordsTypeFilter) {
-        _recordsTypeFilter.update { type }
-        updateWidgetsStatistic(recordStackList.value)
-    }
-
-
-    val filteredRecordStackList: StateFlow<List<RecordStack>> =
-        combine(
-            _recordStackList,
-            _dateRangeMenuUiState,
-            _accountsUiState,
-            _recordsTypeFilter
-        ) { thisRecordStackList, thisDateRangeMenuUiState, thisAccountsUiState, thisRecordsTypeFilter ->
-            thisRecordStackList.filter {
-                it.date in thisDateRangeMenuUiState.dateRangeState.fromPast..thisDateRangeMenuUiState.dateRangeState.toFuture &&
-                        it.accountId == thisAccountsUiState.activeAccount?.id &&
-                        (thisRecordsTypeFilter == RecordsTypeFilter.All ||
-                                thisRecordsTypeFilter == RecordsTypeFilter.Expenses && it.type == '-' ||
-                                thisRecordsTypeFilter == RecordsTypeFilter.Income && it.type == '+')
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
-
-
-    private val _widgetsUiState: MutableStateFlow<WidgetsUiState> = MutableStateFlow(WidgetsUiState())
-    val widgetsUiState: StateFlow<WidgetsUiState> = _widgetsUiState.asStateFlow()
-
-    private fun updateWidgetsStatistic(recordStackList: List<RecordStack>) {
+    val widgetsUiState = combine(
+        _dateRangeMenuUiState,
+        _accountsUiState,
+        _recordStackList,
+        categoriesUiState,
+        _appTheme
+    ) { dateRangeMenuUiState, accountsUiState, recordStackList, categoriesUiState, appTheme ->
         val expensesTotalForPeriod = getRecordsTotalAmount(
             recordStackList = recordStackList,
-            startDate = dateRangeMenuUiState.value.dateRangeState.fromPast,
-            endDate = dateRangeMenuUiState.value.dateRangeState.toFuture,
+            startDate = dateRangeMenuUiState.dateRangeState.fromPast,
+            endDate = dateRangeMenuUiState.dateRangeState.toFuture,
             type = RecordType.Expense
         )
         val incomeTotalForPeriod = getRecordsTotalAmount(
             recordStackList = recordStackList,
-            startDate = dateRangeMenuUiState.value.dateRangeState.fromPast,
-            endDate = dateRangeMenuUiState.value.dateRangeState.toFuture,
+            startDate = dateRangeMenuUiState.dateRangeState.fromPast,
+            endDate = dateRangeMenuUiState.dateRangeState.toFuture,
             type = RecordType.Income
         )
-        val totalForPeriod = expensesTotalForPeriod + incomeTotalForPeriod
-
-        _widgetsUiState.update {
-            val expensesPercentage = if (totalForPeriod != 0.0) {
-                (100 / totalForPeriod) * expensesTotalForPeriod
-            } else {
-                0.0
-            }
-            val incomePercentage = if (totalForPeriod != 0.0) {
-                (100 / totalForPeriod) * incomeTotalForPeriod
-            } else {
-                0.0
-            }
-            it.copy(
-                greetings = GreetingsWidgetUiState(
-                    titleRes = getGreetingsWidgetTitleRes(),
-                    expensesTotal = getRecordsTotalAmount(
-                        recordStackList = recordStackList,
-                        startDate = DateRangeController().getTodayDateLong(),
-                        endDate = DateRangeController().getTodayDateLong() + 2359,
-                        type = RecordType.Expense
-                    )
-                ),
-                expensesIncome = ExpensesIncomeWidgetUiState(
-                    expensesTotal = expensesTotalForPeriod,
-                    incomeTotal = incomeTotalForPeriod,
-                    expensesPercentage = expensesPercentage,
-                    incomePercentage = incomePercentage,
-                    expensesPercentageFloat = (expensesPercentage / 100).toFloat(),
-                    incomePercentageFloat = (incomePercentage / 100).toFloat()
-                ),
+        val expensesIncomePercentage = (expensesTotalForPeriod + incomeTotalForPeriod)
+            .let { if (it == 0.0) null else it }
+            ?.let {
+                (100 / it) * expensesTotalForPeriod to (100 / it) * incomeTotalForPeriod
+            } ?: (0.0 to 0.0)
+        WidgetsUiState(
+            greetings = GreetingsWidgetUiState(
+                titleRes = getGreetingsWidgetTitleRes(),
+                expensesTotal = getRecordsTotalAmount(
+                    recordStackList = recordStackList,
+                    startDate = DateRangeController().getTodayDateLong(),
+                    endDate = DateRangeController().getTodayDateLong() + 2359,
+                    type = RecordType.Expense
+                )
+            ),
+            expensesIncome = ExpensesIncomeWidgetUiState(
+                expensesTotal = expensesTotalForPeriod,
+                incomeTotal = incomeTotalForPeriod,
+                expensesPercentage = expensesIncomePercentage.first,
+                incomePercentage = expensesIncomePercentage.second,
+                expensesPercentageFloat = (expensesIncomePercentage.first / 100).toFloat(),
+                incomePercentageFloat = (expensesIncomePercentage.second / 100).toFloat()
+            ),
+            categoryStatisticsLists = CategoryController().getCategoriesStatistics(
+                recordStackList = filteredRecordStackList.value,
+                parentCategoriesLists = categoriesUiState.parentCategories,
+                subcategoriesLists = categoriesUiState.subcategories,
+                categoryIconNameToIconResMap = categoryIconNameToIconResMap,
+                categoryColorNameToColorMap = categoryColorNameToColorMap.value,
+                appTheme = appTheme,
+                accountCurrency = accountsUiState.activeAccount?.currency ?: ""
             )
-        }
-    }
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = WidgetsUiState()
+    )
 
     private fun getGreetingsWidgetTitleRes(): Int {
         return when (LocalDateTime.now().hour) {
@@ -1237,9 +1232,19 @@ data class AccountsUiState(
 )
 
 data class CategoriesUiState(
-    val parentCategories: ParentCategoriesLists = ParentCategoriesLists(emptyList(), emptyList()),
-    val subcategories: SubcategoriesLists = SubcategoriesLists(emptyList(), emptyList())
-)
+    val parentCategories: ParentCategoriesLists = ParentCategoriesLists(),
+    val subcategories: SubcategoriesLists = SubcategoriesLists()
+) {
+    fun getParCategoryListAndSubcategoryListsByType(
+        type: RecordType?
+    ): Pair<List<Category>, List<List<Category>>> {
+        return if (type == RecordType.Expense) {
+            parentCategories.expense to subcategories.expense
+        } else {
+            parentCategories.income to subcategories.income
+        }
+    }
+}
 
 data class DateRangeMenuUiState(
     val startCalendarDateMillis: Long,
@@ -1257,11 +1262,41 @@ data class MadeTransferState(
     val finalAmount: Double,
     val dateTimeState: DateTimeState = DateTimeState(),
     val recordNum: Int
-)
+) {
+    fun toRecordsPair(): Pair<Record, Record> {
+        return Pair(
+            Record(
+                id = idFrom,
+                recordNum = recordNum,
+                date = dateTimeState.dateLong,
+                type = '>',
+                amount = startAmount,
+                quantity = null,
+                categoryId = 0,
+                subcategoryId = null,
+                accountId = fromAccount.id,
+                note = toAccount.id.toString()
+            ),
+            Record(
+                id = idTo,
+                recordNum = recordNum + 1,
+                date = dateTimeState.dateLong,
+                type = '<',
+                amount = finalAmount,
+                quantity = null,
+                categoryId = 0,
+                subcategoryId = null,
+                accountId = toAccount.id,
+                note = fromAccount.id.toString()
+            )
+        )
+    }
+}
 
 data class WidgetsUiState(
     val greetings: GreetingsWidgetUiState = GreetingsWidgetUiState(),
-    val expensesIncome: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState()
+    val expensesIncome: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
+    val categoryStatisticsLists: CategoryStatisticsLists = CategoryStatisticsLists()
 )
 
 data class GreetingsWidgetUiState(
@@ -1306,5 +1341,75 @@ data class ExpensesIncomeWidgetUiState(
     }
     fun getIncomeTotalFormatted(): String {
         return getFormattedNumberWithSpaces(incomeTotal)
+    }
+}
+
+data class CategoryStatisticsLists(
+    val expense: List<CategoryStatisticsElementUiState> = emptyList(),
+    val income: List<CategoryStatisticsElementUiState> = emptyList()
+)
+
+data class CategoriesStatsMapItem(
+    val category: Category,
+    var totalAmount: Double = 0.0
+) {
+
+    fun toCategoryStatisticsElementUiState(
+        categoryIconNameToIconResMap: Map<String, Int>,
+        categoryColorNameToColorMap: Map<String, Colors>,
+        appTheme: AppTheme?,
+        accountCurrency: String,
+        allCategoriesTotalAmount: Double,
+        subcategoriesStatistics: MutableMap<Int, CategoriesStatsMapItem>? = null
+    ): CategoryStatisticsElementUiState {
+        return CategoryStatisticsElementUiState(
+            categoryId = category.id,
+            categoryName = category.name,
+            categoryIconRes = categoryIconNameToIconResMap[category.iconName],
+            categoryColor = categoryColorNameToColorMap[category.colorName]?.lightAndDark ?:
+                CategoryColors.GrayDefault(appTheme).color.lightAndDark,
+            totalAmount = getFormattedTotalAmount(),
+            currency = accountCurrency,
+            percentage = getPercentage(allCategoriesTotalAmount),
+            subcategoriesStatisticsUiState = subcategoriesStatistics?.values
+                ?.sortedByDescending { it.totalAmount }
+                ?.map {
+                    it.toCategoryStatisticsElementUiState(
+                        categoryIconNameToIconResMap = categoryIconNameToIconResMap,
+                        categoryColorNameToColorMap = categoryColorNameToColorMap,
+                        appTheme = appTheme,
+                        accountCurrency = accountCurrency,
+                        allCategoriesTotalAmount = totalAmount
+                    )
+                }
+        )
+    }
+
+    private fun getFormattedTotalAmount(): String {
+        return "%.2f".format(Locale.US, totalAmount)
+    }
+
+    private fun getPercentage(allCategoriesTotalAmount: Double): Float {
+        return if (allCategoriesTotalAmount != 0.0) {
+            ((100 / allCategoriesTotalAmount) * totalAmount).toFloat()
+        } else {
+            0.0f
+        }
+    }
+
+}
+
+data class CategoryStatisticsElementUiState(
+    val categoryId: Int,
+    val categoryName: String,
+    val categoryIconRes: Int?,
+    val categoryColor: LighterDarkerColors,
+    val totalAmount: String,
+    val currency: String,
+    val percentage: Float,
+    val subcategoriesStatisticsUiState: List<CategoryStatisticsElementUiState>? = null
+) {
+    fun getFormattedPercentage(): String {
+        return "%.2f".format(Locale.US, percentage) + "%"
     }
 }

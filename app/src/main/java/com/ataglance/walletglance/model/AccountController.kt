@@ -15,7 +15,7 @@ class AccountController {
             name = account.name,
             currency = account.currency,
             balance = account.balance.toString(),
-            color = account.color,
+            colorName = account.color,
             hide = account.hide,
             hideBalance = account.hideBalance,
             withoutBalance = account.withoutBalance,

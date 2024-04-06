@@ -73,48 +73,60 @@ data class AccountColorsByTheme(
     ),
 )
 
-sealed class AccountColors(val name: AccountColorName, val color: LighterDarkerColors) {
+sealed class AccountColors(val color: Colors) {
     data class Default(val appTheme: AppTheme) : AccountColors(
-        AccountColorName.Default,
-        when(appTheme) {
-            AppTheme.LightDefault -> AccountColorsByTheme().light.default
-            AppTheme.DarkDefault -> AccountColorsByTheme().dark.default
-        }
+        Colors(
+            AccountColorName.Default.name,
+            when(appTheme) {
+                AppTheme.LightDefault -> AccountColorsByTheme().light.default
+                AppTheme.DarkDefault -> AccountColorsByTheme().dark.default
+            }
+        )
     )
     data class Pink(val appTheme: AppTheme) : AccountColors(
-        AccountColorName.Pink,
-        when(appTheme) {
-            AppTheme.LightDefault -> AccountColorsByTheme().light.pink
-            AppTheme.DarkDefault -> AccountColorsByTheme().dark.pink
-        }
+        Colors(
+            AccountColorName.Pink.name,
+            when(appTheme) {
+                AppTheme.LightDefault -> AccountColorsByTheme().light.pink
+                AppTheme.DarkDefault -> AccountColorsByTheme().dark.pink
+            }
+        )
     )
     data class Blue(val appTheme: AppTheme) : AccountColors(
-        AccountColorName.Blue,
-        when(appTheme) {
-            AppTheme.LightDefault -> AccountColorsByTheme().light.blue
-            AppTheme.DarkDefault -> AccountColorsByTheme().dark.blue
-        }
+        Colors(
+            AccountColorName.Blue.name,
+            when(appTheme) {
+                AppTheme.LightDefault -> AccountColorsByTheme().light.blue
+                AppTheme.DarkDefault -> AccountColorsByTheme().dark.blue
+            }
+        )
     )
     data class Camel(val appTheme: AppTheme) : AccountColors(
-        AccountColorName.Camel,
-        when(appTheme) {
-            AppTheme.LightDefault -> AccountColorsByTheme().light.camel
-            AppTheme.DarkDefault -> AccountColorsByTheme().dark.camel
-        }
+        Colors(
+            AccountColorName.Camel.name,
+            when(appTheme) {
+                AppTheme.LightDefault -> AccountColorsByTheme().light.camel
+                AppTheme.DarkDefault -> AccountColorsByTheme().dark.camel
+            }
+        )
     )
     data class Green(val appTheme: AppTheme) : AccountColors(
-        AccountColorName.Green,
-        when(appTheme) {
-            AppTheme.LightDefault -> AccountColorsByTheme().light.green
-            AppTheme.DarkDefault -> AccountColorsByTheme().dark.green
-        }
+        Colors(
+            AccountColorName.Green.name,
+            when(appTheme) {
+                AppTheme.LightDefault -> AccountColorsByTheme().light.green
+                AppTheme.DarkDefault -> AccountColorsByTheme().dark.green
+            }
+        )
     )
     data class Red(val appTheme: AppTheme) : AccountColors(
-        AccountColorName.Red,
-        when(appTheme) {
-            AppTheme.LightDefault -> AccountColorsByTheme().light.red
-            AppTheme.DarkDefault -> AccountColorsByTheme().dark.red
-        }
+        Colors(
+            AccountColorName.Red.name,
+            when(appTheme) {
+                AppTheme.LightDefault -> AccountColorsByTheme().light.red
+                AppTheme.DarkDefault -> AccountColorsByTheme().dark.red
+            }
+        )
     )
 }
 
@@ -132,7 +144,7 @@ private fun AccountCardPreview() {
             modifier = Modifier.fillMaxSize()
         )
         AccountCard(
-            account = Account(color = AccountColors.Red(AppTheme.LightDefault).name.name),
+            account = Account(color = AccountColors.Red(AppTheme.LightDefault).color.name),
             appTheme = AppTheme.LightDefault,
             todayExpenses = 0.0
         )

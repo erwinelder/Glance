@@ -13,6 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Category
+import com.ataglance.walletglance.model.Colors
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.EditSubcategoryListContainer
 
@@ -21,6 +22,7 @@ fun EditSubcategoryListScreen(
     scaffoldPadding: PaddingValues,
     subcategoryList: List<Category>,
     categoryNameAndIconMap: Map<String, Int>,
+    categoryColorNameToColorMap: Map<String, Colors>,
     onSaveButton: () -> Unit,
     onNavigateToEditCategoryScreen: (Int) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
@@ -38,6 +40,7 @@ fun EditSubcategoryListScreen(
         EditSubcategoryListContainer(
             subcategoryList = subcategoryList,
             categoryNameAndIconMap = categoryNameAndIconMap,
+            categoryColorNameToColorMap = categoryColorNameToColorMap,
             onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
             onSwapCategories = onSwapCategories,
             onAddNewSubcategory = onAddNewSubcategory

@@ -1,26 +1,13 @@
 package com.ataglance.walletglance.ui.theme.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,10 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,18 +34,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.AccountColorName
 import com.ataglance.walletglance.model.AccountColors
 import com.ataglance.walletglance.model.AccountController
 import com.ataglance.walletglance.model.EditAccountUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.ui.theme.uielements.buttons.ColorButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.fields.FieldLabel
+import com.ataglance.walletglance.ui.theme.uielements.pickers.ColorPicker
 import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
 
 @Composable
@@ -67,7 +55,7 @@ fun EditAccountScreen(
     uiState: EditAccountUiState,
     appTheme: AppTheme?,
     showDeleteAccountButton: Boolean,
-    onColorChange: (AccountColorName) -> Unit,
+    onColorChange: (String) -> Unit,
     onNameChange: (String) -> Unit,
     onNavigateToCurrencyPickerWindow: () -> Unit,
     onBalanceChange: (String) -> Unit,
@@ -78,7 +66,7 @@ fun EditAccountScreen(
     onDeleteButton: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val showColorPicker = remember { mutableStateOf(false) }
+    var showColorPicker by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -116,8 +104,12 @@ fun EditAccountScreen(
                             .verticalScroll(scrollState)
                             .padding(horizontal = 12.dp, vertical = 24.dp)
                     ) {
-                        ColorButton(uiState.color, appTheme) {
-                            showColorPicker.value = true
+                        ColorButton(
+                            color = AccountController().getAccountAndOnAccountColor(
+                                uiState.colorName, appTheme
+                            ).first.lighter
+                        ) {
+                            showColorPicker = true
                         }
                         CustomTextFieldWithLabel(
                             text = uiState.name,
@@ -158,46 +150,23 @@ fun EditAccountScreen(
         }
 
         if (appTheme != null) {
-            AccountColorPicker(
-                visible = showColorPicker.value,
-                appTheme = appTheme,
-                onColorChange = {
-                    onColorChange(it)
-                },
+            ColorPicker(
+                visible = showColorPicker,
+                colorList = listOf(
+                    AccountColors.Default(appTheme).color,
+                    AccountColors.Pink(appTheme).color,
+                    AccountColors.Blue(appTheme).color,
+                    AccountColors.Camel(appTheme).color,
+                    AccountColors.Red(appTheme).color,
+                    AccountColors.Green(appTheme).color
+                ),
+                onColorClick = onColorChange,
                 onPickerClose = {
-                    showColorPicker.value = false
+                    showColorPicker = false
                 }
             )
         }
 
-    }
-}
-
-@Composable
-private fun ColorButton(
-    colorName: String,
-    appTheme: AppTheme?,
-    onClick: () -> Unit
-) {
-    val color by animateColorAsState(
-        targetValue = AccountController().getAccountAndOnAccountColor(
-            colorName, appTheme
-        ).first.lighter,
-        label = "account color picker button color"
-    )
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        FieldLabel(text = stringResource(R.string.color))
-        Spacer(
-            modifier = Modifier
-                .bounceClickEffect(.97f, onClick = onClick)
-                .clip(RoundedCornerShape(15.dp))
-                .background(color)
-                .size(70.dp, 42.dp)
-        )
     }
 }
 
@@ -232,74 +201,6 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
                 tint = GlanceTheme.onSurface,
                 modifier = Modifier.size(20.dp)
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun AccountColorPicker(
-    visible: Boolean,
-    appTheme: AppTheme,
-    onColorChange: (AccountColorName) -> Unit,
-    onPickerClose: () -> Unit
-) {
-    val accountColors = listOf(
-        AccountColors.Default(appTheme),
-        AccountColors.Pink(appTheme),
-        AccountColors.Blue(appTheme),
-        AccountColors.Camel(appTheme),
-        AccountColors.Red(appTheme),
-        AccountColors.Green(appTheme)
-    )
-
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(tween(300)),
-        exit = fadeOut(tween(300))
-    ) {
-        Box(
-            modifier = Modifier
-                .clickable { onPickerClose() }
-                .fillMaxSize()
-                .background(Color.Black.copy(.2f))
-        )
-    }
-    AnimatedVisibility(
-        visible = visible,
-        enter = scaleIn(
-            initialScale = .5f
-        ) + slideInHorizontally { (it * 1.25).toInt() },
-        exit = scaleOut(
-            targetScale = .5f
-        ) + slideOutHorizontally { (it * 1.25).toInt() },
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                .background(GlanceTheme.background)
-                .fillMaxWidth(.8f)
-                .padding(12.dp)
-        ) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                accountColors.forEach { color ->
-                    Spacer(
-                        modifier = Modifier
-                            .bounceClickEffect(.97f) {
-                                onColorChange(color.name)
-                                onPickerClose()
-                            }
-                            .clip(RoundedCornerShape(dimensionResource(R.dimen.field_corners)))
-                            .fillMaxWidth(.22f)
-                            .aspectRatio(1.4f, false)
-                            .background(color.color.lighter)
-                    )
-                }
-            }
         }
     }
 }

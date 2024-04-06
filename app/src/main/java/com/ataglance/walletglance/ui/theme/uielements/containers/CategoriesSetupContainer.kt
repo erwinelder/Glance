@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,11 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.CategoryType
+import com.ataglance.walletglance.model.Colors
 import com.ataglance.walletglance.model.SetupCategoriesUiState
-import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
-import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.categories.ParentCategorySetupElement
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -38,6 +37,7 @@ import com.ataglance.walletglance.ui.theme.uielements.categories.ParentCategoryS
 fun ColumnScope.CategoriesSetupContainer(
     uiState: SetupCategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
+    categoryColorNameToColorMap: Map<String, Colors>,
     onShowCategoriesByType: (CategoryType) -> Unit,
     onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
     onNavigateToEditCategoryScreen: (Int) -> Unit,
@@ -48,21 +48,10 @@ fun ColumnScope.CategoriesSetupContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.weight(1f)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth(if (WindowTypeIsCompact) .82f else .56f)
-        ) {
-            BarButton(
-                onClick = { onShowCategoriesByType(CategoryType.Income) },
-                active = uiState.categoryTypeToShow == CategoryType.Income,
-                text = stringResource(R.string.income_plural)
-            )
-            BarButton(
-                onClick = { onShowCategoriesByType(CategoryType.Expense) },
-                active = uiState.categoryTypeToShow == CategoryType.Expense,
-                text = stringResource(R.string.expenses)
-            )
-        }
+        CategoryTypeFilterBar(
+            currentCategoryType = uiState.categoryTypeToShow,
+            onClick = onShowCategoriesByType
+        )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.button_bar_to_widget_gap)))
         GlassSurface(
             modifier = Modifier.weight(1f),
@@ -93,6 +82,7 @@ fun ColumnScope.CategoriesSetupContainer(
                             ParentCategorySetupElement(
                                 category = category,
                                 iconRes = categoryNameAndIconMap[category.iconName],
+                                color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
                                 onNavigateToEditSubcategoryListScreen = {
                                     onNavigateToEditSubcategoryListScreen(category.orderNum)
                                 },
@@ -120,6 +110,7 @@ fun ColumnScope.CategoriesSetupContainer(
                                 ParentCategorySetupElement(
                                     category = category,
                                     iconRes = categoryNameAndIconMap[category.iconName],
+                                    color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
                                     onNavigateToEditSubcategoryListScreen = {
                                         onNavigateToEditSubcategoryListScreen(category.orderNum)
                                     },

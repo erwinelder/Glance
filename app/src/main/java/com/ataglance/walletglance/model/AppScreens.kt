@@ -13,17 +13,21 @@ enum class MakeRecordStatus {
 }
 
 enum class AppScreenRoutes {
-    Home, Records, MakeRecord, MakeTransfer, Settings, FinishSetup
+    Home, Records, CategoriesStatistics, MakeRecord, MakeTransfer, Settings, FinishSetup
 }
-sealed class AppScreen(val route: String, @DrawableRes val iconRes: Int) {
-    data object Home : AppScreen(AppScreenRoutes.Home.name, R.drawable.home_filled_icon)
-    data object Records : AppScreen(AppScreenRoutes.Records.name, R.drawable.home_filled_icon)
-    data object MakeRecord : AppScreen(AppScreenRoutes.MakeRecord.name, R.drawable.make_record_icon)
-    data object MakeTransfer : AppScreen(AppScreenRoutes.MakeTransfer.name, R.drawable.ic_launcher_background)
-    data object Settings : AppScreen(AppScreenRoutes.Settings.name, R.drawable.settings_filled_icon)
-    data object FinishSetup : AppScreen(AppScreenRoutes.FinishSetup.name, R.drawable.ic_launcher_background)
+sealed class AppScreen(val route: String) {
+    data object Home : AppScreen(AppScreenRoutes.Home.name)
+    data object Records : AppScreen(AppScreenRoutes.Records.name)
+    data object CategoriesStatistics : AppScreen(AppScreenRoutes.CategoriesStatistics.name)
+    data object MakeRecord : AppScreen(AppScreenRoutes.MakeRecord.name)
+    data object MakeTransfer : AppScreen(AppScreenRoutes.MakeTransfer.name)
+    data object Settings : AppScreen(AppScreenRoutes.Settings.name)
+    data object FinishSetup : AppScreen(AppScreenRoutes.FinishSetup.name)
 }
 
+enum class CategoryStatisticsScreenArgs {
+    ParentCategoryId
+}
 enum class EditAccountScreenArgs {
     OrderNum
 }

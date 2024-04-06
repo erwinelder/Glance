@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Category
+import com.ataglance.walletglance.model.Colors
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.SubcategorySetupElement
@@ -34,6 +35,7 @@ import com.ataglance.walletglance.ui.theme.uielements.categories.SubcategorySetu
 fun ColumnScope.EditSubcategoryListContainer(
     subcategoryList: List<Category>,
     categoryNameAndIconMap: Map<String, Int>,
+    categoryColorNameToColorMap: Map<String, Colors>,
     onNavigateToEditCategoryScreen: (Int) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
     onAddNewSubcategory: () -> Unit
@@ -65,6 +67,7 @@ fun ColumnScope.EditSubcategoryListContainer(
                             SubcategorySetupElement(
                                 category = category,
                                 iconRes = categoryNameAndIconMap[category.iconName],
+                                color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
                                 onEditButton = {
                                     onNavigateToEditCategoryScreen(category.orderNum)
                                 },
@@ -89,6 +92,7 @@ fun ColumnScope.EditSubcategoryListContainer(
                                 SubcategorySetupElement(
                                     category = category,
                                     iconRes = categoryNameAndIconMap[category.iconName],
+                                    color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
                                     onEditButton = {
                                         onNavigateToEditCategoryScreen(category.orderNum)
                                     },
