@@ -35,12 +35,12 @@ import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
 fun RecordHistory(
     recordStackList: List<RecordStack>,
     appTheme: AppTheme?,
-    recordsTypeFilter: RecordsTypeFilter,
     getCategoryAndIcon: (Int, Int?, RecordType?) -> Pair<Category?, Int?>?,
     getAccount: (Int) -> Account?,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    recordsTypeFilter: RecordsTypeFilter = RecordsTypeFilter.All,
     filledWidth: Float? = null,
     title: String = ""
 ) {
@@ -68,7 +68,7 @@ fun RecordHistory(
                 )
             }
             AnimatedContent(
-                targetState = recordStackList to recordsTypeFilter,
+                targetState = Pair(recordStackList, recordsTypeFilter),
                 label = "records history widget content"
             ) { targetRecordStackListAndTypeFilter ->
                 LazyColumn(
@@ -81,30 +81,29 @@ fun RecordHistory(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = modifier.fillMaxWidth()
                 ) {
-                    if (targetRecordStackListAndTypeFilter.first.isNotEmpty()) {
-                        items(
-                            items = targetRecordStackListAndTypeFilter.first,
-                            key = { it.recordNum }
-                        ) { recordStack ->
-                            if (RecordController().isTransfer(recordStack.type)) {
-                                TransferComponent(
-                                    recordStack = recordStack,
-                                    includeYearToDate = includeYearToRecordDate,
-                                    appTheme = appTheme,
-                                    getAccount = getAccount,
-                                    onTransferClick = onTransferClick
-                                )
-                            } else {
-                                RecordStackComponent(
-                                    recordStack = recordStack,
-                                    includeYearToDate = includeYearToRecordDate,
-                                    getCategoryAndIcon = getCategoryAndIcon,
-                                    getAccount = getAccount,
-                                    onRecordClick = onRecordClick
-                                )
-                            }
+                    items(
+                        items = targetRecordStackListAndTypeFilter.first,
+                        key = { it.recordNum }
+                    ) { recordStack ->
+                        if (recordStack.isTransfer()) {
+                            TransferComponent(
+                                recordStack = recordStack,
+                                includeYearToDate = includeYearToRecordDate,
+                                appTheme = appTheme,
+                                getAccount = getAccount,
+                                onTransferClick = onTransferClick
+                            )
+                        } else {
+                            RecordStackComponent(
+                                recordStack = recordStack,
+                                includeYearToDate = includeYearToRecordDate,
+                                getCategoryAndIcon = getCategoryAndIcon,
+                                getAccount = getAccount,
+                                onRecordClick = onRecordClick
+                            )
                         }
-                    } else {
+                    }
+                    if (targetRecordStackListAndTypeFilter.first.isEmpty()) {
                         item {
                             EmptyRecordsHistoryMessageContainer(
                                 targetRecordStackListAndTypeFilter.second
