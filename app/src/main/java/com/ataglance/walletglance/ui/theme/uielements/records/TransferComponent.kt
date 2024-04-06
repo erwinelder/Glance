@@ -19,12 +19,11 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.model.AccountController
 import com.ataglance.walletglance.model.DateRangeController
-import com.ataglance.walletglance.model.RecordController
 import com.ataglance.walletglance.model.RecordStack
-import com.ataglance.walletglance.model.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
+import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 
 @Composable
 fun TransferComponent(
@@ -34,7 +33,6 @@ fun TransferComponent(
     getAccount: (Int) -> Account?,
     onTransferClick: (Int) -> Unit
 ) {
-    val type = RecordController().recordTypeCharToRecordType(recordStack.type)
     val transferFirstPairAccount = getAccount(recordStack.accountId)
     val transferSecondPairAccount = recordStack.stack.firstOrNull()?.note?.let { note ->
         getAccount(note.toInt())
@@ -43,7 +41,7 @@ fun TransferComponent(
         AccountController().getAccountAndOnAccountColor(transferSecondPairAccount.color, appTheme)
     } ?: Pair(LighterDarkerColors(), Color.White)
 
-    RecordContainer({ onTransferClick(recordStack.recordNum) }) {
+    GlassSurfaceOnGlassSurface(onClick = { onTransferClick(recordStack.recordNum) }) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -69,7 +67,7 @@ fun TransferComponent(
         ) {
             Text(
                 text = stringResource(
-                    if (type == RecordType.Expense) R.string.to_account_meaning
+                    if (recordStack.isOutTransfer()) R.string.to_account_meaning
                     else R.string.from_account_meaning
                 ),
                 color = GlanceTheme.onSurface,

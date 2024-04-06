@@ -18,10 +18,10 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.data.Category
 import com.ataglance.walletglance.model.DateRangeController
-import com.ataglance.walletglance.model.RecordController
 import com.ataglance.walletglance.model.RecordStack
 import com.ataglance.walletglance.model.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 
 @Composable
 fun RecordStackComponent(
@@ -33,7 +33,7 @@ fun RecordStackComponent(
 ) {
     val account = getAccount(recordStack.accountId)
 
-    RecordContainer({ onRecordClick(recordStack.recordNum) }) {
+    GlassSurfaceOnGlassSurface(onClick = { onRecordClick(recordStack.recordNum) }) {
         // date
         Text(
             text = DateRangeController().convertDateLongToDayMonthYear(recordStack.date, includeYearToDate),
@@ -64,7 +64,7 @@ fun RecordStackComponent(
                         categoryAndIconRes = getCategoryAndIcon(
                             recordStackUnit.categoryId,
                             recordStackUnit.subcategoryId,
-                            RecordController().recordTypeCharToRecordType(recordStack.type)
+                            recordStack.getRecordType()
                         )
                     )
                 }
