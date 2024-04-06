@@ -81,7 +81,7 @@ class SetupCategoriesViewModel : ViewModel() {
             orderNum = listSize + 1,
             parentCategoryId = parentCategoryId,
             name = name,
-            iconName = "",
+            iconName = "other",
             colorName = CategoryColors.GrayDefault(null).color.name
         )
     }
