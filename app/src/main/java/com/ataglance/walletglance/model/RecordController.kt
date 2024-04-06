@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.model
 
 import com.ataglance.walletglance.data.Account
-import com.ataglance.walletglance.data.Category
 import com.ataglance.walletglance.data.Record
 import java.util.Locale
 
@@ -11,24 +10,13 @@ enum class RecordType {
 
 class RecordController {
 
-    private fun Record.toRecordStackUnit(): RecordStackUnit {
-        return RecordStackUnit(
-            id = this.id,
-            amount = this.amount,
-            quantity = this.quantity,
-            categoryId = this.categoryId,
-            subcategoryId = this.subcategoryId,
-            note = this.note
-        )
-    }
-
-    fun getLastUsedCategoryPairByAccountId(accountId: Int, recordStackList: List<RecordStack>): Pair<Int, Int?>? {
-        recordStackList.forEach { recordStack ->
-            if (recordStack.accountId == accountId) {
-                return recordStack.stack.first().categoryId to recordStack.stack.first().subcategoryId
-            }
+    fun getLastUsedCategoryPairByAccountId(
+        accountId: Int,
+        recordStackList: List<RecordStack>
+    ): Pair<Int, Int?>? {
+        return recordStackList.find { it.accountId == accountId }?.stack?.firstOrNull()?.let {
+            it.categoryId to it.subcategoryId
         }
-        return null
     }
 
     fun includeYearToRecordDate(recordStackList: List<RecordStack>): Boolean {
@@ -39,10 +27,6 @@ class RecordController {
         }
     }
 
-    fun isTransfer(type: Char): Boolean {
-        return type == '>' || type == '<'
-    }
-
     private fun getStartAndFinalRateByAmounts(
         startAmount: Double,
         finalAmount: Double
@@ -51,34 +35,6 @@ class RecordController {
             1.0 to finalAmount / startAmount
         } else {
             startAmount / finalAmount to 1.0
-        }
-    }
-
-    private fun getParCategoryListAndSubcategoryListsByType(
-        type: RecordType?,
-        categoriesUiState: CategoriesUiState
-    ): Pair<List<Category>, List<List<Category>>> {
-        return if (
-            type == RecordType.Expense
-        ) {
-            categoriesUiState.parentCategories.expense
-        } else {
-            categoriesUiState.parentCategories.income
-        } to
-                if (
-                    type == RecordType.Expense
-                ) {
-                    categoriesUiState.subcategories.expense
-                } else {
-                    categoriesUiState.subcategories.income
-                }
-    }
-
-    fun recordTypeCharToRecordType(type: Char): RecordType? {
-        return when (type) {
-            '-', '>' -> RecordType.Expense
-            '+', '<' -> RecordType.Income
-            else -> null
         }
     }
 
@@ -111,123 +67,6 @@ class RecordController {
         return recordStackList
     }
 
-    fun convertRecordStackToRecordList(recordStack: RecordStack): List<Record> {
-        return recordStack.stack.map { unit ->
-            Record(
-                id = unit.id,
-                recordNum = recordStack.recordNum,
-                date = recordStack.date,
-                type = recordStack.type,
-                accountId = recordStack.accountId,
-                amount = unit.amount,
-                quantity = unit.quantity,
-                categoryId = unit.categoryId,
-                subcategoryId = unit.subcategoryId,
-                note = unit.note
-            )
-        }
-    }
-
-    fun convertMakeRecordStateAndUnitListToRecordList(
-        uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>,
-        lastRecordNum: Int
-    ): List<Record> {
-        val recordList = mutableListOf<Record>()
-
-        unitList.forEach { unit ->
-            if (uiState.account != null && unit.category != null) {
-                recordList.add(
-                    Record(
-                        recordNum = uiState.recordNum ?: (lastRecordNum + 1),
-                        date = uiState.dateTimeState.dateLong,
-                        type = if (uiState.type == RecordType.Expense) '-' else '+',
-                        amount = if (unit.quantity.isNotBlank()) {
-                            "%.2f".format(
-                                Locale.US,
-                                unit.amount.toDouble() * unit.quantity.toInt()
-                            ).toDouble()
-                        } else {
-                            unit.amount.toDouble()
-                        },
-                        quantity = unit.quantity.ifBlank { null }?.toInt(),
-                        categoryId = unit.category.id,
-                        subcategoryId = unit.subcategory?.id,
-                        accountId = uiState.account.id,
-                        note = unit.note.ifBlank { null }
-                    )
-                )
-            }
-        }
-
-        return recordList
-    }
-
-    fun convertMakeRecordStateAndUnitListToRecordListWithOldIds(
-        uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>,
-        recordStack: RecordStack
-    ): List<Record> {
-        val recordList = mutableListOf<Record>()
-
-        unitList.forEach { unit ->
-            if (uiState.account != null && unit.category != null) {
-                recordList.add(
-                    Record(
-                        id = recordStack.stack[unit.index].id,
-                        recordNum = recordStack.recordNum,
-                        date = uiState.dateTimeState.dateLong,
-                        type = if (uiState.type == RecordType.Expense) '-' else '+',
-                        amount = if (unit.quantity.isNotBlank()) {
-                            "%.2f".format(
-                                Locale.US,
-                                unit.amount.toDouble() * unit.quantity.toInt()
-                            ).toDouble()
-                        } else {
-                            unit.amount.toDouble()
-                        },
-                        quantity = unit.quantity.ifBlank { null }?.toInt(),
-                        categoryId = unit.category.id,
-                        subcategoryId = unit.subcategory?.id,
-                        accountId = uiState.account.id,
-                        note = unit.note.ifBlank { null }
-                    )
-                )
-            }
-        }
-
-        return recordList
-    }
-
-    fun convertMadeTransferStateToRecordsPair(uiState: MadeTransferState): Pair<Record, Record> {
-        return Pair(
-            Record(
-                id = uiState.idFrom,
-                recordNum = uiState.recordNum,
-                date = uiState.dateTimeState.dateLong,
-                type = '>',
-                amount = uiState.startAmount,
-                quantity = null,
-                categoryId = 0,
-                subcategoryId = null,
-                accountId = uiState.fromAccount.id,
-                note = uiState.toAccount.id.toString()
-            ),
-            Record(
-                id = uiState.idTo,
-                recordNum = uiState.recordNum + 1,
-                date = uiState.dateTimeState.dateLong,
-                type = '<',
-                amount = uiState.finalAmount,
-                quantity = null,
-                categoryId = 0,
-                subcategoryId = null,
-                accountId = uiState.toAccount.id,
-                note = uiState.fromAccount.id.toString()
-            )
-        )
-    }
-
     fun convertRecordStackToMakeRecordStateAndUnitList(
         makeRecordStatus: String?,
         recordNum: Int?,
@@ -245,14 +84,11 @@ class RecordController {
                     recordStatus = MakeRecordStatus.Edit,
                     recordNum = recordStack.recordNum,
                     account = AccountController().getAccountById(it.accountId, accountList),
-                    type = recordTypeCharToRecordType(it.type) ?: RecordType.Expense,
+                    type = recordStack.getRecordType() ?: RecordType.Expense,
                     dateTimeState = DateTimeController().getNewDateByRecordLongDate(it.date)
-                ) to convertRecordStackUnitListToMakeRecordUnitList(
-                    recordStackUnitList = recordStack.stack,
-                    categoryListAndSubcategoryLists = getParCategoryListAndSubcategoryListsByType(
-                        recordTypeCharToRecordType(recordStack.type),
-                        categoriesUiState
-                    )
+                ) to recordStack.stackToMakeRecordUnitList(
+                    categoriesUiState
+                        .getParCategoryListAndSubcategoryListsByType(recordStack.getRecordType())
                 )
             }
         }
@@ -263,42 +99,6 @@ class RecordController {
             account = activeAccount
         ) to null
 
-    }
-
-    private fun convertRecordStackUnitListToMakeRecordUnitList(
-        recordStackUnitList: List<RecordStackUnit>,
-        categoryListAndSubcategoryLists: Pair<List<Category>, List<List<Category>>>
-    ): List<MakeRecordUnitUiState> {
-        val makeRecordUnitList = mutableListOf<MakeRecordUnitUiState>()
-
-        recordStackUnitList.forEach { unit ->
-            makeRecordUnitList.add(
-                MakeRecordUnitUiState(
-                    index = makeRecordUnitList.lastIndex + 1,
-                    category = CategoryController().getParCategoryFromList(
-                        id = unit.categoryId,
-                        list = categoryListAndSubcategoryLists.first
-                    ),
-                    subcategory = unit.subcategoryId?.let { subcategoryId ->
-                        CategoryController().getCategoryOrderNumById(
-                            id = unit.categoryId,
-                            list = categoryListAndSubcategoryLists.first
-                        )?.let { parCategoryOrderNum ->
-                            CategoryController().getSubcategByParCategOrderNumFromLists(
-                                subcategoryId = subcategoryId,
-                                parentCategoryOrderNum = parCategoryOrderNum,
-                                lists = categoryListAndSubcategoryLists.second
-                            )
-                        }
-                    },
-                    note = unit.note ?: "",
-                    amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
-                    quantity = unit.quantity?.toString() ?: ""
-                )
-            )
-        }
-
-        return makeRecordUnitList
     }
 
     fun convertRecordStackToMakeTransferState(
@@ -312,13 +112,13 @@ class RecordController {
 
             val firstRecordStack = recordStackList.find { it.recordNum == recordNum }
             val secondRecordStack = recordStackList.find {
-                it.recordNum == recordNum + if (firstRecordStack?.type == '>') 1 else -1
+                it.recordNum == recordNum + if (firstRecordStack?.isOutTransfer() == true) 1 else -1
             }
             val recordStackFrom = firstRecordStack?.let {
-                if (firstRecordStack.type == '>') firstRecordStack else secondRecordStack
+                if (firstRecordStack.isOutTransfer()) firstRecordStack else secondRecordStack
             }
             val recordStackTo = firstRecordStack?.let {
-                if (firstRecordStack.type == '>') secondRecordStack else firstRecordStack
+                if (firstRecordStack.isOutTransfer()) secondRecordStack else firstRecordStack
             }
 
             if (recordStackFrom != null && recordStackTo != null) {
@@ -374,9 +174,9 @@ class RecordController {
         transferList.forEach { transfer ->
             recordList.add(
                 transfer.copy(
-                    type = if (transfer.type == '>') '-' else '+',
-                    categoryId = if (transfer.type == '>') 12 else 77,
-                    subcategoryId = if (transfer.type == '>') 66 else null
+                    type = if (transfer.isOutTransfer()) '-' else '+',
+                    categoryId = if (transfer.isOutTransfer()) 12 else 77,
+                    subcategoryId = if (transfer.isOutTransfer()) 66 else null
                 )
             )
         }

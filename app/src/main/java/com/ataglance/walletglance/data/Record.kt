@@ -2,6 +2,7 @@ package com.ataglance.walletglance.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ataglance.walletglance.model.RecordStackUnit
 
 @Entity(tableName = "Record")
 data class Record(
@@ -16,4 +17,18 @@ data class Record(
     val categoryId: Int,
     val subcategoryId: Int?,
     val note: String?
-)
+) {
+
+    fun isOutTransfer(): Boolean { return type == '>' }
+
+    fun toRecordStackUnit(): RecordStackUnit {
+        return RecordStackUnit(
+            id = this.id,
+            amount = this.amount,
+            quantity = this.quantity,
+            categoryId = this.categoryId,
+            subcategoryId = this.subcategoryId,
+            note = this.note
+        )
+    }
+}
