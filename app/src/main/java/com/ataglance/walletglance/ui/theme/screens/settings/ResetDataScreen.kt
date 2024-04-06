@@ -1,19 +1,12 @@
 package com.ataglance.walletglance.ui.theme.screens.settings
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -22,11 +15,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,18 +36,7 @@ fun SettingsDataScreen(
     onExportData: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val backgroundRedColorStep = remember { mutableIntStateOf(0) }
-    val fillPercent by animateFloatAsState(
-        targetValue = when (backgroundRedColorStep.intValue) {
-            0 -> 0f
-                1 -> .25f
-                2 -> .5f
-                3 -> .75f
-                else -> 1f
-        },
-        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMediumLow),
-        label = "resetting progress bar"
-    )
+    var resetStep by remember { mutableIntStateOf(0) }
     val job: MutableState<Job?> = remember { mutableStateOf(null) }
 
     Column(
@@ -66,26 +46,34 @@ fun SettingsDataScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
-        ResetDataBlock(fillPercent) {
+        ResetDataBlock(
+            showPrompt = resetStep == 1,
+            onResetDataConfirm = onResetData,
+            onResetDataCancel = {
+                job.value?.cancel()
+                resetStep = 0
+            }
+        ) {
             job.value?.cancel()
 
-            backgroundRedColorStep.intValue ++
-            if (backgroundRedColorStep.intValue > 3) {
-                onResetData()
-            }
+            resetStep ++
 
             job.value = coroutineScope.launch {
-                delay(1200)
-                backgroundRedColorStep.intValue = 0
+                delay(5000)
+                resetStep = 0
             }
         }
-//        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-private fun ResetDataBlock(fillPercent: Float, onResetData: () -> Unit) {
-    GlassSurface {
+private fun ResetDataBlock(
+    showPrompt: Boolean,
+    onResetDataConfirm: () -> Unit,
+    onResetDataCancel: () -> Unit,
+    onResetDataButton: () -> Unit,
+) {
+    GlassSurface(filledWidth = 1f) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -93,53 +81,52 @@ private fun ResetDataBlock(fillPercent: Float, onResetData: () -> Unit) {
                 .fillMaxWidth()
                 .padding(horizontal = 22.dp, vertical = 18.dp)
         ) {
-            AnimatedVisibility(visible = fillPercent > 0) {
-                ProgressBar(progress = fillPercent)
-            }
-            Text(
-                text = stringResource(R.string.reset_data_description),
-                fontSize = 17.sp,
-                color = GlanceTheme.onSurface,
-                textAlign = TextAlign.Center
-            )
-            SmallPrimaryButton(
-                text = stringResource(R.string.reset_data),
-                enabledGradientColor = GlanceTheme.errorGradientLightToDark,
-                onClick = onResetData,
-            )
-        }
-    }
-}
-
-@Composable
-private fun ProgressBar(progress: Float) {
-    val firstGradientColor by animateColorAsState(
-        targetValue = GlanceTheme.error,
-        label = "resetting progress bar color"
-    )
-    val secondGradientColor = Color(
-        red = firstGradientColor.red.minus(.2f),
-        green = firstGradientColor.green.minus(.2f),
-        blue = firstGradientColor.blue.minus(.2f)
-    )
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(50))
-            .fillMaxWidth()
-            .background(GlanceTheme.onSurfaceVariant)
-    ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(50))
-                .background(
-                    brush = Brush.horizontalGradient(
-                        listOf(secondGradientColor, firstGradientColor)
+            AnimatedContent(
+                targetState = showPrompt,
+                label = "reset data description"
+            ) { targetShowPrompt ->
+                if (targetShowPrompt) {
+                    Text(
+                        text = stringResource(R.string.reset_data_warning),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
                     )
-                )
-                .fillMaxWidth(progress)
-                .height(16.dp)
-        )
+                } else {
+                    Text(
+                        text = stringResource(R.string.reset_data_description),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            AnimatedContent(
+                targetState = showPrompt,
+                label = "reset data buttons"
+            ) { targetShowPrompt ->
+                if (targetShowPrompt) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        SmallPrimaryButton(
+                            text = stringResource(R.string.yes),
+                            enabledGradientColor = GlanceTheme.errorGradientLightToDark,
+                            onClick = onResetDataConfirm,
+                        )
+                        SmallPrimaryButton(
+                            text = stringResource(R.string.no),
+                            enabledGradientColor = GlanceTheme.errorGradientLightToDark,
+                            onClick = onResetDataCancel,
+                        )
+                    }
+                } else {
+                    SmallPrimaryButton(
+                        text = stringResource(R.string.reset_data),
+                        enabledGradientColor = GlanceTheme.errorGradientLightToDark,
+                        onClick = onResetDataButton,
+                    )
+                }
+            }
+        }
     }
 }
 
