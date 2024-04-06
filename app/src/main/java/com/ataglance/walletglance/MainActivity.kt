@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                                     AppTheme.LightDefault -> {
                                         Image(
                                             painter = painterResource(R.drawable.main_background_light),
-                                            contentDescription = "application background",
+                                            contentDescription = "application light background",
                                             contentScale = ContentScale.FillBounds,
                                             modifier = Modifier.fillMaxSize()
                                         )
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                                     AppTheme.DarkDefault -> {
                                         Image(
                                             painter = painterResource(R.drawable.main_background_dark),
-                                            contentDescription = "application background",
+                                            contentDescription = "application dark background",
                                             contentScale = ContentScale.FillBounds,
                                             modifier = Modifier.fillMaxSize()
                                         )
