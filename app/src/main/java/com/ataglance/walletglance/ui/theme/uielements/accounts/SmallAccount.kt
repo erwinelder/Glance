@@ -116,7 +116,7 @@ fun SmallAccount(
                             .background(
                                 if (
                                     appTheme != null &&
-                                    account.color == AccountColors.Default(appTheme).name.name
+                                    account.color == AccountColors.Default(appTheme).color.name
                                 ) {
                                     GlanceTheme.background.copy(.07f)
                                 } else {
