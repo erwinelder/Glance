@@ -1,5 +1,7 @@
 package com.ataglance.walletglance.model
 
+import com.ataglance.walletglance.data.Category
+import com.ataglance.walletglance.data.Record
 import java.util.Locale
 
 data class RecordStack(
@@ -10,6 +12,75 @@ data class RecordStack(
     val totalAmount: Double,
     val stack: List<RecordStackUnit>
 ) {
+
+    fun isExpense(): Boolean { return type == '-' }
+    fun isIncome(): Boolean { return type == '+' }
+    fun isOutTransfer(): Boolean { return type == '>' }
+    private fun isInTransfer(): Boolean { return type == '<' }
+    fun isExpenseOrOutTransfer(): Boolean { return isExpense() || isOutTransfer() }
+    fun isIncomeOrInTransfer(): Boolean { return isIncome() || isInTransfer() }
+    fun isTransfer(): Boolean { return isOutTransfer() || isInTransfer() }
+
+    fun getRecordType(): RecordType? {
+        return when (type) {
+            '-', '>' -> RecordType.Expense
+            '+', '<' -> RecordType.Income
+            else -> null
+        }
+    }
+
+    fun toRecordList(): List<Record> {
+        return stack.map { unit ->
+            Record(
+                id = unit.id,
+                recordNum = recordNum,
+                date = date,
+                type = type,
+                accountId = accountId,
+                amount = unit.amount,
+                quantity = unit.quantity,
+                categoryId = unit.categoryId,
+                subcategoryId = unit.subcategoryId,
+                note = unit.note
+            )
+        }
+    }
+
+    fun stackToMakeRecordUnitList(
+        categoryListAndSubcategoryLists: Pair<List<Category>, List<List<Category>>>
+    ): List<MakeRecordUnitUiState> {
+        val makeRecordUnitList = mutableListOf<MakeRecordUnitUiState>()
+
+        stack.forEach { unit ->
+            makeRecordUnitList.add(
+                MakeRecordUnitUiState(
+                    index = makeRecordUnitList.lastIndex + 1,
+                    category = CategoryController().getParCategoryFromList(
+                        id = unit.categoryId,
+                        list = categoryListAndSubcategoryLists.first
+                    ),
+                    subcategory = unit.subcategoryId?.let { subcategoryId ->
+                        CategoryController().getCategoryOrderNumById(
+                            id = unit.categoryId,
+                            list = categoryListAndSubcategoryLists.first
+                        )?.let { parCategoryOrderNum ->
+                            CategoryController().getSubcategByParCategOrderNumFromLists(
+                                subcategoryId = subcategoryId,
+                                parentCategoryOrderNum = parCategoryOrderNum,
+                                lists = categoryListAndSubcategoryLists.second
+                            )
+                        }
+                    },
+                    note = unit.note ?: "",
+                    amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
+                    quantity = unit.quantity?.toString() ?: ""
+                )
+            )
+        }
+
+        return makeRecordUnitList
+    }
+
     fun getFormattedAmountWithSpaces(currency: String?): String {
         var numberString = "%.2f".format(Locale.US, totalAmount)
         var formattedNumber = numberString.let {
@@ -28,10 +99,11 @@ data class RecordStack(
             }
         }
 
-        val sign = if (RecordController().recordTypeCharToRecordType(type) == RecordType.Expense)
-            '-' else '+'
+        val sign = if (isExpenseOrOutTransfer()) '-' else '+'
+
         return "%c %s %s".format(sign, formattedNumber, currency)
     }
+
 }
 
 data class RecordStackUnit(
