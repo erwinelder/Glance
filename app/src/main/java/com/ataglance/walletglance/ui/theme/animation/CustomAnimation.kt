@@ -42,9 +42,9 @@ class CustomAnimation {
 
 
     fun widgetEnterTransition(delayMillis: Int = 0): EnterTransition {
-        return fadeIn(tween(400, delayMillis)) +
-                slideInVertically(tween(400, delayMillis)) { -(it*0.2).toInt() } +
-                scaleIn(animationSpec = tween(400, delayMillis), initialScale = .6f)
+        return fadeIn(tween(300, delayMillis)) +
+                slideInVertically(tween(300, delayMillis)) { -(it*0.2).toInt() } +
+                scaleIn(animationSpec = tween(300, delayMillis), initialScale = .6f)
     }
 
 }

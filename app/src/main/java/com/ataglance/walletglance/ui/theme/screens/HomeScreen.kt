@@ -131,13 +131,14 @@ private fun CompactLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            WidgetAnimatedContainer(appTheme != null) {
+            WidgetAnimatedContainer(appTheme != null, 50) {
                 GreetingsMessage(widgetsUiState.greetings.titleRes)
             }
         }
         item {
             WidgetAnimatedContainer(
-                appTheme != null && accountsUiState.activeAccount != null
+                appTheme != null && accountsUiState.activeAccount != null,
+                delayMillis = 100
             ) {
                 AccountCard(
                     account = accountsUiState.activeAccount!!,
@@ -148,7 +149,7 @@ private fun CompactLayout(
             }
         }
         item {
-            WidgetAnimatedContainer(appTheme != null) {
+            WidgetAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncome,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
@@ -157,7 +158,7 @@ private fun CompactLayout(
             }
         }
         item {
-            WidgetAnimatedContainer(appTheme != null) {
+            WidgetAnimatedContainer(appTheme != null, 200) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -190,7 +191,7 @@ private fun CompactLayout(
             }
         }
         item {
-            WidgetAnimatedContainer(appTheme != null) {
+            WidgetAnimatedContainer(appTheme != null, 250) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -251,11 +252,12 @@ private fun ExpandedLayout(
             Column(
                 modifier = Modifier.fillMaxWidth(.42f)
             ) {
-                WidgetAnimatedContainer(appTheme != null) {
+                WidgetAnimatedContainer(appTheme != null, 50) {
                     GreetingsMessage(widgetsUiState.greetings.titleRes)
                 }
                 WidgetAnimatedContainer(
-                    appTheme != null && accountsUiState.activeAccount != null
+                    appTheme != null && accountsUiState.activeAccount != null,
+                    delayMillis = 100
                 ) {
                     AccountCard(
                         account = accountsUiState.activeAccount!!,
@@ -265,7 +267,7 @@ private fun ExpandedLayout(
                     )
                 }
             }
-            WidgetAnimatedContainer(appTheme != null) {
+            WidgetAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncome,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
@@ -274,7 +276,7 @@ private fun ExpandedLayout(
             }
         }
 
-        WidgetAnimatedContainer(appTheme != null) {
+        WidgetAnimatedContainer(appTheme != null, 200) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -306,7 +308,7 @@ private fun ExpandedLayout(
             }
         }
 
-        WidgetAnimatedContainer(appTheme != null) {
+        WidgetAnimatedContainer(appTheme != null, 250) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -329,11 +331,12 @@ private fun ExpandedLayout(
 @Composable
 fun WidgetAnimatedContainer(
     visible: Boolean,
+    delayMillis: Int = 0,
     content: @Composable () -> Unit
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = CustomAnimation().widgetEnterTransition(),
+        enter = CustomAnimation().widgetEnterTransition(delayMillis),
     ) {
         content()
     }
