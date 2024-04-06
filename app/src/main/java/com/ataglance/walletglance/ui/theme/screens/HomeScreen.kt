@@ -31,13 +31,13 @@ import com.ataglance.walletglance.model.DateRangeEnum
 import com.ataglance.walletglance.model.DateRangeMenuUiState
 import com.ataglance.walletglance.model.RecordStack
 import com.ataglance.walletglance.model.RecordType
-import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.model.WidgetsUiState
 import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.AppMainTopBar
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.uielements.buttons.NavigationTextArrowButton
+import com.ataglance.walletglance.ui.theme.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.ui.theme.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.ui.theme.widgets.GreetingsMessage
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistory
@@ -48,7 +48,6 @@ fun HomeScreen(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    recordsTypeFilter: RecordsTypeFilter,
     filteredRecordStackList: List<RecordStack>,
     categoriesUiState: CategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
@@ -59,15 +58,13 @@ fun HomeScreen(
     onCustomDateRangeButtonClick: () -> Unit,
     onTopBarAccountClick: (Int) -> Unit,
     onNavigateToRecordsScreen: () -> Unit,
+    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
-            AnimatedVisibility(
-                visible = appTheme != null,
-                enter = CustomAnimation().widgetEnterTransition(),
-            ) {
+            WidgetAnimatedContainer(appTheme != null) {
                 AppMainTopBar(
                     accountList = accountsUiState.accountList.filter { !it.hide },
                     currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
@@ -87,13 +84,13 @@ fun HomeScreen(
             appTheme = appTheme,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
-            recordsTypeFilter = recordsTypeFilter,
             filteredRecordStackList = filteredRecordStackList,
             categoriesUiState = categoriesUiState,
             categoryNameAndIconMap = categoryNameAndIconMap,
             widgetsUiState = widgetsUiState,
             onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
             onNavigateToRecordsScreen = onNavigateToRecordsScreen,
+            onNavigateToCategoriesStatisticsScreen = onNavigateToCategoriesStatisticsScreen,
             onRecordClick = onRecordClick,
             onTransferClick = onTransferClick
         )
@@ -107,7 +104,6 @@ private fun CompactLayout(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    recordsTypeFilter: RecordsTypeFilter,
     filteredRecordStackList: List<RecordStack>,
     categoriesUiState: CategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
@@ -115,6 +111,7 @@ private fun CompactLayout(
     onChangeHideActiveAccountBalance: () -> Unit,
     onNavigateToRecordsScreen: () -> Unit,
     onRecordClick: (Int) -> Unit,
+    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -134,17 +131,13 @@ private fun CompactLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            AnimatedVisibility(
-                visible = appTheme != null,
-                enter = CustomAnimation().widgetEnterTransition(),
-            ) {
+            WidgetAnimatedContainer(appTheme != null) {
                 GreetingsMessage(widgetsUiState.greetings.titleRes)
             }
         }
         item {
-            AnimatedVisibility(
-                visible = appTheme != null && accountsUiState.activeAccount != null,
-                enter = CustomAnimation().widgetEnterTransition(),
+            WidgetAnimatedContainer(
+                appTheme != null && accountsUiState.activeAccount != null
             ) {
                 AccountCard(
                     account = accountsUiState.activeAccount!!,
@@ -155,23 +148,16 @@ private fun CompactLayout(
             }
         }
         item {
-            AnimatedVisibility(
-                visible = appTheme != null,
-                enter = CustomAnimation().widgetEnterTransition(),
-            ) {
+            WidgetAnimatedContainer(appTheme != null) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncome,
-                    appTheme = appTheme,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
                     accountCurrency = accountsUiState.activeAccount?.currency ?: ""
                 )
             }
         }
         item {
-            AnimatedVisibility(
-                visible = appTheme != null,
-                enter = CustomAnimation().widgetEnterTransition(),
-            ) {
+            WidgetAnimatedContainer(appTheme != null) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -179,7 +165,6 @@ private fun CompactLayout(
                     RecordHistory(
                         recordStackList = filteredRecordStackList.take(3),
                         appTheme = appTheme,
-                        recordsTypeFilter = recordsTypeFilter,
                         getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
                             CategoryController().getCategoryAndIconRes(
                                 categoriesUiState = categoriesUiState,
@@ -204,6 +189,24 @@ private fun CompactLayout(
                 }
             }
         }
+        item {
+            WidgetAnimatedContainer(appTheme != null) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    CategoriesStatisticsWidget(
+                        uiState = widgetsUiState.categoryStatisticsLists,
+                        onNavigateToCategoriesStatisticsScreen =
+                            onNavigateToCategoriesStatisticsScreen
+                    )
+                    NavigationTextArrowButton(
+                        text = stringResource(R.string.view_all),
+                        onClick = { onNavigateToCategoriesStatisticsScreen(0) }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -214,7 +217,6 @@ private fun ExpandedLayout(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    recordsTypeFilter: RecordsTypeFilter,
     filteredRecordStackList: List<RecordStack>,
     categoriesUiState: CategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
@@ -222,6 +224,7 @@ private fun ExpandedLayout(
     onChangeHideActiveAccountBalance: () -> Unit,
     onNavigateToRecordsScreen: () -> Unit,
     onRecordClick: (Int) -> Unit,
+    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -248,54 +251,90 @@ private fun ExpandedLayout(
             Column(
                 modifier = Modifier.fillMaxWidth(.42f)
             ) {
-                GreetingsMessage(widgetsUiState.greetings.titleRes)
-                accountsUiState.activeAccount?.let {
+                WidgetAnimatedContainer(appTheme != null) {
+                    GreetingsMessage(widgetsUiState.greetings.titleRes)
+                }
+                WidgetAnimatedContainer(
+                    appTheme != null && accountsUiState.activeAccount != null
+                ) {
                     AccountCard(
-                        account = it,
+                        account = accountsUiState.activeAccount!!,
                         appTheme = appTheme,
                         todayExpenses = widgetsUiState.greetings.expensesTotal,
                         onHideBalanceButton = onChangeHideActiveAccountBalance
                     )
                 }
             }
-            ExpensesIncomeWidget(
-                uiState = widgetsUiState.expensesIncome,
-                appTheme = appTheme,
-                dateRangeState = dateRangeMenuUiState.dateRangeState,
-                accountCurrency = accountsUiState.activeAccount?.currency ?: ""
-            )
+            WidgetAnimatedContainer(appTheme != null) {
+                ExpensesIncomeWidget(
+                    uiState = widgetsUiState.expensesIncome,
+                    dateRangeState = dateRangeMenuUiState.dateRangeState,
+                    accountCurrency = accountsUiState.activeAccount?.currency ?: ""
+                )
+            }
         }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            RecordHistory(
-                recordStackList = filteredRecordStackList.take(3),
-                appTheme = appTheme,
-                recordsTypeFilter = recordsTypeFilter,
-                getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    CategoryController().getCategoryAndIconRes(
-                        categoriesUiState = categoriesUiState,
-                        categoryNameAndIconMap = categoryNameAndIconMap,
-                        categoryId = categoryId,
-                        subcategoryId = subcategoryId,
-                        recordType = type
-                    )
-                },
-                getAccount = { accountId: Int ->
-                    AccountController().getAccountById(accountId, accountsUiState.accountList)
-                },
-                onRecordClick = onRecordClick,
-                onTransferClick = onTransferClick,
-                modifier = Modifier.height(370.dp),
-                title = stringResource(R.string.recent)
-            )
-            NavigationTextArrowButton(
-                text = stringResource(R.string.view_all),
-                onClick = onNavigateToRecordsScreen
-            )
+        WidgetAnimatedContainer(appTheme != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RecordHistory(
+                    recordStackList = filteredRecordStackList.take(3),
+                    appTheme = appTheme,
+                    getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
+                        CategoryController().getCategoryAndIconRes(
+                            categoriesUiState = categoriesUiState,
+                            categoryNameAndIconMap = categoryNameAndIconMap,
+                            categoryId = categoryId,
+                            subcategoryId = subcategoryId,
+                            recordType = type
+                        )
+                    },
+                    getAccount = { accountId: Int ->
+                        AccountController().getAccountById(accountId, accountsUiState.accountList)
+                    },
+                    onRecordClick = onRecordClick,
+                    onTransferClick = onTransferClick,
+                    modifier = Modifier.height(370.dp),
+                    title = stringResource(R.string.recent)
+                )
+                NavigationTextArrowButton(
+                    text = stringResource(R.string.view_all),
+                    onClick = onNavigateToRecordsScreen
+                )
+            }
         }
 
+        WidgetAnimatedContainer(appTheme != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CategoriesStatisticsWidget(
+                    uiState = widgetsUiState.categoryStatisticsLists,
+                    onNavigateToCategoriesStatisticsScreen =
+                        onNavigateToCategoriesStatisticsScreen
+                )
+                NavigationTextArrowButton(
+                    text = stringResource(R.string.view_all),
+                    onClick = { onNavigateToCategoriesStatisticsScreen(0) }
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+fun WidgetAnimatedContainer(
+    visible: Boolean,
+    content: @Composable () -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = CustomAnimation().widgetEnterTransition(),
+    ) {
+        content()
     }
 }
