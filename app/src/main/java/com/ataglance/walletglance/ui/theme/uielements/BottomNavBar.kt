@@ -1,9 +1,13 @@
 package com.ataglance.walletglance.ui.theme.uielements
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,30 +37,49 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.AppScreen
+import com.ataglance.walletglance.model.BottomBarButtons
 import com.ataglance.walletglance.model.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.theme.AppTheme
 
 @Composable
 fun BottomNavBar(
+    appTheme: AppTheme?,
     isAppSetUp: Boolean,
     navBackStackEntry: NavBackStackEntry?,
     navigateBack: () -> Unit,
     onNavigationButton: (String) -> Unit,
     onMakeRecordButtonClick: () -> Unit,
 ) {
-    val appScreensList = listOf(
-        AppScreen.Home,
+    val bottomBarButtonList = listOf(
+        Pair(
+            BottomBarButtons.HomeInactive(appTheme),
+            BottomBarButtons.HomeActive(appTheme)
+        ),
+        Pair(
+            BottomBarButtons.RecordsInactive(appTheme),
+            BottomBarButtons.RecordsActive(appTheme)
+        ),
         null,
-        AppScreen.Settings
+        Pair(
+            BottomBarButtons.CategoriesStatisticsInactive(appTheme),
+            BottomBarButtons.CategoriesStatisticsActive(appTheme)
+        ),
+        Pair(
+            BottomBarButtons.SettingsInactive(appTheme),
+            BottomBarButtons.SettingsActive(appTheme)
+        )
     )
-    val currentScreen = navBackStackEntry?.destination?.route
+    val currentScreenRoute = navBackStackEntry?.destination?.route
 
     AnimatedVisibility(
         visible = isAppSetUp &&
-                (currentScreen == AppScreen.Home.route ||
-                        currentScreen == SettingsScreen.SettingsHome.route ||
-                        currentScreen == SettingsScreen.Language.route),
+                (currentScreenRoute == AppScreen.Home.route ||
+                currentScreenRoute == AppScreen.Records.route ||
+                currentScreenRoute?.startsWith(AppScreen.CategoriesStatistics.route) == true ||
+                currentScreenRoute == SettingsScreen.SettingsHome.route ||
+                currentScreenRoute == SettingsScreen.Language.route),
         enter = slideInVertically { (it * 1.5).toInt() },
         exit = slideOutVertically { (it * 1.5).toInt() }
     ) {
@@ -69,7 +91,7 @@ fun BottomNavBar(
                 .padding(bottom = 12.dp)
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(28.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .shadow(
@@ -86,41 +108,41 @@ fun BottomNavBar(
                     )
                     .padding(vertical = 16.dp, horizontal = 28.dp)
             ) {
-                appScreensList.forEach { item ->
+                bottomBarButtonList.forEach { item ->
                     if (item != null) {
-                        val iconColor by animateColorAsState(
-                            targetValue = if (navBackStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true) {
-                                GlanceTheme.primary
-                            } else {
-                                GlanceTheme.onSurface
-                            },
-                            label = "bottom bar icon color"
-                        )
-                        Icon(
-                            painter = painterResource(item.iconRes),
-                            contentDescription = item.route,
-                            tint = iconColor,
-                            modifier = Modifier
-                                .bounceClickEffect(.97f) {
-                                    if (
-                                        item == AppScreen.Settings &&
-                                        (currentScreen == SettingsScreen.Language.route ||
-                                                currentScreen == SettingsScreen.Appearance.route)
-                                    ) {
-                                        navigateBack()
-                                    } else {
-                                        onNavigationButton(item.route)
+                        AnimatedContent(
+                            targetState = if (
+                                navBackStackEntry?.destination?.hierarchy?.any {
+                                    it.route?.startsWith(item.first.relatedScreen.route) == true
+                                } == true
+                            ) item.second else item.first,
+                            transitionSpec = { fadeIn() togetherWith fadeOut() },
+                            label = "bottom bar icon + ${item.first.route}"
+                        ) { bottomBarButton ->
+                            Image(
+                                painter = painterResource(bottomBarButton.iconRes),
+                                contentDescription = bottomBarButton.route,
+                                modifier = Modifier
+                                    .bounceClickEffect(.97f) {
+                                        if (
+                                            bottomBarButton.route == AppScreen.Settings.route &&
+                                            currentScreenRoute == SettingsScreen.Language.route
+                                        ) {
+                                            navigateBack()
+                                        } else {
+                                            onNavigationButton(bottomBarButton.route)
+                                        }
                                     }
-                                }
-                                .size(36.dp)
-                        )
+                                    .size(36.dp)
+                            )
+                        }
                     } else {
-                        Spacer(modifier = Modifier.width(50.dp))
+                        Spacer(modifier = Modifier.width(60.dp))
                     }
                 }
             }
             Box(
-                modifier = Modifier.absoluteOffset(y = -(24).dp)
+                modifier = Modifier.absoluteOffset(y = -(20).dp)
             ) {
                 IconButton(
                     onClick = onMakeRecordButtonClick,
