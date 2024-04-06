@@ -31,6 +31,8 @@
     <string name="other">Інший</string>
     <string name="view_all">Все</string>
     <string name="recent">Недавні</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
 
     <!-- Settings categories -->
     <string name="accounts">Рахунки</string>
@@ -126,10 +128,12 @@
     <string name="new_subcategory_name">Нова підкатегорія</string>
     <string name="category_not_found">Категорія не знайдена</string>
     <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>
+    <string name="reset_data_warning">Ви впевнені, що хочете скинути всі дані?</string>
     <string name="export_data_description">Експортувати дані програми до файла.</string>
-    <string name="you_have_no_records_in_date_range">У вас немає записів за цей період.</string>
-    <string name="you_have_no_expenses_in_date_range">У вас немає витрат за цей період.</string>
-    <string name="you_have_no_income_in_date_range">У вас немає доходів за цей період.</string>
+    <string name="you_have_no_records_in_date_range">У вас немає записів за цей період</string>
+    <string name="you_have_no_expenses_in_date_range">У вас немає витрат за цей період</string>
+    <string name="you_have_no_income_in_date_range">У вас немає доходів за цей період</string>
+    <string name="no_data_for_the_selected_filter">Немає даних для обраного фільтра</string>
 
 
 

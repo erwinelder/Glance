@@ -31,6 +31,8 @@
     <string name="other">Anderer</string>
     <string name="view_all">Alle</string>
     <string name="recent">Letzte</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 
     <!-- Settings categories -->
     <string name="accounts">Konten</string>
@@ -126,10 +128,12 @@
     <string name="new_subcategory_name">Neue Unterkategorie</string>
     <string name="category_not_found">Kategorie wurde nicht gefunden</string>
     <string name="reset_data_description">Setzen Sie alle App-Daten zurück, einschließlich Konten, Datensätze, Kategorien und Einstellungen.</string>
+    <string name="reset_data_warning">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
     <string name="export_data_description">App-Daten in eine Datei exportieren.</string>
-    <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum.</string>
-    <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum.</string>
-    <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum.</string>
+    <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum</string>
+    <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum</string>
+    <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum</string>
+    <string name="no_data_for_the_selected_filter">Keine Daten für den ausgewählten Filter vorhanden</string>
 
 
 

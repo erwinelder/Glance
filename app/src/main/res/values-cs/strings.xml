@@ -31,6 +31,8 @@
     <string name="other">Jiný</string>
     <string name="view_all">Vše</string>
     <string name="recent">Nedávné</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
 
     <!-- Settings categories -->
     <string name="accounts">Účty</string>
@@ -126,10 +128,12 @@
     <string name="new_subcategory_name">Nová podkategorie</string>
     <string name="category_not_found">Kategorie nebyla nalezena</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
+    <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>
     <string name="export_data_description">Exportovat data aplikace do souboru.</string>
-    <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období.</string>
-    <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období.</string>
-    <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období.</string>
+    <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období</string>
+    <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
+    <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>
+    <string name="no_data_for_the_selected_filter">Žádná data pro vybraný filtr</string>
 
 
 
