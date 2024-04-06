@@ -13,7 +13,9 @@ data class GlanceColors(
     val onGlassSurfaceBorder: Color,
     val glassGradientLightToDark: Pair<Color, Color>,
     val disabledGradientLightToDark: Pair<Color, Color>,
-    val errorGradientLightToDark: Pair<Color, Color>
+    val errorGradientLightToDark: Pair<Color, Color>,
+    val greenGradientPaleToSaturated: Pair<Color, Color>,
+    val redGradientPaleToSaturated: Pair<Color, Color>
 ) {
     val primary: Color get() = material.primary
     val onPrimary: Color get() = material.onPrimary

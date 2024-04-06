@@ -89,6 +89,14 @@ val md_theme_light_default_errorGradientLightToDark = Pair(
     Color(206, 53, 53),
     Color(119, 36, 36)
 )
+val md_theme_light_default_green = Pair(
+    Color(173, 207, 153),
+    Color(151, 192, 127)
+)
+val md_theme_light_default_red = Pair(
+    Color(203, 139, 137),
+    Color(201, 104, 98)
+)
 
 val md_theme_dark_default_primary = Color(154, 92, 128)
 val md_theme_dark_default_onPrimary = Color(0xFFE7D4E1)
@@ -149,6 +157,14 @@ val md_theme_dark_default_errorGradientLightToDark = Pair(
     Color(177, 55, 55),
     Color(104, 33, 33)
 )
+val md_theme_dark_default_green = Pair(
+    Color(78, 107, 58, 255),
+    Color(107, 163, 72, 255)
+)
+val md_theme_dark_default_red = Pair(
+    Color(107, 44, 44, 255),
+    Color(158, 56, 51, 255)
+)
 
 val md_theme_dark_blue_primary = Color(0xFFB15E8B)
 val md_theme_dark_blue_onPrimary = Color(0xFFE7D4E1)
@@ -208,6 +224,14 @@ val md_theme_dark_blue_disabledGradientLightToDark = Pair(
 val md_theme_dark_blue_errorGradientLightToDark = Pair(
     Color(184, 59, 59),
     Color(136, 44, 44)
+)
+val md_theme_dark_blue_green = Pair(
+    Color(78, 107, 58, 255),
+    Color(107, 163, 72, 255)
+)
+val md_theme_dark_blue_red = Pair(
+    Color(107, 44, 44, 255),
+    Color(158, 56, 51, 255)
 )
 
 

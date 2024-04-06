@@ -59,7 +59,9 @@ private val LightDefaultPalette = GlanceColors(
     onGlassSurfaceBorder = md_theme_light_default_onGlassSurfaceBorder,
     glassGradientLightToDark = md_theme_light_default_glassGradientLightToDark,
     disabledGradientLightToDark = md_theme_light_default_disabledGradientLightToDark,
-    errorGradientLightToDark = md_theme_light_default_errorGradientLightToDark
+    errorGradientLightToDark = md_theme_light_default_errorGradientLightToDark,
+    greenGradientPaleToSaturated = md_theme_light_default_green,
+    redGradientPaleToSaturated = md_theme_light_default_red
 )
 
 private val DarkDefaultPalette = GlanceColors(
@@ -102,7 +104,9 @@ private val DarkDefaultPalette = GlanceColors(
     onGlassSurfaceBorder = md_theme_dark_default_onGlassSurfaceBorder,
     glassGradientLightToDark = md_theme_dark_default_glassGradientLightToDark,
     disabledGradientLightToDark = md_theme_dark_default_disabledGradientLightToDark,
-    errorGradientLightToDark = md_theme_dark_default_errorGradientLightToDark
+    errorGradientLightToDark = md_theme_dark_default_errorGradientLightToDark,
+    greenGradientPaleToSaturated = md_theme_dark_default_green,
+    redGradientPaleToSaturated = md_theme_dark_default_red
 )
 
 private val DarkBluePalette = GlanceColors(
@@ -145,7 +149,9 @@ private val DarkBluePalette = GlanceColors(
     onGlassSurfaceBorder = md_theme_dark_blue_onGlassSurfaceBorder,
     glassGradientLightToDark = md_theme_dark_blue_glassGradientLightToDark,
     disabledGradientLightToDark = md_theme_dark_blue_disabledGradientLightToDark,
-    errorGradientLightToDark = md_theme_dark_blue_errorGradientLightToDark
+    errorGradientLightToDark = md_theme_dark_blue_errorGradientLightToDark,
+    greenGradientPaleToSaturated = md_theme_dark_blue_green,
+    redGradientPaleToSaturated = md_theme_dark_blue_red
 )
 
 private val LocalColors = staticCompositionLocalOf { LightDefaultPalette }
