@@ -1,12 +1,17 @@
-package com.ataglance.walletglance.ui.theme.screens.settings
+package com.ataglance.walletglance.ui.theme.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -27,21 +32,26 @@ import com.ataglance.walletglance.ui.theme.widgets.RecordHistory
 @Composable
 fun RecordsScreen(
     scaffoldAppScreenPadding: PaddingValues,
-    accountList: List<Account>,
-    filteredRecordStackList: List<RecordStack>,
     appTheme: AppTheme?,
+    accountList: List<Account>,
+    recordStackList: List<RecordStack>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    recordsTypeFilter: RecordsTypeFilter,
-    onRecordsTypeFilterChange: (RecordsTypeFilter) -> Unit,
     getCategoryAndIcon: (Int, Int?, RecordType?) -> Pair<Category?, Int?>?,
     getAccount: (Int) -> Account?,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
+    var recordsType by remember { mutableStateOf(RecordsTypeFilter.All) }
+    val filteredRecordStackList = when (recordsType) {
+        RecordsTypeFilter.All -> recordStackList
+        RecordsTypeFilter.Expenses -> recordStackList.filter { it.isExpenseOrOutTransfer() }
+        RecordsTypeFilter.Income -> recordStackList.filter { it.isIncomeOrInTransfer() }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.button_bar_to_widget_gap)),
@@ -49,10 +59,11 @@ fun RecordsScreen(
             .fillMaxWidth()
             .padding(
                 top = scaffoldAppScreenPadding.calculateTopPadding() +
+                        dimensionResource(R.dimen.button_bar_to_widget_gap),
+                bottom = scaffoldAppScreenPadding.calculateBottomPadding() +
                         dimensionResource(R.dimen.screen_vertical_padding),
-                bottom = 20.dp,
-                start = 12.dp,
-                end = 12.dp
+                start = 16.dp,
+                end = 16.dp
             )
     ) {
         SmallAccountsContainer(
@@ -67,13 +78,16 @@ fun RecordsScreen(
             onCustomDateRangeButtonClick = onCustomDateRangeButtonClick
         )
         RecordsTypeFilterBar(
-            currentTypeFiler = recordsTypeFilter,
-            onClick = onRecordsTypeFilterChange
+            currentTypeFiler = recordsType,
+            onClick = {
+                recordsType = it
+            }
         )
+        Spacer(modifier = Modifier)
         RecordHistory(
             recordStackList = filteredRecordStackList,
             appTheme = appTheme,
-            recordsTypeFilter = recordsTypeFilter,
+            recordsTypeFilter = recordsType,
             getCategoryAndIcon = getCategoryAndIcon,
             getAccount = getAccount,
             onRecordClick = onRecordClick,
