@@ -88,12 +88,14 @@ private fun ResetDataBlock(
                 if (targetShowPrompt) {
                     Text(
                         text = stringResource(R.string.reset_data_warning),
+                        color = GlanceTheme.onSurface,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center
                     )
                 } else {
                     Text(
                         text = stringResource(R.string.reset_data_description),
+                        color = GlanceTheme.onSurface,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center
                     )
