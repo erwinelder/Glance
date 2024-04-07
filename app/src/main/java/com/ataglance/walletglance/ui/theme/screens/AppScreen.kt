@@ -113,10 +113,10 @@ fun AppScreen(
                 screenRouteNavigateTo != AppScreen.Settings.route
             )
         ) {
-            navBackStackEntry?.destination?.route?.let { currentRoute ->
+//            navBackStackEntry?.destination?.route?.let { currentRoute ->
 //                moveScreenTowardsLeft =
 //                    appViewModel.needToMoveScreenTowardsLeft(currentRoute, screenRouteNavigateTo)
-            }
+//            }
             navController.navigate(screenRouteNavigateTo) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     inclusive = false
@@ -525,7 +525,6 @@ fun HomeNavHost(
             }
         }
         setupGraph(
-            openScreenFromRight = moveScreenTowardsLeft,
             navController = navController,
             startDestination = startSettingsDestination,
             scaffoldPadding = scaffoldPadding,
@@ -556,7 +555,6 @@ fun HomeNavHost(
 
 
 fun NavGraphBuilder.setupGraph(
-    openScreenFromRight: Boolean,
     navController: NavHostController,
     startDestination: String,
     scaffoldPadding: PaddingValues,
