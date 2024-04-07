@@ -505,7 +505,7 @@ class SetupCategoriesViewModel : ViewModel() {
                     Category(
                         id = 74, type = '+', rank = 'c', orderNum = 5, parentCategoryId = null,
                         name = context.getString(R.string.refunds), iconName = "refunds",
-                            colorName = CategoryColors.GrayDefault(null).color.name
+                            colorName = CategoryColors.LightBlue(null).color.name
                     ),
                     Category(
                         id = 75, type = '+', rank = 'c', orderNum = 6, parentCategoryId = null,
