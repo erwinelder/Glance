@@ -575,22 +575,6 @@ class AppViewModel(
     private val _recordStackList: MutableStateFlow<List<RecordStack>> = MutableStateFlow(emptyList())
     val recordStackList: StateFlow<List<RecordStack>> = _recordStackList.asStateFlow()
 
-    /*val filteredRecordStackList: StateFlow<List<RecordStack>> =
-        combine(
-            _recordStackList,
-            _dateRangeMenuUiState,
-            _accountsUiState
-        ) { thisRecordStackList, thisDateRangeMenuUiState, thisAccountsUiState ->
-            thisRecordStackList.filter {
-                it.date in thisDateRangeMenuUiState.dateRangeState.fromPast..thisDateRangeMenuUiState.dateRangeState.toFuture &&
-                        it.accountId == thisAccountsUiState.activeAccount?.id
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )*/
-
     private fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
         viewModelScope.launch {
             recordRepository.getRecordsInDateRange(dateRangeState).collect { recordList ->
