@@ -1,7 +1,5 @@
 package com.ataglance.walletglance.ui.theme.screens
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -105,19 +104,19 @@ fun AppScreen(
         firstRoute.substringBefore('/') != secondRoute.substringBefore('/')
     }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val navigateToScreen = { screenRouteNavigateTo: String ->
+    val navigateToScreen = { routeNavigateTo: String ->
         if (
-            screenRoutesDiffer(navBackStackEntry?.destination?.route, screenRouteNavigateTo) &&
+            screenRoutesDiffer(navBackStackEntry?.destination?.route, routeNavigateTo) &&
             (
                 navBackStackEntry?.destination?.route != SettingsScreen.SettingsHome.route ||
-                screenRouteNavigateTo != AppScreen.Settings.route
+                routeNavigateTo != AppScreen.Settings.route
             )
         ) {
-//            navBackStackEntry?.destination?.route?.let { currentRoute ->
-//                moveScreenTowardsLeft =
-//                    appViewModel.needToMoveScreenTowardsLeft(currentRoute, screenRouteNavigateTo)
-//            }
-            navController.navigate(screenRouteNavigateTo) {
+            navBackStackEntry?.destination?.route?.let { currentRoute ->
+                moveScreenTowardsLeft =
+                    appViewModel.needToMoveScreenTowardsLeft(currentRoute, routeNavigateTo)
+            }
+            navController.navigate(routeNavigateTo) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     inclusive = false
                 }
@@ -159,6 +158,7 @@ fun AppScreen(
                 navigateBack = navController::popBackStack,
                 onNavigationButton = navigateToScreen,
                 onMakeRecordButtonClick = {
+                    moveScreenTowardsLeft = true
                     navController.navigate(
                         "${AppScreen.MakeRecord.route}/${MakeRecordStatus.Create}/0"
                     ) {
@@ -189,6 +189,7 @@ fun AppScreen(
                 openCustomDateRangeWindow.value = !openCustomDateRangeWindow.value
             },
             onNavigateToMakeRecordScreen = { makeRecordStatus: MakeRecordStatus, orderNum: Int ->
+                moveScreenTowardsLeft = true
                 navController.navigate(
                     "${AppScreen.MakeRecord.route}/${makeRecordStatus}/${orderNum}"
                 ) {
@@ -269,14 +270,24 @@ fun HomeNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = startMainDestination
+        startDestination = startMainDestination,
+        contentAlignment = Alignment.Center,
+        enterTransition = {
+            CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft)
+        },
+        popEnterTransition = {
+            CustomAnimation().screenPopEnterTransition(this, !moveScreenTowardsLeft)
+        },
+        exitTransition = {
+            CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft)
+        },
+        popExitTransition = {
+            CustomAnimation().screenPopExitTransition(this, false)
+        }
     ) {
         composable(
             route = AppScreen.Home.route,
-            enterTransition = { fadeIn(tween(400)) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) }
         ) {
             HomeScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
@@ -312,11 +323,7 @@ fun HomeNavHost(
             )
         }
         composable(
-            route = AppScreen.Records.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = AppScreen.Records.route
         ) {
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
@@ -357,11 +364,7 @@ fun HomeNavHost(
                 navArgument(CategoryStatisticsScreenArgs.ParentCategoryId.name) {
                     type = NavType.IntType
                 },
-            ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            )
         ) {
             val parentCategoryId =
                 it.arguments?.getInt(CategoryStatisticsScreenArgs.ParentCategoryId.name)
@@ -397,10 +400,12 @@ fun HomeNavHost(
                 navArgument(MakeRecordScreenArgs.Status.name) { type = NavType.StringType },
                 navArgument(MakeRecordScreenArgs.RecordNum.name) { type = NavType.IntType },
             ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
+            enterTransition = { CustomAnimation().screenEnterTransition(this) },
+            popEnterTransition = {
+                CustomAnimation().screenPopEnterTransition(this, !moveScreenTowardsLeft)
+            },
             exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            popExitTransition = { CustomAnimation().screenExitTransition(this, false) }
         ) {
             val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
             val recordNum = it.arguments?.getInt(MakeRecordScreenArgs.RecordNum.name)
@@ -475,9 +480,7 @@ fun HomeNavHost(
                 navArgument(MakeRecordScreenArgs.RecordNum.name) { type = NavType.IntType },
             ),
             enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            popExitTransition = { CustomAnimation().screenPopExitTransition(this, false) }
         ) {
             val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
             val recordNum = it.arguments?.getInt(MakeRecordScreenArgs.RecordNum.name)
@@ -535,11 +538,7 @@ fun HomeNavHost(
             categoryColorNameToColorMap = categoryColorNameToColorMap
         )
         composable(
-            route = AppScreen.FinishSetup.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = AppScreen.FinishSetup.route
         ) {
             val coroutineScope = rememberCoroutineScope()
             SetupFinishScreen(
@@ -573,11 +572,7 @@ fun NavGraphBuilder.setupGraph(
         route = AppScreen.Settings.route
     ) {
         composable(
-            route = SettingsScreen.Start.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Start.route
         ) {
             SetupStartScreen(
                 onManualSetupButton = {
@@ -589,11 +584,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.SettingsHome.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.SettingsHome.route
         ) {
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -606,11 +597,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.Language.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Language.route
         ) {
             val viewModel = viewModel<LanguageViewModel>()
             val chosenLanguage by viewModel.langCode.collectAsState()
@@ -634,11 +621,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.Appearance.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Appearance.route
         ) {
             SetupAppearanceScreen(
                 isAppSetUp = appUiSettings.isSetUp,
@@ -652,11 +635,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.Accounts.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Accounts.route
         ) { entry ->
             val viewModel = entry.sharedViewModel<SetupAccountsViewModel>(navController)
             val accountsSetupList by viewModel.accountsListState.collectAsStateWithLifecycle()
@@ -695,14 +674,11 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = "${SettingsScreen.EditAccount.route}/{${EditAccountScreenArgs.OrderNum.name}}",
+            route = "${SettingsScreen.EditAccount.route}/" +
+                    "{${EditAccountScreenArgs.OrderNum.name}}",
             arguments = listOf(
                 navArgument(EditAccountScreenArgs.OrderNum.name) { type = NavType.IntType }
-            ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            )
         ) { entry ->
             val coroutineScope = rememberCoroutineScope()
             val orderNum = entry.arguments?.getInt(EditAccountScreenArgs.OrderNum.name)
@@ -766,14 +742,11 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = "${SettingsScreen.CurrencyPicker.route}/{${CurrencyPickerScreenArgs.Currency.name}}",
+            route = "${SettingsScreen.CurrencyPicker.route}/" +
+                    "{${CurrencyPickerScreenArgs.Currency.name}}",
             arguments = listOf(
                 navArgument(CurrencyPickerScreenArgs.Currency.name) { type = NavType.StringType }
-            ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            )
         ) { entry ->
             val currency = entry.arguments?.getString(CurrencyPickerScreenArgs.Currency.name)
             val editAccountViewModel = entry.sharedViewModel<EditAccountViewModel>(navController)
@@ -793,11 +766,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.Categories.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Categories.route
         ) {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -846,14 +815,13 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = "${SettingsScreen.EditSubcategoryList.route}/{${EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name}}",
+            route = "${SettingsScreen.EditSubcategoryList.route}/" +
+                    "{${EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name}}",
             arguments = listOf(
-                navArgument(EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name) { type = NavType.IntType }
-            ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+                navArgument(EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name) {
+                    type = NavType.IntType
+                }
+            )
         ) {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -885,11 +853,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.EditCategory.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.EditCategory.route
         ) {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
 
@@ -905,11 +869,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.Import.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Import.route
         ) {
             SetupImportScreen(
                 onNextNavigationButton = {
@@ -918,11 +878,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = SettingsScreen.Data.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
+            route = SettingsScreen.Data.route
         ) {
             val coroutineScope = rememberCoroutineScope()
 

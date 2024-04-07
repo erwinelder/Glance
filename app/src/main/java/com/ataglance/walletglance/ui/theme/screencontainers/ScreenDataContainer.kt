@@ -53,7 +53,7 @@ fun <S> ScreenDataContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.button_bar_to_widget_gap)),
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(
                 top = scaffoldAppScreenPadding.calculateTopPadding() +
                         dimensionResource(R.dimen.button_bar_to_widget_gap),
