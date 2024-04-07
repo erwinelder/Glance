@@ -101,10 +101,11 @@ fun AppScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val navigateToScreen = { screenRouteNavigateTo: String ->
         if (
-            navBackStackEntry?.destination?.route != screenRouteNavigateTo &&
-            !(
-                navBackStackEntry?.destination?.route == SettingsScreen.SettingsHome.route &&
-                screenRouteNavigateTo == AppScreen.Settings.route
+            navBackStackEntry?.destination?.route?.substringBefore('/') !=
+                screenRouteNavigateTo.substringBefore('/') &&
+            (
+                navBackStackEntry?.destination?.route != SettingsScreen.SettingsHome.route ||
+                screenRouteNavigateTo != AppScreen.Settings.route
             )
         ) {
             navController.navigate(screenRouteNavigateTo) {

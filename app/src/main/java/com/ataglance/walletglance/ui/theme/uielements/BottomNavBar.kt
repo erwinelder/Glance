@@ -113,7 +113,8 @@ fun BottomNavBar(
                         AnimatedContent(
                             targetState = if (
                                 navBackStackEntry?.destination?.hierarchy?.any {
-                                    it.route?.startsWith(item.first.relatedScreen.route) == true
+                                    it.route?.substringBefore('/') ==
+                                            item.first.route.substringBefore('/')
                                 } == true
                             ) item.second else item.first,
                             transitionSpec = { fadeIn() togetherWith fadeOut() },
