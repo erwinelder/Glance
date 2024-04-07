@@ -155,7 +155,7 @@ fun BottomNavBar(
                     modifier = Modifier
                         .bounceClickEffect()
                         .shadow(
-                            elevation = 15.dp,
+                            elevation = 12.dp,
                             shape = RoundedCornerShape(38),
                             spotColor = GlanceTheme.primaryGradientLightToDark.first
                         )
@@ -170,13 +170,13 @@ fun BottomNavBar(
                                 end = Offset(95f, -10f)
                             )
                         )
-                        .padding(8.dp)
+                        .padding(6.dp)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.make_record_icon),
                         contentDescription = "make record",
                         tint = GlanceTheme.onPrimary,
-                        modifier = Modifier.size(26.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
