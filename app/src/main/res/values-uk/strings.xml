@@ -206,7 +206,7 @@
 
     <!-- Parent categories income -->
     <string name="salary">Зарплатня</string>
-    <string name="scholarship">Стидендія</string>
+    <string name="scholarship">Стипендія</string>
     <string name="sale">Продаж</string>
     <string name="realty_income">Дохід від нерухомості</string>
     <string name="refunds">Повернення коштів</string>
