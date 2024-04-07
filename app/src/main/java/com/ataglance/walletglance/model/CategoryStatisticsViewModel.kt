@@ -11,8 +11,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class CategoryStatisticsViewModel(
-    private val categoryStatisticsLists: CategoryStatisticsLists
+    categoryStatisticsLists: CategoryStatisticsLists
 ) : ViewModel() {
+
+    private val _categoryStatisticsLists = MutableStateFlow(categoryStatisticsLists)
+
+    fun setCategoryStatisticsLists(newCategoryStatisticsLists: CategoryStatisticsLists) {
+        _categoryStatisticsLists.update { newCategoryStatisticsLists }
+    }
 
     private val _categoryType = MutableStateFlow(CategoryType.Expense)
     val categoryType = _categoryType.asStateFlow()
@@ -45,8 +51,9 @@ class CategoryStatisticsViewModel(
 
     val categoryList = combine(
         _categoryType,
-        _parentCategory
-    ) { categoryType, parentCategory ->
+        _parentCategory,
+        _categoryStatisticsLists
+    ) { categoryType, parentCategory, categoryStatisticsLists ->
         if (parentCategory?.subcategoriesStatisticsUiState != null) {
             parentCategory.subcategoriesStatisticsUiState
         } else {

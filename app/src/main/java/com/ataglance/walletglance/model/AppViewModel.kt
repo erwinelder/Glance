@@ -213,6 +213,23 @@ class AppViewModel(
         }
     }
 
+    fun needToMoveScreenTowardsLeft(currentRoute: String, newRoute: String): Boolean {
+        listOf(
+            AppScreen.Home.route,
+            AppScreen.Records.route,
+            AppScreen.MakeRecord.route,
+            AppScreen.CategoriesStatistics.route,
+            AppScreen.Settings.route
+        ).forEach { screenRoute ->
+            if (currentRoute.substringBefore('/') == screenRoute) {
+                return true
+            } else if (newRoute.substringBefore('/') == screenRoute) {
+                return false
+            }
+        }
+        return true
+    }
+
 
     private val _accountsUiState: MutableStateFlow<AccountsUiState> = MutableStateFlow(AccountsUiState())
     val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState.asStateFlow()
@@ -558,7 +575,7 @@ class AppViewModel(
     private val _recordStackList: MutableStateFlow<List<RecordStack>> = MutableStateFlow(emptyList())
     val recordStackList: StateFlow<List<RecordStack>> = _recordStackList.asStateFlow()
 
-    val filteredRecordStackList: StateFlow<List<RecordStack>> =
+    /*val filteredRecordStackList: StateFlow<List<RecordStack>> =
         combine(
             _recordStackList,
             _dateRangeMenuUiState,
@@ -572,7 +589,7 @@ class AppViewModel(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
-        )
+        )*/
 
     private fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
         viewModelScope.launch {
@@ -1132,7 +1149,12 @@ class AppViewModel(
             ?.let {
                 (100 / it) * expensesTotalForPeriod to (100 / it) * incomeTotalForPeriod
             } ?: (0.0 to 0.0)
+        val filteredRecordStackList = recordStackList.filter {
+            it.date in dateRangeMenuUiState.dateRangeState.fromPast..dateRangeMenuUiState.dateRangeState.toFuture &&
+                    it.accountId == accountsUiState.activeAccount?.id
+        }
         WidgetsUiState(
+            filteredRecordStackList = filteredRecordStackList,
             greetings = GreetingsWidgetUiState(
                 titleRes = getGreetingsWidgetTitleRes(),
                 expensesTotal = getRecordsTotalAmount(
@@ -1151,7 +1173,7 @@ class AppViewModel(
                 incomePercentageFloat = (expensesIncomePercentage.second / 100).toFloat()
             ),
             categoryStatisticsLists = CategoryController().getCategoriesStatistics(
-                recordStackList = filteredRecordStackList.value,
+                recordStackList = filteredRecordStackList,
                 parentCategoriesLists = categoriesUiState.parentCategories,
                 subcategoriesLists = categoriesUiState.subcategories,
                 categoryIconNameToIconResMap = categoryIconNameToIconResMap,
@@ -1294,6 +1316,7 @@ data class MadeTransferState(
 }
 
 data class WidgetsUiState(
+    val filteredRecordStackList: List<RecordStack> = emptyList(),
     val greetings: GreetingsWidgetUiState = GreetingsWidgetUiState(),
     val expensesIncome: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
     val categoryStatisticsLists: CategoryStatisticsLists = CategoryStatisticsLists()

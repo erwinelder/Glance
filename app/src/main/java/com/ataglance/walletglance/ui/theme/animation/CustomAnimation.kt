@@ -11,30 +11,58 @@ import androidx.navigation.NavBackStackEntry
 
 class CustomAnimation {
 
-    fun screenEnterTransition(scope: AnimatedContentTransitionScope<NavBackStackEntry>): EnterTransition {
+    fun screenEnterTransition(
+        scope: AnimatedContentTransitionScope<NavBackStackEntry>,
+        moveScreenTowardsLeft: Boolean = true
+    ): EnterTransition {
         return scope.slideIntoContainer(
-            towards = AnimatedContentTransitionScope.SlideDirection.Left,
+            towards = if (moveScreenTowardsLeft) {
+                AnimatedContentTransitionScope.SlideDirection.Left
+            } else {
+                AnimatedContentTransitionScope.SlideDirection.Right
+            },
             animationSpec = tween(400)
         )
     }
 
-    fun screenPopEnterTransition(scope: AnimatedContentTransitionScope<NavBackStackEntry>): EnterTransition {
+    fun screenPopEnterTransition(
+        scope: AnimatedContentTransitionScope<NavBackStackEntry>,
+        moveScreenTowardsLeft: Boolean = false
+    ): EnterTransition {
         return scope.slideIntoContainer(
-            towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+            towards = if (moveScreenTowardsLeft) {
+                AnimatedContentTransitionScope.SlideDirection.Left
+            } else {
+                AnimatedContentTransitionScope.SlideDirection.Right
+            },
             animationSpec = tween(400)
         )
     }
 
-    fun screenExitTransition(scope: AnimatedContentTransitionScope<NavBackStackEntry>): ExitTransition {
+    fun screenExitTransition(
+        scope: AnimatedContentTransitionScope<NavBackStackEntry>,
+        moveScreenTowardsLeft: Boolean = true
+    ): ExitTransition {
         return scope.slideOutOfContainer(
-            towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+            towards = if (moveScreenTowardsLeft) {
+                AnimatedContentTransitionScope.SlideDirection.Left
+            } else {
+                AnimatedContentTransitionScope.SlideDirection.Right
+            },
             animationSpec = tween(400)
         )
     }
 
-    fun screenPopExitTransition(scope: AnimatedContentTransitionScope<NavBackStackEntry>): ExitTransition {
+    fun screenPopExitTransition(
+        scope: AnimatedContentTransitionScope<NavBackStackEntry>,
+        moveScreenTowardsLeft: Boolean = false
+    ): ExitTransition {
         return scope.slideOutOfContainer(
-            towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+            towards = if (moveScreenTowardsLeft) {
+                AnimatedContentTransitionScope.SlideDirection.Left
+            } else {
+                AnimatedContentTransitionScope.SlideDirection.Right
+            },
             animationSpec = tween(400)
         )
     }

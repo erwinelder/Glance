@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -98,16 +99,24 @@ fun AppScreen(
     themeUiState: ThemeUiState,
     navController: NavHostController = rememberNavController()
 ) {
+    var moveScreenTowardsLeft by remember { mutableStateOf(true) }
+    val screenRoutesDiffer = { firstRoute: String?, secondRoute: String ->
+        firstRoute == null ||
+        firstRoute.substringBefore('/') != secondRoute.substringBefore('/')
+    }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val navigateToScreen = { screenRouteNavigateTo: String ->
         if (
-            navBackStackEntry?.destination?.route?.substringBefore('/') !=
-                screenRouteNavigateTo.substringBefore('/') &&
+            screenRoutesDiffer(navBackStackEntry?.destination?.route, screenRouteNavigateTo) &&
             (
                 navBackStackEntry?.destination?.route != SettingsScreen.SettingsHome.route ||
                 screenRouteNavigateTo != AppScreen.Settings.route
             )
         ) {
+            navBackStackEntry?.destination?.route?.let { currentRoute ->
+//                moveScreenTowardsLeft =
+//                    appViewModel.needToMoveScreenTowardsLeft(currentRoute, screenRouteNavigateTo)
+            }
             navController.navigate(screenRouteNavigateTo) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     inclusive = false
@@ -121,7 +130,6 @@ fun AppScreen(
     val categoriesUiState by appViewModel.categoriesUiState.collectAsStateWithLifecycle()
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
-    val filteredRecordStackList by appViewModel.filteredRecordStackList.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
     val categoryColorNameToColorMap by appViewModel.categoryColorNameToColorMap.collectAsState()
 
@@ -162,6 +170,7 @@ fun AppScreen(
         containerColor = Color.Transparent
     ) { scaffoldPadding ->
         HomeNavHost(
+            moveScreenTowardsLeft = moveScreenTowardsLeft,
             navController = navController,
             startMainDestination = appUiSettings.startMainDestination,
             startSettingsDestination = appUiSettings.startSettingsDestination,
@@ -172,7 +181,6 @@ fun AppScreen(
             accountsUiState = accountsUiState,
             categoriesUiState = categoriesUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
-            filteredRecordStackList = filteredRecordStackList,
             recordStackList = recordStackList,
             widgetsUiState = widgetsUiState,
             categoryColorNameToColorMap = categoryColorNameToColorMap,
@@ -240,6 +248,7 @@ fun AppScreen(
 
 @Composable
 fun HomeNavHost(
+    moveScreenTowardsLeft: Boolean,
     navController: NavHostController,
     startMainDestination: String,
     startSettingsDestination: String,
@@ -251,7 +260,6 @@ fun HomeNavHost(
     categoriesUiState: CategoriesUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
     recordStackList: List<RecordStack>,
-    filteredRecordStackList: List<RecordStack>,
     widgetsUiState: WidgetsUiState,
     categoryColorNameToColorMap: Map<String, Colors>,
     openCustomDateRangeWindow: Boolean,
@@ -267,7 +275,7 @@ fun HomeNavHost(
             route = AppScreen.Home.route,
             enterTransition = { fadeIn(tween(400)) },
             popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
+            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
             popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
         ) {
             HomeScreen(
@@ -275,7 +283,6 @@ fun HomeNavHost(
                 appTheme = appUiSettings.appTheme,
                 accountsUiState = accountsUiState,
                 dateRangeMenuUiState = dateRangeMenuUiState,
-                filteredRecordStackList = filteredRecordStackList,
                 categoriesUiState = categoriesUiState,
                 categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                 widgetsUiState = widgetsUiState,
@@ -306,16 +313,16 @@ fun HomeNavHost(
         }
         composable(
             route = AppScreen.Records.route,
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
+            enterTransition = { CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft) },
             popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
+            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
             popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
         ) {
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
-                recordStackList = filteredRecordStackList,
+                recordStackList = widgetsUiState.filteredRecordStackList,
                 onAccountClick = { orderNum ->
                     appViewModel.chooseNewActiveAccount(orderNum)
                 },
@@ -351,9 +358,9 @@ fun HomeNavHost(
                     type = NavType.IntType
                 },
             ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
+            enterTransition = { CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft) },
             popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
+            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
             popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
         ) {
             val parentCategoryId =
@@ -363,6 +370,9 @@ fun HomeNavHost(
                     categoryStatisticsLists = widgetsUiState.categoryStatisticsLists
                 )
             )
+            LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
+                viewModel.setCategoryStatisticsLists(widgetsUiState.categoryStatisticsLists)
+            }
 
             CategoriesStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
@@ -387,9 +397,9 @@ fun HomeNavHost(
                 navArgument(MakeRecordScreenArgs.Status.name) { type = NavType.StringType },
                 navArgument(MakeRecordScreenArgs.RecordNum.name) { type = NavType.IntType },
             ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
+            enterTransition = { CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft) },
             popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) },
-            exitTransition = { CustomAnimation().screenExitTransition(this) },
+            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
             popExitTransition = { CustomAnimation().screenPopExitTransition(this) }
         ) {
             val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
@@ -515,6 +525,7 @@ fun HomeNavHost(
             }
         }
         setupGraph(
+            openScreenFromRight = moveScreenTowardsLeft,
             navController = navController,
             startDestination = startSettingsDestination,
             scaffoldPadding = scaffoldPadding,
@@ -545,6 +556,7 @@ fun HomeNavHost(
 
 
 fun NavGraphBuilder.setupGraph(
+    openScreenFromRight: Boolean,
     navController: NavHostController,
     startDestination: String,
     scaffoldPadding: PaddingValues,

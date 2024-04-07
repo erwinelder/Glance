@@ -48,7 +48,6 @@ fun HomeScreen(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    filteredRecordStackList: List<RecordStack>,
     categoriesUiState: CategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
@@ -84,7 +83,6 @@ fun HomeScreen(
             appTheme = appTheme,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
-            filteredRecordStackList = filteredRecordStackList,
             categoriesUiState = categoriesUiState,
             categoryNameAndIconMap = categoryNameAndIconMap,
             widgetsUiState = widgetsUiState,
@@ -104,7 +102,6 @@ private fun CompactLayout(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    filteredRecordStackList: List<RecordStack>,
     categoriesUiState: CategoriesUiState,
     categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
@@ -164,7 +161,7 @@ private fun CompactLayout(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     RecordHistory(
-                        recordStackList = filteredRecordStackList.take(3),
+                        recordStackList = widgetsUiState.filteredRecordStackList.take(3),
                         appTheme = appTheme,
                         getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
                             CategoryController().getCategoryAndIconRes(
