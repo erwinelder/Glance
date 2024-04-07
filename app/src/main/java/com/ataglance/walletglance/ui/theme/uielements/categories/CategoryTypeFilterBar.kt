@@ -24,13 +24,13 @@ fun CategoryTypeFilterBar(
     val scrollState = rememberScrollState()
 
     Row(
-        modifier = Modifier
-            .horizontalScroll(scrollState)
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState)
         ) {
             Spacer(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
