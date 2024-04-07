@@ -23,7 +23,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.model.DateRangeEnum
@@ -59,9 +58,7 @@ fun <S> ScreenDataContainer(
                 top = scaffoldAppScreenPadding.calculateTopPadding() +
                         dimensionResource(R.dimen.button_bar_to_widget_gap),
                 bottom = scaffoldAppScreenPadding.calculateBottomPadding() +
-                        dimensionResource(R.dimen.screen_vertical_padding),
-                start = 16.dp,
-                end = 16.dp
+                        dimensionResource(R.dimen.screen_vertical_padding)
             )
     ) {
         if (accountList.size > 1) {
@@ -80,14 +77,16 @@ fun <S> ScreenDataContainer(
         typeFilterBar()
         Spacer(modifier = Modifier)
         GlassSurface(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)),
             filledWidth = 1f
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
             ) {
                 AnimatedContent(
                     targetState = animatedContentTargetState,

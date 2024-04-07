@@ -24,7 +24,7 @@ import com.ataglance.walletglance.model.RecordType
 import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
-import com.ataglance.walletglance.ui.theme.uielements.containers.RecordsTypeFilterBar
+import com.ataglance.walletglance.ui.theme.uielements.records.RecordsTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
 

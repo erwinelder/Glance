@@ -34,7 +34,6 @@ fun AppMainTopBar(
             .background(GlanceTheme.surface)
             .fillMaxWidth()
             .padding(
-                start = 4.dp, end = 4.dp,
                 top = if (accountList.size > 1) 10.dp else 12.dp, bottom = 12.dp
             )
     ) {
