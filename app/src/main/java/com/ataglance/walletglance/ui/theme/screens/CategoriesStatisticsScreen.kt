@@ -38,11 +38,11 @@ fun CategoriesStatisticsScreen(
     viewModel: CategoryStatisticsViewModel,
     parentCategoryId: Int?
 ) {
-    LaunchedEffect(parentCategoryId) {
-        viewModel.setParentCategoryById(parentCategoryId)
-    }
     LaunchedEffect(currentDateRangeEnum) {
         viewModel.clearParentCategory()
+    }
+    LaunchedEffect(parentCategoryId) {
+        viewModel.setParentCategoryById(parentCategoryId)
     }
 
     val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
@@ -90,11 +90,7 @@ fun CategoriesStatisticsScreen(
                     items = categoryListAndParCategory.first,
                     key = { it.categoryId }
                 ) { category ->
-                    CategoryStatisticsItemComponent(
-                        showRightArrow =
-                        category.subcategoriesStatisticsUiState != null,
-                        uiState = category
-                    ) {
+                    CategoryStatisticsItemComponent(category) {
                         viewModel.setParentCategory(category)
                     }
                 }

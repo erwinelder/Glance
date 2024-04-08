@@ -34,14 +34,17 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnG
 @Composable
 fun CategoryStatisticsItemComponent(
     uiState: CategoryStatisticsElementUiState?,
-    showRightArrow: Boolean = false,
     showLeftArrow: Boolean = false,
+    enableClick: Boolean? = null,
     onClick: () -> Unit = {}
 ) {
     GlassSurfaceOnGlassSurface(
         modifier = Modifier.alpha(if (uiState == null) 0f else 1f),
         onClick = onClick,
-        enableClick = uiState != null && (showRightArrow || showLeftArrow),
+        enableClick = enableClick == null &&
+                uiState != null && (
+                    uiState.subcategoriesStatisticsUiState != null || showLeftArrow
+                ) || enableClick == true,
         filledWidth = 1f,
         paddingValues = PaddingValues(24.dp, 16.dp)
     ) {
@@ -88,10 +91,10 @@ fun CategoryStatisticsItemComponent(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
-                if (showRightArrow) {
+                if (uiState?.subcategoriesStatisticsUiState != null && !showLeftArrow) {
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_right_icon),
-                        contentDescription = "go to ${uiState?.categoryName ?: ""} subcategories",
+                        contentDescription = "go to ${uiState.categoryName} subcategories",
                         tint = GlanceTheme.onSurface,
                         modifier = Modifier.size(20.dp)
                     )

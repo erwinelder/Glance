@@ -67,31 +67,15 @@ fun CategoriesStatisticsWidget(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CategoryStatisticsItemComponent(
-                            uiState = firstCategory,
-                            showRightArrow = firstCategory?.subcategoriesStatisticsUiState != null,
-                            onClick = {
-                                firstCategory?.categoryId?.let {
-                                    onNavigateToCategoriesStatisticsScreen(it)
-                                }
-                            }
-                        )
-                        CategoryStatisticsItemComponent(
-                            uiState = secondCategory,
-                            showRightArrow = secondCategory?.subcategoriesStatisticsUiState != null,
-                            onClick = {
-                                secondCategory?.categoryId
-                                    ?.let(onNavigateToCategoriesStatisticsScreen)
-                            }
-                        )
-                        CategoryStatisticsItemComponent(
-                            uiState = thirdCategory,
-                            showRightArrow = thirdCategory?.subcategoriesStatisticsUiState != null,
-                            onClick = {
-                                thirdCategory?.categoryId
-                                    ?.let(onNavigateToCategoriesStatisticsScreen)
-                            }
-                        )
+                        CategoryStatisticsItemComponent(firstCategory, enableClick = true) {
+                            firstCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
+                        }
+                        CategoryStatisticsItemComponent(secondCategory, enableClick = true) {
+                            secondCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
+                        }
+                        CategoryStatisticsItemComponent(thirdCategory, enableClick = true) {
+                            thirdCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
+                        }
                     }
                     if (firstCategory == null) {
                         EmptyCategoriesStatisticsMessageContainer()

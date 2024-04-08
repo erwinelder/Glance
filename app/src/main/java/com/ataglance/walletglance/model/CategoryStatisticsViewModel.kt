@@ -20,16 +20,6 @@ class CategoryStatisticsViewModel(
         _categoryStatisticsLists.update { newCategoryStatisticsLists }
     }
 
-    private val _categoryType = MutableStateFlow(CategoryType.Expense)
-    val categoryType = _categoryType.asStateFlow()
-
-    fun setCategoryType(newCategoryType: CategoryType) {
-        if (newCategoryType == categoryType.value) return
-
-        if (parentCategory.value != null) clearParentCategory()
-        _categoryType.update { newCategoryType }
-    }
-
     private val _parentCategory = MutableStateFlow<CategoryStatisticsElementUiState?>(null)
     val parentCategory = _parentCategory.asStateFlow()
 
@@ -47,6 +37,16 @@ class CategoryStatisticsViewModel(
 
     fun clearParentCategory() {
         _parentCategory.update { null }
+    }
+
+    private val _categoryType = MutableStateFlow(CategoryType.Expense)
+    val categoryType = _categoryType.asStateFlow()
+
+    fun setCategoryType(newCategoryType: CategoryType) {
+        if (newCategoryType == categoryType.value) return
+
+        if (parentCategory.value != null) clearParentCategory()
+        _categoryType.update { newCategoryType }
     }
 
     val categoryList = combine(
