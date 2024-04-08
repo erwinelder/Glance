@@ -15,15 +15,6 @@ class SetupCategoriesViewModel : ViewModel() {
     private val _editCategoryUiState = MutableStateFlow(EditCategoryUiState())
     val editCategoryUiState = _editCategoryUiState.asStateFlow()
 
-    private fun getCategoryIdByOrderNum(orderNum: Int, list: List<Category>): Int? {
-        list.forEach { category ->
-            if (category.orderNum == orderNum) {
-                return category.id
-            }
-        }
-        return null
-    }
-
     private fun getCategoryFromListByOrderNum(list: List<Category>, orderNum: Int): Category? {
         list.forEach { category ->
             if (category.orderNum == orderNum) {
@@ -69,7 +60,8 @@ class SetupCategoriesViewModel : ViewModel() {
         rank: CategoryRank,
         listSize: Int,
         parentCategoryId: Int?,
-        name: String
+        name: String,
+        colorName: String = CategoryColors.GrayDefault(null).color.name
     ): Category {
         return Category(
             id = getNewCategoryId(),
@@ -82,8 +74,16 @@ class SetupCategoriesViewModel : ViewModel() {
             parentCategoryId = parentCategoryId,
             name = name,
             iconName = "other",
-            colorName = CategoryColors.GrayDefault(null).color.name
+            colorName = colorName
         )
+    }
+
+    private fun getCurrentParentCategoryListByType(): List<Category> {
+        return if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
+            uiState.value.expenseParentCategoryList
+        } else {
+            uiState.value.incomeParentCategoryList
+        }
     }
 
     private fun changeParentCategoryIdToParentCategory(): List<Category> {
@@ -94,7 +94,9 @@ class SetupCategoriesViewModel : ViewModel() {
             uiState.value.incomeParentCategoryList.toMutableList()
         }
 
-        categoryList[orderNum] = categoryList[orderNum].copy(parentCategoryId = categoryList[orderNum].id)
+        categoryList[orderNum - 1].let {
+            categoryList[orderNum - 1] = it.copy(parentCategoryId = it.id)
+        }
         return categoryList
     }
 
@@ -768,21 +770,20 @@ class SetupCategoriesViewModel : ViewModel() {
     }
 
     fun addNewSubcategory(name: String) {
-        val categoryTypeToShow = uiState.value.categoryTypeToShow
-        val parentCategoryId = getCategoryIdByOrderNum(
-            uiState.value.parentCategoryOrderNum,
-            if (categoryTypeToShow == CategoryType.Expense) uiState.value.expenseParentCategoryList
-            else uiState.value.incomeParentCategoryList
-        )
+        val parentCategory = getCategoryFromListByOrderNum(
+            getCurrentParentCategoryListByType(),
+            uiState.value.parentCategoryOrderNum
+        ) ?: return
 
         val subcategoryList = uiState.value.subcategoryList.toMutableList()
         subcategoryList.add(
             getNewCategory(
-                type = categoryTypeToShow,
+                type = uiState.value.categoryTypeToShow,
                 rank = CategoryRank.Sub,
                 listSize = uiState.value.subcategoryList.size,
-                parentCategoryId = parentCategoryId,
-                name = name
+                parentCategoryId = parentCategory.id,
+                name = name,
+                colorName = parentCategory.colorName
             )
         )
 
