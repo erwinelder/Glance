@@ -171,6 +171,9 @@ fun AppScreen(
     ) { scaffoldPadding ->
         HomeNavHost(
             moveScreenTowardsLeft = moveScreenTowardsLeft,
+            changeMoveScreenTowardsLeft = {
+                moveScreenTowardsLeft = it
+            },
             navController = navController,
             startMainDestination = appUiSettings.startMainDestination,
             startSettingsDestination = appUiSettings.startSettingsDestination,
@@ -250,6 +253,7 @@ fun AppScreen(
 @Composable
 fun HomeNavHost(
     moveScreenTowardsLeft: Boolean,
+    changeMoveScreenTowardsLeft: (Boolean) -> Unit,
     navController: NavHostController,
     startMainDestination: String,
     startSettingsDestination: String,
@@ -308,6 +312,7 @@ fun HomeNavHost(
                     navController.navigate(AppScreen.Records.route)
                 },
                 onNavigateToCategoriesStatisticsScreen = { parentCategoryId: Int ->
+                    changeMoveScreenTowardsLeft(true)
                     navController.navigate(
                         "${AppScreen.CategoriesStatistics.route}/${parentCategoryId}"
                     ) {
@@ -315,6 +320,7 @@ fun HomeNavHost(
                     }
                 },
                 onRecordClick = { orderNum: Int ->
+                    changeMoveScreenTowardsLeft(true)
                     onNavigateToMakeRecordScreen(MakeRecordStatus.Edit, orderNum)
                 },
                 onTransferClick = { orderNum: Int ->
