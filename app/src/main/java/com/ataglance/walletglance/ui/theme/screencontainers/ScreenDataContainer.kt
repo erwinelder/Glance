@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -82,11 +81,9 @@ fun <S> ScreenDataContainer(
                 .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)),
             filledWidth = 1f
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
+            Box(
+                contentAlignment = Alignment.TopCenter,
+                modifier = Modifier.fillMaxSize()
             ) {
                 AnimatedContent(
                     targetState = animatedContentTargetState,
@@ -94,23 +91,30 @@ fun <S> ScreenDataContainer(
                 ) {
                     animatedContent(it)
                 }
-                AnimatedVisibility(
-                    visible = visibleNoDataMessage,
-                    enter = fadeIn(tween(220, delayMillis = 90)) +
-                            scaleIn(tween(220, delayMillis = 90), .92f),
-                    exit = fadeOut(animationSpec = tween(90)),
-                    modifier = Modifier.fillMaxSize()
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
+                    AnimatedVisibility(
+                        visible = visibleNoDataMessage,
+                        enter = fadeIn(tween(220, delayMillis = 90)) +
+                                scaleIn(tween(220, delayMillis = 90), .92f),
+                        exit = fadeOut(animationSpec = tween(90)),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Text(
-                            text = stringResource(noDataMessageResource),
-                            color = GlanceTheme.onSurface.copy(.6f),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Light
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text(
+                                text = stringResource(noDataMessageResource),
+                                color = GlanceTheme.onSurface.copy(.6f),
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Light
+                            )
+                        }
                     }
                 }
             }
