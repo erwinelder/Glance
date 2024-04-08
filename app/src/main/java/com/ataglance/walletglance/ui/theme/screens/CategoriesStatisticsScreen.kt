@@ -41,6 +41,9 @@ fun CategoriesStatisticsScreen(
     LaunchedEffect(parentCategoryId) {
         viewModel.setParentCategoryById(parentCategoryId)
     }
+    LaunchedEffect(currentDateRangeEnum) {
+        viewModel.clearParentCategory()
+    }
 
     val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
     val parentCategory by viewModel.parentCategory.collectAsStateWithLifecycle()
