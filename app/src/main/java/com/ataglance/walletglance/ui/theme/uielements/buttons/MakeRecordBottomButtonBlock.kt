@@ -41,7 +41,7 @@ fun MakeRecordBottomButtonBlock(
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 SmallPrimaryButton(
                     onClick = onSaveButton,
