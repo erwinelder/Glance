@@ -83,7 +83,9 @@ fun <S> ScreenDataContainer(
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
             ) {
                 AnimatedContent(
                     targetState = animatedContentTargetState,
@@ -93,9 +95,7 @@ fun <S> ScreenDataContainer(
                 }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     AnimatedVisibility(
                         visible = visibleNoDataMessage,
