@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.ui.theme.screens
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,14 +61,14 @@ fun MakeTransferScreen(
     val scrollState = rememberScrollState()
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val savingIsAllowed = uiState.startAmount.isNotBlank() &&
-        uiState.startAmount.last() != '.' &&
-        uiState.startAmount.toDouble() != 0.0
-        uiState.finalAmount.isNotBlank() &&
-        uiState.finalAmount.last() != '.' &&
-        uiState.finalAmount.toDouble() != 0.0 &&
-        uiState.fromAccount != null &&
-        uiState.toAccount != null
+    val savingIsAllowed = (uiState.startAmount.isNotBlank() &&
+            uiState.finalAmount.isNotBlank() &&
+            uiState.startAmount.lastOrNull() != '.' &&
+            uiState.startAmount.toDouble() != 0.0 &&
+            uiState.finalAmount.lastOrNull() != '.' &&
+            uiState.finalAmount.toDouble() != 0.0 &&
+            uiState.fromAccount != null &&
+            uiState.toAccount != null)
 
     val openDateDialog = remember { mutableStateOf(false) }
     val openTimeDialog = remember { mutableStateOf(false) }
@@ -113,13 +114,23 @@ fun MakeTransferScreen(
                         onClick = { openDateDialog.value = true }
                     )
                     MakeRecordFieldContainer(R.string.from_account) {
-                        SmallAccount(uiState.fromAccount, appTheme) {
-                            openDialogFromAccount.value = true
+                        AnimatedContent(
+                            targetState = uiState.fromAccount,
+                            label = "from account field at the make transfer screen"
+                        ) { targetAccount ->
+                            SmallAccount(targetAccount, appTheme) {
+                                openDialogFromAccount.value = true
+                            }
                         }
                     }
                     MakeRecordFieldContainer(R.string.to_account) {
-                        SmallAccount(uiState.toAccount, appTheme) {
-                            openDialogToAccount.value = true
+                        AnimatedContent(
+                            targetState = uiState.toAccount,
+                            label = "to account field at the make transfer screen"
+                        ) { targetAccount ->
+                            SmallAccount(targetAccount, appTheme) {
+                                openDialogToAccount.value = true
+                            }
                         }
                     }
                     SmallDivider(Modifier.padding(top = 4.dp))
