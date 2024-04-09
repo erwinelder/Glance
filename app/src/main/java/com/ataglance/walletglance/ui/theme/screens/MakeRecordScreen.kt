@@ -56,7 +56,6 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
-import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
@@ -69,6 +68,7 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
+import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,32 +124,14 @@ fun MakeRecordScreen(
         ) {
 
             if (makeRecordStatus == MakeRecordStatus.Create.name) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    if (accountList.size > 1) {
-                        BarButton(
-                            onClick = onMakeTransferButtonClick,
-                            active = false,
-                            text = stringResource(R.string.transfer)
-                        )
+                MakeRecordTypeBar(
+                    isTransferButtonVisible = accountList.size > 1,
+                    onMakeTransferButtonClick = onMakeTransferButtonClick,
+                    currentRecordType = uiState.type,
+                    onRecordTypeChange = {
+                        viewModel.changeRecordType(it, categoriesUiState)
                     }
-                    BarButton(
-                        onClick = {
-                            viewModel.changeRecordType(RecordType.Expense, categoriesUiState)
-                        },
-                        active = uiState.type == RecordType.Expense,
-                        text = stringResource(R.string.expense)
-                    )
-                    BarButton(
-                        onClick = {
-                            viewModel.changeRecordType(RecordType.Income, categoriesUiState)
-                        },
-                        active = uiState.type == RecordType.Income,
-                        text = stringResource(R.string.income_singular)
-                    )
-                }
+                )
             }
 
             GlassSurface(modifier = Modifier.weight(1f)) {
