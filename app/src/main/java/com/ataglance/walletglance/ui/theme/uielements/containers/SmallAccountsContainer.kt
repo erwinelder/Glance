@@ -31,18 +31,20 @@ fun SmallAccountsContainer(
             .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
     ) {
         accountList.forEach { account ->
-            SmallAccount(
-                account = account,
-                appTheme = appTheme,
-                fontSize = 20.sp,
-                roundedCornerSize = 16.dp,
-                horizontalPadding = 12.dp,
-                verticalPadding = 6.dp,
-                outerPadding = PaddingValues(horizontal = 3.dp),
-                adjustStyleByActiveStatus = true,
-                showBalance = false,
-                onClick = { onAccountClick(account.orderNum) }
-            )
+            if (!account.hide) {
+                SmallAccount(
+                    account = account,
+                    appTheme = appTheme,
+                    fontSize = 20.sp,
+                    roundedCornerSize = 16.dp,
+                    horizontalPadding = 12.dp,
+                    verticalPadding = 6.dp,
+                    outerPadding = PaddingValues(horizontal = 3.dp),
+                    adjustStyleByActiveStatus = true,
+                    showBalance = false,
+                    onClick = { onAccountClick(account.orderNum) }
+                )
+            }
         }
     }
 }
