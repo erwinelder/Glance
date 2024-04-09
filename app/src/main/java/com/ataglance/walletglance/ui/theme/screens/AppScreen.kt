@@ -581,6 +581,7 @@ fun NavGraphBuilder.setupGraph(
             route = SettingsScreen.Start.route
         ) {
             SetupStartScreen(
+                appTheme = appUiSettings.appTheme,
                 onManualSetupButton = {
                     onNavigateToScreen(SettingsScreen.Language.route)
                 },

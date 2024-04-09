@@ -14,10 +14,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.animation.StartAnimatedContainer
+import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 
 @Composable
 fun SetupStartScreen(
+    appTheme: AppTheme?,
     onManualSetupButton: () -> Unit,
     onImportDataButton: () -> Unit
 ) {
@@ -27,21 +30,25 @@ fun SetupStartScreen(
             .fillMaxSize()
             .padding(top = 10.dp, bottom = 32.dp)
     ) {
-        Text(
-            text = "WalletGlance",
-            color = GlanceTheme.onBackground,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.ExtraBold,
-            letterSpacing = -(.5).sp
-        )
+        StartAnimatedContainer(appTheme != null, 200) {
+            Text(
+                text = "WalletGlance",
+                color = GlanceTheme.onBackground,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = -(.5).sp
+            )
+        }
         Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = stringResource(R.string.hello) + "!",
-            color = GlanceTheme.onBackground,
-            fontSize = 55.sp,
-            fontWeight = FontWeight.ExtraBold,
-            letterSpacing = -(1).sp
-        )
+        StartAnimatedContainer(appTheme != null) {
+            Text(
+                text = stringResource(R.string.hello) + "!",
+                color = GlanceTheme.onBackground,
+                fontSize = 55.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = -(1).sp
+            )
+        }
         Spacer(modifier = Modifier.weight(1f))
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,10 +61,12 @@ fun SetupStartScreen(
                 fontSize = 20.sp
             )
             Spacer(modifier = Modifier.height(24.dp))*/
-            PrimaryButton(
-                onClick = onManualSetupButton,
-                text = stringResource(R.string.start_setup)
-            )
+            StartAnimatedContainer(appTheme != null, 100) {
+                PrimaryButton(
+                    onClick = onManualSetupButton,
+                    text = stringResource(R.string.start_setup)
+                )
+            }
         }
     }
 }
