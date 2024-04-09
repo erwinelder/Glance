@@ -75,26 +75,35 @@ class SetupAccountsViewModel : ViewModel() {
     }
 
     fun swapAccounts(thisOrderNum: Int, otherOrderNum: Int) {
-        val firstAccountToSwap = getAccountByOrderNum(thisOrderNum)
-        val secondAccountToSwap = getAccountByOrderNum(otherOrderNum)
-
-        if (firstAccountToSwap == null || secondAccountToSwap == null) {
-            return
+        _accountsListState.update {
+            getListWithSwappedAccounts(it, thisOrderNum, otherOrderNum) ?: it
         }
+    }
 
-        val accountsList = mutableListOf<Account>()
+    private fun getListWithSwappedAccounts(
+        list: List<Account>,
+        firstOrderNum: Int,
+        secondOrderNum: Int
+    ): List<Account>? {
+        val firstAccountToSwap = getAccountByOrderNum(firstOrderNum) ?: return null
+        val secondAccountToSwap = getAccountByOrderNum(secondOrderNum) ?: return null
 
-        accountsListState.value.forEach { account ->
-            if (account.orderNum != firstAccountToSwap.orderNum && account.orderNum != secondAccountToSwap.orderNum) {
-                accountsList.add(account)
+        val finalList = mutableListOf<Account>()
+
+        list.forEach { account ->
+            if (
+                account.orderNum != firstAccountToSwap.orderNum &&
+                account.orderNum != secondAccountToSwap.orderNum
+            ) {
+                finalList.add(account)
             } else if (account.orderNum == firstAccountToSwap.orderNum) {
-                accountsList.add(secondAccountToSwap.copy(orderNum = account.orderNum))
+                finalList.add(secondAccountToSwap.copy(orderNum = account.orderNum))
             } else {
-                accountsList.add(firstAccountToSwap.copy(orderNum = account.orderNum))
+                finalList.add(firstAccountToSwap.copy(orderNum = account.orderNum))
             }
         }
 
-        _accountsListState.update { accountsList }
+        return finalList
     }
 
     fun saveAccountData(newAccount: Account) {
