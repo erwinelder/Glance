@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.ui.theme.screens
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +31,7 @@ import com.ataglance.walletglance.model.DateRangeMenuUiState
 import com.ataglance.walletglance.model.RecordStack
 import com.ataglance.walletglance.model.RecordType
 import com.ataglance.walletglance.model.WidgetsUiState
-import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
+import com.ataglance.walletglance.ui.theme.animation.StartAnimatedContainer
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.AppMainTopBar
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
@@ -63,7 +62,7 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            WidgetAnimatedContainer(appTheme != null) {
+            StartAnimatedContainer(appTheme != null) {
                 AppMainTopBar(
                     accountList = accountsUiState.accountList.filter { !it.hide },
                     currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
@@ -128,12 +127,12 @@ private fun CompactLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            WidgetAnimatedContainer(appTheme != null, 50) {
+            StartAnimatedContainer(appTheme != null, 50) {
                 GreetingsMessage(widgetsUiState.greetings.titleRes)
             }
         }
         item {
-            WidgetAnimatedContainer(
+            StartAnimatedContainer(
                 appTheme != null && accountsUiState.activeAccount != null,
                 delayMillis = 100
             ) {
@@ -146,7 +145,7 @@ private fun CompactLayout(
             }
         }
         item {
-            WidgetAnimatedContainer(appTheme != null, 150) {
+            StartAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncome,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
@@ -155,7 +154,7 @@ private fun CompactLayout(
             }
         }
         item {
-            WidgetAnimatedContainer(appTheme != null, 200) {
+            StartAnimatedContainer(appTheme != null, 200) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -188,7 +187,7 @@ private fun CompactLayout(
             }
         }
         item {
-            WidgetAnimatedContainer(appTheme != null, 250) {
+            StartAnimatedContainer(appTheme != null, 250) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -249,10 +248,10 @@ private fun ExpandedLayout(
             Column(
                 modifier = Modifier.fillMaxWidth(.42f)
             ) {
-                WidgetAnimatedContainer(appTheme != null, 50) {
+                StartAnimatedContainer(appTheme != null, 50) {
                     GreetingsMessage(widgetsUiState.greetings.titleRes)
                 }
-                WidgetAnimatedContainer(
+                StartAnimatedContainer(
                     appTheme != null && accountsUiState.activeAccount != null,
                     delayMillis = 100
                 ) {
@@ -264,7 +263,7 @@ private fun ExpandedLayout(
                     )
                 }
             }
-            WidgetAnimatedContainer(appTheme != null, 150) {
+            StartAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncome,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
@@ -273,7 +272,7 @@ private fun ExpandedLayout(
             }
         }
 
-        WidgetAnimatedContainer(appTheme != null, 200) {
+        StartAnimatedContainer(appTheme != null, 200) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -305,7 +304,7 @@ private fun ExpandedLayout(
             }
         }
 
-        WidgetAnimatedContainer(appTheme != null, 250) {
+        StartAnimatedContainer(appTheme != null, 250) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -322,19 +321,5 @@ private fun ExpandedLayout(
             }
         }
 
-    }
-}
-
-@Composable
-fun WidgetAnimatedContainer(
-    visible: Boolean,
-    delayMillis: Int = 0,
-    content: @Composable () -> Unit
-) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = CustomAnimation().widgetEnterTransition(delayMillis),
-    ) {
-        content()
     }
 }
