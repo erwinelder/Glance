@@ -150,16 +150,25 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(R.string.balance),
-            fontSize = 16.sp,
-            color = onAccountColor.copy(.5f)
-        )
+        AnimatedContent(
+            targetState = account.withoutBalance,
+            label = "account balance or currency label"
+        ) { targetState ->
+            Text(
+                text = if (targetState) {
+                    stringResource(R.string.currency)
+                } else {
+                    stringResource(R.string.balance)
+                },
+                fontSize = 16.sp,
+                color = onAccountColor.copy(.5f)
+            )
+        }
         Row(
             verticalAlignment = Alignment.Bottom
         ) {
             AnimatedContent(
-                targetState = account.getFormattedBalanceBeforeDecimalSeparatorOrHiddenBalance(),
+                targetState = account.getFormattedBalanceBeforeDecimalSeparator(),
                 label = "account balance before decimal separator"
             ) { targetContent ->
                 Text(
@@ -170,7 +179,7 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                 )
             }
             AnimatedContent(
-                targetState = account.getFormattedBalanceAfterDecimalSeparatorOrEmptyString(),
+                targetState = account.getFormattedBalanceAfterDecimalSeparator(),
                 label = "account balance after decimal separator"
             ) { targetContent ->
                 Text(
@@ -181,16 +190,25 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                     lineHeight = 33.sp,
                 )
             }
-            Spacer(modifier = Modifier.width(10.dp))
             AnimatedContent(
-                targetState = account.currency,
+                targetState = account.withoutBalance,
+                label = "balance to currency spacer"
+            ) { targetState ->
+                if (!targetState) {
+                    Spacer(modifier = Modifier.width(10.dp))
+                }
+            }
+            AnimatedContent(
+                targetState = account.currency to account.withoutBalance,
                 label = "account currency"
-            ) { targetContent ->
+            ) { currencyAndWithoutBalanceSetting ->
                 Text(
-                    text = targetContent,
+                    text = currencyAndWithoutBalanceSetting.first,
                     color = onAccountColor,
-                    fontSize = 22.sp,
+                    fontSize = if (currencyAndWithoutBalanceSetting.second) 30.sp else 22.sp,
                     lineHeight = 35.sp,
+                    fontWeight = if (currencyAndWithoutBalanceSetting.second) FontWeight.Bold
+                        else FontWeight.Normal
                 )
             }
         }
@@ -233,7 +251,10 @@ private fun AccountCardPreview() {
             modifier = Modifier.fillMaxSize()
         )
         AccountCard(
-            account = Account(color = AccountColors.Blue(AppTheme.DarkDefault).color.name),
+            account = Account(
+                color = AccountColors.Blue(AppTheme.DarkDefault).color.name,
+                withoutBalance = true
+            ),
             appTheme = AppTheme.DarkDefault,
             todayExpenses = 0.0
         )

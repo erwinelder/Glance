@@ -53,9 +53,11 @@ data class Account(
         return getFormattedBalanceWithSpaces() + " $currency"
     }
 
-    fun getFormattedBalanceBeforeDecimalSeparatorOrHiddenBalance(): String {
-        if (hideBalance || withoutBalance) {
+    fun getFormattedBalanceBeforeDecimalSeparator(): String {
+        if (hideBalance) {
             return "***"
+        } else if (withoutBalance) {
+            return ""
         }
 
         return getFormattedBalanceWithSpaces().let {
@@ -63,7 +65,7 @@ data class Account(
         }
     }
 
-    fun getFormattedBalanceAfterDecimalSeparatorOrEmptyString(): String {
+    fun getFormattedBalanceAfterDecimalSeparator(): String {
         if (hideBalance || withoutBalance) {
             return ""
         }
