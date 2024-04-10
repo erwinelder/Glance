@@ -51,6 +51,11 @@ class SetupCategoriesViewModel : ViewModel() {
                 }
             }
         }
+        uiState.value.subcategoryList.forEach { category ->
+            if (category.id > maxFoundedId) {
+                maxFoundedId = category.id
+            }
+        }
 
         return maxFoundedId + 1
     }
@@ -97,16 +102,6 @@ class SetupCategoriesViewModel : ViewModel() {
         }
         return categoryList
     }
-
-    /*private fun changeParentCategoryIdTONull(): List<Category> {
-        val orderNum = uiState.value.parentCategoryOrderNum
-        val categoryList = getCurrentParentCategoryListByType().toMutableList()
-
-        categoryList.getOrNull(orderNum - 1)?.let {
-            categoryList[orderNum - 1] = it.copy(parentCategoryId = null)
-        }
-        return categoryList
-    }*/
 
     private fun getSubcategoryListByOrderNum(parentCategoryOrderNum: Int): List<Category> {
         return if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
