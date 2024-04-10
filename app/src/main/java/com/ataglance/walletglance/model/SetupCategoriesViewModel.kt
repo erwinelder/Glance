@@ -790,21 +790,7 @@ class SetupCategoriesViewModel : ViewModel() {
             )
         )
 
-        /*if (subcategoryList.size == 1) {
-            if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
-                _uiState.update { it.copy(
-                    expenseParentCategoryList = changeParentCategoryIdToParentCategory(),
-                    subcategoryList = subcategoryList
-                ) }
-            } else {
-                _uiState.update { it.copy(
-                    incomeParentCategoryList = changeParentCategoryIdToParentCategory(),
-                    subcategoryList = subcategoryList
-                ) }
-            }
-        } else {*/
-            _uiState.update { it.copy(subcategoryList = subcategoryList) }
-        /*}*/
+        _uiState.update { it.copy(subcategoryList = subcategoryList) }
     }
 
     fun saveSubcategoryList() {
