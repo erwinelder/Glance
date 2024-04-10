@@ -261,17 +261,19 @@ class CategoryController {
                                     }
                             }
                         } else {
-                            subcategoriesLists.getOrNull(
-                                categoryStatsMap[stackUnit.categoryId]!!.category.orderNum - 1
-                            )
-                                ?.find { it.id == stackUnit.subcategoryId }
-                                ?.let { subcategory ->
-                                subcategoriesStatsMap[stackUnit.categoryId] = mutableMapOf(
-                                    stackUnit.subcategoryId to CategoriesStatsMapItem(
-                                        category = subcategory,
-                                        totalAmount = stackUnit.amount
-                                    )
+                            categoryStatsMap[stackUnit.categoryId]?.let { categoryStatsMapItem ->
+                                subcategoriesLists.getOrNull(
+                                    categoryStatsMapItem.category.orderNum - 1
                                 )
+                                    ?.find { it.id == stackUnit.subcategoryId }
+                                    ?.let { subcategory ->
+                                        subcategoriesStatsMap[stackUnit.categoryId] = mutableMapOf(
+                                            stackUnit.subcategoryId to CategoriesStatsMapItem(
+                                                category = subcategory,
+                                                totalAmount = stackUnit.amount
+                                            )
+                                        )
+                                    }
                             }
                         }
                     }
