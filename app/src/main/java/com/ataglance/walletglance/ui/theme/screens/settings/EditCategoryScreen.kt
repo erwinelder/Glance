@@ -101,7 +101,10 @@ fun EditCategoryScreen(
                                 onValueChange = viewModel::onCategoryNameChange
                             )
                             categoryColorNameToColorMap[uiState.category!!.colorName]?.lightAndDark?.let {
-                                if (uiState.category?.parentCategoryId == uiState.category?.id) {
+                                if (
+                                    uiState.category?.parentCategoryId == uiState.category?.id ||
+                                    uiState.category?.parentCategoryId == null
+                                ) {
                                     ColorButton(
                                         color = it.darker,
                                         onClick = { showColorPicker = true }
