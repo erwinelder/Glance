@@ -71,7 +71,7 @@ fun SettingsHomeScreen(
                 fontFamily = Manrope
             )
             Text(
-                text = stringResource(R.string.version) + " 1.0.1",
+                text = stringResource(R.string.version) + " 1.0.2",
                 color = GlanceTheme.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
