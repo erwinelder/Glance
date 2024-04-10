@@ -771,8 +771,8 @@ class SetupCategoriesViewModel : ViewModel() {
 
     fun addNewSubcategory(name: String) {
         val parentCategory = getCategoryFromListByOrderNum(
-            getCurrentParentCategoryListByType(),
-            uiState.value.parentCategoryOrderNum
+            list = getCurrentParentCategoryListByType(),
+            orderNum = uiState.value.parentCategoryOrderNum
         ) ?: return
 
         val subcategoryList = uiState.value.subcategoryList.toMutableList()
