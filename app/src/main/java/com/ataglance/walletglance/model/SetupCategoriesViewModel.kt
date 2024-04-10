@@ -86,19 +86,27 @@ class SetupCategoriesViewModel : ViewModel() {
         }
     }
 
-    private fun changeParentCategoryIdToParentCategory(): List<Category> {
+    private fun changeParentCategoryIdToParentCategoryOrNull(): List<Category> {
         val orderNum = uiState.value.parentCategoryOrderNum
-        val categoryList = if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
-            uiState.value.expenseParentCategoryList.toMutableList()
-        } else {
-            uiState.value.incomeParentCategoryList.toMutableList()
-        }
+        val categoryList = getCurrentParentCategoryListByType().toMutableList()
 
-        categoryList[orderNum - 1].let {
-            categoryList[orderNum - 1] = it.copy(parentCategoryId = it.id)
+        categoryList.getOrNull(orderNum - 1)?.let {
+            categoryList[orderNum - 1] = it.copy(
+                parentCategoryId = if (uiState.value.subcategoryList.isEmpty()) null else it.id
+            )
         }
         return categoryList
     }
+
+    /*private fun changeParentCategoryIdTONull(): List<Category> {
+        val orderNum = uiState.value.parentCategoryOrderNum
+        val categoryList = getCurrentParentCategoryListByType().toMutableList()
+
+        categoryList.getOrNull(orderNum - 1)?.let {
+            categoryList[orderNum - 1] = it.copy(parentCategoryId = null)
+        }
+        return categoryList
+    }*/
 
     private fun getSubcategoryListByOrderNum(parentCategoryOrderNum: Int): List<Category> {
         return if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
@@ -625,7 +633,7 @@ class SetupCategoriesViewModel : ViewModel() {
             }
         }
 
-        return  newList
+        return newList
     }
 
     fun changeCategoryTypeToShow(categoryType: CategoryType) {
@@ -787,7 +795,7 @@ class SetupCategoriesViewModel : ViewModel() {
             )
         )
 
-        if (subcategoryList.size == 1) {
+        /*if (subcategoryList.size == 1) {
             if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
                 _uiState.update { it.copy(
                     expenseParentCategoryList = changeParentCategoryIdToParentCategory(),
@@ -799,26 +807,32 @@ class SetupCategoriesViewModel : ViewModel() {
                     subcategoryList = subcategoryList
                 ) }
             }
-        } else {
+        } else {*/
             _uiState.update { it.copy(subcategoryList = subcategoryList) }
-        }
+        /*}*/
     }
 
     fun saveSubcategoryList() {
         if (uiState.value.categoryTypeToShow == CategoryType.Expense) {
             val subcategoryLists = uiState.value.expenseSubcategoryLists.toMutableList()
             subcategoryLists[uiState.value.parentCategoryOrderNum - 1] = uiState.value.subcategoryList
-            _uiState.update { it.copy(
-                subcategoryList = emptyList(),
-                expenseSubcategoryLists = subcategoryLists
-            ) }
+            _uiState.update {
+                it.copy(
+                    subcategoryList = emptyList(),
+                    expenseSubcategoryLists = subcategoryLists,
+                    expenseParentCategoryList = changeParentCategoryIdToParentCategoryOrNull()
+                )
+            }
         } else {
             val subcategoryLists = uiState.value.incomeSubcategoryLists.toMutableList()
             subcategoryLists[uiState.value.parentCategoryOrderNum - 1] = uiState.value.subcategoryList
-            _uiState.update { it.copy(
-                subcategoryList = emptyList(),
-                incomeSubcategoryLists = subcategoryLists
-            ) }
+            _uiState.update {
+                it.copy(
+                    subcategoryList = emptyList(),
+                    incomeSubcategoryLists = subcategoryLists,
+                    incomeParentCategoryList = changeParentCategoryIdToParentCategoryOrNull()
+                )
+            }
         }
     }
 
