@@ -223,7 +223,7 @@ class SetupCategoriesViewModel : ViewModel() {
                     listOf(
                         Category(
                             id = 21, type = '-', rank = 's', orderNum = 1, parentCategoryId = 3,
-                            name = context.getString(R.string.clothes_and_shoes), iconName = "shopping",
+                            name = context.getString(R.string.clothes_and_shoes), iconName = "clothes_icon",
                             colorName = CategoryColors.Pink(null).color.name
                         ),
                         Category(

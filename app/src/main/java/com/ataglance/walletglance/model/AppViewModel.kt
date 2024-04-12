@@ -360,6 +360,7 @@ class AppViewModel(
         CategoryIcon.Housing.name to CategoryIcon.Housing.res,
         CategoryIcon.HousingPurchase.name to CategoryIcon.HousingPurchase.res,
         CategoryIcon.Shopping.name to CategoryIcon.Shopping.res,
+        CategoryIcon.Clothes.name to CategoryIcon.Clothes.res,
         CategoryIcon.Transport.name to CategoryIcon.Transport.res,
         CategoryIcon.Vehicle.name to CategoryIcon.Vehicle.res,
         CategoryIcon.DigitalLife.name to CategoryIcon.DigitalLife.res,
