@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,19 +32,19 @@ fun CategoryTypeFilterBar(
                 .fillMaxWidth()
                 .horizontalScroll(scrollState)
         ) {
-            Spacer(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)))
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
                 onClick = { onClick(CategoryType.Income) },
                 active = currentCategoryType == CategoryType.Income,
                 text = stringResource(R.string.income_plural)
             )
-            Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             BarButton(
                 onClick = { onClick(CategoryType.Expense) },
                 active = currentCategoryType == CategoryType.Expense,
                 text = stringResource(R.string.expenses)
             )
-            Spacer(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)))
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }
     }
 }

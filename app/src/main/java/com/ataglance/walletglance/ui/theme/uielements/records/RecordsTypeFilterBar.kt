@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
@@ -37,13 +38,13 @@ fun RecordsTypeFilterBar(
                 active = currentTypeFiler == RecordsTypeFilter.Expenses,
                 text = stringResource(R.string.expenses)
             )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
+            Spacer(modifier = Modifier.width(8.dp))
             BarButton(
                 onClick = { onClick(RecordsTypeFilter.Income) },
                 active = currentTypeFiler == RecordsTypeFilter.Income,
                 text = stringResource(R.string.income_plural)
             )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
+            Spacer(modifier = Modifier.width(8.dp))
             BarButton(
                 onClick = { onClick(RecordsTypeFilter.All) },
                 active = currentTypeFiler == RecordsTypeFilter.All,

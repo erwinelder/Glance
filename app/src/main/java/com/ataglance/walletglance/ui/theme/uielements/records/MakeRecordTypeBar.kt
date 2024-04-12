@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,14 +34,14 @@ fun MakeRecordTypeBar(
                 .fillMaxWidth()
                 .horizontalScroll(scrollState)
         ) {
-            Spacer(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)))
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             if (isTransferButtonVisible) {
                 BarButton(
                     onClick = onMakeTransferButtonClick,
                     active = false,
                     text = stringResource(R.string.transfer)
                 )
-                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
             }
             BarButton(
                 onClick = {
@@ -50,7 +50,7 @@ fun MakeRecordTypeBar(
                 active = currentRecordType == RecordType.Expense,
                 text = stringResource(R.string.expense)
             )
-            Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             BarButton(
                 onClick = {
                     onRecordTypeChange(RecordType.Income)
@@ -58,7 +58,7 @@ fun MakeRecordTypeBar(
                 active = currentRecordType == RecordType.Income,
                 text = stringResource(R.string.income_singular)
             )
-            Spacer(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)))
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }
     }
 }
