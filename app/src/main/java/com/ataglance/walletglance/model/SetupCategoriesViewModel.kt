@@ -179,7 +179,7 @@ class SetupCategoriesViewModel : ViewModel() {
                     listOf(
                         Category(
                             id = 13, type = '-', rank = 's', orderNum = 1, parentCategoryId = 1,
-                            name = context.getString(R.string.groceries), iconName = "food_and_drinks",
+                            name = context.getString(R.string.groceries), iconName = "groceries",
                             colorName = CategoryColors.Olive(null).color.name
                         ),
                         Category(
