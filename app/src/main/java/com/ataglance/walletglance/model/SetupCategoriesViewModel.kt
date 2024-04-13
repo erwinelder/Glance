@@ -324,7 +324,7 @@ class SetupCategoriesViewModel : ViewModel() {
                         ),
                         Category(
                             id = 40, type = '-', rank = 's', orderNum = 3, parentCategoryId = 6,
-                            name = context.getString(R.string.entertainment_subs), iconName = "digital_life",
+                            name = context.getString(R.string.entertainment_subs), iconName = "entertainment_subs",
                             colorName = CategoryColors.LightBlue(null).color.name
                         ),
                         Category(
