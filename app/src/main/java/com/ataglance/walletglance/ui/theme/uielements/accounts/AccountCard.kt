@@ -4,16 +4,16 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -144,6 +144,7 @@ fun AccountCard(
 
 @Composable
 private fun BalanceRow(account: Account, onAccountColor: Color) {
+    val scrollState = rememberScrollState()
 
     Column(
         horizontalAlignment = Alignment.Start,
@@ -165,7 +166,8 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
             )
         }
         Row(
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
+            modifier = Modifier.horizontalScroll(scrollState)
         ) {
             AnimatedContent(
                 targetState = account.getFormattedBalanceBeforeDecimalSeparator(),
@@ -175,7 +177,7 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                     text = targetContent,
                     color = onAccountColor,
                     fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
             }
             AnimatedContent(
@@ -187,16 +189,8 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                     color = onAccountColor,
                     fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 33.sp,
+                    lineHeight = 33.sp
                 )
-            }
-            AnimatedContent(
-                targetState = account.withoutBalance,
-                label = "balance to currency spacer"
-            ) { targetState ->
-                if (!targetState) {
-                    Spacer(modifier = Modifier.width(10.dp))
-                }
             }
             AnimatedContent(
                 targetState = account.currency to account.withoutBalance,
@@ -208,7 +202,9 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                     fontSize = if (currencyAndWithoutBalanceSetting.second) 30.sp else 22.sp,
                     lineHeight = 35.sp,
                     fontWeight = if (currencyAndWithoutBalanceSetting.second) FontWeight.Bold
-                        else FontWeight.Normal
+                        else FontWeight.Normal,
+                    modifier = Modifier
+                        .padding(start = if (account.withoutBalance) 0.dp else 10.dp)
                 )
             }
         }
