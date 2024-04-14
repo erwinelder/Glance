@@ -12,8 +12,8 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = 28
         targetSdk = 34
-        versionCode = 26
-        versionName = "1.0.5"
+        versionCode = 27
+        versionName = "1.0.6"
         resourceConfigurations += arrayOf("en", "cs", "de", "ru", "uk")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
