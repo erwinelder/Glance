@@ -309,6 +309,7 @@ fun HomeNavHost(
                 },
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onNavigateToRecordsScreen = {
+                    changeMoveScreenTowardsLeft(true)
                     navController.navigate(AppScreen.Records.route)
                 },
                 onNavigateToCategoriesStatisticsScreen = { parentCategoryId: Int ->
