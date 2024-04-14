@@ -3,12 +3,12 @@ package com.ataglance.walletglance.ui.theme.widgets
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,64 +27,52 @@ import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
-import com.ataglance.walletglance.ui.theme.uielements.records.EmptyRecordsHistoryMessageContainer
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
 
 @Composable
-fun RecordHistory(
+fun RecordHistoryWidget(
     recordStackList: List<RecordStack>,
     appTheme: AppTheme?,
     getCategoryAndIcon: (Int, Int?, RecordType?) -> Pair<Category?, Int?>?,
     getAccount: (Int) -> Account?,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    recordsTypeFilter: RecordsTypeFilter = RecordsTypeFilter.All,
-    filledWidth: Float? = null,
-    title: String = ""
+    recordsTypeFilter: RecordsTypeFilter = RecordsTypeFilter.All
 ) {
     val includeYearToRecordDate = RecordController().includeYearToRecordDate(recordStackList)
-    val lazyListState = rememberLazyListState()
 
-    GlassSurface(filledWidth = filledWidth) {
+    GlassSurface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = if (title.isNotBlank()) 16.dp else 0.dp,
+                    top = 16.dp,
                     start = 16.dp,
                     end = 16.dp
                 )
         ) {
-            if (title.isNotBlank()) {
-                Text(
-                    text = stringResource(R.string.recent),
-                    color = GlanceTheme.onSurface,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Light
-                )
-            }
+            Text(
+                text = stringResource(R.string.recent),
+                color = GlanceTheme.onSurface,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Light
+            )
             AnimatedContent(
                 targetState = Pair(recordStackList, recordsTypeFilter),
                 label = "records history widget content"
             ) { targetRecordStackListAndTypeFilter ->
-                LazyColumn(
-                    state = lazyListState,
-                    contentPadding = PaddingValues(
-                        top = if (title.isBlank()) 16.dp else 0.dp,
-                        bottom = 16.dp
-                    ),
+                Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(370.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    items(
-                        items = targetRecordStackListAndTypeFilter.first,
-                        key = { it.recordNum }
-                    ) { recordStack ->
+                    for (recordStack in targetRecordStackListAndTypeFilter.first) {
                         if (recordStack.isTransfer()) {
                             TransferComponent(
                                 recordStack = recordStack,
@@ -103,13 +91,7 @@ fun RecordHistory(
                             )
                         }
                     }
-                    if (targetRecordStackListAndTypeFilter.first.isEmpty()) {
-                        item {
-                            EmptyRecordsHistoryMessageContainer(
-                                targetRecordStackListAndTypeFilter.second
-                            )
-                        }
-                    }
+                    Spacer(modifier = Modifier)
                 }
             }
         }

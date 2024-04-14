@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -39,7 +38,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.NavigationTextArro
 import com.ataglance.walletglance.ui.theme.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.ui.theme.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.ui.theme.widgets.GreetingsMessage
-import com.ataglance.walletglance.ui.theme.widgets.RecordHistory
+import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
 
 @Composable
 fun HomeScreen(
@@ -159,7 +158,7 @@ private fun CompactLayout(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    RecordHistory(
+                    RecordHistoryWidget(
                         recordStackList = widgetsUiState.filteredRecordStackList.take(3),
                         appTheme = appTheme,
                         getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
@@ -175,9 +174,7 @@ private fun CompactLayout(
                             AccountController().getAccountById(accountId, accountsUiState.accountList)
                         },
                         onRecordClick = onRecordClick,
-                        onTransferClick = onTransferClick,
-                        modifier = Modifier.height(370.dp),
-                        title = stringResource(R.string.recent)
+                        onTransferClick = onTransferClick
                     )
                     NavigationTextArrowButton(
                         text = stringResource(R.string.view_all),
@@ -277,7 +274,7 @@ private fun ExpandedLayout(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                RecordHistory(
+                RecordHistoryWidget(
                     recordStackList = filteredRecordStackList.take(3),
                     appTheme = appTheme,
                     getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
@@ -293,9 +290,7 @@ private fun ExpandedLayout(
                         AccountController().getAccountById(accountId, accountsUiState.accountList)
                     },
                     onRecordClick = onRecordClick,
-                    onTransferClick = onTransferClick,
-                    modifier = Modifier.height(370.dp),
-                    title = stringResource(R.string.recent)
+                    onTransferClick = onTransferClick
                 )
                 NavigationTextArrowButton(
                     text = stringResource(R.string.view_all),
