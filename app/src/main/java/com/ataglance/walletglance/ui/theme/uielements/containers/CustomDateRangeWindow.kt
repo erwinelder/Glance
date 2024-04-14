@@ -68,7 +68,7 @@ fun BoxScope.CustomDateRangeWindow(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                    .background(GlanceTheme.surface)
+                    .background(GlanceTheme.background)
                     /*.innerShadow(
                         shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)),
                         color = GlanceTheme.onSurface.copy(.25f),
