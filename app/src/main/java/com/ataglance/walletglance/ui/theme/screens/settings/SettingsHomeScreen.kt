@@ -118,12 +118,12 @@ fun SettingsHomeScreen(
             ) {
                 item {
                     SettingPlate(category = settingsCategories.accounts) {
-                        onNavigateToScreen(SettingsScreen.Data)
+                        onNavigateToScreen(SettingsScreen.Accounts)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.categories) {
-                        onNavigateToScreen(SettingsScreen.Language)
+                        onNavigateToScreen(SettingsScreen.Categories)
                     }
                 }
                 item {
@@ -133,12 +133,12 @@ fun SettingsHomeScreen(
                 }
                 item {
                     SettingPlate(category = settingsCategories.language) {
-                        onNavigateToScreen(SettingsScreen.Categories)
+                        onNavigateToScreen(SettingsScreen.Language)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.resetData) {
-                        onNavigateToScreen(SettingsScreen.Accounts)
+                        onNavigateToScreen(SettingsScreen.Data)
                     }
                 }
             }
