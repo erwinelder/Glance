@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.ui.theme.screens.settings
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -7,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,8 +28,15 @@ fun SetupLanguageScreen(
     chosenLanguage: String?,
     chooseNewLanguage: (String) -> Unit,
     onApplyButton: (String) -> Unit,
+    onContextChange: (Context) -> Unit,
     onNextNavigationButton: () -> Unit
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(context) {
+        if (isAppSetUp && chosenLanguage != null && appLanguage != chosenLanguage) {
+            onContextChange(context)
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,12 +56,11 @@ fun SetupLanguageScreen(
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
         SmallPrimaryButton(
-            onClick = {
-                chosenLanguage?.let { onApplyButton(it) }
-            },
             text = stringResource(R.string.apply),
             enabled = appLanguage != chosenLanguage
-        )
+        ) {
+            chosenLanguage?.let { onApplyButton(it) }
+        }
         Spacer(modifier = Modifier.weight(1f))
         if (!isAppSetUp) {
             PrimaryButton(

@@ -103,6 +103,16 @@ class AppViewModel(
         AppCompatDelegate.setApplicationLocales(appLocale)
     }
 
+    fun translateDefaultCategories(context: Context) {
+        val translatedCategories = DefaultCategoriesPackage(context).translateDefaultCategories(
+            categoriesUiState = categoriesUiState.value
+        )
+
+        viewModelScope.launch {
+            categoryRepository.upsertCategories(translatedCategories)
+        }
+    }
+
     fun setUseDeviceTheme(value: Boolean) {
         viewModelScope.launch {
             settingsRepository.saveUseDeviceThemePreference(value)
@@ -333,7 +343,6 @@ class AppViewModel(
                 }?.copy(isActive = true)
             )
         }
-        /*updateWidgetsStatistic(recordStackList.value)*/
     }
 
     private fun getTransferSecondUnitRecordNumbers(transferList: List<Record>): List<Int> {

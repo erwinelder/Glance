@@ -623,6 +623,7 @@ fun NavGraphBuilder.setupGraph(
                 onApplyButton = { langCode: String ->
                     appViewModel.setLanguage(langCode, context)
                 },
+                onContextChange = appViewModel::translateDefaultCategories,
                 onNextNavigationButton = {
                     onNavigateToScreen(SettingsScreen.Appearance.route)
                 }
