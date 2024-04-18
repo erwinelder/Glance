@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.ui.theme.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -612,7 +613,6 @@ fun NavGraphBuilder.setupGraph(
             if (chosenLanguage == null) {
                 viewModel.chooseNewLanguage(appUiSettings.langCode)
             }
-            val context = LocalContext.current
 
             SetupLanguageScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -620,7 +620,7 @@ fun NavGraphBuilder.setupGraph(
                 appLanguage = appUiSettings.langCode,
                 chosenLanguage = chosenLanguage,
                 chooseNewLanguage = viewModel::chooseNewLanguage,
-                onApplyButton = { langCode: String ->
+                onApplyButton = { langCode: String, context: Context ->
                     appViewModel.setLanguage(langCode, context)
                 },
                 onContextChange = appViewModel::translateDefaultCategories,
@@ -782,6 +782,9 @@ fun NavGraphBuilder.setupGraph(
             val newCategoryName = stringResource(R.string.new_category_name)
             val coroutineScope = rememberCoroutineScope()
             val context = LocalContext.current
+            LaunchedEffect(appUiSettings.langCode) {
+                viewModel.applyCategoryList(appViewModel.categoriesUiState.value, context)
+            }
             LaunchedEffect(true) {
                 if (uiState.expenseParentCategoryList.isEmpty() || uiState.incomeParentCategoryList.isEmpty()) {
                     viewModel.applyCategoryList(appViewModel.categoriesUiState.value, context)

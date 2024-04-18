@@ -27,13 +27,13 @@ fun SetupLanguageScreen(
     appLanguage: String,
     chosenLanguage: String?,
     chooseNewLanguage: (String) -> Unit,
-    onApplyButton: (String) -> Unit,
+    onApplyButton: (String, Context) -> Unit,
     onContextChange: (Context) -> Unit,
     onNextNavigationButton: () -> Unit
 ) {
     val context = LocalContext.current
     LaunchedEffect(context) {
-        if (isAppSetUp && chosenLanguage != null && appLanguage != chosenLanguage) {
+        if (isAppSetUp && chosenLanguage != null) {
             onContextChange(context)
         }
     }
@@ -59,7 +59,7 @@ fun SetupLanguageScreen(
             text = stringResource(R.string.apply),
             enabled = appLanguage != chosenLanguage
         ) {
-            chosenLanguage?.let { onApplyButton(it) }
+            chosenLanguage?.let { onApplyButton(it, context) }
         }
         Spacer(modifier = Modifier.weight(1f))
         if (!isAppSetUp) {
