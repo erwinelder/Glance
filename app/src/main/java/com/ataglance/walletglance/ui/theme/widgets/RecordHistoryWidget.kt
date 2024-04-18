@@ -2,6 +2,7 @@ package com.ataglance.walletglance.ui.theme.widgets
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
+import com.ataglance.walletglance.ui.theme.uielements.records.EmptyRecordsHistoryMessageContainer
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
 
@@ -64,34 +66,43 @@ fun RecordHistoryWidget(
                 targetState = Pair(recordStackList, recordsTypeFilter),
                 label = "records history widget content"
             ) { targetRecordStackListAndTypeFilter ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(370.dp)
-                        .verticalScroll(rememberScrollState())
+                Box(
+                    contentAlignment = Alignment.Center
                 ) {
-                    for (recordStack in targetRecordStackListAndTypeFilter.first) {
-                        if (recordStack.isTransfer()) {
-                            TransferComponent(
-                                recordStack = recordStack,
-                                includeYearToDate = includeYearToRecordDate,
-                                appTheme = appTheme,
-                                getAccount = getAccount,
-                                onTransferClick = onTransferClick
-                            )
-                        } else {
-                            RecordStackComponent(
-                                recordStack = recordStack,
-                                includeYearToDate = includeYearToRecordDate,
-                                getCategoryAndIcon = getCategoryAndIcon,
-                                getAccount = getAccount,
-                                onRecordClick = onRecordClick
-                            )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(370.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        for (recordStack in targetRecordStackListAndTypeFilter.first) {
+                            if (recordStack.isTransfer()) {
+                                TransferComponent(
+                                    recordStack = recordStack,
+                                    includeYearToDate = includeYearToRecordDate,
+                                    appTheme = appTheme,
+                                    getAccount = getAccount,
+                                    onTransferClick = onTransferClick
+                                )
+                            } else {
+                                RecordStackComponent(
+                                    recordStack = recordStack,
+                                    includeYearToDate = includeYearToRecordDate,
+                                    getCategoryAndIcon = getCategoryAndIcon,
+                                    getAccount = getAccount,
+                                    onRecordClick = onRecordClick
+                                )
+                            }
+                        }
+                        if (targetRecordStackListAndTypeFilter.first.isNotEmpty()) {
+                            Spacer(modifier = Modifier)
                         }
                     }
-                    Spacer(modifier = Modifier)
+                    if (targetRecordStackListAndTypeFilter.first.isEmpty()) {
+                        EmptyRecordsHistoryMessageContainer()
+                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.ui.theme.uielements.records
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,12 +14,12 @@ import com.ataglance.walletglance.model.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 
 @Composable
-fun LazyItemScope.EmptyRecordsHistoryMessageContainer(
+fun EmptyRecordsHistoryMessageContainer(
     recordsTypeFilter: RecordsTypeFilter = RecordsTypeFilter.All
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillParentMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Text(
             text = stringResource(
