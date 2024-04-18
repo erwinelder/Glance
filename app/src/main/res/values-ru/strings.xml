@@ -77,7 +77,7 @@
     <string name="greetings_title_afternoon">Добрый день!</string>
     <string name="greetings_title_evening">Добрый вечер!</string>
     <string name="greetings_title_night">Доброй ночи!</string>
-    <string name="greetings_empty_message">Сегодня еще не было никаких расходов</string>
+    <string name="greetings_empty_message">Сегодня ещё не было никаких расходов</string>
     <string name="greetings_expenses_message">Сегодня вы потратили %s %s</string>
     <string name="from_capital">От</string>
     <string name="to">до</string>
