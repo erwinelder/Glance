@@ -38,7 +38,7 @@ fun CategoriesStatisticsScreen(
     viewModel: CategoryStatisticsViewModel,
     parentCategoryId: Int?
 ) {
-    LaunchedEffect(currentDateRangeEnum) {
+    LaunchedEffect(currentDateRangeEnum, accountList) {
         viewModel.clearParentCategory()
     }
     LaunchedEffect(parentCategoryId) {
