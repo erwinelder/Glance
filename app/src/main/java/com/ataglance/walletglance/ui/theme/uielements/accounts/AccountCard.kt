@@ -123,6 +123,7 @@ fun AccountCard(
             }
             FilledIconButton(
                 onClick = onHideBalanceButton,
+                enabled = !account.withoutBalance,
                 shape = RoundedCornerShape(13.dp),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = onAccountColor.copy(.1f),
