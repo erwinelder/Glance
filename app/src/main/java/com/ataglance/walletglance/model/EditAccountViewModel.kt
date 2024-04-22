@@ -90,13 +90,18 @@ class EditAccountViewModel(
         }
     }
     fun changeHideBalance(value: Boolean) {
+        if (uiState.value.withoutBalance) return
+
         _uiState.update {
             it.copy(hideBalance = value)
         }
     }
     fun changeWithoutBalance(value: Boolean) {
         _uiState.update {
-            it.copy(withoutBalance = value)
+            it.copy(
+                hideBalance = false,
+                withoutBalance = value
+            )
         }
     }
 
