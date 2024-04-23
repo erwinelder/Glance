@@ -119,9 +119,10 @@ class CategoryController {
 
         oneDimenList.forEach { category ->
             category.parentCategoryId?.let { parentCategoryId ->
-                getCategoryOrderNumById(parentCategoryId, parentCategoriesList)?.let { parentCategoryOrderNum ->
-                    twoDimenList[parentCategoryOrderNum - 1].add(category)
-                }
+                getCategoryOrderNumById(parentCategoryId, parentCategoriesList)
+                    ?.let { parentCategoryOrderNum ->
+                        twoDimenList[parentCategoryOrderNum - 1].add(category)
+                    }
             }
         }
 
@@ -295,6 +296,59 @@ class CategoryController {
                     subcategoriesStatistics = subcategoriesStatsMap[categoryStatsMapItem.category.id]
                 )
             }
+    }
+
+    fun fixCategoriesOrderNums(categoryList: List<Category>): List<Category> {
+        val fixedCategoryList = mutableListOf<Category>()
+
+        val categoryListsExpenseAndIncome = categoryList.partition { it.isExpense() }
+
+        val expenseCategoryListsParAndSub =
+            categoryListsExpenseAndIncome.first.partition { it.isParentCategory() }
+        val incomeCategoryListsParAndSub =
+            categoryListsExpenseAndIncome.second.partition { it.isParentCategory() }
+
+        expenseCategoryListsParAndSub.first
+            .sortedBy { it.orderNum }
+            .forEachIndexed { index, category ->
+                fixedCategoryList.add(category.copy(orderNum = index + 1))
+            }
+
+        incomeCategoryListsParAndSub.first
+            .sortedBy { it.orderNum }
+            .forEachIndexed { index, category ->
+                fixedCategoryList.add(category.copy(orderNum = index + 1))
+            }
+
+        expenseCategoryListsParAndSub.second.sortedBy { it.parentCategoryId }
+            .forEach { subcategory ->
+                if (
+                    fixedCategoryList.lastOrNull()?.isParentCategory() == true ||
+                    subcategory.parentCategoryId != fixedCategoryList.lastOrNull()?.parentCategoryId
+                ) {
+                    fixedCategoryList.add(subcategory.copy(orderNum = 1))
+                } else {
+                    fixedCategoryList.lastOrNull()?.let {
+                        fixedCategoryList.add(subcategory.copy(orderNum = it.orderNum + 1))
+                    }
+                }
+            }
+
+        incomeCategoryListsParAndSub.second.sortedBy { it.parentCategoryId }
+            .forEach { subcategory ->
+                if (
+                    fixedCategoryList.lastOrNull()?.isParentCategory() == true &&
+                    subcategory.parentCategoryId != fixedCategoryList.lastOrNull()?.parentCategoryId
+                ) {
+                    fixedCategoryList.add(subcategory.copy(orderNum = 1))
+                } else {
+                    fixedCategoryList.lastOrNull()?.let {
+                        fixedCategoryList.add(subcategory.copy(orderNum = it.orderNum + 1))
+                    }
+                }
+            }
+
+        return fixedCategoryList
     }
 
 }

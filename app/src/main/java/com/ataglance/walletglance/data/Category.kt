@@ -18,7 +18,7 @@ data class Category(
     val colorName: String = CategoryColorName.GrayDefault.name
 ) {
 
-    private fun isExpense() = type == '-'
+    fun isExpense() = type == '-'
     private fun isIncome() = type == '+'
 
     fun getCategoryType(): CategoryType? {
@@ -28,5 +28,7 @@ data class Category(
             else -> null
         }
     }
+
+    fun isParentCategory() = rank == 'c'
 
 }

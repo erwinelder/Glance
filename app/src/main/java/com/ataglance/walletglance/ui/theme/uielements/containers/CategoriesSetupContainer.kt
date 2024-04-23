@@ -78,7 +78,7 @@ fun ColumnScope.CategoriesSetupContainer(
                             .fillMaxWidth()
                             .padding(2.dp)
                     ) {
-                        items(items = targetCategoryList, key = { it.orderNum }) { category ->
+                        items(items = targetCategoryList, key = { it.id }) { category ->
                             ParentCategorySetupElement(
                                 category = category,
                                 iconRes = categoryNameAndIconMap[category.iconName],

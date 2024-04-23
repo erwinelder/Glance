@@ -412,12 +412,19 @@ class AppViewModel(
     )
 
     private fun fetchCategoriesFromDb() {
+        val categoryController = CategoryController()
+
         viewModelScope.launch {
             categoryRepository.getCategories().collect { categoryList ->
 
-                _categoriesUiState.update {
-                    CategoryController().breakCategoriesOnDifferentLists(categoryList)
+                try {
+                    _categoriesUiState.update {
+                        categoryController.breakCategoriesOnDifferentLists(categoryList)
+                    }
+                } catch (e: Exception) {
+                    saveCategoriesToDb(categoryController.fixCategoriesOrderNums(categoryList))
                 }
+
             }
         }
     }
