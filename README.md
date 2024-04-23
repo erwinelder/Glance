@@ -1,4 +1,5 @@
 # WalletGlance
+[Google Play Store link](https://play.google.com/store/apps/details?id=com.ataglance.walletglance)
 
 Make records of your expenses and income and view statistics on that.
 
@@ -17,11 +18,11 @@ Set up your own categories. Adjust the category name, color, and icon to specify
 • STATISTICS
 View your recent records on the app home screen or go to a separate screen to view all of your records. View statistics by categories and subcategories to see how much you have spent on items within different categories. View these statistics by specifying the period: this month, last month, a specific month of a specific year, or a completely custom period.
 
-![App screenshot 1](https://play-lh.googleusercontent.com/OcQi59tYZFOJvN5FBk5wHqXHxiyanqwVqNEHwEaw-TJXrqb5hcY67_dAR5dkZqUGY8Q=w1052-h592)
-![App screenshot 2](https://play-lh.googleusercontent.com/LBhsDI6Opkrm7sJLoLMMbalx751UWbXRmfaM6UbuzVGxxPK_2-MuPbzZrUKwA1D-3g=w1052-h592)
-![App screenshot 3](https://play-lh.googleusercontent.com/kt2P7GPd_wkBUNjHCELjLICX6Ab4tmjXPC1BxbiCGIzBaTpBycfDdhwTwYIYe3ga-t4=w1052-h592)
+![App screenshot 1](https://play-lh.googleusercontent.com/mW0zqs2MyHx70eau-_46_z5UXFwz_CJH81RDEexRcXL_NNG92NYZvieN9-Wir96oyJE=w1052-h592)
+![App screenshot 2](https://play-lh.googleusercontent.com/Jhe5rYWInIYejoJD2pNQqRd4rsYBphjwCWmGGDGqYJ0eE_QvbFKK3HiYOMtUBGtfYGo=w1052-h592)
+![App screenshot 3](https://play-lh.googleusercontent.com/OT36msaOuT5iBdD8Rf7lLySsLQ3s8QhLMAXypmpNgDKFwYpLnhafgGyS3gFR5AKJjz0=w1052-h592)
 ![App screenshot 4](https://play-lh.googleusercontent.com/EF76-bW-eDmxqwxBcaxLmBzdNkft8G_VnrtjU8NRX3YV5hdUksIipRIt-BvGJG7K-g=w1052-h592)
-![App screenshot 5](https://play-lh.googleusercontent.com/CPyfAtHwf_s7gVzLejgri1OEinxQWzjESrfgkvtW7lPVgZvVlbdtn7eKmXQt1WTkKsw9=w1052-h592)
-![App screenshot 6](https://play-lh.googleusercontent.com/QN9TNC5d6zNA2_LbfW6-8GCAF1YjrHgUYepuo3qoIPsrqVvdVc0V0xV0U3bfwv46UQBM=w1052-h592)
-![App screenshot 7](https://play-lh.googleusercontent.com/NzID3meillCKYEzMNpXbxyhbcXBUT2ukM7c0wvKCo2nssD4P9QCH9dVbQt0IIxKOZgI=w1052-h592)
-![App screenshot 8](https://play-lh.googleusercontent.com/xW0vWWJJr13T1gZ202Z0xVna48KZjJ3hbX_6D-rpfUL94k4VHhGnlAVg-e67vaie9A=w1052-h592)
+![App screenshot 5](https://play-lh.googleusercontent.com/_N27nnfdEIqHZ9c-Wa5RK83fX-Njg0EtwFnFJPwVlU231RWsNuI9lNfp-kIyj3vJeho=w1052-h592)
+![App screenshot 6](https://play-lh.googleusercontent.com/Epb3-oiBtETtiapME0aZrEd-cEG3pppqjnCa2fRqAczPIM6p9tiH1emL2XCVpD9eXz0=w1052-h592)
+![App screenshot 7](https://play-lh.googleusercontent.com/Wvkd_20heYwxEgK6WyvZs99L0Ag4RA9WQ6NZ1BLtryxERMWrSuRHCO_cAq8Ve5vn8w=w1052-h592)
+![App screenshot 8](https://play-lh.googleusercontent.com/EcF3NjnKnCz7CoV8uapwRv26sdy3voVJvNjL_6tiiPNuHXf2kz2r3ENTGx4_tshn1g=w1052-h592)
