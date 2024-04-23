@@ -782,11 +782,16 @@ fun NavGraphBuilder.setupGraph(
             val newCategoryName = stringResource(R.string.new_category_name)
             val coroutineScope = rememberCoroutineScope()
             val context = LocalContext.current
-            LaunchedEffect(appUiSettings.langCode) {
-                viewModel.applyCategoryList(appViewModel.categoriesUiState.value, context)
-            }
             LaunchedEffect(true) {
-                if (uiState.expenseParentCategoryList.isEmpty() || uiState.incomeParentCategoryList.isEmpty()) {
+                if (
+                    uiState.expenseParentCategoryList.isEmpty() ||
+                    uiState.incomeParentCategoryList.isEmpty() ||
+                    uiState.expenseParentCategoryList.firstOrNull()?.let { stateCategory ->
+                        appViewModel.categoriesUiState.value.parentCategories.expense.firstOrNull()?.let { appCategory ->
+                            stateCategory.id == appCategory.id && stateCategory.name != appCategory.name
+                        }
+                    } == true
+                ) {
                     viewModel.applyCategoryList(appViewModel.categoriesUiState.value, context)
                 } else {
                     viewModel.changeNavigatedFromSetupCategoriesScreen(true)
