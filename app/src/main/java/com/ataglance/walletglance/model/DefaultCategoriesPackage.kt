@@ -457,7 +457,20 @@ data class DefaultCategoriesPackage(
         }
 
         return currentCategoriesToTranslate.map { currentCategory ->
-            translatedDefaultCategories.find { it.id == currentCategory.id } ?: currentCategory
+            translatedDefaultCategories.find {
+                it.id == currentCategory.id
+            }?.let{
+                it.copy(
+                    id = currentCategory.id,
+                    type = currentCategory.type,
+                    rank = currentCategory.rank,
+                    orderNum = currentCategory.orderNum,
+                    parentCategoryId = currentCategory.parentCategoryId,
+                    name = it.name,
+                    iconName = currentCategory.iconName,
+                    colorName = currentCategory.colorName
+                )
+            } ?: currentCategory
         }
     }
 
