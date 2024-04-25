@@ -165,4 +165,19 @@ class AccountController {
         }
     }
 
+    fun checkAccountsOrderNums(accountList: List<Account>): Boolean {
+        accountList.sortedBy { it.orderNum }.forEachIndexed { index, account ->
+            if (account.orderNum != index + 1) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun fixAccountsOrderNums(accountList: List<Account>): List<Account> {
+        return accountList.sortedBy { it.orderNum }.mapIndexed { index, account ->
+            account.copy(orderNum = index + 1)
+        }
+    }
+
 }

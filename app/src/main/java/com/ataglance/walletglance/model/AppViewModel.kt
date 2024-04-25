@@ -247,7 +247,11 @@ class AppViewModel(
     private fun fetchAccountsFromDb() {
         viewModelScope.launch {
             accountRepository.getAllAccounts().collect { accountsList ->
-                applyAccountListToUiState(accountsList)
+                if (AccountController().checkAccountsOrderNums(accountsList)) {
+                    applyAccountListToUiState(accountsList)
+                } else {
+                    saveAccountsToDb(AccountController().fixAccountsOrderNums(accountsList))
+                }
             }
         }
     }
