@@ -12,109 +12,109 @@ data class DefaultCategoriesPackage(
         return CategoriesUiState(
             parentCategories = ParentCategoriesLists(
                 expense = listOf(
-                Category(
-                    id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
-                    name = context.getString(R.string.food_and_drinks), iconName = "food_and_drinks",
-                    colorName = CategoryColors.Olive(null).color.name
+                    Category(
+                        id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
+                        name = context.getString(R.string.food_and_drinks), iconName = "food_and_drinks",
+                        colorName = CategoryColors.Olive(null).color.name
+                    ),
+                    Category(
+                        id = 2, type = '-', rank = 'c', orderNum = 2, parentCategoryId = 2,
+                        name = context.getString(R.string.housing), iconName = "housing",
+                        colorName = CategoryColors.Camel(null).color.name
+                    ),
+                    Category(
+                        id = 3, type = '-', rank = 'c', orderNum = 3, parentCategoryId = 3,
+                        name = context.getString(R.string.shopping), iconName = "shopping",
+                        colorName = CategoryColors.Pink(null).color.name
+                    ),
+                    Category(
+                        id = 4, type = '-', rank = 'c', orderNum = 4, parentCategoryId = 4,
+                        name = context.getString(R.string.transport), iconName = "transport",
+                        colorName = CategoryColors.Green(null).color.name
+                    ),
+                    Category(
+                        id = 5, type = '-', rank = 'c', orderNum = 5, parentCategoryId = 5,
+                        name = context.getString(R.string.vehicle), iconName = "vehicle",
+                        colorName = CategoryColors.Red(null).color.name
+                    ),
+                    Category(
+                        id = 6, type = '-', rank = 'c', orderNum = 6, parentCategoryId = 6,
+                        name = context.getString(R.string.digital_life), iconName = "digital_life",
+                        colorName = CategoryColors.LightBlue(null).color.name
+                    ),
+                    Category(
+                        id = 7, type = '-', rank = 'c', orderNum = 7, parentCategoryId = 7,
+                        name = context.getString(R.string.medicine), iconName = "medicine",
+                        colorName = CategoryColors.Lavender(null).color.name
+                    ),
+                    Category(
+                        id = 8, type = '-', rank = 'c', orderNum = 8, parentCategoryId = 8,
+                        name = context.getString(R.string.education), iconName = "education",
+                        colorName = CategoryColors.Blue(null).color.name
+                    ),
+                    Category(
+                        id = 9, type = '-', rank = 'c', orderNum = 9, parentCategoryId = 9,
+                        name = context.getString(R.string.travels), iconName = "travels",
+                        colorName = CategoryColors.Aquamarine(null).color.name
+                    ),
+                    Category(
+                        id = 10, type = '-', rank = 'c', orderNum = 10, parentCategoryId = 10,
+                        name = context.getString(R.string.entertainment), iconName = "entertainment",
+                        colorName = CategoryColors.Orange(null).color.name
+                    ),
+                    Category(
+                        id = 11, type = '-', rank = 'c', orderNum = 11, parentCategoryId = 11,
+                        name = context.getString(R.string.investments), iconName = "investments",
+                        colorName = CategoryColors.Yellow(null).color.name
+                    ),
+                    Category(
+                        id = 12, type = '-', rank = 'c', orderNum = 12, parentCategoryId = 12,
+                        name = context.getString(R.string.other_category), iconName = "other",
+                        colorName = CategoryColors.GrayDefault(null).color.name
+                    )
                 ),
-                Category(
-                    id = 2, type = '-', rank = 'c', orderNum = 2, parentCategoryId = 2,
-                    name = context.getString(R.string.housing), iconName = "housing",
-                    colorName = CategoryColors.Camel(null).color.name
-                ),
-                Category(
-                    id = 3, type = '-', rank = 'c', orderNum = 3, parentCategoryId = 3,
-                    name = context.getString(R.string.shopping), iconName = "shopping",
-                    colorName = CategoryColors.Pink(null).color.name
-                ),
-                Category(
-                    id = 4, type = '-', rank = 'c', orderNum = 4, parentCategoryId = 4,
-                    name = context.getString(R.string.transport), iconName = "transport",
-                    colorName = CategoryColors.Green(null).color.name
-                ),
-                Category(
-                    id = 5, type = '-', rank = 'c', orderNum = 5, parentCategoryId = 5,
-                    name = context.getString(R.string.vehicle), iconName = "vehicle",
-                    colorName = CategoryColors.Red(null).color.name
-                ),
-                Category(
-                    id = 6, type = '-', rank = 'c', orderNum = 6, parentCategoryId = 6,
-                    name = context.getString(R.string.digital_life), iconName = "digital_life",
-                    colorName = CategoryColors.LightBlue(null).color.name
-                ),
-                Category(
-                    id = 7, type = '-', rank = 'c', orderNum = 7, parentCategoryId = 7,
-                    name = context.getString(R.string.medicine), iconName = "medicine",
-                    colorName = CategoryColors.Lavender(null).color.name
-                ),
-                Category(
-                    id = 8, type = '-', rank = 'c', orderNum = 8, parentCategoryId = 8,
-                    name = context.getString(R.string.education), iconName = "education",
-                    colorName = CategoryColors.Blue(null).color.name
-                ),
-                Category(
-                    id = 9, type = '-', rank = 'c', orderNum = 9, parentCategoryId = 9,
-                    name = context.getString(R.string.travels), iconName = "travels",
-                    colorName = CategoryColors.Aquamarine(null).color.name
-                ),
-                Category(
-                    id = 10, type = '-', rank = 'c', orderNum = 10, parentCategoryId = 10,
-                    name = context.getString(R.string.entertainment), iconName = "entertainment",
-                    colorName = CategoryColors.Orange(null).color.name
-                ),
-                Category(
-                    id = 11, type = '-', rank = 'c', orderNum = 11, parentCategoryId = 11,
-                    name = context.getString(R.string.investments), iconName = "investments",
-                    colorName = CategoryColors.Yellow(null).color.name
-                ),
-                Category(
-                    id = 12, type = '-', rank = 'c', orderNum = 12, parentCategoryId = 12,
-                    name = context.getString(R.string.other_category), iconName = "other",
-                    colorName = CategoryColors.GrayDefault(null).color.name
-                )
-            ),
                 income = listOf(
-                Category(
-                    id = 70, type = '+', rank = 'c', orderNum = 1, parentCategoryId = null,
-                    name = context.getString(R.string.salary), iconName = "salary",
-                    colorName = CategoryColors.Green(null).color.name
-                ),
-                Category(
-                    id = 71, type = '+', rank = 'c', orderNum = 2, parentCategoryId = null,
-                    name = context.getString(R.string.scholarship), iconName = "scholarship",
-                    colorName = CategoryColors.Blue(null).color.name
-                ),
-                Category(
-                    id = 72, type = '+', rank = 'c', orderNum = 3, parentCategoryId = null,
-                    name = context.getString(R.string.sale), iconName = "sales",
-                    colorName = CategoryColors.Orange(null).color.name
-                ),
-                Category(
-                    id = 73, type = '+', rank = 'c', orderNum = 4, parentCategoryId = null,
-                    name = context.getString(R.string.rent), iconName = "housing",
-                    colorName = CategoryColors.Camel(null).color.name
-                ),
-                Category(
-                    id = 74, type = '+', rank = 'c', orderNum = 5, parentCategoryId = null,
-                    name = context.getString(R.string.refunds), iconName = "refunds",
-                    colorName = CategoryColors.LightBlue(null).color.name
-                ),
-                Category(
-                    id = 75, type = '+', rank = 'c', orderNum = 6, parentCategoryId = null,
-                    name = context.getString(R.string.investments), iconName = "investments",
-                    colorName = CategoryColors.Yellow(null).color.name
-                ),
-                Category(
-                    id = 76, type = '+', rank = 'c', orderNum = 7, parentCategoryId = null,
-                    name = context.getString(R.string.gifts), iconName = "gifts",
-                    colorName = CategoryColors.Lavender(null).color.name
-                ),
-                Category(
-                    id = 77, type = '+', rank = 'c', orderNum = 8, parentCategoryId = null,
-                    name = context.getString(R.string.transfers), iconName = "transfers",
-                    colorName = CategoryColors.GrayDefault(null).color.name
+                    Category(
+                        id = 70, type = '+', rank = 'c', orderNum = 1, parentCategoryId = null,
+                        name = context.getString(R.string.salary), iconName = "salary",
+                        colorName = CategoryColors.Green(null).color.name
+                    ),
+                    Category(
+                        id = 71, type = '+', rank = 'c', orderNum = 2, parentCategoryId = null,
+                        name = context.getString(R.string.scholarship), iconName = "scholarship",
+                        colorName = CategoryColors.Blue(null).color.name
+                    ),
+                    Category(
+                        id = 72, type = '+', rank = 'c', orderNum = 3, parentCategoryId = null,
+                        name = context.getString(R.string.sale), iconName = "sales",
+                        colorName = CategoryColors.Orange(null).color.name
+                    ),
+                    Category(
+                        id = 73, type = '+', rank = 'c', orderNum = 4, parentCategoryId = null,
+                        name = context.getString(R.string.rent), iconName = "housing",
+                        colorName = CategoryColors.Camel(null).color.name
+                    ),
+                    Category(
+                        id = 74, type = '+', rank = 'c', orderNum = 5, parentCategoryId = null,
+                        name = context.getString(R.string.refunds), iconName = "refunds",
+                        colorName = CategoryColors.LightBlue(null).color.name
+                    ),
+                    Category(
+                        id = 75, type = '+', rank = 'c', orderNum = 6, parentCategoryId = null,
+                        name = context.getString(R.string.investments), iconName = "investments",
+                        colorName = CategoryColors.Yellow(null).color.name
+                    ),
+                    Category(
+                        id = 76, type = '+', rank = 'c', orderNum = 7, parentCategoryId = null,
+                        name = context.getString(R.string.gifts), iconName = "gifts",
+                        colorName = CategoryColors.Lavender(null).color.name
+                    ),
+                    Category(
+                        id = 77, type = '+', rank = 'c', orderNum = 8, parentCategoryId = null,
+                        name = context.getString(R.string.transfers), iconName = "transfers",
+                        colorName = CategoryColors.GrayDefault(null).color.name
+                    )
                 )
-            ),
             ),
             subcategories = SubcategoriesLists(
                 expense = listOf(
