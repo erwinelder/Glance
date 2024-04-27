@@ -147,7 +147,7 @@ private fun CategoryList(
     ) {
         items(
             items = list,
-            key = { it.orderNum }
+            key = { it.id }
         ) { category ->
             if (category.orderNum != 1) {
                 SmallDivider()

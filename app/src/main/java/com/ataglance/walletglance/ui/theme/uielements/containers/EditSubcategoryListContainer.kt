@@ -63,7 +63,7 @@ fun ColumnScope.EditSubcategoryListContainer(
                             .fillMaxWidth()
                             .padding(2.dp)
                     ) {
-                        items(items = targetSubcategoryList, key = { it.orderNum }) { category ->
+                        items(items = targetSubcategoryList, key = { it.id }) { category ->
                             SubcategorySetupElement(
                                 category = category,
                                 iconRes = categoryNameAndIconMap[category.iconName],
