@@ -126,7 +126,22 @@ class CategoryController {
             }
         }
 
+        for (categoryList in twoDimenList) {
+            if (!checkCategoriesOrderNums(categoryList)) {
+                throw IllegalAccessException("Subcategories order numbers are not correct")
+            }
+        }
+
         return twoDimenList
+    }
+
+    private fun checkCategoriesOrderNums(categoryList: List<Category>): Boolean {
+        categoryList.sortedBy { it.orderNum }.forEachIndexed { index, category ->
+            if (category.orderNum != index + 1) {
+                return false
+            }
+        }
+        return true
     }
 
     private fun breakListOnSubcategoriesLists(
@@ -147,26 +162,10 @@ class CategoryController {
         expenseSubcategoriesList.sortBy { it.orderNum }
         incomeSubcategoriesList.sortBy { it.orderNum }
 
-        if (
-            !checkCategoriesOrderNums(expenseSubcategoriesList) ||
-            !checkCategoriesOrderNums(incomeSubcategoriesList)
-        ) {
-            throw IllegalAccessException("Subcategories order numbers are not correct")
-        }
-
         return SubcategoriesLists(
             transformToTwoDimenSubcategoriesList(expenseSubcategoriesList, parentCategoriesLists.expense),
             transformToTwoDimenSubcategoriesList(incomeSubcategoriesList, parentCategoriesLists.income)
         )
-    }
-
-    private fun checkCategoriesOrderNums(categoryList: List<Category>): Boolean {
-        categoryList.sortedBy { it.orderNum }.forEachIndexed { index, category ->
-            if (category.orderNum != index + 1) {
-                return false
-            }
-        }
-        return true
     }
 
     fun breakCategoriesOnDifferentLists(categoryList: List<Category>): CategoriesUiState {
