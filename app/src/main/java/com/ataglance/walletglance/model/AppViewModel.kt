@@ -507,7 +507,7 @@ class AppViewModel(
         return null
     }
 
-    fun getLastRecordCategory(accountId: Int, type: CategoryType): Pair<Category, Category?> {
+    fun getLastRecordCategory(accountId: Int, type: CategoryType): Pair<Category?, Category?> {
         val categoryIdsPair = RecordController().getLastUsedCategoryPairByAccountId(accountId, recordStackList.value)
         if (categoryIdsPair != null) {
             val categoryPair = getCategoryPairByIds(categoryIdsPair.first, categoryIdsPair.second, type)
@@ -526,15 +526,15 @@ class AppViewModel(
         }
 
         return if (type == CategoryType.Expense) {
-            val parentCategory = categoriesUiState.value.parentCategories.expense.last()
-            val subcategory = if (parentCategory.parentCategoryId != null) {
-                categoriesUiState.value.subcategories.expense.last().last()
+            val parentCategory = categoriesUiState.value.parentCategories.expense.lastOrNull()
+            val subcategory = if (parentCategory?.parentCategoryId != null) {
+                categoriesUiState.value.subcategories.expense.lastOrNull()?.lastOrNull()
             } else null
             parentCategory to subcategory
         } else {
-            val parentCategory = categoriesUiState.value.parentCategories.income.last()
-            val subcategory = if (parentCategory.parentCategoryId != null) {
-                categoriesUiState.value.subcategories.income.last().last()
+            val parentCategory = categoriesUiState.value.parentCategories.income.lastOrNull()
+            val subcategory = if (parentCategory?.parentCategoryId != null) {
+                categoriesUiState.value.subcategories.income.lastOrNull()?.lastOrNull()
             } else null
             parentCategory to subcategory
         }
