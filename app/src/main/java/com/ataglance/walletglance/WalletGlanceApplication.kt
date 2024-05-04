@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -30,8 +31,14 @@ class WalletGlanceApplication: Application() {
     private val accountRepository by lazy { AccountRepository(db.accountDao) }
     private val categoryRepository by lazy { CategoryRepository(db.categoryDao) }
     private val recordRepository by lazy { RecordRepository(db.recordDao) }
-    private val recordAndAccountRepository by lazy { RecordAndAccountRepository(db.recordDao, db.accountDao) }
-    private val generalRepository by lazy { GeneralRepository(settingsRepository, accountRepository, categoryRepository, recordRepository) }
+    private val recordAndAccountRepository by lazy {
+        RecordAndAccountRepository(db.recordDao, db.accountDao)
+    }
+    private val generalRepository by lazy {
+        GeneralRepository(
+            settingsRepository, accountRepository, categoryRepository, recordRepository
+        )
+    }
 
     val appViewModel by lazy { AppViewModel(
         settingsRepository = settingsRepository,
@@ -50,26 +57,20 @@ class WalletGlanceApplication: Application() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            // apply saved language preference in datastore preferences
+            /* apply saved language preference in datastore preferences */
             val langCode = settingsRepository.language.first()
             val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
-            AppCompatDelegate.setApplicationLocales(appLocale)
+            withContext(Dispatchers.Main) {
+                AppCompatDelegate.setApplicationLocales(appLocale)
+            }
 
-            // if app has been set up but finish screen was not closed (so 2 still saved as a start destination
-            // in the datastore preferences, which is finish screen), reassign this preference to 1 (home screen)
+             /* if app has been set up but finish screen was not closed (so 2 still saved as a
+             start destination in the datastore preferences, which is finish screen), reassign this
+             preference to 1 (home screen) */
             val isSetUp = settingsRepository.setupStage.first()
             if (isSetUp == 2) {
                 settingsRepository.saveIsSetUpPreference(1)
             }
-
-//            val useDeviceTheme = settingsRepository.useDeviceTheme.first()
-//            val chosenLightTheme = settingsRepository.chosenLightTheme.first()
-//            val chosenDarkTheme = settingsRepository.chosenDarkTheme.first()
-//            val lastChosenTheme = settingsRepository.lastChosenTheme.first()
-//            appViewModel.setAppTheme(useDeviceTheme, chosenTheme)
-
-            // temporary action
-//            accountRepository.removeAllAccounts()
         }
     }
 }
