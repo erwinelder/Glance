@@ -306,7 +306,7 @@ fun HomeNavHost(
                 onDateRangeChange = appViewModel::changeDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 onTopBarAccountClick = { orderNum ->
-                    appViewModel.chooseNewActiveAccount(orderNum)
+                    appViewModel.applyActiveAccountByOrderNum(orderNum)
                 },
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onNavigateToRecordsScreen = {
@@ -339,7 +339,7 @@ fun HomeNavHost(
                 accountList = accountsUiState.accountList,
                 recordStackList = widgetsUiState.filteredRecordStackList,
                 onAccountClick = { orderNum ->
-                    appViewModel.chooseNewActiveAccount(orderNum)
+                    appViewModel.applyActiveAccountByOrderNum(orderNum)
                 },
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
@@ -390,7 +390,7 @@ fun HomeNavHost(
                 appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
                 onAccountClick = { orderNum ->
-                    appViewModel.chooseNewActiveAccount(orderNum)
+                    appViewModel.applyActiveAccountByOrderNum(orderNum)
                 },
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,

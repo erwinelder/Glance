@@ -241,7 +241,8 @@ class AppViewModel(
     }
 
 
-    private val _accountsUiState: MutableStateFlow<AccountsUiState> = MutableStateFlow(AccountsUiState())
+    private val _accountsUiState: MutableStateFlow<AccountsUiState> =
+        MutableStateFlow(AccountsUiState())
     val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState.asStateFlow()
 
     private fun fetchAccountsFromDb() {
@@ -289,7 +290,10 @@ class AppViewModel(
         return false
     }
 
-    private fun deleteAccountsByIds(originalList: List<Account>, newList: List<Account>): List<Int> {
+    private fun getAccountIdsToDelete(
+        originalList: List<Account>,
+        newList: List<Account>
+    ): List<Int> {
         val listOfIdsToDelete = mutableListOf<Int>()
 
         originalList.forEach { account ->
@@ -302,7 +306,7 @@ class AppViewModel(
     }
 
     suspend fun saveAccountsToDb(accountsList: List<Account>) {
-        val listOfIdsToDelete = deleteAccountsByIds(accountsUiState.value.accountList, accountsList)
+        val listOfIdsToDelete = getAccountIdsToDelete(accountsUiState.value.accountList, accountsList)
 
         if (listOfIdsToDelete.isEmpty()) {
             viewModelScope.launch {
@@ -319,7 +323,7 @@ class AppViewModel(
         viewModelScope.launch {
 
             val accountTransferList = recordRepository.getTransfersByAccountId(accountId).first()
-            val transferSecondUnitsNumbers = getTransferSecondUnitRecordNumbers(accountTransferList)
+            val transferSecondUnitsNumbers = getTransferSecondUnitsRecordNumbers(accountTransferList)
                 .takeIf { it.isNotEmpty() }
 
             val convertedTransfers = transferSecondUnitsNumbers?.let { transfers ->
@@ -327,16 +331,17 @@ class AppViewModel(
                 RecordController().convertTransfersToRecordsWithCategoryTransfer(recordList)
             } ?: emptyList()
 
-            recordAndAccountRepository.deleteAccountAndUpdateAccountsAndDeleteRecordsByAccountIdAndUpdateRecords(
-                accountIdToDelete = accountId,
-                accountListToUpsert = updatedAccountList,
-                recordListToUpsert = convertedTransfers
-            )
+            recordAndAccountRepository
+                .deleteAccountAndUpdateAccountsAndDeleteRecordsByAccountIdAndUpdateRecords(
+                    accountIdToDelete = accountId,
+                    accountListToUpsert = updatedAccountList,
+                    recordListToUpsert = convertedTransfers
+                )
 
         }
     }
 
-    fun chooseNewActiveAccount(accountOrderNum: Int) {
+    fun applyActiveAccountByOrderNum(accountOrderNum: Int) {
         _accountsUiState.update {
             it.copy(
                 accountList = accountsUiState.value.accountList.map { account ->
@@ -349,7 +354,7 @@ class AppViewModel(
         }
     }
 
-    private fun getTransferSecondUnitRecordNumbers(transferList: List<Record>): List<Int> {
+    private fun getTransferSecondUnitsRecordNumbers(transferList: List<Record>): List<Int> {
         val recordNumbersList = mutableListOf<Int>()
 
         transferList.forEach { record ->
@@ -363,7 +368,8 @@ class AppViewModel(
         return recordNumbersList
     }
 
-    private val _categoriesUiState: MutableStateFlow<CategoriesUiState> = MutableStateFlow(CategoriesUiState())
+    private val _categoriesUiState: MutableStateFlow<CategoriesUiState> =
+        MutableStateFlow(CategoriesUiState())
     val categoriesUiState: StateFlow<CategoriesUiState> = _categoriesUiState.asStateFlow()
 
     val categoryIconNameToIconResMap = mapOf(
@@ -442,7 +448,10 @@ class AppViewModel(
         return false
     }
 
-    private fun getCategoriesIdsToDelete(originalList: List<Category>, newList: List<Category>): List<Int> {
+    private fun getCategoriesIdsToDelete(
+        originalList: List<Category>,
+        newList: List<Category>
+    ): List<Int> {
         val listOfIdsToDelete = mutableListOf<Int>()
 
         originalList.forEach { category ->
@@ -474,7 +483,11 @@ class AppViewModel(
         }
     }
 
-    private fun getCategoryPairByIds(parentId: Int, subId: Int?, type: CategoryType): Pair<Category, Category?>? {
+    private fun getCategoryPairByIds(
+        parentId: Int,
+        subId: Int?,
+        type: CategoryType
+    ): Pair<Category, Category?>? {
 
         val parentCategory = CategoryController().getParCategoryFromList(
             parentId,
@@ -595,7 +608,8 @@ class AppViewModel(
     }
 
 
-    private val _recordStackList: MutableStateFlow<List<RecordStack>> = MutableStateFlow(emptyList())
+    private val _recordStackList: MutableStateFlow<List<RecordStack>> =
+        MutableStateFlow(emptyList())
     val recordStackList: StateFlow<List<RecordStack>> = _recordStackList.asStateFlow()
 
     private fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
