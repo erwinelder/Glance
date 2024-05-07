@@ -9,33 +9,31 @@ import com.ataglance.walletglance.data.RecordAndAccountRepository
 import com.ataglance.walletglance.data.RecordRepository
 import com.ataglance.walletglance.data.SettingsRepository
 import org.junit.Assert
-import org.junit.Assert.assertArrayEquals
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.Mockito
 
-@RunWith(MockitoJUnitRunner::class)
 class AppViewModelTest {
 
-    private val mockSettingsRepository = mock(SettingsRepository::class.java)
-    private val mockAccountRepository = mock(AccountRepository::class.java)
-    private val mockCategoryRepository = mock(CategoryRepository::class.java)
-    private val mockRecordRepository = mock(RecordRepository::class.java)
-    private val mockRecordAndAccountRepository = mock(RecordAndAccountRepository::class.java)
-    private val mockGeneralRepository = mock(GeneralRepository::class.java)
-    private val viewModel = AppViewModel(
-        mockSettingsRepository,
-        mockAccountRepository,
-        mockCategoryRepository,
-        mockRecordRepository,
-        mockRecordAndAccountRepository,
-        mockGeneralRepository
-    )
+    private lateinit var appViewModel: AppViewModel
+
+    @BeforeEach
+    fun setUp() {
+        appViewModel = AppViewModel(
+            settingsRepository = Mockito.mock(SettingsRepository::class.java),
+            accountRepository = Mockito.mock(AccountRepository::class.java),
+            categoryRepository = Mockito.mock(CategoryRepository::class.java),
+            recordRepository = Mockito.mock(RecordRepository::class.java),
+            recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
+            generalRepository = Mockito.mock(GeneralRepository::class.java)
+        )
+    }
+
+
 
     private fun getAccountListByBalances(balanceList: List<Double>): List<Account> {
         return balanceList.mapIndexed { index, balance ->
@@ -47,7 +45,7 @@ class AppViewModelTest {
         }
     }
 
-    private fun getMadeTransferState(
+    private fun getTestMadeTransferState(
         fromAccount: Account,
         toAccount: Account,
         startAmount: Double,
@@ -65,7 +63,7 @@ class AppViewModelTest {
         )
     }
 
-    private fun getRecordStackList(
+    private fun getTestRecordStackList(
         fromAccount: Account,
         toAccount: Account,
         startAmount: Double,
@@ -180,23 +178,25 @@ class AppViewModelTest {
         newToAccountIndex: Int,
     ) {
         val accounts = getAccountListByBalances(currentBalances)
-        val recordStacks = getRecordStackList(
+        val recordStacks = getTestRecordStackList(
             accounts[prevFromAccountIndex], accounts[prevToAccountIndex],
             prevStartAmount, prevFinalAmount
         )
-        val uiState = getMadeTransferState(
+        val uiState = getTestMadeTransferState(
             accounts[newFromAccountIndex],
             accounts[newToAccountIndex],
             newStartAmount, newFinalAmount
         )
 
-        viewModel.applyAccountListToUiState(accounts)
+        appViewModel.applyAccountListToUiState(accounts)
 
-        val result = viewModel.getUpdatedAccountsAfterEditedTransfer(
+        val result = appViewModel.getUpdatedAccountsAfterEditedTransfer(
             uiState, recordStacks.first, recordStacks.second
         )
 
-        assertEquals(getAccountListByBalances(expectedBalances), result?.sortedBy { it.id })
+        Assertions.assertEquals(
+            getAccountListByBalances(expectedBalances),
+            result?.sortedBy { it.id })
     }
 
 
@@ -264,7 +264,7 @@ class AppViewModelTest {
     }
 
     @Test
-    fun testFixCategoriesOrderNums() {
+    fun testFixCategoriesOrderNumbers() {
         val currentCategoryList = listOf(
             Category(
                 id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
@@ -373,7 +373,7 @@ class AppViewModelTest {
                 colorName = CategoryColors.Camel(null).color.name
             )
         )
-        assertArrayEquals(
+        Assertions.assertArrayEquals(
             expectedCategoryList.toTypedArray(),
             CategoryController().fixCategoriesOrderNums(currentCategoryList).toTypedArray()
         )
