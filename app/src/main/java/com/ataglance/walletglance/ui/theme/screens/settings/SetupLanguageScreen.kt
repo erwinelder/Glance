@@ -27,7 +27,7 @@ fun SetupLanguageScreen(
     appLanguage: String,
     chosenLanguage: String?,
     chooseNewLanguage: (String) -> Unit,
-    onApplyButton: (String, Context) -> Unit,
+    onApplyButton: (String) -> Unit,
     onContextChange: (Context) -> Unit,
     onNextNavigationButton: () -> Unit
 ) {
@@ -59,7 +59,7 @@ fun SetupLanguageScreen(
             text = stringResource(R.string.apply),
             enabled = appLanguage != chosenLanguage
         ) {
-            chosenLanguage?.let { onApplyButton(it, context) }
+            chosenLanguage?.let { onApplyButton(it) }
         }
         Spacer(modifier = Modifier.weight(1f))
         if (!isAppSetUp) {

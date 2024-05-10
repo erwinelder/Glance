@@ -88,7 +88,7 @@ class AppViewModel(
             initialValue = null
         )
 
-    fun setLanguage(langCode: String, context: Context) {
+    fun setLanguage(langCode: String) {
         viewModelScope.launch {
             settingsRepository.saveLanguagePreference(langCode)
         }

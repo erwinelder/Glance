@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.ui.theme.screens
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -620,8 +619,8 @@ fun NavGraphBuilder.setupGraph(
                 appLanguage = appUiSettings.langCode,
                 chosenLanguage = chosenLanguage,
                 chooseNewLanguage = viewModel::chooseNewLanguage,
-                onApplyButton = { langCode: String, context: Context ->
-                    appViewModel.setLanguage(langCode, context)
+                onApplyButton = { langCode: String ->
+                    appViewModel.setLanguage(langCode)
                 },
                 onContextChange = appViewModel::translateDefaultCategories,
                 onNextNavigationButton = {
