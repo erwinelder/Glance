@@ -31,12 +31,12 @@ import java.time.LocalDateTime
 import java.util.Locale
 
 class AppViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val accountRepository: AccountRepository,
-    private val categoryRepository: CategoryRepository,
-    private val recordRepository: RecordRepository,
-    private val recordAndAccountRepository: RecordAndAccountRepository,
-    private val generalRepository: GeneralRepository
+    val settingsRepository: SettingsRepository,
+    val accountRepository: AccountRepository,
+    val categoryRepository: CategoryRepository,
+    val recordRepository: RecordRepository,
+    val recordAndAccountRepository: RecordAndAccountRepository,
+    val generalRepository: GeneralRepository
 ) : ViewModel() {
 
     private val _appTheme: MutableStateFlow<AppTheme?> = MutableStateFlow(null)
@@ -612,7 +612,7 @@ class AppViewModel(
         MutableStateFlow(emptyList())
     val recordStackList: StateFlow<List<RecordStack>> = _recordStackList.asStateFlow()
 
-    private fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
+    fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
         viewModelScope.launch {
             recordRepository.getRecordsInDateRange(dateRangeState).collect { recordList ->
                 val recordStackList =
@@ -1170,10 +1170,11 @@ class AppViewModel(
             ?.let {
                 (100 / it) * expensesTotalForPeriod to (100 / it) * incomeTotalForPeriod
             } ?: (0.0 to 0.0)
-        val filteredRecordStackList = recordStackList.filter {
-            it.date in dateRangeMenuUiState.dateRangeState.fromPast..dateRangeMenuUiState.dateRangeState.toFuture &&
-                    it.accountId == accountsUiState.activeAccount?.id
-        }
+        val filteredRecordStackList = filterRecordStackForWidgetsUiState(
+            recordStackList = recordStackList,
+            dateRangeState = dateRangeMenuUiState.dateRangeState,
+            activeAccount = accountsUiState.activeAccount
+        )
         WidgetsUiState(
             filteredRecordStackList = filteredRecordStackList,
             greetings = GreetingsWidgetUiState(
@@ -1208,6 +1209,17 @@ class AppViewModel(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = WidgetsUiState()
     )
+
+    fun filterRecordStackForWidgetsUiState(
+        recordStackList: List<RecordStack>,
+        dateRangeState: DateRangeState,
+        activeAccount: Account?
+    ): List<RecordStack> {
+        return recordStackList.filter {
+            it.date in dateRangeState.fromPast..dateRangeState.toFuture &&
+                    it.accountId == activeAccount?.id
+        }
+    }
 
     private fun getGreetingsWidgetTitleRes(): Int {
         return when (LocalDateTime.now().hour) {
@@ -1271,7 +1283,7 @@ data class ThemeUiState(
 
 data class AccountsUiState(
     val accountList: List<Account> = emptyList(),
-    val activeAccount: Account? = Account()
+    val activeAccount: Account? = null
 )
 
 data class CategoriesUiState(
