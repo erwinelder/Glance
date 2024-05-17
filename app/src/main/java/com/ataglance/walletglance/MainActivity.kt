@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
+        app.appViewModel.updateGreetingsWidgetTitle()
         Log.d(ContentValues.TAG, "onResume called")
     }
     override fun onRestart() {

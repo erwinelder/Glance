@@ -1146,13 +1146,25 @@ class AppViewModel(
     }
 
 
+    private val _greetingsWidgetTitleRes: MutableStateFlow<Int> = MutableStateFlow(
+        getGreetingsWidgetTitleRes()
+    )
+
     val widgetsUiState = combine(
         _dateRangeMenuUiState,
         _accountsUiState,
         _recordStackList,
         categoriesUiState,
-        _appTheme
-    ) { dateRangeMenuUiState, accountsUiState, recordStackList, categoriesUiState, appTheme ->
+        _appTheme,
+        _greetingsWidgetTitleRes
+    ) { combinedArray ->
+        val dateRangeMenuUiState = combinedArray[0] as DateRangeMenuUiState
+        val accountsUiState = combinedArray[1] as AccountsUiState
+        val recordStackList = combinedArray[2] as List<RecordStack>
+        val categoriesUiState = combinedArray[3] as CategoriesUiState
+        val appTheme = combinedArray[4] as AppTheme
+        val greetingsWidgetTitleRes = combinedArray[5] as Int
+
         val expensesTotalForPeriod = getRecordsTotalAmount(
             recordStackList = recordStackList,
             startDate = dateRangeMenuUiState.dateRangeState.fromPast,
@@ -1178,7 +1190,7 @@ class AppViewModel(
         WidgetsUiState(
             filteredRecordStackList = filteredRecordStackList,
             greetings = GreetingsWidgetUiState(
-                titleRes = getGreetingsWidgetTitleRes(),
+                titleRes = greetingsWidgetTitleRes,
                 expensesTotal = getRecordsTotalAmount(
                     recordStackList = recordStackList,
                     startDate = DateRangeController().getTodayDateLong(),
@@ -1219,6 +1231,10 @@ class AppViewModel(
             it.date in dateRangeState.fromPast..dateRangeState.toFuture &&
                     it.accountId == activeAccount?.id
         }
+    }
+
+    fun updateGreetingsWidgetTitle() {
+        _greetingsWidgetTitleRes.update { getGreetingsWidgetTitleRes() }
     }
 
     private fun getGreetingsWidgetTitleRes(): Int {
