@@ -35,10 +35,12 @@ import androidx.navigation.navigation
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.Account
 import com.ataglance.walletglance.model.AccountController
+import com.ataglance.walletglance.model.AccountsSetupScreen
 import com.ataglance.walletglance.model.AccountsUiState
 import com.ataglance.walletglance.model.AppScreen
 import com.ataglance.walletglance.model.AppUiSettings
 import com.ataglance.walletglance.model.AppViewModel
+import com.ataglance.walletglance.model.CategoriesSetupScreen
 import com.ataglance.walletglance.model.CategoriesUiState
 import com.ataglance.walletglance.model.CategoryController
 import com.ataglance.walletglance.model.CategoryStatisticsScreenArgs
@@ -534,7 +536,7 @@ fun HomeNavHost(
                 )
             }
         }
-        setupGraph(
+        settingsGraph(
             navController = navController,
             startDestination = startSettingsDestination,
             scaffoldPadding = scaffoldPadding,
@@ -560,7 +562,7 @@ fun HomeNavHost(
 }
 
 
-fun NavGraphBuilder.setupGraph(
+fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     startDestination: String,
     scaffoldPadding: PaddingValues,
@@ -570,10 +572,6 @@ fun NavGraphBuilder.setupGraph(
     accountList: List<Account>,
     categoryColorNameToColorMap: Map<String, Colors>
 ) {
-    val onNavigateToScreen = { setupScreenRoute: String ->
-        navController.navigate(setupScreenRoute)
-    }
-
     navigation(
         startDestination = startDestination,
         route = AppScreen.Settings.route
@@ -584,10 +582,10 @@ fun NavGraphBuilder.setupGraph(
             SetupStartScreen(
                 appTheme = appUiSettings.appTheme,
                 onManualSetupButton = {
-                    onNavigateToScreen(SettingsScreen.Language.route)
+                    navController.navigate(SettingsScreen.Language.route)
                 },
                 onImportDataButton = {
-                    onNavigateToScreen(SettingsScreen.Import.route)
+                    navController.navigate(SettingsScreen.Import.route)
                 }
             )
         }
@@ -624,7 +622,7 @@ fun NavGraphBuilder.setupGraph(
                 },
                 onContextChange = appViewModel::translateDefaultCategories,
                 onNextNavigationButton = {
-                    onNavigateToScreen(SettingsScreen.Appearance.route)
+                    navController.navigate(SettingsScreen.Appearance.route)
                 }
             )
         }
@@ -634,7 +632,7 @@ fun NavGraphBuilder.setupGraph(
             SetupAppearanceScreen(
                 isAppSetUp = appUiSettings.isSetUp,
                 onContinueButton = {
-                    onNavigateToScreen(SettingsScreen.Accounts.route)
+                    navController.navigate(SettingsScreen.Accounts.route)
                 },
                 onChooseLightTheme = appViewModel::chooseLightTheme,
                 onChooseDarkTheme = appViewModel::chooseDarkTheme,
@@ -642,8 +640,59 @@ fun NavGraphBuilder.setupGraph(
                 themeUiState = themeUiState
             )
         }
+        accountsGraph(
+            navController = navController,
+            scaffoldPadding = scaffoldPadding,
+            appViewModel = appViewModel,
+            appUiSettings = appUiSettings,
+            accountList = accountList
+        )
+        categoriesGraph(
+            navController = navController,
+            scaffoldPadding = scaffoldPadding,
+            appViewModel = appViewModel,
+            appUiSettings = appUiSettings,
+            categoryColorNameToColorMap = categoryColorNameToColorMap
+        )
         composable(
-            route = SettingsScreen.Accounts.route
+            route = SettingsScreen.Import.route
+        ) {
+            SetupImportScreen(
+                onNextNavigationButton = {
+                    navController.navigate(AppScreen.FinishSetup.route)
+                }
+            )
+        }
+        composable(
+            route = SettingsScreen.Data.route
+        ) {
+            val coroutineScope = rememberCoroutineScope()
+
+            SettingsDataScreen(
+                onResetData = {
+                    coroutineScope.launch {
+                        appViewModel.resetAppData()
+                    }
+                },
+                onExportData = {}
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.accountsGraph(
+    navController: NavHostController,
+    scaffoldPadding: PaddingValues,
+    appViewModel: AppViewModel,
+    appUiSettings: AppUiSettings,
+    accountList: List<Account>
+) {
+    navigation(
+        startDestination = AccountsSetupScreen.AccountsSetup.route,
+        route = SettingsScreen.Accounts.route
+    ) {
+        composable(
+            route = AccountsSetupScreen.AccountsSetup.route
         ) { entry ->
             val viewModel = entry.sharedViewModel<SetupAccountsViewModel>(navController)
             val accountsSetupList by viewModel.accountsListState.collectAsStateWithLifecycle()
@@ -660,7 +709,7 @@ fun NavGraphBuilder.setupGraph(
                 accountsList = accountsSetupList,
                 appTheme = appUiSettings.appTheme,
                 navigateToEditAccountScreen = { orderNum ->
-                    navController.navigate("${SettingsScreen.EditAccount.route}/$orderNum")
+                    navController.navigate("${AccountsSetupScreen.EditAccount.route}/$orderNum")
                 },
                 onAddNewAccount = {
                     viewModel.addNewDefaultAccount()
@@ -676,13 +725,13 @@ fun NavGraphBuilder.setupGraph(
                     if (appUiSettings.isSetUp) {
                         navController.popBackStack()
                     } else {
-                        onNavigateToScreen(SettingsScreen.Categories.route)
+                        navController.navigate(SettingsScreen.Categories.route)
                     }
                 }
             )
         }
         composable(
-            route = "${SettingsScreen.EditAccount.route}/" +
+            route = "${AccountsSetupScreen.EditAccount.route}/" +
                     "{${EditAccountScreenArgs.OrderNum.name}}",
             arguments = listOf(
                 navArgument(EditAccountScreenArgs.OrderNum.name) { type = NavType.IntType }
@@ -723,7 +772,7 @@ fun NavGraphBuilder.setupGraph(
                 onNameChange = editAccountViewModel::changeName,
                 onNavigateToCurrencyPickerWindow = {
                     navController.navigate(
-                        "${SettingsScreen.CurrencyPicker.route}/${editAccountUiState.currency}"
+                        "${AccountsSetupScreen.CurrencyPicker.route}/${editAccountUiState.currency}"
                     )
                 },
                 onBalanceChange = editAccountViewModel::changeBalance,
@@ -750,7 +799,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = "${SettingsScreen.CurrencyPicker.route}/" +
+            route = "${AccountsSetupScreen.CurrencyPicker.route}/" +
                     "{${CurrencyPickerScreenArgs.Currency.name}}",
             arguments = listOf(
                 navArgument(CurrencyPickerScreenArgs.Currency.name) { type = NavType.StringType }
@@ -773,8 +822,22 @@ fun NavGraphBuilder.setupGraph(
                 }
             )
         }
+    }
+}
+
+fun NavGraphBuilder.categoriesGraph(
+    navController: NavHostController,
+    scaffoldPadding: PaddingValues,
+    appViewModel: AppViewModel,
+    appUiSettings: AppUiSettings,
+    categoryColorNameToColorMap: Map<String, Colors>
+) {
+    navigation(
+        startDestination = CategoriesSetupScreen.CategoriesSetup.route,
+        route = SettingsScreen.Categories.route
+    ) {
         composable(
-            route = SettingsScreen.Categories.route
+            route = CategoriesSetupScreen.CategoriesSetup.route
         ) {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -805,11 +868,11 @@ fun NavGraphBuilder.setupGraph(
                 categoryColorNameToColorMap = categoryColorNameToColorMap,
                 onShowCategoriesByType = viewModel::changeCategoryTypeToShow,
                 onNavigateToEditSubcategoryListScreen = { orderNum: Int ->
-                    navController.navigate("${SettingsScreen.EditSubcategoryList.route}/$orderNum")
+                    navController.navigate("${CategoriesSetupScreen.SubcategoriesSetup.route}/$orderNum")
                 },
                 onNavigateToEditCategoryScreen = { orderNum ->
                     viewModel.applyCategoryToEdit(orderNum)
-                    onNavigateToScreen(SettingsScreen.EditCategory.route)
+                    navController.navigate(CategoriesSetupScreen.EditCategory.route)
                 },
                 onSwapCategories = viewModel::swapParentCategories,
                 onAddNewCategory = {
@@ -831,7 +894,7 @@ fun NavGraphBuilder.setupGraph(
             )
         }
         composable(
-            route = "${SettingsScreen.EditSubcategoryList.route}/" +
+            route = "${CategoriesSetupScreen.SubcategoriesSetup.route}/" +
                     "{${EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name}}",
             arguments = listOf(
                 navArgument(EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name) {
@@ -862,14 +925,14 @@ fun NavGraphBuilder.setupGraph(
                 },
                 onNavigateToEditCategoryScreen = { orderNum ->
                     viewModel.applyCategoryToEdit(orderNum)
-                    onNavigateToScreen(SettingsScreen.EditCategory.route)
+                    navController.navigate(CategoriesSetupScreen.EditCategory.route)
                 },
                 onSwapCategories = viewModel::swapSubcategories,
                 onAddNewSubcategory = { viewModel.addNewSubcategory(newSubcategoryName) }
             )
         }
         composable(
-            route = SettingsScreen.EditCategory.route
+            route = CategoriesSetupScreen.EditCategory.route
         ) {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
 
@@ -882,29 +945,6 @@ fun NavGraphBuilder.setupGraph(
                     Pair(name, res)
                 },
                 navigateBack = navController::popBackStack
-            )
-        }
-        composable(
-            route = SettingsScreen.Import.route
-        ) {
-            SetupImportScreen(
-                onNextNavigationButton = {
-                    onNavigateToScreen(AppScreen.FinishSetup.route)
-                }
-            )
-        }
-        composable(
-            route = SettingsScreen.Data.route
-        ) {
-            val coroutineScope = rememberCoroutineScope()
-
-            SettingsDataScreen(
-                onResetData = {
-                    coroutineScope.launch {
-                        appViewModel.resetAppData()
-                    }
-                },
-                onExportData = {}
             )
         }
     }

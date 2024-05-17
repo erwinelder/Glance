@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.model.AccountsSetupScreen
+import com.ataglance.walletglance.model.CategoriesSetupScreen
 import com.ataglance.walletglance.model.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
@@ -33,12 +35,12 @@ fun SetupProgressTopBar(
         navBackStackEntry?.destination?.route == SettingsScreen.Appearance.route -> R.string.appearance
         navBackStackEntry?.destination?.route == SettingsScreen.Accounts.route ||
                 navBackStackEntry?.destination?.route
-                    ?.startsWith(SettingsScreen.EditAccount.route) == true -> R.string.accounts
+                    ?.startsWith(AccountsSetupScreen.EditAccount.route) == true -> R.string.accounts
         navBackStackEntry?.destination?.route == SettingsScreen.Categories.route ||
             navBackStackEntry?.destination?.route
-                ?.startsWith(SettingsScreen.EditSubcategoryList.route) == true ||
+                ?.startsWith(CategoriesSetupScreen.SubcategoriesSetup.route) == true ||
             navBackStackEntry?.destination?.route
-                ?.startsWith(SettingsScreen.EditCategory.route) == true -> R.string.categories
+                ?.startsWith(CategoriesSetupScreen.EditCategory.route) == true -> R.string.categories
         else -> R.string.settings
     }
 

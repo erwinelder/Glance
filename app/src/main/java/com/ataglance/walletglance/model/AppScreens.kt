@@ -39,7 +39,7 @@ enum class EditSubcategoryListScreenArgs {
 }
 
 enum class SettingsRoutes {
-    Start, SettingsHome, Language, Appearance, Accounts, EditAccount, CurrencyPicker, Categories, EditSubcategoryList, EditCategory, Import, Data
+    Start, SettingsHome, Language, Appearance, Accounts, Categories, Import, Data
 }
 sealed class SettingsScreen(val route: String) {
     data object Start : SettingsScreen(SettingsRoutes.Start.name)
@@ -47,11 +47,7 @@ sealed class SettingsScreen(val route: String) {
     data object Language : SettingsScreen(SettingsRoutes.Language.name)
     data object Appearance : SettingsScreen(SettingsRoutes.Appearance.name)
     data object Accounts : SettingsScreen(SettingsRoutes.Accounts.name)
-    data object EditAccount : SettingsScreen(SettingsRoutes.EditAccount.name)
-    data object CurrencyPicker : SettingsScreen(SettingsRoutes.CurrencyPicker.name)
     data object Categories : SettingsScreen(SettingsRoutes.Categories.name)
-    data object EditSubcategoryList : SettingsScreen(SettingsRoutes.EditSubcategoryList.name)
-    data object EditCategory : SettingsScreen(SettingsRoutes.EditCategory.name)
     data object Import : SettingsScreen(SettingsRoutes.Import.name)
     data object Data : SettingsScreen(SettingsRoutes.Data.name)
 }
@@ -105,4 +101,24 @@ class SettingsCategories(appTheme: AppTheme?) {
         }
     )
 
+}
+
+enum class AccountsSetupRoutes {
+    AccountsSetup, EditAccount, CurrencyPicker
+}
+
+sealed class AccountsSetupScreen(val route: String) {
+    data object AccountsSetup : AccountsSetupScreen(AccountsSetupRoutes.AccountsSetup.name)
+    data object EditAccount : AccountsSetupScreen(AccountsSetupRoutes.EditAccount.name)
+    data object CurrencyPicker : AccountsSetupScreen(AccountsSetupRoutes.CurrencyPicker.name)
+}
+
+enum class CategoriesSetupRoutes {
+    CategoriesSetup, SubcategoriesSetup, EditCategory
+}
+
+sealed class CategoriesSetupScreen(val route: String) {
+    data object CategoriesSetup : CategoriesSetupScreen(CategoriesSetupRoutes.CategoriesSetup.name)
+    data object SubcategoriesSetup : CategoriesSetupScreen(CategoriesSetupRoutes.SubcategoriesSetup.name)
+    data object EditCategory : CategoriesSetupScreen(CategoriesSetupRoutes.EditCategory.name)
 }
