@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
@@ -48,61 +50,64 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContent {
-            val context = LocalContext.current as ComponentActivity
-            val appUiSettings = appViewModel.appUiSettings.collectAsStateWithLifecycle().value
-            val themeUiState = appViewModel.themeUiState.collectAsStateWithLifecycle().value
+            CompositionLocalProvider(LocalLifecycleOwner provides this) {
 
-            BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
-                if (themeUiState != null) {
-                    WalletGlanceTheme(
-                        context = context,
-                        useDeviceTheme = themeUiState.useDeviceTheme,
-                        chosenLightTheme = themeUiState.chosenLightTheme,
-                        chosenDarkTheme = themeUiState.chosenDarkTheme,
-                        lastChosenTheme = themeUiState.lastChosenTheme,
-                        setIsDarkTheme = appViewModel::updateAppThemeState,
-                        boxWithConstraintsScope = this
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(GlanceTheme.background)
+                val context = LocalContext.current as ComponentActivity
+                val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()
+                val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
+
+                BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
+                    if (themeUiState != null) {
+                        WalletGlanceTheme(
+                            context = context,
+                            useDeviceTheme = themeUiState!!.useDeviceTheme,
+                            chosenLightTheme = themeUiState!!.chosenLightTheme,
+                            chosenDarkTheme = themeUiState!!.chosenDarkTheme,
+                            lastChosenTheme = themeUiState!!.lastChosenTheme,
+                            setIsDarkTheme = appViewModel::updateAppThemeState,
+                            boxWithConstraintsScope = this
                         ) {
-                            AnimatedContent(
-                                targetState = appUiSettings.appTheme,
-                                label = "App background",
-                                transitionSpec = {
-                                    fadeIn() togetherWith fadeOut()
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(GlanceTheme.background)
+                            ) {
+                                AnimatedContent(
+                                    targetState = appUiSettings.appTheme,
+                                    label = "App background",
+                                    transitionSpec = {
+                                        fadeIn() togetherWith fadeOut()
+                                    }
+                                ) { targetAppTheme ->
+                                    when (targetAppTheme) {
+                                        AppTheme.LightDefault -> {
+                                            Image(
+                                                painter = painterResource(R.drawable.main_background_light),
+                                                contentDescription = "application light background",
+                                                contentScale = ContentScale.FillBounds,
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
+                                        AppTheme.DarkDefault -> {
+                                            Image(
+                                                painter = painterResource(R.drawable.main_background_dark),
+                                                contentDescription = "application dark background",
+                                                contentScale = ContentScale.FillBounds,
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
+                                        else -> {
+                                            Box(modifier = Modifier.fillMaxSize())
+                                        }
+                                    }
                                 }
-                            ) { targetAppTheme ->
-                                when (targetAppTheme) {
-                                    AppTheme.LightDefault -> {
-                                        Image(
-                                            painter = painterResource(R.drawable.main_background_light),
-                                            contentDescription = "application light background",
-                                            contentScale = ContentScale.FillBounds,
-                                            modifier = Modifier.fillMaxSize()
-                                        )
-                                    }
-                                    AppTheme.DarkDefault -> {
-                                        Image(
-                                            painter = painterResource(R.drawable.main_background_dark),
-                                            contentDescription = "application dark background",
-                                            contentScale = ContentScale.FillBounds,
-                                            modifier = Modifier.fillMaxSize()
-                                        )
-                                    }
-                                    else -> {
-                                        Box(modifier = Modifier.fillMaxSize())
-                                    }
+                                CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+                                    AppScreen(
+                                        appViewModel = appViewModel,
+                                        appUiSettings = appUiSettings,
+                                        themeUiState = themeUiState!!
+                                    )
                                 }
-                            }
-                            CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-                                AppScreen(
-                                    appViewModel = appViewModel,
-                                    appUiSettings = appUiSettings,
-                                    themeUiState = themeUiState
-                                )
                             }
                         }
                     }
