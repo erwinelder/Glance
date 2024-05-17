@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.screens.settings
+package com.ataglance.walletglance.ui.theme.screens.settings.categories
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement

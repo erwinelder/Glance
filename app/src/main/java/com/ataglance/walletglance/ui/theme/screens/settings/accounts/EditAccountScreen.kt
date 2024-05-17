@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.screens
+package com.ataglance.walletglance.ui.theme.screens.settings.accounts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
