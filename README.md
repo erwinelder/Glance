@@ -23,6 +23,6 @@ View your recent records on the app home screen or go to a separate screen to vi
 ![App screenshot 3](https://play-lh.googleusercontent.com/OT36msaOuT5iBdD8Rf7lLySsLQ3s8QhLMAXypmpNgDKFwYpLnhafgGyS3gFR5AKJjz0=w1052-h592)
 ![App screenshot 4](https://play-lh.googleusercontent.com/EF76-bW-eDmxqwxBcaxLmBzdNkft8G_VnrtjU8NRX3YV5hdUksIipRIt-BvGJG7K-g=w1052-h592)
 ![App screenshot 5](https://play-lh.googleusercontent.com/_N27nnfdEIqHZ9c-Wa5RK83fX-Njg0EtwFnFJPwVlU231RWsNuI9lNfp-kIyj3vJeho=w1052-h592)
-![App screenshot 6](https://play-lh.googleusercontent.com/uEHPdUNeD15QmrRtolBH4L7D_C6xbo4ZZJIUbeyw8dOoxGLttfk0fOGk2yNrrD5hRao=w5120-h2880)
+![App screenshot 6](https://play-lh.googleusercontent.com/uEHPdUNeD15QmrRtolBH4L7D_C6xbo4ZZJIUbeyw8dOoxGLttfk0fOGk2yNrrD5hRao=w1052-h592)
 ![App screenshot 7](https://play-lh.googleusercontent.com/Wvkd_20heYwxEgK6WyvZs99L0Ag4RA9WQ6NZ1BLtryxERMWrSuRHCO_cAq8Ve5vn8w=w1052-h592)
 ![App screenshot 8](https://play-lh.googleusercontent.com/EcF3NjnKnCz7CoV8uapwRv26sdy3voVJvNjL_6tiiPNuHXf2kz2r3ENTGx4_tshn1g=w1052-h592)
