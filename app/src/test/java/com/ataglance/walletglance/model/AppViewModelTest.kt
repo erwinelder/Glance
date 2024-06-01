@@ -1,13 +1,20 @@
 package com.ataglance.walletglance.model
 
+import com.ataglance.walletglance.data.SettingsRepository
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.data.SettingsRepository
+import com.ataglance.walletglance.ui.viewmodels.AppViewModel
+import com.ataglance.walletglance.ui.viewmodels.CategoryColors
+import com.ataglance.walletglance.ui.viewmodels.CategoryController
+import com.ataglance.walletglance.ui.viewmodels.MadeTransferState
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
+import com.ataglance.walletglance.ui.viewmodels.RecordStack
+import com.ataglance.walletglance.ui.viewmodels.RecordStackUnit
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
