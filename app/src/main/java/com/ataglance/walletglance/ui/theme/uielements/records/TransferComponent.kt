@@ -16,10 +16,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.Account
-import com.ataglance.walletglance.model.AccountController
-import com.ataglance.walletglance.model.DateRangeController
-import com.ataglance.walletglance.model.RecordStack
+import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.ui.viewmodels.AccountController
+import com.ataglance.walletglance.ui.viewmodels.DateRangeController
+import com.ataglance.walletglance.ui.viewmodels.RecordStack
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors

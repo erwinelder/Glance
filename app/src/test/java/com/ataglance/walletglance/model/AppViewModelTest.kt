@@ -1,12 +1,12 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.data.Account
-import com.ataglance.walletglance.data.AccountRepository
-import com.ataglance.walletglance.data.Category
-import com.ataglance.walletglance.data.CategoryRepository
-import com.ataglance.walletglance.data.GeneralRepository
-import com.ataglance.walletglance.data.RecordAndAccountRepository
-import com.ataglance.walletglance.data.RecordRepository
+import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.repositories.CategoryRepository
+import com.ataglance.walletglance.domain.repositories.GeneralRepository
+import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
+import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.data.SettingsRepository
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions

@@ -41,9 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.AppScreen
-import com.ataglance.walletglance.model.BottomBarButtons
-import com.ataglance.walletglance.model.SettingsScreen
+import com.ataglance.walletglance.ui.viewmodels.AppScreen
+import com.ataglance.walletglance.ui.viewmodels.BottomBarButtons
+import com.ataglance.walletglance.ui.viewmodels.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme

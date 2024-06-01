@@ -4,6 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.ataglance.walletglance.domain.dao.AccountDao
+import com.ataglance.walletglance.domain.dao.CategoryDao
+import com.ataglance.walletglance.domain.dao.RecordDao
+import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.entities.Record
 
 @Database(
     entities = [Account::class, Category::class, Record::class],

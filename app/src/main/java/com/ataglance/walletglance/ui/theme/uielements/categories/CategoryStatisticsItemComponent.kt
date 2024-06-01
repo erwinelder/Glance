@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 

@@ -34,11 +34,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.DateRange
-import com.ataglance.walletglance.model.DateRangeController
-import com.ataglance.walletglance.model.DateRangeEnum
-import com.ataglance.walletglance.model.DateRangeState
-import com.ataglance.walletglance.model.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.ui.viewmodels.DateRange
+import com.ataglance.walletglance.ui.viewmodels.DateRangeController
+import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
+import com.ataglance.walletglance.ui.viewmodels.DateRangeState
+import com.ataglance.walletglance.ui.viewmodels.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme

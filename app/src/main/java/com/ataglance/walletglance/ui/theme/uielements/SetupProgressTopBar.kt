@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.AccountsSetupScreen
-import com.ataglance.walletglance.model.CategoriesSetupScreen
-import com.ataglance.walletglance.model.SettingsScreen
+import com.ataglance.walletglance.ui.viewmodels.AccountsSetupScreen
+import com.ataglance.walletglance.ui.viewmodels.CategoriesSetupScreen
+import com.ataglance.walletglance.ui.viewmodels.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
 
@@ -33,9 +33,9 @@ fun SetupProgressTopBar(
     val titleRes = when {
         navBackStackEntry?.destination?.route == SettingsScreen.Language.route -> R.string.language
         navBackStackEntry?.destination?.route == SettingsScreen.Appearance.route -> R.string.appearance
-        navBackStackEntry?.destination?.route == SettingsScreen.Accounts.route ||
+        navBackStackEntry?.destination?.route == AccountsSetupScreen.AccountsSetup.route ||
                 navBackStackEntry?.destination?.route
-                    ?.startsWith(AccountsSetupScreen.EditAccount.route) == true -> R.string.accounts
+                    ?.startsWith(AccountsSetupScreen.EditAccount.route) == true -> R.string.account
         navBackStackEntry?.destination?.route == SettingsScreen.Categories.route ||
             navBackStackEntry?.destination?.route
                 ?.startsWith(CategoriesSetupScreen.SubcategoriesSetup.route) == true ||

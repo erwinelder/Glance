@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.Account
-import com.ataglance.walletglance.model.MakeRecordStatus
-import com.ataglance.walletglance.model.MakeTransferUiState
-import com.ataglance.walletglance.model.MakeTransferViewModel
+import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
+import com.ataglance.walletglance.ui.viewmodels.MakeTransferUiState
+import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModel
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount

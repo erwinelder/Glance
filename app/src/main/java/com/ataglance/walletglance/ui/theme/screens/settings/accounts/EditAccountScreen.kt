@@ -34,9 +34,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.AccountColors
-import com.ataglance.walletglance.model.AccountController
-import com.ataglance.walletglance.model.EditAccountUiState
+import com.ataglance.walletglance.ui.viewmodels.AccountColors
+import com.ataglance.walletglance.ui.viewmodels.AccountController
+import com.ataglance.walletglance.ui.viewmodels.EditAccountUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme

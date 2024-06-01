@@ -28,9 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.SettingsCategories
-import com.ataglance.walletglance.model.SettingsCategory
-import com.ataglance.walletglance.model.SettingsScreen
+import com.ataglance.walletglance.ui.viewmodels.SettingsCategories
+import com.ataglance.walletglance.ui.viewmodels.SettingsCategory
+import com.ataglance.walletglance.ui.viewmodels.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.Manrope
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact

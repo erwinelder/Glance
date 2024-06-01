@@ -24,8 +24,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.Category
-import com.ataglance.walletglance.model.Colors
+import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.ui.viewmodels.Colors
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.SubcategorySetupElement

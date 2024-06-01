@@ -32,9 +32,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.Category
-import com.ataglance.walletglance.model.CategoriesUiState
-import com.ataglance.walletglance.model.CategoryType
+import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
+import com.ataglance.walletglance.ui.viewmodels.CategoryType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium

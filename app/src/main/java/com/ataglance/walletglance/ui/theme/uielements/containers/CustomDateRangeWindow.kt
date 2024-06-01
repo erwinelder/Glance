@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.DateRange
-import com.ataglance.walletglance.model.DateRangeController
-import com.ataglance.walletglance.model.DateRangeEnum
+import com.ataglance.walletglance.ui.viewmodels.DateRange
+import com.ataglance.walletglance.ui.viewmodels.DateRangeController
+import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.Manrope
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect

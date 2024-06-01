@@ -15,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.data.Account
-import com.ataglance.walletglance.data.Category
-import com.ataglance.walletglance.model.DateRangeController
-import com.ataglance.walletglance.model.RecordStack
-import com.ataglance.walletglance.model.RecordType
+import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.ui.viewmodels.DateRangeController
+import com.ataglance.walletglance.ui.viewmodels.RecordStack
+import com.ataglance.walletglance.ui.viewmodels.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 

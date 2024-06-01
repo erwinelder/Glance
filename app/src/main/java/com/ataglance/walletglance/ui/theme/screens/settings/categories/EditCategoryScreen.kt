@@ -31,9 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.CategoryColors
-import com.ataglance.walletglance.model.Colors
-import com.ataglance.walletglance.model.SetupCategoriesViewModel
+import com.ataglance.walletglance.ui.viewmodels.CategoryColors
+import com.ataglance.walletglance.ui.viewmodels.Colors
+import com.ataglance.walletglance.ui.viewmodels.SetupCategoriesViewModel
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme

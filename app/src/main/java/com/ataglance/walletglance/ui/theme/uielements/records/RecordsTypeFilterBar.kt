@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.RecordsTypeFilter
+import com.ataglance.walletglance.ui.viewmodels.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 
 @Composable

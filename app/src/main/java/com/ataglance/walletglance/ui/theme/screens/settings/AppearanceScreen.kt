@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.model.ThemeUiState
+import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.pickers.ThemePicker
 
