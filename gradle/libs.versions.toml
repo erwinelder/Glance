@@ -11,8 +11,10 @@ coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
 devtoolsKsp = "2.0.0-1.0.21"
 espressoCore = "3.5.1"
+firebaseBom = "33.1.0"
 foundation = "1.6.7"
 gson = "2.10.1"
+googleServices = "4.4.2"
 junit = "4.13.2"
 junitJupiter = "5.10.2"
 junitVersion = "1.1.5"
@@ -57,6 +59,8 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 core = { group = "com.google.android.play", name = "core", version.ref = "core" }
 core-ktx = { group = "com.google.android.play", name = "core-ktx", version.ref = "coreKtxVersion" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
@@ -73,6 +77,7 @@ test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "and
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtoolsKsp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
