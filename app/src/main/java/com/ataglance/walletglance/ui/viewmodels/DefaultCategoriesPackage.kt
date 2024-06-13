@@ -271,7 +271,7 @@ data class DefaultCategoriesPackage(
                     ),
                     Category(
                         id = 41, type = '-', rank = 's', orderNum = 4, parentCategoryId = 6,
-                        name = context.getString(R.string.games), iconName = "digital_life",
+                        name = context.getString(R.string.games), iconName = "games",
                         colorName = CategoryColors.LightBlue(null).color.name
                     )
                 ),

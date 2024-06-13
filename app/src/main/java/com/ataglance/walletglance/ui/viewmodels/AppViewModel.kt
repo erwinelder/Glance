@@ -385,6 +385,7 @@ class AppViewModel(
         CategoryIcon.DigitalLife.name to CategoryIcon.DigitalLife.res,
         CategoryIcon.ProfessionalSubs.name to CategoryIcon.ProfessionalSubs.res,
         CategoryIcon.EntertainmentSubs.name to CategoryIcon.EntertainmentSubs.res,
+        CategoryIcon.Games.name to CategoryIcon.Games.res,
         CategoryIcon.Medicine.name to CategoryIcon.Medicine.res,
         CategoryIcon.Education.name to CategoryIcon.Education.res,
         CategoryIcon.Travels.name to CategoryIcon.Travels.res,
