@@ -261,7 +261,7 @@ data class DefaultCategoriesPackage(
                     ),
                     Category(
                         id = 39, type = '-', rank = 's', orderNum = 2, parentCategoryId = 6,
-                        name = context.getString(R.string.professional_subs), iconName = "digital_life",
+                        name = context.getString(R.string.professional_subs), iconName = "professional_subs",
                         colorName = CategoryColors.LightBlue(null).color.name
                     ),
                     Category(

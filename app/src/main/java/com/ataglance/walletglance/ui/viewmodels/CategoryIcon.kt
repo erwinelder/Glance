@@ -14,6 +14,7 @@ sealed class CategoryIcon(val name: String, @DrawableRes val res: Int) {
     data object Transport : CategoryIcon("transport", R.drawable.transport_icon)
     data object Vehicle : CategoryIcon("vehicle", R.drawable.vehicle_icon)
     data object DigitalLife : CategoryIcon("digital_life", R.drawable.digital_life_icon)
+    data object ProfessionalSubs : CategoryIcon("professional_subs", R.drawable.professional_subs_icon)
     data object EntertainmentSubs : CategoryIcon("entertainment_subs", R.drawable.entertainment_subs_icon)
     data object Medicine : CategoryIcon("medicine", R.drawable.medicine_icon)
     data object Education : CategoryIcon("education", R.drawable.education_icon)
