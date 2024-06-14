@@ -584,9 +584,6 @@ fun NavGraphBuilder.settingsGraph(
                 appTheme = appUiSettings.appTheme,
                 onManualSetupButton = {
                     navController.navigate(SettingsScreen.Language.route)
-                },
-                onImportDataButton = {
-                    navController.navigate(SettingsScreen.Import.route)
                 }
             )
         }
