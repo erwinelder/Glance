@@ -46,7 +46,7 @@ fun SmallFilledIconButton(
 fun BoxScope.SmallFilledIconButton(
     iconRes: Int,
     iconContendDescription: String,
-    containerColor: Color = GlanceTheme.glassGradientLightToDark.first,
+    containerColor: Color = GlanceTheme.surface,
     contentColor: Color = GlanceTheme.onSurface,
     alignment: Alignment = Alignment.Center,
     enabled: Boolean = true,
