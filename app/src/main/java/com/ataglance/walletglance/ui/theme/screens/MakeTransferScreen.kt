@@ -85,8 +85,8 @@ fun MakeTransferScreen(
     )
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
