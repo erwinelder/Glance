@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,12 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.viewmodels.AccountColors
-import com.ataglance.walletglance.ui.viewmodels.AccountController
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
+import com.ataglance.walletglance.ui.viewmodels.AccountColors
+import com.ataglance.walletglance.ui.viewmodels.AccountController
 import java.util.Locale
 
 @Composable
@@ -121,24 +117,14 @@ fun AccountCard(
                 BalanceRow(account, onAccountColor)
                 TodayStatistic(todayExpenses, account.currency, onAccountColor)
             }
-            FilledIconButton(
-                onClick = onHideBalanceButton,
+            SmallFilledIconButton(
+                iconRes = if (account.hideBalance) R.drawable.hide_icon else R.drawable.show_icon,
+                iconContendDescription = "show or hide balance",
+                containerColor = onAccountColor.copy(.1f),
+                contentColor = onAccountColor,
                 enabled = !account.withoutBalance,
-                shape = RoundedCornerShape(13.dp),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = onAccountColor.copy(.1f),
-                    contentColor = onAccountColor
-                ),
-                modifier = Modifier.bounceClickEffect(.96f)
-            ) {
-                Icon(
-                    painter = painterResource(
-                        if (account.hideBalance) R.drawable.hide_icon else R.drawable.show_icon
-                    ),
-                    contentDescription = "show or hide balance",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+                onClick = onHideBalanceButton
+            )
         }
     }
 }
