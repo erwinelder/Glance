@@ -22,7 +22,7 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
-import com.ataglance.walletglance.ui.theme.uielements.containers.DialogWindow
+import com.ataglance.walletglance.ui.theme.uielements.containers.GlanceDialog
 
 @Composable
 fun AccountPicker(
@@ -33,7 +33,7 @@ fun AccountPicker(
     onAccountChoose: (Account) -> Unit,
     lazyListState: LazyListState = rememberLazyListState()
 ) {
-    DialogWindow(
+    GlanceDialog(
         visible = visible,
         onDismissRequest = onDismissRequest
     ) {
