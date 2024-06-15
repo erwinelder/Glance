@@ -1,14 +1,9 @@
 package com.ataglance.walletglance.ui.theme.uielements.pickers
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +40,7 @@ import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
+import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
@@ -67,13 +63,6 @@ fun CategoryPicker(
         mutableStateOf(categoriesUiState.parentCategories.expense.first())
     }
 
-    val enterTransition = slideInVertically(spring(stiffness = 320F)) {
-        (it * 1.1).toInt()
-    } + scaleIn(tween(400), .8f)
-    val exitTransition = slideOutVertically(spring(stiffness = 320F)) {
-        (it * 1.1).toInt()
-    } + scaleOut(tween(400), .8f)
-
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(tween(400)),
@@ -91,8 +80,8 @@ fun CategoryPicker(
     }
     AnimatedVisibility(
         visible = visible && !showSubcategoryList,
-        enter = enterTransition,
-        exit = exitTransition
+        enter = CustomAnimation().dialogSlideFromBottomTransition,
+        exit = CustomAnimation().dialogSlideToBottomTransition
     ) {
         CategoryList(
             lazyListState = parentCategoryListState,
@@ -115,8 +104,8 @@ fun CategoryPicker(
     }
     AnimatedVisibility(
         visible = visible && showSubcategoryList,
-        enter = enterTransition,
-        exit = exitTransition
+        enter = CustomAnimation().dialogSlideFromBottomTransition,
+        exit = CustomAnimation().dialogSlideToBottomTransition
     ) {
         CategoryList(
             lazyListState = subcategoryListState,
