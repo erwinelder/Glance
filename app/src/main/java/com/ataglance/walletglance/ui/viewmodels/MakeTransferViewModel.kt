@@ -37,6 +37,30 @@ class MakeTransferViewModel(
         ) }
     }
 
+    fun changeFromAccount() {
+        if (accountList.size < 2) return
+
+        for (i in accountList.indices) {
+            if (accountList[i].id == uiState.value.fromAccount?.id ) {
+                (accountList.getOrNull(i + 1) ?: accountList.getOrNull(i - 1))
+                    ?.let { account -> chooseFromAccount(account) } ?: return
+                break
+            }
+        }
+    }
+
+    fun changeToAccount() {
+        if (accountList.size < 2) return
+
+        for (i in accountList.indices) {
+            if (accountList[i].id == uiState.value.toAccount?.id ) {
+                (accountList.getOrNull(i + 1) ?: accountList.getOrNull(i - 1))
+                    ?.let { account -> chooseToAccount(account) } ?: return
+                break
+            }
+        }
+    }
+
     fun chooseFromAccount(account: Account) {
         if (uiState.value.toAccount != account) {
             _uiState.update { it.copy(fromAccount = account) }

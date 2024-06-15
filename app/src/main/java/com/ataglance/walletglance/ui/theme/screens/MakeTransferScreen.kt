@@ -27,9 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModel
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
@@ -43,6 +40,9 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldCont
 import com.ataglance.walletglance.ui.theme.uielements.pickers.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
+import com.ataglance.walletglance.ui.viewmodels.MakeTransferUiState
+import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModel
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,7 +119,11 @@ fun MakeTransferScreen(
                             label = "from account field at the make transfer screen"
                         ) { targetAccount ->
                             SmallAccount(targetAccount, appTheme) {
-                                openDialogFromAccount.value = true
+                                if (accountList.size == 2) {
+                                    viewModel.changeFromAccount()
+                                } else {
+                                    openDialogFromAccount.value = true
+                                }
                             }
                         }
                     }
@@ -129,7 +133,11 @@ fun MakeTransferScreen(
                             label = "to account field at the make transfer screen"
                         ) { targetAccount ->
                             SmallAccount(targetAccount, appTheme) {
-                                openDialogToAccount.value = true
+                                if (accountList.size == 2) {
+                                    viewModel.changeToAccount()
+                                } else {
+                                    openDialogToAccount.value = true
+                                }
                             }
                         }
                     }
