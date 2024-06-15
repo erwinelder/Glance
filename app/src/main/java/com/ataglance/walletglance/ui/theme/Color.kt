@@ -116,7 +116,7 @@ val md_theme_dark_default_onError = Color(0xFF690005)
 val md_theme_dark_default_onErrorContainer = Color(0xFFFFDAD6)
 val md_theme_dark_default_background = Color(0xFF121212)
 val md_theme_dark_default_onBackground = Color(0xFFEAE0E3)
-val md_theme_dark_default_surface = Color(30, 30, 30)
+val md_theme_dark_default_surface = Color(33, 33, 33, 255)
 val md_theme_dark_default_onSurface = Color(0xFFE2D9DC)
 val md_theme_dark_default_surfaceVariant = Color(34, 34, 34, 128)
 val md_theme_dark_default_inverseSurface = Color(24, 24, 24, 128)
@@ -132,8 +132,8 @@ val md_theme_dark_default_primaryGradientLightToDark = Pair(
     Color(88, 47, 70)
 )
 val md_theme_dark_default_glassSurfaceGradient = listOf(
-    Color(22, 22, 22, 128),
-    Color(34, 34, 34, 128)
+    Color(23, 23, 23, 128),
+    Color(31, 31, 31, 128)
 )
 val md_theme_dark_default_glassSurfaceBorder = Color(35, 35, 35, 128)
 val md_theme_dark_default_glassSurfaceLightAndDarkShadow = Pair(
@@ -141,8 +141,8 @@ val md_theme_dark_default_glassSurfaceLightAndDarkShadow = Pair(
     Color(19, 19, 19, 120)
 )
 val md_theme_dark_default_onGlassSurfaceGradient = listOf(
-    Color(37, 37, 37, 120),
-    Color(44, 44, 44, 120)
+    Color(31, 31, 31, 120),
+    Color(36, 36, 36, 120)
 )
 val md_theme_dark_default_onGlassSurfaceBorder = Color(44, 44, 44, 128)
 val md_theme_dark_default_glassGradientLightToDark = Pair(
@@ -235,13 +235,13 @@ val md_theme_dark_blue_red = Pair(
 )
 
 
-@Preview(showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewColors() {
     BoxWithConstraints {
         WalletGlanceTheme(
             useDeviceTheme = false,
-            lastChosenTheme = AppTheme.LightDefault.name,
+            lastChosenTheme = AppTheme.DarkDefault.name,
             boxWithConstraintsScope = this
         ) {
             Box(
@@ -249,7 +249,7 @@ private fun PreviewColors() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Image(
-                    painter = painterResource(R.drawable.main_background_light),
+                    painter = painterResource(R.drawable.main_background_dark),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.fillMaxSize()
