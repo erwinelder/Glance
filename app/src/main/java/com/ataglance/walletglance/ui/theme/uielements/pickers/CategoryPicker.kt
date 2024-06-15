@@ -83,7 +83,7 @@ fun CategoryPicker(
         enter = CustomAnimation().dialogSlideFromBottomTransition,
         exit = CustomAnimation().dialogSlideToBottomTransition
     ) {
-        CategoryList(
+        CategoryListWindow(
             lazyListState = parentCategoryListState,
             list = if (type == CategoryType.Expense) {
                 categoriesUiState.parentCategories.expense
@@ -107,7 +107,7 @@ fun CategoryPicker(
         enter = CustomAnimation().dialogSlideFromBottomTransition,
         exit = CustomAnimation().dialogSlideToBottomTransition
     ) {
-        CategoryList(
+        CategoryListWindow(
             lazyListState = subcategoryListState,
             list = if (type == CategoryType.Expense) {
                 categoriesUiState.subcategories.expense[chosenCategory.orderNum - 1]
@@ -129,7 +129,7 @@ fun CategoryPicker(
 }
 
 @Composable
-private fun CategoryList(
+private fun CategoryListWindow(
     lazyListState: LazyListState,
     list: List<Category>,
     categoryNameAndIconMap: Map<String, Int>,
@@ -142,7 +142,7 @@ private fun CategoryList(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(bottom = 20.dp)
+            .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
             .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
             .background(GlanceTheme.surfaceVariant.copy(1f))
             .fillMaxWidth(
