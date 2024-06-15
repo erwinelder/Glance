@@ -118,7 +118,7 @@ private fun StartButton(onClick: () -> Unit = {}) {
                 )
         ) {
             Icon(
-                painter = painterResource(R.drawable.long_right_arrow_rotated),
+                painter = painterResource(R.drawable.long_right_arrow_rotated_icon),
                 contentDescription = "start setup button icon",
                 modifier = Modifier.size(42.dp)
             )
