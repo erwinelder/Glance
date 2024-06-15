@@ -90,9 +90,7 @@ fun CustomTextField(
             ),
             contentPadding = padding,
             innerTextField = {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(contentAlignment = Alignment.Center) {
                     if (text.isNotBlank()) {
                         it()
                     } else {
