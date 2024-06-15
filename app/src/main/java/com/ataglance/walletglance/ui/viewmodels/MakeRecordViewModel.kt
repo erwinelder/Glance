@@ -49,10 +49,12 @@ class MakeRecordViewModel(
     private val _recordUnitList: MutableStateFlow<List<MakeRecordUnitUiState>> = MutableStateFlow(
         makeRecordUnitList ?: listOf(
                 MakeRecordUnitUiState(
+                    lazyListKey = 0,
                     index = 0,
                     category = category,
                     subcategory = subcategory,
-                    note = ""
+                    note = "",
+                    collapsed = false
                 )
             )
     )
@@ -84,6 +86,20 @@ class MakeRecordViewModel(
 
     fun chooseAccount(account: Account) {
         _uiState.update { it.copy(account = account) }
+    }
+
+    fun changeAccount(currentAccount: Account, accountList: List<Account>) {
+        if (accountList.size < 2) return
+
+        for (i in accountList.indices) {
+            if (accountList[i].id == currentAccount.id ) {
+                (accountList.getOrNull(i + 1) ?: accountList.getOrNull(i - 1))
+                    ?.let { account ->
+                        _uiState.update { it.copy(account = account) }
+                    } ?: return
+                break
+            }
+        }
     }
 
     fun changeNoteValue(index: Int, value: String) {
@@ -122,13 +138,36 @@ class MakeRecordViewModel(
         _recordUnitList.update { newList }
     }
 
+    fun changeCollapsedValue(index: Int, collapsed: Boolean) {
+        val newList = recordUnitList.value.toMutableList()
+
+        if (!collapsed) {
+            for (i in 0..newList.lastIndex) {
+                if (i == index) {
+                    newList[i] = newList[i].copy(collapsed = false)
+                } else {
+                    newList[i] = newList[i].copy(collapsed = true)
+                }
+            }
+        } else {
+            newList[index] = newList[index].copy(collapsed = true)
+        }
+
+        _recordUnitList.update { newList }
+    }
+
     fun addNewRecordUnit() {
         val newList = recordUnitList.value.toMutableList()
+        for (i in 0..newList.lastIndex) {
+            newList[i] = newList[i].copy(collapsed = true)
+        }
         newList.add(
             MakeRecordUnitUiState(
+                lazyListKey = newList.maxOfOrNull { it.lazyListKey }?.let { it + 1 } ?: 0,
                 index = newList.last().index + 1,
                 category = newList.last().category,
-                subcategory = newList.last().subcategory
+                subcategory = newList.last().subcategory,
+                collapsed = false
             )
         )
         _recordUnitList.update { newList }
@@ -276,10 +315,38 @@ data class MakeRecordUiState(
 }
 
 data class MakeRecordUnitUiState(
+    val lazyListKey: Int,
     val index: Int,
     val category: Category?,
     val subcategory: Category?,
     val note: String = "",
     val amount: String = "",
-    val quantity: String = ""
-)
+    val quantity: String = "",
+    val collapsed: Boolean = true
+) {
+
+    fun getFormattedAmountWithSpaces(): String {
+        var numberString = "%.2f".format(
+            Locale.US,
+            amount.takeIf { it.isNotBlank() }?.toDouble() ?: return "------"
+        )
+        var formattedNumber = numberString.let {
+            it.substring(startIndex = it.length - 3)
+        }
+        numberString = numberString.let {
+            it.substring(0, it.length - 3)
+        }
+        var digitCount = 0
+
+        for (i in numberString.length - 1 downTo 0) {
+            formattedNumber = numberString[i] + formattedNumber
+            digitCount++
+            if (digitCount % 3 == 0 && i != 0) {
+                formattedNumber = " $formattedNumber"
+            }
+        }
+
+        return formattedNumber
+    }
+
+}

@@ -54,6 +54,7 @@ data class RecordStack(
         stack.forEach { unit ->
             makeRecordUnitList.add(
                 MakeRecordUnitUiState(
+                    lazyListKey = makeRecordUnitList.lastIndex + 1,
                     index = makeRecordUnitList.lastIndex + 1,
                     category = CategoryController().getParCategoryFromList(
                         id = unit.categoryId,
@@ -73,7 +74,8 @@ data class RecordStack(
                     },
                     note = unit.note ?: "",
                     amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
-                    quantity = unit.quantity?.toString() ?: ""
+                    quantity = unit.quantity?.toString() ?: "",
+                    collapsed = stack.size != 1
                 )
             )
         }

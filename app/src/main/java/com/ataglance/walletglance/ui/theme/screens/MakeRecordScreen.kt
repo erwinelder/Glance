@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -37,7 +40,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,21 +51,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
-import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryType
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordUnitUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordViewModel
-import com.ataglance.walletglance.ui.viewmodels.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
+import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
+import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
-import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
-import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
+import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.fields.CategoryField
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
@@ -69,6 +69,13 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
+import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
+import com.ataglance.walletglance.ui.viewmodels.CategoryType
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordUiState
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordUnitUiState
+import com.ataglance.walletglance.ui.viewmodels.MakeRecordViewModel
+import com.ataglance.walletglance.ui.viewmodels.RecordType
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,10 +118,7 @@ fun MakeRecordScreen(
         is24Hour = true
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.buttons_gap)),
@@ -134,43 +138,48 @@ fun MakeRecordScreen(
                 )
             }
 
-            GlassSurface(modifier = Modifier.weight(1f)) {
+            GlassSurface(modifier = Modifier.weight(1f), filledWidth = .96f) {
                 LazyColumn(
                     state = lazyListState,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
                     contentPadding = PaddingValues(12.dp, 18.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     item {
-                        DateField(
-                            dateFormatted = uiState.dateTimeState.dateFormatted,
-                            cornerSize = fieldsCornerSize,
-                            onClick = { openDateDialog.value = true }
-                        )
-                    }
-                    item {
-                        MakeRecordFieldContainer(R.string.account) {
-                            AnimatedContent(
-                                targetState = uiState.account,
-                                label = "account field at the make record screen"
-                            ) { targetAccount ->
-                                SmallAccount(targetAccount, appTheme) {
-                                    openAccountDialog.value = true
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            DateField(
+                                dateFormatted = uiState.dateTimeState.dateFormatted,
+                                cornerSize = fieldsCornerSize,
+                                onClick = { openDateDialog.value = true }
+                            )
+                            MakeRecordFieldContainer(R.string.account) {
+                                AnimatedContent(
+                                    targetState = uiState.account,
+                                    label = "account field at the make record screen"
+                                ) { targetAccount ->
+                                    SmallAccount(targetAccount, appTheme) {
+                                        if (accountList.size == 2) {
+                                            uiState.account?.let { account ->
+                                                viewModel.changeAccount(account, accountList)
+                                            }
+                                        } else if (accountList.size > 1) {
+                                            openAccountDialog.value = true
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                    item {
-                        BigDivider(Modifier.padding(top = 4.dp))
-                    }
-                    items(items = recordUnitList, key = { it.index }) { recordUnit ->
+                    items(items = recordUnitList, key = { it.lazyListKey }) { recordUnit ->
                         RecordUnitBlock(
-                            noteText = recordUnit.note,
+                            recordUnitUiState = recordUnit,
                             onNoteValueChange = { value ->
                                 viewModel.changeNoteValue(recordUnit.index, value)
                             },
-                            categoryToShow = recordUnit.subcategory ?: recordUnit.category,
                             categoryIconRes = categoryNameAndIconMap[
                                 recordUnit.subcategory?.iconName ?: recordUnit.category?.iconName
                             ],
@@ -178,24 +187,25 @@ fun MakeRecordScreen(
                                 viewModel.changeClickedUnitIndex(recordUnit.index)
                                 openCategoryDialog.value = true
                             },
-                            amount = recordUnit.amount,
                             onAmountValueChange = { value ->
                                 viewModel.changeAmountValue(recordUnit.index, value)
                             },
-                            quantity = recordUnit.quantity,
                             onQuantityChange = { value ->
                                 viewModel.changeQuantityValue(recordUnit.index, value)
                             },
-                            index = recordUnit.index,
                             lastIndex = recordUnitList.last().index,
                             onSwapUnits = viewModel::swapRecordUnits,
                             onDeleteButton = viewModel::deleteRecordUnit,
                             fieldsCornerSize = fieldsCornerSize,
+                            collapsed = recordUnit.collapsed,
+                            onChangeCollapsedValue = { value ->
+                                viewModel.changeCollapsedValue(recordUnit.index, value)
+                            },
+                            accountCurrency = uiState.account?.currency
                         )
-                        SmallDivider(Modifier.padding(top = 24.dp, bottom = 8.dp))
                     }
                     item {
-                        AddNewRecordUnit(viewModel::addNewRecordUnit)
+                        AddNewRecordUnitButton(viewModel::addNewRecordUnit)
                     }
                 }
             }
@@ -251,7 +261,154 @@ fun MakeRecordScreen(
 }
 
 @Composable
-private fun RecordUnitBlock(
+private fun LazyItemScope.RecordUnitBlock(
+    recordUnitUiState: MakeRecordUnitUiState,
+    onNoteValueChange: (String) -> Unit,
+    categoryIconRes: Int?,
+    onCategoryClick: () -> Unit,
+    onAmountValueChange: (String) -> Unit,
+    onQuantityChange: (String) -> Unit,
+    lastIndex: Int,
+    onSwapUnits: (Int, Int) -> Unit,
+    onDeleteButton: (Int) -> Unit,
+    fieldsCornerSize: Dp,
+    collapsed: Boolean,
+    onChangeCollapsedValue: (Boolean) -> Unit,
+    accountCurrency: String?
+) {
+    GlassSurfaceOnGlassSurface(
+        modifier = Modifier.animateItem(placementSpec = null),
+        paddingValues = PaddingValues(0.dp),
+        enableClick = collapsed,
+        onClick = { onChangeCollapsedValue(false) }
+    ) {
+        AnimatedContent(
+            targetState = recordUnitUiState.collapsed,
+            label = "record unit block"
+        ) { targetCollapsed ->
+            if (targetCollapsed) {
+                RecordUnitBlockCollapsed(
+                    noteText = recordUnitUiState.note,
+                    categoryToShow = recordUnitUiState.subcategory ?: recordUnitUiState.category,
+                    categoryIconRes = categoryIconRes,
+                    amount = recordUnitUiState.getFormattedAmountWithSpaces(),
+                    quantity = recordUnitUiState.quantity,
+                    accountCurrency = accountCurrency,
+                    index = recordUnitUiState.index,
+                    lastIndex = lastIndex,
+                    onSwapUnits = onSwapUnits,
+                    onDeleteButton = onDeleteButton,
+                    onExpandButton = { onChangeCollapsedValue(false) }
+                )
+            } else {
+                RecordUnitBlockExpanded(
+                    noteText = recordUnitUiState.note,
+                    onNoteValueChange = onNoteValueChange,
+                    categoryToShow = recordUnitUiState.subcategory ?: recordUnitUiState.category,
+                    categoryIconRes = categoryIconRes,
+                    onCategoryClick = onCategoryClick,
+                    amount = recordUnitUiState.amount,
+                    onAmountValueChange = onAmountValueChange,
+                    quantity = recordUnitUiState.quantity,
+                    onQuantityChange = onQuantityChange,
+                    index = recordUnitUiState.index,
+                    lastIndex = lastIndex,
+                    onSwapUnits = onSwapUnits,
+                    onDeleteButton = onDeleteButton,
+                    fieldsCornerSize = fieldsCornerSize,
+                    onCollapseButton = { onChangeCollapsedValue(true) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecordUnitBlockCollapsed(
+    noteText: String,
+    categoryToShow: Category?,
+    categoryIconRes: Int?,
+    amount: String,
+    quantity: String,
+    accountCurrency: String?,
+    index: Int,
+    lastIndex: Int,
+    onSwapUnits: (Int, Int) -> Unit,
+    onDeleteButton: (Int) -> Unit,
+    onExpandButton: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
+    ) {
+        if (noteText.isNotBlank()) {
+            Text(
+                text = noteText,
+                color = GlanceTheme.onSurface,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Light,
+                fontStyle = FontStyle.Italic,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            if (quantity.isNotBlank()) {
+                Text(
+                    text = "$quantity x",
+                    fontSize = 18.sp,
+                    color = GlanceTheme.onSurface.copy(.6f),
+                    modifier = Modifier.padding(bottom = 2.dp)
+                )
+            }
+            Text(
+                text = amount,
+                fontSize = 22.sp,
+                color = GlanceTheme.onSurface,
+            )
+            accountCurrency?.let {
+                Text(
+                    text = it,
+                    fontSize = 18.sp,
+                    color = GlanceTheme.onSurface.copy(.6f),
+                    modifier = Modifier.padding(bottom = 2.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        AnimatedContent(
+            targetState = categoryToShow to categoryIconRes,
+            label = "record unit category"
+        ) { categoryAndCategoryIconRes ->
+            RecordCategory(
+                categoryAndIconRes = categoryAndCategoryIconRes,
+                iconSize = 24.dp,
+                fontSize = 20.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        ControlPanel(
+            index = index,
+            lastIndex = lastIndex,
+            spaceSize = 12.dp,
+            onSwapUnits = onSwapUnits,
+            onDeleteButton = onDeleteButton
+        ) {
+            SmallFilledIconButton(
+                iconRes = R.drawable.expand_icon,
+                iconContendDescription = "expand record unit",
+                onClick = onExpandButton
+            )
+        }
+    }
+}
+
+@Composable
+private fun RecordUnitBlockExpanded(
     noteText: String,
     onNoteValueChange: (String) -> Unit,
     categoryToShow: Category?,
@@ -266,17 +423,20 @@ private fun RecordUnitBlock(
     onSwapUnits: (Int, Int) -> Unit,
     onDeleteButton: (Int) -> Unit,
     fieldsCornerSize: Dp,
+    onCollapseButton: () -> Unit
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 22.dp)
     ) {
-        MakeRecordFieldContainer(R.string.note) {
+        MakeRecordFieldContainer(R.string.amount) {
             CustomTextField(
-                text = noteText,
-                placeholderText = stringResource(R.string.note_placeholder),
-                fontSize = 18.sp,
+                text = amount,
+                placeholderText = "0.00",
+                fontSize = 22.sp,
                 cornerSize = fieldsCornerSize,
-                onValueChange = onNoteValueChange,
+                onValueChange = onAmountValueChange,
+                keyboardType = KeyboardType.Number,
                 modifier = Modifier.bounceClickEffect(.97f)
             )
         }
@@ -296,14 +456,13 @@ private fun RecordUnitBlock(
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
-        MakeRecordFieldContainer(R.string.amount) {
+        MakeRecordFieldContainer(R.string.note) {
             CustomTextField(
-                text = amount,
-                placeholderText = "0.00",
-                fontSize = 22.sp,
+                text = noteText,
+                placeholderText = stringResource(R.string.note_placeholder),
+                fontSize = 18.sp,
                 cornerSize = fieldsCornerSize,
-                onValueChange = onAmountValueChange,
-                keyboardType = KeyboardType.Number,
+                onValueChange = onNoteValueChange,
                 modifier = Modifier.bounceClickEffect(.97f)
             )
         }
@@ -320,12 +479,68 @@ private fun RecordUnitBlock(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        ControlPanel(
-            index = index,
-            lastIndex = lastIndex,
-            onSwapUnits = onSwapUnits,
-            onDeleteButton = onDeleteButton
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ControlPanel(
+                index = index,
+                lastIndex = lastIndex,
+                spaceSize = 16.dp,
+                onSwapUnits = onSwapUnits,
+                onDeleteButton = onDeleteButton
+            ) {
+                SmallFilledIconButton(
+                    iconRes = R.drawable.collapse_icon,
+                    iconContendDescription = "collapse record unit",
+                    onClick = onCollapseButton
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ControlPanel(
+    index: Int,
+    lastIndex: Int,
+    spaceSize: Dp,
+    onSwapUnits: (Int, Int) -> Unit,
+    onDeleteButton: (Int) -> Unit,
+    collapseExpandButton: @Composable () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(spaceSize),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = 3.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .bounceClickEffect(.98f)
+                .clip(RoundedCornerShape(17.dp))
+                .background(GlanceTheme.surface)
+                .padding(horizontal = 4.dp)
+        ) {
+            ControlPanelButton(
+                onClick = { onDeleteButton(index) },
+                enabled = lastIndex != 0,
+                iconRes = R.drawable.trash_icon,
+                iconContentDescription = "delete"
+            )
+            ControlPanelButton(
+                onClick = { onSwapUnits(index, index - 1) },
+                enabled = index > 0,
+                iconRes = R.drawable.short_arrow_up_icon,
+                iconContentDescription = "move up"
+            )
+            ControlPanelButton(
+                onClick = { onSwapUnits(index, index + 1) },
+                enabled = index < lastIndex,
+                iconRes = R.drawable.short_arrow_down_icon,
+                iconContentDescription = "move down"
+            )
+        }
+        collapseExpandButton()
     }
 }
 
@@ -357,56 +572,21 @@ private fun ControlPanelButton(
             painter = painterResource(iconRes),
             contentDescription = iconContentDescription,
             tint = color,
-            modifier = Modifier
-                .size(36.dp)
-                .padding(horizontal = 4.dp)
+            modifier = Modifier.size(28.dp)
         )
     }
 }
 
 @Composable
-private fun ControlPanel(
-    index: Int,
-    lastIndex: Int,
-    onSwapUnits: (Int, Int) -> Unit,
-    onDeleteButton: (Int) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .bounceClickEffect(.98f)
-            .clip(RoundedCornerShape(17.dp))
-            .background(GlanceTheme.surface)
-            .padding(horizontal = 4.dp)
-    ) {
-        ControlPanelButton(
-            onClick = { onDeleteButton(index) },
-            enabled = lastIndex != 0,
-            iconRes = R.drawable.trash_icon,
-            iconContentDescription = "delete"
-        )
-        ControlPanelButton(
-            onClick = { onSwapUnits(index, index - 1) },
-            enabled = index > 0,
-            iconRes = R.drawable.short_arrow_up_icon,
-            iconContentDescription = "move up"
-        )
-        ControlPanelButton(
-            onClick = { onSwapUnits(index, index + 1) },
-            enabled = index < lastIndex,
-            iconRes = R.drawable.short_arrow_down_icon,
-            iconContentDescription = "move down"
-        )
-    }
-}
-
-@Composable
-private fun AddNewRecordUnit(onClick: () -> Unit) {
+private fun LazyItemScope.AddNewRecordUnitButton(onClick: () -> Unit) {
     IconButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.Transparent
         ),
         modifier = Modifier
+            .animateItem(placementSpec = null)
+            .width(250.dp)
             .bounceClickEffect(.97f)
             .clip(RoundedCornerShape(22.dp))
             .border(2.dp, GlanceTheme.outline, RoundedCornerShape(22.dp))
@@ -416,8 +596,7 @@ private fun AddNewRecordUnit(onClick: () -> Unit) {
             painter = painterResource(R.drawable.add_icon),
             contentDescription = "add",
             tint = GlanceTheme.outline,
-            modifier = Modifier
-                .size(26.dp)
+            modifier = Modifier.size(26.dp)
         )
     }
 }
