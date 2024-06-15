@@ -126,67 +126,6 @@ fun CategoryPicker(
             }
         )
     }
-
-    /*DialogWindow(
-        visible = visible,
-        onDismissRequest = {
-            onDismissRequest()
-            if (showSubcategoryList.value) {
-                coroutineScope.launch {
-                    delay(400)
-                    showSubcategoryList.value = false
-                }
-            }
-        }
-    ) {
-        AnimatedVisibility(
-            visible = !showSubcategoryList.value,
-            enter = slideInHorizontally(tween(400)) { -(it * 1.1).toInt() },
-            exit = slideOutHorizontally(tween(400)) { -(it * 1.1).toInt() }
-        ) {
-            CategoryList(
-                lazyListState = parentCategoryListState,
-                list = if (type == CategoryType.Expense) {
-                    categoriesUiState.parentCategories.expense
-                } else {
-                    categoriesUiState.parentCategories.income
-                },
-                categoryNameAndIconMap = categoryNameAndIconMap,
-                onCategoryClick = { category ->
-                    if (category.parentCategoryId != null) {
-                        chosenCategory.value = category
-                        showSubcategoryList.value = true
-                    } else {
-                        onCategoryChoose(category, null)
-                        onDismissRequest()
-                    }
-                }
-            )
-        }
-        AnimatedVisibility(
-            visible = showSubcategoryList.value,
-            enter = slideInHorizontally(tween(400)) { (it*1.1).toInt() },
-            exit = slideOutHorizontally(tween(400)) { (it*1.1).toInt() }
-        ) {
-            CategoryList(
-                lazyListState = subcategoryListState,
-                list = if (type == CategoryType.Expense) {
-                    categoriesUiState.subcategories.expense[chosenCategory.value.orderNum - 1]
-                } else {
-                    categoriesUiState.subcategories.income[chosenCategory.value.orderNum - 1]
-                },
-                categoryNameAndIconMap = categoryNameAndIconMap,
-                onCategoryClick = { category ->
-                    onCategoryChoose(chosenCategory.value, category)
-                    onDismissRequest()
-                    coroutineScope.launch {
-                        delay(400)
-                        showSubcategoryList.value = false
-                    }
-                }
-            )
-        }
-    }*/
 }
 
 @Composable
