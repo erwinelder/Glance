@@ -1,14 +1,21 @@
 package com.ataglance.walletglance.ui.theme.uielements.pickers
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,12 +27,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,16 +42,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Category
-import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.uielements.containers.DialogWindow
+import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
+import com.ataglance.walletglance.ui.viewmodels.CategoryType
 
 @Composable
 fun CategoryPicker(
@@ -51,17 +58,87 @@ fun CategoryPicker(
     categoryNameAndIconMap: Map<String, Int>,
     type: CategoryType,
     onDismissRequest: () -> Unit,
-    onCategoryChoose: (Category, Category?) -> Unit,
-    parentCategoryListState: LazyListState = rememberLazyListState(),
-    subcategoryListState: LazyListState = rememberLazyListState(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    onCategoryChoose: (Category, Category?) -> Unit
 ) {
-    val showSubcategoryList = remember { mutableStateOf(false) }
-    val chosenCategory = remember {
+    val parentCategoryListState = rememberLazyListState()
+    val subcategoryListState = rememberLazyListState()
+    var showSubcategoryList by remember { mutableStateOf(false) }
+    var chosenCategory by remember {
         mutableStateOf(categoriesUiState.parentCategories.expense.first())
     }
 
-    DialogWindow(
+    val enterTransition = slideInVertically(spring(stiffness = 320F)) {
+        (it * 1.1).toInt()
+    } + scaleIn(tween(400), .8f)
+    val exitTransition = slideOutVertically(spring(stiffness = 320F)) {
+        (it * 1.1).toInt()
+    } + scaleOut(tween(400), .8f)
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(tween(400)),
+        exit = fadeOut(tween(400))
+    ) {
+        Box(
+            modifier = Modifier
+                .clickable {
+                    onDismissRequest()
+                    if (showSubcategoryList) showSubcategoryList = false
+                }
+                .fillMaxSize()
+                .background(Color.Black.copy(.3f))
+        )
+    }
+    AnimatedVisibility(
+        visible = visible && !showSubcategoryList,
+        enter = enterTransition,
+        exit = exitTransition
+    ) {
+        CategoryList(
+            lazyListState = parentCategoryListState,
+            list = if (type == CategoryType.Expense) {
+                categoriesUiState.parentCategories.expense
+            } else {
+                categoriesUiState.parentCategories.income
+            },
+            categoryNameAndIconMap = categoryNameAndIconMap,
+            onCategoryClick = { category ->
+                if (category.parentCategoryId != null) {
+                    chosenCategory = category
+                    showSubcategoryList = true
+                } else {
+                    onCategoryChoose(category, null)
+                    onDismissRequest()
+                }
+            }
+        )
+    }
+    AnimatedVisibility(
+        visible = visible && showSubcategoryList,
+        enter = enterTransition,
+        exit = exitTransition
+    ) {
+        CategoryList(
+            lazyListState = subcategoryListState,
+            list = if (type == CategoryType.Expense) {
+                categoriesUiState.subcategories.expense[chosenCategory.orderNum - 1]
+            } else {
+                categoriesUiState.subcategories.income[chosenCategory.orderNum - 1]
+            },
+            categoryNameAndIconMap = categoryNameAndIconMap,
+            onCategoryClick = { category ->
+                onCategoryChoose(chosenCategory, category)
+                onDismissRequest()
+                showSubcategoryList = false
+            },
+            showCloseButton = true,
+            onCloseSubcategoryList = {
+                showSubcategoryList = false
+            }
+        )
+    }
+
+    /*DialogWindow(
         visible = visible,
         onDismissRequest = {
             onDismissRequest()
@@ -75,8 +152,8 @@ fun CategoryPicker(
     ) {
         AnimatedVisibility(
             visible = !showSubcategoryList.value,
-            enter = slideInHorizontally(tween(400)) { -(it*1.1).toInt() },
-            exit = slideOutHorizontally(tween(400)) { -(it*1.1).toInt() }
+            enter = slideInHorizontally(tween(400)) { -(it * 1.1).toInt() },
+            exit = slideOutHorizontally(tween(400)) { -(it * 1.1).toInt() }
         ) {
             CategoryList(
                 lazyListState = parentCategoryListState,
@@ -120,7 +197,7 @@ fun CategoryPicker(
                 }
             )
         }
-    }
+    }*/
 }
 
 @Composable
@@ -128,20 +205,23 @@ private fun CategoryList(
     lazyListState: LazyListState,
     list: List<Category>,
     categoryNameAndIconMap: Map<String, Int>,
-    onCategoryClick: (Category) -> Unit
+    onCategoryClick: (Category) -> Unit,
+    showCloseButton: Boolean = false,
+    onCloseSubcategoryList: () -> Unit = {}
 ) {
     LazyColumn(
         state = lazyListState,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
+            .padding(bottom = 20.dp)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
             .background(GlanceTheme.surfaceVariant.copy(1f))
             .fillMaxWidth(
                 when {
-                    WindowTypeIsCompact -> 1f
-                    WindowTypeIsMedium -> .7f
-                    else -> .6f
+                    WindowTypeIsCompact -> .9f
+                    WindowTypeIsMedium -> .6f
+                    else -> .5f
                 }
             )
     ) {
@@ -159,6 +239,12 @@ private fun CategoryList(
                 onCategoryClick(category)
             }
         }
+        if (showCloseButton) {
+            item {
+                SmallDivider(filledWidth = .6f)
+                CloseButton(onClick = onCloseSubcategoryList)
+            }
+        }
     }
 }
 
@@ -171,7 +257,7 @@ private fun CategoryListItem(
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
-            .clickable { onClick() }
+            .bounceClickEffect { onClick() }
             .padding(vertical = 14.dp)
     ) {
         iconRes?.let {

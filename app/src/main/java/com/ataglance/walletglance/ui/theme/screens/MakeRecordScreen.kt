@@ -118,7 +118,10 @@ fun MakeRecordScreen(
         is24Hour = true
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.fillMaxSize()
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.buttons_gap)),
