@@ -26,4 +26,5 @@ class CategoryRepository(
     fun getCategories(): Flow<List<Category>> {
         return dao.getAllCategories()
     }
+
 }

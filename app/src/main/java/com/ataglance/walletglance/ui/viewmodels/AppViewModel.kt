@@ -10,8 +10,11 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.SettingsRepository
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.entities.CategoryCollection
+import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
@@ -34,6 +37,8 @@ class AppViewModel(
     val settingsRepository: SettingsRepository,
     val accountRepository: AccountRepository,
     val categoryRepository: CategoryRepository,
+    private val categoryCollectionAndCollectionCategoryAssociationRepository:
+        CategoryCollectionAndCollectionCategoryAssociationRepository,
     val recordRepository: RecordRepository,
     val recordAndAccountRepository: RecordAndAccountRepository,
     val generalRepository: GeneralRepository
@@ -368,6 +373,7 @@ class AppViewModel(
         return recordNumbersList
     }
 
+
     private val _categoriesUiState: MutableStateFlow<CategoriesUiState> =
         MutableStateFlow(CategoriesUiState())
     val categoriesUiState: StateFlow<CategoriesUiState> = _categoriesUiState.asStateFlow()
@@ -450,21 +456,6 @@ class AppViewModel(
         return false
     }
 
-    private fun getCategoriesIdsToDelete(
-        originalList: List<Category>,
-        newList: List<Category>
-    ): List<Int> {
-        val listOfIdsToDelete = mutableListOf<Int>()
-
-        originalList.forEach { category ->
-            if (!isCategoryIdInList(category.id, newList)) {
-                listOfIdsToDelete.add(category.id)
-            }
-        }
-
-        return listOfIdsToDelete
-    }
-
     suspend fun saveCategoriesToDb(categoryList: List<Category>) {
         val listOfIdsToDelete = getCategoriesIdsToDelete(
             originalList = CategoryController().concatenateCategoryLists(
@@ -483,6 +474,21 @@ class AppViewModel(
                 categoryRepository.deleteAndUpsertCategories(listOfIdsToDelete, categoryList)
             }
         }
+    }
+
+    private fun getCategoriesIdsToDelete(
+        originalList: List<Category>,
+        newList: List<Category>
+    ): List<Int> {
+        val listOfIdsToDelete = mutableListOf<Int>()
+
+        originalList.forEach { category ->
+            if (!isCategoryIdInList(category.id, newList)) {
+                listOfIdsToDelete.add(category.id)
+            }
+        }
+
+        return listOfIdsToDelete
     }
 
     private fun getCategoryPairByIds(
@@ -554,6 +560,117 @@ class AppViewModel(
             parentCategory to subcategory
         }
     }
+
+
+    private val _categoryCollectionsUiState: MutableStateFlow<List<CategoryCollectionUiState>> =
+        MutableStateFlow(listOf())
+    val categoryCollectionsUiState: StateFlow<List<CategoryCollectionUiState>> =
+        _categoryCollectionsUiState.asStateFlow()
+
+    private fun fetchCategoryCollectionsFromDb() {
+        viewModelScope.launch {
+            val collectionsAndCollectionCategoryAssociations =
+                categoryCollectionAndCollectionCategoryAssociationRepository
+                    .getCategoryCollectionsAndCollectionCategoryAssociations()
+            _categoryCollectionsUiState.update {
+                transformCategoryCollectionsAndCollectionCategoryAssociationsToOneList(
+                    collectionsAndCollectionCategoryAssociations.first,
+                    collectionsAndCollectionCategoryAssociations.second
+                )
+            }
+        }
+    }
+
+    private fun transformCategoryCollectionsAndCollectionCategoryAssociationsToOneList(
+        collectionList: List<CategoryCollection>,
+        collectionCategoryAssociationList: List<CategoryCollectionCategoryAssociation>
+    ): List<CategoryCollectionUiState> {
+        return collectionList
+            .map { collection ->
+                CategoryCollectionUiState(
+                    id = collection.id,
+                    orderNum = collection.orderNum,
+                    name = collection.name,
+                    categoriesIds = collectionCategoryAssociationList
+                        .filter { it.categoryCollectionId == collection.id }
+                        .map { it.categoryCollectionId }
+                )
+            }
+            .sortedBy { it.orderNum }
+    }
+
+    suspend fun saveCategoryCollectionsToDb(collectionsUiState: List<CategoryCollectionUiState>) {
+
+        val newCollectionsAndAssociations = collectionsUiState.breakOnCollectionsAndAssociations()
+        val originalCollectionsAndAssociations =
+            categoryCollectionsUiState.value.breakOnCollectionsAndAssociations()
+
+        val categoryCollectionsIdsToDelete =
+            newCollectionsAndAssociations.first.getIdsThatAreNotInList(
+                originalCollectionsAndAssociations.first
+            )
+        val collectionCategoryAssociationsToDelete =
+            newCollectionsAndAssociations.second.getAssociationsThatAreNotInList(
+                originalCollectionsAndAssociations.second
+            )
+
+        viewModelScope.launch {
+            categoryCollectionAndCollectionCategoryAssociationRepository
+                .deleteAndUpsertCollectionsAndDeleteAndUpsertAssociations(
+                    collectionsIdsToDelete = categoryCollectionsIdsToDelete,
+                    collectionListToUpsert = newCollectionsAndAssociations.first,
+                    associationsToDelete = collectionCategoryAssociationsToDelete,
+                    associationsToUpsert = newCollectionsAndAssociations.second
+                )
+        }
+
+    }
+
+    private fun List<CategoryCollectionUiState>.breakOnCollectionsAndAssociations():
+            Pair<List<CategoryCollection>, List<CategoryCollectionCategoryAssociation>>
+    {
+        val categoryCollectionList = this.map { collectionUiState ->
+            CategoryCollection(
+                id = collectionUiState.id,
+                orderNum = collectionUiState.orderNum,
+                name = collectionUiState.name
+            )
+        }
+        val listOfCollectionCategoryAssociationList = this
+            .filter { it.categoriesIds != null }
+            .flatMap { collectionUiState ->
+                collectionUiState.categoriesIds!!.map { categoryId ->
+                    CategoryCollectionCategoryAssociation(
+                        categoryCollectionId = collectionUiState.id,
+                        categoryId = categoryId
+                    )
+                }
+            }
+        return categoryCollectionList to listOfCollectionCategoryAssociationList
+    }
+
+    private fun List<CategoryCollection>.getIdsThatAreNotInList(
+        list: List<CategoryCollection>
+    ): List<Int> {
+        return this
+            .filter { collection ->
+                list.find { it.id == collection.id } == null
+            }
+            .map { it.id }
+    }
+
+    private fun List<CategoryCollectionCategoryAssociation>.getAssociationsThatAreNotInList(
+        list: List<CategoryCollectionCategoryAssociation>
+    ): List<CategoryCollectionCategoryAssociation> {
+        return this
+            .filter { association ->
+                list.find {
+                    it.categoryCollectionId == association.categoryCollectionId &&
+                            it.categoryId == association.categoryId
+                } == null
+            }
+    }
+
 
     private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> =
         MutableStateFlow(
@@ -1278,6 +1395,7 @@ class AppViewModel(
         fetchAccountsFromDb()
         fetchCategoriesFromDb()
         fetchLastRecordNumFromDb()
+        fetchCategoryCollectionsFromDb()
         fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
     }
 
@@ -1318,6 +1436,13 @@ data class CategoriesUiState(
         }
     }
 }
+
+data class CategoryCollectionUiState(
+    val id: Int,
+    val orderNum: Int,
+    val name: String,
+    val categoriesIds: List<Int>?
+)
 
 data class DateRangeMenuUiState(
     val startCalendarDateMillis: Long,

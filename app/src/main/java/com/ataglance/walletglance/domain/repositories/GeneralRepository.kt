@@ -7,6 +7,7 @@ class GeneralRepository(
     private val settingsRepository: SettingsRepository,
     private val accountRepository: AccountRepository,
     private val categoryRepository: CategoryRepository,
+    private val categoryCollectionRepository: CategoryCollectionRepository,
     private val recordRepository: RecordRepository
 ) {
     @Transaction
@@ -15,5 +16,6 @@ class GeneralRepository(
         accountRepository.deleteAllAccounts()
         categoryRepository.deleteAllCategories()
         recordRepository.deleteAllRecords()
+        categoryCollectionRepository.deleteAllCollections()
     }
 }
