@@ -500,9 +500,12 @@ class AppViewModel(
         }
     }
 
-    suspend fun saveCategoryCollectionsToDb(collectionsUiState: List<CategoryCollectionUiState>) {
+    suspend fun saveCategoryCollectionsToDb(
+        collectionUiStateList: List<CategoryCollectionUiState>
+    ) {
 
-        val newCollectionsAndAssociations = collectionsUiState.breakOnCollectionsAndAssociations()
+        val newCollectionsAndAssociations =
+            collectionUiStateList.breakOnCollectionsAndAssociations()
         val originalCollectionsAndAssociations =
             categoryCollectionsUiState.value.breakOnCollectionsAndAssociations()
 

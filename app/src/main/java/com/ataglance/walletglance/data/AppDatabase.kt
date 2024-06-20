@@ -5,21 +5,33 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ataglance.walletglance.domain.dao.AccountDao
+import com.ataglance.walletglance.domain.dao.CategoryCollectionCategoryAssociationDao
+import com.ataglance.walletglance.domain.dao.CategoryCollectionDao
 import com.ataglance.walletglance.domain.dao.CategoryDao
 import com.ataglance.walletglance.domain.dao.RecordDao
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.entities.CategoryCollection
+import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.domain.entities.Record
 
 @Database(
-    entities = [Account::class, Category::class, Record::class],
-    version = 2,
+    entities = [
+        Account::class,
+        Category::class,
+        CategoryCollection::class,
+        CategoryCollectionCategoryAssociation::class,
+        Record::class
+    ],
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract val accountDao: AccountDao
     abstract val categoryDao: CategoryDao
+    abstract val categoryCollectionDao: CategoryCollectionDao
+    abstract val categoryCollectionCategoryAssociationDao: CategoryCollectionCategoryAssociationDao
     abstract val recordDao: RecordDao
 
     companion object {
@@ -32,7 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context, AppDatabase::class.java, "app_data"
                 )
 
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
 
                     /*.addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {

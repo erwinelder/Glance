@@ -8,8 +8,10 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.data.AppDatabase
+import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
+import com.ataglance.walletglance.domain.repositories.CategoryCollectionRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
@@ -30,13 +32,26 @@ class WalletGlanceApplication: Application() {
 
     private val accountRepository by lazy { AccountRepository(db.accountDao) }
     private val categoryRepository by lazy { CategoryRepository(db.categoryDao) }
+    private val categoryCollectionRepository by lazy {
+        CategoryCollectionRepository(db.categoryCollectionDao)
+    }
+    private val categoryCollectionAndCollectionCategoryAssociationRepository by lazy {
+        CategoryCollectionAndCollectionCategoryAssociationRepository(
+            categoryCollectionDao = db.categoryCollectionDao,
+            categoryCollectionCategoryAssociationDao = db.categoryCollectionCategoryAssociationDao
+        )
+    }
     private val recordRepository by lazy { RecordRepository(db.recordDao) }
     private val recordAndAccountRepository by lazy {
         RecordAndAccountRepository(db.recordDao, db.accountDao)
     }
     private val generalRepository by lazy {
         GeneralRepository(
-            settingsRepository, accountRepository, categoryRepository, recordRepository
+            settingsRepository = settingsRepository,
+            accountRepository = accountRepository,
+            categoryRepository = categoryRepository,
+            categoryCollectionRepository = categoryCollectionRepository,
+            recordRepository = recordRepository
         )
     }
 
@@ -44,6 +59,8 @@ class WalletGlanceApplication: Application() {
         settingsRepository = settingsRepository,
         accountRepository = accountRepository,
         categoryRepository = categoryRepository,
+        categoryCollectionAndCollectionCategoryAssociationRepository =
+            categoryCollectionAndCollectionCategoryAssociationRepository,
         recordRepository = recordRepository,
         recordAndAccountRepository = recordAndAccountRepository,
         generalRepository = generalRepository
