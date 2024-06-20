@@ -2,7 +2,9 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.ui.viewmodels.AccountColorName
+import com.ataglance.walletglance.data.accounts.AccountColorName
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
+import com.ataglance.walletglance.data.records.RecordType
 import java.util.Locale
 
 @Entity(tableName = "Account")
@@ -73,6 +75,57 @@ data class Account(
         return getFormattedBalanceWithSpaces().let {
             it.substring(startIndex = it.length - 3)
         }
+    }
+
+    fun cloneAndAddToBalance(amount: Double): Account {
+        return this.copy(
+            balance = "%.2f".format(Locale.US, balance + amount).toDouble()
+        )
+    }
+
+    fun cloneAndSubtractFromBalance(amount: Double): Account {
+        return this.copy(
+            balance = "%.2f".format(Locale.US, balance - amount).toDouble()
+        )
+    }
+
+    fun cloneAndAddToOrSubtractFromBalance(amount: Double, recordType: RecordType): Account {
+        return this.copy(
+            balance = "%.2f".format(
+                Locale.US,
+                balance + if (recordType == RecordType.Expense) -amount else amount
+            ).toDouble()
+        )
+    }
+
+    fun cloneAndReapplyAmountToBalance(
+        prevAmount: Double,
+        newAmount: Double,
+        recordType: RecordType
+    ): Account {
+        return this.copy(
+            balance = "%.2f".format(
+                Locale.US,
+                balance +
+                        (if (recordType == RecordType.Expense) prevAmount else -prevAmount) +
+                        if (recordType == RecordType.Expense) -newAmount else newAmount
+            ).toDouble()
+        )
+    }
+
+    fun toEditAccountUiState(): EditAccountUiState {
+        return EditAccountUiState(
+            id = id,
+            orderNum = orderNum,
+            name = name,
+            currency = currency,
+            balance = balance.toString(),
+            colorName = color,
+            hide = hide,
+            hideBalance = hideBalance,
+            withoutBalance = withoutBalance,
+            isActive = isActive
+        )
     }
 
 }

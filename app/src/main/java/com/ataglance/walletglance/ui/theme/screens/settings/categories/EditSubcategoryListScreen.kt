@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Category
-import com.ataglance.walletglance.ui.viewmodels.Colors
+import com.ataglance.walletglance.data.app.Colors
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.EditSubcategoryListContainer
 

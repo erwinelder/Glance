@@ -21,15 +21,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.AccountController
-import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryController
-import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
-import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
-import com.ataglance.walletglance.ui.viewmodels.RecordStack
-import com.ataglance.walletglance.ui.viewmodels.RecordType
-import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
 import com.ataglance.walletglance.ui.theme.animation.StartAnimatedContainer
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.AppMainTopBar
@@ -39,6 +30,15 @@ import com.ataglance.walletglance.ui.theme.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.ui.theme.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.ui.theme.widgets.GreetingsMessage
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
+import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
+import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
+import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
 
 @Composable
 fun HomeScreen(
@@ -46,7 +46,7 @@ fun HomeScreen(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    categoriesUiState: CategoriesUiState,
+    categoriesUiState: CategoriesLists,
     categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
@@ -100,7 +100,7 @@ private fun CompactLayout(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    categoriesUiState: CategoriesUiState,
+    categoriesUiState: CategoriesLists,
     categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
@@ -162,17 +162,15 @@ private fun CompactLayout(
                         recordStackList = widgetsUiState.filteredRecordStackList.take(3),
                         appTheme = appTheme,
                         getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                            CategoryController().getCategoryAndIconRes(
-                                categoriesUiState = categoriesUiState,
+                            getCategoryAndIconRes(
+                                categoriesLists = categoriesUiState,
                                 categoryNameAndIconMap = categoryNameAndIconMap,
                                 categoryId = categoryId,
                                 subcategoryId = subcategoryId,
                                 recordType = type
                             )
                         },
-                        getAccount = { accountId: Int ->
-                            AccountController().getAccountById(accountId, accountsUiState.accountList)
-                        },
+                        getAccount = { accountsUiState.accountList.findById(it) },
                         onRecordClick = onRecordClick,
                         onTransferClick = onTransferClick
                     )
@@ -212,7 +210,7 @@ private fun ExpandedLayout(
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
     filteredRecordStackList: List<RecordStack>,
-    categoriesUiState: CategoriesUiState,
+    categoriesUiState: CategoriesLists,
     categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
@@ -278,17 +276,15 @@ private fun ExpandedLayout(
                     recordStackList = filteredRecordStackList.take(3),
                     appTheme = appTheme,
                     getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                        CategoryController().getCategoryAndIconRes(
-                            categoriesUiState = categoriesUiState,
+                        getCategoryAndIconRes(
+                            categoriesLists = categoriesUiState,
                             categoryNameAndIconMap = categoryNameAndIconMap,
                             categoryId = categoryId,
                             subcategoryId = subcategoryId,
                             recordType = type
                         )
                     },
-                    getAccount = { accountId: Int ->
-                        AccountController().getAccountById(accountId, accountsUiState.accountList)
-                    },
+                    getAccount = { accountsUiState.accountList.findById(it) },
                     onRecordClick = onRecordClick,
                     onTransferClick = onTransferClick
                 )

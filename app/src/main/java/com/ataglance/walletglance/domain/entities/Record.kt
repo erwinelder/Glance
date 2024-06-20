@@ -2,7 +2,8 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.ui.viewmodels.RecordStackUnit
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordStackUnit
 
 @Entity(tableName = "Record")
 data class Record(
@@ -21,14 +22,25 @@ data class Record(
 
     fun isOutTransfer(): Boolean { return type == '>' }
 
+    fun toRecordStack(): RecordStack {
+        return RecordStack(
+            recordNum = recordNum,
+            date = date,
+            type = type,
+            accountId = accountId,
+            totalAmount = amount,
+            stack = listOf(toRecordStackUnit())
+        )
+    }
+
     fun toRecordStackUnit(): RecordStackUnit {
         return RecordStackUnit(
-            id = this.id,
-            amount = this.amount,
-            quantity = this.quantity,
-            categoryId = this.categoryId,
-            subcategoryId = this.subcategoryId,
-            note = this.note
+            id = id,
+            amount = amount,
+            quantity = quantity,
+            categoryId = categoryId,
+            subcategoryId = subcategoryId,
+            note = note
         )
     }
 }

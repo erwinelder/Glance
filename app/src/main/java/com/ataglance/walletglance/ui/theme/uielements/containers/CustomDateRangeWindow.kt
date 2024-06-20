@@ -28,15 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.DateRange
-import com.ataglance.walletglance.ui.viewmodels.DateRangeController
-import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.Manrope
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
+import com.ataglance.walletglance.ui.utils.formatDateRangeForCustomDateRangeField
+import com.ataglance.walletglance.data.date.DateRange
+import com.ataglance.walletglance.data.date.DateRangeEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -118,7 +118,7 @@ fun BoxScope.CustomDateRangeWindow(
                     CustomDateRangeComponent(DateRange.December, currentDateRangeEnum, onDateRangeEnumClick)
                 }
                 DateField(
-                    dateFormatted = DateRangeController().formatDateRangeForCustomDateRangeField(
+                    dateFormatted = formatDateRangeForCustomDateRangeField(
                         dateRangePickerState.selectedStartDateMillis,
                         dateRangePickerState.selectedEndDateMillis
                     ),

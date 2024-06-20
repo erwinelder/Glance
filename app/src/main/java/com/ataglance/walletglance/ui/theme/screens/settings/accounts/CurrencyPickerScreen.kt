@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.CurrencyPickerViewModel
+import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded

@@ -2,8 +2,8 @@ package com.ataglance.walletglance.domain.repositories
 
 import com.ataglance.walletglance.domain.dao.RecordDao
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.ui.viewmodels.DateRangeController
-import com.ataglance.walletglance.ui.viewmodels.DateRangeState
+import com.ataglance.walletglance.ui.utils.getTodayDateLong
+import com.ataglance.walletglance.data.date.DateRangeState
 import kotlinx.coroutines.flow.Flow
 
 class RecordRepository(
@@ -23,7 +23,7 @@ class RecordRepository(
     }
 
     fun getRecordsInDateRange(dateRangeState: DateRangeState): Flow<List<Record>> {
-        val today = DateRangeController().getTodayDateLong()
+        val today = getTodayDateLong()
         return dao.getRecordsInDateRange(
             today, today + 2359,
             dateRangeState.fromPast, dateRangeState.toFuture

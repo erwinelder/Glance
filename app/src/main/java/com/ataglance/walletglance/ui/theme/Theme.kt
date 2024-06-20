@@ -15,7 +15,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.ui.viewmodels.WindowType
+import com.ataglance.walletglance.data.app.WindowType
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.GlanceColors
 

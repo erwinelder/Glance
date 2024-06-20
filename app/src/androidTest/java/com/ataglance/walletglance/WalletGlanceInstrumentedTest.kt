@@ -5,33 +5,35 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.entities.Record
+import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
-import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.data.SettingsRepository
-import com.ataglance.walletglance.ui.viewmodels.AccountColorName
-import com.ataglance.walletglance.ui.viewmodels.AccountController
-import com.ataglance.walletglance.ui.viewmodels.AppLanguage
-import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.CategoryColorName
-import com.ataglance.walletglance.ui.viewmodels.CategoryController
-import com.ataglance.walletglance.ui.viewmodels.DateRangeController
-import com.ataglance.walletglance.ui.viewmodels.DateTimeState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordUnitUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordViewModel
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModel
-import com.ataglance.walletglance.ui.viewmodels.RecordType
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
+import com.ataglance.walletglance.ui.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.ui.utils.toLongWithTime
+import com.ataglance.walletglance.data.app.AppLanguage
+import com.ataglance.walletglance.ui.viewmodels.AppViewModel
+import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.data.accounts.AccountColorName
+import com.ataglance.walletglance.data.categories.CategoryColorName
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
+import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
+import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
+import com.ataglance.walletglance.data.records.RecordType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -53,6 +55,8 @@ class WalletGlanceInstrumentedTest {
 
     private lateinit var mockAccountRepository: AccountRepository
     private lateinit var mockCategoryRepository: CategoryRepository
+    private lateinit var categoryCollectionAndCollectionCategoryAssociationRepository:
+            CategoryCollectionAndCollectionCategoryAssociationRepository
     private lateinit var mockRecordRepository: RecordRepository
     private lateinit var mockRecordAndAccountRepository: RecordAndAccountRepository
     private lateinit var mockGeneralRepository: GeneralRepository
@@ -69,6 +73,7 @@ class WalletGlanceInstrumentedTest {
         mockAccountRepository = mockk()
         setupAccountRepository()
         mockCategoryRepository = mockk()
+        categoryCollectionAndCollectionCategoryAssociationRepository = mockk()
         setupCategoryRepository()
         mockRecordRepository = mockk()
         setupRecordRepository()
@@ -79,6 +84,8 @@ class WalletGlanceInstrumentedTest {
         appViewModel = AppViewModel(
             accountRepository = mockAccountRepository,
             categoryRepository = mockCategoryRepository,
+            categoryCollectionAndCollectionCategoryAssociationRepository =
+                categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = mockRecordRepository,
             recordAndAccountRepository = mockRecordAndAccountRepository,
             generalRepository = mockGeneralRepository,
@@ -203,8 +210,8 @@ class WalletGlanceInstrumentedTest {
         calendar.set(2024, 4, 1)
         val dateTimeState = DateTimeState(
             calendar = calendar,
-            dateLong = DateRangeController().convertCalendarToLongWithTime(calendar),
-            dateFormatted = DateRangeController().formatCalendarDateWithTime(calendar)
+            dateLong = calendar.toLongWithTime(),
+            dateFormatted = calendar.getFormattedDateWithTime()
         )
 
         val accountsUiState = appViewModel.accountsUiState.value
@@ -220,6 +227,7 @@ class WalletGlanceInstrumentedTest {
         val unitList = listOf(
             MakeRecordUnitUiState(
                 index = 0,
+                lazyListKey = 0,
                 category = categoriesUiState.parentCategories.expense[0],
                 subcategory = null,
                 amount = "516"
@@ -278,17 +286,15 @@ class WalletGlanceInstrumentedTest {
                 ),
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    CategoryController().getCategoryAndIconRes(
-                        categoriesUiState = categoriesUiState,
+                    getCategoryAndIconRes(
+                        categoriesLists = categoriesUiState,
                         categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                         categoryId = categoryId,
                         subcategoryId = subcategoryId,
                         recordType = type
                     )
                 },
-                getAccount = { accountId: Int ->
-                    AccountController().getAccountById(accountId, accountsUiState.accountList)
-                },
+                getAccount = { accountsUiState.accountList.findById(it) },
                 onRecordClick = {},
                 onTransferClick = {}
             )
@@ -305,8 +311,8 @@ class WalletGlanceInstrumentedTest {
         calendar.set(2024, 3, 1)
         val dateTimeState = DateTimeState(
             calendar = calendar,
-            dateLong = DateRangeController().convertCalendarToLongWithTime(calendar),
-            dateFormatted = DateRangeController().formatCalendarDateWithTime(calendar)
+            dateLong = calendar.toLongWithTime(),
+            dateFormatted = calendar.getFormattedDateWithTime()
         )
 
         val accountsUiState = appViewModel.accountsUiState.value
@@ -322,6 +328,7 @@ class WalletGlanceInstrumentedTest {
         val unitList = listOf(
             MakeRecordUnitUiState(
                 index = 0,
+                lazyListKey = 0,
                 category = categoriesUiState.parentCategories.expense[0],
                 subcategory = null,
                 amount = "516"
@@ -380,17 +387,15 @@ class WalletGlanceInstrumentedTest {
                 ),
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    CategoryController().getCategoryAndIconRes(
-                        categoriesUiState = categoriesUiState,
+                    getCategoryAndIconRes(
+                        categoriesLists = categoriesUiState,
                         categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                         categoryId = categoryId,
                         subcategoryId = subcategoryId,
                         recordType = type
                     )
                 },
-                getAccount = { accountId: Int ->
-                    AccountController().getAccountById(accountId, accountsUiState.accountList)
-                },
+                getAccount = { accountsUiState.accountList.findById(it) },
                 onRecordClick = {},
                 onTransferClick = {}
             )
@@ -416,6 +421,7 @@ class WalletGlanceInstrumentedTest {
         val unitList = listOf(
             MakeRecordUnitUiState(
                 index = 0,
+                lazyListKey = 0,
                 category = categoriesUiState.parentCategories.expense[0],
                 subcategory = null,
                 amount = "516"
@@ -443,8 +449,8 @@ class WalletGlanceInstrumentedTest {
         calendar.set(2024, 4, 1)
         val dateTimeState = DateTimeState(
             calendar = calendar,
-            dateLong = DateRangeController().convertCalendarToLongWithTime(calendar),
-            dateFormatted = DateRangeController().formatCalendarDateWithTime(calendar)
+            dateLong = calendar.toLongWithTime(),
+            dateFormatted = calendar.getFormattedDateWithTime()
         )
         val accountsUiState = appViewModel.accountsUiState.value
 
@@ -524,17 +530,15 @@ class WalletGlanceInstrumentedTest {
                 ),
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    CategoryController().getCategoryAndIconRes(
-                        categoriesUiState = appViewModel.categoriesUiState.value,
+                    getCategoryAndIconRes(
+                        categoriesLists = appViewModel.categoriesUiState.value,
                         categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                         categoryId = categoryId,
                         subcategoryId = subcategoryId,
                         recordType = type
                     )
                 },
-                getAccount = { accountId: Int ->
-                    AccountController().getAccountById(accountId, accountsUiState.accountList)
-                },
+                getAccount = { accountsUiState.accountList.findById(it) },
                 onRecordClick = {},
                 onTransferClick = {}
             )
@@ -553,8 +557,8 @@ class WalletGlanceInstrumentedTest {
         calendar.set(2024, 3, 1)
         val dateTimeState = DateTimeState(
             calendar = calendar,
-            dateLong = DateRangeController().convertCalendarToLongWithTime(calendar),
-            dateFormatted = DateRangeController().formatCalendarDateWithTime(calendar)
+            dateLong = calendar.toLongWithTime(),
+            dateFormatted = calendar.getFormattedDateWithTime()
         )
         val accountsUiState = appViewModel.accountsUiState.value
 
@@ -634,17 +638,15 @@ class WalletGlanceInstrumentedTest {
                 ),
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    CategoryController().getCategoryAndIconRes(
-                        categoriesUiState = appViewModel.categoriesUiState.value,
+                    getCategoryAndIconRes(
+                        categoriesLists = appViewModel.categoriesUiState.value,
                         categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                         categoryId = categoryId,
                         subcategoryId = subcategoryId,
                         recordType = type
                     )
                 },
-                getAccount = { accountId: Int ->
-                    AccountController().getAccountById(accountId, accountsUiState.accountList)
-                },
+                getAccount = { accountsUiState.accountList.findById(it) },
                 onRecordClick = {},
                 onTransferClick = {}
             )

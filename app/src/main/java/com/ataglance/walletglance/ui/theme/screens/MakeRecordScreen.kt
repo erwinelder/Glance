@@ -69,13 +69,13 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
-import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryType
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordUnitUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordViewModel
-import com.ataglance.walletglance.ui.viewmodels.RecordType
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
+import com.ataglance.walletglance.data.records.RecordType
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,7 +85,7 @@ fun MakeRecordScreen(
     viewModel: MakeRecordViewModel,
     makeRecordStatus: String,
     accountList: List<Account>,
-    categoriesUiState: CategoriesUiState,
+    categoriesUiState: CategoriesLists,
     categoryNameAndIconMap: Map<String, Int>,
     onMakeTransferButtonClick: () -> Unit,
     onSaveButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,

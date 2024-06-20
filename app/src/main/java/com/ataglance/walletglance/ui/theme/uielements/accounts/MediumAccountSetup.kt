@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.viewmodels.AccountColorName
-import com.ataglance.walletglance.ui.viewmodels.AccountController
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
+import com.ataglance.walletglance.data.accounts.AccountColorName
 
 @Composable
 fun MediumAccountSetup(
@@ -56,9 +56,7 @@ fun MediumAccountSetup(
     onDownButtonClick: () -> Unit = {},
     downButtonEnabled: Boolean = false
 ) {
-    val accountBackgroundAndColor = AccountController().getAccountAndOnAccountColor(
-        account.color, appTheme
-    )
+    val accountBackgroundAndColor = getAccountAndOnAccountColor(account.color, appTheme)
     val accountColor = accountBackgroundAndColor.first
     val onAccountColor = accountBackgroundAndColor.second
 

@@ -27,13 +27,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.viewmodels.AccountColors
-import com.ataglance.walletglance.ui.viewmodels.AccountController
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
+import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
+import com.ataglance.walletglance.data.accounts.AccountColors
 
 @Composable
 fun SmallAccount(
@@ -49,7 +49,7 @@ fun SmallAccount(
     onClick: () -> Unit = {}
 ) {
     val accountAndOnAccountColor = account?.let {
-        AccountController().getAccountAndOnAccountColor(account.color, appTheme)
+        getAccountAndOnAccountColor(account.color, appTheme)
     } ?: Pair(LighterDarkerColors(), Color.White)
     val transparency by animateFloatAsState(
         targetValue =

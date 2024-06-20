@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.domain.repositories
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.data.SettingsRepository
 
 class GeneralRepository(
     private val settingsRepository: SettingsRepository,

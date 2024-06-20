@@ -17,13 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.viewmodels.AccountController
-import com.ataglance.walletglance.ui.viewmodels.DateRangeController
-import com.ataglance.walletglance.ui.viewmodels.RecordStack
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.ui.utils.convertDateLongToDayMonthYear
+import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
+import com.ataglance.walletglance.data.records.RecordStack
 
 @Composable
 fun TransferComponent(
@@ -38,7 +38,7 @@ fun TransferComponent(
         getAccount(note.toInt())
     }
     val accountAndOnAccountColor = transferSecondPairAccount?.let {
-        AccountController().getAccountAndOnAccountColor(transferSecondPairAccount.color, appTheme)
+        getAccountAndOnAccountColor(transferSecondPairAccount.color, appTheme)
     } ?: Pair(LighterDarkerColors(), Color.White)
 
     GlassSurfaceOnGlassSurface(onClick = { onTransferClick(recordStack.recordNum) }) {
@@ -47,9 +47,7 @@ fun TransferComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = DateRangeController().convertDateLongToDayMonthYear(
-                    recordStack.date, includeYearToDate
-                ),
+                text = convertDateLongToDayMonthYear(recordStack.date, includeYearToDate),
                 color = GlanceTheme.outline,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light

@@ -52,44 +52,44 @@ import com.ataglance.walletglance.ui.theme.uielements.BottomNavBar
 import com.ataglance.walletglance.ui.theme.uielements.SetupProgressTopBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.CustomDateRangeWindow
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDateRangePicker
-import com.ataglance.walletglance.ui.viewmodels.AccountController
-import com.ataglance.walletglance.ui.viewmodels.AccountsSetupScreen
+import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
+import com.ataglance.walletglance.ui.utils.getMakeRecordStateAndUnitList
+import com.ataglance.walletglance.ui.utils.getMakeTransferState
+import com.ataglance.walletglance.data.app.AccountsSetupScreen
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.ui.viewmodels.AppScreen
+import com.ataglance.walletglance.data.app.AppScreen
 import com.ataglance.walletglance.ui.viewmodels.AppUiSettings
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.CategoriesSetupScreen
-import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryController
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsScreenArgs
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsViewModel
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.CategoryType
-import com.ataglance.walletglance.ui.viewmodels.Colors
-import com.ataglance.walletglance.ui.viewmodels.CurrencyPickerScreenArgs
-import com.ataglance.walletglance.ui.viewmodels.CurrencyPickerViewModel
-import com.ataglance.walletglance.ui.viewmodels.CurrencyPickerViewModelFactory
+import com.ataglance.walletglance.data.app.CategoriesSetupScreen
+import com.ataglance.walletglance.data.app.CategoryStatisticsScreenArgs
+import com.ataglance.walletglance.data.app.Colors
+import com.ataglance.walletglance.data.app.CurrencyPickerScreenArgs
+import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
+import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
-import com.ataglance.walletglance.ui.viewmodels.EditAccountScreenArgs
-import com.ataglance.walletglance.ui.viewmodels.EditAccountUiState
-import com.ataglance.walletglance.ui.viewmodels.EditAccountViewModel
-import com.ataglance.walletglance.ui.viewmodels.EditAccountViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.EditSubcategoryListScreenArgs
-import com.ataglance.walletglance.ui.viewmodels.LanguageViewModel
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordScreenArgs
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordViewModel
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModel
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.RecordController
-import com.ataglance.walletglance.ui.viewmodels.RecordStack
-import com.ataglance.walletglance.ui.viewmodels.RecordType
-import com.ataglance.walletglance.ui.viewmodels.SettingsScreen
-import com.ataglance.walletglance.ui.viewmodels.SetupAccountsViewModel
-import com.ataglance.walletglance.ui.viewmodels.SetupCategoriesViewModel
+import com.ataglance.walletglance.data.app.EditAccountScreenArgs
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModel
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModelFactory
+import com.ataglance.walletglance.data.app.EditSubcategoryListScreenArgs
+import com.ataglance.walletglance.ui.viewmodels.settings.LanguageViewModel
+import com.ataglance.walletglance.data.app.MakeRecordScreenArgs
+import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.data.app.SettingsScreen
+import com.ataglance.walletglance.ui.viewmodels.accounts.SetupAccountsViewModel
 import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
 import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
+import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModelFactory
+import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModel
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
+import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
+import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModelFactory
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.ui.viewmodels.sharedViewModel
 import kotlinx.coroutines.launch
 
@@ -265,7 +265,7 @@ fun HomeNavHost(
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     accountsUiState: AccountsUiState,
-    categoriesUiState: CategoriesUiState,
+    categoriesUiState: CategoriesLists,
     dateRangeMenuUiState: DateRangeMenuUiState,
     recordStackList: List<RecordStack>,
     widgetsUiState: WidgetsUiState,
@@ -348,16 +348,13 @@ fun HomeNavHost(
                 onDateRangeChange = appViewModel::changeDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    CategoryController().getCategoryAndIconRes(
-                        categoriesUiState = categoriesUiState,
+                    getCategoryAndIconRes(
+                        categoriesLists = categoriesUiState,
                         categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                         categoryId = categoryId,
                         subcategoryId = subcategoryId,
                         recordType = type
                     )
-                },
-                getAccount = { accountId: Int ->
-                    AccountController().getAccountById(accountId, accountsUiState.accountList)
                 },
                 onRecordClick = { orderNum: Int ->
                     onNavigateToMakeRecordScreen(MakeRecordStatus.Edit, orderNum)
@@ -420,15 +417,13 @@ fun HomeNavHost(
             val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
             val recordNum = it.arguments?.getInt(MakeRecordScreenArgs.RecordNum.name)
 
-            val makeRecordUiStateAndUnitList =
-                RecordController().convertRecordStackToMakeRecordStateAndUnitList(
-                    makeRecordStatus = makeRecordStatus,
-                    recordNum = recordNum,
-                    accountList = accountsUiState.accountList,
-                    activeAccount = accountsUiState.activeAccount,
-                    recordStackList = recordStackList,
-                    categoriesUiState = categoriesUiState
-                )
+            val makeRecordUiStateAndUnitList = recordStackList.getMakeRecordStateAndUnitList(
+                makeRecordStatus = makeRecordStatus,
+                recordNum = recordNum,
+                accountList = accountsUiState.accountList,
+                activeAccount = accountsUiState.activeAccount,
+                categoriesLists = categoriesUiState
+            )
             val lastCategoryPair = if (
                 makeRecordUiStateAndUnitList.second == null && accountsUiState.activeAccount != null
             ) {
@@ -494,12 +489,10 @@ fun HomeNavHost(
         ) {
             val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
             val recordNum = it.arguments?.getInt(MakeRecordScreenArgs.RecordNum.name)
-            val makeTransferUiState = RecordController().convertRecordStackToMakeTransferState(
+            val makeTransferUiState = recordStackList.getMakeTransferState(
                 makeRecordStatus = makeRecordStatus,
                 recordNum = recordNum,
-                accountList = accountsUiState.accountList,
-                activeAccount = accountsUiState.activeAccount,
-                recordStackList = recordStackList
+                accountsUiState = accountsUiState
             )
             val viewModel = viewModel<MakeTransferViewModel>(
                 factory = MakeTransferViewModelFactory(
@@ -747,9 +740,7 @@ fun NavGraphBuilder.accountsGraph(
             val editAccountViewModel = entry.sharedViewModel<EditAccountViewModel>(
                 navController = navController,
                 factory = EditAccountViewModelFactory(
-                    uiState = account?.let {
-                        AccountController().accountToEditAccountUiState(it)
-                    } ?: EditAccountUiState()
+                    uiState = account?.toEditAccountUiState() ?: EditAccountUiState()
                 )
             )
             val editAccountUiState by editAccountViewModel.uiState.collectAsStateWithLifecycle()

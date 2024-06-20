@@ -2,8 +2,8 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.ui.viewmodels.CategoryColorName
-import com.ataglance.walletglance.ui.viewmodels.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryColorName
+import com.ataglance.walletglance.data.categories.CategoryType
 
 @Entity(tableName = "Category")
 data class Category(
@@ -19,7 +19,7 @@ data class Category(
 ) {
 
     fun isExpense() = type == '-'
-    private fun isIncome() = type == '+'
+    fun isIncome() = type == '+'
 
     fun getCategoryType(): CategoryType? {
         return when {
@@ -30,5 +30,19 @@ data class Category(
     }
 
     fun isParentCategory() = rank == 'c'
+    fun isSubcategory() = rank == 's'
+
+    fun cloneWithNewName(name: String): Category {
+        return Category(
+            id = id,
+            type = type,
+            rank = rank,
+            orderNum = orderNum,
+            parentCategoryId = parentCategoryId,
+            name = name,
+            iconName = iconName,
+            colorName = colorName
+        )
+    }
 
 }

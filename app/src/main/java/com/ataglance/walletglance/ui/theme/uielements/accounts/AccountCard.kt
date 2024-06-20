@@ -39,8 +39,8 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.ui.viewmodels.AccountColors
-import com.ataglance.walletglance.ui.viewmodels.AccountController
+import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
+import com.ataglance.walletglance.data.accounts.AccountColors
 import java.util.Locale
 
 @Composable
@@ -50,7 +50,7 @@ fun AccountCard(
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
 ) {
-    val accountAndOnAccountColor = AccountController().getAccountAndOnAccountColor(account.color, appTheme)
+    val accountAndOnAccountColor = getAccountAndOnAccountColor(account.color, appTheme)
     val accountColorLighter by animateColorAsState(
         targetValue = accountAndOnAccountColor.first.lighter,
         label = "account background lighter"

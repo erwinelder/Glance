@@ -14,7 +14,7 @@ import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.data.SettingsRepository
+import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

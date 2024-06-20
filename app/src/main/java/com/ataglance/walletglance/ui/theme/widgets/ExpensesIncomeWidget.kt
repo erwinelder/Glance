@@ -34,16 +34,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.DateRange
-import com.ataglance.walletglance.ui.viewmodels.DateRangeController
-import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
-import com.ataglance.walletglance.ui.viewmodels.DateRangeState
-import com.ataglance.walletglance.ui.viewmodels.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
+import com.ataglance.walletglance.ui.utils.getFormattedDateFromAndToByFormatDayMonthYear
+import com.ataglance.walletglance.data.date.DateRangeState
+import com.ataglance.walletglance.ui.viewmodels.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.data.date.DateRange
+import com.ataglance.walletglance.data.date.DateRangeEnum
 import java.util.Locale
 
 @Composable
@@ -64,7 +64,7 @@ fun ExpensesIncomeWidget(
         DateRangeEnum.July, DateRangeEnum.August, DateRangeEnum.September,
         DateRangeEnum.October, DateRangeEnum.November, DateRangeEnum.December ->
             dateRangeState.getFormattedMonth(LocalContext.current)
-        DateRangeEnum.Custom -> DateRangeController().getFormattedDateFromAndToByFormatDayMonthYear(
+        DateRangeEnum.Custom -> getFormattedDateFromAndToByFormatDayMonthYear(
             dateRangeState.fromPast, dateRangeState.toFuture, LocalContext.current
         )
     }

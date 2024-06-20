@@ -44,13 +44,13 @@ import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
-import com.ataglance.walletglance.ui.viewmodels.CategoriesUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryType
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
 
 @Composable
 fun CategoryPicker(
     visible: Boolean,
-    categoriesUiState: CategoriesUiState,
+    categoriesUiState: CategoriesLists,
     categoryNameAndIconMap: Map<String, Int>,
     type: CategoryType,
     onDismissRequest: () -> Unit,

@@ -34,9 +34,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.AccountColors
-import com.ataglance.walletglance.ui.viewmodels.AccountController
-import com.ataglance.walletglance.ui.viewmodels.EditAccountUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
@@ -48,6 +45,9 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWith
 import com.ataglance.walletglance.ui.theme.uielements.fields.FieldLabel
 import com.ataglance.walletglance.ui.theme.uielements.pickers.ColorPicker
 import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
+import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
+import com.ataglance.walletglance.data.accounts.AccountColors
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 
 @Composable
 fun EditAccountScreen(
@@ -105,9 +105,8 @@ fun EditAccountScreen(
                             .padding(horizontal = 12.dp, vertical = 24.dp)
                     ) {
                         ColorButton(
-                            color = AccountController().getAccountAndOnAccountColor(
-                                uiState.colorName, appTheme
-                            ).first.lighter
+                            color = getAccountAndOnAccountColor(uiState.colorName, appTheme)
+                                .first.lighter
                         ) {
                             showColorPicker = true
                         }

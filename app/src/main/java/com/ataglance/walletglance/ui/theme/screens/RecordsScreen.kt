@@ -17,16 +17,17 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
-import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
-import com.ataglance.walletglance.ui.viewmodels.RecordController
-import com.ataglance.walletglance.ui.viewmodels.RecordStack
-import com.ataglance.walletglance.ui.viewmodels.RecordType
-import com.ataglance.walletglance.ui.viewmodels.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
-import com.ataglance.walletglance.ui.theme.uielements.records.RecordsTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
+import com.ataglance.walletglance.ui.theme.uielements.records.RecordsTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
+import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.needToIncludeYearToDate
+import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.records.RecordsTypeFilter
 
 @Composable
 fun RecordsScreen(
@@ -40,7 +41,6 @@ fun RecordsScreen(
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
     getCategoryAndIcon: (Int, Int?, RecordType?) -> Pair<Category?, Int?>?,
-    getAccount: (Int) -> Account?,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
@@ -51,7 +51,7 @@ fun RecordsScreen(
         RecordsTypeFilter.Expenses -> recordStackList.filter { it.isExpenseOrOutTransfer() }
         RecordsTypeFilter.Income -> recordStackList.filter { it.isIncomeOrInTransfer() }
     }
-    val includeYearToRecordDate = RecordController().includeYearToRecordDate(recordStackList)
+    val includeYearToRecordDate = recordStackList.needToIncludeYearToDate()
 
     ScreenDataContainer(
         scaffoldAppScreenPadding = scaffoldAppScreenPadding,
@@ -92,7 +92,7 @@ fun RecordsScreen(
                         recordStack = recordStack,
                         includeYearToDate = includeYearToRecordDate,
                         appTheme = appTheme,
-                        getAccount = getAccount,
+                        getAccount = { accountList.findById(it) },
                         onTransferClick = onTransferClick
                     )
                 } else {
@@ -100,7 +100,7 @@ fun RecordsScreen(
                         recordStack = recordStack,
                         includeYearToDate = includeYearToRecordDate,
                         getCategoryAndIcon = getCategoryAndIcon,
-                        getAccount = getAccount,
+                        getAccount = { accountList.findById(it) },
                         onRecordClick = onRecordClick
                     )
                 }

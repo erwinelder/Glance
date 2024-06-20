@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.AccountsSetupScreen
-import com.ataglance.walletglance.ui.viewmodels.CategoriesSetupScreen
-import com.ataglance.walletglance.ui.viewmodels.SettingsScreen
+import com.ataglance.walletglance.data.app.AccountsSetupScreen
+import com.ataglance.walletglance.data.app.CategoriesSetupScreen
+import com.ataglance.walletglance.data.app.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
 

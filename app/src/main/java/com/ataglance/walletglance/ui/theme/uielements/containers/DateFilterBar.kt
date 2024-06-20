@@ -13,8 +13,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.DateRange
-import com.ataglance.walletglance.ui.viewmodels.DateRangeEnum
+import com.ataglance.walletglance.data.date.DateRange
+import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 
 @Composable

@@ -40,9 +40,9 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldCont
 import com.ataglance.walletglance.ui.theme.uielements.pickers.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferUiState
-import com.ataglance.walletglance.ui.viewmodels.MakeTransferViewModel
+import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
+import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)

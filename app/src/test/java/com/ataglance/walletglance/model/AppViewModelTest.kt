@@ -1,20 +1,22 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.data.SettingsRepository
+import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
+import com.ataglance.walletglance.ui.utils.breakOnDifferentLists
+import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.CategoryColors
-import com.ataglance.walletglance.ui.viewmodels.CategoryController
+import com.ataglance.walletglance.data.categories.CategoryColors
 import com.ataglance.walletglance.ui.viewmodels.MadeTransferState
-import com.ataglance.walletglance.ui.viewmodels.MakeRecordStatus
-import com.ataglance.walletglance.ui.viewmodels.RecordStack
-import com.ataglance.walletglance.ui.viewmodels.RecordStackUnit
+import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordStackUnit
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -34,6 +36,10 @@ class AppViewModelTest {
             settingsRepository = Mockito.mock(SettingsRepository::class.java),
             accountRepository = Mockito.mock(AccountRepository::class.java),
             categoryRepository = Mockito.mock(CategoryRepository::class.java),
+            categoryCollectionAndCollectionCategoryAssociationRepository =
+                Mockito.mock(
+                    CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
+                ),
             recordRepository = Mockito.mock(RecordRepository::class.java),
             recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
             generalRepository = Mockito.mock(GeneralRepository::class.java)
@@ -266,7 +272,7 @@ class AppViewModelTest {
         )
 
         Assert.assertThrows(IllegalAccessException::class.java) {
-            CategoryController().breakCategoriesOnDifferentLists(categoryList)
+            categoryList.breakOnDifferentLists()
         }
     }
 
@@ -382,7 +388,7 @@ class AppViewModelTest {
         )
         Assertions.assertArrayEquals(
             expectedCategoryList.toTypedArray(),
-            CategoryController().fixCategoriesOrderNums(currentCategoryList).toTypedArray()
+            currentCategoryList.fixOrderNumbers().toTypedArray()
         )
     }
 

@@ -15,9 +15,9 @@ import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.ui.viewmodels.DateRangeController
-import com.ataglance.walletglance.ui.viewmodels.RecordStack
-import com.ataglance.walletglance.ui.viewmodels.RecordType
+import com.ataglance.walletglance.ui.utils.convertDateLongToDayMonthYear
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
 
 @Composable
 fun RecordStackComponent(
@@ -32,7 +32,7 @@ fun RecordStackComponent(
     GlassSurfaceOnGlassSurface(onClick = { onRecordClick(recordStack.recordNum) }) {
         // date
         Text(
-            text = DateRangeController().convertDateLongToDayMonthYear(recordStack.date, includeYearToDate),
+            text = convertDateLongToDayMonthYear(recordStack.date, includeYearToDate),
             color = GlanceTheme.outline,
             fontSize = 16.sp
         )
