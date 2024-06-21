@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
+import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 
 @Composable
 fun CategoriesStatisticsScreen(

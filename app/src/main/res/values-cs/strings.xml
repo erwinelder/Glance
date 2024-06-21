@@ -23,6 +23,7 @@
     <string name="add_account">Přidat účet</string>
     <string name="add_category">Přidat kategorii</string>
     <string name="add_subcategory">Přidat podkategorii</string>
+    <string name="add_collection">Přidat kolekci</string>
     <string name="save_record">Uložit záznam</string>
     <string name="make_transfer">Udělat převod</string>
     <string name="repeat">Zopakovat</string>
@@ -36,17 +37,18 @@
 
     <!-- Settings categories -->
     <string name="accounts">Účty</string>
+    <string name="categories">Kategorie</string>
+    <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
-    <string name="export_data">Exportovat data</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
-    <string name="categories">Kategorie</string>
     <string name="finish">Dokončit</string>
     <string name="_import">Import</string>
     <string name="import_data">Importovat data</string>
+    <string name="export_data">Exportovat data</string>
     <string name="start_setup">Začít nastavení</string>
 
     <!-- Fields -->
@@ -123,9 +125,11 @@
     <string name="expenses">Výdaje</string>
     <string name="income_singular">Příjem</string>
     <string name="income_plural">Příjmy</string>
+    <string name="mixed">Smíšené</string>
     <string name="transfer">Převod</string>
     <string name="new_category_name">Nová kategorie</string>
     <string name="new_subcategory_name">Nová podkategorie</string>
+    <string name="new_category_collection_name">Nová kolekce</string>
     <string name="category_not_found">Kategorie nebyla nalezena</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
     <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>

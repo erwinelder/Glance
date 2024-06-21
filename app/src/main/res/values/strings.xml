@@ -24,6 +24,7 @@
     <string name="add_account">Add account</string>
     <string name="add_category">Add category</string>
     <string name="add_subcategory">Add subcategory</string>
+    <string name="add_collection">Add collection</string>
     <string name="save_record">Save record</string>
     <string name="make_transfer">Make transfer</string>
     <string name="repeat">Repeat</string>
@@ -37,17 +38,18 @@
 
     <!-- Settings categories -->
     <string name="accounts">Accounts</string>
+    <string name="categories">Categories</string>
+    <string name="category_collections">Category collections</string>
     <string name="appearance">Appearance</string>
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
-    <string name="export_data">Export data</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
-    <string name="categories">Categories</string>
     <string name="finish">Finish</string>
     <string name="_import">Import</string>
     <string name="import_data">Import data</string>
+    <string name="export_data">Export data</string>
     <string name="start_setup">Start setup</string>
 
     <!-- Fields -->
@@ -124,9 +126,11 @@
     <string name="expenses">Expenses</string>
     <string name="income_singular">Income</string>
     <string name="income_plural">Income</string>
+    <string name="mixed">Mixed</string>
     <string name="transfer">Transfer</string>
     <string name="new_category_name">New category</string>
     <string name="new_subcategory_name">New subcategory</string>
+    <string name="new_category_collection_name">New collection</string>
     <string name="category_not_found">Category was not found</string>
     <string name="reset_data_description">Reset all app data, including accounts, records, categories, and settings.</string>
     <string name="reset_data_warning">Are you sure you want to reset all your data?</string>

@@ -27,9 +27,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsElementUiState
 
 @Composable
 fun CategoryStatisticsItemComponent(
@@ -48,9 +48,7 @@ fun CategoryStatisticsItemComponent(
         filledWidth = 1f,
         paddingValues = PaddingValues(24.dp, 16.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,

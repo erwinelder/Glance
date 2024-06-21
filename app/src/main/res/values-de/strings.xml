@@ -23,6 +23,7 @@
     <string name="add_account">Konto hinzufügen</string>
     <string name="add_category">Kategorie hinzufügen</string>
     <string name="add_subcategory">Unterkategorie hinzufügen</string>
+    <string name="add_collection">Sammlung hinzufügen</string>
     <string name="save_record">Eintrag speichern</string>
     <string name="make_transfer">Überweisen</string>
     <string name="repeat">Wiederholen</string>
@@ -36,17 +37,18 @@
 
     <!-- Settings categories -->
     <string name="accounts">Konten</string>
+    <string name="categories">Kategorien</string>
+    <string name="category_collections">Kategorien Sammlungen</string>
     <string name="appearance">Aussehen</string>
     <string name="language">Sprachen</string>
     <string name="reset_data">Daten zurücksetzen</string>
-    <string name="export_data">Daten exportieren</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
-    <string name="categories">Kategorien</string>
     <string name="finish">Abschließen</string>
     <string name="_import">Importieren</string>
     <string name="import_data">Daten importieren</string>
+    <string name="export_data">Daten exportieren</string>
     <string name="start_setup">Setup starten</string>
 
     <!-- Fields -->
@@ -123,9 +125,11 @@
     <string name="expenses">Spesen</string>
     <string name="income_singular">Einkommen</string>
     <string name="income_plural">Einkommen</string>
+    <string name="mixed">Gemischt</string>
     <string name="transfer">Transfer</string>
     <string name="new_category_name">Neue Kategorie</string>
     <string name="new_subcategory_name">Neue Unterkategorie</string>
+    <string name="new_category_collection_name">Neue Sammlung</string>
     <string name="category_not_found">Kategorie wurde nicht gefunden</string>
     <string name="reset_data_description">Setzen Sie alle App-Daten zurück, einschließlich Konten, Datensätze, Kategorien und Einstellungen.</string>
     <string name="reset_data_warning">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>

@@ -17,13 +17,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.app.Colors
-import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesUiState
+import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.CategoriesSetupContainer
+import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesUiState
 
 @Composable
 fun SetupCategoriesScreen(
@@ -45,7 +45,7 @@ fun SetupCategoriesScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = if (isAppSetUp) { 0.dp } else { scaffoldPadding.calculateTopPadding() } +
+                top = (if (isAppSetUp) 0.dp else scaffoldPadding.calculateTopPadding()) +
                     dimensionResource(R.dimen.buttons_gap),
                 bottom = dimensionResource(R.dimen.screen_vertical_padding)
             )

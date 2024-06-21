@@ -23,6 +23,7 @@
     <string name="add_account">Добавить аккаунт</string>
     <string name="add_category">Добавить категорию</string>
     <string name="add_subcategory">Добавить подкатегорию</string>
+    <string name="add_collection">Добавить коллекцию</string>
     <string name="save_record">Сохранить запись</string>
     <string name="make_transfer">Сделать перевод</string>
     <string name="repeat">Повторить</string>
@@ -36,17 +37,18 @@
 
     <!-- Settings categories -->
     <string name="accounts">Счета</string>
+    <string name="categories">Категории</string>
+    <string name="category_collections">Коллекции категорий</string>
     <string name="appearance">Внешний вид</string>
     <string name="language">Язык</string>
     <string name="reset_data">Сбросить данные</string>
-    <string name="export_data">Экспортировать данные</string>
 
     <!-- Setting up -->
     <string name="start">Старт</string>
-    <string name="categories">Категории</string>
     <string name="finish">Завершить</string>
     <string name="_import">Импорт</string>
     <string name="import_data">Импортировать данные</string>
+    <string name="export_data">Экспортировать данные</string>
     <string name="start_setup">Начать настройку</string>
 
     <!-- Fields -->
@@ -123,9 +125,11 @@
     <string name="expenses">Расходы</string>
     <string name="income_singular">Доход</string>
     <string name="income_plural">Доходы</string>
+    <string name="mixed">Смешанные</string>
     <string name="transfer">Перевод</string>
     <string name="new_category_name">Новая категория</string>
     <string name="new_subcategory_name">Новая подкатегория</string>
+    <string name="new_category_collection_name">Новая коллекция</string>
     <string name="category_not_found">Категория не найдена</string>
     <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>
     <string name="reset_data_warning">Вы уверены, что хотите сбросить все данные?</string>

@@ -2,11 +2,12 @@ package com.ataglance.walletglance.ui.viewmodels.categories
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.CategoriesLists
 import com.ataglance.walletglance.data.categories.CategoryColors
 import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.ParentCategoriesLists
 import com.ataglance.walletglance.data.categories.SubcategoriesLists
 import com.ataglance.walletglance.domain.entities.Category
@@ -15,8 +16,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class SetupCategoriesViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(SetupCategoriesUiState())
+class SetupCategoriesViewModel(
+    private val categoriesLists: CategoriesLists
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(
+        SetupCategoriesUiState(
+            subcategoryList = emptyList(),
+            expenseParentCategoryList = categoriesLists.parentCategories.expense,
+            expenseSubcategoryLists = categoriesLists.subcategories.expense,
+            incomeParentCategoryList = categoriesLists.parentCategories.income,
+            incomeSubcategoryLists = categoriesLists.subcategories.income
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private val _editCategoryUiState = MutableStateFlow(EditCategoryUiState())
@@ -163,36 +174,13 @@ class SetupCategoriesViewModel : ViewModel() {
         _uiState.update { it.copy(categoryTypeToShow = categoryType) }
     }
 
-    fun applyCategoryList(categoriesUiState: CategoriesLists, context: Context) {
-        if (
-            categoriesUiState.parentCategories.expense.isNotEmpty() &&
-            categoriesUiState.parentCategories.income.isNotEmpty()
-        ) {
-            _uiState.update {
-                it.copy(
-                    navigatedFromSetupCategoriesScreen = true,
-                    subcategoryList = emptyList(),
-                    expenseParentCategoryList = categoriesUiState.parentCategories.expense,
-                    expenseSubcategoryLists = categoriesUiState.subcategories.expense,
-                    incomeParentCategoryList = categoriesUiState.parentCategories.income,
-                    incomeSubcategoryLists = categoriesUiState.subcategories.income
-                )
-            }
-        } else if (uiState.value.expenseParentCategoryList.isEmpty()) {
-            reapplyCategoryLists(context)
-        }
-    }
-
-    fun reapplyCategoryLists(context: Context) {
-        val categoryLists = DefaultCategoriesPackage(context).getDefaultCategories()
-
+    fun reapplyCategoryLists() {
         _uiState.update { it.copy(
-            navigatedFromSetupCategoriesScreen = true,
             subcategoryList = emptyList(),
-            expenseParentCategoryList = categoryLists.parentCategories.expense,
-            expenseSubcategoryLists = categoryLists.subcategories.expense,
-            incomeParentCategoryList = categoryLists.parentCategories.income,
-            incomeSubcategoryLists = categoryLists.subcategories.income
+            expenseParentCategoryList = categoriesLists.parentCategories.expense,
+            expenseSubcategoryLists = categoriesLists.subcategories.expense,
+            incomeParentCategoryList = categoriesLists.parentCategories.income,
+            incomeSubcategoryLists = categoriesLists.subcategories.income
         ) }
     }
 
@@ -208,6 +196,14 @@ class SetupCategoriesViewModel : ViewModel() {
             }
         } else {
             _uiState.update { it.copy(subcategoryList = subcategoryList) }
+        }
+    }
+
+    fun clearSubcategoryList() {
+        _uiState.update {
+            it.copy(
+                subcategoryList = listOf()
+            )
         }
     }
 
@@ -263,7 +259,7 @@ class SetupCategoriesViewModel : ViewModel() {
         _uiState.update { it.copy(subcategoryList = newSubcategoryList) }
     }
 
-    fun addNewParentCategory(name: String) {
+    fun addNewParentCategory(context: Context) {
         if (uiState.value.currentTypeIsExpense()) {
 
             val categoryList = uiState.value.expenseParentCategoryList.toMutableList()
@@ -272,7 +268,7 @@ class SetupCategoriesViewModel : ViewModel() {
                     rank = CategoryRank.Parent,
                     listSize = uiState.value.expenseParentCategoryList.size,
                     parentCategoryId = null,
-                    name = name
+                    name = context.getString(R.string.new_category_name)
                 ))
             val subcategoryLists = uiState.value.expenseSubcategoryLists.toMutableList()
             subcategoryLists.add(emptyList())
@@ -289,7 +285,7 @@ class SetupCategoriesViewModel : ViewModel() {
                     rank = CategoryRank.Parent,
                     listSize = uiState.value.incomeParentCategoryList.size,
                     parentCategoryId = null,
-                    name = name
+                    name = context.getString(R.string.new_category_name)
                 ))
             val subcategoryLists = uiState.value.incomeSubcategoryLists.toMutableList()
             subcategoryLists.add(emptyList())
@@ -366,9 +362,6 @@ class SetupCategoriesViewModel : ViewModel() {
                 }
             }
 
-        _uiState.update {
-            it.copy(navigatedFromSetupCategoriesScreen = false)
-        }
     }
 
     fun onCategoryNameChange(name: String) {
@@ -498,19 +491,19 @@ class SetupCategoriesViewModel : ViewModel() {
         ).concatenateLists()
     }
 
-    fun changeNavigatedFromSetupCategoriesScreen(value: Boolean) {
-        _uiState.update {
-            it.copy(
-                navigatedFromSetupCategoriesScreen = value,
-                subcategoryList = emptyList()
-            )
-        }
-    }
-
 }
 
+data class SetupCategoriesViewModelFactory(
+    private val categoriesLists: CategoriesLists
+) : ViewModelProvider.NewInstanceFactory() {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return SetupCategoriesViewModel(categoriesLists) as T
+    }
+}
+
+
 data class SetupCategoriesUiState(
-    val navigatedFromSetupCategoriesScreen: Boolean = true,
     val categoryTypeToShow: CategoryType = CategoryType.Expense,
     val parentCategoryOrderNum: Int = 0,
     val subcategoryList: List<Category> = emptyList(),

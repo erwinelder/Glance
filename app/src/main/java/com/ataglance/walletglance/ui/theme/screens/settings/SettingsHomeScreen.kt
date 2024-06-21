@@ -97,6 +97,9 @@ fun SettingsHomeScreen(
                 SettingPlate(category = settingsCategories.appearance) {
                     onNavigateToScreen(SettingsScreen.Appearance)
                 }
+                SettingPlate(category = settingsCategories.categoryCollections) {
+                    onNavigateToScreen(SettingsScreen.CategoryCollections)
+                }
                 SettingPlate(category = settingsCategories.categories) {
                     onNavigateToScreen(SettingsScreen.Categories)
                 }
@@ -113,8 +116,7 @@ fun SettingsHomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 reverseLayout = true,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 item {
                     SettingPlate(category = settingsCategories.accounts) {
@@ -124,6 +126,11 @@ fun SettingsHomeScreen(
                 item {
                     SettingPlate(category = settingsCategories.categories) {
                         onNavigateToScreen(SettingsScreen.Categories)
+                    }
+                }
+                item {
+                    SettingPlate(category = settingsCategories.categoryCollections) {
+                        onNavigateToScreen(SettingsScreen.CategoryCollections)
                     }
                 }
                 item {

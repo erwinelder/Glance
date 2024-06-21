@@ -1,35 +1,72 @@
 package com.ataglance.walletglance.ui.utils
 
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
+import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.domain.entities.CategoryCollection
 import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.ui.viewmodels.CategoryCollectionUiState
 
-fun transformCategoryCollectionsAndCollectionCategoryAssociationsToOneList(
+
+fun transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
     collectionList: List<CategoryCollection>,
     collectionCategoryAssociationList: List<CategoryCollectionCategoryAssociation>
-): List<CategoryCollectionUiState> {
+): CategoryCollectionsWithIds {
     return collectionList
         .map { collection ->
-            CategoryCollectionUiState(
+            CategoryCollectionWithIds(
                 id = collection.id,
                 orderNum = collection.orderNum,
+                type = collection.getCategoryType(),
                 name = collection.name,
                 categoriesIds = collectionCategoryAssociationList
                     .filter { it.categoryCollectionId == collection.id }
-                    .map { it.categoryCollectionId }
+                    .map { it.categoryId }
             )
         }
-        .sortedBy { it.orderNum }
+        .partition { it.type == CategoryCollectionType.Expense }
+        .let { expenseAndOtherCollections ->
+            expenseAndOtherCollections.second
+                .partition { it.type == CategoryCollectionType.Income }
+                .let { incomeAndMixedCollections ->
+                    CategoryCollectionsWithIds(
+                        expense = expenseAndOtherCollections.first,
+                        income = incomeAndMixedCollections.first,
+                        mixed = incomeAndMixedCollections.second
+                    )
+                }
+        }
 }
 
-fun List<CategoryCollectionUiState>.breakOnCollectionsAndAssociations():
+
+fun CategoryCollectionType.toggle(): CategoryCollectionType {
+    return when (this) {
+        CategoryCollectionType.Expense -> CategoryCollectionType.Income
+        CategoryCollectionType.Income -> CategoryCollectionType.Mixed
+        CategoryCollectionType.Mixed -> CategoryCollectionType.Expense
+    }
+}
+
+
+fun CategoryCollectionType.asChar(): Char {
+    return when (this) {
+        CategoryCollectionType.Expense -> '-'
+        CategoryCollectionType.Income -> '+'
+        CategoryCollectionType.Mixed -> 'm'
+    }
+}
+
+
+fun List<CategoryCollectionWithIds>.breakOnCollectionsAndAssociations():
         Pair<List<CategoryCollection>, List<CategoryCollectionCategoryAssociation>>
 {
-    val categoryCollectionList = this.map { collectionUiState ->
+    val categoryCollectionList = this.map { collectionWithIds ->
         CategoryCollection(
-            id = collectionUiState.id,
-            orderNum = collectionUiState.orderNum,
-            name = collectionUiState.name
+            id = collectionWithIds.id,
+            orderNum = collectionWithIds.orderNum,
+            type = collectionWithIds.type.asChar(),
+            name = collectionWithIds.name
         )
     }
     val listOfCollectionCategoryAssociationList = this
@@ -45,6 +82,7 @@ fun List<CategoryCollectionUiState>.breakOnCollectionsAndAssociations():
     return categoryCollectionList to listOfCollectionCategoryAssociationList
 }
 
+
 fun List<CategoryCollection>.getIdsThatAreNotInList(
     list: List<CategoryCollection>
 ): List<Int> {
@@ -54,6 +92,7 @@ fun List<CategoryCollection>.getIdsThatAreNotInList(
         }
         .map { it.id }
 }
+
 
 fun List<CategoryCollectionCategoryAssociation>.getAssociationsThatAreNotInList(
     list: List<CategoryCollectionCategoryAssociation>
@@ -65,4 +104,16 @@ fun List<CategoryCollectionCategoryAssociation>.getAssociationsThatAreNotInList(
                         it.categoryId == association.categoryId
             } == null
         }
+}
+
+
+fun List<CategoryCollectionWithIds>.toCollectionsWithCategories(
+    allCategories: List<Category>
+): List<CategoryCollectionWithCategories> {
+    return this.map { it.toCategoryCollectionWithCategories(allCategories) }
+}
+
+
+fun List<CategoryCollectionWithCategories>.toCollectionsWithIds(): List<CategoryCollectionWithIds> {
+    return this.map { it.toCollectionWithIds() }
 }

@@ -1,10 +1,21 @@
 package com.ataglance.walletglance.ui.utils
 
-import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.ParentCategoriesLists
 import com.ataglance.walletglance.data.categories.SubcategoriesLists
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.entities.Category
+
+
+fun CategoryType.asChar(): Char {
+    return if (this == CategoryType.Expense) '-' else '+'
+}
+
+
+fun CategoryType.inverse(): CategoryType {
+    return if (this == CategoryType.Expense) CategoryType.Income else CategoryType.Expense
+}
 
 
 fun List<Category>.getIdsThatAreNotInList(list: List<Category>): List<Int> {

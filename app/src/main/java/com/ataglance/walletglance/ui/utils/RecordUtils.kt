@@ -1,15 +1,15 @@
 package com.ataglance.walletglance.ui.utils
 
+import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.data.app.MakeRecordStatus
-import com.ataglance.walletglance.data.categories.CategoriesLists
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
 import java.util.Locale
 
 
@@ -73,14 +73,14 @@ fun List<Record>.toRecordStackList(): List<RecordStack> {
 
 
 fun List<RecordStack>.getMakeRecordStateAndUnitList(
-    makeRecordStatus: String?,
+    makeRecordStatus: MakeRecordStatus,
     recordNum: Int?,
     accountList: List<Account>,
     activeAccount: Account?,
     categoriesLists: CategoriesLists
 ): Pair<MakeRecordUiState, List<MakeRecordUnitUiState>?> {
 
-    if (makeRecordStatus == MakeRecordStatus.Edit.name && recordNum != null && recordNum != 0) {
+    if (makeRecordStatus == MakeRecordStatus.Edit && recordNum != null && recordNum != 0) {
         this.find { it.recordNum == recordNum }?.let { recordStack ->
             return MakeRecordUiState(
                 recordStatus = MakeRecordStatus.Edit,

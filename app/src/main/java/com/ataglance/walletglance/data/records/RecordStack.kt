@@ -20,7 +20,7 @@ data class RecordStack(
     fun isExpense(): Boolean { return type == '-' }
     fun isIncome(): Boolean { return type == '+' }
     fun isOutTransfer(): Boolean { return type == '>' }
-    private fun isInTransfer(): Boolean { return type == '<' }
+    fun isInTransfer(): Boolean { return type == '<' }
     fun isExpenseOrOutTransfer(): Boolean { return isExpense() || isOutTransfer() }
     fun isIncomeOrInTransfer(): Boolean { return isIncome() || isInTransfer() }
     fun isTransfer(): Boolean { return isOutTransfer() || isInTransfer() }

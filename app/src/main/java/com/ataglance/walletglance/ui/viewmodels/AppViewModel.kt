@@ -13,6 +13,8 @@ import com.ataglance.walletglance.data.app.Colors
 import com.ataglance.walletglance.data.app.MakeRecordStatus
 import com.ataglance.walletglance.data.app.SettingsScreen
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.data.categories.CategoryColors
 import com.ataglance.walletglance.data.categories.CategoryIcon
 import com.ataglance.walletglance.data.categories.CategoryType
@@ -54,7 +56,7 @@ import com.ataglance.walletglance.ui.utils.inverse
 import com.ataglance.walletglance.ui.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.ui.utils.toRecordStackList
 import com.ataglance.walletglance.ui.utils.transfersToRecordsWithCategoryOfTransfer
-import com.ataglance.walletglance.ui.utils.transformCategoryCollectionsAndCollectionCategoryAssociationsToOneList
+import com.ataglance.walletglance.ui.utils.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
@@ -481,9 +483,9 @@ class AppViewModel(
     }
 
 
-    private val _categoryCollectionsUiState: MutableStateFlow<List<CategoryCollectionUiState>> =
-        MutableStateFlow(listOf())
-    val categoryCollectionsUiState: StateFlow<List<CategoryCollectionUiState>> =
+    private val _categoryCollectionsUiState: MutableStateFlow<CategoryCollectionsWithIds> =
+        MutableStateFlow(CategoryCollectionsWithIds())
+    val categoryCollectionsUiState: StateFlow<CategoryCollectionsWithIds> =
         _categoryCollectionsUiState.asStateFlow()
 
     private fun fetchCategoryCollectionsFromDb() {
@@ -492,7 +494,7 @@ class AppViewModel(
                 categoryCollectionAndCollectionCategoryAssociationRepository
                     .getCategoryCollectionsAndCollectionCategoryAssociations()
             _categoryCollectionsUiState.update {
-                transformCategoryCollectionsAndCollectionCategoryAssociationsToOneList(
+                transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
                     collectionsAndCollectionCategoryAssociations.first,
                     collectionsAndCollectionCategoryAssociations.second
                 )
@@ -501,13 +503,13 @@ class AppViewModel(
     }
 
     suspend fun saveCategoryCollectionsToDb(
-        collectionUiStateList: List<CategoryCollectionUiState>
+        collectionUiStateList: List<CategoryCollectionWithIds>
     ) {
 
         val newCollectionsAndAssociations =
             collectionUiStateList.breakOnCollectionsAndAssociations()
-        val originalCollectionsAndAssociations =
-            categoryCollectionsUiState.value.breakOnCollectionsAndAssociations()
+        val originalCollectionsAndAssociations = categoryCollectionsUiState.value
+            .concatenateLists().breakOnCollectionsAndAssociations()
 
         val categoryCollectionsIdsToDelete =
             newCollectionsAndAssociations.first.getIdsThatAreNotInList(
@@ -1116,10 +1118,10 @@ class AppViewModel(
                 .filter {
                     it.accountId == accountsUiState.value.activeAccount!!.id &&
                             it.date in startDate..endDate && (
-                                ((it.type == '-') && type == RecordType.Expense) ||
-                                    ((it.type == '>') && type == RecordType.Expense) ||
-                                    ((it.type == '+') && type == RecordType.Income) ||
-                                    ((it.type == '<') && type == RecordType.Income)
+                                (it.isExpense() && type == RecordType.Expense) ||
+                                    (it.isOutTransfer() && type == RecordType.Expense) ||
+                                    (it.isIncome() && type == RecordType.Income) ||
+                                    (it.isInTransfer() && type == RecordType.Income)
                                 )
                 }
                 .fold(0.0) { total, recordStack ->
@@ -1160,13 +1162,6 @@ data class ThemeUiState(
 data class AccountsUiState(
     val accountList: List<Account> = emptyList(),
     val activeAccount: Account? = null
-)
-
-data class CategoryCollectionUiState(
-    val id: Int,
-    val orderNum: Int,
-    val name: String,
-    val categoriesIds: List<Int>?
 )
 
 data class DateRangeMenuUiState(

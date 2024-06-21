@@ -6,10 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -65,8 +62,11 @@ fun ParentCategorySetupElement(
             .padding(start = 15.dp, end = 15.dp, top = 12.dp, bottom = 12.dp)
     ) {
         Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { onNavigateToEditSubcategoryListScreen(category.orderNum) }
+            modifier = Modifier.clickable {
+                onNavigateToEditSubcategoryListScreen(category.orderNum)
+            }
         ) {
             if (iconRes != null && color != null) {
                 Icon(
@@ -84,7 +84,6 @@ fun ParentCategorySetupElement(
                         .size(32.dp)
                         .padding(5.dp)
                 )
-                Spacer(modifier = Modifier.requiredWidth(8.dp))
             }
             Text(
                 text = category.name,
@@ -92,15 +91,16 @@ fun ParentCategorySetupElement(
                 fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 1.dp)
+                modifier = Modifier
+                    .weight(1f, false)
+                    .padding(bottom = 1.dp)
             )
-            Spacer(modifier = Modifier.requiredWidth(8.dp))
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "right arrow",
                 tint = GlanceTheme.onSurface,
                 modifier = Modifier
-                    .requiredSize(12.dp, 20.dp)
+                    .size(12.dp, 20.dp)
             )
         }
         CategoryControlPanel(
