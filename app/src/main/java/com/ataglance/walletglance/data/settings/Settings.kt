@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.data.app
+package com.ataglance.walletglance.data.settings
 
 data class Settings(
     val language: String,

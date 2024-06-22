@@ -2,14 +2,14 @@ package com.ataglance.walletglance.ui.viewmodels.records
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.data.app.MakeRecordStatus
-import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -166,9 +166,9 @@ class MakeRecordViewModel(
         newList.add(
             MakeRecordUnitUiState(
                 lazyListKey = newList.maxOfOrNull { it.lazyListKey }?.let { it + 1 } ?: 0,
-                index = newList.last().index + 1,
-                category = newList.last().category,
-                subcategory = newList.last().subcategory,
+                index = newList.lastOrNull()?.let { it.index + 1 } ?: 0,
+                category = newList.lastOrNull()?.category,
+                subcategory = newList.lastOrNull()?.subcategory,
                 collapsed = false
             )
         )

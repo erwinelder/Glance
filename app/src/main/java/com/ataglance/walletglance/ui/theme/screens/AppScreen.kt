@@ -18,28 +18,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.ataglance.walletglance.R
+import androidx.navigation.toRoute
+import com.ataglance.walletglance.data.app.Colors
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
+import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
+import com.ataglance.walletglance.ui.theme.animation.screenEnterTransition
+import com.ataglance.walletglance.ui.theme.animation.screenExitTransition
+import com.ataglance.walletglance.ui.theme.animation.screenPopEnterTransition
+import com.ataglance.walletglance.ui.theme.animation.screenPopExitTransition
+import com.ataglance.walletglance.ui.theme.navigation.screens.AccountsSettingsScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.CategoriesSettingsScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.CategoryCollectionsSettingsScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.screens.settings.SettingsDataScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.SettingsHomeScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.SetupAppearanceScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.SetupFinishScreen
-import com.ataglance.walletglance.ui.theme.screens.settings.SetupImportScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.SetupLanguageScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.SetupStartScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.CurrencyPickerScreen
@@ -48,48 +59,40 @@ import com.ataglance.walletglance.ui.theme.screens.settings.accounts.SetupAccoun
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditCategoryScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditSubcategoryListScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.SetupCategoriesScreen
+import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.SetupCategoryCollectionsScreen
 import com.ataglance.walletglance.ui.theme.uielements.BottomNavBar
 import com.ataglance.walletglance.ui.theme.uielements.SetupProgressTopBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.CustomDateRangeWindow
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDateRangePicker
+import com.ataglance.walletglance.ui.utils.fromMainScreen
 import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
 import com.ataglance.walletglance.ui.utils.getMakeRecordStateAndUnitList
 import com.ataglance.walletglance.ui.utils.getMakeTransferState
-import com.ataglance.walletglance.data.app.AccountsSetupScreen
+import com.ataglance.walletglance.ui.utils.needToMoveScreenTowardsLeft
+import com.ataglance.walletglance.ui.utils.toCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.data.app.AppScreen
 import com.ataglance.walletglance.ui.viewmodels.AppUiSettings
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.data.app.CategoriesSetupScreen
-import com.ataglance.walletglance.data.app.CategoryStatisticsScreenArgs
-import com.ataglance.walletglance.data.app.Colors
-import com.ataglance.walletglance.data.app.CurrencyPickerScreenArgs
+import com.ataglance.walletglance.ui.viewmodels.CategoryCollectionsViewModel
+import com.ataglance.walletglance.ui.viewmodels.CategoryCollectionsViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
+import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
+import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
-import com.ataglance.walletglance.data.app.EditAccountScreenArgs
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModelFactory
-import com.ataglance.walletglance.data.app.EditSubcategoryListScreenArgs
-import com.ataglance.walletglance.ui.viewmodels.settings.LanguageViewModel
-import com.ataglance.walletglance.data.app.MakeRecordScreenArgs
-import com.ataglance.walletglance.data.app.MakeRecordStatus
-import com.ataglance.walletglance.data.app.SettingsScreen
 import com.ataglance.walletglance.ui.viewmodels.accounts.SetupAccountsViewModel
-import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
-import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
-import com.ataglance.walletglance.data.categories.CategoriesLists
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModelFactory
-import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModel
+import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModelFactory
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.ui.viewmodels.settings.LanguageViewModel
 import com.ataglance.walletglance.ui.viewmodels.sharedViewModel
 import kotlinx.coroutines.launch
 
@@ -102,41 +105,19 @@ fun AppScreen(
     navController: NavHostController = rememberNavController()
 ) {
     var moveScreenTowardsLeft by remember { mutableStateOf(true) }
-    val screenRoutesDiffer = { firstRoute: String?, secondRoute: String ->
-        firstRoute == null ||
-        firstRoute.substringBefore('/') != secondRoute.substringBefore('/')
-    }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val navigateToScreen = { routeNavigateTo: String ->
-        if (
-            screenRoutesDiffer(navBackStackEntry?.destination?.route, routeNavigateTo) &&
-            (
-                navBackStackEntry?.destination?.route != SettingsScreen.SettingsHome.route ||
-                routeNavigateTo != AppScreen.Settings.route
-            )
-        ) {
-            navBackStackEntry?.destination?.route?.let { currentRoute ->
-                moveScreenTowardsLeft =
-                    appViewModel.needToMoveScreenTowardsLeft(currentRoute, routeNavigateTo)
-            }
-            navController.navigate(routeNavigateTo) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    inclusive = false
-                }
-                launchSingleTop = true
-            }
-        }
-    }
 
     val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
     val categoriesUiState by appViewModel.categoriesUiState.collectAsStateWithLifecycle()
+    val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState
+        .collectAsStateWithLifecycle()
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
     val categoryColorNameToColorMap by appViewModel.categoryColorNameToColorMap.collectAsState()
 
-    val openCustomDateRangeWindow = remember { mutableStateOf(false) }
-    val openDateRangePickerDialog = remember { mutableStateOf(false) }
+    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
+    var openDateRangePickerDialog by remember { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState()
     dateRangePickerState.setSelection(
         dateRangeMenuUiState.startCalendarDateMillis,
@@ -146,9 +127,9 @@ fun AppScreen(
     Scaffold(
         topBar = {
             SetupProgressTopBar(
-                visible = appUiSettings.startMainDestination != AppScreen.Home.route &&
-                        navBackStackEntry?.destination?.route != SettingsScreen.Start.route &&
-                        navBackStackEntry?.destination?.route != AppScreen.FinishSetup.route,
+                visible = appUiSettings.startMainDestination != MainScreens.Home &&
+                        navBackStackEntry?.destination?.route != SettingsScreens.Start::class.simpleName &&
+                        navBackStackEntry?.destination?.route != MainScreens.FinishSetup::class.simpleName,
                 navBackStackEntry = navBackStackEntry,
                 onBackNavigationButton = navController::popBackStack
             )
@@ -158,12 +139,24 @@ fun AppScreen(
                 appTheme = appUiSettings.appTheme,
                 isAppSetUp = appUiSettings.isSetUp,
                 navBackStackEntry = navBackStackEntry,
-                navigateBack = navController::popBackStack,
-                onNavigationButton = navigateToScreen,
+                onNavigateBack = navController::popBackStack,
+                onNavigateToScreen = { screenNavigateTo: MainScreens ->
+                    navBackStackEntry.fromMainScreen().let { currentScreen ->
+                        moveScreenTowardsLeft = needToMoveScreenTowardsLeft(
+                            currentScreen, screenNavigateTo
+                        )
+                    }
+                    navController.navigate(screenNavigateTo) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
+                },
                 onMakeRecordButtonClick = {
                     moveScreenTowardsLeft = true
                     navController.navigate(
-                        "${AppScreen.MakeRecord.route}/${MakeRecordStatus.Create}/0"
+                        MainScreens.MakeRecord(MakeRecordStatus.Create.name, 0)
                     ) {
                         launchSingleTop = true
                     }
@@ -178,43 +171,27 @@ fun AppScreen(
                 moveScreenTowardsLeft = it
             },
             navController = navController,
-            startMainDestination = appUiSettings.startMainDestination,
-            startSettingsDestination = appUiSettings.startSettingsDestination,
             scaffoldPadding = scaffoldPadding,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,
             accountsUiState = accountsUiState,
-            categoriesUiState = categoriesUiState,
+            categoriesLists = categoriesUiState,
+            categoryCollectionsUiState = categoryCollectionsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
             recordStackList = recordStackList,
             widgetsUiState = widgetsUiState,
             categoryColorNameToColorMap = categoryColorNameToColorMap,
-            openCustomDateRangeWindow = openCustomDateRangeWindow.value,
+            openCustomDateRangeWindow = openCustomDateRangeWindow,
             onCustomDateRangeButtonClick = {
-                openCustomDateRangeWindow.value = !openCustomDateRangeWindow.value
-            },
-            onNavigateToMakeRecordScreen = { makeRecordStatus: MakeRecordStatus, orderNum: Int ->
-                moveScreenTowardsLeft = true
-                navController.navigate(
-                    "${AppScreen.MakeRecord.route}/${makeRecordStatus}/${orderNum}"
-                ) {
-                    launchSingleTop = true
-                }
-            },
-            onNavigateToMakeTransferScreen = { makeRecordStatus: MakeRecordStatus, orderNum: Int ->
-                navController.navigate(
-                    "${AppScreen.MakeTransfer.route}/${makeRecordStatus}/${orderNum}"
-                ) {
-                    launchSingleTop = true
-                }
+                openCustomDateRangeWindow = !openCustomDateRangeWindow
             }
         )
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
             CustomDateRangeWindow(
-                visible = openCustomDateRangeWindow.value,
+                visible = openCustomDateRangeWindow,
                 padding = PaddingValues(
                     top = scaffoldPadding.calculateTopPadding() +
                             scaffoldPadding.calculateTopPadding(),
@@ -225,17 +202,17 @@ fun AppScreen(
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
                 dateRangePickerState = dateRangePickerState,
                 onDismissRequest = {
-                    openCustomDateRangeWindow.value = false
+                    openCustomDateRangeWindow = false
                 },
                 onDateRangeEnumClick = { dateRangeEnum ->
                     appViewModel.changeDateRange(dateRangeEnum)
-                    openCustomDateRangeWindow.value = false
+                    openCustomDateRangeWindow = false
                 },
                 onCustomDateRangeFieldClick = {
-                    openDateRangePickerDialog.value = true
+                    openDateRangePickerDialog = true
                 },
                 onConfirmButtonClick = {
-                    openCustomDateRangeWindow.value = false
+                    openCustomDateRangeWindow = false
                     appViewModel.changeDateRangeToCustom(
                         dateRangePickerState.selectedStartDateMillis,
                         dateRangePickerState.selectedEndDateMillis
@@ -244,9 +221,9 @@ fun AppScreen(
             )
             CustomDateRangePicker(
                 state = dateRangePickerState,
-                openDialog = openDateRangePickerDialog.value,
-                onOpenDialogChange = { value ->
-                    openDateRangePickerDialog.value = value
+                openDialog = openDateRangePickerDialog,
+                onOpenDialogChange = {
+                    openDateRangePickerDialog = it
                 }
             )
         }
@@ -258,50 +235,38 @@ fun HomeNavHost(
     moveScreenTowardsLeft: Boolean,
     changeMoveScreenTowardsLeft: (Boolean) -> Unit,
     navController: NavHostController,
-    startMainDestination: String,
-    startSettingsDestination: String,
     scaffoldPadding: PaddingValues,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     accountsUiState: AccountsUiState,
-    categoriesUiState: CategoriesLists,
+    categoriesLists: CategoriesLists,
+    categoryCollectionsUiState: CategoryCollectionsWithIds,
     dateRangeMenuUiState: DateRangeMenuUiState,
     recordStackList: List<RecordStack>,
     widgetsUiState: WidgetsUiState,
     categoryColorNameToColorMap: Map<String, Colors>,
     openCustomDateRangeWindow: Boolean,
-    onCustomDateRangeButtonClick: () -> Unit,
-    onNavigateToMakeRecordScreen: (MakeRecordStatus, Int) -> Unit,
-    onNavigateToMakeTransferScreen: (MakeRecordStatus, Int) -> Unit
+    onCustomDateRangeButtonClick: () -> Unit
 ) {
     NavHost(
         navController = navController,
-        startDestination = startMainDestination,
+        startDestination = appUiSettings.startMainDestination,
         contentAlignment = Alignment.Center,
-        enterTransition = {
-            CustomAnimation().screenEnterTransition(this, moveScreenTowardsLeft)
-        },
-        popEnterTransition = {
-            CustomAnimation().screenPopEnterTransition(this, !moveScreenTowardsLeft)
-        },
-        exitTransition = {
-            CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft)
-        },
-        popExitTransition = {
-            CustomAnimation().screenPopExitTransition(this, false)
-        }
+        enterTransition = { screenEnterTransition(this, moveScreenTowardsLeft) },
+        popEnterTransition = { screenPopEnterTransition(this, !moveScreenTowardsLeft) },
+        exitTransition = { screenExitTransition(this, moveScreenTowardsLeft) },
+        popExitTransition = { screenPopExitTransition(this, false) }
     ) {
-        composable(
-            route = AppScreen.Home.route,
-            popEnterTransition = { CustomAnimation().screenPopEnterTransition(this) }
+        composable<MainScreens.Home>(
+            popEnterTransition = { screenPopEnterTransition(this) }
         ) {
             HomeScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 accountsUiState = accountsUiState,
                 dateRangeMenuUiState = dateRangeMenuUiState,
-                categoriesUiState = categoriesUiState,
+                categoriesUiState = categoriesLists,
                 categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                 widgetsUiState = widgetsUiState,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
@@ -313,28 +278,32 @@ fun HomeNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onNavigateToRecordsScreen = {
                     changeMoveScreenTowardsLeft(true)
-                    navController.navigate(AppScreen.Records.route)
+                    navController.navigate(MainScreens.Records)
                 },
                 onNavigateToCategoriesStatisticsScreen = { parentCategoryId: Int ->
                     changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        "${AppScreen.CategoriesStatistics.route}/${parentCategoryId}"
-                    ) {
+                    navController.navigate(MainScreens.CategoryStatistics(parentCategoryId)) {
                         launchSingleTop = true
                     }
                 },
                 onRecordClick = { orderNum: Int ->
                     changeMoveScreenTowardsLeft(true)
-                    onNavigateToMakeRecordScreen(MakeRecordStatus.Edit, orderNum)
+                    navController.navigate(
+                        MainScreens.MakeRecord(MakeRecordStatus.Edit.name, orderNum)
+                    ) {
+                        launchSingleTop = true
+                    }
                 },
                 onTransferClick = { orderNum: Int ->
-                    onNavigateToMakeTransferScreen(MakeRecordStatus.Edit, orderNum)
+                    navController.navigate(
+                        MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, orderNum)
+                    ) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
-        composable(
-            route = AppScreen.Records.route
-        ) {
+        composable<MainScreens.Records> {
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
@@ -349,7 +318,7 @@ fun HomeNavHost(
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
                     getCategoryAndIconRes(
-                        categoriesLists = categoriesUiState,
+                        categoriesLists = categoriesLists,
                         categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
                         categoryId = categoryId,
                         subcategoryId = subcategoryId,
@@ -357,24 +326,22 @@ fun HomeNavHost(
                     )
                 },
                 onRecordClick = { orderNum: Int ->
-                    onNavigateToMakeRecordScreen(MakeRecordStatus.Edit, orderNum)
+                    changeMoveScreenTowardsLeft(true)
+                    navController.navigate(MainScreens.MakeRecord(MakeRecordStatus.Edit.name, orderNum)) {
+                        launchSingleTop = true
+                    }
                 },
                 onTransferClick = { orderNum: Int ->
-                    onNavigateToMakeTransferScreen(MakeRecordStatus.Edit, orderNum)
+                    navController.navigate(
+                        MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, orderNum)
+                    ) { launchSingleTop = true }
                 }
             )
         }
-        composable(
-            route = "${AppScreen.CategoriesStatistics.route}/" +
-                    "{${CategoryStatisticsScreenArgs.ParentCategoryId.name}}",
-            arguments = listOf(
-                navArgument(CategoryStatisticsScreenArgs.ParentCategoryId.name) {
-                    type = NavType.IntType
-                },
-            )
-        ) {
+        composable<MainScreens.CategoryStatistics> { backStack ->
             val parentCategoryId =
-                it.arguments?.getInt(CategoryStatisticsScreenArgs.ParentCategoryId.name)
+                backStack.toRoute<MainScreens.CategoryStatistics>().parentCategoryId
+
             val viewModel = viewModel<CategoryStatisticsViewModel>(
                 factory = CategoryStatisticsViewModelFactory(
                     categoryStatisticsLists = widgetsUiState.categoryStatisticsLists
@@ -399,30 +366,21 @@ fun HomeNavHost(
                 parentCategoryId = parentCategoryId
             )
         }
-        composable(
-            route = "${AppScreen.MakeRecord.route}/" +
-                    "{${MakeRecordScreenArgs.Status.name}}/" +
-                    "{${MakeRecordScreenArgs.RecordNum.name}}",
-            arguments = listOf(
-                navArgument(MakeRecordScreenArgs.Status.name) { type = NavType.StringType },
-                navArgument(MakeRecordScreenArgs.RecordNum.name) { type = NavType.IntType },
-            ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popEnterTransition = {
-                CustomAnimation().screenPopEnterTransition(this, !moveScreenTowardsLeft)
-            },
-            exitTransition = { CustomAnimation().screenExitTransition(this, moveScreenTowardsLeft) },
-            popExitTransition = { CustomAnimation().screenExitTransition(this, false) }
-        ) {
-            val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
-            val recordNum = it.arguments?.getInt(MakeRecordScreenArgs.RecordNum.name)
+        composable<MainScreens.MakeRecord>(
+            enterTransition = { screenEnterTransition(this) },
+            popEnterTransition = { screenPopEnterTransition(this, !moveScreenTowardsLeft) },
+            exitTransition = { screenExitTransition(this, moveScreenTowardsLeft) },
+            popExitTransition = { screenExitTransition(this, false) }
+        ) { backStack ->
+            val makeRecordStatus = MakeRecordStatus.valueOf(backStack.toRoute<MainScreens.MakeRecord>().status)
+            val recordNum = backStack.toRoute<MainScreens.MakeRecord>().recordNum
 
             val makeRecordUiStateAndUnitList = recordStackList.getMakeRecordStateAndUnitList(
                 makeRecordStatus = makeRecordStatus,
                 recordNum = recordNum,
                 accountList = accountsUiState.accountList,
                 activeAccount = accountsUiState.activeAccount,
-                categoriesLists = categoriesUiState
+                categoriesLists = categoriesLists
             )
             val lastCategoryPair = if (
                 makeRecordUiStateAndUnitList.second == null && accountsUiState.activeAccount != null
@@ -431,9 +389,7 @@ fun HomeNavHost(
                     accountId = accountsUiState.activeAccount.id,
                     type = CategoryType.Expense
                 )
-            } else {
-                null
-            }
+            } else null
             val viewModel = viewModel<MakeRecordViewModel>(
                 factory = MakeRecordViewModelFactory(
                     category = lastCategoryPair?.first,
@@ -444,105 +400,92 @@ fun HomeNavHost(
             )
             val coroutineScope = rememberCoroutineScope()
 
-            if (makeRecordStatus != null) {
-                MakeRecordScreen(
-                    appTheme = appUiSettings.appTheme,
-                    viewModel = viewModel,
-                    makeRecordStatus = makeRecordStatus,
-                    accountList = accountsUiState.accountList,
-                    categoriesUiState = categoriesUiState,
-                    categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
-                    onMakeTransferButtonClick = {
-                        onNavigateToMakeTransferScreen(MakeRecordStatus.Create, 0)
-                    },
-                    onSaveButton = { state, unitList ->
-                        coroutineScope.launch {
-                            appViewModel.saveRecord(state, unitList)
-                        }
-                        navController.popBackStack()
-                    },
-                    onRepeatButton = { state, unitList ->
-                        coroutineScope.launch {
-                            appViewModel.repeatRecord(state, unitList)
-                        }
-                        navController.popBackStack()
-                    },
-                    onDeleteButton = { recordNumToDelete ->
-                        coroutineScope.launch {
-                            appViewModel.deleteRecord(recordNumToDelete)
-                        }
-                        navController.popBackStack()
-                    },
-                )
-            }
-        }
-        composable(
-            route = "${AppScreen.MakeTransfer.route}/" +
-                    "{${MakeRecordScreenArgs.Status.name}}/" +
-                    "{${MakeRecordScreenArgs.RecordNum.name}}",
-            arguments = listOf(
-                navArgument(MakeRecordScreenArgs.Status.name) { type = NavType.StringType },
-                navArgument(MakeRecordScreenArgs.RecordNum.name) { type = NavType.IntType },
-            ),
-            enterTransition = { CustomAnimation().screenEnterTransition(this) },
-            popExitTransition = { CustomAnimation().screenPopExitTransition(this, false) }
-        ) {
-            val makeRecordStatus = it.arguments?.getString(MakeRecordScreenArgs.Status.name)
-            val recordNum = it.arguments?.getInt(MakeRecordScreenArgs.RecordNum.name)
-            val makeTransferUiState = recordStackList.getMakeTransferState(
+            MakeRecordScreen(
+                appTheme = appUiSettings.appTheme,
+                viewModel = viewModel,
                 makeRecordStatus = makeRecordStatus,
-                recordNum = recordNum,
-                accountsUiState = accountsUiState
+                accountList = accountsUiState.accountList,
+                categoriesUiState = categoriesLists,
+                categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
+                onMakeTransferButtonClick = {
+                    navController.navigate(MainScreens.MakeTransfer(MakeRecordStatus.Create.name)) {
+                        launchSingleTop = true
+                    }
+                },
+                onSaveButton = { state, unitList ->
+                    coroutineScope.launch {
+                        appViewModel.saveRecord(state, unitList)
+                    }
+                    navController.popBackStack()
+                },
+                onRepeatButton = { state, unitList ->
+                    coroutineScope.launch {
+                        appViewModel.repeatRecord(state, unitList)
+                    }
+                    navController.popBackStack()
+                },
+                onDeleteButton = { recordNumToDelete ->
+                    coroutineScope.launch {
+                        appViewModel.deleteRecord(recordNumToDelete)
+                    }
+                    navController.popBackStack()
+                },
             )
+        }
+        composable<MainScreens.MakeTransfer>(
+            enterTransition = { screenEnterTransition(this) },
+            popExitTransition = { screenPopExitTransition(this, false) }
+        ) { backStack ->
+            val makeRecordStatus = MakeRecordStatus.valueOf(backStack.toRoute<MainScreens.MakeTransfer>().status)
+            val recordNum = backStack.toRoute<MainScreens.MakeTransfer>().recordNum
+
             val viewModel = viewModel<MakeTransferViewModel>(
                 factory = MakeTransferViewModelFactory(
                     accountList = accountsUiState.accountList,
-                    makeTransferUiState = makeTransferUiState
+                    makeTransferUiState = recordStackList
+                        .getMakeTransferState(makeRecordStatus, recordNum, accountsUiState)
                 )
             )
             val coroutineScope = rememberCoroutineScope()
 
-            if (makeRecordStatus != null) {
-                MakeTransferScreen(
-                    appTheme = appUiSettings.appTheme,
-                    viewModel = viewModel,
-                    makeRecordStatus = makeRecordStatus,
-                    accountList = accountsUiState.accountList,
-                    onNavigateBack = navController::popBackStack,
-                    onSaveButton = { state ->
-                        coroutineScope.launch {
-                            appViewModel.saveTransfer(state)
-                        }
-                        navController.popBackStack(AppScreen.Home.route, false)
-                    },
-                    onRepeatButton = { state ->
-                        coroutineScope.launch {
-                            appViewModel.repeatTransfer(state)
-                        }
-                        navController.popBackStack(AppScreen.Home.route, false)
-                    },
-                    onDeleteButton = { recordNumToDelete ->
-                        coroutineScope.launch {
-                            appViewModel.deleteTransfer(recordNumToDelete)
-                        }
-                        navController.popBackStack(AppScreen.Home.route, false)
+            MakeTransferScreen(
+                appTheme = appUiSettings.appTheme,
+                viewModel = viewModel,
+                makeRecordStatus = makeRecordStatus,
+                accountList = accountsUiState.accountList,
+                onNavigateBack = navController::popBackStack,
+                onSaveButton = { state ->
+                    coroutineScope.launch {
+                        appViewModel.saveTransfer(state)
                     }
-                )
-            }
+                    navController.popBackStack(MainScreens.Home, false)
+                },
+                onRepeatButton = { state ->
+                    coroutineScope.launch {
+                        appViewModel.repeatTransfer(state)
+                    }
+                    navController.popBackStack(MainScreens.Home, false)
+                },
+                onDeleteButton = { recordNumToDelete ->
+                    coroutineScope.launch {
+                        appViewModel.deleteTransfer(recordNumToDelete)
+                    }
+                    navController.popBackStack(MainScreens.Home, false)
+                }
+            )
         }
         settingsGraph(
             navController = navController,
-            startDestination = startSettingsDestination,
             scaffoldPadding = scaffoldPadding,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,
             accountList = accountsUiState.accountList,
+            categoriesLists = categoriesLists,
+            categoryCollectionsUiState = categoryCollectionsUiState,
             categoryColorNameToColorMap = categoryColorNameToColorMap
         )
-        composable(
-            route = AppScreen.FinishSetup.route
-        ) {
+        composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()
             SetupFinishScreen(
                 onFinishSetupButton = {
@@ -558,44 +501,36 @@ fun HomeNavHost(
 
 fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
-    startDestination: String,
     scaffoldPadding: PaddingValues,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     accountList: List<Account>,
+    categoriesLists: CategoriesLists,
+    categoryCollectionsUiState: CategoryCollectionsWithIds,
     categoryColorNameToColorMap: Map<String, Colors>
 ) {
-    navigation(
-        startDestination = startDestination,
-        route = AppScreen.Settings.route
-    ) {
-        composable(
-            route = SettingsScreen.Start.route
-        ) {
+    navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
+        composable<SettingsScreens.Start> {
             SetupStartScreen(
                 appTheme = appUiSettings.appTheme,
                 onManualSetupButton = {
-                    navController.navigate(SettingsScreen.Language.route)
+                    navController.navigate(SettingsScreens.Language)
                 }
             )
         }
-        composable(
-            route = SettingsScreen.SettingsHome.route
-        ) {
+        composable<SettingsScreens.SettingsHome> {
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
-                onNavigateToScreen = { screen: SettingsScreen ->
-                    if (navController.currentDestination?.route == SettingsScreen.SettingsHome.route) {
-                        navController.navigate(screen.route) { launchSingleTop = true }
+                onNavigateToScreen = { screen: SettingsScreens ->
+                    navController.navigate(screen) {
+                        launchSingleTop = true
                     }
                 }
             )
         }
-        composable(
-            route = SettingsScreen.Language.route
-        ) {
+        composable<SettingsScreens.Language> {
             val viewModel = viewModel<LanguageViewModel>()
             val chosenLanguage by viewModel.langCode.collectAsState()
             if (chosenLanguage == null) {
@@ -613,22 +548,20 @@ fun NavGraphBuilder.settingsGraph(
                 },
                 onContextChange = appViewModel::translateDefaultCategories,
                 onNextNavigationButton = {
-                    navController.navigate(SettingsScreen.Appearance.route)
+                    navController.navigate(SettingsScreens.Appearance)
                 }
             )
         }
-        composable(
-            route = SettingsScreen.Appearance.route
-        ) {
+        composable<SettingsScreens.Appearance> {
             SetupAppearanceScreen(
                 isAppSetUp = appUiSettings.isSetUp,
+                themeUiState = themeUiState,
                 onContinueButton = {
-                    navController.navigate(SettingsScreen.Accounts.route)
+                    navController.navigate(SettingsScreens.Accounts)
                 },
                 onChooseLightTheme = appViewModel::chooseLightTheme,
                 onChooseDarkTheme = appViewModel::chooseDarkTheme,
-                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme,
-                themeUiState = themeUiState
+                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme
             )
         }
         accountsGraph(
@@ -643,20 +576,18 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
+            categoriesLists = categoriesLists,
             categoryColorNameToColorMap = categoryColorNameToColorMap
         )
-        composable(
-            route = SettingsScreen.Import.route
-        ) {
-            SetupImportScreen(
-                onNextNavigationButton = {
-                    navController.navigate(AppScreen.FinishSetup.route)
-                }
-            )
-        }
-        composable(
-            route = SettingsScreen.Data.route
-        ) {
+        categoryCollectionsGraph(
+            navController = navController,
+            appViewModel = appViewModel,
+            appUiSettings = appUiSettings,
+            categoriesLists = categoriesLists,
+            categoryCollectionsWithIds = categoryCollectionsUiState,
+            categoryColorNameToColorMap = categoryColorNameToColorMap
+        )
+        composable<SettingsScreens.ResetData> {
             val coroutineScope = rememberCoroutineScope()
 
             SettingsDataScreen(
@@ -678,14 +609,9 @@ fun NavGraphBuilder.accountsGraph(
     appUiSettings: AppUiSettings,
     accountList: List<Account>
 ) {
-    navigation(
-        startDestination = AccountsSetupScreen.AccountsSetup.route,
-        route = SettingsScreen.Accounts.route
-    ) {
-        composable(
-            route = AccountsSetupScreen.AccountsSetup.route
-        ) { entry ->
-            val viewModel = entry.sharedViewModel<SetupAccountsViewModel>(navController)
+    navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
+        composable<AccountsSettingsScreens.EditAccounts> { backStack ->
+            val viewModel = backStack.sharedViewModel<SetupAccountsViewModel>(navController)
             val accountsSetupList by viewModel.accountsListState.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(true) {
@@ -700,7 +626,7 @@ fun NavGraphBuilder.accountsGraph(
                 accountsList = accountsSetupList,
                 appTheme = appUiSettings.appTheme,
                 navigateToEditAccountScreen = { orderNum ->
-                    navController.navigate("${AccountsSetupScreen.EditAccount.route}/$orderNum")
+                    navController.navigate(AccountsSettingsScreens.EditAccount(orderNum))
                 },
                 onAddNewAccount = {
                     viewModel.addNewDefaultAccount()
@@ -712,32 +638,24 @@ fun NavGraphBuilder.accountsGraph(
                 onSaveButton = { newAccountsList ->
                     coroutineScope.launch {
                         appViewModel.saveAccountsToDb(newAccountsList)
-                    }
-                    if (appUiSettings.isSetUp) {
-                        navController.popBackStack()
-                    } else {
-                        navController.navigate(SettingsScreen.Categories.route)
+                        if (appUiSettings.isSetUp) {
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(SettingsScreens.Categories)
+                        }
                     }
                 }
             )
         }
-        composable(
-            route = "${AccountsSetupScreen.EditAccount.route}/" +
-                    "{${EditAccountScreenArgs.OrderNum.name}}",
-            arguments = listOf(
-                navArgument(EditAccountScreenArgs.OrderNum.name) { type = NavType.IntType }
-            )
-        ) { entry ->
-            val coroutineScope = rememberCoroutineScope()
-            val orderNum = entry.arguments?.getInt(EditAccountScreenArgs.OrderNum.name)
+        composable<AccountsSettingsScreens.EditAccount> { backStack ->
+            val accountOrderNum = backStack.toRoute<AccountsSettingsScreens.EditAccount>().orderNum
 
-            val setupAccountsViewModel = entry.sharedViewModel<SetupAccountsViewModel>(navController)
+            val setupAccountsViewModel = backStack.sharedViewModel<SetupAccountsViewModel>(navController)
             val showDeleteAccountButton by setupAccountsViewModel.showDeleteAccountButton.collectAsState()
-            val account = orderNum?.let {
-                setupAccountsViewModel.getAccountByOrderNum(orderNum)
-            }
+            val account = setupAccountsViewModel.getAccountByOrderNum(accountOrderNum)
+            val coroutineScope = rememberCoroutineScope()
 
-            val editAccountViewModel = entry.sharedViewModel<EditAccountViewModel>(
+            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
                 navController = navController,
                 factory = EditAccountViewModelFactory(
                     uiState = account?.toEditAccountUiState() ?: EditAccountUiState()
@@ -759,9 +677,9 @@ fun NavGraphBuilder.accountsGraph(
                 showDeleteAccountButton = showDeleteAccountButton,
                 onColorChange = editAccountViewModel::changeColor,
                 onNameChange = editAccountViewModel::changeName,
-                onNavigateToCurrencyPickerWindow = {
+                onNavigateToEditAccountCurrencyWindow = {
                     navController.navigate(
-                        "${AccountsSetupScreen.CurrencyPicker.route}/${editAccountUiState.currency}"
+                        AccountsSettingsScreens.EditAccountCurrency(editAccountUiState.currency)
                     )
                 },
                 onBalanceChange = editAccountViewModel::changeBalance,
@@ -770,10 +688,9 @@ fun NavGraphBuilder.accountsGraph(
                 onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
                 onDeleteButton = { id ->
                     navController.popBackStack()
-                    val updatedAccountList = setupAccountsViewModel.deleteAccountById(id)
-                    updatedAccountList?.let {
+                    setupAccountsViewModel.deleteAccountById(id)?.let {
                         coroutineScope.launch {
-                            appViewModel.deleteAccountWithItsRecords(id, updatedAccountList)
+                            appViewModel.deleteAccountWithItsRecords(id, it)
                         }
                     }
                 },
@@ -787,15 +704,9 @@ fun NavGraphBuilder.accountsGraph(
                 }
             )
         }
-        composable(
-            route = "${AccountsSetupScreen.CurrencyPicker.route}/" +
-                    "{${CurrencyPickerScreenArgs.Currency.name}}",
-            arguments = listOf(
-                navArgument(CurrencyPickerScreenArgs.Currency.name) { type = NavType.StringType }
-            )
-        ) { entry ->
-            val currency = entry.arguments?.getString(CurrencyPickerScreenArgs.Currency.name)
-            val editAccountViewModel = entry.sharedViewModel<EditAccountViewModel>(navController)
+        composable<AccountsSettingsScreens.EditAccountCurrency> { backStack ->
+            val currency = backStack.toRoute<AccountsSettingsScreens.EditAccountCurrency>().currency
+            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
             val currencyPickerViewModel = viewModel<CurrencyPickerViewModel>(
                 factory = CurrencyPickerViewModelFactory(
                     selectedCurrency = currency
@@ -819,34 +730,22 @@ fun NavGraphBuilder.categoriesGraph(
     scaffoldPadding: PaddingValues,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
+    categoriesLists: CategoriesLists,
     categoryColorNameToColorMap: Map<String, Colors>
 ) {
-    navigation(
-        startDestination = CategoriesSetupScreen.CategoriesSetup.route,
-        route = SettingsScreen.Categories.route
+    navigation<SettingsScreens.Categories>(
+        startDestination = CategoriesSettingsScreens.EditCategories
     ) {
-        composable(
-            route = CategoriesSetupScreen.CategoriesSetup.route
-        ) {
-            val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
+        composable<CategoriesSettingsScreens.EditCategories> { backStack ->
+            val viewModel = backStack.sharedViewModel<SetupCategoriesViewModel>(
+                navController = navController,
+                factory = SetupCategoriesViewModelFactory(categoriesLists)
+            )
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            val newCategoryName = stringResource(R.string.new_category_name)
             val coroutineScope = rememberCoroutineScope()
             val context = LocalContext.current
             LaunchedEffect(true) {
-                if (
-                    uiState.expenseParentCategoryList.isEmpty() ||
-                    uiState.incomeParentCategoryList.isEmpty() ||
-                    uiState.expenseParentCategoryList.firstOrNull()?.let { stateCategory ->
-                        appViewModel.categoriesUiState.value.parentCategories.expense.firstOrNull()?.let { appCategory ->
-                            stateCategory.id == appCategory.id && stateCategory.name != appCategory.name
-                        }
-                    } == true
-                ) {
-                    viewModel.applyCategoryList(appViewModel.categoriesUiState.value, context)
-                } else {
-                    viewModel.changeNavigatedFromSetupCategoriesScreen(true)
-                }
+                if (uiState.subcategoryList.isNotEmpty()) viewModel.clearSubcategoryList()
             }
 
             SetupCategoriesScreen(
@@ -857,19 +756,18 @@ fun NavGraphBuilder.categoriesGraph(
                 categoryColorNameToColorMap = categoryColorNameToColorMap,
                 onShowCategoriesByType = viewModel::changeCategoryTypeToShow,
                 onNavigateToEditSubcategoryListScreen = { orderNum: Int ->
-                    navController.navigate("${CategoriesSetupScreen.SubcategoriesSetup.route}/$orderNum")
+                    viewModel.applySubcategoryList(orderNum)
+                    navController.navigate(CategoriesSettingsScreens.EditSubcategories)
                 },
                 onNavigateToEditCategoryScreen = { orderNum ->
                     viewModel.applyCategoryToEdit(orderNum)
-                    navController.navigate(CategoriesSetupScreen.EditCategory.route)
+                    navController.navigate(CategoriesSettingsScreens.EditCategory)
                 },
                 onSwapCategories = viewModel::swapParentCategories,
                 onAddNewCategory = {
-                    viewModel.addNewParentCategory(newCategoryName)
+                    viewModel.addNewParentCategory(context)
                 },
-                onResetButton = {
-                    viewModel.reapplyCategoryLists(context)
-                },
+                onResetButton = viewModel::reapplyCategoryLists,
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
                         appViewModel.saveCategoriesToDb(viewModel.getAllCategories())
@@ -882,26 +780,10 @@ fun NavGraphBuilder.categoriesGraph(
                 }
             )
         }
-        composable(
-            route = "${CategoriesSetupScreen.SubcategoriesSetup.route}/" +
-                    "{${EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name}}",
-            arguments = listOf(
-                navArgument(EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name) {
-                    type = NavType.IntType
-                }
-            )
-        ) {
+        composable<CategoriesSettingsScreens.EditSubcategories> {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            val newSubcategoryName = stringResource(R.string.new_subcategory_name)
-            LaunchedEffect(true) {
-                val parentCategoryOrderNum = it.arguments?.getInt(EditSubcategoryListScreenArgs.ParentCategoryOrderNum.name)
-                parentCategoryOrderNum?.let {
-                    if (uiState.navigatedFromSetupCategoriesScreen) {
-                        viewModel.applySubcategoryList(parentCategoryOrderNum)
-                    }
-                }
-            }
+            val context = LocalContext.current
 
             EditSubcategoryListScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -914,15 +796,15 @@ fun NavGraphBuilder.categoriesGraph(
                 },
                 onNavigateToEditCategoryScreen = { orderNum ->
                     viewModel.applyCategoryToEdit(orderNum)
-                    navController.navigate(CategoriesSetupScreen.EditCategory.route)
+                    navController.navigate(CategoriesSettingsScreens.EditCategory)
                 },
                 onSwapCategories = viewModel::swapSubcategories,
-                onAddNewSubcategory = { viewModel.addNewSubcategory(newSubcategoryName) }
+                onAddNewSubcategory = {
+                    viewModel.addNewSubcategory(context)
+                }
             )
         }
-        composable(
-            route = CategoriesSetupScreen.EditCategory.route
-        ) {
+        composable<CategoriesSettingsScreens.EditCategory> {
             val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
 
             EditCategoryScreen(
@@ -935,6 +817,65 @@ fun NavGraphBuilder.categoriesGraph(
                 },
                 navigateBack = navController::popBackStack
             )
+        }
+    }
+}
+
+fun NavGraphBuilder.categoryCollectionsGraph(
+    navController: NavHostController,
+    appViewModel: AppViewModel,
+    appUiSettings: AppUiSettings,
+    categoriesLists: CategoriesLists,
+    categoryCollectionsWithIds: CategoryCollectionsWithIds,
+    categoryColorNameToColorMap: Map<String, Colors>
+) {
+    navigation<SettingsScreens.CategoryCollections>(
+        startDestination = CategoryCollectionsSettingsScreens.EditCategoryCollections
+    ) {
+        composable<CategoryCollectionsSettingsScreens.EditCategoryCollections> { backStack ->
+            val viewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
+                navController = navController,
+                factory = CategoryCollectionsViewModelFactory(
+                    categoryList = categoriesLists.concatenateLists(),
+                    collectionsWithIds = categoryCollectionsWithIds
+                )
+            )
+            val collectionList by viewModel.collectionsWithCategories.collectAsStateWithLifecycle()
+            val collectionListByType by viewModel.collectionsWithCategoriesByType
+                .collectAsStateWithLifecycle()
+            val categoryCollectionType by viewModel.categoryCollectionType
+                .collectAsStateWithLifecycle()
+            val coroutineScope = rememberCoroutineScope()
+            val context = LocalContext.current
+
+            SetupCategoryCollectionsScreen(
+                collectionsWithCategories = collectionListByType,
+                categoryCollectionType = categoryCollectionType,
+                onCategoryTypeChange = viewModel::changeCategoryType,
+                onNavigateToEditCollectionScreen = { orderNum: Int ->
+                    viewModel.applyCollectionToEdit(orderNum)
+                    navController.navigate(
+                        CategoryCollectionsSettingsScreens.EditCategoryCollection
+                    )
+                },
+                onAddNewCollection = {
+                    viewModel.addNewCollection(context)
+                },
+                onSaveCollectionsButton = {
+                    coroutineScope.launch {
+                        appViewModel.saveCategoryCollectionsToDb(
+                            collectionList.concatenateLists().toCollectionsWithIds()
+                        )
+                        navController.popBackStack()
+                    }
+                }
+//                onSwapCategories = viewModel::swapParentCategories
+            )
+        }
+        composable<CategoryCollectionsSettingsScreens.EditCategoryCollection> {
+            val viewModel = it.sharedViewModel<CategoryCollectionsViewModel>(navController)
+
+
         }
     }
 }

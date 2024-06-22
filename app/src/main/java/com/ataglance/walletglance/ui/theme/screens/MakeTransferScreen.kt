@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
@@ -40,7 +41,6 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldCont
 import com.ataglance.walletglance.ui.theme.uielements.pickers.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
-import com.ataglance.walletglance.data.app.MakeRecordStatus
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
 import java.util.Calendar
@@ -50,7 +50,7 @@ import java.util.Calendar
 fun MakeTransferScreen(
     appTheme: AppTheme?,
     viewModel: MakeTransferViewModel,
-    makeRecordStatus: String,
+    makeRecordStatus: MakeRecordStatus,
     accountList: List<Account>,
     onNavigateBack: () -> Unit,
     onSaveButton: (MakeTransferUiState) -> Unit,
@@ -191,7 +191,7 @@ fun MakeTransferScreen(
             }
 
             MakeRecordBottomButtonBlock(
-                showSingleButton = makeRecordStatus == MakeRecordStatus.Create.name,
+                showSingleButton = makeRecordStatus == MakeRecordStatus.Create,
                 singlePrimaryButtonStringRes = R.string.make_transfer,
                 onSaveButton = { onSaveButton(uiState) },
                 onRepeatButton = { onRepeatButton(uiState) },

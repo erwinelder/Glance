@@ -41,12 +41,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppScreen
-import com.ataglance.walletglance.data.app.BottomBarButtons
-import com.ataglance.walletglance.data.app.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.navigation.BottomBarButtons
+import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.ui.utils.currentScreenIs
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -55,40 +57,27 @@ fun BottomNavBar(
     appTheme: AppTheme?,
     isAppSetUp: Boolean,
     navBackStackEntry: NavBackStackEntry?,
-    navigateBack: () -> Unit,
-    onNavigationButton: (String) -> Unit,
-    onMakeRecordButtonClick: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToScreen: (MainScreens) -> Unit,
+    onMakeRecordButtonClick: () -> Unit
 ) {
+    val bottomBarButtonList = listOf(
+        BottomBarButtons.Home,
+        BottomBarButtons.Records,
+        null,
+        BottomBarButtons.CategoryStatistics,
+        BottomBarButtons.Settings,
+    )
     var timerIsUp by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-    val currentScreenRoute = navBackStackEntry?.destination?.route
-    val bottomBarButtonList = listOf(
-        Pair(
-            BottomBarButtons.HomeInactive(appTheme),
-            BottomBarButtons.HomeActive(appTheme)
-        ),
-        Pair(
-            BottomBarButtons.RecordsInactive(appTheme),
-            BottomBarButtons.RecordsActive(appTheme)
-        ),
-        null,
-        Pair(
-            BottomBarButtons.CategoriesStatisticsInactive(appTheme),
-            BottomBarButtons.CategoriesStatisticsActive(appTheme)
-        ),
-        Pair(
-            BottomBarButtons.SettingsInactive(appTheme),
-            BottomBarButtons.SettingsActive(appTheme)
-        )
-    )
 
     AnimatedVisibility(
         visible = isAppSetUp &&
-                (currentScreenRoute == AppScreen.Home.route ||
-                currentScreenRoute == AppScreen.Records.route ||
-                currentScreenRoute?.startsWith(AppScreen.CategoriesStatistics.route) == true ||
-                currentScreenRoute == SettingsScreen.SettingsHome.route ||
-                currentScreenRoute == SettingsScreen.Language.route),
+                (navBackStackEntry.currentScreenIs(MainScreens.Home) ||
+                        navBackStackEntry.currentScreenIs(MainScreens.Records) ||
+                        navBackStackEntry.currentScreenIs(MainScreens.CategoryStatistics(0)) ||
+                        navBackStackEntry.currentScreenIs(SettingsScreens.SettingsHome) ||
+                        navBackStackEntry.currentScreenIs(SettingsScreens.Language)),
         enter = slideInVertically { (it * 1.5).toInt() },
         exit = slideOutVertically { (it * 1.5).toInt() }
     ) {
@@ -117,43 +106,18 @@ fun BottomNavBar(
                     )
                     .padding(vertical = 16.dp, horizontal = 28.dp)
             ) {
-                bottomBarButtonList.forEach { item ->
-                    if (item != null) {
-                        AnimatedContent(
-                            targetState = if (
-                                navBackStackEntry?.destination?.hierarchy?.any {
-                                    it.route?.substringBefore('/') ==
-                                            item.first.route.substringBefore('/')
-                                } == true
-                            ) item.second else item.first,
-                            transitionSpec = { fadeIn() togetherWith fadeOut() },
-                            label = "bottom bar icon + ${item.first.route}"
-                        ) { bottomBarButton ->
-                            Image(
-                                painter = painterResource(bottomBarButton.iconRes),
-                                contentDescription = bottomBarButton.route,
-                                modifier = Modifier
-                                    .bounceClickEffect(.97f) {
-                                        if (timerIsUp) {
-                                            coroutineScope.launch {
-                                                timerIsUp = false
-                                                delay(500)
-                                                timerIsUp = true
-                                            }
-
-                                            if (
-                                                bottomBarButton.route == AppScreen.Settings.route &&
-                                                currentScreenRoute == SettingsScreen.Language.route
-                                            ) {
-                                                navigateBack()
-                                            } else {
-                                                onNavigationButton(bottomBarButton.route)
-                                            }
-                                        }
-                                    }
-                                    .size(36.dp)
-                            )
-                        }
+                bottomBarButtonList.forEach { button ->
+                    if (button != null) {
+                        BottomBarButton(
+                            button = button,
+                            navBackStackEntry = navBackStackEntry,
+                            onNavigateToScreen = onNavigateToScreen,
+                            onNavigateBack = onNavigateBack,
+                            appTheme = appTheme,
+                            coroutineScope = coroutineScope,
+                            timerIsUp = timerIsUp,
+                            setupTimerIsUp = { timerIsUp = it }
+                        )
                     } else {
                         Spacer(modifier = Modifier.width(60.dp))
                     }
@@ -162,42 +126,96 @@ fun BottomNavBar(
             Box(
                 modifier = Modifier.absoluteOffset(y = -(20).dp)
             ) {
-                IconButton(
-                    onClick = onMakeRecordButtonClick,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = GlanceTheme.onSurface,
-                        disabledContentColor = Color.Transparent,
-                        disabledContainerColor = GlanceTheme.onSurface
-                    ),
-                    modifier = Modifier
-                        .bounceClickEffect()
-                        .shadow(
-                            elevation = 12.dp,
-                            shape = RoundedCornerShape(38),
-                            spotColor = GlanceTheme.primaryGradientLightToDark.first
-                        )
-                        .clip(RoundedCornerShape(38))
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    GlanceTheme.primaryGradientLightToDark.second,
-                                    GlanceTheme.primaryGradientLightToDark.first
-                                ),
-                                start = Offset(75f, 210f),
-                                end = Offset(95f, -10f)
-                            )
-                        )
-                        .padding(6.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.make_record_icon),
-                        contentDescription = "make record",
-                        tint = GlanceTheme.onPrimary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                MakeRecordButton(onMakeRecordButtonClick)
             }
         }
+    }
+}
+
+@Composable
+private fun BottomBarButton(
+    button: BottomBarButtons,
+    navBackStackEntry: NavBackStackEntry?,
+    onNavigateToScreen: (MainScreens) -> Unit,
+    onNavigateBack: () -> Unit,
+    appTheme: AppTheme?,
+    coroutineScope: CoroutineScope,
+    timerIsUp: Boolean,
+    setupTimerIsUp: (Boolean) -> Unit,
+) {
+
+    AnimatedContent(
+        targetState = if (
+            navBackStackEntry?.destination?.hierarchy?.any {
+                it.currentScreenIs(button.screen)
+            } == true
+        ) button.activeIconRes else button.inactiveIconRes,
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        label = "bottom bar ${button.screen} icon"
+    ) { buttonIconRes ->
+        Image(
+            painter = painterResource(buttonIconRes.getByTheme(appTheme)),
+            contentDescription = "bottom bar ${button.screen} icon",
+            modifier = Modifier
+                .bounceClickEffect(.97f) {
+                    if (navBackStackEntry.currentScreenIs(button.screen)) return@bounceClickEffect
+                    if (!timerIsUp) return@bounceClickEffect
+
+                    coroutineScope.launch {
+                        setupTimerIsUp(false)
+                        delay(500)
+                        setupTimerIsUp(true)
+                    }
+
+                    if (
+                        button.screen == MainScreens.Settings &&
+                        navBackStackEntry.currentScreenIs(SettingsScreens.Language)
+                    ) {
+                        onNavigateBack()
+                    } else {
+                        onNavigateToScreen(button.screen)
+                    }
+                }
+                .size(36.dp)
+        )
+    }
+}
+
+@Composable
+private fun MakeRecordButton(onMakeRecordButtonClick: () -> Unit) {
+    IconButton(
+        onClick = onMakeRecordButtonClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = Color.Transparent,
+            contentColor = GlanceTheme.onSurface,
+            disabledContentColor = Color.Transparent,
+            disabledContainerColor = GlanceTheme.onSurface
+        ),
+        modifier = Modifier
+            .bounceClickEffect()
+            .shadow(
+                elevation = 12.dp,
+                shape = RoundedCornerShape(38),
+                spotColor = GlanceTheme.primaryGradientLightToDark.first
+            )
+            .clip(RoundedCornerShape(38))
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        GlanceTheme.primaryGradientLightToDark.second,
+                        GlanceTheme.primaryGradientLightToDark.first
+                    ),
+                    start = Offset(75f, 210f),
+                    end = Offset(95f, -10f)
+                )
+            )
+            .padding(6.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.make_record_icon),
+            contentDescription = "make record",
+            tint = GlanceTheme.onPrimary,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }

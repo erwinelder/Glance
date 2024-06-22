@@ -297,7 +297,7 @@ class SetupCategoriesViewModel(
         }
     }
 
-    fun addNewSubcategory(name: String) {
+    fun addNewSubcategory(context: Context) {
         val parentCategory = uiState.value
             .getParentCategoryListByCurrentType()
             .findByRecordNum(uiState.value.parentCategoryOrderNum) ?: return
@@ -309,7 +309,7 @@ class SetupCategoriesViewModel(
                 rank = CategoryRank.Sub,
                 listSize = uiState.value.subcategoryList.size,
                 parentCategoryId = parentCategory.id,
-                name = name,
+                name = context.getString(R.string.new_subcategory_name),
                 colorName = parentCategory.colorName
             )
         )

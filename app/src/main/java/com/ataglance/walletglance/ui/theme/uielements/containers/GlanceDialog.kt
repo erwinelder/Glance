@@ -19,7 +19,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.ui.theme.GlanceTheme
-import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
+import com.ataglance.walletglance.ui.theme.animation.dialogSlideFromBottomTransition
+import com.ataglance.walletglance.ui.theme.animation.dialogSlideToBottomTransition
 
 @Composable
 fun GlanceDialog(
@@ -41,8 +42,8 @@ fun GlanceDialog(
     }
     AnimatedVisibility(
         visible = visible,
-        enter = CustomAnimation().dialogSlideFromBottomTransition,
-        exit = CustomAnimation().dialogSlideToBottomTransition
+        enter = dialogSlideFromBottomTransition,
+        exit = dialogSlideToBottomTransition
     ) {
         Box(
             modifier = Modifier

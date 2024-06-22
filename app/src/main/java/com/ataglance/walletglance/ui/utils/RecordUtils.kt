@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.ui.utils
 
-import com.ataglance.walletglance.data.app.MakeRecordStatus
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Account
@@ -74,14 +74,14 @@ fun List<Record>.toRecordStackList(): List<RecordStack> {
 
 fun List<RecordStack>.getMakeRecordStateAndUnitList(
     makeRecordStatus: MakeRecordStatus,
-    recordNum: Int?,
+    recordNum: Int,
     accountList: List<Account>,
     activeAccount: Account?,
     categoriesLists: CategoriesLists
 ): Pair<MakeRecordUiState, List<MakeRecordUnitUiState>?> {
 
-    if (makeRecordStatus == MakeRecordStatus.Edit && recordNum != null && recordNum != 0) {
-        this.find { it.recordNum == recordNum }?.let { recordStack ->
+    if (makeRecordStatus == MakeRecordStatus.Edit && recordNum != 0) {
+        this.findByRecordNum(recordNum)?.let { recordStack ->
             return MakeRecordUiState(
                 recordStatus = MakeRecordStatus.Edit,
                 recordNum = recordStack.recordNum,
@@ -105,13 +105,13 @@ fun List<RecordStack>.getMakeRecordStateAndUnitList(
 
 
 fun List<RecordStack>.getMakeTransferState(
-    makeRecordStatus: String?,
-    recordNum: Int?,
+    makeRecordStatus: MakeRecordStatus,
+    recordNum: Int,
     accountsUiState: AccountsUiState
 ): MakeTransferUiState {
-    if (makeRecordStatus == MakeRecordStatus.Edit.name && recordNum != null && recordNum != 0) {
+    if (makeRecordStatus == MakeRecordStatus.Edit && recordNum != 0) {
 
-        val firstRecordStack = this.find { it.recordNum == recordNum }
+        val firstRecordStack = this.findByRecordNum(recordNum)
         val secondRecordStack = this.find {
             it.recordNum == recordNum + if (firstRecordStack?.isOutTransfer() == true) 1 else -1
         }

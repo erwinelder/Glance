@@ -18,11 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AccountsSetupScreen
-import com.ataglance.walletglance.data.app.CategoriesSetupScreen
-import com.ataglance.walletglance.data.app.SettingsScreen
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.navigation.screens.AccountsSettingsScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.CategoriesSettingsScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
+import com.ataglance.walletglance.ui.utils.currentScreenIs
 
 @Composable
 fun SetupProgressTopBar(
@@ -31,16 +32,14 @@ fun SetupProgressTopBar(
     onBackNavigationButton: () -> Unit
 ) {
     val titleRes = when {
-        navBackStackEntry?.destination?.route == SettingsScreen.Language.route -> R.string.language
-        navBackStackEntry?.destination?.route == SettingsScreen.Appearance.route -> R.string.appearance
-        navBackStackEntry?.destination?.route == AccountsSetupScreen.AccountsSetup.route ||
-                navBackStackEntry?.destination?.route
-                    ?.startsWith(AccountsSetupScreen.EditAccount.route) == true -> R.string.account
-        navBackStackEntry?.destination?.route == SettingsScreen.Categories.route ||
-            navBackStackEntry?.destination?.route
-                ?.startsWith(CategoriesSetupScreen.SubcategoriesSetup.route) == true ||
-            navBackStackEntry?.destination?.route
-                ?.startsWith(CategoriesSetupScreen.EditCategory.route) == true -> R.string.categories
+        navBackStackEntry.currentScreenIs(SettingsScreens.Language) -> R.string.language
+        navBackStackEntry.currentScreenIs(SettingsScreens.Appearance) -> R.string.appearance
+        navBackStackEntry.currentScreenIs(AccountsSettingsScreens.EditAccounts) ||
+                navBackStackEntry.currentScreenIs(AccountsSettingsScreens.EditAccount) ||
+                navBackStackEntry.currentScreenIs(AccountsSettingsScreens.EditAccountCurrency) -> R.string.accounts
+        navBackStackEntry.currentScreenIs(CategoriesSettingsScreens.EditCategories) ||
+                navBackStackEntry.currentScreenIs(CategoriesSettingsScreens.EditSubcategories) ||
+                navBackStackEntry.currentScreenIs(CategoriesSettingsScreens.EditCategory) -> R.string.categories
         else -> R.string.settings
     }
 

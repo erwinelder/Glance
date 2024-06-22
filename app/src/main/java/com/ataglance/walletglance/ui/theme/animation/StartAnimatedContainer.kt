@@ -11,7 +11,7 @@ fun StartAnimatedContainer(
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = CustomAnimation().widgetEnterTransition(delayMillis),
+        enter = widgetEnterTransition(delayMillis),
     ) {
         content()
     }
