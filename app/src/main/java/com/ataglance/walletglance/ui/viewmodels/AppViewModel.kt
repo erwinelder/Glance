@@ -8,20 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppLanguage
-import com.ataglance.walletglance.data.app.AppScreen
 import com.ataglance.walletglance.data.app.Colors
-import com.ataglance.walletglance.data.app.MakeRecordStatus
-import com.ataglance.walletglance.data.app.SettingsScreen
 import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.data.categories.CategoryColors
 import com.ataglance.walletglance.data.categories.CategoryIcon
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.data.date.DateRangeState
 import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Account
@@ -34,6 +32,8 @@ import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
+import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 import com.ataglance.walletglance.ui.utils.breakOnCollectionsAndAssociations
@@ -96,13 +96,13 @@ class AppViewModel(
             AppUiSettings(
                 isSetUp = setupStage == 1,
                 startMainDestination = when(setupStage) {
-                    1 -> AppScreen.Home.route
-                    0 -> AppScreen.Settings.route
-                    else -> AppScreen.FinishSetup.route
+                    1 -> MainScreens.Home
+                    0 -> MainScreens.Settings
+                    else -> MainScreens.FinishSetup
                 },
                 startSettingsDestination = when (setupStage) {
-                    1 -> SettingsScreen.SettingsHome.route
-                    else -> SettingsScreen.Start.route
+                    1 -> SettingsScreens.SettingsHome
+                    else -> SettingsScreens.Start
                 },
                 langCode = language,
                 appTheme = appTheme,
@@ -265,23 +265,6 @@ class AppViewModel(
                 _lastRecordNum.update { recordNum ?: 0 }
             }
         }
-    }
-
-    fun needToMoveScreenTowardsLeft(currentRoute: String, newRoute: String): Boolean {
-        listOf(
-            AppScreen.Home.route,
-            AppScreen.Records.route,
-            AppScreen.MakeRecord.route,
-            AppScreen.CategoriesStatistics.route,
-            AppScreen.Settings.route
-        ).forEach { screenRoute ->
-            if (currentRoute.substringBefore('/') == screenRoute) {
-                return true
-            } else if (newRoute.substringBefore('/') == screenRoute) {
-                return false
-            }
-        }
-        return true
     }
 
 
@@ -1145,8 +1128,8 @@ class AppViewModel(
 
 data class AppUiSettings(
     val isSetUp: Boolean = false,
-    val startMainDestination: String = AppScreen.Home.route,
-    val startSettingsDestination: String = SettingsScreen.Start.route,
+    val startMainDestination: MainScreens = MainScreens.Home,
+    val startSettingsDestination: SettingsScreens = SettingsScreens.Start,
     val langCode: String = AppLanguage.English.languageCode,
     val appTheme: AppTheme? = null,
     val lastRecordNum: Int = 0,

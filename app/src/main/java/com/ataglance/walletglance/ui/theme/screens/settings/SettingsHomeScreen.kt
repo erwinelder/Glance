@@ -28,14 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.SettingsCategories
-import com.ataglance.walletglance.data.app.SettingsCategory
-import com.ataglance.walletglance.data.app.SettingsScreen
+import com.ataglance.walletglance.data.settings.SettingsCategories
+import com.ataglance.walletglance.data.settings.SettingsCategory
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.Manrope
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
@@ -43,7 +43,7 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 fun SettingsHomeScreen(
     scaffoldPadding: PaddingValues,
     appTheme: AppTheme?,
-    onNavigateToScreen: (SettingsScreen) -> Unit
+    onNavigateToScreen: (SettingsScreens) -> Unit
 ) {
     val gap = 20.dp
     val scrollState = rememberScrollState()
@@ -89,22 +89,22 @@ fun SettingsHomeScreen(
                     .padding(horizontal = 24.dp)
             ) {
                 SettingPlate(category = settingsCategories.resetData) {
-                    onNavigateToScreen(SettingsScreen.Data)
+                    onNavigateToScreen(SettingsScreens.ResetData)
                 }
                 SettingPlate(category = settingsCategories.language) {
-                    onNavigateToScreen(SettingsScreen.Language)
+                    onNavigateToScreen(SettingsScreens.Language)
                 }
                 SettingPlate(category = settingsCategories.appearance) {
-                    onNavigateToScreen(SettingsScreen.Appearance)
+                    onNavigateToScreen(SettingsScreens.Appearance)
                 }
                 SettingPlate(category = settingsCategories.categoryCollections) {
-                    onNavigateToScreen(SettingsScreen.CategoryCollections)
+                    onNavigateToScreen(SettingsScreens.CategoryCollections)
                 }
                 SettingPlate(category = settingsCategories.categories) {
-                    onNavigateToScreen(SettingsScreen.Categories)
+                    onNavigateToScreen(SettingsScreens.Categories)
                 }
                 SettingPlate(category = settingsCategories.accounts) {
-                    onNavigateToScreen(SettingsScreen.Accounts)
+                    onNavigateToScreen(SettingsScreens.Accounts)
                 }
             }
         } else {
@@ -120,32 +120,32 @@ fun SettingsHomeScreen(
             ) {
                 item {
                     SettingPlate(category = settingsCategories.accounts) {
-                        onNavigateToScreen(SettingsScreen.Accounts)
+                        onNavigateToScreen(SettingsScreens.Accounts)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.categories) {
-                        onNavigateToScreen(SettingsScreen.Categories)
+                        onNavigateToScreen(SettingsScreens.Categories)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.categoryCollections) {
-                        onNavigateToScreen(SettingsScreen.CategoryCollections)
+                        onNavigateToScreen(SettingsScreens.CategoryCollections)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.appearance) {
-                        onNavigateToScreen(SettingsScreen.Appearance)
+                        onNavigateToScreen(SettingsScreens.Appearance)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.language) {
-                        onNavigateToScreen(SettingsScreen.Language)
+                        onNavigateToScreen(SettingsScreens.Language)
                     }
                 }
                 item {
                     SettingPlate(category = settingsCategories.resetData) {
-                        onNavigateToScreen(SettingsScreen.Data)
+                        onNavigateToScreen(SettingsScreens.ResetData)
                     }
                 }
             }

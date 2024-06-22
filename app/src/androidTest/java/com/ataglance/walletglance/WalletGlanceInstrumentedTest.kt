@@ -25,7 +25,7 @@ import com.ataglance.walletglance.ui.utils.toLongWithTime
 import com.ataglance.walletglance.data.app.AppLanguage
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.accounts.AccountColorName
 import com.ataglance.walletglance.data.categories.CategoryColorName
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState

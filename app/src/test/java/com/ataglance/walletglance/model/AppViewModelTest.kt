@@ -14,7 +14,7 @@ import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import com.ataglance.walletglance.data.categories.CategoryColors
 import com.ataglance.walletglance.ui.viewmodels.MadeTransferState
-import com.ataglance.walletglance.data.app.MakeRecordStatus
+import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
 import org.junit.Assert

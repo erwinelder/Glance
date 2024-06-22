@@ -49,6 +49,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
@@ -69,13 +73,9 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
-import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.app.MakeRecordStatus
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
-import com.ataglance.walletglance.data.records.RecordType
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +83,7 @@ import java.util.Calendar
 fun MakeRecordScreen(
     appTheme: AppTheme?,
     viewModel: MakeRecordViewModel,
-    makeRecordStatus: String,
+    makeRecordStatus: MakeRecordStatus,
     accountList: List<Account>,
     categoriesUiState: CategoriesLists,
     categoryNameAndIconMap: Map<String, Int>,
@@ -130,7 +130,7 @@ fun MakeRecordScreen(
                 .padding(vertical = dimensionResource(R.dimen.screen_vertical_padding))
         ) {
 
-            if (makeRecordStatus == MakeRecordStatus.Create.name) {
+            if (makeRecordStatus == MakeRecordStatus.Create) {
                 MakeRecordTypeBar(
                     isTransferButtonVisible = accountList.size > 1,
                     onMakeTransferButtonClick = onMakeTransferButtonClick,
@@ -214,7 +214,7 @@ fun MakeRecordScreen(
             }
 
             MakeRecordBottomButtonBlock(
-                showSingleButton = makeRecordStatus == MakeRecordStatus.Create.name,
+                showSingleButton = makeRecordStatus == MakeRecordStatus.Create,
                 singlePrimaryButtonStringRes = R.string.save_record,
                 onSaveButton = { onSaveButton(uiState, recordUnitList) },
                 onRepeatButton = { onRepeatButton(uiState, recordUnitList) },

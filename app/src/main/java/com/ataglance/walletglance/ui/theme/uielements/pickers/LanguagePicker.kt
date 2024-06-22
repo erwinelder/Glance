@@ -28,8 +28,8 @@ fun LanguagePicker(
         AppLanguage.Czech,
         AppLanguage.English,
         AppLanguage.German,
-        AppLanguage.Russian,
         AppLanguage.Spanish,
+        AppLanguage.Russian,
         AppLanguage.Ukrainian
     )
 ) {

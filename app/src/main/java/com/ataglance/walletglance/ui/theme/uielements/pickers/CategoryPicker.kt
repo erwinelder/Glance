@@ -36,16 +36,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.animation.CustomAnimation
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.animation.dialogSlideFromBottomTransition
+import com.ataglance.walletglance.ui.theme.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
-import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categories.CategoryType
 
 @Composable
 fun CategoryPicker(
@@ -80,8 +81,8 @@ fun CategoryPicker(
     }
     AnimatedVisibility(
         visible = visible && !showSubcategoryList,
-        enter = CustomAnimation().dialogSlideFromBottomTransition,
-        exit = CustomAnimation().dialogSlideToBottomTransition
+        enter = dialogSlideFromBottomTransition,
+        exit = dialogSlideToBottomTransition
     ) {
         CategoryListWindow(
             lazyListState = parentCategoryListState,
@@ -104,8 +105,8 @@ fun CategoryPicker(
     }
     AnimatedVisibility(
         visible = visible && showSubcategoryList,
-        enter = CustomAnimation().dialogSlideFromBottomTransition,
-        exit = CustomAnimation().dialogSlideToBottomTransition
+        enter = dialogSlideFromBottomTransition,
+        exit = dialogSlideToBottomTransition
     ) {
         CategoryListWindow(
             lazyListState = subcategoryListState,

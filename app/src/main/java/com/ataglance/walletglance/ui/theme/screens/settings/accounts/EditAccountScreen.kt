@@ -57,7 +57,7 @@ fun EditAccountScreen(
     showDeleteAccountButton: Boolean,
     onColorChange: (String) -> Unit,
     onNameChange: (String) -> Unit,
-    onNavigateToCurrencyPickerWindow: () -> Unit,
+    onNavigateToEditAccountCurrencyWindow: () -> Unit,
     onBalanceChange: (String) -> Unit,
     onHideChange: (Boolean) -> Unit,
     onHideBalanceChange: (Boolean) -> Unit,
@@ -115,7 +115,7 @@ fun EditAccountScreen(
                             onValueChange = onNameChange,
                             labelText = stringResource(R.string.name)
                         )
-                        CurrencyField(uiState.currency, onNavigateToCurrencyPickerWindow)
+                        CurrencyField(uiState.currency, onNavigateToEditAccountCurrencyWindow)
                         CustomTextFieldWithLabel(
                             text = uiState.balance,
                             onValueChange = onBalanceChange,

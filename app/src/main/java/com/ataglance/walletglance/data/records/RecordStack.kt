@@ -60,8 +60,8 @@ data class RecordStack(
     ): List<MakeRecordUnitUiState> {
         return stack.mapIndexed { index, unit ->
             MakeRecordUnitUiState(
-                lazyListKey = index + 1,
-                index = index + 1,
+                lazyListKey = index,
+                index = index,
                 category = categoryListAndSubcategoryLists.first.findById(unit.categoryId),
                 subcategory = unit.subcategoryId?.let { subcategoryId ->
                     categoryListAndSubcategoryLists.first.getOrderNumById(unit.categoryId)?.let {
