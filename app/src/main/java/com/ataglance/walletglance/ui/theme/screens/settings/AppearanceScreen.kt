@@ -18,7 +18,7 @@ import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
 fun SetupAppearanceScreen(
     isAppSetUp: Boolean,
     themeUiState: ThemeUiState,
-    onContinueButton: () -> Unit,
+    onContinueSetupButton: () -> Unit,
     onSetUseDeviceTheme: (Boolean) -> Unit,
     onChooseLightTheme: (String) -> Unit,
     onChooseDarkTheme: (String) -> Unit
@@ -39,7 +39,7 @@ fun SetupAppearanceScreen(
         Spacer(modifier = Modifier.weight(1f))
         if (!isAppSetUp) {
             PrimaryButton(
-                onClick = onContinueButton,
+                onClick = onContinueSetupButton,
                 text = stringResource(R.string._continue)
             )
         }

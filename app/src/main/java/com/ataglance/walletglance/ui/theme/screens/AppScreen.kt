@@ -64,6 +64,7 @@ import com.ataglance.walletglance.ui.theme.uielements.BottomNavBar
 import com.ataglance.walletglance.ui.theme.uielements.SetupProgressTopBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.CustomDateRangeWindow
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDateRangePicker
+import com.ataglance.walletglance.ui.utils.currentScreenIs
 import com.ataglance.walletglance.ui.utils.fromMainScreen
 import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
 import com.ataglance.walletglance.ui.utils.getMakeRecordStateAndUnitList
@@ -83,7 +84,8 @@ import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.accounts.SetupAccountsViewModel
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModel
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModel
@@ -128,8 +130,8 @@ fun AppScreen(
         topBar = {
             SetupProgressTopBar(
                 visible = appUiSettings.startMainDestination != MainScreens.Home &&
-                        navBackStackEntry?.destination?.route != SettingsScreens.Start::class.simpleName &&
-                        navBackStackEntry?.destination?.route != MainScreens.FinishSetup::class.simpleName,
+                        !navBackStackEntry.currentScreenIs(SettingsScreens.Start) &&
+                        !navBackStackEntry.currentScreenIs(MainScreens.FinishSetup),
                 navBackStackEntry = navBackStackEntry,
                 onBackNavigationButton = navController::popBackStack
             )
@@ -372,7 +374,9 @@ fun HomeNavHost(
             exitTransition = { screenExitTransition(this, moveScreenTowardsLeft) },
             popExitTransition = { screenExitTransition(this, false) }
         ) { backStack ->
-            val makeRecordStatus = MakeRecordStatus.valueOf(backStack.toRoute<MainScreens.MakeRecord>().status)
+            val makeRecordStatus = MakeRecordStatus.valueOf(
+                backStack.toRoute<MainScreens.MakeRecord>().status
+            )
             val recordNum = backStack.toRoute<MainScreens.MakeRecord>().recordNum
 
             val makeRecordUiStateAndUnitList = recordStackList.getMakeRecordStateAndUnitList(
@@ -436,7 +440,9 @@ fun HomeNavHost(
             enterTransition = { screenEnterTransition(this) },
             popExitTransition = { screenPopExitTransition(this, false) }
         ) { backStack ->
-            val makeRecordStatus = MakeRecordStatus.valueOf(backStack.toRoute<MainScreens.MakeTransfer>().status)
+            val makeRecordStatus = MakeRecordStatus.valueOf(
+                backStack.toRoute<MainScreens.MakeTransfer>().status
+            )
             val recordNum = backStack.toRoute<MainScreens.MakeTransfer>().recordNum
 
             val viewModel = viewModel<MakeTransferViewModel>(
@@ -556,7 +562,7 @@ fun NavGraphBuilder.settingsGraph(
             SetupAppearanceScreen(
                 isAppSetUp = appUiSettings.isSetUp,
                 themeUiState = themeUiState,
-                onContinueButton = {
+                onContinueSetupButton = {
                     navController.navigate(SettingsScreens.Accounts)
                 },
                 onChooseLightTheme = appViewModel::chooseLightTheme,
@@ -611,19 +617,17 @@ fun NavGraphBuilder.accountsGraph(
 ) {
     navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
         composable<AccountsSettingsScreens.EditAccounts> { backStack ->
-            val viewModel = backStack.sharedViewModel<SetupAccountsViewModel>(navController)
-            val accountsSetupList by viewModel.accountsListState.collectAsStateWithLifecycle()
+            val viewModel = backStack.sharedViewModel<EditAccountsViewModel>(
+                navController = navController,
+                factory = EditAccountsViewModelFactory(accountList)
+            )
+            val accountListState by viewModel.accountListState.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
-            LaunchedEffect(true) {
-                if (accountsSetupList.isEmpty()) {
-                    viewModel.applyAccountsList(accountList)
-                }
-            }
 
             SetupAccountsScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
-                accountsList = accountsSetupList,
+                accountsList = accountListState,
                 appTheme = appUiSettings.appTheme,
                 navigateToEditAccountScreen = { orderNum ->
                     navController.navigate(AccountsSettingsScreens.EditAccount(orderNum))
@@ -650,9 +654,9 @@ fun NavGraphBuilder.accountsGraph(
         composable<AccountsSettingsScreens.EditAccount> { backStack ->
             val accountOrderNum = backStack.toRoute<AccountsSettingsScreens.EditAccount>().orderNum
 
-            val setupAccountsViewModel = backStack.sharedViewModel<SetupAccountsViewModel>(navController)
-            val showDeleteAccountButton by setupAccountsViewModel.showDeleteAccountButton.collectAsState()
-            val account = setupAccountsViewModel.getAccountByOrderNum(accountOrderNum)
+            val editAccountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(navController)
+            val showDeleteAccountButton by editAccountsViewModel.showDeleteAccountButton.collectAsState()
+            val account = editAccountsViewModel.getAccountByOrderNum(accountOrderNum)
             val coroutineScope = rememberCoroutineScope()
 
             val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
@@ -686,17 +690,17 @@ fun NavGraphBuilder.accountsGraph(
                 onHideChange = editAccountViewModel::changeHide,
                 onHideBalanceChange = editAccountViewModel::changeHideBalance,
                 onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
-                onDeleteButton = { id ->
+                onDeleteButton = { idToDelete: Int ->
                     navController.popBackStack()
-                    setupAccountsViewModel.deleteAccountById(id)?.let {
+                    editAccountsViewModel.deleteAccountById(idToDelete)?.let {
                         coroutineScope.launch {
-                            appViewModel.deleteAccountWithItsRecords(id, it)
+                            appViewModel.deleteAccountWithItsRecords(idToDelete, it)
                         }
                     }
                 },
                 onSaveButton = {
                     if (account != null) {
-                        setupAccountsViewModel.saveAccountData(
+                        editAccountsViewModel.saveAccountData(
                             editAccountViewModel.getAccountObject()
                         )
                     }
@@ -706,6 +710,7 @@ fun NavGraphBuilder.accountsGraph(
         }
         composable<AccountsSettingsScreens.EditAccountCurrency> { backStack ->
             val currency = backStack.toRoute<AccountsSettingsScreens.EditAccountCurrency>().currency
+
             val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
             val currencyPickerViewModel = viewModel<CurrencyPickerViewModel>(
                 factory = CurrencyPickerViewModelFactory(

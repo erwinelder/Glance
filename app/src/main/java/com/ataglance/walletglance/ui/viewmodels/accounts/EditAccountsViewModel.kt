@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.ui.viewmodels.accounts
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.ui.utils.findById
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,25 +9,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class SetupAccountsViewModel : ViewModel() {
-    private val _accountsListState: MutableStateFlow<List<Account>> = MutableStateFlow(emptyList())
-    val accountsListState: StateFlow<List<Account>> = _accountsListState.asStateFlow()
+class EditAccountsViewModel(
+    private val accountList: List<Account>
+) : ViewModel() {
+
+    private val _accountsListState: MutableStateFlow<List<Account>> = MutableStateFlow(accountList)
+    val accountListState: StateFlow<List<Account>> = _accountsListState.asStateFlow()
+
     private val _showDeleteAccountButton: MutableStateFlow<Boolean> =
-        MutableStateFlow(accountsListState.value.size > 1)
+        MutableStateFlow(accountListState.value.size > 1)
     val showDeleteAccountButton: StateFlow<Boolean> = _showDeleteAccountButton.asStateFlow()
 
-    fun applyAccountsList(accountList: List<Account>) {
-        if (accountList.isNotEmpty()) {
-            val sortedAccountList = accountList.sortedBy { it.orderNum }
-            _accountsListState.update { sortedAccountList }
-            _showDeleteAccountButton.update { sortedAccountList.size > 1 }
-        } else if (accountsListState.value.isEmpty()) {
-            addNewDefaultAccount()
-        }
-    }
-
     fun addNewDefaultAccount() {
-        val accountsList = accountsListState.value.toMutableList()
+        val accountsList = accountListState.value.toMutableList()
         val newAccountId = accountsList.maxByOrNull { it.id }?.id?.let { it + 1 } ?: 1
         accountsList.add(
             Account(
@@ -40,15 +35,15 @@ class SetupAccountsViewModel : ViewModel() {
     }
 
     fun deleteAccountById(id: Int): List<Account>? {
-        if (accountsListState.value.size == 1) {
+        if (accountListState.value.size == 1) {
             return null
         }
 
         val accountsList = mutableListOf<Account>()
         var stepAfterDeleting = 0
-        val account = accountsListState.value.findById(id) ?: return null
+        val account = accountListState.value.findById(id) ?: return null
 
-        accountsListState.value.forEach {
+        accountListState.value.forEach {
             if (it.orderNum != account.orderNum) {
                 accountsList.add(it.copy(orderNum = it.orderNum - stepAfterDeleting))
             } else {
@@ -67,7 +62,7 @@ class SetupAccountsViewModel : ViewModel() {
     }
 
     fun getAccountByOrderNum(orderNum: Int): Account? {
-        accountsListState.value.forEach {
+        accountListState.value.forEach {
             if (it.orderNum == orderNum) {
                 return it
             }
@@ -110,11 +105,11 @@ class SetupAccountsViewModel : ViewModel() {
     fun saveAccountData(newAccount: Account) {
         var newAccountsList = mutableListOf<Account>()
 
-        accountsListState.value.forEach { account ->
+        accountListState.value.forEach { account ->
             if (account.orderNum != newAccount.orderNum) {
                 newAccountsList.add(account)
             } else {
-                if (newAccount.hide && accountsListState.value.filter { !it.hide }.size == 1) {
+                if (newAccount.hide && accountListState.value.filter { !it.hide }.size == 1) {
                     newAccountsList.add(newAccount.copy(hide = false))
                 } else {
                     newAccountsList.add(newAccount)
@@ -122,7 +117,7 @@ class SetupAccountsViewModel : ViewModel() {
             }
         }
 
-        if (newAccount.hide && newAccount.isActive && accountsListState.value.filter { !it.hide }.size > 1) {
+        if (newAccount.hide && newAccount.isActive && accountListState.value.filter { !it.hide }.size > 1) {
             newAccountsList = newAccountsList.map {
                 if (!it.hide) {
                     it.copy(isActive = true)
@@ -136,6 +131,15 @@ class SetupAccountsViewModel : ViewModel() {
     }
 
     fun resetAccountsList() {
-        _accountsListState.update { listOf(Account(orderNum = 1)) }
+        _accountsListState.update { accountList }
+    }
+}
+
+data class EditAccountsViewModelFactory(
+    private val accountList: List<Account>,
+) : ViewModelProvider.NewInstanceFactory() {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return EditAccountsViewModel(accountList) as T
     }
 }
