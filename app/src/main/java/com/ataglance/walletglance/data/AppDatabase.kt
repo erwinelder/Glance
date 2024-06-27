@@ -9,16 +9,16 @@ import com.ataglance.walletglance.domain.dao.CategoryCollectionCategoryAssociati
 import com.ataglance.walletglance.domain.dao.CategoryCollectionDao
 import com.ataglance.walletglance.domain.dao.CategoryDao
 import com.ataglance.walletglance.domain.dao.RecordDao
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.CategoryCollection
 import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.domain.entities.Record
 
 @Database(
     entities = [
-        Account::class,
-        Category::class,
+        AccountEntity::class,
+        CategoryEntity::class,
         CategoryCollection::class,
         CategoryCollectionCategoryAssociation::class,
         Record::class

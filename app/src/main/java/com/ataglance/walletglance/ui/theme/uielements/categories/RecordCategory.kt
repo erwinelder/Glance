@@ -15,30 +15,28 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 
 @Composable
 fun RecordCategory(
-    categoryAndIconRes: Pair<Category?, Int?>?,
+    category: Category?,
     iconSize: Dp = 22.dp,
     fontSize: TextUnit = 18.sp
 ) {
-    categoryAndIconRes?.first?.let {
+    category?.let {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            categoryAndIconRes.second?.let {
-                Icon(
-                    painter = painterResource(categoryAndIconRes.second!!),
-                    contentDescription = categoryAndIconRes.first!!.name + " icon",
-                    tint = GlanceTheme.onSurface,
-                    modifier = Modifier.size(iconSize)
-                )
-            }
+            Icon(
+                painter = painterResource(category.icon.res),
+                contentDescription = category.name + " icon",
+                tint = GlanceTheme.onSurface,
+                modifier = Modifier.size(iconSize)
+            )
             Text(
-                text = categoryAndIconRes.first!!.name,
+                text = category.name,
                 color = GlanceTheme.onSurface,
                 fontSize = fontSize,
                 fontWeight = FontWeight.Light,

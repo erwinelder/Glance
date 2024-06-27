@@ -1,22 +1,23 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.categories.color.CategoryColors
+import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordStackUnit
+import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
+import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.utils.breakOnDifferentLists
 import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.data.categories.CategoryColors
 import com.ataglance.walletglance.ui.viewmodels.MadeTransferState
-import com.ataglance.walletglance.data.records.MakeRecordStatus
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordStackUnit
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -86,16 +87,16 @@ class AppViewModelTest {
             RecordStack(
                 recordNum = 1,
                 date = 202403110324,
-                type = '-',
-                accountId = fromAccount.id,
+                type = RecordType.OutTransfer,
+                account = fromAccount.toRecordAccount(),
                 totalAmount = startAmount,
                 stack = listOf(
                     RecordStackUnit(
                         id = 1,
                         amount = startAmount,
                         quantity = null,
-                        categoryId = 0,
-                        subcategoryId = null,
+                        category = null,
+                        subcategory = null,
                         note = null
                     )
                 )
@@ -103,16 +104,16 @@ class AppViewModelTest {
             RecordStack(
                 recordNum = 2,
                 date = 202403110324,
-                type = '+',
-                accountId = toAccount.id,
+                type = RecordType.InTransfer,
+                account = toAccount.toRecordAccount(),
                 totalAmount = finalAmount,
                 stack = listOf(
                     RecordStackUnit(
                         id = 2,
                         amount = finalAmount,
                         quantity = null,
-                        categoryId = 0,
-                        subcategoryId = null,
+                        category = null,
+                        subcategory = null,
                         note = null
                     )
                 )
@@ -217,57 +218,57 @@ class AppViewModelTest {
     @Test
     fun testBreakCategoriesOnDifferentLists() {
         val categoryList = listOf(
-            Category(
+            CategoryEntity(
                 id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 2, type = '-', rank = 'c', orderNum = 2, parentCategoryId = 2,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
 
-            Category(
+            CategoryEntity(
                 id = 13, type = '-', rank = 's', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 14, type = '-', rank = 's', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
 
-            Category(
+            CategoryEntity(
                 id = 15, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 16, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 17, type = '-', rank = 's', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 18, type = '-', rank = 's', orderNum = 4, parentCategoryId = 2,
                 name = "subcategory 24", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 19, type = '-', rank = 's', orderNum = 5, parentCategoryId = 2,
                 name = "subcategory 25", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 20, type = '-', rank = 's', orderNum = 6, parentCategoryId = 2,
                 name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             )
         )
 
@@ -279,111 +280,111 @@ class AppViewModelTest {
     @Test
     fun testFixCategoriesOrderNumbers() {
         val currentCategoryList = listOf(
-            Category(
+            CategoryEntity(
                 id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 2, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 2,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
 
-            Category(
+            CategoryEntity(
                 id = 13, type = '-', rank = 's', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 14, type = '-', rank = 's', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
 
-            Category(
+            CategoryEntity(
                 id = 15, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 16, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 17, type = '-', rank = 's', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 18, type = '-', rank = 's', orderNum = 4, parentCategoryId = 2,
                 name = "subcategory 24", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 19, type = '-', rank = 's', orderNum = 5, parentCategoryId = 2,
                 name = "subcategory 25", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 20, type = '-', rank = 's', orderNum = 6, parentCategoryId = 2,
                 name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             )
         )
         val expectedCategoryList = listOf(
-            Category(
+            CategoryEntity(
                 id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 2, type = '-', rank = 'c', orderNum = 2, parentCategoryId = 2,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
 
-            Category(
+            CategoryEntity(
                 id = 13, type = '-', rank = 's', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 14, type = '-', rank = 's', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive(null).color.name
+                colorName = CategoryColors.Olive.name.name
             ),
 
-            Category(
+            CategoryEntity(
                 id = 15, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 16, type = '-', rank = 's', orderNum = 2, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 17, type = '-', rank = 's', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 18, type = '-', rank = 's', orderNum = 4, parentCategoryId = 2,
                 name = "subcategory 24", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 19, type = '-', rank = 's', orderNum = 5, parentCategoryId = 2,
                 name = "subcategory 25", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             ),
-            Category(
+            CategoryEntity(
                 id = 20, type = '-', rank = 's', orderNum = 6, parentCategoryId = 2,
                 name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel(null).color.name
+                colorName = CategoryColors.Camel.name.name
             )
         )
         Assertions.assertArrayEquals(

@@ -32,7 +32,7 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.modifiers.NoRippleTheme
 import com.ataglance.walletglance.ui.theme.screens.AppScreen
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.data.app.AppTheme
 
 class MainActivity : AppCompatActivity() {
     private lateinit var app: WalletGlanceApplication

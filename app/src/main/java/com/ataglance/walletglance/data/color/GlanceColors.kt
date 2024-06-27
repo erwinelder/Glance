@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.theme
+package com.ataglance.walletglance.data.color
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color

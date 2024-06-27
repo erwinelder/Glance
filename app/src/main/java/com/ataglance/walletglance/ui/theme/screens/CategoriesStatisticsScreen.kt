@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
@@ -74,7 +74,7 @@ fun CategoriesStatisticsScreen(
         ) {
             categoryListAndParCategory.second?.let {
                 Spacer(modifier = Modifier.height(16.dp))
-                CategoryStatisticsItemComponent(it, showLeftArrow = true) {
+                CategoryStatisticsItemComponent(it, appTheme, showLeftArrow = true) {
                     viewModel.clearParentCategory()
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -90,7 +90,7 @@ fun CategoriesStatisticsScreen(
                     items = categoryListAndParCategory.first,
                     key = { it.categoryId }
                 ) { category ->
-                    CategoryStatisticsItemComponent(category) {
+                    CategoryStatisticsItemComponent(category, appTheme) {
                         viewModel.setParentCategory(category)
                     }
                 }

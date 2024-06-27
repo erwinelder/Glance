@@ -49,15 +49,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
@@ -86,7 +86,6 @@ fun MakeRecordScreen(
     makeRecordStatus: MakeRecordStatus,
     accountList: List<Account>,
     categoriesUiState: CategoriesLists,
-    categoryNameAndIconMap: Map<String, Int>,
     onMakeTransferButtonClick: () -> Unit,
     onSaveButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,
     onRepeatButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,
@@ -183,9 +182,7 @@ fun MakeRecordScreen(
                             onNoteValueChange = { value ->
                                 viewModel.changeNoteValue(recordUnit.index, value)
                             },
-                            categoryIconRes = categoryNameAndIconMap[
-                                recordUnit.subcategory?.iconName ?: recordUnit.category?.iconName
-                            ],
+                            categoryIconRes = (recordUnit.subcategory ?: recordUnit.category)?.icon?.res,
                             onCategoryClick = {
                                 viewModel.changeClickedUnitIndex(recordUnit.index)
                                 openCategoryDialog.value = true
@@ -218,9 +215,7 @@ fun MakeRecordScreen(
                 singlePrimaryButtonStringRes = R.string.save_record,
                 onSaveButton = { onSaveButton(uiState, recordUnitList) },
                 onRepeatButton = { onRepeatButton(uiState, recordUnitList) },
-                onDeleteButton = {
-                    uiState.recordNum?.let { onDeleteButton(it) }
-                },
+                onDeleteButton = { onDeleteButton(uiState.recordNum) },
                 buttonsAreEnabled = savingIsAllowed
             )
 
@@ -254,7 +249,6 @@ fun MakeRecordScreen(
         CategoryPicker(
             visible = openCategoryDialog.value,
             categoriesUiState = categoriesUiState,
-            categoryNameAndIconMap = categoryNameAndIconMap,
             type = if (uiState.type == RecordType.Expense) CategoryType.Expense
                 else CategoryType.Income,
             onDismissRequest = { openCategoryDialog.value = false },
@@ -292,8 +286,7 @@ private fun LazyItemScope.RecordUnitBlock(
             if (targetCollapsed) {
                 RecordUnitBlockCollapsed(
                     noteText = recordUnitUiState.note,
-                    categoryToShow = recordUnitUiState.subcategory ?: recordUnitUiState.category,
-                    categoryIconRes = categoryIconRes,
+                    category = recordUnitUiState.subcategory ?: recordUnitUiState.category,
                     amount = recordUnitUiState.getFormattedAmountWithSpaces(),
                     quantity = recordUnitUiState.quantity,
                     accountCurrency = accountCurrency,
@@ -307,7 +300,7 @@ private fun LazyItemScope.RecordUnitBlock(
                 RecordUnitBlockExpanded(
                     noteText = recordUnitUiState.note,
                     onNoteValueChange = onNoteValueChange,
-                    categoryToShow = recordUnitUiState.subcategory ?: recordUnitUiState.category,
+                    category = recordUnitUiState.subcategory ?: recordUnitUiState.category,
                     categoryIconRes = categoryIconRes,
                     onCategoryClick = onCategoryClick,
                     amount = recordUnitUiState.amount,
@@ -329,8 +322,7 @@ private fun LazyItemScope.RecordUnitBlock(
 @Composable
 private fun RecordUnitBlockCollapsed(
     noteText: String,
-    categoryToShow: Category?,
-    categoryIconRes: Int?,
+    category: Category?,
     amount: String,
     quantity: String,
     accountCurrency: String?,
@@ -384,11 +376,11 @@ private fun RecordUnitBlockCollapsed(
         }
         Spacer(modifier = Modifier.height(4.dp))
         AnimatedContent(
-            targetState = categoryToShow to categoryIconRes,
+            targetState = category,
             label = "record unit category"
-        ) { categoryAndCategoryIconRes ->
+        ) { targetCategory ->
             RecordCategory(
-                categoryAndIconRes = categoryAndCategoryIconRes,
+                category = targetCategory,
                 iconSize = 24.dp,
                 fontSize = 20.sp
             )
@@ -414,7 +406,7 @@ private fun RecordUnitBlockCollapsed(
 private fun RecordUnitBlockExpanded(
     noteText: String,
     onNoteValueChange: (String) -> Unit,
-    categoryToShow: Category?,
+    category: Category?,
     categoryIconRes: Int?,
     onCategoryClick: () -> Unit,
     amount: String,
@@ -446,7 +438,7 @@ private fun RecordUnitBlockExpanded(
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.category) {
             AnimatedContent(
-                targetState = categoryToShow to categoryIconRes,
+                targetState = category to categoryIconRes,
                 label = "category field at the make record screen"
             ) { targetCategoryAndIconRes ->
                 CategoryField(

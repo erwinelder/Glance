@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithCategories
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
-import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.utils.toggle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

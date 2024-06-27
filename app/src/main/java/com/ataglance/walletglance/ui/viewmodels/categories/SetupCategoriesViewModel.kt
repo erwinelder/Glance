@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categories.CategoryColors
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.ParentCategoriesLists
 import com.ataglance.walletglance.data.categories.SubcategoriesLists
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
+import com.ataglance.walletglance.data.categories.color.CategoryColors
+import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
+import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.ui.utils.findByRecordNum
+import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,7 +23,7 @@ import kotlinx.coroutines.flow.update
 class SetupCategoriesViewModel(
     private val categoriesLists: CategoriesLists
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(
+    private val _uiState: MutableStateFlow<SetupCategoriesUiState> = MutableStateFlow(
         SetupCategoriesUiState(
             subcategoryList = emptyList(),
             expenseParentCategoryList = categoriesLists.parentCategories.expense,
@@ -61,25 +65,21 @@ class SetupCategoriesViewModel(
     }
 
     private fun getNewCategory(
-        type: CategoryType,
         rank: CategoryRank,
         listSize: Int,
         parentCategoryId: Int?,
         name: String,
-        colorName: String = CategoryColors.GrayDefault(null).color.name
+        colorWithName: CategoryColorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
     ): Category {
         return Category(
             id = getNewCategoryId(),
-            type = when (type) {
-                CategoryType.Expense -> '-'
-                CategoryType.Income -> '+'
-            },
-            rank = if (rank == CategoryRank.Parent) 'c' else 's',
+            type = uiState.value.categoryType,
+            rank = rank,
             orderNum = listSize + 1,
             parentCategoryId = parentCategoryId,
             name = name,
-            iconName = "other",
-            colorName = colorName
+            icon = CategoryIcon.Other,
+            colorWithName = colorWithName
         )
     }
 
@@ -171,7 +171,7 @@ class SetupCategoriesViewModel(
     }
 
     fun changeCategoryTypeToShow(categoryType: CategoryType) {
-        _uiState.update { it.copy(categoryTypeToShow = categoryType) }
+        _uiState.update { it.copy(categoryType = categoryType) }
     }
 
     fun reapplyCategoryLists() {
@@ -260,40 +260,31 @@ class SetupCategoriesViewModel(
     }
 
     fun addNewParentCategory(context: Context) {
-        if (uiState.value.currentTypeIsExpense()) {
+        val categoryList = uiState.value.getParentCategoryListByCurrentType().toMutableList()
+        categoryList.add(
+            getNewCategory(
+                rank = CategoryRank.Parent,
+                listSize = categoryList.size,
+                parentCategoryId = null,
+                name = context.getString(R.string.new_category_name)
+            )
+        )
 
-            val categoryList = uiState.value.expenseParentCategoryList.toMutableList()
-            categoryList.add(getNewCategory(
-                    type = CategoryType.Expense,
-                    rank = CategoryRank.Parent,
-                    listSize = uiState.value.expenseParentCategoryList.size,
-                    parentCategoryId = null,
-                    name = context.getString(R.string.new_category_name)
-                ))
-            val subcategoryLists = uiState.value.expenseSubcategoryLists.toMutableList()
-            subcategoryLists.add(emptyList())
-            _uiState.update { it.copy(
-                expenseParentCategoryList = categoryList,
-                expenseSubcategoryLists = subcategoryLists
-            ) }
+        val subcategoryLists = uiState.value.getSubcategoryListsByCurrentType().toMutableList()
+        subcategoryLists.add(emptyList())
 
-        } else {
-
-            val categoryList = uiState.value.incomeParentCategoryList.toMutableList()
-            categoryList.add(getNewCategory(
-                    type = CategoryType.Income,
-                    rank = CategoryRank.Parent,
-                    listSize = uiState.value.incomeParentCategoryList.size,
-                    parentCategoryId = null,
-                    name = context.getString(R.string.new_category_name)
-                ))
-            val subcategoryLists = uiState.value.incomeSubcategoryLists.toMutableList()
-            subcategoryLists.add(emptyList())
-            _uiState.update { it.copy(
-                incomeParentCategoryList = categoryList,
-                incomeSubcategoryLists = subcategoryLists
-            ) }
-
+        _uiState.update {
+            if (it.currentTypeIsExpense()) {
+                it.copy(
+                    expenseParentCategoryList = categoryList,
+                    expenseSubcategoryLists = subcategoryLists
+                )
+            } else {
+                it.copy(
+                    incomeParentCategoryList = categoryList,
+                    incomeSubcategoryLists = subcategoryLists
+                )
+            }
         }
     }
 
@@ -305,12 +296,11 @@ class SetupCategoriesViewModel(
         val subcategoryList = uiState.value.subcategoryList.toMutableList()
         subcategoryList.add(
             getNewCategory(
-                type = uiState.value.categoryTypeToShow,
                 rank = CategoryRank.Sub,
                 listSize = uiState.value.subcategoryList.size,
                 parentCategoryId = parentCategory.id,
                 name = context.getString(R.string.new_subcategory_name),
-                colorName = parentCategory.colorName
+                colorWithName = parentCategory.colorWithName
             )
         )
 
@@ -318,20 +308,17 @@ class SetupCategoriesViewModel(
     }
 
     fun saveSubcategoryList() {
-        if (uiState.value.currentTypeIsExpense()) {
-            val subcategoryLists = uiState.value.expenseSubcategoryLists.toMutableList()
-            subcategoryLists[uiState.value.parentCategoryOrderNum - 1] = uiState.value.subcategoryList
-            _uiState.update {
+        val subcategoryLists = uiState.value.getSubcategoryListsByCurrentType().toMutableList()
+        subcategoryLists[uiState.value.parentCategoryOrderNum - 1] = uiState.value.subcategoryList
+
+        _uiState.update {
+            if (uiState.value.currentTypeIsExpense()) {
                 it.copy(
                     subcategoryList = emptyList(),
                     expenseSubcategoryLists = subcategoryLists,
                     expenseParentCategoryList = changeParentCategoryIdToParentCategoryOrNull()
                 )
-            }
-        } else {
-            val subcategoryLists = uiState.value.incomeSubcategoryLists.toMutableList()
-            subcategoryLists[uiState.value.parentCategoryOrderNum - 1] = uiState.value.subcategoryList
-            _uiState.update {
+            } else {
                 it.copy(
                     subcategoryList = emptyList(),
                     incomeSubcategoryLists = subcategoryLists,
@@ -356,8 +343,6 @@ class SetupCategoriesViewModel(
                             category.isIncome() && category.id != 77
                         ),
                         allowSaving = category.name.isNotBlank()
-                                && category.iconName.isNotBlank()
-                                && category.colorName.isNotBlank()
                     )
                 }
             }
@@ -373,18 +358,20 @@ class SetupCategoriesViewModel(
         }
     }
 
-    fun onCategoryIconChange(iconName: String) {
+    fun onCategoryIconChange(icon: CategoryIcon) {
         _editCategoryUiState.update {
             it.copy(
-                category = it.category?.copy(iconName = iconName)
+                category = it.category?.copy(icon = icon)
             )
         }
     }
 
-    fun onCategoryColorChange(color: String) {
+    fun onCategoryColorChange(colorName: String) {
         _editCategoryUiState.update {
             it.copy(
-                category = it.category?.copy(colorName = color)
+                category = it.category?.copy(
+                    colorWithName = CategoryPossibleColors().getByName(colorName)
+                )
             )
         }
     }
@@ -401,7 +388,6 @@ class SetupCategoriesViewModel(
                     it.copy(
                         expenseParentCategoryList = newList,
                         expenseSubcategoryLists = newSubcategoryLists
-                            ?: uiState.value.expenseSubcategoryLists
                     )
                 }
             } else {
@@ -409,7 +395,6 @@ class SetupCategoriesViewModel(
                     it.copy(
                         incomeParentCategoryList = newList,
                         incomeSubcategoryLists = newSubcategoryLists
-                            ?: uiState.value.incomeSubcategoryLists
                     )
                 }
             }
@@ -418,21 +403,20 @@ class SetupCategoriesViewModel(
         }
     }
 
-    private fun updateSubcategoriesColorIfNeeded(category: Category): List<List<Category>>? {
-        return category.getCategoryType()
-            ?.let { uiState.value.getSubcategoryListsByType(it) }
-            ?.map { list ->
-                list.takeUnless {
-                    list.firstOrNull()?.let {
-                        it.parentCategoryId == category.id && it.colorName != category.colorName
-                    } == true
-                } ?: list.map { it.copy(colorName = category.colorName) }
-            }
+    private fun updateSubcategoriesColorIfNeeded(category: Category): List<List<Category>> {
+        return uiState.value.getSubcategoryListsByType(category.type).map { list ->
+            list.takeUnless {
+                list.firstOrNull()?.let {
+                    it.parentCategoryId == category.id &&
+                            it.colorWithName.name != category.colorWithName.name
+                } == true
+            } ?: list.map { it.copy(colorWithName = category.colorWithName) }
+        }
     }
 
     private fun deleteParentCategory() {
         val categoryDelete = editCategoryUiState.value.category ?: return
-        val isExpenseType = uiState.value.categoryTypeToShow == CategoryType.Expense
+        val isExpenseType = uiState.value.categoryType == CategoryType.Expense
 
         val newListsPair = deleteParentCategoryFromList(categoryDelete)
 
@@ -466,8 +450,8 @@ class SetupCategoriesViewModel(
     fun deleteCategory() {
         editCategoryUiState.value.category?.let {
             if (
-                (it.type == '-' && (it.id == 12 || it.id == 66)) ||
-                (it.type == '+' && it.id == 77)
+                (it.isExpense() && (it.id == 12 || it.id == 66)) ||
+                (it.isIncome() && it.id == 77)
             ) return
         }
 
@@ -504,7 +488,7 @@ data class SetupCategoriesViewModelFactory(
 
 
 data class SetupCategoriesUiState(
-    val categoryTypeToShow: CategoryType = CategoryType.Expense,
+    val categoryType: CategoryType = CategoryType.Expense,
     val parentCategoryOrderNum: Int = 0,
     val subcategoryList: List<Category> = emptyList(),
 
@@ -515,7 +499,7 @@ data class SetupCategoriesUiState(
 ) {
 
     fun currentTypeIsExpense(): Boolean {
-        return categoryTypeToShow == CategoryType.Expense
+        return categoryType == CategoryType.Expense
     }
 
     fun getParentCategoryListByCurrentType(): List<Category> {

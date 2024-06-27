@@ -3,7 +3,7 @@ package com.ataglance.walletglance.domain.repositories
 import androidx.room.Transaction
 import com.ataglance.walletglance.domain.dao.AccountDao
 import com.ataglance.walletglance.domain.dao.RecordDao
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.domain.entities.AccountEntity
 import com.ataglance.walletglance.domain.entities.Record
 
 class RecordAndAccountRepository(
@@ -14,7 +14,7 @@ class RecordAndAccountRepository(
     @Transaction
     suspend fun upsertRecordsAndUpdateAccounts(
         recordList: List<Record>,
-        accountList: List<Account>
+        accountList: List<AccountEntity>
     ) {
         recordDao.insertOrReplaceRecords(recordList)
         accountDao.insertOrReplaceAccounts(accountList)
@@ -24,7 +24,7 @@ class RecordAndAccountRepository(
     suspend fun deleteAndUpsertRecordsAndUpdateAccounts(
         recordListToDelete: List<Record>,
         recordListToUpsert: List<Record>,
-        accountList: List<Account>
+        accountList: List<AccountEntity>
     ) {
         recordDao.deleteRecords(recordListToDelete)
         recordDao.insertOrReplaceRecords(recordListToUpsert)
@@ -34,7 +34,7 @@ class RecordAndAccountRepository(
     @Transaction
     suspend fun deleteRecordsAndUpdateAccounts(
         recordList: List<Record>,
-        accountList: List<Account>
+        accountList: List<AccountEntity>
     ) {
         recordDao.deleteRecords(recordList)
         accountDao.insertOrReplaceAccounts(accountList)
@@ -43,7 +43,7 @@ class RecordAndAccountRepository(
     @Transaction
     suspend fun deleteAccountAndUpdateAccountsAndDeleteRecordsByAccountIdAndUpdateRecords(
         accountIdToDelete: Int,
-        accountListToUpsert: List<Account>,
+        accountListToUpsert: List<AccountEntity>,
         recordListToUpsert: List<Record>
     ) {
         accountDao.insertOrReplaceAccounts(accountListToUpsert)

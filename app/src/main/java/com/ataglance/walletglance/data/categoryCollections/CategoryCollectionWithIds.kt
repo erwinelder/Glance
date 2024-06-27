@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.data.categoryCollections
 
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.categories.Category
 
 data class CategoryCollectionWithIds(
     val id: Int,

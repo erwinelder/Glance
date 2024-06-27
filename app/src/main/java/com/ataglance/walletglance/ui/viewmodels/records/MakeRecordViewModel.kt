@@ -2,13 +2,13 @@ package com.ataglance.walletglance.ui.viewmodels.records
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.domain.entities.Record
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -238,24 +238,21 @@ class MakeRecordViewModelFactory(
 
 data class MakeRecordUiState(
     val recordStatus: MakeRecordStatus,
-    val recordNum: Int?,
+    val recordNum: Int,
     val account: Account?,
     val type: RecordType = RecordType.Expense,
     val clickedUnitIndex: Int = 0,
     val dateTimeState: DateTimeState = DateTimeState()
 ) {
 
-    fun toRecordList(
-        unitList: List<MakeRecordUnitUiState>,
-        lastRecordNum: Int
-    ): List<Record> {
+    fun toRecordList(unitList: List<MakeRecordUnitUiState>): List<Record> {
         val recordList = mutableListOf<Record>()
 
         unitList.forEach { unit ->
             if (account != null && unit.category != null) {
                 recordList.add(
                     Record(
-                        recordNum = recordNum ?: (lastRecordNum + 1),
+                        recordNum = recordNum,
                         date = dateTimeState.dateLong,
                         type = if (type == RecordType.Expense) '-' else '+',
                         amount = if (unit.quantity.isNotBlank()) {

@@ -12,8 +12,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
 
 @OptIn(ExperimentalLayoutApi::class)

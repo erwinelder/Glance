@@ -14,10 +14,10 @@ sealed interface MainScreens {
     data class CategoryStatistics(val parentCategoryId: Int) : MainScreens
 
     @Serializable
-    data class MakeRecord(val status: String, val recordNum: Int = 0) : MainScreens
+    data class MakeRecord(val status: String, val recordNum: Int) : MainScreens
 
     @Serializable
-    data class MakeTransfer(val status: String, val recordNum: Int = 0) : MainScreens
+    data class MakeTransfer(val status: String, val recordNum: Int) : MainScreens
 
     @Serializable
     data object Settings : MainScreens

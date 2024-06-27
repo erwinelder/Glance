@@ -3,7 +3,7 @@ package com.ataglance.walletglance.data.settings
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.data.app.AppTheme
 
 data class SettingsCategory(@StringRes val stringRes: Int, @DrawableRes val iconRes: Int)
 

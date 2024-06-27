@@ -39,7 +39,7 @@ import com.ataglance.walletglance.ui.theme.Manrope
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.data.app.AppTheme
 
 @Composable
 fun PrimaryButton(

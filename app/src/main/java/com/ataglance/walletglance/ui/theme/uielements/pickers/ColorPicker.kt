@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.Colors
+import com.ataglance.walletglance.data.color.ColorWithName
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 
@@ -36,7 +36,7 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 @Composable
 fun ColorPicker(
     visible: Boolean,
-    colorList: List<Colors>,
+    colorList: List<ColorWithName>,
     onColorClick: (String) -> Unit,
     onPickerClose: () -> Unit
 ) {
@@ -73,17 +73,17 @@ fun ColorPicker(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                colorList.forEach { color ->
+                colorList.forEach { colorWithName ->
                     Spacer(
                         modifier = Modifier
                             .bounceClickEffect(.97f) {
-                                onColorClick(color.name)
+                                onColorClick(colorWithName.name)
                                 onPickerClose()
                             }
                             .clip(RoundedCornerShape(dimensionResource(R.dimen.field_corners)))
                             .fillMaxWidth(.22f)
                             .aspectRatio(1.4f, false)
-                            .background(color.lightAndDark.darker)
+                            .background(colorWithName.color)
                     )
                 }
             }

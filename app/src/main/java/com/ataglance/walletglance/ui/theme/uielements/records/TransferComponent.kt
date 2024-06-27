@@ -11,43 +11,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.data.accounts.RecordAccount
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.ui.theme.GlanceTheme
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
-import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.ui.utils.convertDateLongToDayMonthYear
-import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
-import com.ataglance.walletglance.data.records.RecordStack
 
 @Composable
 fun TransferComponent(
     recordStack: RecordStack,
+    secondAccount: RecordAccount?,
     includeYearToDate: Boolean,
     appTheme: AppTheme?,
-    getAccount: (Int) -> Account?,
     onTransferClick: (Int) -> Unit
 ) {
-    val transferFirstPairAccount = getAccount(recordStack.accountId)
-    val transferSecondPairAccount = recordStack.stack.firstOrNull()?.note?.let { note ->
-        getAccount(note.toInt())
-    }
-    val accountAndOnAccountColor = transferSecondPairAccount?.let {
-        getAccountAndOnAccountColor(transferSecondPairAccount.color, appTheme)
-    } ?: Pair(LighterDarkerColors(), Color.White)
-
     GlassSurfaceOnGlassSurface(onClick = { onTransferClick(recordStack.recordNum) }) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = convertDateLongToDayMonthYear(recordStack.date, includeYearToDate),
+                text = convertDateLongToDayMonthYear(
+                    date = recordStack.date,
+                    context = LocalContext.current,
+                    includeYear = includeYearToDate
+                ),
                 color = GlanceTheme.outline,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light
@@ -73,18 +68,21 @@ fun TransferComponent(
                 fontWeight = FontWeight.Light
             )
             Text(
-                text = transferSecondPairAccount?.name ?: "---",
-                color = accountAndOnAccountColor.second,
+                text = secondAccount?.name ?: "---",
+                color = secondAccount?.color?.colorOn?.getByTheme(appTheme) ?: Color.Transparent,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .clip(RoundedCornerShape(42))
-                    .background(accountAndOnAccountColor.first.lighter)
+                    .background(
+                        secondAccount?.color?.color?.getByTheme(appTheme)?.lighter
+                            ?: Color.Transparent
+                    )
                     .padding(7.dp, 3.dp)
             )
         }
         Text(
-            text = recordStack.getFormattedAmountWithSpaces(transferFirstPairAccount?.currency),
+            text = recordStack.getFormattedAmountWithSpaces(),
             color = GlanceTheme.onSurface,
             fontSize = 20.sp,
             fontWeight = FontWeight.Light

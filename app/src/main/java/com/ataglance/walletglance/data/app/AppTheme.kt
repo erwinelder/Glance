@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.theme
+package com.ataglance.walletglance.data.app
 
 enum class AppTheme {
     LightDefault, DarkDefault

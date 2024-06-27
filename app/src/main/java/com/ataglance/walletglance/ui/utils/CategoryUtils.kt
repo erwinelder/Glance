@@ -1,11 +1,18 @@
 package com.ataglance.walletglance.ui.utils
 
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.ParentCategoriesLists
 import com.ataglance.walletglance.data.categories.SubcategoriesLists
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
+import com.ataglance.walletglance.data.categories.color.CategoryColors
+import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
+import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.data.color.ColorWithName
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 
 
 fun CategoryType.asChar(): Char {
@@ -13,15 +20,17 @@ fun CategoryType.asChar(): Char {
 }
 
 
-fun CategoryType.inverse(): CategoryType {
-    return if (this == CategoryType.Expense) CategoryType.Income else CategoryType.Expense
+fun CategoryRank.asChar(): Char {
+    return if (this == CategoryRank.Parent) 'c' else 's'
 }
 
 
-fun List<Category>.getIdsThatAreNotInList(list: List<Category>): List<Int> {
-    return this
-        .filter { list.findById(it.id) == null }
-        .map { it.id }
+fun CategoryColors.toCategoryColorWithName(): CategoryColorWithName {
+    return CategoryColorWithName(this.name, this.color)
+}
+
+fun CategoryColors.toColorWithName(theme: AppTheme?): ColorWithName {
+    return ColorWithName(this.name.name, this.color.getByTheme(theme).darker)
 }
 
 
@@ -34,8 +43,21 @@ fun List<Category>.findById(id: Int): Category? {
     return this.find { it.id == id }
 }
 
+
+fun List<CategoryEntity>.findById(id: Int): CategoryEntity? {
+    return this.find { it.id == id }
+}
+
+
 fun List<Category>.findByRecordNum(orderNum: Int): Category? {
     return this.find { it.orderNum == orderNum }
+}
+
+
+fun List<CategoryEntity>.getIdsThatAreNotInList(list: List<CategoryEntity>): List<Int> {
+    return this
+        .filter { list.findById(it.id) == null }
+        .map { it.id }
 }
 
 
@@ -47,37 +69,12 @@ fun List<List<Category>>.getSubcategoryByIdAndParentOrderNum(
 }
 
 
-fun getCategoryAndIconRes(
-    categoriesLists: CategoriesLists,
-    categoryNameAndIconMap: Map<String, Int>,
-    categoryId: Int,
-    subcategoryId: Int?,
-    recordType: RecordType?
-): Pair<Category?, Int?>? {
-    val parentCategoryList = if (recordType == RecordType.Expense) {
-        categoriesLists.parentCategories.expense
-    } else {
-        categoriesLists.parentCategories.income
-    }
-
-    return if (subcategoryId != null) {
-        parentCategoryList.getOrderNumById(categoryId)?.let { parCategoryOrderNum ->
-            recordType
-                ?.let { categoriesLists.subcategories.getByType(recordType) }
-                ?.getSubcategoryByIdAndParentOrderNum(subcategoryId, parCategoryOrderNum)
-                ?.let { subcategory ->
-                    subcategory to categoryNameAndIconMap[subcategory.iconName]
-                }
-        }
-    } else {
-        parentCategoryList.findById(categoryId)?.let { category ->
-            category to categoryNameAndIconMap[category.iconName]
-        }
-    }
+fun List<Category>.toCategoryEntityList(): List<CategoryEntity> {
+    return this.map { it.toCategoryEntity() }
 }
 
 
-fun List<Category>.breakOnDifferentLists(): CategoriesLists {
+fun List<CategoryEntity>.breakOnDifferentLists(): CategoriesLists {
     val parentCategoriesLists = this.extractParentCategoriesLists()
     val subcategoriesLists = this.extractSubcategoriesLists(parentCategoriesLists)
 
@@ -85,19 +82,27 @@ fun List<Category>.breakOnDifferentLists(): CategoriesLists {
 }
 
 
-fun List<Category>.extractParentCategoriesLists(): ParentCategoriesLists {
+fun List<CategoryEntity>.extractParentCategoriesLists(): ParentCategoriesLists {
     val expenseCategoriesList = mutableListOf<Category>()
     val incomeCategoriesList = mutableListOf<Category>()
 
-    this.forEach { category ->
-        if (category.isParentCategory()) {
-            if (category.isExpense()) {
+    val possibleIcons = CategoryPossibleIcons()
+    val possibleColors = CategoryPossibleColors()
+
+    this.forEach { categoryEntity ->
+        if (categoryEntity.isParentCategory()) {
+            val category = categoryEntity.toCategory(
+                icon = possibleIcons.getIconByName(categoryEntity.iconName),
+                color = possibleColors.getByName(categoryEntity.colorName)
+            )
+            if (categoryEntity.isExpense()) {
                 expenseCategoriesList.add(category)
-            } else if (category.isIncome()) {
+            } else if (categoryEntity.isIncome()) {
                 incomeCategoriesList.add(category)
             }
         }
     }
+
     expenseCategoriesList.sortBy { it.orderNum }
     incomeCategoriesList.sortBy { it.orderNum }
 
@@ -105,21 +110,29 @@ fun List<Category>.extractParentCategoriesLists(): ParentCategoriesLists {
 }
 
 
-fun List<Category>.extractSubcategoriesLists(
+fun List<CategoryEntity>.extractSubcategoriesLists(
     parentCategoriesLists: ParentCategoriesLists
 ): SubcategoriesLists {
     val expenseSubcategoriesList = mutableListOf<Category>()
     val incomeSubcategoriesList = mutableListOf<Category>()
 
-    this.forEach { category ->
-        if (category.isSubcategory()) {
-            if (category.isExpense()) {
+    val possibleIcons = CategoryPossibleIcons()
+    val possibleColors = CategoryPossibleColors()
+
+    this.forEach { categoryEntity ->
+        if (categoryEntity.isSubcategory()) {
+            val category = categoryEntity.toCategory(
+                icon = possibleIcons.getIconByName(categoryEntity.iconName),
+                color = possibleColors.getByName(categoryEntity.colorName)
+            )
+            if (categoryEntity.isExpense()) {
                 expenseSubcategoriesList.add(category)
-            } else {
+            } else if (categoryEntity.isIncome()) {
                 incomeSubcategoriesList.add(category)
             }
         }
     }
+
     expenseSubcategoriesList.sortBy { it.orderNum }
     incomeSubcategoriesList.sortBy { it.orderNum }
 
@@ -167,17 +180,17 @@ private fun List<Category>.checkCategoriesOrderNumbers(): Boolean {
 }
 
 
-fun List<Category>.fixOrderNumbers(): List<Category> {
-    val fixedCategoryList = mutableListOf<Category>()
+fun List<CategoryEntity>.fixOrderNumbers(): List<CategoryEntity> {
+    val fixedCategoryList = mutableListOf<CategoryEntity>()
 
     val categoryListsExpenseAndIncome = this.partition { it.isExpense() }
-    val expenseCategoryListsParAndSub =
-        categoryListsExpenseAndIncome.first.partition { it.isParentCategory() }
-    val incomeCategoryListsParAndSub =
-        categoryListsExpenseAndIncome.second.partition { it.isParentCategory() }
+    val expenseCategoryListsParAndSub = categoryListsExpenseAndIncome.first
+        .partition { it.isParentCategory() }
+    val incomeCategoryListsParAndSub = categoryListsExpenseAndIncome.second
+        .partition { it.isParentCategory() }
 
-    fixedCategoryList + expenseCategoryListsParAndSub.first.getWithFixedOrderNumbers()
-    fixedCategoryList + incomeCategoryListsParAndSub.first.getWithFixedOrderNumbers()
+    fixedCategoryList.addAll(expenseCategoryListsParAndSub.first.getWithFixedOrderNumbers())
+    fixedCategoryList.addAll(incomeCategoryListsParAndSub.first.getWithFixedOrderNumbers())
 
     expenseCategoryListsParAndSub.second.sortedBy { it.parentCategoryId }
         .forEach { subcategory ->
@@ -210,7 +223,8 @@ fun List<Category>.fixOrderNumbers(): List<Category> {
     return fixedCategoryList
 }
 
-private fun List<Category>.getWithFixedOrderNumbers(): List<Category> {
+
+private fun List<CategoryEntity>.getWithFixedOrderNumbers(): List<CategoryEntity> {
     return this.sortedBy { it.orderNum }
         .mapIndexed { index, category ->
             category.copy(orderNum = index + 1)

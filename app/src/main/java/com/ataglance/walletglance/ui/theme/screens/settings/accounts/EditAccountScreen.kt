@@ -34,9 +34,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.ColorButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
@@ -45,8 +46,6 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWith
 import com.ataglance.walletglance.ui.theme.uielements.fields.FieldLabel
 import com.ataglance.walletglance.ui.theme.uielements.pickers.ColorPicker
 import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
-import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
-import com.ataglance.walletglance.data.accounts.AccountColors
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 
 @Composable
@@ -105,8 +104,7 @@ fun EditAccountScreen(
                             .padding(horizontal = 12.dp, vertical = 24.dp)
                     ) {
                         ColorButton(
-                            color = getAccountAndOnAccountColor(uiState.colorName, appTheme)
-                                .first.lighter
+                            color = uiState.color.getColorAndColorOnByTheme(appTheme).first.lighter
                         ) {
                             showColorPicker = true
                         }
@@ -151,14 +149,7 @@ fun EditAccountScreen(
         if (appTheme != null) {
             ColorPicker(
                 visible = showColorPicker,
-                colorList = listOf(
-                    AccountColors.Default(appTheme).color,
-                    AccountColors.Pink(appTheme).color,
-                    AccountColors.Blue(appTheme).color,
-                    AccountColors.Camel(appTheme).color,
-                    AccountColors.Red(appTheme).color,
-                    AccountColors.Green(appTheme).color
-                ),
+                colorList = AccountPossibleColors().asColorWithNameList(appTheme),
                 onColorClick = onColorChange,
                 onPickerClose = {
                     showColorPicker = false

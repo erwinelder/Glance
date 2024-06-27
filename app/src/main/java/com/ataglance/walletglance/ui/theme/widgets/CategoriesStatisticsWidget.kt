@@ -21,20 +21,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.categories.CategoryColors
-import com.ataglance.walletglance.data.categories.CategoryIcon
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsLists
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
+import com.ataglance.walletglance.data.categories.color.CategoryColors
+import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.ui.theme.uielements.categories.EmptyCategoriesStatisticsMessageContainer
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
 @Composable
 fun CategoriesStatisticsWidget(
-    uiState: CategoryStatisticsLists,
+    categoryStatisticsLists: CategoryStatisticsLists,
+    appTheme: AppTheme?,
     onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
 ) {
     GlassSurface {
@@ -53,9 +54,9 @@ fun CategoriesStatisticsWidget(
             )
             AnimatedContent(
                 targetState = Triple(
-                    uiState.expense.getOrNull(0),
-                    uiState.expense.getOrNull(1),
-                    uiState.expense.getOrNull(2)
+                    categoryStatisticsLists.expense.getOrNull(0),
+                    categoryStatisticsLists.expense.getOrNull(1),
+                    categoryStatisticsLists.expense.getOrNull(2)
                 ),
                 label = "top 3 expense categories"
             ) { (firstCategory, secondCategory, thirdCategory) ->
@@ -67,13 +68,13 @@ fun CategoriesStatisticsWidget(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CategoryStatisticsItemComponent(firstCategory, enableClick = true) {
+                        CategoryStatisticsItemComponent(firstCategory, appTheme, enableClick = true) {
                             firstCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
                         }
-                        CategoryStatisticsItemComponent(secondCategory, enableClick = true) {
+                        CategoryStatisticsItemComponent(secondCategory, appTheme, enableClick = true) {
                             secondCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
                         }
-                        CategoryStatisticsItemComponent(thirdCategory, enableClick = true) {
+                        CategoryStatisticsItemComponent(thirdCategory, appTheme, enableClick = true) {
                             thirdCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
                         }
                     }
@@ -102,14 +103,13 @@ private fun CategoriesStatisticsWidgetPreview() {
                     modifier = Modifier.fillMaxSize()
                 )
                 CategoriesStatisticsWidget(
-                    CategoryStatisticsLists(
+                    categoryStatisticsLists = CategoryStatisticsLists(
                         expense = listOf(
                             CategoryStatisticsElementUiState(
                                 categoryId = 1,
                                 categoryName = "Food & Drinks",
                                 categoryIconRes = CategoryIcon.FoodAndDrinks.res,
-                                categoryColor =
-                                    CategoryColors.Olive(AppTheme.LightDefault).color.lightAndDark,
+                                categoryColor = CategoryColors.Olive.color,
                                 totalAmount = "1000.00",
                                 percentage = 50f,
                                 currency = "USD"
@@ -118,8 +118,7 @@ private fun CategoriesStatisticsWidgetPreview() {
                                 categoryId = 2,
                                 categoryName = "Housing",
                                 categoryIconRes = CategoryIcon.Housing.res,
-                                categoryColor =
-                                    CategoryColors.Camel(AppTheme.LightDefault).color.lightAndDark,
+                                categoryColor = CategoryColors.Camel.color,
                                 totalAmount = "500.00",
                                 percentage = 25f,
                                 currency = "USD"
@@ -127,6 +126,7 @@ private fun CategoriesStatisticsWidgetPreview() {
                         ),
                         income = emptyList()
                     ),
+                    appTheme = AppTheme.LightDefault,
                     onNavigateToCategoriesStatisticsScreen = {}
                 )
             }

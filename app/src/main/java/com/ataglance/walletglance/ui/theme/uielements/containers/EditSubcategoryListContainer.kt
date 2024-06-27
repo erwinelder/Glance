@@ -24,8 +24,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Category
-import com.ataglance.walletglance.data.app.Colors
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.SubcategorySetupElement
@@ -34,8 +34,7 @@ import com.ataglance.walletglance.ui.theme.uielements.categories.SubcategorySetu
 @Composable
 fun ColumnScope.EditSubcategoryListContainer(
     subcategoryList: List<Category>,
-    categoryNameAndIconMap: Map<String, Int>,
-    categoryColorNameToColorMap: Map<String, Colors>,
+    appTheme: AppTheme?,
     onNavigateToEditCategoryScreen: (Int) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
     onAddNewSubcategory: () -> Unit
@@ -66,8 +65,7 @@ fun ColumnScope.EditSubcategoryListContainer(
                         items(items = targetSubcategoryList, key = { it.id }) { category ->
                             SubcategorySetupElement(
                                 category = category,
-                                iconRes = categoryNameAndIconMap[category.iconName],
-                                color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
+                                appTheme = appTheme,
                                 onEditButton = {
                                     onNavigateToEditCategoryScreen(category.orderNum)
                                 },
@@ -91,8 +89,7 @@ fun ColumnScope.EditSubcategoryListContainer(
                             Box(modifier = Modifier.padding(9.dp)) {
                                 SubcategorySetupElement(
                                     category = category,
-                                    iconRes = categoryNameAndIconMap[category.iconName],
-                                    color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
+                                    appTheme = appTheme,
                                     onEditButton = {
                                         onNavigateToEditCategoryScreen(category.orderNum)
                                     },

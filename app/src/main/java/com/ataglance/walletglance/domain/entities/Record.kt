@@ -2,8 +2,16 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.categories.CategoriesLists
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
+import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.ui.utils.asChar
+import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.getRecordTypeByChar
+import com.ataglance.walletglance.ui.utils.isExpenseOrIncome
+import com.ataglance.walletglance.ui.utils.toCategoryType
 
 @Entity(tableName = "Record")
 data class Record(
@@ -20,26 +28,42 @@ data class Record(
     val note: String?
 ) {
 
-    fun isOutTransfer(): Boolean { return type == '>' }
+    fun isOutTransfer(): Boolean { return type == RecordType.OutTransfer.asChar() }
 
-    fun toRecordStack(): RecordStack {
+    fun toRecordStack(accountList: List<Account>, categoriesLists: CategoriesLists): RecordStack? {
+        val recordType = getRecordTypeByChar(type) ?: return null
+        val recordAccount = accountList.findById(accountId)?.toRecordAccount() ?: return null
+        val recordStackUnit = toRecordStackUnit(categoriesLists) ?: return null
+
         return RecordStack(
             recordNum = recordNum,
             date = date,
-            type = type,
-            accountId = accountId,
+            type = recordType,
+            account = recordAccount,
             totalAmount = amount,
-            stack = listOf(toRecordStackUnit())
+            stack = listOf(recordStackUnit)
         )
     }
 
-    fun toRecordStackUnit(): RecordStackUnit {
+    fun toRecordStackUnit(categoriesLists: CategoriesLists): RecordStackUnit? {
+        val recordType = getRecordTypeByChar(type) ?: return null
+
+        val parAndSubcategory = if (recordType.isExpenseOrIncome()) {
+            categoriesLists.getParAndSubCategoryByIds(
+                parentCategoryId = categoryId,
+                subcategoryId = subcategoryId,
+                type = recordType.toCategoryType()
+            ) ?: return null
+        } else {
+            null to null
+        }
+
         return RecordStackUnit(
             id = id,
             amount = amount,
             quantity = quantity,
-            categoryId = categoryId,
-            subcategoryId = subcategoryId,
+            category = parAndSubcategory.first,
+            subcategory = parAndSubcategory.second,
             note = note
         )
     }

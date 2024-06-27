@@ -1,5 +1,5 @@
 package com.ataglance.walletglance.data.records
 
 enum class RecordType {
-    Expense, Income
+    Expense, Income, OutTransfer, InTransfer
 }

@@ -1,10 +1,11 @@
 package com.ataglance.walletglance.ui.utils
 
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Account
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
@@ -14,7 +15,73 @@ import java.util.Locale
 
 
 fun RecordType.inverse(): RecordType {
-    return if (this == RecordType.Expense) RecordType.Income else RecordType.Expense
+    return when (this) {
+        RecordType.Expense -> RecordType.Income
+        RecordType.Income -> RecordType.Expense
+        RecordType.OutTransfer -> RecordType.InTransfer
+        RecordType.InTransfer -> RecordType.OutTransfer
+    }
+}
+
+
+fun RecordType.isExpenseOrIncome(): Boolean {
+    return this == RecordType.Expense || this == RecordType.Income
+}
+
+
+fun RecordType.asChar(): Char {
+    return when (this) {
+        RecordType.Expense -> '-'
+        RecordType.Income -> '+'
+        RecordType.OutTransfer -> '>'
+        RecordType.InTransfer -> '<'
+    }
+}
+
+
+fun RecordType.toCategoryType(): CategoryType {
+    return when (this) {
+        RecordType.Expense, RecordType.OutTransfer -> CategoryType.Expense
+        RecordType.Income, RecordType.InTransfer -> CategoryType.Income
+    }
+}
+
+
+fun getRecordTypeByChar(char: Char): RecordType? {
+    return when (char) {
+        '-' -> RecordType.Expense
+        '+' -> RecordType.Income
+        '>' -> RecordType.OutTransfer
+        '<' -> RecordType.InTransfer
+        else -> null
+    }
+}
+
+
+fun List<Record>.toRecordStackList(
+    accountList: List<Account>,
+    categoriesLists: CategoriesLists
+): List<RecordStack> {
+    val recordStackList = mutableListOf<RecordStack>()
+
+    this.forEach { record ->
+        if (recordStackList.lastOrNull()?.recordNum != record.recordNum) {
+            record.toRecordStack(accountList, categoriesLists)?.let { recordStackList.add(it) }
+        } else {
+            recordStackList.lastOrNull()?.let { lastRecordStack ->
+                record.toRecordStackUnit(categoriesLists)?.let { recordStackUnit ->
+                    val stack = lastRecordStack.stack.toMutableList()
+                    stack.add(recordStackUnit)
+                    recordStackList[recordStackList.lastIndex] = lastRecordStack.copy(
+                        totalAmount = lastRecordStack.totalAmount + recordStackUnit.amount,
+                        stack = stack
+                    )
+                }
+            }
+        }
+    }
+
+    return recordStackList
 }
 
 
@@ -23,9 +90,9 @@ fun List<RecordStack>.findByRecordNum(recordNum: Int): RecordStack? {
 }
 
 
-fun List<RecordStack>.needToIncludeYearToDate(): Boolean {
+fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
     return this.isNotEmpty() &&
-            this.first().date / 100000000 == this.last().date / 100000000
+            this.first().date / 100000000 != this.last().date / 100000000
 }
 
 
@@ -41,66 +108,25 @@ private fun getStartAndFinalRateByAmounts(
 }
 
 
-fun List<RecordStack>.getLastUsedCategoryByAccountId(accountId: Int): Pair<Int, Int?>? {
-    return this
-        .find { it.accountId == accountId }
-        ?.stack?.firstOrNull()
-        ?.let { it.categoryId to it.subcategoryId }
-}
-
-
-fun List<Record>.toRecordStackList(): List<RecordStack> {
-    val recordStackList = mutableListOf<RecordStack>()
-
-    this.forEach { record ->
-        if (recordStackList.lastOrNull()?.recordNum != record.recordNum) {
-            recordStackList.add(record.toRecordStack())
-        } else {
-            val lastRecordStack = recordStackList.last()
-            val stack = lastRecordStack.stack.toMutableList()
-            val recordStackUnit = record.toRecordStackUnit()
-
-            stack.add(recordStackUnit)
-            recordStackList[recordStackList.lastIndex] = lastRecordStack.copy(
-                totalAmount = lastRecordStack.totalAmount + recordStackUnit.amount,
-                stack = stack
-            )
-        }
-    }
-
-    return recordStackList
-}
-
-
 fun List<RecordStack>.getMakeRecordStateAndUnitList(
     makeRecordStatus: MakeRecordStatus,
     recordNum: Int,
-    accountList: List<Account>,
-    activeAccount: Account?,
-    categoriesLists: CategoriesLists
-): Pair<MakeRecordUiState, List<MakeRecordUnitUiState>?> {
+    accountList: List<Account>
+): Pair<MakeRecordUiState, List<MakeRecordUnitUiState>>? {
 
-    if (makeRecordStatus == MakeRecordStatus.Edit && recordNum != 0) {
-        this.findByRecordNum(recordNum)?.let { recordStack ->
+    if (makeRecordStatus == MakeRecordStatus.Edit) {
+        this.findByRecordNum(recordNum)?.takeIf { it.isExpenseOrIncome() }?.let { recordStack ->
             return MakeRecordUiState(
                 recordStatus = MakeRecordStatus.Edit,
                 recordNum = recordStack.recordNum,
-                account = accountList.findById(recordStack.accountId),
-                type = recordStack.getRecordType() ?: RecordType.Expense,
+                account = accountList.findById(recordStack.account.id),
+                type = recordStack.type,
                 dateTimeState = getNewDateByRecordLongDate(recordStack.date)
-            ) to recordStack.toMakeRecordUnitList(
-                categoriesLists
-                    .getParCategoryListAndSubcategoryListsByType(recordStack.getRecordType())
-            )
+            ) to recordStack.toMakeRecordUnitList()
         }
     }
 
-    return MakeRecordUiState(
-        recordStatus = MakeRecordStatus.Create,
-        recordNum = null,
-        account = activeAccount
-    ) to null
-
+    return null
 }
 
 
@@ -109,7 +135,7 @@ fun List<RecordStack>.getMakeTransferState(
     recordNum: Int,
     accountsUiState: AccountsUiState
 ): MakeTransferUiState {
-    if (makeRecordStatus == MakeRecordStatus.Edit && recordNum != 0) {
+    if (makeRecordStatus == MakeRecordStatus.Edit) {
 
         val firstRecordStack = this.findByRecordNum(recordNum)
         val secondRecordStack = this.find {
@@ -123,8 +149,8 @@ fun List<RecordStack>.getMakeTransferState(
         }
 
         if (recordStackFrom != null && recordStackTo != null) {
-            return convertRecordStacksFromAndToToMakeTransferUiState(
-                recordStackFrom, recordStackTo, recordNum, accountsUiState.accountList
+            return (recordStackFrom to recordStackTo).toMakeTransferUiState(
+                recordNum, accountsUiState.accountList
             )
         }
 
@@ -140,29 +166,36 @@ fun List<RecordStack>.getMakeTransferState(
 }
 
 
-private fun convertRecordStacksFromAndToToMakeTransferUiState(
-    recordStackFrom: RecordStack,
-    recordStackTo: RecordStack,
+fun List<RecordStack>.getOutAndInTransfersByOneRecordNum(
+    recordNum: Int
+): Pair<RecordStack, RecordStack>? {
+    val first = this.findByRecordNum(recordNum) ?: return null
+    val second = this.findByRecordNum(
+        recordNum + if (first.isOutTransfer()) 1 else -1
+    ) ?: return null
+    return if (first.isOutTransfer()) first to second else second to first
+}
+
+
+private fun Pair<RecordStack, RecordStack>.toMakeTransferUiState(
     recordNum: Int,
     accountList: List<Account>
 ): MakeTransferUiState {
     val startAndFinalRate = getStartAndFinalRateByAmounts(
-        recordStackFrom.totalAmount, recordStackTo.totalAmount
+        this.first.totalAmount, this.second.totalAmount
     )
     return MakeTransferUiState(
         recordNum = recordNum,
         recordStatus = MakeRecordStatus.Edit,
-        fromAccount = accountList.findById(recordStackFrom.accountId),
-        toAccount = accountList.findById(recordStackTo.accountId),
-        startAmount = "%.2f".format(Locale.US, recordStackFrom.totalAmount),
-        finalAmount = "%.2f".format(Locale.US, recordStackTo.totalAmount),
+        fromAccount = accountList.findById(this.first.account.id),
+        toAccount = accountList.findById(this.second.account.id),
+        startAmount = "%.2f".format(Locale.US, this.first.totalAmount),
+        finalAmount = "%.2f".format(Locale.US, this.second.totalAmount),
         startRate = "%.2f".format(Locale.US, startAndFinalRate.first),
         finalRate = "%.2f".format(Locale.US, startAndFinalRate.second),
-        dateTimeState = getNewDateByRecordLongDate(
-            recordStackFrom.date
-        ),
-        idFrom = recordStackFrom.stack.firstOrNull()?.id ?: 0,
-        idTo = recordStackTo.stack.firstOrNull()?.id ?: 0
+        dateTimeState = getNewDateByRecordLongDate(this.first.date),
+        idFrom = this.first.stack.firstOrNull()?.id ?: 0,
+        idTo = this.second.stack.firstOrNull()?.id ?: 0
     )
 }
 
@@ -183,6 +216,7 @@ fun List<Record>.getTransferSecondUnitsRecordNumbers(): List<Int> {
         if (record.isOutTransfer()) record.recordNum + 1 else record.recordNum - 1
     }
 }
+
 
 fun List<MakeRecordUnitUiState>.getTotalAmount(): Double {
     return this.fold(0.0) { total, recordUnit ->

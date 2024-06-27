@@ -1,14 +1,14 @@
 package com.ataglance.walletglance.domain.repositories
 
 import com.ataglance.walletglance.domain.dao.AccountDao
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.domain.entities.AccountEntity
 import kotlinx.coroutines.flow.Flow
 
 class AccountRepository(
     private val dao: AccountDao
 ) {
 
-    suspend fun upsertAccounts(accountList: List<Account>) {
+    suspend fun upsertAccounts(accountList: List<AccountEntity>) {
         dao.insertOrReplaceAccounts(accountList)
     }
 
@@ -16,12 +16,12 @@ class AccountRepository(
         dao.deleteAllAccounts()
     }
 
-    suspend fun deleteAndUpsertAccounts(idListToDelete: List<Int>, accountList: List<Account>) {
+    suspend fun deleteAndUpsertAccounts(idListToDelete: List<Int>, accountList: List<AccountEntity>) {
         dao.deleteAccountsByIds(idListToDelete)
         dao.insertOrReplaceAccounts(accountList)
     }
 
-    fun getAllAccounts(): Flow<List<Account>> {
+    fun getAllAccounts(): Flow<List<AccountEntity>> {
         return dao.getAllAccounts()
     }
 

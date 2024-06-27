@@ -2,7 +2,7 @@ package com.ataglance.walletglance.ui.viewmodels.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.ui.utils.findById
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

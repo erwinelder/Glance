@@ -2,8 +2,11 @@ package com.ataglance.walletglance.ui.viewmodels.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.data.accounts.AccountColorName
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
+import com.ataglance.walletglance.data.accounts.color.AccountColors
+import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
+import com.ataglance.walletglance.ui.utils.toAccountColorWithName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,7 +44,7 @@ class EditAccountViewModel(
                 name = account.name,
                 currency = account.currency,
                 balance = "%.2f".format(Locale.US, account.balance),
-                colorName = account.color,
+                color = account.color,
                 hide = account.hide,
                 hideBalance = account.hideBalance,
                 withoutBalance = account.withoutBalance,
@@ -55,7 +58,7 @@ class EditAccountViewModel(
 
     fun changeColor(colorName: String) {
         _uiState.update {
-            it.copy(colorName = colorName)
+            it.copy(color = AccountPossibleColors().getByName(colorName))
         }
     }
 
@@ -106,20 +109,6 @@ class EditAccountViewModel(
         }
     }
 
-    fun getAccountObject(): Account {
-        return Account(
-            id = uiState.value.id,
-            orderNum = uiState.value.orderNum,
-            name = uiState.value.name,
-            currency = uiState.value.currency,
-            balance = uiState.value.balance.toDouble(),
-            color = uiState.value.colorName,
-            hide = uiState.value.hide,
-            hideBalance = uiState.value.hideBalance,
-            withoutBalance = uiState.value.withoutBalance,
-            isActive = uiState.value.isActive
-        )
-    }
 }
 
 data class EditAccountViewModelFactory(
@@ -137,10 +126,27 @@ data class EditAccountUiState(
     val name: String = "",
     val currency: String = "",
     val balance: String = "0.00",
-    val colorName: String = AccountColorName.Default.name,
+    val color: AccountColorWithName = AccountColors.Default.toAccountColorWithName(),
     val hide: Boolean = false,
     val hideBalance: Boolean = false,
     val withoutBalance: Boolean = false,
     val isActive: Boolean = false,
     val allowSaving: Boolean = false
-)
+) {
+
+    fun toAccount(): Account {
+        return Account(
+            id = id,
+            orderNum = orderNum,
+            name = name,
+            currency = currency,
+            balance = balance.toDouble(),
+            color = color,
+            hide = hide,
+            hideBalance = hideBalance,
+            withoutBalance = withoutBalance,
+            isActive = isActive
+        )
+    }
+
+}

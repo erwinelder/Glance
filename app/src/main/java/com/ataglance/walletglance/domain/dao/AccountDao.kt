@@ -4,17 +4,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.domain.entities.AccountEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplaceAccount(account: Account)
+    suspend fun insertOrReplaceAccount(account: AccountEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplaceAccounts(accountsList: List<Account>)
+    suspend fun insertOrReplaceAccounts(accountsList: List<AccountEntity>)
 
     @Query("DELETE FROM Account WHERE id == :id")
     suspend fun deleteAccountById(id: Int)
@@ -26,6 +26,6 @@ interface AccountDao {
     suspend fun deleteAllAccounts()
 
     @Query("SELECT * FROM Account ORDER BY orderNum ASC")
-    fun getAllAccounts(): Flow<List<Account>>
+    fun getAllAccounts(): Flow<List<AccountEntity>>
 
 }

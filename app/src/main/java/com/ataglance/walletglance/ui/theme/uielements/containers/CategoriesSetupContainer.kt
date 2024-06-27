@@ -24,7 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.Colors
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
@@ -36,8 +36,7 @@ import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesUiStat
 @Composable
 fun ColumnScope.CategoriesSetupContainer(
     uiState: SetupCategoriesUiState,
-    categoryNameAndIconMap: Map<String, Int>,
-    categoryColorNameToColorMap: Map<String, Colors>,
+    appTheme: AppTheme?,
     onShowCategoriesByType: (CategoryType) -> Unit,
     onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
     onNavigateToEditCategoryScreen: (Int) -> Unit,
@@ -49,7 +48,7 @@ fun ColumnScope.CategoriesSetupContainer(
         modifier = Modifier.weight(1f)
     ) {
         CategoryTypeFilterBar(
-            currentCategoryType = uiState.categoryTypeToShow,
+            currentCategoryType = uiState.categoryType,
             onClick = onShowCategoriesByType
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.button_bar_to_widget_gap)))
@@ -57,7 +56,7 @@ fun ColumnScope.CategoriesSetupContainer(
             modifier = Modifier.weight(1f),
             filledWidth = if (!WindowTypeIsExpanded) null else .86f
         ) {
-            val categoryList = if (uiState.categoryTypeToShow == CategoryType.Expense) {
+            val categoryList = if (uiState.categoryType == CategoryType.Expense) {
                 uiState.expenseParentCategoryList
             } else {
                 uiState.incomeParentCategoryList
@@ -81,8 +80,7 @@ fun ColumnScope.CategoriesSetupContainer(
                         items(items = targetCategoryList, key = { it.id }) { category ->
                             ParentCategorySetupElement(
                                 category = category,
-                                iconRes = categoryNameAndIconMap[category.iconName],
-                                color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
+                                appTheme = appTheme,
                                 onNavigateToEditSubcategoryListScreen = {
                                     onNavigateToEditSubcategoryListScreen(category.orderNum)
                                 },
@@ -109,8 +107,7 @@ fun ColumnScope.CategoriesSetupContainer(
                             Box(modifier = Modifier.padding(9.dp)) {
                                 ParentCategorySetupElement(
                                     category = category,
-                                    iconRes = categoryNameAndIconMap[category.iconName],
-                                    color = categoryColorNameToColorMap[category.colorName]?.lightAndDark,
+                                    appTheme = appTheme,
                                     onNavigateToEditSubcategoryListScreen = {
                                         onNavigateToEditSubcategoryListScreen(category.orderNum)
                                     },

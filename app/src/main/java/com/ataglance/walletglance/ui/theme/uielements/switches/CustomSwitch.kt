@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.modifiers.innerShadow
@@ -59,7 +60,7 @@ fun CustomSwitch(
     ) {
         Box(
             modifier = Modifier
-                .offset(x = offset)
+                .offset { IntOffset(x = offset.roundToPx(), y = 0) }
                 .size(height - 8.dp)
                 .shadow(
                     elevation = 3.dp,

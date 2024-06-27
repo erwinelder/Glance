@@ -1,26 +1,64 @@
-package com.ataglance.walletglance.domain.entities
+package com.ataglance.walletglance.data.accounts
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.ataglance.walletglance.data.accounts.AccountColorName
-import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
+import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
+import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.ui.utils.toAccountColorWithName
+import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 import java.util.Locale
 
-@Entity(tableName = "Account")
 data class Account(
-    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val orderNum: Int = 0,
     val name: String = "USD",
     val currency: String = "USD",
     val balance: Double = 0.0,
-    val color: String = AccountColorName.Default.name,
+    val color: AccountColorWithName = AccountColors.Default.toAccountColorWithName(),
     val hide: Boolean = false,
     val hideBalance: Boolean = false,
     val withoutBalance: Boolean = false,
     val isActive: Boolean = true
 ) {
+
+    fun toAccountEntity(): AccountEntity {
+        return AccountEntity(
+            id = id,
+            orderNum = orderNum,
+            name = name,
+            currency = currency,
+            balance = balance,
+            color = color.getNameValue(),
+            hide = hide,
+            hideBalance = hideBalance,
+            withoutBalance = withoutBalance,
+            isActive = isActive
+        )
+    }
+
+    fun toRecordAccount(): RecordAccount {
+        return RecordAccount(
+            id = id,
+            name = name,
+            currency = currency,
+            color = color
+        )
+    }
+
+    fun toEditAccountUiState(): EditAccountUiState {
+        return EditAccountUiState(
+            id = id,
+            orderNum = orderNum,
+            name = name,
+            currency = currency,
+            balance = balance.toString(),
+            color = color,
+            hide = hide,
+            hideBalance = hideBalance,
+            withoutBalance = withoutBalance,
+            isActive = isActive
+        )
+    }
 
     fun getFormattedBalanceWithSpaces(): String {
         if (hideBalance || withoutBalance) {
@@ -110,21 +148,6 @@ data class Account(
                         (if (recordType == RecordType.Expense) prevAmount else -prevAmount) +
                         if (recordType == RecordType.Expense) -newAmount else newAmount
             ).toDouble()
-        )
-    }
-
-    fun toEditAccountUiState(): EditAccountUiState {
-        return EditAccountUiState(
-            id = id,
-            orderNum = orderNum,
-            name = name,
-            currency = currency,
-            balance = balance.toString(),
-            colorName = color,
-            hide = hide,
-            hideBalance = hideBalance,
-            withoutBalance = withoutBalance,
-            isActive = isActive
         )
     }
 

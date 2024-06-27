@@ -1,41 +1,33 @@
 package com.ataglance.walletglance.data.records
 
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.accounts.RecordAccount
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.ui.utils.findById
-import com.ataglance.walletglance.ui.utils.getOrderNumById
-import com.ataglance.walletglance.ui.utils.getSubcategoryByIdAndParentOrderNum
+import com.ataglance.walletglance.ui.utils.asChar
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import java.util.Locale
 
 data class RecordStack(
     val recordNum: Int,
     val date: Long,
-    val type: Char,
-    val accountId: Int,
+    val type: RecordType,
+    val account: RecordAccount,
     val totalAmount: Double,
     val stack: List<RecordStackUnit>
 ) {
 
-    fun isExpense(): Boolean { return type == '-' }
-    fun isIncome(): Boolean { return type == '+' }
-    fun isOutTransfer(): Boolean { return type == '>' }
-    fun isInTransfer(): Boolean { return type == '<' }
-    fun isExpenseOrOutTransfer(): Boolean { return isExpense() || isOutTransfer() }
-    fun isIncomeOrInTransfer(): Boolean { return isIncome() || isInTransfer() }
-    fun isTransfer(): Boolean { return isOutTransfer() || isInTransfer() }
+    private fun isExpense() = type == RecordType.Expense
+    private fun isIncome() = type == RecordType.Income
+    fun isOutTransfer() = type == RecordType.OutTransfer
+    fun isInTransfer() = type == RecordType.InTransfer
+    fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
+    fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
+    fun isExpenseOrIncome() = isExpense() || isIncome()
+    fun isTransfer() = isOutTransfer() || isInTransfer()
 
     fun isOfType(passedType: RecordType): Boolean {
         return (isExpense() && passedType == RecordType.Expense) ||
                 (isIncome() && passedType == RecordType.Income)
-    }
-
-    fun getRecordType(): RecordType? {
-        return when (type) {
-            '-', '>' -> RecordType.Expense
-            '+', '<' -> RecordType.Income
-            else -> null
-        }
     }
 
     fun toRecordList(): List<Record> {
@@ -44,31 +36,24 @@ data class RecordStack(
                 id = unit.id,
                 recordNum = recordNum,
                 date = date,
-                type = type,
-                accountId = accountId,
+                type = type.asChar(),
+                accountId = account.id,
                 amount = unit.amount,
                 quantity = unit.quantity,
-                categoryId = unit.categoryId,
-                subcategoryId = unit.subcategoryId,
+                categoryId = unit.category?.id ?: 0,
+                subcategoryId = unit.subcategory?.id,
                 note = unit.note
             )
         }
     }
 
-    fun toMakeRecordUnitList(
-        categoryListAndSubcategoryLists: Pair<List<Category>, List<List<Category>>>
-    ): List<MakeRecordUnitUiState> {
+    fun toMakeRecordUnitList(): List<MakeRecordUnitUiState> {
         return stack.mapIndexed { index, unit ->
             MakeRecordUnitUiState(
                 lazyListKey = index,
                 index = index,
-                category = categoryListAndSubcategoryLists.first.findById(unit.categoryId),
-                subcategory = unit.subcategoryId?.let { subcategoryId ->
-                    categoryListAndSubcategoryLists.first.getOrderNumById(unit.categoryId)?.let {
-                        categoryListAndSubcategoryLists.second
-                            .getSubcategoryByIdAndParentOrderNum(subcategoryId, it)
-                    }
-                },
+                category = unit.category,
+                subcategory = unit.subcategory,
                 note = unit.note ?: "",
                 amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
                 quantity = unit.quantity?.toString() ?: "",
@@ -77,7 +62,7 @@ data class RecordStack(
         }
     }
 
-    fun getFormattedAmountWithSpaces(currency: String?): String {
+    fun getFormattedAmountWithSpaces(): String {
         var numberString = "%.2f".format(Locale.US, totalAmount)
         var formattedNumber = numberString.let {
             it.substring(startIndex = it.length - 3)
@@ -97,7 +82,7 @@ data class RecordStack(
 
         val sign = if (isExpenseOrOutTransfer()) '-' else '+'
 
-        return "%c %s %s".format(sign, formattedNumber, currency)
+        return "%c %s %s".format(sign, formattedNumber, account.currency)
     }
 
 }
@@ -106,7 +91,7 @@ data class RecordStackUnit(
     val id: Int = 0,
     val amount: Double,
     val quantity: Int?,
-    val categoryId: Int,
-    val subcategoryId: Int?,
+    val category: Category?,
+    val subcategory: Category?,
     val note: String?
 )

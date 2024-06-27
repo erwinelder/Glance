@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsLists
+import com.ataglance.walletglance.data.categories.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

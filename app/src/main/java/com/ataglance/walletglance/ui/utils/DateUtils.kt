@@ -201,6 +201,25 @@ private fun DateRangeEnum.getMonthValue(): Int? {
 }
 
 
+private fun getMonthStringByMonthValue(value: Int, context: Context): String? {
+    return when (value) {
+        1 -> context.getString(R.string.january_short)
+        2 -> context.getString(R.string.february_short)
+        3 -> context.getString(R.string.march_short)
+        4 -> context.getString(R.string.april_short)
+        5 -> context.getString(R.string.may_short)
+        6 -> context.getString(R.string.june_short)
+        7 -> context.getString(R.string.july_short)
+        8 -> context.getString(R.string.august_short)
+        9 -> context.getString(R.string.september_short)
+        10 -> context.getString(R.string.october_short)
+        11 -> context.getString(R.string.november_short)
+        12 -> context.getString(R.string.december_short)
+        else -> null
+    }
+}
+
+
 fun DateRangeEnum.getCalendarStartLong(currentDateRangeState: DateRangeState? = null): Long {
     return when(this) {
         DateRangeEnum.ThisMonth -> getThisMonthLocalDateRange().startPast.toCalendarLong()
@@ -284,12 +303,17 @@ fun formatDateRangeForCustomDateRangeField(
 }
 
 
-fun convertDateLongToDayMonthYear(date: Long, includeYear: Boolean = true): String {
+fun convertDateLongToDayMonthYear(
+    date: Long,
+    context: Context,
+    includeYear: Boolean = true
+): String {
     val year = (date / 100000000).toInt()
-    val month = date / 1000000 - year * 100
+    val month = (date / 1000000 - year * 100).toInt()
+    val monthString = getMonthStringByMonthValue(month, context)
     val day = date / 10000 - year * 10000 - month * 100
 
-    return if (includeYear) "$day.$month.$year" else "$day.$month"
+    return if (includeYear) "$day $monthString $year" else "$day $monthString"
 }
 
 
@@ -299,7 +323,7 @@ fun getFormattedDateFromAndToByFormatDayMonthYear(
     context: Context
 ): String {
     return context.getString(R.string.from_capital) + " " +
-            convertDateLongToDayMonthYear(fromPast) + "\n" +
+            convertDateLongToDayMonthYear(fromPast, context) + "\n" +
             context.getString(R.string.to) + " " +
-            convertDateLongToDayMonthYear(toFuture)
+            convertDateLongToDayMonthYear(toFuture, context)
 }

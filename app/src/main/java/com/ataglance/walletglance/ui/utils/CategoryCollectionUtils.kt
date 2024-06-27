@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.ui.utils
 
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
-import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.domain.entities.CategoryCollection
 import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
 

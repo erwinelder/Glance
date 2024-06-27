@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.data.categories
+package com.ataglance.walletglance.data.categories.icons
 
 import androidx.annotation.DrawableRes
 import com.ataglance.walletglance.R

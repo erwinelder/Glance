@@ -5,9 +5,15 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.accounts.color.AccountColorName
+import com.ataglance.walletglance.data.app.AppLanguage
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.color.CategoryColorName
+import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -15,25 +21,18 @@ import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
+import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.ui.utils.findById
-import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
 import com.ataglance.walletglance.ui.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.ui.utils.toAccountEntityList
 import com.ataglance.walletglance.ui.utils.toLongWithTime
-import com.ataglance.walletglance.data.app.AppLanguage
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.records.MakeRecordStatus
-import com.ataglance.walletglance.data.accounts.AccountColorName
-import com.ataglance.walletglance.data.categories.CategoryColorName
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
-import com.ataglance.walletglance.data.records.RecordType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -113,7 +112,7 @@ class WalletGlanceInstrumentedTest {
     private fun setupAccountRepository() {
         every { mockAccountRepository.getAllAccounts() } returns flowOf (
             listOf(
-                Account(
+                AccountEntity(
                     id = 1,
                     orderNum = 1,
                     name = "Account 1",
@@ -125,7 +124,7 @@ class WalletGlanceInstrumentedTest {
                     withoutBalance = false,
                     isActive = true
                 ),
-                Account(
+                AccountEntity(
                     id = 2,
                     orderNum = 2,
                     name = "Account 2",
@@ -144,7 +143,7 @@ class WalletGlanceInstrumentedTest {
     private fun setupCategoryRepository() {
         every { mockCategoryRepository.getCategories() } returns flowOf(
             listOf(
-                Category(
+                CategoryEntity(
                     id = 1,
                     type = '-',
                     rank = 'c',
@@ -154,7 +153,7 @@ class WalletGlanceInstrumentedTest {
                     iconName = "housing",
                     colorName = CategoryColorName.Red.name
                 ),
-                Category(
+                CategoryEntity(
                     id = 2,
                     type = '+',
                     rank = 'c',
@@ -215,11 +214,11 @@ class WalletGlanceInstrumentedTest {
         )
 
         val accountsUiState = appViewModel.accountsUiState.value
-        val categoriesUiState = appViewModel.categoriesUiState.value
+        val categoriesLists = appViewModel.categoriesUiState.value
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
-            recordNum = null,
+            recordNum = appViewModel.appUiSettings.value.nextRecordNum(),
             account = accountsUiState.activeAccount,
             type = RecordType.Expense,
             dateTimeState = dateTimeState
@@ -228,7 +227,7 @@ class WalletGlanceInstrumentedTest {
             MakeRecordUnitUiState(
                 index = 0,
                 lazyListKey = 0,
-                category = categoriesUiState.parentCategories.expense[0],
+                category = categoriesLists.parentCategories.expense[0],
                 subcategory = null,
                 amount = "516"
             )
@@ -249,7 +248,7 @@ class WalletGlanceInstrumentedTest {
                 accountId = accountsUiState.activeAccount!!.id,
                 amount = 516.0,
                 quantity = null,
-                categoryId = categoriesUiState.parentCategories.expense[0].id,
+                categoryId = categoriesLists.parentCategories.expense[0].id,
                 subcategoryId = null,
                 note = null
             )
@@ -265,7 +264,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList
+                expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
 
@@ -284,17 +283,9 @@ class WalletGlanceInstrumentedTest {
                     dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
                     activeAccount = accountsUiState.activeAccount
                 ),
+                accountList = appViewModel.accountsUiState.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
-                getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    getCategoryAndIconRes(
-                        categoriesLists = categoriesUiState,
-                        categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
-                        categoryId = categoryId,
-                        subcategoryId = subcategoryId,
-                        recordType = type
-                    )
-                },
-                getAccount = { accountsUiState.accountList.findById(it) },
+                isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
             )
@@ -316,11 +307,11 @@ class WalletGlanceInstrumentedTest {
         )
 
         val accountsUiState = appViewModel.accountsUiState.value
-        val categoriesUiState = appViewModel.categoriesUiState.value
+        val categoriesLists = appViewModel.categoriesUiState.value
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
-            recordNum = null,
+            recordNum = appViewModel.appUiSettings.value.nextRecordNum(),
             account = accountsUiState.activeAccount,
             type = RecordType.Expense,
             dateTimeState = dateTimeState
@@ -329,7 +320,7 @@ class WalletGlanceInstrumentedTest {
             MakeRecordUnitUiState(
                 index = 0,
                 lazyListKey = 0,
-                category = categoriesUiState.parentCategories.expense[0],
+                category = categoriesLists.parentCategories.expense[0],
                 subcategory = null,
                 amount = "516"
             )
@@ -350,7 +341,7 @@ class WalletGlanceInstrumentedTest {
                 accountId = accountsUiState.activeAccount!!.id,
                 amount = 516.0,
                 quantity = null,
-                categoryId = categoriesUiState.parentCategories.expense[0].id,
+                categoryId = categoriesLists.parentCategories.expense[0].id,
                 subcategoryId = null,
                 note = null
             )
@@ -366,7 +357,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList
+                expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
 
@@ -385,17 +376,9 @@ class WalletGlanceInstrumentedTest {
                     dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
                     activeAccount = accountsUiState.activeAccount
                 ),
+                accountList = appViewModel.accountsUiState.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
-                getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    getCategoryAndIconRes(
-                        categoriesLists = categoriesUiState,
-                        categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
-                        categoryId = categoryId,
-                        subcategoryId = subcategoryId,
-                        recordType = type
-                    )
-                },
-                getAccount = { accountsUiState.accountList.findById(it) },
+                isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
             )
@@ -413,7 +396,7 @@ class WalletGlanceInstrumentedTest {
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
-            recordNum = null,
+            recordNum = appViewModel.appUiSettings.value.nextRecordNum(),
             account = null,
             type = RecordType.Expense,
             dateTimeState = dateTimeState
@@ -509,7 +492,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList
+                expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
 
@@ -528,17 +511,9 @@ class WalletGlanceInstrumentedTest {
                     dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
                     activeAccount = accountsUiState.activeAccount
                 ),
+                accountList = appViewModel.accountsUiState.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
-                getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    getCategoryAndIconRes(
-                        categoriesLists = appViewModel.categoriesUiState.value,
-                        categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
-                        categoryId = categoryId,
-                        subcategoryId = subcategoryId,
-                        recordType = type
-                    )
-                },
-                getAccount = { accountsUiState.accountList.findById(it) },
+                isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
             )
@@ -617,7 +592,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList
+                expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
 
@@ -636,17 +611,9 @@ class WalletGlanceInstrumentedTest {
                     dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
                     activeAccount = accountsUiState.activeAccount
                 ),
+                accountList = appViewModel.accountsUiState.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
-                getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                    getCategoryAndIconRes(
-                        categoriesLists = appViewModel.categoriesUiState.value,
-                        categoryNameAndIconMap = appViewModel.categoryIconNameToIconResMap,
-                        categoryId = categoryId,
-                        subcategoryId = subcategoryId,
-                        recordType = type
-                    )
-                },
-                getAccount = { accountsUiState.accountList.findById(it) },
+                isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
             )

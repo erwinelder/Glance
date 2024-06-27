@@ -7,11 +7,12 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppLanguage
-import com.ataglance.walletglance.data.app.Colors
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categories.CategoryColors
-import com.ataglance.walletglance.data.categories.CategoryIcon
+import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
@@ -22,8 +23,8 @@ import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -34,13 +35,12 @@ import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
-import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 import com.ataglance.walletglance.ui.utils.breakOnCollectionsAndAssociations
 import com.ataglance.walletglance.ui.utils.breakOnDifferentLists
 import com.ataglance.walletglance.ui.utils.checkOrderNumbers
 import com.ataglance.walletglance.ui.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.findByOrderNum
 import com.ataglance.walletglance.ui.utils.findByRecordNum
 import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.utils.getAssociationsThatAreNotInList
@@ -48,12 +48,15 @@ import com.ataglance.walletglance.ui.utils.getCalendarEndLong
 import com.ataglance.walletglance.ui.utils.getCalendarStartLong
 import com.ataglance.walletglance.ui.utils.getDateRangeState
 import com.ataglance.walletglance.ui.utils.getIdsThatAreNotInList
-import com.ataglance.walletglance.ui.utils.getLastUsedCategoryByAccountId
+import com.ataglance.walletglance.ui.utils.getOutAndInTransfersByOneRecordNum
 import com.ataglance.walletglance.ui.utils.getTodayDateLong
 import com.ataglance.walletglance.ui.utils.getTotalAmount
 import com.ataglance.walletglance.ui.utils.getTransferSecondUnitsRecordNumbers
 import com.ataglance.walletglance.ui.utils.inverse
 import com.ataglance.walletglance.ui.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
+import com.ataglance.walletglance.ui.utils.toAccountEntityList
+import com.ataglance.walletglance.ui.utils.toAccountList
+import com.ataglance.walletglance.ui.utils.toCategoryEntityList
 import com.ataglance.walletglance.ui.utils.toRecordStackList
 import com.ataglance.walletglance.ui.utils.transfersToRecordsWithCategoryOfTransfer
 import com.ataglance.walletglance.ui.utils.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
@@ -150,11 +153,11 @@ class AppViewModel(
 
     fun translateDefaultCategories(context: Context) {
         val translatedCategories = DefaultCategoriesPackage(context).translateDefaultCategories(
-            categoriesUiState = categoriesUiState.value
+            categoriesLists = categoriesUiState.value
         )
 
         viewModelScope.launch {
-            categoryRepository.upsertCategories(translatedCategories)
+            categoryRepository.upsertCategories(translatedCategories.toCategoryEntityList())
         }
     }
 
@@ -276,7 +279,7 @@ class AppViewModel(
         viewModelScope.launch {
             accountRepository.getAllAccounts().collect { accountList ->
                 if (accountList.checkOrderNumbers()) {
-                    applyAccountListToUiState(accountList)
+                    applyAccountListToUiState(accountList.toAccountList())
                 } else {
                     saveAccountsToDb(accountList.fixOrderNumbers())
                 }
@@ -314,14 +317,13 @@ class AppViewModel(
                 accountList = accountsUiState.value.accountList.map { account ->
                     account.copy(isActive = account.orderNum == accountOrderNum)
                 },
-                activeAccount = accountsUiState.value.accountList.find {  account ->
-                    account.orderNum == accountOrderNum
-                }?.copy(isActive = true)
+                activeAccount = accountsUiState.value.accountList
+                    .findByOrderNum(accountOrderNum)?.copy(isActive = true)
             )
         }
     }
 
-    suspend fun saveAccountsToDb(accountsList: List<Account>) {
+    suspend fun saveAccountsToDb(accountsList: List<AccountEntity>) {
         val listOfIdsToDelete =
             accountsUiState.value.accountList.getIdsThatAreNotInList(accountsList)
 
@@ -336,7 +338,10 @@ class AppViewModel(
         }
     }
 
-    suspend fun deleteAccountWithItsRecords(accountId: Int, updatedAccountList: List<Account>) {
+    suspend fun deleteAccountWithItsRecords(
+        accountId: Int,
+        updatedAccountList: List<AccountEntity>
+    ) {
         viewModelScope.launch {
 
             val accountTransferList = recordRepository.getTransfersByAccountId(accountId).first()
@@ -363,74 +368,25 @@ class AppViewModel(
         MutableStateFlow(CategoriesLists())
     val categoriesUiState: StateFlow<CategoriesLists> = _categoriesUiState.asStateFlow()
 
-    val categoryIconNameToIconResMap = mapOf(
-        CategoryIcon.FoodAndDrinks.name to CategoryIcon.FoodAndDrinks.res,
-        CategoryIcon.Groceries.name to CategoryIcon.Groceries.res,
-        CategoryIcon.Restaurant.name to CategoryIcon.Restaurant.res,
-        CategoryIcon.Housing.name to CategoryIcon.Housing.res,
-        CategoryIcon.HousingPurchase.name to CategoryIcon.HousingPurchase.res,
-        CategoryIcon.Shopping.name to CategoryIcon.Shopping.res,
-        CategoryIcon.Clothes.name to CategoryIcon.Clothes.res,
-        CategoryIcon.Transport.name to CategoryIcon.Transport.res,
-        CategoryIcon.Vehicle.name to CategoryIcon.Vehicle.res,
-        CategoryIcon.DigitalLife.name to CategoryIcon.DigitalLife.res,
-        CategoryIcon.ProfessionalSubs.name to CategoryIcon.ProfessionalSubs.res,
-        CategoryIcon.EntertainmentSubs.name to CategoryIcon.EntertainmentSubs.res,
-        CategoryIcon.Games.name to CategoryIcon.Games.res,
-        CategoryIcon.Medicine.name to CategoryIcon.Medicine.res,
-        CategoryIcon.Education.name to CategoryIcon.Education.res,
-        CategoryIcon.Travels.name to CategoryIcon.Travels.res,
-        CategoryIcon.Entertainment.name to CategoryIcon.Entertainment.res,
-        CategoryIcon.Investments.name to CategoryIcon.Investments.res,
-        CategoryIcon.Other.name to CategoryIcon.Other.res,
-        CategoryIcon.Transfers.name to CategoryIcon.Transfers.res,
-        CategoryIcon.Missing.name to CategoryIcon.Missing.res,
-        CategoryIcon.Salary.name to CategoryIcon.Salary.res,
-        CategoryIcon.Scholarship.name to CategoryIcon.Scholarship.res,
-        CategoryIcon.Sales.name to CategoryIcon.Sales.res,
-        CategoryIcon.Refunds.name to CategoryIcon.Refunds.res,
-        CategoryIcon.Gifts.name to CategoryIcon.Gifts.res,
-    )
-
-    val categoryColorNameToColorMap = combine(_appTheme) { appThemeArray ->
-        val theme = appThemeArray.first()
-        mapOf(
-            CategoryColors.Olive(theme).let { it.color.name to it.color },
-            CategoryColors.Camel(theme).let { it.color.name to it.color },
-            CategoryColors.Pink(theme).let { it.color.name to it.color },
-            CategoryColors.Green(theme).let { it.color.name to it.color },
-            CategoryColors.Red(theme).let { it.color.name to it.color },
-            CategoryColors.LightBlue(theme).let { it.color.name to it.color },
-            CategoryColors.Lavender(theme).let { it.color.name to it.color },
-            CategoryColors.Blue(theme).let { it.color.name to it.color },
-            CategoryColors.Aquamarine(theme).let { it.color.name to it.color },
-            CategoryColors.Orange(theme).let { it.color.name to it.color },
-            CategoryColors.Yellow(theme).let { it.color.name to it.color },
-            CategoryColors.GrayDefault(theme).let { it.color.name to it.color }
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = emptyMap()
-    )
-
     private fun fetchCategoriesFromDb() {
         viewModelScope.launch {
-            categoryRepository.getCategories().collect { categoryList ->
+            categoryRepository.getCategories().collect { categoryEntityList ->
 
                 try {
-                    _categoriesUiState.update { categoryList.breakOnDifferentLists() }
+                    _categoriesUiState.update { categoryEntityList.breakOnDifferentLists() }
                 } catch (e: Exception) {
-                    saveCategoriesToDb(categoryList.fixOrderNumbers())
+                    saveCategoriesToDb(categoryEntityList.fixOrderNumbers())
                 }
 
             }
         }
     }
 
-    suspend fun saveCategoriesToDb(categoryList: List<Category>) {
-        val listOfIdsToDelete =
-            categoriesUiState.value.concatenateLists().getIdsThatAreNotInList(categoryList)
+    suspend fun saveCategoriesToDb(categoryList: List<CategoryEntity>) {
+        val listOfIdsToDelete = categoriesUiState.value
+            .concatenateLists()
+            .toCategoryEntityList()
+            .getIdsThatAreNotInList(categoryList)
 
         if (listOfIdsToDelete.isNotEmpty()) {
             viewModelScope.launch {
@@ -444,18 +400,12 @@ class AppViewModel(
     }
 
     fun getLastRecordCategory(accountId: Int, type: CategoryType): Pair<Category?, Category?> {
-        recordStackList.value
-            .getLastUsedCategoryByAccountId(accountId)
-            ?.let { categoriesUiState.value.getCategoryPairByIds(it.first, it.second, type) }
-            ?.let { return it }
 
-        recordStackList.value
-            .firstOrNull()?.stack
-            ?.firstOrNull()
-            ?.let {
-                categoriesUiState.value.getCategoryPairByIds(it.categoryId, it.subcategoryId, type)
-            }
-            ?.let { return it }
+        recordStackList.value.let { list ->
+            list.find { it.account.id == accountId } ?: list.firstOrNull()
+        }
+        ?.stack?.firstOrNull()
+        ?.let { return it.category to it.subcategory }
 
         return categoriesUiState.value.parentCategories.getByType(type).lastOrNull()
             .let { parCategory ->
@@ -561,78 +511,82 @@ class AppViewModel(
     }
 
 
-    private val _recordStackList: MutableStateFlow<List<RecordStack>> =
-        MutableStateFlow(emptyList())
-    val recordStackList: StateFlow<List<RecordStack>> = _recordStackList.asStateFlow()
+    private val _recordList: MutableStateFlow<List<Record>> = MutableStateFlow(emptyList())
 
     fun fetchRecordsFromDbInDateRange(dateRangeState: DateRangeState) {
         viewModelScope.launch {
             recordRepository.getRecordsInDateRange(dateRangeState).collect { recordList ->
-                _recordStackList.update { recordList.toRecordStackList() }
+                _recordList.update { recordList }
             }
         }
     }
 
-    suspend fun saveRecord(
-        uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>
-    ) {
-        if (
-            uiState.recordStatus != MakeRecordStatus.Edit ||
-            uiState.recordNum == null ||
-            uiState.recordNum == 0
-        ) {
-            saveNewRecord(uiState, unitList, unitList.getTotalAmount())
+    val recordStackList: StateFlow<List<RecordStack>> = combine(
+        _recordList,
+        _accountsUiState,
+        _categoriesUiState
+    ) { recordList, accountsUiState, categoriesUiState ->
+        recordList.toRecordStackList(
+            accountList = accountsUiState.accountList,
+            categoriesLists = categoriesUiState
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList()
+    )
+
+    suspend fun saveRecord(uiState: MakeRecordUiState, unitList: List<MakeRecordUnitUiState>) {
+        if (uiState.recordStatus == MakeRecordStatus.Create) {
+            saveNewRecord(uiState, unitList)
         } else {
-            saveEditedRecord(uiState, unitList, unitList.getTotalAmount())
+            saveEditedRecord(uiState, unitList)
         }
     }
 
     private suspend fun saveNewRecord(
         uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>,
-        thisRecordTotalAmount: Double
+        unitList: List<MakeRecordUnitUiState>
     ) {
         uiState.account ?: return
 
-        val recordList = uiState.toRecordList(unitList, appUiSettings.value.lastRecordNum)
+        val recordList = uiState.toRecordList(unitList)
         val updatedAccountList = mergeAccountLists(
             listOf(
-                uiState.account
-                    .cloneAndAddToOrSubtractFromBalance(thisRecordTotalAmount, uiState.type)
+                uiState.account.cloneAndAddToOrSubtractFromBalance(
+                    amount = unitList.getTotalAmount(),
+                    recordType = uiState.type
+                )
             )
         )
 
         viewModelScope.launch {
             recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                recordList, updatedAccountList
+                recordList, updatedAccountList.toAccountEntityList()
             )
         }
     }
 
     private suspend fun saveEditedRecord(
         uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>,
-        thisRecordTotalAmount: Double
+        unitList: List<MakeRecordUnitUiState>
     ) {
-        val currentRecordStack = recordStackList.value.find {
-            it.recordNum == uiState.recordNum
-        } ?: return
+        val currentRecordStack = recordStackList.value.findByRecordNum(uiState.recordNum) ?: return
 
         if (unitList.size == currentRecordStack.stack.size) {
             updateEditedRecord(
                 uiState = uiState,
                 newRecordList = uiState.toRecordListWithOldIds(unitList, currentRecordStack),
                 recordStack = currentRecordStack,
-                thisRecordTotalAmount = thisRecordTotalAmount,
+                thisRecordTotalAmount = unitList.getTotalAmount()
             )
         } else {
             deleteRecordAndSaveNewOne(
                 uiState = uiState,
                 currentRecordStack = currentRecordStack,
                 currentRecordList = currentRecordStack.toRecordList(),
-                newRecordList = uiState.toRecordList(unitList, appUiSettings.value.lastRecordNum),
-                thisRecordTotalAmount = thisRecordTotalAmount
+                newRecordList = uiState.toRecordList(unitList),
+                thisRecordTotalAmount = unitList.getTotalAmount()
             )
         }
     }
@@ -645,7 +599,7 @@ class AppViewModel(
     ) {
         uiState.account ?: return
 
-        if (uiState.account.id == recordStack.accountId) {
+        if (uiState.account.id == recordStack.account.id) {
             val updatedAccountList = mergeAccountLists(
                 listOf(
                     uiState.account.cloneAndReapplyAmountToBalance(
@@ -657,14 +611,14 @@ class AppViewModel(
             )
             viewModelScope.launch {
                 recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                    newRecordList, updatedAccountList
+                    newRecordList, updatedAccountList.toAccountEntityList()
                 )
             }
         } else {
-            accountsUiState.value.accountList.findById(recordStack.accountId)?.let { prevAccount ->
+            accountsUiState.value.accountList.findById(recordStack.account.id)?.let {
                 updateEditedRecordDifferentAccounts(
                     recordList = newRecordList,
-                    prevAccount = prevAccount,
+                    prevAccount = it,
                     newAccount = uiState.account,
                     prevAmount = recordStack.totalAmount,
                     newAmount = thisRecordTotalAmount,
@@ -683,7 +637,7 @@ class AppViewModel(
         recordType: RecordType
     ) {
         val updatedAccountList = mergeAccountLists(
-            Pair(prevAccount, newAccount).returnAmountToFirstBalanceAndUpdateSecondBalance(
+            (prevAccount to newAccount).returnAmountToFirstBalanceAndUpdateSecondBalance(
                 prevAmount = prevAmount,
                 newAmount = newAmount,
                 recordType = recordType
@@ -691,7 +645,7 @@ class AppViewModel(
         )
         viewModelScope.launch {
             recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                recordList, updatedAccountList
+                recordList, updatedAccountList.toAccountEntityList()
             )
         }
     }
@@ -705,7 +659,7 @@ class AppViewModel(
     ) {
         uiState.account ?: return
 
-        if (uiState.account.id == currentRecordStack.accountId) {
+        if (uiState.account.id == currentRecordStack.account.id) {
             val updatedAccountList = mergeAccountLists(
                 listOf(
                     uiState.account.cloneAndReapplyAmountToBalance(
@@ -717,12 +671,12 @@ class AppViewModel(
             )
             viewModelScope.launch {
                 recordAndAccountRepository.deleteAndUpsertRecordsAndUpdateAccounts(
-                    currentRecordList, newRecordList, updatedAccountList
+                    currentRecordList, newRecordList, updatedAccountList.toAccountEntityList()
                 )
             }
         } else {
             accountsUiState.value.accountList
-                .findById(currentRecordStack.accountId)
+                .findById(currentRecordStack.account.id)
                 ?.let { prevAccount ->
                     deleteRecordAndSaveNewOneDifferentAccounts(
                         currentRecordList = currentRecordList,
@@ -758,7 +712,7 @@ class AppViewModel(
                 recordAndAccountRepository.deleteAndUpsertRecordsAndUpdateAccounts(
                     recordListToDelete = currentRecordList,
                     recordListToUpsert = newRecordList,
-                    accountList = updatedAccountList
+                    accountList = updatedAccountList.toAccountEntityList()
                 )
             }
         }
@@ -770,11 +724,10 @@ class AppViewModel(
     ) {
         saveNewRecord(
             uiState = uiState.copy(
-                recordNum = appUiSettings.value.lastRecordNum + 1,
+                recordNum = appUiSettings.value.nextRecordNum(),
                 dateTimeState = DateTimeState()
             ),
-            unitList = unitList,
-            thisRecordTotalAmount = unitList.getTotalAmount()
+            unitList = unitList
         )
     }
 
@@ -782,17 +735,19 @@ class AppViewModel(
 
         val recordStack = recordStackList.value.findByRecordNum(recordNum) ?: return
         val recordList = recordStack.toRecordList()
-        val recordType = recordStack.getRecordType() ?: return
 
         val account = accountsUiState.value.accountList
-            .findById(recordStack.accountId)
-            ?.cloneAndAddToOrSubtractFromBalance(recordStack.totalAmount, recordType.inverse())
+            .findById(recordStack.account.id)
+            ?.cloneAndAddToOrSubtractFromBalance(
+                amount = recordStack.totalAmount,
+                recordType = recordStack.type.inverse()
+            )
             ?: return
         val updatedAccountList = mergeAccountLists(listOf(account))
 
         viewModelScope.launch {
             recordAndAccountRepository.deleteRecordsAndUpdateAccounts(
-                recordList, updatedAccountList
+                recordList, updatedAccountList.toAccountEntityList()
             )
         }
     }
@@ -803,8 +758,7 @@ class AppViewModel(
             uiState.toMadeTransferState(appUiSettings.value.lastRecordNum) ?: return
 
         val recordListAndUpdatedAccountList = if (
-            madeTransferState.recordStatus != MakeRecordStatus.Edit ||
-            madeTransferState.recordNum == 0
+            madeTransferState.recordStatus == MakeRecordStatus.Create
         ) {
             getRecordListAndUpdatedAccountListAfterNewTransfer(madeTransferState)
         } else {
@@ -823,7 +777,7 @@ class AppViewModel(
 
     private fun getRecordListAndUpdatedAccountListAfterNewTransfer(
         state: MadeTransferState
-    ): Pair<List<Record>, List<Account>> {
+    ): Pair<List<Record>, List<AccountEntity>> {
         val recordList = state.toRecordsPair().toList()
         val updatedAccountList = mergeAccountLists(
             listOf(
@@ -832,12 +786,12 @@ class AppViewModel(
             )
         )
 
-        return recordList to updatedAccountList
+        return recordList to updatedAccountList.toAccountEntityList()
     }
 
     private fun getRecordListAndUpdatedAccountListAfterEditedTransfer(
         state: MadeTransferState
-    ): Pair<List<Record>, List<Account>>? {
+    ): Pair<List<Record>, List<AccountEntity>>? {
         val firstRecordStack = recordStackList.value.findByRecordNum(state.recordNum) ?: return null
         val recordNumDifference = if (firstRecordStack.isOutTransfer()) 1 else -1
         val secondRecordStack = recordStackList.value
@@ -856,7 +810,7 @@ class AppViewModel(
             mergeAccountLists(it)
         }
 
-        return updatedAccountList?.let { recordList to it }
+        return updatedAccountList?.let { recordList to it.toAccountEntityList() }
     }
 
     fun getUpdatedAccountsAfterEditedTransfer(
@@ -865,17 +819,14 @@ class AppViewModel(
         currRecordStackTo: RecordStack
     ): List<Account>? {
 
-        val prevAccounts = Pair(
-            accountsUiState.value.accountList
-                .findById(currRecordStackFrom.accountId) ?: return null,
-            accountsUiState.value.accountList
-                .findById(currRecordStackTo.accountId) ?: return null
-        )
+        val prevFromAccount = accountsUiState.value.accountList
+            .findById(currRecordStackFrom.account.id) ?: return null
+        val prevToAccount = accountsUiState.value.accountList
+            .findById(currRecordStackTo.account.id) ?: return null
 
-        val updatedPreviousAccounts = returnAmountsToAccountsAfterEditedTransfer(
-            prevAccounts = prevAccounts,
-            fromAmount = currRecordStackFrom.totalAmount,
-            toAmount = currRecordStackTo.totalAmount
+        val updatedPreviousAccounts = listOf(
+            prevFromAccount.cloneAndAddToBalance(currRecordStackFrom.totalAmount),
+            prevToAccount.cloneAndSubtractFromBalance(currRecordStackTo.totalAmount)
         )
         val updatedAccounts = applyAmountsToAccountAfterTransfer(
             state = uiState,
@@ -885,30 +836,19 @@ class AppViewModel(
         return updatedAccounts?.let { mergeAccountLists(it, updatedPreviousAccounts) }
     }
 
-    private fun returnAmountsToAccountsAfterEditedTransfer(
-        prevAccounts: Pair<Account, Account>,
-        fromAmount: Double,
-        toAmount: Double
-    ): List<Account> {
-        return listOf(
-            prevAccounts.first.cloneAndAddToBalance(fromAmount),
-            prevAccounts.second.cloneAndSubtractFromBalance(toAmount)
-        )
-    }
-
     private fun applyAmountsToAccountAfterTransfer(
         state: MadeTransferState,
-        prevAccounts: List<Account>? = null
+        prevAccounts: List<Account>
     ): List<Account>? {
         val updatedAccounts = mutableListOf<Account>()
 
-        prevAccounts?.findById(state.fromAccount.id)?.let {
+        prevAccounts.findById(state.fromAccount.id)?.let {
             updatedAccounts.add(it.cloneAndSubtractFromBalance(state.startAmount))
         } ?: accountsUiState.value.accountList.findById(state.fromAccount.id)?.let {
             updatedAccounts.add(it.cloneAndSubtractFromBalance(state.startAmount))
         } ?: return null
 
-        prevAccounts?.findById(state.toAccount.id)?.let {
+        prevAccounts.findById(state.toAccount.id)?.let {
             updatedAccounts.add(it.cloneAndAddToBalance(state.finalAmount))
         } ?: accountsUiState.value.accountList.findById(state.toAccount.id)?.let {
             updatedAccounts.add(it.cloneAndAddToBalance(state.finalAmount))
@@ -940,7 +880,7 @@ class AppViewModel(
 
         val madeTransferState = uiState.toMadeTransferState(appUiSettings.value.lastRecordNum)
             ?.copy(
-                recordNum = appUiSettings.value.lastRecordNum + 1,
+                recordNum = appUiSettings.value.nextRecordNum(),
                 dateTimeState = DateTimeState(),
                 idFrom = 0,
                 idTo = 0
@@ -958,37 +898,31 @@ class AppViewModel(
     }
 
     suspend fun deleteTransfer(recordNum: Int) {
-        val firstRecordStack = recordStackList.value.findByRecordNum(recordNum) ?: return
-        val recordNumDifference = if (firstRecordStack.isOutTransfer()) 1 else -1
-        val secondRecordStack = recordStackList.value
-            .findByRecordNum(recordNum + recordNumDifference) ?: return
 
-        val recordList = firstRecordStack.toRecordList() + secondRecordStack.toRecordList()
+        val outAndInTransfers = recordStackList.value
+            .getOutAndInTransfersByOneRecordNum(recordNum) ?: return
 
-        val updatedAccountList = returnAmountsToAccountsAfterEditedTransfer(
-            prevAccounts = Pair(
-                accountsUiState.value.accountList.findById(
-                    if (firstRecordStack.isOutTransfer()) firstRecordStack.accountId
-                    else secondRecordStack.accountId
-                ) ?: return,
-                accountsUiState.value.accountList.findById(
-                    if (firstRecordStack.isOutTransfer()) secondRecordStack.accountId
-                    else firstRecordStack.accountId
-                ) ?: return,
-            ),
-            fromAmount = if (firstRecordStack.isOutTransfer()) firstRecordStack.totalAmount
-                else secondRecordStack.totalAmount,
-            toAmount = if (firstRecordStack.isOutTransfer()) secondRecordStack.totalAmount
-                else firstRecordStack.totalAmount
+        val recordList = outAndInTransfers.first.toRecordList() +
+                outAndInTransfers.second.toRecordList()
+
+        val prevAccounts = Pair(
+            accountsUiState.value.accountList.findById(outAndInTransfers.first.account.id) ?: return,
+            accountsUiState.value.accountList.findById(outAndInTransfers.second.account.id) ?: return
+        )
+
+        val updatedAccountList = listOf(
+            prevAccounts.first.cloneAndAddToBalance(outAndInTransfers.first.totalAmount),
+            prevAccounts.second.cloneAndSubtractFromBalance(outAndInTransfers.second.totalAmount)
         ).let {
             mergeAccountLists(it)
         }
 
         viewModelScope.launch {
             recordAndAccountRepository.deleteRecordsAndUpdateAccounts(
-                recordList, updatedAccountList
+                recordList, updatedAccountList.toAccountEntityList()
             )
         }
+
     }
 
 
@@ -999,7 +933,7 @@ class AppViewModel(
     val widgetsUiState = combine(
         _dateRangeMenuUiState,
         _accountsUiState,
-        _recordStackList,
+        recordStackList,
         categoriesUiState,
         _appTheme,
         _greetingsWidgetTitleRes
@@ -1054,8 +988,6 @@ class AppViewModel(
             ),
             categoryStatisticsLists = categoriesUiState.getStatistics(
                 recordStackList = filteredRecordStackList,
-                categoryIconNameToIconResMap = categoryIconNameToIconResMap,
-                categoryColorNameToColorMap = categoryColorNameToColorMap.value,
                 appTheme = appTheme,
                 accountCurrency = accountsUiState.activeAccount?.currency ?: ""
             )
@@ -1073,7 +1005,7 @@ class AppViewModel(
     ): List<RecordStack> {
         return recordStackList.filter {
             it.date in dateRangeState.fromPast..dateRangeState.toFuture &&
-                    it.accountId == activeAccount?.id
+                    it.account.id == activeAccount?.id
         }
     }
 
@@ -1096,23 +1028,20 @@ class AppViewModel(
         endDate: Long,
         type: RecordType
     ): Double {
-        if (accountsUiState.value.activeAccount != null) {
-            return recordStackList
+        return accountsUiState.value.activeAccount?.let { activeAccount ->
+            recordStackList
                 .filter {
-                    it.accountId == accountsUiState.value.activeAccount!!.id &&
+                    it.account.id == activeAccount.id &&
                             it.date in startDate..endDate && (
-                                (it.isExpense() && type == RecordType.Expense) ||
+                            (it.isOfType(type)) ||
                                     (it.isOutTransfer() && type == RecordType.Expense) ||
-                                    (it.isIncome() && type == RecordType.Income) ||
                                     (it.isInTransfer() && type == RecordType.Income)
-                                )
+                            )
                 }
                 .fold(0.0) { total, recordStack ->
                     total + recordStack.totalAmount
                 }
-        } else {
-            return 0.0
-        }
+        } ?: 0.0
     }
 
 
@@ -1133,7 +1062,13 @@ data class AppUiSettings(
     val langCode: String = AppLanguage.English.languageCode,
     val appTheme: AppTheme? = null,
     val lastRecordNum: Int = 0,
-)
+) {
+
+    fun nextRecordNum(): Int {
+        return lastRecordNum + 1
+    }
+
+}
 
 data class ThemeUiState(
     val useDeviceTheme: Boolean,
@@ -1243,75 +1178,5 @@ data class ExpensesIncomeWidgetUiState(
     }
     fun getIncomeTotalFormatted(): String {
         return getFormattedNumberWithSpaces(incomeTotal)
-    }
-}
-
-data class CategoryStatisticsLists(
-    val expense: List<CategoryStatisticsElementUiState> = emptyList(),
-    val income: List<CategoryStatisticsElementUiState> = emptyList()
-)
-
-data class CategoriesStatsMapItem(
-    val category: Category,
-    var totalAmount: Double = 0.0
-) {
-
-    fun toCategoryStatisticsElementUiState(
-        categoryIconNameToIconResMap: Map<String, Int>,
-        categoryColorNameToColorMap: Map<String, Colors>,
-        appTheme: AppTheme?,
-        accountCurrency: String,
-        allCategoriesTotalAmount: Double,
-        subcategoriesStatistics: MutableMap<Int, CategoriesStatsMapItem>? = null
-    ): CategoryStatisticsElementUiState {
-        return CategoryStatisticsElementUiState(
-            categoryId = category.id,
-            categoryName = category.name,
-            categoryIconRes = categoryIconNameToIconResMap[category.iconName],
-            categoryColor = categoryColorNameToColorMap[category.colorName]?.lightAndDark ?:
-                CategoryColors.GrayDefault(appTheme).color.lightAndDark,
-            totalAmount = getFormattedTotalAmount(),
-            currency = accountCurrency,
-            percentage = getPercentage(allCategoriesTotalAmount),
-            subcategoriesStatisticsUiState = subcategoriesStatistics?.values
-                ?.sortedByDescending { it.totalAmount }
-                ?.map {
-                    it.toCategoryStatisticsElementUiState(
-                        categoryIconNameToIconResMap = categoryIconNameToIconResMap,
-                        categoryColorNameToColorMap = categoryColorNameToColorMap,
-                        appTheme = appTheme,
-                        accountCurrency = accountCurrency,
-                        allCategoriesTotalAmount = totalAmount
-                    )
-                }
-        )
-    }
-
-    private fun getFormattedTotalAmount(): String {
-        return "%.2f".format(Locale.US, totalAmount)
-    }
-
-    private fun getPercentage(allCategoriesTotalAmount: Double): Float {
-        return if (allCategoriesTotalAmount != 0.0) {
-            ((100 / allCategoriesTotalAmount) * totalAmount).toFloat()
-        } else {
-            0.0f
-        }
-    }
-
-}
-
-data class CategoryStatisticsElementUiState(
-    val categoryId: Int,
-    val categoryName: String,
-    val categoryIconRes: Int?,
-    val categoryColor: LighterDarkerColors,
-    val totalAmount: String,
-    val currency: String,
-    val percentage: Float,
-    val subcategoriesStatisticsUiState: List<CategoryStatisticsElementUiState>? = null
-) {
-    fun getFormattedPercentage(): String {
-        return "%.2f".format(Locale.US, percentage) + "%"
     }
 }

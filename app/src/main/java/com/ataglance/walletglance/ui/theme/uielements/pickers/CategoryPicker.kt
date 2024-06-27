@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.domain.entities.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
@@ -52,7 +52,6 @@ import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 fun CategoryPicker(
     visible: Boolean,
     categoriesUiState: CategoriesLists,
-    categoryNameAndIconMap: Map<String, Int>,
     type: CategoryType,
     onDismissRequest: () -> Unit,
     onCategoryChoose: (Category, Category?) -> Unit
@@ -91,7 +90,6 @@ fun CategoryPicker(
             } else {
                 categoriesUiState.parentCategories.income
             },
-            categoryNameAndIconMap = categoryNameAndIconMap,
             onCategoryClick = { category ->
                 if (category.parentCategoryId != null) {
                     chosenCategory = category
@@ -115,7 +113,6 @@ fun CategoryPicker(
             } else {
                 categoriesUiState.subcategories.income[chosenCategory.orderNum - 1]
             },
-            categoryNameAndIconMap = categoryNameAndIconMap,
             onCategoryClick = { category ->
                 onCategoryChoose(chosenCategory, category)
                 onDismissRequest()
@@ -133,7 +130,6 @@ fun CategoryPicker(
 private fun CategoryListWindow(
     lazyListState: LazyListState,
     list: List<Category>,
-    categoryNameAndIconMap: Map<String, Int>,
     onCategoryClick: (Category) -> Unit,
     showCloseButton: Boolean = false,
     onCloseSubcategoryList: () -> Unit = {}
@@ -161,12 +157,7 @@ private fun CategoryListWindow(
             if (category.orderNum != 1) {
                 SmallDivider()
             }
-            CategoryListItem(
-                category = category,
-                iconRes = categoryNameAndIconMap[category.iconName],
-            ) {
-                onCategoryClick(category)
-            }
+            CategoryListItem(category, onCategoryClick)
         }
         if (showCloseButton) {
             item {
@@ -180,18 +171,17 @@ private fun CategoryListWindow(
 @Composable
 private fun CategoryListItem(
     category: Category,
-    iconRes: Int?,
-    onClick: () -> Unit
+    onClick: (Category) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
-            .bounceClickEffect { onClick() }
+            .bounceClickEffect { onClick(category) }
             .padding(vertical = 14.dp)
     ) {
-        iconRes?.let {
+        category.icon.res.let {
             Icon(
-                painter = painterResource(iconRes),
+                painter = painterResource(it),
                 contentDescription = category.name + " icon",
                 tint = GlanceTheme.onSurface,
                 modifier = Modifier

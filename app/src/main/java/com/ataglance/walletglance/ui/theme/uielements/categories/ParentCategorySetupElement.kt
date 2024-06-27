@@ -24,16 +24,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.theme.LighterDarkerColors
 
 @Composable
 fun ParentCategorySetupElement(
     category: Category,
-    iconRes: Int?,
-    color: LighterDarkerColors?,
+    appTheme: AppTheme?,
     onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
     onEditButton: (Int) -> Unit,
     onUpButtonClick: () -> Unit,
@@ -68,23 +67,21 @@ fun ParentCategorySetupElement(
                 onNavigateToEditSubcategoryListScreen(category.orderNum)
             }
         ) {
-            if (iconRes != null && color != null) {
-                Icon(
-                    painter = painterResource(iconRes),
-                    contentDescription = "category ${category.name} icon",
-                    tint = GlanceTheme.surface,
-                    modifier = Modifier
-                        .shadow(
-                            elevation = 8.dp,
-                            spotColor = color.darker,
-                            shape = RoundedCornerShape(30)
-                        )
-                        .clip(RoundedCornerShape(30))
-                        .background(color.darker)
-                        .size(32.dp)
-                        .padding(5.dp)
-                )
-            }
+            Icon(
+                painter = painterResource(category.icon.res),
+                contentDescription = "category ${category.name} icon",
+                tint = GlanceTheme.surface,
+                modifier = Modifier
+                    .shadow(
+                        elevation = 8.dp,
+                        spotColor = category.getColorByTheme(appTheme).darker,
+                        shape = RoundedCornerShape(30)
+                    )
+                    .clip(RoundedCornerShape(30))
+                    .background(category.getColorByTheme(appTheme).darker)
+                    .size(32.dp)
+                    .padding(5.dp)
+            )
             Text(
                 text = category.name,
                 color = GlanceTheme.onSurface,

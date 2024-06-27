@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.ui.theme.widgets
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,30 +19,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Account
-import com.ataglance.walletglance.domain.entities.Category
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordsTypeFilter
 import com.ataglance.walletglance.ui.theme.GlanceTheme
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.records.EmptyRecordsHistoryMessageContainer
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
-import com.ataglance.walletglance.ui.utils.needToIncludeYearToDate
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.data.records.RecordsTypeFilter
+import com.ataglance.walletglance.ui.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.ui.utils.findById
 
 @Composable
 fun RecordHistoryWidget(
     recordStackList: List<RecordStack>,
+    accountList: List<Account>,
     appTheme: AppTheme?,
-    getCategoryAndIcon: (Int, Int?, RecordType?) -> Pair<Category?, Int?>?,
-    getAccount: (Int) -> Account?,
+    isCustomDateRange: Boolean,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
     recordsTypeFilter: RecordsTypeFilter = RecordsTypeFilter.All
 ) {
-    val includeYearToRecordDate = recordStackList.needToIncludeYearToDate()
+    val includeYearToRecordDate =
+        isCustomDateRange || recordStackList.containsRecordsFromDifferentYears()
 
     GlassSurface {
         Column(
@@ -50,11 +50,7 @@ fun RecordHistoryWidget(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp
-                )
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         ) {
             Text(
                 text = stringResource(R.string.recent),
@@ -69,42 +65,61 @@ fun RecordHistoryWidget(
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(370.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        for (recordStack in targetRecordStackListAndTypeFilter.first) {
-                            if (recordStack.isTransfer()) {
-                                TransferComponent(
-                                    recordStack = recordStack,
-                                    includeYearToDate = includeYearToRecordDate,
-                                    appTheme = appTheme,
-                                    getAccount = getAccount,
-                                    onTransferClick = onTransferClick
-                                )
-                            } else {
-                                RecordStackComponent(
-                                    recordStack = recordStack,
-                                    includeYearToDate = includeYearToRecordDate,
-                                    getCategoryAndIcon = getCategoryAndIcon,
-                                    getAccount = getAccount,
-                                    onRecordClick = onRecordClick
-                                )
-                            }
-                        }
-                        if (targetRecordStackListAndTypeFilter.first.isNotEmpty()) {
-                            Spacer(modifier = Modifier)
-                        }
-                    }
+                    RecordStackList(
+                        recordStackList = targetRecordStackListAndTypeFilter.first,
+                        accountList = accountList,
+                        includeYearToRecordDate = includeYearToRecordDate,
+                        appTheme = appTheme,
+                        onRecordClick = onRecordClick,
+                        onTransferClick = onTransferClick
+                    )
                     if (targetRecordStackListAndTypeFilter.first.isEmpty()) {
                         EmptyRecordsHistoryMessageContainer()
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun RecordStackList(
+    recordStackList: List<RecordStack>,
+    accountList: List<Account>,
+    includeYearToRecordDate: Boolean,
+    appTheme: AppTheme?,
+    onRecordClick: (Int) -> Unit,
+    onTransferClick: (Int) -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(370.dp)
+            .verticalScroll(ScrollState(0), enabled = false)
+    ) {
+        for (recordStack in recordStackList) {
+            if (recordStack.isExpenseOrIncome()) {
+                RecordStackComponent(
+                    recordStack = recordStack,
+                    includeYearToDate = includeYearToRecordDate,
+                    onRecordClick = onRecordClick
+                )
+            } else {
+                TransferComponent(
+                    recordStack = recordStack,
+                    includeYearToDate = includeYearToRecordDate,
+                    appTheme = appTheme,
+                    secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
+                        accountList.findById(it)?.toRecordAccount()
+                    },
+                    onTransferClick = onTransferClick
+                )
+            }
+        }
+        if (recordStackList.isNotEmpty()) {
+            Spacer(Modifier)
         }
     }
 }

@@ -27,13 +27,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.ui.viewmodels.CategoryStatisticsElementUiState
 
 @Composable
 fun CategoryStatisticsItemComponent(
     uiState: CategoryStatisticsElementUiState?,
+    appTheme: AppTheme?,
     showLeftArrow: Boolean = false,
     enableClick: Boolean? = null,
     onClick: () -> Unit = {}
@@ -72,11 +74,11 @@ fun CategoryStatisticsItemComponent(
                         modifier = Modifier
                             .shadow(
                                 elevation = 8.dp,
-                                spotColor = uiState.categoryColor.darker,
+                                spotColor = uiState.categoryColor.getByTheme(appTheme).darker,
                                 shape = RoundedCornerShape(30)
                             )
                             .clip(RoundedCornerShape(30))
-                            .background(uiState.categoryColor.darker)
+                            .background(uiState.categoryColor.getByTheme(appTheme).darker)
                             .size(32.dp)
                             .padding(5.dp)
                     )
@@ -141,15 +143,13 @@ fun CategoryStatisticsItemComponent(
                         modifier = Modifier
                             .shadow(
                                 elevation = 8.dp,
-                                spotColor = uiState.categoryColor.darker,
+                                spotColor = uiState.categoryColor.getByTheme(appTheme).darker,
                                 shape = RoundedCornerShape(50)
                             )
                             .clip(RoundedCornerShape(50))
                             .background(
                                 brush = Brush.linearGradient(
-                                    listOf(
-                                        uiState.categoryColor.darker, uiState.categoryColor.lighter
-                                    )
+                                    uiState.categoryColor.getByTheme(appTheme).asListDarkToLight()
                                 )
                             )
                             .fillMaxWidth(uiState.percentage / 100f)

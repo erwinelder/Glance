@@ -21,8 +21,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.ui.theme.animation.StartAnimatedContainer
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.AppMainTopBar
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.uielements.buttons.NavigationTextArrowButton
@@ -30,15 +32,9 @@ import com.ataglance.walletglance.ui.theme.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.ui.theme.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.ui.theme.widgets.GreetingsMessage
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.ui.utils.findById
-import com.ataglance.walletglance.ui.utils.getCategoryAndIconRes
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
 import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
-import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
 
 @Composable
 fun HomeScreen(
@@ -46,8 +42,6 @@ fun HomeScreen(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    categoriesUiState: CategoriesLists,
-    categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
     onDateRangeChange: (DateRangeEnum) -> Unit,
@@ -81,8 +75,6 @@ fun HomeScreen(
             appTheme = appTheme,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
-            categoriesUiState = categoriesUiState,
-            categoryNameAndIconMap = categoryNameAndIconMap,
             widgetsUiState = widgetsUiState,
             onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
             onNavigateToRecordsScreen = onNavigateToRecordsScreen,
@@ -100,8 +92,6 @@ private fun CompactLayout(
     appTheme: AppTheme?,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    categoriesUiState: CategoriesLists,
-    categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
     onNavigateToRecordsScreen: () -> Unit,
@@ -160,17 +150,10 @@ private fun CompactLayout(
                 ) {
                     RecordHistoryWidget(
                         recordStackList = widgetsUiState.filteredRecordStackList.take(3),
+                        accountList = accountsUiState.accountList,
                         appTheme = appTheme,
-                        getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                            getCategoryAndIconRes(
-                                categoriesLists = categoriesUiState,
-                                categoryNameAndIconMap = categoryNameAndIconMap,
-                                categoryId = categoryId,
-                                subcategoryId = subcategoryId,
-                                recordType = type
-                            )
-                        },
-                        getAccount = { accountsUiState.accountList.findById(it) },
+                        isCustomDateRange =
+                            dateRangeMenuUiState.dateRangeState.enum == DateRangeEnum.Custom,
                         onRecordClick = onRecordClick,
                         onTransferClick = onTransferClick
                     )
@@ -188,7 +171,8 @@ private fun CompactLayout(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     CategoriesStatisticsWidget(
-                        uiState = widgetsUiState.categoryStatisticsLists,
+                        categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
+                        appTheme = appTheme,
                         onNavigateToCategoriesStatisticsScreen =
                             onNavigateToCategoriesStatisticsScreen
                     )
@@ -210,8 +194,6 @@ private fun ExpandedLayout(
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
     filteredRecordStackList: List<RecordStack>,
-    categoriesUiState: CategoriesLists,
-    categoryNameAndIconMap: Map<String, Int>,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
     onNavigateToRecordsScreen: () -> Unit,
@@ -274,17 +256,10 @@ private fun ExpandedLayout(
             ) {
                 RecordHistoryWidget(
                     recordStackList = filteredRecordStackList.take(3),
+                    accountList = accountsUiState.accountList,
                     appTheme = appTheme,
-                    getCategoryAndIcon = { categoryId: Int, subcategoryId: Int?, type: RecordType? ->
-                        getCategoryAndIconRes(
-                            categoriesLists = categoriesUiState,
-                            categoryNameAndIconMap = categoryNameAndIconMap,
-                            categoryId = categoryId,
-                            subcategoryId = subcategoryId,
-                            recordType = type
-                        )
-                    },
-                    getAccount = { accountsUiState.accountList.findById(it) },
+                    isCustomDateRange =
+                        dateRangeMenuUiState.dateRangeState.enum == DateRangeEnum.Custom,
                     onRecordClick = onRecordClick,
                     onTransferClick = onTransferClick
                 )
@@ -301,7 +276,8 @@ private fun ExpandedLayout(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CategoriesStatisticsWidget(
-                    uiState = widgetsUiState.categoryStatisticsLists,
+                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
+                    appTheme = appTheme,
                     onNavigateToCategoriesStatisticsScreen =
                         onNavigateToCategoriesStatisticsScreen
                 )

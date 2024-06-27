@@ -34,13 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.domain.entities.Account
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.accounts.color.AccountColors
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.theme.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.ui.utils.getAccountAndOnAccountColor
-import com.ataglance.walletglance.data.accounts.AccountColors
+import com.ataglance.walletglance.ui.utils.toAccountColorWithName
 import java.util.Locale
 
 @Composable
@@ -50,7 +50,7 @@ fun AccountCard(
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
 ) {
-    val accountAndOnAccountColor = getAccountAndOnAccountColor(account.color, appTheme)
+    val accountAndOnAccountColor = account.color.getColorAndColorOnByTheme(appTheme)
     val accountColorLighter by animateColorAsState(
         targetValue = accountAndOnAccountColor.first.lighter,
         label = "account background lighter"
@@ -235,7 +235,7 @@ private fun AccountCardPreview() {
         )
         AccountCard(
             account = Account(
-                color = AccountColors.Blue(AppTheme.DarkDefault).color.name,
+                color = AccountColors.Blue.toAccountColorWithName(),
                 withoutBalance = true
             ),
             appTheme = AppTheme.DarkDefault,
