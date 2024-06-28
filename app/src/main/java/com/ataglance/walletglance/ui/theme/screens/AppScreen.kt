@@ -43,8 +43,6 @@ import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.ui.theme.animation.screenEnterTransition
 import com.ataglance.walletglance.ui.theme.animation.screenExitTransition
-import com.ataglance.walletglance.ui.theme.animation.screenPopEnterTransition
-import com.ataglance.walletglance.ui.theme.animation.screenPopExitTransition
 import com.ataglance.walletglance.ui.theme.navigation.screens.AccountsSettingsScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.CategoriesSettingsScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.CategoryCollectionsSettingsScreens
@@ -260,13 +258,13 @@ fun HomeNavHost(
         navController = navController,
         startDestination = appUiSettings.startMainDestination,
         contentAlignment = Alignment.Center,
-        enterTransition = { screenEnterTransition(this, moveScreenTowardsLeft) },
-        popEnterTransition = { screenPopEnterTransition(this, !moveScreenTowardsLeft) },
-        exitTransition = { screenExitTransition(this, moveScreenTowardsLeft) },
-        popExitTransition = { screenPopExitTransition(this, false) }
+        enterTransition = { screenEnterTransition(moveScreenTowardsLeft) },
+        popEnterTransition = { screenEnterTransition(!moveScreenTowardsLeft) },
+        exitTransition = { screenExitTransition(moveScreenTowardsLeft) },
+        popExitTransition = { screenExitTransition(false) }
     ) {
         composable<MainScreens.Home>(
-            popEnterTransition = { screenPopEnterTransition(this) }
+            popEnterTransition = { screenEnterTransition(false) }
         ) {
             HomeScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
@@ -300,6 +298,7 @@ fun HomeNavHost(
                     }
                 },
                 onTransferClick = { recordNum: Int ->
+                    changeMoveScreenTowardsLeft(true)
                     navController.navigate(
                         MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
                     ) {
@@ -330,6 +329,7 @@ fun HomeNavHost(
                     }
                 },
                 onTransferClick = { recordNum: Int ->
+                    changeMoveScreenTowardsLeft(true)
                     navController.navigate(
                         MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
                     ) {
@@ -367,10 +367,10 @@ fun HomeNavHost(
             )
         }
         composable<MainScreens.MakeRecord>(
-            enterTransition = { screenEnterTransition(this) },
-            popEnterTransition = { screenPopEnterTransition(this, !moveScreenTowardsLeft) },
-            exitTransition = { screenExitTransition(this, moveScreenTowardsLeft) },
-            popExitTransition = { screenExitTransition(this, false) }
+            enterTransition = { screenEnterTransition() },
+            popEnterTransition = { screenEnterTransition(!moveScreenTowardsLeft) },
+            exitTransition = { screenExitTransition(moveScreenTowardsLeft) },
+            popExitTransition = { screenExitTransition(false) }
         ) { backStack ->
             val makeRecordStatus = MakeRecordStatus.valueOf(
                 backStack.toRoute<MainScreens.MakeRecord>().status
@@ -441,8 +441,8 @@ fun HomeNavHost(
             )
         }
         composable<MainScreens.MakeTransfer>(
-            enterTransition = { screenEnterTransition(this) },
-            popExitTransition = { screenPopExitTransition(this, false) }
+            enterTransition = { screenEnterTransition() },
+            popExitTransition = { screenExitTransition(false) }
         ) { backStack ->
             val makeRecordStatus = MakeRecordStatus.valueOf(
                 backStack.toRoute<MainScreens.MakeTransfer>().status

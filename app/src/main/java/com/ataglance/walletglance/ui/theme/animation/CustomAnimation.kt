@@ -13,11 +13,10 @@ import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavBackStackEntry
 
 
-fun screenEnterTransition(
-    scope: AnimatedContentTransitionScope<NavBackStackEntry>,
+fun AnimatedContentTransitionScope<NavBackStackEntry>.screenEnterTransition(
     moveScreenTowardsLeft: Boolean = true
 ): EnterTransition {
-    return scope.slideIntoContainer(
+    return this.slideIntoContainer(
         towards = if (moveScreenTowardsLeft) {
             AnimatedContentTransitionScope.SlideDirection.Left
         } else {
@@ -28,41 +27,10 @@ fun screenEnterTransition(
 }
 
 
-fun screenPopEnterTransition(
-    scope: AnimatedContentTransitionScope<NavBackStackEntry>,
-    moveScreenTowardsLeft: Boolean = false
-): EnterTransition {
-    return scope.slideIntoContainer(
-        towards = if (moveScreenTowardsLeft) {
-            AnimatedContentTransitionScope.SlideDirection.Left
-        } else {
-            AnimatedContentTransitionScope.SlideDirection.Right
-        },
-        animationSpec = tween(400)
-    )
-}
-
-
-fun screenExitTransition(
-    scope: AnimatedContentTransitionScope<NavBackStackEntry>,
+fun AnimatedContentTransitionScope<NavBackStackEntry>.screenExitTransition(
     moveScreenTowardsLeft: Boolean = true
 ): ExitTransition {
-    return scope.slideOutOfContainer(
-        towards = if (moveScreenTowardsLeft) {
-            AnimatedContentTransitionScope.SlideDirection.Left
-        } else {
-            AnimatedContentTransitionScope.SlideDirection.Right
-        },
-        animationSpec = tween(400)
-    )
-}
-
-
-fun screenPopExitTransition(
-    scope: AnimatedContentTransitionScope<NavBackStackEntry>,
-    moveScreenTowardsLeft: Boolean = false
-): ExitTransition {
-    return scope.slideOutOfContainer(
+    return this.slideOutOfContainer(
         towards = if (moveScreenTowardsLeft) {
             AnimatedContentTransitionScope.SlideDirection.Left
         } else {
