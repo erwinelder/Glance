@@ -220,16 +220,15 @@ class MakeRecordViewModel(
 }
 
 class MakeRecordViewModelFactory(
-    private val category: Category?,
-    private val subcategory: Category?,
+    private val categoryAndSubcategory: Pair<Category?, Category?>?,
     private val makeRecordUiState: MakeRecordUiState,
     private val makeRecordUnitList: List<MakeRecordUnitUiState>?,
 ) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MakeRecordViewModel(
-            category = category,
-            subcategory = subcategory,
+            category = categoryAndSubcategory?.first,
+            subcategory = categoryAndSubcategory?.second,
             makeRecordUiState = makeRecordUiState,
             makeRecordUnitList = makeRecordUnitList,
         ) as T

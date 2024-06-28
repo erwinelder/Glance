@@ -35,7 +35,6 @@ import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
@@ -389,15 +388,11 @@ fun HomeNavHost(
             val lastCategoryPair = if (
                 makeRecordUiStateAndUnitList.second == null && accountsUiState.activeAccount != null
             ) {
-                appViewModel.getLastRecordCategory(
-                    accountId = accountsUiState.activeAccount.id,
-                    type = CategoryType.Expense
-                )
+                appViewModel.getLastRecordCategory(accountId = accountsUiState.activeAccount.id)
             } else null
             val viewModel = viewModel<MakeRecordViewModel>(
                 factory = MakeRecordViewModelFactory(
-                    category = lastCategoryPair?.first,
-                    subcategory = lastCategoryPair?.second,
+                    categoryAndSubcategory = lastCategoryPair,
                     makeRecordUiState = makeRecordUiStateAndUnitList.first,
                     makeRecordUnitList = makeRecordUiStateAndUnitList.second
                 )

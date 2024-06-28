@@ -399,10 +399,13 @@ class AppViewModel(
         }
     }
 
-    fun getLastRecordCategory(accountId: Int, type: CategoryType): Pair<Category?, Category?> {
+    fun getLastRecordCategory(
+        accountId: Int,
+        type: CategoryType = CategoryType.Expense
+    ): Pair<Category?, Category?> {
 
         recordStackList.value.let { list ->
-            list.find { it.account.id == accountId } ?: list.firstOrNull()
+            list.find { it.account.id == accountId && it.isExpenseOrIncome() } ?: list.firstOrNull()
         }
         ?.stack?.firstOrNull()
         ?.let { return it.category to it.subcategory }
