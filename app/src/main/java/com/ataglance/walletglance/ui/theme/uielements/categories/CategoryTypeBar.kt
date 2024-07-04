@@ -17,7 +17,7 @@ import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 
 @Composable
-fun CategoryTypeFilterBar(
+fun CategoryTypeBar(
     currentCategoryType: CategoryType,
     onClick: (CategoryType) -> Unit
 ) {

@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ataglance.walletglance.data.accounts.color.AccountColorName
 import com.ataglance.walletglance.data.app.AppLanguage
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.color.CategoryColorName
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.records.MakeRecordStatus
@@ -214,7 +215,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val accountsUiState = appViewModel.accountsUiState.value
-        val categoriesLists = appViewModel.categoriesUiState.value
+        val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -227,14 +228,14 @@ class WalletGlanceInstrumentedTest {
             MakeRecordUnitUiState(
                 index = 0,
                 lazyListKey = 0,
-                category = categoriesLists.parentCategories.expense[0],
-                subcategory = null,
+                categoryWithSubcategory = CategoryWithSubcategory(
+                    categoriesWithSubcategories.expense.first().category
+                ),
                 amount = "516"
             )
         )
         val viewModel = MakeRecordViewModel(
-            category = null,
-            subcategory = null,
+            categoryWithSubcategory = null,
             makeRecordUiState = uiState,
             makeRecordUnitList = unitList
         )
@@ -248,7 +249,7 @@ class WalletGlanceInstrumentedTest {
                 accountId = accountsUiState.activeAccount!!.id,
                 amount = 516.0,
                 quantity = null,
-                categoryId = categoriesLists.parentCategories.expense[0].id,
+                categoryId = categoriesWithSubcategories.expense.first().category.id,
                 subcategoryId = null,
                 note = null
             )
@@ -307,7 +308,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val accountsUiState = appViewModel.accountsUiState.value
-        val categoriesLists = appViewModel.categoriesUiState.value
+        val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -320,14 +321,14 @@ class WalletGlanceInstrumentedTest {
             MakeRecordUnitUiState(
                 index = 0,
                 lazyListKey = 0,
-                category = categoriesLists.parentCategories.expense[0],
-                subcategory = null,
+                categoryWithSubcategory = CategoryWithSubcategory(
+                    categoriesWithSubcategories.expense.first().category
+                ),
                 amount = "516"
             )
         )
         val viewModel = MakeRecordViewModel(
-            category = null,
-            subcategory = null,
+            categoryWithSubcategory = null,
             makeRecordUiState = uiState,
             makeRecordUnitList = unitList
         )
@@ -341,7 +342,7 @@ class WalletGlanceInstrumentedTest {
                 accountId = accountsUiState.activeAccount!!.id,
                 amount = 516.0,
                 quantity = null,
-                categoryId = categoriesLists.parentCategories.expense[0].id,
+                categoryId = categoriesWithSubcategories.expense.first().category.id,
                 subcategoryId = null,
                 note = null
             )
@@ -392,7 +393,7 @@ class WalletGlanceInstrumentedTest {
     fun makingRecordProcess_Negative_NotPerformed() = runTest {
 
         val dateTimeState = DateTimeState()
-        val categoriesUiState = appViewModel.categoriesUiState.value
+        val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -405,14 +406,14 @@ class WalletGlanceInstrumentedTest {
             MakeRecordUnitUiState(
                 index = 0,
                 lazyListKey = 0,
-                category = categoriesUiState.parentCategories.expense[0],
-                subcategory = null,
+                categoryWithSubcategory = CategoryWithSubcategory(
+                    categoriesWithSubcategories.expense.first().category
+                ),
                 amount = "516"
             )
         )
         val viewModel = MakeRecordViewModel(
-            category = null,
-            subcategory = null,
+            categoryWithSubcategory = null,
             makeRecordUiState = uiState,
             makeRecordUnitList = unitList
         )

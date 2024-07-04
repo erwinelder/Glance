@@ -51,7 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.records.MakeRecordStatus
@@ -85,7 +85,7 @@ fun MakeRecordScreen(
     viewModel: MakeRecordViewModel,
     makeRecordStatus: MakeRecordStatus,
     accountList: List<Account>,
-    categoriesUiState: CategoriesLists,
+    categoriesWithSubcategories: CategoriesWithSubcategories,
     onMakeTransferButtonClick: () -> Unit,
     onSaveButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,
     onRepeatButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,
@@ -100,7 +100,7 @@ fun MakeRecordScreen(
         recordUnit.amount.isBlank() ||
                 recordUnit.amount.last() == '.' ||
                 recordUnit.amount.toDouble() == 0.0 ||
-                recordUnit.category == null
+                recordUnit.categoryWithSubcategory == null
     } && uiState.account != null
 
     val openDateDialog = remember { mutableStateOf(false) }
@@ -135,7 +135,7 @@ fun MakeRecordScreen(
                     onMakeTransferButtonClick = onMakeTransferButtonClick,
                     currentRecordType = uiState.type,
                     onRecordTypeChange = {
-                        viewModel.changeRecordType(it, categoriesUiState)
+                        viewModel.changeRecordType(it, categoriesWithSubcategories)
                     }
                 )
             }
@@ -182,7 +182,7 @@ fun MakeRecordScreen(
                             onNoteValueChange = { value ->
                                 viewModel.changeNoteValue(recordUnit.index, value)
                             },
-                            categoryIconRes = (recordUnit.subcategory ?: recordUnit.category)?.icon?.res,
+                            categoryIconRes = recordUnit.getSubcategoryOrCategory()?.icon?.res,
                             onCategoryClick = {
                                 viewModel.changeClickedUnitIndex(recordUnit.index)
                                 openCategoryDialog.value = true
@@ -248,7 +248,7 @@ fun MakeRecordScreen(
         )
         CategoryPicker(
             visible = openCategoryDialog.value,
-            categoriesUiState = categoriesUiState,
+            categoriesWithSubcategories = categoriesWithSubcategories,
             type = if (uiState.type == RecordType.Expense) CategoryType.Expense
                 else CategoryType.Income,
             onDismissRequest = { openCategoryDialog.value = false },
@@ -286,7 +286,8 @@ private fun LazyItemScope.RecordUnitBlock(
             if (targetCollapsed) {
                 RecordUnitBlockCollapsed(
                     noteText = recordUnitUiState.note,
-                    category = recordUnitUiState.subcategory ?: recordUnitUiState.category,
+                    category = recordUnitUiState.categoryWithSubcategory
+                        ?.getSubcategoryOrCategory(),
                     amount = recordUnitUiState.getFormattedAmountWithSpaces(),
                     quantity = recordUnitUiState.quantity,
                     accountCurrency = accountCurrency,
@@ -300,7 +301,8 @@ private fun LazyItemScope.RecordUnitBlock(
                 RecordUnitBlockExpanded(
                     noteText = recordUnitUiState.note,
                     onNoteValueChange = onNoteValueChange,
-                    category = recordUnitUiState.subcategory ?: recordUnitUiState.category,
+                    category = recordUnitUiState.categoryWithSubcategory
+                        ?.getSubcategoryOrCategory(),
                     categoryIconRes = categoryIconRes,
                     onCategoryClick = onCategoryClick,
                     amount = recordUnitUiState.amount,

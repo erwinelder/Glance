@@ -4,7 +4,6 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Home</string>
-    <string name="make_record">Make record</string>
     <string name="settings">Settings</string>
     <string name="setup">Setup</string>
 
@@ -132,6 +131,8 @@
     <string name="new_subcategory_name">New subcategory</string>
     <string name="new_category_collection_name">New collection</string>
     <string name="category_not_found">Category was not found</string>
+    <string name="collection_name">Collection name</string>
+    <string name="no_collections_of_this_type">No collections of this type</string>
     <string name="reset_data_description">Reset all app data, including accounts, records, categories, and settings.</string>
     <string name="reset_data_warning">Are you sure you want to reset all your data?</string>
     <string name="export_data_description">Export app data to a file.</string>

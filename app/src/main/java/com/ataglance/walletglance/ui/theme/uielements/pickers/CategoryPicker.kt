@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,9 +35,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
@@ -51,16 +52,15 @@ import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 @Composable
 fun CategoryPicker(
     visible: Boolean,
-    categoriesUiState: CategoriesLists,
+    categoriesWithSubcategories: CategoriesWithSubcategories,
     type: CategoryType,
     onDismissRequest: () -> Unit,
-    onCategoryChoose: (Category, Category?) -> Unit
+    onCategoryChoose: (CategoryWithSubcategory) -> Unit
 ) {
     val parentCategoryListState = rememberLazyListState()
     val subcategoryListState = rememberLazyListState()
-    var showSubcategoryList by remember { mutableStateOf(false) }
-    var chosenCategory by remember {
-        mutableStateOf(categoriesUiState.parentCategories.expense.first())
+    var chosenCategoryWithSubcategories: CategoryWithSubcategories? by remember {
+        mutableStateOf(null)
     }
 
     AnimatedVisibility(
@@ -72,97 +72,99 @@ fun CategoryPicker(
             modifier = Modifier
                 .clickable {
                     onDismissRequest()
-                    if (showSubcategoryList) showSubcategoryList = false
+                    if (chosenCategoryWithSubcategories != null) {
+                        chosenCategoryWithSubcategories = null
+                    }
                 }
                 .fillMaxSize()
                 .background(Color.Black.copy(.3f))
         )
     }
     AnimatedVisibility(
-        visible = visible && !showSubcategoryList,
+        visible = visible && chosenCategoryWithSubcategories == null,
         enter = dialogSlideFromBottomTransition,
         exit = dialogSlideToBottomTransition
     ) {
-        CategoryListWindow(
-            lazyListState = parentCategoryListState,
-            list = if (type == CategoryType.Expense) {
-                categoriesUiState.parentCategories.expense
-            } else {
-                categoriesUiState.parentCategories.income
-            },
-            onCategoryClick = { category ->
-                if (category.parentCategoryId != null) {
-                    chosenCategory = category
-                    showSubcategoryList = true
-                } else {
-                    onCategoryChoose(category, null)
-                    onDismissRequest()
+        LazyColumn(
+            state = parentCategoryListState,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
+                .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
+                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .fillMaxWidth(
+                    when {
+                        WindowTypeIsCompact -> .9f
+                        WindowTypeIsMedium -> .6f
+                        else -> .5f
+                    }
+                )
+        ) {
+            items(
+                items = categoriesWithSubcategories.getByType(type),
+                key = { it.category.id }
+            ) { categoryWithSubcategories ->
+                if (categoryWithSubcategories.category.orderNum != 1) {
+                    SmallDivider()
+                }
+                CategoryListItem(
+                    category = categoryWithSubcategories.category,
+                    onClick = { chosenCategoryWithSubcategories = categoryWithSubcategories }
+                )
+            }
+            if (false) {
+                item {
+                    SmallDivider(filledWidth = .6f)
+                    CloseButton(onClick = { chosenCategoryWithSubcategories = null })
                 }
             }
-        )
+        }
     }
     AnimatedVisibility(
-        visible = visible && showSubcategoryList,
+        visible = visible && chosenCategoryWithSubcategories != null,
         enter = dialogSlideFromBottomTransition,
         exit = dialogSlideToBottomTransition
     ) {
-        CategoryListWindow(
-            lazyListState = subcategoryListState,
-            list = if (type == CategoryType.Expense) {
-                categoriesUiState.subcategories.expense[chosenCategory.orderNum - 1]
-            } else {
-                categoriesUiState.subcategories.income[chosenCategory.orderNum - 1]
-            },
-            onCategoryClick = { category ->
-                onCategoryChoose(chosenCategory, category)
-                onDismissRequest()
-                showSubcategoryList = false
-            },
-            showCloseButton = true,
-            onCloseSubcategoryList = {
-                showSubcategoryList = false
-            }
-        )
-    }
-}
-
-@Composable
-private fun CategoryListWindow(
-    lazyListState: LazyListState,
-    list: List<Category>,
-    onCategoryClick: (Category) -> Unit,
-    showCloseButton: Boolean = false,
-    onCloseSubcategoryList: () -> Unit = {}
-) {
-    LazyColumn(
-        state = lazyListState,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-            .background(GlanceTheme.surfaceVariant.copy(1f))
-            .fillMaxWidth(
-                when {
-                    WindowTypeIsCompact -> .9f
-                    WindowTypeIsMedium -> .6f
-                    else -> .5f
+        LazyColumn(
+            state = subcategoryListState,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
+                .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
+                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .fillMaxWidth(
+                    when {
+                        WindowTypeIsCompact -> .9f
+                        WindowTypeIsMedium -> .6f
+                        else -> .5f
+                    }
+                )
+        ) {
+            items(
+                items = chosenCategoryWithSubcategories?.subcategoryList ?: emptyList(),
+                key = { it.id }
+            ) { category ->
+                if (category.orderNum != 1) {
+                    SmallDivider()
                 }
-            )
-    ) {
-        items(
-            items = list,
-            key = { it.id }
-        ) { category ->
-            if (category.orderNum != 1) {
-                SmallDivider()
+                CategoryListItem(
+                    category = category,
+                    onClick = { subcategory ->
+                        chosenCategoryWithSubcategories?.category?.let { parentCategory ->
+                            onCategoryChoose(
+                                CategoryWithSubcategory(parentCategory, subcategory)
+                            )
+                        }
+                    }
+                )
             }
-            CategoryListItem(category, onCategoryClick)
-        }
-        if (showCloseButton) {
-            item {
-                SmallDivider(filledWidth = .6f)
-                CloseButton(onClick = onCloseSubcategoryList)
+            if (true) {
+                item {
+                    SmallDivider(filledWidth = .6f)
+                    CloseButton(onClick = { chosenCategoryWithSubcategories = null })
+                }
             }
         }
     }

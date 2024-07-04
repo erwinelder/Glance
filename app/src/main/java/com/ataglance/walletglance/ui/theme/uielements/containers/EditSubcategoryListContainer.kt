@@ -30,12 +30,11 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.SubcategorySetupElement
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColumnScope.EditSubcategoryListContainer(
     subcategoryList: List<Category>,
     appTheme: AppTheme?,
-    onNavigateToEditCategoryScreen: (Int) -> Unit,
+    onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
     onAddNewSubcategory: () -> Unit
 ) {
@@ -52,59 +51,98 @@ fun ColumnScope.EditSubcategoryListContainer(
                 label = "subcategory list uploading"
             ) { targetSubcategoryList ->
                 if (!WindowTypeIsExpanded) {
-                    val lazyListState = rememberLazyListState()
-                    LazyColumn(
-                        state = lazyListState,
-                        contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(18.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(2.dp)
-                    ) {
-                        items(items = targetSubcategoryList, key = { it.id }) { category ->
-                            SubcategorySetupElement(
-                                category = category,
-                                appTheme = appTheme,
-                                onEditButton = {
-                                    onNavigateToEditCategoryScreen(category.orderNum)
-                                },
-                                onUpButtonClick = { onSwapCategories(category.orderNum, category.orderNum - 1) },
-                                upButtonEnabled = category.orderNum > 1,
-                                onDownButtonClick = { onSwapCategories(category.orderNum, category.orderNum + 1) },
-                                downButtonEnabled = category.orderNum < targetSubcategoryList.size,
-                            )
-                        }
-                    }
+                    CompactLayout(
+                        subcategoryList = targetSubcategoryList,
+                        appTheme = appTheme,
+                        onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
+                        onSwapCategories = onSwapCategories
+                    )
                 } else {
-                    val scrollState = rememberScrollState()
-                    FlowRow(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .verticalScroll(scrollState)
-                            .fillMaxWidth()
-                            .padding(9.dp)
-                    ) {
-                        targetSubcategoryList.forEach { category ->
-                            Box(modifier = Modifier.padding(9.dp)) {
-                                SubcategorySetupElement(
-                                    category = category,
-                                    appTheme = appTheme,
-                                    onEditButton = {
-                                        onNavigateToEditCategoryScreen(category.orderNum)
-                                    },
-                                    onUpButtonClick = { onSwapCategories(category.orderNum, category.orderNum - 1) },
-                                    upButtonEnabled = category.orderNum > 1,
-                                    onDownButtonClick = { onSwapCategories(category.orderNum, category.orderNum + 1) },
-                                    downButtonEnabled = category.orderNum < targetSubcategoryList.size,
-                                )
-                            }
-                        }
-                    }
+                    ExpandedLayout(
+                        subcategoryList = targetSubcategoryList,
+                        appTheme = appTheme,
+                        onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
+                        onSwapCategories = onSwapCategories
+                    )
                 }
             }
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
         SmallPrimaryButton(onClick = onAddNewSubcategory, text = stringResource(R.string.add_subcategory))
+    }
+}
+
+@Composable
+private fun CompactLayout(
+    subcategoryList: List<Category>,
+    appTheme: AppTheme?,
+    onNavigateToEditCategoryScreen: (Category) -> Unit,
+    onSwapCategories: (Int, Int) -> Unit
+) {
+    val lazyListState = rememberLazyListState()
+    LazyColumn(
+        state = lazyListState,
+        contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(2.dp)
+    ) {
+        items(items = subcategoryList, key = { it.id }) { category ->
+            SubcategorySetupElement(
+                category = category,
+                appTheme = appTheme,
+                onEditButton = {
+                    onNavigateToEditCategoryScreen(category)
+                },
+                onUpButtonClick = {
+                    onSwapCategories(category.orderNum, category.orderNum - 1)
+                },
+                upButtonEnabled = category.orderNum > 1,
+                onDownButtonClick = {
+                    onSwapCategories(category.orderNum, category.orderNum + 1)
+                },
+                downButtonEnabled = category.orderNum < subcategoryList.size,
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ExpandedLayout(
+    subcategoryList: List<Category>,
+    appTheme: AppTheme?,
+    onNavigateToEditCategoryScreen: (Category) -> Unit,
+    onSwapCategories: (Int, Int) -> Unit
+) {
+    val scrollState = rememberScrollState()
+    FlowRow(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .fillMaxWidth()
+            .padding(9.dp)
+    ) {
+        subcategoryList.forEach { category ->
+            Box(modifier = Modifier.padding(9.dp)) {
+                SubcategorySetupElement(
+                    category = category,
+                    appTheme = appTheme,
+                    onEditButton = {
+                        onNavigateToEditCategoryScreen(category)
+                    },
+                    onUpButtonClick = {
+                        onSwapCategories(category.orderNum, category.orderNum - 1)
+                    },
+                    upButtonEnabled = category.orderNum > 1,
+                    onDownButtonClick = {
+                        onSwapCategories(category.orderNum, category.orderNum + 1)
+                    },
+                    downButtonEnabled = category.orderNum < subcategoryList.size,
+                )
+            }
+        }
     }
 }

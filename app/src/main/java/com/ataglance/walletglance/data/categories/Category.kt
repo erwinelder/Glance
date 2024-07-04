@@ -19,10 +19,16 @@ data class Category(
 ) {
 
     fun isExpense() = type == CategoryType.Expense
-    fun isIncome() = type == CategoryType.Income
+    private fun isIncome() = type == CategoryType.Income
+
+    fun isParentCategory() = rank == CategoryRank.Parent
 
     fun getColorByTheme(theme: AppTheme?): LighterDarkerColors {
         return colorWithName.getColorByTheme(theme)
+    }
+
+    fun canBeDeleted(): Boolean {
+        return (isExpense() && id != 12 && id != 66) || (isIncome() && id != 77)
     }
 
     fun toCategoryEntity(): CategoryEntity {
@@ -35,6 +41,13 @@ data class Category(
             name = name,
             iconName = icon.name,
             colorName = colorWithName.getNameValue()
+        )
+    }
+
+    fun toCheckedCategory(checkedCategoryList: List<Category>): CheckedCategory {
+        return CheckedCategory(
+            category = this,
+            checked = checkedCategoryList.find { it.id == id } != null
         )
     }
 

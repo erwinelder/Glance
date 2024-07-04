@@ -97,10 +97,7 @@ fun EditCategoryScreen(
                             labelText = stringResource(R.string.name),
                             onValueChange = onNameChange
                         )
-                        if (
-                            category.parentCategoryId == category.id ||
-                            category.parentCategoryId == null
-                        ) {
+                        if (category.isParentCategory()) {
                             ColorButton(
                                 color = category.getColorByTheme(appTheme).darker,
                                 onClick = { showColorPicker = true }

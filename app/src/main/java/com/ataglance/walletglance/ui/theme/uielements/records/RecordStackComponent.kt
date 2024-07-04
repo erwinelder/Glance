@@ -55,7 +55,9 @@ fun RecordStackComponent(
                         )
                     }
                     RecordCategory(
-                        category = recordStackUnit.let { it.subcategory ?: it.category }
+                        category = recordStackUnit.let {
+                            it.categoryWithSubcategory?.getSubcategoryOrCategory()
+                        }
                     )
                 }
             }

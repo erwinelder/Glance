@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.data.records
 
 import com.ataglance.walletglance.data.accounts.RecordAccount
-import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.ui.utils.asChar
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
@@ -40,8 +40,8 @@ data class RecordStack(
                 accountId = account.id,
                 amount = unit.amount,
                 quantity = unit.quantity,
-                categoryId = unit.category?.id ?: 0,
-                subcategoryId = unit.subcategory?.id,
+                categoryId = unit.categoryWithSubcategory?.category?.id ?: 0,
+                subcategoryId = unit.categoryWithSubcategory?.subcategory?.id,
                 note = unit.note
             )
         }
@@ -52,8 +52,7 @@ data class RecordStack(
             MakeRecordUnitUiState(
                 lazyListKey = index,
                 index = index,
-                category = unit.category,
-                subcategory = unit.subcategory,
+                categoryWithSubcategory = unit.categoryWithSubcategory,
                 note = unit.note ?: "",
                 amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
                 quantity = unit.quantity?.toString() ?: "",
@@ -91,7 +90,6 @@ data class RecordStackUnit(
     val id: Int = 0,
     val amount: Double,
     val quantity: Int?,
-    val category: Category?,
-    val subcategory: Category?,
+    val categoryWithSubcategory: CategoryWithSubcategory?,
     val note: String?
 )

@@ -1,16 +1,13 @@
-package com.ataglance.walletglance.ui.viewmodels
+package com.ataglance.walletglance.ui.viewmodels.categoryCollections
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithCategories
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
-import com.ataglance.walletglance.ui.utils.toggle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,62 +17,69 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class CategoryCollectionsViewModel(
-    private val categoryList: List<Category>,
+    categoryList: List<Category>,
     categoryCollectionsWithIds: CategoryCollectionsWithIds
 ) : ViewModel() {
 
-    private val _categoryCollectionType: MutableStateFlow<CategoryCollectionType> =
-        MutableStateFlow(CategoryCollectionType.Mixed)
-    val categoryCollectionType: StateFlow<CategoryCollectionType> =
-        _categoryCollectionType.asStateFlow()
+    private val _collectionType: MutableStateFlow<CategoryCollectionType> =
+        MutableStateFlow(
+            if (categoryCollectionsWithIds.expense.isNotEmpty()) {
+                CategoryCollectionType.Expense
+            } else if (categoryCollectionsWithIds.income.isNotEmpty()) {
+                CategoryCollectionType.Income
+            } else {
+                CategoryCollectionType.Mixed
+            }
+        )
+    val collectionType: StateFlow<CategoryCollectionType> = _collectionType.asStateFlow()
 
     private val _collectionsWithCategories: MutableStateFlow<CategoryCollectionsWithCategories> =
         MutableStateFlow(categoryCollectionsWithIds.toCollectionsWithCategories(categoryList))
-    val collectionsWithCategories: StateFlow<CategoryCollectionsWithCategories> =
+    private val collectionsWithCategories: StateFlow<CategoryCollectionsWithCategories> =
         _collectionsWithCategories.asStateFlow()
 
     val collectionsWithCategoriesByType: StateFlow<List<CategoryCollectionWithCategories>> =
         combine(
             _collectionsWithCategories,
-            _categoryCollectionType
+            _collectionType
         ) { collectionsWithCategories, categoryType ->
-            collectionsWithCategories.getListByType(categoryType)
+            collectionsWithCategories.getByType(categoryType)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = listOf()
         )
 
-    private val _collectionToEdit: MutableStateFlow<CategoryCollectionWithCategories?> =
-        MutableStateFlow(null)
-    val collectionToEdit: StateFlow<CategoryCollectionWithCategories?> =
-        _collectionToEdit.asStateFlow()
 
-
-    fun changeCategoryType(type: CategoryCollectionType? = null) {
-        _categoryCollectionType.update { type ?: it.toggle() }
+    fun changeCategoryType(type: CategoryCollectionType) {
+        _collectionType.update { type }
     }
 
-    fun addNewCollection(context: Context) {
+    fun getNewCollection(): CategoryCollectionWithCategories {
+        return CategoryCollectionWithCategories(
+            id = 0,
+            orderNum = 0,
+            type = collectionType.value,
+            name = "",
+            categoryList = emptyList()
+        )
+    }
+
+    fun deleteCollection(collection: CategoryCollectionWithCategories) {
         _collectionsWithCategories.update {
-            it.cloneAndAddNewCollection(
-                type = categoryCollectionType.value,
-                name = context.getString(R.string.new_category_collection_name)
-            )
+            it.deleteCollection(collection)
         }
     }
 
-    fun deleteCollection(collectionOrderNum: Int) {
+    fun saveEditingCollection(editingCollection: CategoryCollectionWithCategories) {
         _collectionsWithCategories.update {
-            it.cloneAndDeleteCollectionByOrderNum(collectionOrderNum, categoryCollectionType.value)
+            if (editingCollection.id == 0) it.addCollection(editingCollection)
+            else it.replaceCollection(editingCollection)
         }
     }
 
-    fun applyCollectionToEdit(collectionOrderNum: Int) {
-        _collectionToEdit.update {
-            collectionsWithCategories.value.getListByType(categoryCollectionType.value)
-                .find { it.orderNum == collectionOrderNum }
-        }
+    fun getAllCollections(): List<CategoryCollectionWithCategories> {
+        return collectionsWithCategories.value.concatenateLists()
     }
 
 }

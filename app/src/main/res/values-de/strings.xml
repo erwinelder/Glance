@@ -3,7 +3,6 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Startseite</string>
-    <string name="make_record">Eintrag erstellen</string>
     <string name="settings">Einstellungen</string>
     <string name="setup">Einrichten</string>
 
@@ -131,6 +130,8 @@
     <string name="new_subcategory_name">Neue Unterkategorie</string>
     <string name="new_category_collection_name">Neue Sammlung</string>
     <string name="category_not_found">Kategorie wurde nicht gefunden</string>
+    <string name="collection_name">Sammlungsname</string>
+    <string name="no_collections_of_this_type">Keine Sammlungen dieses Typs vorhanden</string>
     <string name="reset_data_description">Setzen Sie alle App-Daten zurück, einschließlich Konten, Datensätze, Kategorien und Einstellungen.</string>
     <string name="reset_data_warning">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
     <string name="export_data_description">App-Daten in eine Datei exportieren.</string>

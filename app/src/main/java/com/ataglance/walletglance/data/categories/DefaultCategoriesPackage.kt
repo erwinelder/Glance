@@ -11,157 +11,18 @@ data class DefaultCategoriesPackage(
     val context: Context
 ) {
 
-    fun getDefaultCategories(): CategoriesLists {
-        return CategoriesLists(
-            parentCategories = ParentCategoriesLists(
-                expense = listOf(
-                    Category(
+    fun getDefaultCategories(): CategoriesWithSubcategories {
+        return CategoriesWithSubcategories(
+            expense = listOf(
+                CategoryWithSubcategories(
+                    category = Category(
                         id = 1, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 1, parentCategoryId = 1,
+                        orderNum = 1, parentCategoryId = null,
                         name = context.getString(R.string.food_and_drinks),
                         icon = CategoryIcon.FoodAndDrinks,
                         colorWithName = CategoryColors.Olive.toCategoryColorWithName()
                     ),
-                    Category(
-                        id = 2, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 2, parentCategoryId = 2,
-                        name = context.getString(R.string.housing),
-                        icon = CategoryIcon.Housing,
-                        colorWithName = CategoryColors.Camel.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 3, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 3, parentCategoryId = 3,
-                        name = context.getString(R.string.shopping),
-                        icon = CategoryIcon.Shopping,
-                        colorWithName = CategoryColors.Pink.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 4, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 4, parentCategoryId = 4,
-                        name = context.getString(R.string.transport),
-                        icon = CategoryIcon.Transport,
-                        colorWithName = CategoryColors.Green.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 5, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 5, parentCategoryId = 5,
-                        name = context.getString(R.string.vehicle),
-                        icon = CategoryIcon.Vehicle,
-                        colorWithName = CategoryColors.Red.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 6, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 6, parentCategoryId = 6,
-                        name = context.getString(R.string.digital_life),
-                        icon = CategoryIcon.DigitalLife,
-                        colorWithName = CategoryColors.LightBlue.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 7, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 7, parentCategoryId = 7,
-                        name = context.getString(R.string.medicine),
-                        icon = CategoryIcon.Medicine,
-                        colorWithName = CategoryColors.Lavender.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 8, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 8, parentCategoryId = 8,
-                        name = context.getString(R.string.education),
-                        icon = CategoryIcon.Education,
-                        colorWithName = CategoryColors.Blue.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 9, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 9, parentCategoryId = 9,
-                        name = context.getString(R.string.travels),
-                        icon = CategoryIcon.Travels,
-                        colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 10, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 10, parentCategoryId = 10,
-                        name = context.getString(R.string.entertainment),
-                        icon = CategoryIcon.Entertainment,
-                        colorWithName = CategoryColors.Orange.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 11, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 11, parentCategoryId = 11,
-                        name = context.getString(R.string.investments),
-                        icon = CategoryIcon.Investments,
-                        colorWithName = CategoryColors.Yellow.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 12, type = CategoryType.Expense, rank = CategoryRank.Parent,
-                        orderNum = 12, parentCategoryId = 12,
-                        name = context.getString(R.string.other_category),
-                        icon = CategoryIcon.Other,
-                        colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
-                    )
-                ),
-                income = listOf(
-                    Category(
-                        id = 70, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 1, parentCategoryId = null,
-                        name = context.getString(R.string.salary),
-                        icon = CategoryIcon.Salary,
-                        colorWithName = CategoryColors.Green.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 71, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 2, parentCategoryId = null,
-                        name = context.getString(R.string.scholarship),
-                        icon = CategoryIcon.Scholarship,
-                        colorWithName = CategoryColors.Blue.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 72, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 3, parentCategoryId = null,
-                        name = context.getString(R.string.sale),
-                        icon = CategoryIcon.Sales,
-                        colorWithName = CategoryColors.Orange.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 73, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 4, parentCategoryId = null,
-                        name = context.getString(R.string.rent),
-                        icon = CategoryIcon.Housing,
-                        colorWithName = CategoryColors.Camel.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 74, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 5, parentCategoryId = null,
-                        name = context.getString(R.string.refunds),
-                        icon = CategoryIcon.Refunds,
-                        colorWithName = CategoryColors.LightBlue.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 75, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 6, parentCategoryId = null,
-                        name = context.getString(R.string.investments),
-                        icon = CategoryIcon.Investments,
-                        colorWithName = CategoryColors.Yellow.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 76, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 7, parentCategoryId = null,
-                        name = context.getString(R.string.gifts),
-                        icon = CategoryIcon.Gifts,
-                        colorWithName = CategoryColors.Lavender.toCategoryColorWithName()
-                    ),
-                    Category(
-                        id = 77, type = CategoryType.Income, rank = CategoryRank.Parent,
-                        orderNum = 8, parentCategoryId = null,
-                        name = context.getString(R.string.transfers),
-                        icon = CategoryIcon.Transfers,
-                        colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
-                    )
-                )
-            ),
-            subcategories = SubcategoriesLists(
-                expense = listOf(
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 13, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 1,
@@ -176,8 +37,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Restaurant,
                             colorWithName = CategoryColors.Olive.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 2, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 2, parentCategoryId = null,
+                        name = context.getString(R.string.housing),
+                        icon = CategoryIcon.Housing,
+                        colorWithName = CategoryColors.Camel.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 15, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 2,
@@ -220,8 +90,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.HousingPurchase,
                             colorWithName = CategoryColors.Camel.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 3, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 3, parentCategoryId = null,
+                        name = context.getString(R.string.shopping),
+                        icon = CategoryIcon.Shopping,
+                        colorWithName = CategoryColors.Pink.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 21, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 3,
@@ -284,8 +163,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Shopping,
                             colorWithName = CategoryColors.Pink.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 4, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 4, parentCategoryId = null,
+                        name = context.getString(R.string.transport),
+                        icon = CategoryIcon.Transport,
+                        colorWithName = CategoryColors.Green.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 30, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 4,
@@ -307,8 +195,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Transport,
                             colorWithName = CategoryColors.Green.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 5, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 5, parentCategoryId = null,
+                        name = context.getString(R.string.vehicle),
+                        icon = CategoryIcon.Vehicle,
+                        colorWithName = CategoryColors.Red.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 33, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 5,
@@ -344,8 +241,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Vehicle,
                             colorWithName = CategoryColors.Red.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 6, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 6, parentCategoryId = null,
+                        name = context.getString(R.string.digital_life),
+                        icon = CategoryIcon.DigitalLife,
+                        colorWithName = CategoryColors.LightBlue.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 38, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 6,
@@ -374,8 +280,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Games,
                             colorWithName = CategoryColors.LightBlue.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 7, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 7, parentCategoryId = null,
+                        name = context.getString(R.string.medicine),
+                        icon = CategoryIcon.Medicine,
+                        colorWithName = CategoryColors.Lavender.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 42, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 7,
@@ -404,8 +319,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Medicine,
                             colorWithName = CategoryColors.Lavender.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 8, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 8, parentCategoryId = null,
+                        name = context.getString(R.string.education),
+                        icon = CategoryIcon.Education,
+                        colorWithName = CategoryColors.Blue.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 46, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 8,
@@ -427,8 +351,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Education,
                             colorWithName = CategoryColors.Blue.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 9, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 9, parentCategoryId = null,
+                        name = context.getString(R.string.travels),
+                        icon = CategoryIcon.Travels,
+                        colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 49, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 9,
@@ -478,8 +411,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Travels,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 10, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 10, parentCategoryId = null,
+                        name = context.getString(R.string.entertainment),
+                        icon = CategoryIcon.Entertainment,
+                        colorWithName = CategoryColors.Orange.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 56, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 10,
@@ -522,8 +464,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Entertainment,
                             colorWithName = CategoryColors.Orange.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 11, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 11, parentCategoryId = null,
+                        name = context.getString(R.string.investments),
+                        icon = CategoryIcon.Investments,
+                        colorWithName = CategoryColors.Yellow.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 62, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 11,
@@ -552,8 +503,17 @@ data class DefaultCategoriesPackage(
                             icon = CategoryIcon.Investments,
                             colorWithName = CategoryColors.Yellow.toCategoryColorWithName()
                         )
+                    )
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 12, type = CategoryType.Expense, rank = CategoryRank.Parent,
+                        orderNum = 12, parentCategoryId = null,
+                        name = context.getString(R.string.other_category),
+                        icon = CategoryIcon.Other,
+                        colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
                     ),
-                    listOf(
+                    subcategoryList = listOf(
                         Category(
                             id = 66, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 12,
@@ -583,24 +543,98 @@ data class DefaultCategoriesPackage(
                             colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
                         )
                     )
+                )
+            ),
+            income = listOf(
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 70, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 1, parentCategoryId = null,
+                        name = context.getString(R.string.salary),
+                        icon = CategoryIcon.Salary,
+                        colorWithName = CategoryColors.Green.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
                 ),
-                income = listOf(
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList()
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 71, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 2, parentCategoryId = null,
+                        name = context.getString(R.string.scholarship),
+                        icon = CategoryIcon.Scholarship,
+                        colorWithName = CategoryColors.Blue.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 72, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 3, parentCategoryId = null,
+                        name = context.getString(R.string.sale),
+                        icon = CategoryIcon.Sales,
+                        colorWithName = CategoryColors.Orange.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 73, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 4, parentCategoryId = null,
+                        name = context.getString(R.string.rent),
+                        icon = CategoryIcon.Housing,
+                        colorWithName = CategoryColors.Camel.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 74, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 5, parentCategoryId = null,
+                        name = context.getString(R.string.refunds),
+                        icon = CategoryIcon.Refunds,
+                        colorWithName = CategoryColors.LightBlue.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 75, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 6, parentCategoryId = null,
+                        name = context.getString(R.string.investments),
+                        icon = CategoryIcon.Investments,
+                        colorWithName = CategoryColors.Yellow.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 76, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 7, parentCategoryId = null,
+                        name = context.getString(R.string.gifts),
+                        icon = CategoryIcon.Gifts,
+                        colorWithName = CategoryColors.Lavender.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
+                ),
+                CategoryWithSubcategories(
+                    category = Category(
+                        id = 77, type = CategoryType.Income, rank = CategoryRank.Parent,
+                        orderNum = 8, parentCategoryId = null,
+                        name = context.getString(R.string.transfers),
+                        icon = CategoryIcon.Transfers,
+                        colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
+                    ),
+                    subcategoryList = emptyList()
                 )
             )
         )
     }
 
-    fun translateDefaultCategories(categoriesLists: CategoriesLists): List<Category> {
-        val translatedDefaultCategories = getDefaultCategories().concatenateLists()
-        val currentCategoriesToTranslate = categoriesLists.concatenateLists()
+    fun translateDefaultCategoriesIn(
+        categoriesWithSubcategories: CategoriesWithSubcategories
+    ): List<Category> {
+        val translatedDefaultCategories = getDefaultCategories().concatenateAsCategoryList()
+        val currentCategoriesToTranslate = categoriesWithSubcategories.concatenateAsCategoryList()
             .filter { translatedDefaultCategories.findById(it.id) != null }
 
         return currentCategoriesToTranslate.map { currentCategory ->

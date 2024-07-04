@@ -38,9 +38,9 @@ fun GlassSurface(
             .fillMaxWidth(
                 filledWidth ?:
                 when {
-                    WindowTypeIsCompact -> .86f
-                    WindowTypeIsMedium -> .64f
-                    else -> .42f
+                    WindowTypeIsCompact -> .9f
+                    WindowTypeIsMedium -> .67f
+                    else -> .44f
                 }
             )
             .clip(RoundedCornerShape(cornerSize))

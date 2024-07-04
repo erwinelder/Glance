@@ -37,43 +37,41 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeToggleButton
+import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
 @Composable
 fun SetupCategoryCollectionsScreen(
     collectionsWithCategories: List<CategoryCollectionWithCategories>,
-    categoryCollectionType: CategoryCollectionType,
-    onCategoryTypeChange: () -> Unit,
-    onNavigateToEditCollectionScreen: (Int) -> Unit,
-    onAddNewCollection: () -> Unit,
+    collectionType: CategoryCollectionType,
+    onCategoryTypeChange: (CategoryCollectionType) -> Unit,
+    onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories?) -> Unit,
     onSaveCollectionsButton: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.screen_vertical_padding),
-                bottom = dimensionResource(R.dimen.screen_vertical_padding)
-            )
+            .padding(vertical = dimensionResource(R.dimen.screen_vertical_padding))
     ) {
-        CategoryCollectionTypeToggleButton(
-            currentType = categoryCollectionType,
+        CategoryCollectionTypeBar(
+            currentType = collectionType,
             onClick = onCategoryTypeChange
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
@@ -83,7 +81,9 @@ fun SetupCategoryCollectionsScreen(
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
         SmallPrimaryButton(
-            onClick = onAddNewCollection,
+            onClick = {
+                onNavigateToEditCollectionScreen(null)
+            },
             text = stringResource(R.string.add_collection)
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.widgets_gap)))
@@ -98,20 +98,17 @@ fun SetupCategoryCollectionsScreen(
 @Composable
 private fun ColumnScope.CategoryCollectionsContainer(
     collectionsWithCategories: List<CategoryCollectionWithCategories>,
-    onNavigateToEditCategoryCollectionScreen: (Int) -> Unit,
+    onNavigateToEditCategoryCollectionScreen: (CategoryCollectionWithCategories) -> Unit,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.weight(1f)
+    GlassSurface(
+        modifier = Modifier.weight(1f),
+        filledWidth = if (!WindowTypeIsExpanded) null else .86f
     ) {
-        GlassSurface(
-            modifier = Modifier.weight(1f),
-            filledWidth = if (!WindowTypeIsExpanded) null else .86f
-        ) {
-            AnimatedContent(
-                targetState = collectionsWithCategories,
-                label = "category list uploading"
-            ) { targetCollectionsWithCategories ->
+        AnimatedContent(
+            targetState = collectionsWithCategories,
+            label = "category list uploading"
+        ) { targetCollectionsWithCategories ->
+            if (targetCollectionsWithCategories.isNotEmpty()) {
                 if (!WindowTypeIsExpanded) {
                     val lazyListState = rememberLazyListState()
                     LazyColumn(
@@ -125,14 +122,14 @@ private fun ColumnScope.CategoryCollectionsContainer(
                             .fillMaxWidth()
                             .padding(2.dp)
                     ) {
-                       items(
-                           items = targetCollectionsWithCategories,
-                           key = { it.id }
-                       ) { collection ->
-                           CategoryCollectionSetupComponent(collection) {
-                               onNavigateToEditCategoryCollectionScreen(collection.orderNum)
-                           }
-                       }
+                        items(
+                            items = targetCollectionsWithCategories,
+                            key = { it.id }
+                        ) { collection ->
+                            CategoryCollectionSetupComponent(collection) {
+                                onNavigateToEditCategoryCollectionScreen(collection)
+                            }
+                        }
                     }
                 } else {
                     val scrollState = rememberScrollState()
@@ -146,12 +143,14 @@ private fun ColumnScope.CategoryCollectionsContainer(
                         targetCollectionsWithCategories.forEach { collection ->
                             Box(modifier = Modifier.padding(9.dp)) {
                                 CategoryCollectionSetupComponent(collection) {
-                                    onNavigateToEditCategoryCollectionScreen(collection.orderNum)
+                                    onNavigateToEditCategoryCollectionScreen(collection)
                                 }
                             }
                         }
                     }
                 }
+            } else {
+                NoItemsMessage()
             }
         }
     }
@@ -199,6 +198,23 @@ private fun CategoryCollectionSetupComponent(
     }
 }
 
+@Composable
+private fun NoItemsMessage() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(R.string.no_collections_of_this_type),
+            color = GlanceTheme.onSurface.copy(.6f),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Light
+        )
+    }
+}
+
+
+
 @Preview
 @Composable
 private fun SetupCategoryCollectionsScreenPreview() {
@@ -242,10 +258,9 @@ private fun SetupCategoryCollectionsScreenPreview() {
                             categoryList = listOf()
                         ),
                     ),
-                    categoryCollectionType = CategoryCollectionType.Mixed,
+                    collectionType = CategoryCollectionType.Mixed,
                     onCategoryTypeChange = {},
                     onNavigateToEditCollectionScreen = {},
-                    onAddNewCollection = {},
                     onSaveCollectionsButton = {},
                 )
             }

@@ -3,11 +3,11 @@ package com.ataglance.walletglance.data.categoryCollections
 import com.ataglance.walletglance.data.categories.Category
 
 data class CategoryCollectionWithCategories(
-    val id: Int,
-    val orderNum: Int,
-    val type: CategoryCollectionType,
-    val name: String,
-    val categoryList: List<Category>?
+    val id: Int = 0,
+    val orderNum: Int = 0,
+    val type: CategoryCollectionType = CategoryCollectionType.Mixed,
+    val name: String = "",
+    val categoryList: List<Category>? = null
 ) {
 
     fun toCollectionWithIds(): CategoryCollectionWithIds {

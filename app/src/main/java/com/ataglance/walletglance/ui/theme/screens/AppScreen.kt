@@ -34,7 +34,8 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
@@ -59,6 +60,7 @@ import com.ataglance.walletglance.ui.theme.screens.settings.accounts.SetupAccoun
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditCategoryScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditSubcategoryListScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.SetupCategoriesScreen
+import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.EditCategoryCollectionScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.SetupCategoryCollectionsScreen
 import com.ataglance.walletglance.ui.theme.uielements.BottomNavBar
 import com.ataglance.walletglance.ui.theme.uielements.SetupProgressTopBar
@@ -75,8 +77,6 @@ import com.ataglance.walletglance.ui.utils.toCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
 import com.ataglance.walletglance.ui.viewmodels.AppUiSettings
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.CategoryCollectionsViewModel
-import com.ataglance.walletglance.ui.viewmodels.CategoryCollectionsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
 import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
 import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
@@ -91,6 +91,10 @@ import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsVie
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModel
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.categoryCollections.CategoryCollectionsViewModel
+import com.ataglance.walletglance.ui.viewmodels.categoryCollections.CategoryCollectionsViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.categoryCollections.EditCategoryCollectionViewModel
+import com.ataglance.walletglance.ui.viewmodels.categoryCollections.EditCategoryCollectionViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModelFactory
@@ -112,7 +116,8 @@ fun AppScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
-    val categoriesUiState by appViewModel.categoriesUiState.collectAsStateWithLifecycle()
+    val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories
+        .collectAsStateWithLifecycle()
     val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState
         .collectAsStateWithLifecycle()
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
@@ -182,7 +187,7 @@ fun AppScreen(
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,
             accountsUiState = accountsUiState,
-            categoriesLists = categoriesUiState,
+            categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsUiState = categoryCollectionsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
             recordStackList = recordStackList,
@@ -245,7 +250,7 @@ fun HomeNavHost(
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     accountsUiState: AccountsUiState,
-    categoriesLists: CategoriesLists,
+    categoriesWithSubcategories: CategoriesWithSubcategories,
     categoryCollectionsUiState: CategoryCollectionsWithIds,
     dateRangeMenuUiState: DateRangeMenuUiState,
     recordStackList: List<RecordStack>,
@@ -385,14 +390,14 @@ fun HomeNavHost(
                 recordNum = appUiSettings.nextRecordNum(),
                 account = accountsUiState.activeAccount
             ) to null)
-            val lastCategoryPair = if (
+            val categoryWithSubcategory = if (
                 makeRecordUiStateAndUnitList.second == null && accountsUiState.activeAccount != null
             ) {
                 appViewModel.getLastRecordCategory(accountId = accountsUiState.activeAccount.id)
             } else null
             val viewModel = viewModel<MakeRecordViewModel>(
                 factory = MakeRecordViewModelFactory(
-                    categoryAndSubcategory = lastCategoryPair,
+                    categoryWithSubcategory = categoryWithSubcategory,
                     makeRecordUiState = makeRecordUiStateAndUnitList.first,
                     makeRecordUnitList = makeRecordUiStateAndUnitList.second
                 )
@@ -404,7 +409,7 @@ fun HomeNavHost(
                 viewModel = viewModel,
                 makeRecordStatus = makeRecordStatus,
                 accountList = accountsUiState.accountList,
-                categoriesUiState = categoriesLists,
+                categoriesWithSubcategories = categoriesWithSubcategories,
                 onMakeTransferButtonClick = {
                     navController.navigate(
                         MainScreens.MakeTransfer(
@@ -486,7 +491,7 @@ fun HomeNavHost(
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,
             accountList = accountsUiState.accountList,
-            categoriesLists = categoriesLists,
+            categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsUiState = categoryCollectionsUiState
         )
         composable<MainScreens.FinishSetup> {
@@ -510,7 +515,7 @@ fun NavGraphBuilder.settingsGraph(
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     accountList: List<Account>,
-    categoriesLists: CategoriesLists,
+    categoriesWithSubcategories: CategoriesWithSubcategories,
     categoryCollectionsUiState: CategoryCollectionsWithIds
 ) {
     navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
@@ -579,13 +584,12 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
-            categoriesLists = categoriesLists
+            categoriesWithSubcategories = categoriesWithSubcategories
         )
         categoryCollectionsGraph(
             navController = navController,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings,
-            categoriesLists = categoriesLists,
+            categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsWithIds = categoryCollectionsUiState
         )
         composable<SettingsScreens.ResetData> {
@@ -676,7 +680,7 @@ fun NavGraphBuilder.accountsGraph(
                 showDeleteAccountButton = showDeleteAccountButton,
                 onColorChange = editAccountViewModel::changeColor,
                 onNameChange = editAccountViewModel::changeName,
-                onNavigateToEditAccountCurrencyWindow = {
+                onNavigateToEditAccountCurrencyScreen = {
                     navController.navigate(
                         AccountsSettingsScreens.EditAccountCurrency(editAccountUiState.currency)
                     )
@@ -731,7 +735,7 @@ fun NavGraphBuilder.categoriesGraph(
     scaffoldPadding: PaddingValues,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
-    categoriesLists: CategoriesLists
+    categoriesWithSubcategories: CategoriesWithSubcategories
 ) {
     navigation<SettingsScreens.Categories>(
         startDestination = CategoriesSettingsScreens.EditCategories
@@ -740,10 +744,9 @@ fun NavGraphBuilder.categoriesGraph(
             val viewModel = backStack.sharedViewModel<SetupCategoriesViewModel>(
                 navController = navController,
                 factory = SetupCategoriesViewModelFactory(
-                    categoriesLists = categoriesLists.takeIf {
-                        it.parentCategories.expense.isNotEmpty() &&
-                                it.parentCategories.income.isNotEmpty()
-                    } ?: DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+                    categoriesWithSubcategories = categoriesWithSubcategories
+                        .takeIf { it.expense.isNotEmpty() && it.income.isNotEmpty() }
+                        ?: DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
                 )
             )
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -759,12 +762,12 @@ fun NavGraphBuilder.categoriesGraph(
                 appTheme = appUiSettings.appTheme,
                 uiState = uiState,
                 onShowCategoriesByType = viewModel::changeCategoryTypeToShow,
-                onNavigateToEditSubcategoryListScreen = { orderNum: Int ->
-                    viewModel.applySubcategoryList(orderNum)
+                onNavigateToEditSubcategoryListScreen = { category: CategoryWithSubcategories ->
+                    viewModel.applySubcategoryListToEdit(category)
                     navController.navigate(CategoriesSettingsScreens.EditSubcategories)
                 },
-                onNavigateToEditCategoryScreen = { orderNum ->
-                    viewModel.applyCategoryToEdit(orderNum)
+                onNavigateToEditCategoryScreen = { category ->
+                    viewModel.applyCategoryToEdit(category)
                     navController.navigate(CategoriesSettingsScreens.EditCategory)
                 },
                 onSwapCategories = viewModel::swapParentCategories,
@@ -794,13 +797,13 @@ fun NavGraphBuilder.categoriesGraph(
             EditSubcategoryListScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
-                subcategoryList = uiState.subcategoryList,
+                categoryWithSubcategories = uiState.categoryWithSubcategories,
                 onSaveButton = {
                     viewModel.saveSubcategoryList()
                     navController.popBackStack()
                 },
-                onNavigateToEditCategoryScreen = { orderNum ->
-                    viewModel.applyCategoryToEdit(orderNum)
+                onNavigateToEditCategoryScreen = { category ->
+                    viewModel.applyCategoryToEdit(category)
                     navController.navigate(CategoriesSettingsScreens.EditCategory)
                 },
                 onSwapCategories = viewModel::swapSubcategories,
@@ -841,46 +844,52 @@ fun NavGraphBuilder.categoriesGraph(
 fun NavGraphBuilder.categoryCollectionsGraph(
     navController: NavHostController,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings,
-    categoriesLists: CategoriesLists,
+    categoriesWithSubcategories: CategoriesWithSubcategories,
     categoryCollectionsWithIds: CategoryCollectionsWithIds
 ) {
     navigation<SettingsScreens.CategoryCollections>(
         startDestination = CategoryCollectionsSettingsScreens.EditCategoryCollections
     ) {
         composable<CategoryCollectionsSettingsScreens.EditCategoryCollections> { backStack ->
-            val viewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
+
+            val collectionsViewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
                 navController = navController,
                 factory = CategoryCollectionsViewModelFactory(
-                    categoryList = categoriesLists.concatenateLists(),
+                    categoryList = categoriesWithSubcategories.concatenateAsCategoryList(),
                     collectionsWithIds = categoryCollectionsWithIds
                 )
             )
-            val collectionList by viewModel.collectionsWithCategories.collectAsStateWithLifecycle()
-            val collectionListByType by viewModel.collectionsWithCategoriesByType
-                .collectAsStateWithLifecycle()
-            val categoryCollectionType by viewModel.categoryCollectionType
-                .collectAsStateWithLifecycle()
+            val editCollectionViewModel = backStack
+                .sharedViewModel<EditCategoryCollectionViewModel>(
+                    navController = navController,
+                    factory = EditCategoryCollectionViewModelFactory(
+                        categoriesWithSubcategories = categoriesWithSubcategories
+                    )
+                )
+
+            val collectionListByType by collectionsViewModel
+                .collectionsWithCategoriesByType.collectAsStateWithLifecycle()
+            val categoryCollectionType by collectionsViewModel
+                .collectionType.collectAsStateWithLifecycle()
+
             val coroutineScope = rememberCoroutineScope()
-            val context = LocalContext.current
 
             SetupCategoryCollectionsScreen(
                 collectionsWithCategories = collectionListByType,
-                categoryCollectionType = categoryCollectionType,
-                onCategoryTypeChange = viewModel::changeCategoryType,
-                onNavigateToEditCollectionScreen = { orderNum: Int ->
-                    viewModel.applyCollectionToEdit(orderNum)
+                collectionType = categoryCollectionType,
+                onCategoryTypeChange = collectionsViewModel::changeCategoryType,
+                onNavigateToEditCollectionScreen = { collectionOrNull ->
+                    editCollectionViewModel.applyCollection(
+                        collection = collectionOrNull ?: collectionsViewModel.getNewCollection()
+                    )
                     navController.navigate(
                         CategoryCollectionsSettingsScreens.EditCategoryCollection
                     )
                 },
-                onAddNewCollection = {
-                    viewModel.addNewCollection(context)
-                },
                 onSaveCollectionsButton = {
                     coroutineScope.launch {
                         appViewModel.saveCategoryCollectionsToDb(
-                            collectionList.concatenateLists().toCollectionsWithIds()
+                            collectionsViewModel.getAllCollections().toCollectionsWithIds()
                         )
                         navController.popBackStack()
                     }
@@ -888,10 +897,48 @@ fun NavGraphBuilder.categoryCollectionsGraph(
 //                onSwapCategories = viewModel::swapParentCategories
             )
         }
-        composable<CategoryCollectionsSettingsScreens.EditCategoryCollection> {
-            val viewModel = it.sharedViewModel<CategoryCollectionsViewModel>(navController)
+        composable<CategoryCollectionsSettingsScreens.EditCategoryCollection> { backStack ->
 
+            val collectionsViewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
+                navController = navController
+            )
+            val editCollectionViewModel = backStack
+                .sharedViewModel<EditCategoryCollectionViewModel>(
+                    navController = navController,
+                    factory = EditCategoryCollectionViewModelFactory(
+                        categoriesWithSubcategories = categoriesWithSubcategories
+                    )
+                )
 
+            val collectionUiState by editCollectionViewModel
+                .collectionUiState.collectAsStateWithLifecycle()
+            val editingCategoriesWithSubcategories by editCollectionViewModel
+                .editingCategoriesWithSubcategories.collectAsStateWithLifecycle()
+            val expandedCategory by editCollectionViewModel
+                .expandedCategory.collectAsStateWithLifecycle()
+            val allowSaving by editCollectionViewModel
+                .allowSaving.collectAsStateWithLifecycle()
+
+            EditCategoryCollectionScreen(
+                collection = collectionUiState,
+                editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+                expandedCategory = expandedCategory,
+                allowDeleting = editCollectionViewModel.allowDeleting.value,
+                allowSaving = allowSaving,
+                onNameChange = editCollectionViewModel::changeName,
+                onCheckedChange = editCollectionViewModel::inverseCheckedCategoryState,
+                onExpandedChange = editCollectionViewModel::inverseExpandedState,
+                onDeleteButton = {
+                    collectionsViewModel.deleteCollection(collectionUiState)
+                    navController.popBackStack()
+                },
+                onSaveButton = {
+                    collectionsViewModel.saveEditingCollection(
+                        editingCollection = editCollectionViewModel.getCollection()
+                    )
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

@@ -25,10 +25,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeFilterBar
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeBar
 import com.ataglance.walletglance.ui.theme.uielements.categories.ParentCategorySetupElement
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesUiState
 
@@ -38,8 +40,8 @@ fun ColumnScope.CategoriesSetupContainer(
     uiState: SetupCategoriesUiState,
     appTheme: AppTheme?,
     onShowCategoriesByType: (CategoryType) -> Unit,
-    onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
-    onNavigateToEditCategoryScreen: (Int) -> Unit,
+    onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
+    onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
     onAddNewCategory: () -> Unit
 ) {
@@ -47,7 +49,7 @@ fun ColumnScope.CategoriesSetupContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.weight(1f)
     ) {
-        CategoryTypeFilterBar(
+        CategoryTypeBar(
             currentCategoryType = uiState.categoryType,
             onClick = onShowCategoriesByType
         )
@@ -56,16 +58,12 @@ fun ColumnScope.CategoriesSetupContainer(
             modifier = Modifier.weight(1f),
             filledWidth = if (!WindowTypeIsExpanded) null else .86f
         ) {
-            val categoryList = if (uiState.categoryType == CategoryType.Expense) {
-                uiState.expenseParentCategoryList
-            } else {
-                uiState.incomeParentCategoryList
-            }
+            val categoryWithSubcategoriesList = uiState.getCategoriesWithSubcategoriesListByType()
 
             AnimatedContent(
-                targetState = categoryList,
+                targetState = categoryWithSubcategoriesList,
                 label = "category list uploading"
-            ) { targetCategoryList ->
+            ) { categoryList ->
                 if (!WindowTypeIsExpanded) {
                     val lazyListState = rememberLazyListState()
                     LazyColumn(
@@ -77,20 +75,31 @@ fun ColumnScope.CategoriesSetupContainer(
                             .fillMaxWidth()
                             .padding(2.dp)
                     ) {
-                        items(items = targetCategoryList, key = { it.id }) { category ->
+                        items(
+                            items = categoryList,
+                            key = { it.category.id }
+                        ) { item ->
                             ParentCategorySetupElement(
-                                category = category,
+                                category = item.category,
                                 appTheme = appTheme,
                                 onNavigateToEditSubcategoryListScreen = {
-                                    onNavigateToEditSubcategoryListScreen(category.orderNum)
+                                    onNavigateToEditSubcategoryListScreen(item)
                                 },
                                 onEditButton = {
-                                    onNavigateToEditCategoryScreen(category.orderNum)
+                                    onNavigateToEditCategoryScreen(item.category)
                                 },
-                                onUpButtonClick = { onSwapCategories(category.orderNum, category.orderNum - 1) },
-                                upButtonEnabled = category.orderNum > 1,
-                                onDownButtonClick = { onSwapCategories(category.orderNum, category.orderNum + 1) },
-                                downButtonEnabled = category.orderNum < targetCategoryList.size,
+                                onUpButtonClick = {
+                                    onSwapCategories(
+                                        item.category.orderNum, item.category.orderNum - 1
+                                    )
+                                },
+                                upButtonEnabled = item.category.orderNum > 1,
+                                onDownButtonClick = {
+                                    onSwapCategories(
+                                        item.category.orderNum, item.category.orderNum + 1
+                                    )
+                                },
+                                downButtonEnabled = item.category.orderNum < categoryList.size,
                             )
                         }
                     }
@@ -103,21 +112,29 @@ fun ColumnScope.CategoriesSetupContainer(
                             .fillMaxWidth()
                             .padding(9.dp)
                     ) {
-                        targetCategoryList.forEach { category ->
+                        categoryList.forEach { item ->
                             Box(modifier = Modifier.padding(9.dp)) {
                                 ParentCategorySetupElement(
-                                    category = category,
+                                    category = item.category,
                                     appTheme = appTheme,
                                     onNavigateToEditSubcategoryListScreen = {
-                                        onNavigateToEditSubcategoryListScreen(category.orderNum)
+                                        onNavigateToEditSubcategoryListScreen(item)
                                     },
                                     onEditButton = {
-                                        onNavigateToEditCategoryScreen(category.orderNum)
+                                        onNavigateToEditCategoryScreen(item.category)
                                     },
-                                    onUpButtonClick = { onSwapCategories(category.orderNum, category.orderNum - 1) },
-                                    upButtonEnabled = category.orderNum > 1,
-                                    onDownButtonClick = { onSwapCategories(category.orderNum, category.orderNum + 1) },
-                                    downButtonEnabled = category.orderNum < targetCategoryList.size,
+                                    onUpButtonClick = {
+                                        onSwapCategories(
+                                            item.category.orderNum, item.category.orderNum - 1
+                                        )
+                                    },
+                                    upButtonEnabled = item.category.orderNum > 1,
+                                    onDownButtonClick = {
+                                        onSwapCategories(
+                                            item.category.orderNum, item.category.orderNum + 1
+                                        )
+                                    },
+                                    downButtonEnabled = item.category.orderNum < categoryList.size,
                                 )
                             }
                         }

@@ -10,10 +10,10 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppLanguage
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.CategoriesLists
-import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
@@ -36,12 +36,10 @@ import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.utils.breakOnCollectionsAndAssociations
-import com.ataglance.walletglance.ui.utils.breakOnDifferentLists
 import com.ataglance.walletglance.ui.utils.checkOrderNumbers
 import com.ataglance.walletglance.ui.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.ui.utils.findById
 import com.ataglance.walletglance.ui.utils.findByOrderNum
-import com.ataglance.walletglance.ui.utils.findByRecordNum
 import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.ui.utils.getCalendarEndLong
@@ -56,6 +54,7 @@ import com.ataglance.walletglance.ui.utils.inverse
 import com.ataglance.walletglance.ui.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.ui.utils.toAccountEntityList
 import com.ataglance.walletglance.ui.utils.toAccountList
+import com.ataglance.walletglance.ui.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.ui.utils.toCategoryEntityList
 import com.ataglance.walletglance.ui.utils.toRecordStackList
 import com.ataglance.walletglance.ui.utils.transfersToRecordsWithCategoryOfTransfer
@@ -152,8 +151,8 @@ class AppViewModel(
     }
 
     fun translateDefaultCategories(context: Context) {
-        val translatedCategories = DefaultCategoriesPackage(context).translateDefaultCategories(
-            categoriesLists = categoriesUiState.value
+        val translatedCategories = DefaultCategoriesPackage(context).translateDefaultCategoriesIn(
+            categoriesWithSubcategories = categoriesWithSubcategories.value
         )
 
         viewModelScope.launch {
@@ -364,27 +363,24 @@ class AppViewModel(
     }
 
 
-    private val _categoriesUiState: MutableStateFlow<CategoriesLists> =
-        MutableStateFlow(CategoriesLists())
-    val categoriesUiState: StateFlow<CategoriesLists> = _categoriesUiState.asStateFlow()
+    private val _categoriesWithSubcategories: MutableStateFlow<CategoriesWithSubcategories> =
+        MutableStateFlow(CategoriesWithSubcategories())
+    val categoriesWithSubcategories: StateFlow<CategoriesWithSubcategories> =
+        _categoriesWithSubcategories.asStateFlow()
 
     private fun fetchCategoriesFromDb() {
         viewModelScope.launch {
             categoryRepository.getCategories().collect { categoryEntityList ->
-
-                try {
-                    _categoriesUiState.update { categoryEntityList.breakOnDifferentLists() }
-                } catch (e: Exception) {
-                    saveCategoriesToDb(categoryEntityList.fixOrderNumbers())
+                _categoriesWithSubcategories.update {
+                    categoryEntityList.toCategoriesWithSubcategories()
                 }
-
             }
         }
     }
 
     suspend fun saveCategoriesToDb(categoryList: List<CategoryEntity>) {
-        val listOfIdsToDelete = categoriesUiState.value
-            .concatenateLists()
+        val listOfIdsToDelete = categoriesWithSubcategories.value
+            .concatenateAsCategoryList()
             .toCategoryEntityList()
             .getIdsThatAreNotInList(categoryList)
 
@@ -402,20 +398,16 @@ class AppViewModel(
     fun getLastRecordCategory(
         accountId: Int,
         type: CategoryType = CategoryType.Expense
-    ): Pair<Category?, Category?> {
+    ): CategoryWithSubcategory? {
 
         recordStackList.value.let { list ->
             list.find { it.account.id == accountId && it.isExpenseOrIncome() } ?: list.firstOrNull()
         }
         ?.stack?.firstOrNull()
-        ?.let { return it.category to it.subcategory }
+        ?.let { return it.categoryWithSubcategory }
 
-        return categoriesUiState.value.parentCategories.getByType(type).lastOrNull()
-            .let { parCategory ->
-                parCategory to parCategory?.parentCategoryId?.let {
-                    categoriesUiState.value.subcategories.getByType(type).lastOrNull()?.lastOrNull()
-                }
-            }
+        return categoriesWithSubcategories.value.getByTypeOrAll(type)
+            .lastOrNull()?.getWithLastSubcategory()
     }
 
 
@@ -442,28 +434,24 @@ class AppViewModel(
         collectionUiStateList: List<CategoryCollectionWithIds>
     ) {
 
-        val newCollectionsAndAssociations =
-            collectionUiStateList.breakOnCollectionsAndAssociations()
-        val originalCollectionsAndAssociations = categoryCollectionsUiState.value
+        val (newCollections, newAssociations) = collectionUiStateList
+            .breakOnCollectionsAndAssociations()
+        val (originalCollections, originalAssociations) = categoryCollectionsUiState.value
             .concatenateLists().breakOnCollectionsAndAssociations()
 
-        val categoryCollectionsIdsToDelete =
-            newCollectionsAndAssociations.first.getIdsThatAreNotInList(
-                originalCollectionsAndAssociations.first
-            )
-        val collectionCategoryAssociationsToDelete =
-            newCollectionsAndAssociations.second.getAssociationsThatAreNotInList(
-                originalCollectionsAndAssociations.second
-            )
+        val collectionsIdsToDelete = originalCollections.getIdsThatAreNotInList(newCollections)
+        val associationsToDelete = originalAssociations
+            .getAssociationsThatAreNotInList(newAssociations)
 
         viewModelScope.launch {
             categoryCollectionAndCollectionCategoryAssociationRepository
                 .deleteAndUpsertCollectionsAndDeleteAndUpsertAssociations(
-                    collectionsIdsToDelete = categoryCollectionsIdsToDelete,
-                    collectionListToUpsert = newCollectionsAndAssociations.first,
-                    associationsToDelete = collectionCategoryAssociationsToDelete,
-                    associationsToUpsert = newCollectionsAndAssociations.second
+                    collectionsIdsToDelete = collectionsIdsToDelete,
+                    collectionListToUpsert = newCollections,
+                    associationsToDelete = associationsToDelete,
+                    associationsToUpsert = newAssociations
                 )
+            fetchCategoryCollectionsFromDb()
         }
 
     }
@@ -527,11 +515,11 @@ class AppViewModel(
     val recordStackList: StateFlow<List<RecordStack>> = combine(
         _recordList,
         _accountsUiState,
-        _categoriesUiState
-    ) { recordList, accountsUiState, categoriesUiState ->
+        _categoriesWithSubcategories
+    ) { recordList, accountsUiState, categoriesWithSubcategories ->
         recordList.toRecordStackList(
             accountList = accountsUiState.accountList,
-            categoriesLists = categoriesUiState
+            categoriesWithSubcategories = categoriesWithSubcategories
         )
     }.stateIn(
         scope = viewModelScope,
@@ -574,7 +562,7 @@ class AppViewModel(
         uiState: MakeRecordUiState,
         unitList: List<MakeRecordUnitUiState>
     ) {
-        val currentRecordStack = recordStackList.value.findByRecordNum(uiState.recordNum) ?: return
+        val currentRecordStack = recordStackList.value.findByOrderNum(uiState.recordNum) ?: return
 
         if (unitList.size == currentRecordStack.stack.size) {
             updateEditedRecord(
@@ -736,7 +724,7 @@ class AppViewModel(
 
     suspend fun deleteRecord(recordNum: Int) {
 
-        val recordStack = recordStackList.value.findByRecordNum(recordNum) ?: return
+        val recordStack = recordStackList.value.findByOrderNum(recordNum) ?: return
         val recordList = recordStack.toRecordList()
 
         val account = accountsUiState.value.accountList
@@ -795,10 +783,10 @@ class AppViewModel(
     private fun getRecordListAndUpdatedAccountListAfterEditedTransfer(
         state: MadeTransferState
     ): Pair<List<Record>, List<AccountEntity>>? {
-        val firstRecordStack = recordStackList.value.findByRecordNum(state.recordNum) ?: return null
+        val firstRecordStack = recordStackList.value.findByOrderNum(state.recordNum) ?: return null
         val recordNumDifference = if (firstRecordStack.isOutTransfer()) 1 else -1
         val secondRecordStack = recordStackList.value
-            .findByRecordNum(state.recordNum + recordNumDifference) ?: return null
+            .findByOrderNum(state.recordNum + recordNumDifference) ?: return null
 
         val recordList = state.copy(
             recordNum = state.recordNum - (if (firstRecordStack.isOutTransfer()) 0 else 1)
@@ -937,14 +925,14 @@ class AppViewModel(
         _dateRangeMenuUiState,
         _accountsUiState,
         recordStackList,
-        categoriesUiState,
+        _categoriesWithSubcategories,
         _appTheme,
         _greetingsWidgetTitleRes
     ) { combinedArray ->
         val dateRangeMenuUiState = combinedArray[0] as DateRangeMenuUiState
         val accountsUiState = combinedArray[1] as AccountsUiState
         val recordStackList = combinedArray[2] as List<RecordStack>
-        val categoriesUiState = combinedArray[3] as CategoriesLists
+        val categoriesWithSubcategories = combinedArray[3] as CategoriesWithSubcategories
         val appTheme = combinedArray[4] as AppTheme
         val greetingsWidgetTitleRes = combinedArray[5] as Int
 
@@ -989,10 +977,9 @@ class AppViewModel(
                 expensesPercentageFloat = (expensesIncomePercentage.first / 100).toFloat(),
                 incomePercentageFloat = (expensesIncomePercentage.second / 100).toFloat()
             ),
-            categoryStatisticsLists = categoriesUiState.getStatistics(
+            categoryStatisticsLists = categoriesWithSubcategories.getStatistics(
                 recordStackList = filteredRecordStackList,
-                appTheme = appTheme,
-                accountCurrency = accountsUiState.activeAccount?.currency ?: ""
+                appTheme = appTheme
             )
         )
     }.stateIn(

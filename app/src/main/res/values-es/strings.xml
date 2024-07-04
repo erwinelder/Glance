@@ -4,7 +4,6 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Inicio</string>
-    <string name="make_record">Agregar registro</string>
     <string name="settings">Ajustes</string>
     <string name="setup">Configuración</string>
 
@@ -132,6 +131,8 @@
     <string name="new_subcategory_name">Nueva subcategoría</string>
     <string name="new_category_collection_name">Nueva colección</string>
     <string name="category_not_found">Categoría no encontrada</string>
+    <string name="collection_name">Nombre de la colección</string>
+    <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
     <string name="reset_data_description">Restablecer todos los datos de la aplicación, incluidas las cuentas, los registros, las categorías y la configuración.</string>
     <string name="reset_data_warning">¿Está seguro de que desea restablecer todos sus datos?</string>
     <string name="export_data_description">Exportar datos de la aplicación a un archivo.</string>

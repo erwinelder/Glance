@@ -3,7 +3,6 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Главная</string>
-    <string name="make_record">Сделать запись</string>
     <string name="settings">Настройки</string>
     <string name="setup">Настройка</string>
 
@@ -131,6 +130,8 @@
     <string name="new_subcategory_name">Новая подкатегория</string>
     <string name="new_category_collection_name">Новая коллекция</string>
     <string name="category_not_found">Категория не найдена</string>
+    <string name="collection_name">Название коллекции</string>
+    <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
     <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>
     <string name="reset_data_warning">Вы уверены, что хотите сбросить все данные?</string>
     <string name="export_data_description">Экспортировать данные приложения в файл.</string>

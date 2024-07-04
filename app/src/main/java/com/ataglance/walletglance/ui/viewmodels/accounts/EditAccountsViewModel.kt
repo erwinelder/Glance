@@ -3,17 +3,18 @@ package com.ataglance.walletglance.ui.viewmodels.accounts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.deleteItemAndMoveOrderNum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class EditAccountsViewModel(
-    private val accountList: List<Account>
+    private val passedAccountList: List<Account>
 ) : ViewModel() {
 
-    private val _accountsListState: MutableStateFlow<List<Account>> = MutableStateFlow(accountList)
+    private val _accountsListState: MutableStateFlow<List<Account>> =
+        MutableStateFlow(passedAccountList)
     val accountListState: StateFlow<List<Account>> = _accountsListState.asStateFlow()
 
     private val _showDeleteAccountButton: MutableStateFlow<Boolean> =
@@ -35,30 +36,20 @@ class EditAccountsViewModel(
     }
 
     fun deleteAccountById(id: Int): List<Account>? {
-        if (accountListState.value.size == 1) {
-            return null
+        if (accountListState.value.size == 1) return null
+
+        val newList = accountListState.value.deleteItemAndMoveOrderNum(
+            { it.id == id }, { it.copy(orderNum = it.orderNum - 1) }
+        ).toMutableList()
+
+        if (newList.find { it.isActive } == null) {
+            newList[0] = newList[0].copy(isActive = true)
         }
 
-        val accountsList = mutableListOf<Account>()
-        var stepAfterDeleting = 0
-        val account = accountListState.value.findById(id) ?: return null
+        _accountsListState.update { newList }
+        _showDeleteAccountButton.update { newList.size > 1 }
 
-        accountListState.value.forEach {
-            if (it.orderNum != account.orderNum) {
-                accountsList.add(it.copy(orderNum = it.orderNum - stepAfterDeleting))
-            } else {
-                stepAfterDeleting = 1
-            }
-        }
-
-        if (accountsList.find { it.isActive } == null) {
-            accountsList[0] = accountsList[0].copy(isActive = true)
-        }
-
-        _accountsListState.update { accountsList }
-        _showDeleteAccountButton.update { accountsList.size > 1 }
-
-        return accountsList
+        return newList
     }
 
     fun getAccountByOrderNum(orderNum: Int): Account? {
@@ -131,7 +122,7 @@ class EditAccountsViewModel(
     }
 
     fun resetAccountsList() {
-        _accountsListState.update { accountList }
+        _accountsListState.update { passedAccountList }
     }
 }
 

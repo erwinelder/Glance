@@ -66,7 +66,7 @@ class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
 }
 
 data class CurrencyPickerViewModelFactory(
-    val selectedCurrency: String?
+    private val selectedCurrency: String?
 ) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

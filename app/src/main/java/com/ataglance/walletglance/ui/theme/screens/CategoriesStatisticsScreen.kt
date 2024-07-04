@@ -21,7 +21,7 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryStatisticsItemComponent
-import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeFilterBar
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeBar
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 
@@ -63,7 +63,7 @@ fun CategoriesStatisticsScreen(
         visibleNoDataMessage = categoryList.isEmpty(),
         noDataMessageResource = R.string.no_data_for_the_selected_filter,
         typeFilterBar = {
-            CategoryTypeFilterBar(categoryType) {
+            CategoryTypeBar(categoryType) {
                 viewModel.setCategoryType(it)
             }
         }

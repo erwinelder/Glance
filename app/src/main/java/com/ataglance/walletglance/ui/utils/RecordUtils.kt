@@ -1,8 +1,9 @@
 package com.ataglance.walletglance.ui.utils
 
 import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
@@ -39,10 +40,11 @@ fun RecordType.asChar(): Char {
 }
 
 
-fun RecordType.toCategoryType(): CategoryType {
+fun RecordType.toCategoryType(): CategoryType? {
     return when (this) {
-        RecordType.Expense, RecordType.OutTransfer -> CategoryType.Expense
-        RecordType.Income, RecordType.InTransfer -> CategoryType.Income
+        RecordType.Expense -> CategoryType.Expense
+        RecordType.Income -> CategoryType.Income
+        else -> null
     }
 }
 
@@ -60,16 +62,17 @@ fun getRecordTypeByChar(char: Char): RecordType? {
 
 fun List<Record>.toRecordStackList(
     accountList: List<Account>,
-    categoriesLists: CategoriesLists
+    categoriesWithSubcategories: CategoriesWithSubcategories
 ): List<RecordStack> {
     val recordStackList = mutableListOf<RecordStack>()
 
     this.forEach { record ->
         if (recordStackList.lastOrNull()?.recordNum != record.recordNum) {
-            record.toRecordStack(accountList, categoriesLists)?.let { recordStackList.add(it) }
+            record.toRecordStack(accountList, categoriesWithSubcategories)
+                ?.let { recordStackList.add(it) }
         } else {
             recordStackList.lastOrNull()?.let { lastRecordStack ->
-                record.toRecordStackUnit(categoriesLists)?.let { recordStackUnit ->
+                record.toRecordStackUnit(categoriesWithSubcategories)?.let { recordStackUnit ->
                     val stack = lastRecordStack.stack.toMutableList()
                     stack.add(recordStackUnit)
                     recordStackList[recordStackList.lastIndex] = lastRecordStack.copy(
@@ -85,7 +88,7 @@ fun List<Record>.toRecordStackList(
 }
 
 
-fun List<RecordStack>.findByRecordNum(recordNum: Int): RecordStack? {
+fun List<RecordStack>.findByOrderNum(recordNum: Int): RecordStack? {
     return this.find { it.recordNum == recordNum }
 }
 
@@ -115,7 +118,7 @@ fun List<RecordStack>.getMakeRecordStateAndUnitList(
 ): Pair<MakeRecordUiState, List<MakeRecordUnitUiState>>? {
 
     if (makeRecordStatus == MakeRecordStatus.Edit) {
-        this.findByRecordNum(recordNum)?.takeIf { it.isExpenseOrIncome() }?.let { recordStack ->
+        this.findByOrderNum(recordNum)?.takeIf { it.isExpenseOrIncome() }?.let { recordStack ->
             return MakeRecordUiState(
                 recordStatus = MakeRecordStatus.Edit,
                 recordNum = recordStack.recordNum,
@@ -137,7 +140,7 @@ fun List<RecordStack>.getMakeTransferState(
 ): MakeTransferUiState {
     if (makeRecordStatus == MakeRecordStatus.Edit) {
 
-        val firstRecordStack = this.findByRecordNum(recordNum)
+        val firstRecordStack = this.findByOrderNum(recordNum)
         val secondRecordStack = this.find {
             it.recordNum == recordNum + if (firstRecordStack?.isOutTransfer() == true) 1 else -1
         }
@@ -169,8 +172,8 @@ fun List<RecordStack>.getMakeTransferState(
 fun List<RecordStack>.getOutAndInTransfersByOneRecordNum(
     recordNum: Int
 ): Pair<RecordStack, RecordStack>? {
-    val first = this.findByRecordNum(recordNum) ?: return null
-    val second = this.findByRecordNum(
+    val first = this.findByOrderNum(recordNum) ?: return null
+    val second = this.findByOrderNum(
         recordNum + if (first.isOutTransfer()) 1 else -1
     ) ?: return null
     return if (first.isOutTransfer()) first to second else second to first
@@ -215,6 +218,13 @@ fun List<Record>.getTransferSecondUnitsRecordNumbers(): List<Int> {
     return this.map { record ->
         if (record.isOutTransfer()) record.recordNum + 1 else record.recordNum - 1
     }
+}
+
+
+fun List<MakeRecordUnitUiState>.copyWithCategoryWithSubcategory(
+    categoryWithSubcategory: CategoryWithSubcategory?
+): List<MakeRecordUnitUiState> {
+    return this.map { it.copy(categoryWithSubcategory = categoryWithSubcategory) }
 }
 
 

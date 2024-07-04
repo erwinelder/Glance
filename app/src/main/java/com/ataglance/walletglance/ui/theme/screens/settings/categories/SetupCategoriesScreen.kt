@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
@@ -34,8 +36,8 @@ fun SetupCategoriesScreen(
     onResetButton: () -> Unit,
     onSaveAndFinishSetupButton: () -> Unit,
     onShowCategoriesByType: (CategoryType) -> Unit,
-    onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
-    onNavigateToEditCategoryScreen: (Int) -> Unit,
+    onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
+    onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
     onAddNewCategory: () -> Unit
 ) {

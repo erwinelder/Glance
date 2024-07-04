@@ -3,7 +3,6 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Domů</string>
-    <string name="make_record">Udělelat záznam</string>
     <string name="settings">Nastavení</string>
     <string name="setup">Nastavování</string>
 
@@ -131,6 +130,8 @@
     <string name="new_subcategory_name">Nová podkategorie</string>
     <string name="new_category_collection_name">Nová kolekce</string>
     <string name="category_not_found">Kategorie nebyla nalezena</string>
+    <string name="collection_name">Název kolekce</string>
+    <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
     <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>
     <string name="export_data_description">Exportovat data aplikace do souboru.</string>

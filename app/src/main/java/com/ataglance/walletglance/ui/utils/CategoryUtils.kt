@@ -1,16 +1,17 @@
 package com.ataglance.walletglance.ui.utils
 
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.CategoriesLists
+import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.categories.ParentCategoriesLists
-import com.ataglance.walletglance.data.categories.SubcategoriesLists
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.data.categories.EditingCategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.data.categories.CheckedCategory
 import com.ataglance.walletglance.data.color.ColorWithName
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 
@@ -29,13 +30,21 @@ fun CategoryColors.toCategoryColorWithName(): CategoryColorWithName {
     return CategoryColorWithName(this.name, this.color)
 }
 
+
 fun CategoryColors.toColorWithName(theme: AppTheme?): ColorWithName {
     return ColorWithName(this.name.name, this.color.getByTheme(theme).darker)
 }
 
 
-fun List<Category>.getOrderNumById(id: Int): Int? {
-    return this.find { it.id == id }?.orderNum
+fun List<CategoryEntity>.toCategoryList(): List<Category> {
+    val possibleIcons = CategoryPossibleIcons()
+    val possibleColors = CategoryPossibleColors()
+    return this.map {
+        it.toCategory(
+            icon = possibleIcons.getIconByName(it.iconName),
+            color = possibleColors.getByName(it.colorName)
+        )
+    }
 }
 
 
@@ -49,23 +58,10 @@ fun List<CategoryEntity>.findById(id: Int): CategoryEntity? {
 }
 
 
-fun List<Category>.findByRecordNum(orderNum: Int): Category? {
-    return this.find { it.orderNum == orderNum }
-}
-
-
 fun List<CategoryEntity>.getIdsThatAreNotInList(list: List<CategoryEntity>): List<Int> {
     return this
         .filter { list.findById(it.id) == null }
         .map { it.id }
-}
-
-
-fun List<List<Category>>.getSubcategoryByIdAndParentOrderNum(
-    subcategoryId: Int,
-    parentCategoryOrderNum: Int
-): Category? {
-    return this.getOrNull(parentCategoryOrderNum - 1)?.find { it.id == subcategoryId }
 }
 
 
@@ -74,99 +70,52 @@ fun List<Category>.toCategoryEntityList(): List<CategoryEntity> {
 }
 
 
-fun List<CategoryEntity>.breakOnDifferentLists(): CategoriesLists {
-    val parentCategoriesLists = this.extractParentCategoriesLists()
-    val subcategoriesLists = this.extractSubcategoriesLists(parentCategoriesLists)
+fun List<CategoryEntity>.toCategoriesWithSubcategories(): CategoriesWithSubcategories {
+    val categoriesAndSubcategories = this.toCategoryList().partition { it.isParentCategory() }
 
-    return CategoriesLists(parentCategoriesLists, subcategoriesLists)
-}
-
-
-fun List<CategoryEntity>.extractParentCategoriesLists(): ParentCategoriesLists {
-    val expenseCategoriesList = mutableListOf<Category>()
-    val incomeCategoriesList = mutableListOf<Category>()
-
-    val possibleIcons = CategoryPossibleIcons()
-    val possibleColors = CategoryPossibleColors()
-
-    this.forEach { categoryEntity ->
-        if (categoryEntity.isParentCategory()) {
-            val category = categoryEntity.toCategory(
-                icon = possibleIcons.getIconByName(categoryEntity.iconName),
-                color = possibleColors.getByName(categoryEntity.colorName)
-            )
-            if (categoryEntity.isExpense()) {
-                expenseCategoriesList.add(category)
-            } else if (categoryEntity.isIncome()) {
-                incomeCategoriesList.add(category)
-            }
-        }
-    }
-
-    expenseCategoriesList.sortBy { it.orderNum }
-    incomeCategoriesList.sortBy { it.orderNum }
-
-    return ParentCategoriesLists(expenseCategoriesList, incomeCategoriesList)
-}
-
-
-fun List<CategoryEntity>.extractSubcategoriesLists(
-    parentCategoriesLists: ParentCategoriesLists
-): SubcategoriesLists {
-    val expenseSubcategoriesList = mutableListOf<Category>()
-    val incomeSubcategoriesList = mutableListOf<Category>()
-
-    val possibleIcons = CategoryPossibleIcons()
-    val possibleColors = CategoryPossibleColors()
-
-    this.forEach { categoryEntity ->
-        if (categoryEntity.isSubcategory()) {
-            val category = categoryEntity.toCategory(
-                icon = possibleIcons.getIconByName(categoryEntity.iconName),
-                color = possibleColors.getByName(categoryEntity.colorName)
-            )
-            if (categoryEntity.isExpense()) {
-                expenseSubcategoriesList.add(category)
-            } else if (categoryEntity.isIncome()) {
-                incomeSubcategoriesList.add(category)
-            }
-        }
-    }
-
-    expenseSubcategoriesList.sortBy { it.orderNum }
-    incomeSubcategoriesList.sortBy { it.orderNum }
-
-    return SubcategoriesLists(
-        expenseSubcategoriesList.toTwoDimensionList(parentCategoriesLists.expense),
-        incomeSubcategoriesList.toTwoDimensionList(parentCategoriesLists.income)
-    )
-}
-
-
-private fun List<Category>.toTwoDimensionList(
-    parentCategoryList: List<Category>
-): List<List<Category>> {
-    val twoDimenList = mutableListOf<MutableList<Category>>()
-
-    repeat(parentCategoryList.size) {
-        twoDimenList.add(mutableListOf())
-    }
-
-    this.forEach { subcategory ->
+    val subcategoryMap = mutableMapOf<Int, MutableList<Category>>()
+    categoriesAndSubcategories.second.forEach { subcategory ->
         subcategory.parentCategoryId?.let { parentCategoryId ->
-            parentCategoryList.getOrderNumById(parentCategoryId)?.let {
-                twoDimenList[it - 1].add(subcategory)
+            if (subcategoryMap.containsKey(subcategory.parentCategoryId)) {
+                subcategoryMap[parentCategoryId]!!.add(subcategory)
+            } else {
+                subcategoryMap[parentCategoryId] = mutableListOf(subcategory)
             }
         }
     }
 
-    twoDimenList.forEach { categoryList ->
-        if (!categoryList.checkCategoriesOrderNumbers()) {
-            throw IllegalAccessException("Subcategories order numbers are not correct")
+    return categoriesAndSubcategories.first
+        .map { category ->
+            CategoryWithSubcategories(
+                category = category,
+                subcategoryList = subcategoryMap[category.id]?.sortedBy { it.orderNum }
+                    ?: emptyList(),
+            )
         }
-    }
+        .partition { it.category.isExpense() }
+        .let { expenseAndIncomeCategoriesWithSubcategories ->
+            CategoriesWithSubcategories(
+                expense = expenseAndIncomeCategoriesWithSubcategories.first
+                    .sortedBy { it.category.orderNum },
+                income = expenseAndIncomeCategoriesWithSubcategories.second
+                    .sortedBy { it.category.orderNum }
+            )
+        }
 
-    return twoDimenList
+}
+
+
+fun List<Category>.toCheckedCategoryList(
+    checkedCategoryList: List<Category>
+): List<CheckedCategory> {
+    return this.map { it.toCheckedCategory(checkedCategoryList) }
+}
+
+
+fun List<CategoryWithSubcategories>.toEditingCategoryWithSubcategoriesList(
+    checkedCategoryList: List<Category>
+): List<EditingCategoryWithSubcategories> {
+    return this.map { it.toEditingCategoryWithSubcategories(checkedCategoryList) }
 }
 
 

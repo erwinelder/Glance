@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.EditSubcategoryListContainer
 
@@ -21,9 +22,9 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.EditSubcategory
 fun EditSubcategoryListScreen(
     scaffoldPadding: PaddingValues,
     appTheme: AppTheme?,
-    subcategoryList: List<Category>,
+    categoryWithSubcategories: CategoryWithSubcategories?,
     onSaveButton: () -> Unit,
-    onNavigateToEditCategoryScreen: (Int) -> Unit,
+    onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit,
     onAddNewSubcategory: () -> Unit,
 ) {
@@ -36,13 +37,15 @@ fun EditSubcategoryListScreen(
                 bottom = dimensionResource(R.dimen.screen_vertical_padding)
             )
     ) {
-        EditSubcategoryListContainer(
-            subcategoryList = subcategoryList,
-            appTheme = appTheme,
-            onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
-            onSwapCategories = onSwapCategories,
-            onAddNewSubcategory = onAddNewSubcategory
-        )
+        categoryWithSubcategories?.let {
+            EditSubcategoryListContainer(
+                subcategoryList = it.subcategoryList,
+                appTheme = appTheme,
+                onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
+                onSwapCategories = onSwapCategories,
+                onAddNewSubcategory = onAddNewSubcategory
+            )
+        }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.widgets_gap)))
         PrimaryButton(
             onClick = onSaveButton,

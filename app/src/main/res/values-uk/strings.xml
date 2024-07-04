@@ -3,7 +3,6 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Головна</string>
-    <string name="make_record">Зробити запис</string>
     <string name="settings">Налаштування</string>
     <string name="setup">Налаштування</string>
 
@@ -131,6 +130,8 @@
     <string name="new_subcategory_name">Нова підкатегорія</string>
     <string name="new_category_collection_name">Нова колекція</string>
     <string name="category_not_found">Категорія не знайдена</string>
+    <string name="collection_name">Назва колекції</string>
+    <string name="no_collections_of_this_type">Немає колекцій цього типу</string>
     <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>
     <string name="reset_data_warning">Ви впевнені, що хочете скинути всі дані?</string>
     <string name="export_data_description">Експортувати дані програми до файла.</string>
