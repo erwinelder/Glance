@@ -17,6 +17,8 @@ data class CategoryPossibleIcons(
     val medicine: CategoryIcon = CategoryIcon.Medicine,
     val education: CategoryIcon = CategoryIcon.Education,
     val travels: CategoryIcon = CategoryIcon.Travels,
+    val accommodation: CategoryIcon = CategoryIcon.Accommodation,
+    val travelTickets: CategoryIcon = CategoryIcon.TravelTickets,
     val entertainment: CategoryIcon = CategoryIcon.Entertainment,
     val investments: CategoryIcon = CategoryIcon.Investments,
     val other: CategoryIcon = CategoryIcon.Other,
@@ -47,6 +49,8 @@ data class CategoryPossibleIcons(
             medicine,
             education,
             travels,
+            accommodation,
+            travelTickets,
             entertainment,
             investments,
             other,
@@ -78,6 +82,8 @@ data class CategoryPossibleIcons(
             CategoryIcon.Medicine.name -> medicine
             CategoryIcon.Education.name -> education
             CategoryIcon.Travels.name -> travels
+            CategoryIcon.Accommodation.name -> accommodation
+            CategoryIcon.TravelTickets.name -> travelTickets
             CategoryIcon.Entertainment.name -> entertainment
             CategoryIcon.Investments.name -> investments
             CategoryIcon.Other.name -> other

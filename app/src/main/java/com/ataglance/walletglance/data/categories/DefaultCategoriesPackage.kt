@@ -366,14 +366,14 @@ data class DefaultCategoriesPackage(
                             id = 49, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 1, parentCategoryId = 9,
                             name = context.getString(R.string.tickets),
-                            icon = CategoryIcon.Travels,
+                            icon = CategoryIcon.TravelTickets,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         ),
                         Category(
                             id = 50, type = CategoryType.Expense, rank = CategoryRank.Sub,
                             orderNum = 2, parentCategoryId = 9,
                             name = context.getString(R.string.accommodation),
-                            icon = CategoryIcon.Travels,
+                            icon = CategoryIcon.Accommodation,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         ),
                         Category(
