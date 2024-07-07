@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -106,7 +107,7 @@ fun MakeRecordScreen(
     val openDateDialog = remember { mutableStateOf(false) }
     val openTimeDialog = remember { mutableStateOf(false) }
     val openAccountDialog = remember { mutableStateOf(false) }
-    val openCategoryDialog = remember { mutableStateOf(false) }
+    var openCategoryDialog by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = uiState.dateTimeState.calendar.timeInMillis
@@ -185,7 +186,7 @@ fun MakeRecordScreen(
                             categoryIconRes = recordUnit.getSubcategoryOrCategory()?.icon?.res,
                             onCategoryClick = {
                                 viewModel.changeClickedUnitIndex(recordUnit.index)
-                                openCategoryDialog.value = true
+                                openCategoryDialog = true
                             },
                             onAmountValueChange = { value ->
                                 viewModel.changeAmountValue(recordUnit.index, value)
@@ -247,11 +248,11 @@ fun MakeRecordScreen(
             onAccountChoose = viewModel::chooseAccount
         )
         CategoryPicker(
-            visible = openCategoryDialog.value,
+            visible = openCategoryDialog,
             categoriesWithSubcategories = categoriesWithSubcategories,
             type = if (uiState.type == RecordType.Expense) CategoryType.Expense
                 else CategoryType.Income,
-            onDismissRequest = { openCategoryDialog.value = false },
+            onDismissRequest = { openCategoryDialog = false },
             onCategoryChoose = viewModel::chooseCategory
         )
     }

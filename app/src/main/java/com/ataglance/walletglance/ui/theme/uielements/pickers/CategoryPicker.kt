@@ -110,14 +110,17 @@ fun CategoryPicker(
                 }
                 CategoryListItem(
                     category = categoryWithSubcategories.category,
-                    onClick = { chosenCategoryWithSubcategories = categoryWithSubcategories }
+                    onClick = {
+                        if (categoryWithSubcategories.subcategoryList.isNotEmpty()) {
+                            chosenCategoryWithSubcategories = categoryWithSubcategories
+                        } else {
+                            onCategoryChoose(
+                                CategoryWithSubcategory(categoryWithSubcategories.category)
+                            )
+                            onDismissRequest()
+                        }
+                    }
                 )
-            }
-            if (false) {
-                item {
-                    SmallDivider(filledWidth = .6f)
-                    CloseButton(onClick = { chosenCategoryWithSubcategories = null })
-                }
             }
         }
     }
@@ -156,15 +159,17 @@ fun CategoryPicker(
                             onCategoryChoose(
                                 CategoryWithSubcategory(parentCategory, subcategory)
                             )
+                            onDismissRequest()
+                            if (chosenCategoryWithSubcategories != null) {
+                                chosenCategoryWithSubcategories = null
+                            }
                         }
                     }
                 )
             }
-            if (true) {
-                item {
-                    SmallDivider(filledWidth = .6f)
-                    CloseButton(onClick = { chosenCategoryWithSubcategories = null })
-                }
+            item {
+                SmallDivider(filledWidth = .6f)
+                CloseButton(onClick = { chosenCategoryWithSubcategories = null })
             }
         }
     }
