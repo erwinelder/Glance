@@ -49,7 +49,6 @@ import com.ataglance.walletglance.ui.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.ui.utils.getOutAndInTransfersByOneRecordNum
 import com.ataglance.walletglance.ui.utils.getTodayDateLong
 import com.ataglance.walletglance.ui.utils.getTotalAmount
-import com.ataglance.walletglance.ui.utils.getTransferSecondUnitsRecordNumbers
 import com.ataglance.walletglance.ui.utils.inverse
 import com.ataglance.walletglance.ui.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.ui.utils.toAccountEntityList
@@ -57,7 +56,6 @@ import com.ataglance.walletglance.ui.utils.toAccountList
 import com.ataglance.walletglance.ui.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.ui.utils.toCategoryEntityList
 import com.ataglance.walletglance.ui.utils.toRecordStackList
-import com.ataglance.walletglance.ui.utils.transfersToRecordsWithCategoryOfTransfer
 import com.ataglance.walletglance.ui.utils.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
@@ -67,8 +65,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -323,42 +319,21 @@ class AppViewModel(
     }
 
     suspend fun saveAccountsToDb(accountsList: List<AccountEntity>) {
-        val listOfIdsToDelete =
-            accountsUiState.value.accountList.getIdsThatAreNotInList(accountsList)
+        val listOfIdsToDelete = accountsUiState.value.accountList
+            .getIdsThatAreNotInList(accountsList)
 
         if (listOfIdsToDelete.isNotEmpty()) {
             viewModelScope.launch {
-                accountRepository.deleteAndUpsertAccounts(listOfIdsToDelete, accountsList)
+                recordAndAccountRepository
+                    .deleteAndUpdateAccountsAndDeleteRecordsByAccountIdAndConvertTransfersToRecords(
+                        accountIdToDelete = listOfIdsToDelete,
+                        accountListToUpsert = accountsList
+                    )
             }
         } else {
             viewModelScope.launch {
                 accountRepository.upsertAccounts(accountsList)
             }
-        }
-    }
-
-    suspend fun deleteAccountWithItsRecords(
-        accountId: Int,
-        updatedAccountList: List<AccountEntity>
-    ) {
-        viewModelScope.launch {
-
-            val accountTransferList = recordRepository.getTransfersByAccountId(accountId).first()
-            val transferSecondUnitsNumbers =
-                accountTransferList.getTransferSecondUnitsRecordNumbers().takeIf { it.isNotEmpty() }
-
-            val convertedTransfers = transferSecondUnitsNumbers?.let {
-                recordRepository.getRecordsByRecordNumbers(it).firstOrNull()
-                    ?.transfersToRecordsWithCategoryOfTransfer()
-            } ?: emptyList()
-
-            recordAndAccountRepository
-                .deleteAccountAndUpdateAccountsAndDeleteRecordsByAccountIdAndUpdateRecords(
-                    accountIdToDelete = accountId,
-                    accountListToUpsert = updatedAccountList,
-                    recordListToUpsert = convertedTransfers
-                )
-
         }
     }
 

@@ -16,9 +16,6 @@ interface AccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplaceAccounts(accountsList: List<AccountEntity>)
 
-    @Query("DELETE FROM Account WHERE id == :id")
-    suspend fun deleteAccountById(id: Int)
-
     @Query("DELETE FROM Account WHERE id IN (:idList)")
     suspend fun deleteAccountsByIds(idList: List<Int>)
 

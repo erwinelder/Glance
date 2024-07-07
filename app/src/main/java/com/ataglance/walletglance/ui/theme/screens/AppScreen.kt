@@ -67,7 +67,6 @@ import com.ataglance.walletglance.ui.utils.fromMainScreen
 import com.ataglance.walletglance.ui.utils.getMakeRecordStateAndUnitList
 import com.ataglance.walletglance.ui.utils.getMakeTransferState
 import com.ataglance.walletglance.ui.utils.needToMoveScreenTowardsLeft
-import com.ataglance.walletglance.ui.utils.toAccountEntityList
 import com.ataglance.walletglance.ui.utils.toCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
 import com.ataglance.walletglance.ui.viewmodels.AppUiSettings
@@ -659,7 +658,6 @@ fun NavGraphBuilder.accountsGraph(
                 .editAccountUiState.collectAsStateWithLifecycle()
             val allowDeleting by accountsViewModel.allowDeleting.collectAsStateWithLifecycle()
             val allowSaving by editAccountViewModel.allowSaving.collectAsStateWithLifecycle()
-            val coroutineScope = rememberCoroutineScope()
 
             EditAccountScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -680,14 +678,7 @@ fun NavGraphBuilder.accountsGraph(
                 onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
                 onDeleteButton = { accountId ->
                     navController.popBackStack()
-                    accountsViewModel.deleteAccountById(accountId)?.let {
-                        coroutineScope.launch {
-                            appViewModel.deleteAccountWithItsRecords(
-                                accountId = accountId,
-                                updatedAccountList = it.toAccountEntityList()
-                            )
-                        }
-                    }
+                    accountsViewModel.deleteAccountById(accountId)
                 },
                 onSaveButton = {
                     accountsViewModel.saveAccount(editAccountViewModel.getAccount())

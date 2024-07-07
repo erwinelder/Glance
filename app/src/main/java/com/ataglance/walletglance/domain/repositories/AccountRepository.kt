@@ -16,11 +16,6 @@ class AccountRepository(
         dao.deleteAllAccounts()
     }
 
-    suspend fun deleteAndUpsertAccounts(idListToDelete: List<Int>, accountList: List<AccountEntity>) {
-        dao.deleteAccountsByIds(idListToDelete)
-        dao.insertOrReplaceAccounts(accountList)
-    }
-
     fun getAllAccounts(): Flow<List<AccountEntity>> {
         return dao.getAllAccounts()
     }

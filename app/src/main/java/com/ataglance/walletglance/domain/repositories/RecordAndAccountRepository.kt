@@ -41,15 +41,14 @@ class RecordAndAccountRepository(
     }
 
     @Transaction
-    suspend fun deleteAccountAndUpdateAccountsAndDeleteRecordsByAccountIdAndUpdateRecords(
-        accountIdToDelete: Int,
-        accountListToUpsert: List<AccountEntity>,
-        recordListToUpsert: List<Record>
+    suspend fun deleteAndUpdateAccountsAndDeleteRecordsByAccountIdAndConvertTransfersToRecords(
+        accountIdToDelete: List<Int>,
+        accountListToUpsert: List<AccountEntity>
     ) {
+        accountDao.deleteAccountsByIds(accountIdToDelete)
         accountDao.insertOrReplaceAccounts(accountListToUpsert)
-        accountDao.deleteAccountById(accountIdToDelete)
-        recordDao.deleteRecordsByAccountId(accountIdToDelete)
-        recordDao.insertOrReplaceRecords(recordListToUpsert)
+        recordDao.deleteRecordsByAccountIds(accountIdToDelete)
+        recordDao.convertTransfersToRecords(accountIdToDelete.map { it.toString() })
     }
 
 }

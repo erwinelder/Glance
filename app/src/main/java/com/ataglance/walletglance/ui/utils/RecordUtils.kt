@@ -25,11 +25,6 @@ fun RecordType.inverse(): RecordType {
 }
 
 
-fun RecordType.isExpenseOrIncome(): Boolean {
-    return this == RecordType.Expense || this == RecordType.Income
-}
-
-
 fun RecordType.asChar(): Char {
     return when (this) {
         RecordType.Expense -> '-'
@@ -200,24 +195,6 @@ private fun Pair<RecordStack, RecordStack>.toMakeTransferUiState(
         idFrom = this.first.stack.firstOrNull()?.id ?: 0,
         idTo = this.second.stack.firstOrNull()?.id ?: 0
     )
-}
-
-
-fun List<Record>.transfersToRecordsWithCategoryOfTransfer(): List<Record> {
-    return this.map { transferRecord ->
-        transferRecord.copy(
-            type = if (transferRecord.isOutTransfer()) '-' else '+',
-            categoryId = if (transferRecord.isOutTransfer()) 12 else 77,
-            subcategoryId = if (transferRecord.isOutTransfer()) 66 else null
-        )
-    }
-}
-
-
-fun List<Record>.getTransferSecondUnitsRecordNumbers(): List<Int> {
-    return this.map { record ->
-        if (record.isOutTransfer()) record.recordNum + 1 else record.recordNum - 1
-    }
 }
 
 
