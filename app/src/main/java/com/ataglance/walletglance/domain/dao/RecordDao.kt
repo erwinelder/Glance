@@ -54,7 +54,8 @@ interface RecordDao {
         UPDATE Record
         SET type = CASE WHEN type = 62 THEN 45 ELSE 43 END,
             categoryId = CASE WHEN type = 62 THEN 12 ELSE 77 END,
-            subcategoryId = CASE WHEN type = 62 THEN 66 ELSE NULL END
+            subcategoryId = CASE WHEN type = 62 THEN 66 ELSE NULL END,
+            note = NULL
         WHERE note IN (:noteValues)
     """
     )
