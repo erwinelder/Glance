@@ -4,10 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.ui.utils.asChar
 import com.ataglance.walletglance.ui.utils.findById
 import com.ataglance.walletglance.ui.utils.getRecordTypeByChar
 import com.ataglance.walletglance.ui.utils.toCategoryType
@@ -26,8 +25,6 @@ data class Record(
     val subcategoryId: Int?,
     val note: String?
 ) {
-
-    fun isOutTransfer(): Boolean { return type == RecordType.OutTransfer.asChar() }
 
     fun toRecordStack(
         accountList: List<Account>,
@@ -62,7 +59,7 @@ data class Record(
             quantity = quantity,
             categoryWithSubcategory = subcategoryId?.let {
                 categoryWithSubcategories?.getWithSubcategoryWithId(it)
-            },
+            } ?: categoryWithSubcategories?.category?.let { CategoryWithSubcategory(it) },
             note = note
         )
     }
