@@ -126,10 +126,8 @@
     <string name="income_plural">Доходы</string>
     <string name="mixed">Смешанные</string>
     <string name="transfer">Перевод</string>
-    <string name="new_category_name">Новая категория</string>
-    <string name="new_subcategory_name">Новая подкатегория</string>
-    <string name="new_category_collection_name">Новая коллекция</string>
-    <string name="category_not_found">Категория не найдена</string>
+    <string name="account_name">Название счёта</string>
+    <string name="category_name">Название категории</string>
     <string name="collection_name">Название коллекции</string>
     <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
     <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>

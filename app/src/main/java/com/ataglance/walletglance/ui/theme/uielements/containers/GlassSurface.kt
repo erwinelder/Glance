@@ -72,7 +72,9 @@ fun GlassSurface(
                 GlanceTheme.glassSurfaceBorder,
                 RoundedCornerShape(cornerSize)
             )
-    ) { content() }
+    ) {
+        content()
+    }
 }
 
 @Preview(showSystemUi = true)

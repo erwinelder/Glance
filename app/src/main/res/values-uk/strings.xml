@@ -126,10 +126,8 @@
     <string name="income_plural">Доходи</string>
     <string name="mixed">Змішані</string>
     <string name="transfer">Переказ</string>
-    <string name="new_category_name">Нова категорія</string>
-    <string name="new_subcategory_name">Нова підкатегорія</string>
-    <string name="new_category_collection_name">Нова колекція</string>
-    <string name="category_not_found">Категорія не знайдена</string>
+    <string name="account_name">Назва рахунку</string>
+    <string name="category_name">Назва категорії</string>
     <string name="collection_name">Назва колекції</string>
     <string name="no_collections_of_this_type">Немає колекцій цього типу</string>
     <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>

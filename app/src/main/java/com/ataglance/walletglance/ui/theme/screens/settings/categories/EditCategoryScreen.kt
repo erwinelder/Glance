@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,10 +34,10 @@ import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.ColorButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
-import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.pickers.ColorPicker
 
@@ -47,7 +46,7 @@ fun EditCategoryScreen(
     scaffoldPadding: PaddingValues,
     appTheme: AppTheme?,
     category: Category,
-    showDeleteButton: Boolean,
+    allowDeleting: Boolean,
     allowSaving: Boolean,
     onNameChange: (String) -> Unit,
     onCategoryColorChange: (String) -> Unit,
@@ -62,62 +61,34 @@ fun EditCategoryScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = scaffoldPadding.calculateTopPadding() +
-                            dimensionResource(R.dimen.screen_vertical_padding),
-                    bottom = dimensionResource(R.dimen.screen_vertical_padding)
-                )
-        ) {
-            if (showDeleteButton) {
-                SecondaryButton(
-                    onClick = onDeleteButton,
-                    text = stringResource(R.string.delete)
-                )
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
-            }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(1f)
-            ) {
-                GlassSurface {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.field_gap)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Min)
-                            .padding(start = 12.dp, end = 12.dp, top = 24.dp)
-                    ) {
-                        CustomTextFieldWithLabel(
-                            text = category.name,
-                            labelText = stringResource(R.string.name),
-                            onValueChange = onNameChange
-                        )
-                        if (category.isParentCategory()) {
-                            ColorButton(
-                                color = category.getColorByTheme(appTheme).darker,
-                                onClick = { showColorPicker = true }
-                            )
-                        }
-                        CategoryIconsGrid(
-                            categoryIconList = categoryIconList,
-                            currentCategoryIcon = category.icon,
-                            onCategoryIconChange = onIconChange
-                        )
-                    }
+        SetupDataScreenContainer(
+            topPadding = scaffoldPadding.calculateTopPadding(),
+            topButton = if (allowDeleting) {
+                {
+                    SecondaryButton(
+                        onClick = onDeleteButton,
+                        text = stringResource(R.string.delete)
+                    )
                 }
+            } else null,
+            glassSurfaceContent = {
+                GlassSurfaceContent(
+                    appTheme = appTheme,
+                    category = category,
+                    onNameChange = onNameChange,
+                    onIconChange = onIconChange,
+                    categoryIconList = categoryIconList,
+                    onColorButtonClick = { showColorPicker = true }
+                )
+            },
+            primaryBottomButton = {
+                PrimaryButton(
+                    onClick = onSaveButton,
+                    text = stringResource(R.string.save),
+                    enabled = allowSaving
+                )
             }
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
-            PrimaryButton(
-                onClick = onSaveButton,
-                text = stringResource(R.string.save),
-                enabled = allowSaving
-            )
-        }
+        )
         ColorPicker(
             visible = showColorPicker,
             colorList = CategoryPossibleColors().asColorWithNameList(appTheme),
@@ -125,6 +96,43 @@ fun EditCategoryScreen(
             onPickerClose = {
                 showColorPicker = false
             }
+        )
+    }
+}
+
+@Composable
+private fun GlassSurfaceContent(
+    appTheme: AppTheme?,
+    category: Category,
+    onNameChange: (String) -> Unit,
+    onIconChange: (CategoryIcon) -> Unit,
+    categoryIconList: List<CategoryIcon>,
+    onColorButtonClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.field_gap)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .padding(start = 12.dp, end = 12.dp, top = 24.dp)
+    ) {
+        CustomTextFieldWithLabel(
+            text = category.name,
+            placeholderText = stringResource(R.string.category_name),
+            labelText = stringResource(R.string.name),
+            onValueChange = onNameChange
+        )
+        if (category.isParentCategory()) {
+            ColorButton(
+                color = category.getColorByTheme(appTheme).darker,
+                onClick = onColorButtonClick
+            )
+        }
+        CategoryIconsGrid(
+            categoryIconList = categoryIconList,
+            currentCategoryIcon = category.icon,
+            onCategoryIconChange = onIconChange
         )
     }
 }

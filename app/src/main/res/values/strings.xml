@@ -127,10 +127,8 @@
     <string name="income_plural">Income</string>
     <string name="mixed">Mixed</string>
     <string name="transfer">Transfer</string>
-    <string name="new_category_name">New category</string>
-    <string name="new_subcategory_name">New subcategory</string>
-    <string name="new_category_collection_name">New collection</string>
-    <string name="category_not_found">Category was not found</string>
+    <string name="account_name">Account name</string>
+    <string name="category_name">Category name</string>
     <string name="collection_name">Collection name</string>
     <string name="no_collections_of_this_type">No collections of this type</string>
     <string name="reset_data_description">Reset all app data, including accounts, records, categories, and settings.</string>

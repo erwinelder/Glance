@@ -127,10 +127,8 @@
     <string name="income_plural">Ingresos</string>
     <string name="mixed">Mixto</string>
     <string name="transfer">Transferencia</string>
-    <string name="new_category_name">Nueva categoría</string>
-    <string name="new_subcategory_name">Nueva subcategoría</string>
-    <string name="new_category_collection_name">Nueva colección</string>
-    <string name="category_not_found">Categoría no encontrada</string>
+    <string name="account_name">Nombre de la cuenta</string>
+    <string name="category_name">Nombre de la categoría</string>
     <string name="collection_name">Nombre de la colección</string>
     <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
     <string name="reset_data_description">Restablecer todos los datos de la aplicación, incluidas las cuentas, los registros, las categorías y la configuración.</string>

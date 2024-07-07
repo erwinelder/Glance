@@ -49,8 +49,8 @@ fun MediumAccountSetup(
     appTheme: AppTheme?,
     modifier: Modifier = Modifier,
     fontSize: Int = 20,
-    roundedCornerSize: Dp = 14.dp,
-    onAccountClick: () -> Unit = {},
+    roundedCornerSize: Dp = 18.dp,
+    onAccountClick: (Account) -> Unit = {},
     onUpButtonClick: () -> Unit = {},
     upButtonEnabled: Boolean = false,
     onDownButtonClick: () -> Unit = {},
@@ -85,7 +85,7 @@ fun MediumAccountSetup(
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
-                    .clickable { onAccountClick() }
+                    .clickable { onAccountClick(account) }
                     .width(IntrinsicSize.Max)
                     .weight(1f)
                     .padding(vertical = if (account.withoutBalance) 6.dp else 0.dp)

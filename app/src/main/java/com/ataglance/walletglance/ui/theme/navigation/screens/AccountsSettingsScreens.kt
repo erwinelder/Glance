@@ -8,7 +8,7 @@ sealed interface AccountsSettingsScreens {
     data object EditAccounts : AccountsSettingsScreens
 
     @Serializable
-    data class EditAccount(val orderNum: Int) : AccountsSettingsScreens
+    data object EditAccount : AccountsSettingsScreens
 
     @Serializable
     data class EditAccountCurrency(val currency: String) : AccountsSettingsScreens

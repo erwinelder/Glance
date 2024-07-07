@@ -14,6 +14,12 @@ data class CategoriesWithSubcategories(
     val income: List<CategoryWithSubcategories> = emptyList()
 ) {
 
+    fun concatenateAsCategoryList(): List<Category> {
+        return (expense + income).flatMap { categoryWithSubcategories ->
+            categoryWithSubcategories.asSingleList()
+        }
+    }
+
     fun getByTypeOrAll(type: CategoryType?): List<CategoryWithSubcategories> {
         return when (type) {
             CategoryType.Expense -> expense
@@ -29,6 +35,16 @@ data class CategoriesWithSubcategories(
         }
     }
 
+    fun replaceListByType(
+        list: List<CategoryWithSubcategories>,
+        type: CategoryType
+    ): CategoriesWithSubcategories {
+        return when (type) {
+            CategoryType.Expense -> this.copy(expense = list)
+            CategoryType.Income -> this.copy(income = list)
+        }
+    }
+
     fun getLastCategoryWithSubcategoryByType(type: CategoryType?): CategoryWithSubcategory? {
         return type?.let { getByTypeOrAll(it).lastOrNull()?.getWithLastSubcategory() }
     }
@@ -37,28 +53,18 @@ data class CategoriesWithSubcategories(
         return getByTypeOrAll(type).firstOrNull { it.category.id == id }
     }
 
-    fun concatenateAsCategoryList(): List<Category> {
-        return (expense + income).flatMap { categoryWithSubcategories ->
-            categoryWithSubcategories.asSingleList()
-        }
+    fun appendNewCategory(category: Category): CategoriesWithSubcategories {
+        val list = getByType(category.type).toMutableList()
+        list.add(CategoryWithSubcategories(
+            category = category.copy(
+                orderNum = (list.maxOfOrNull { it.category.orderNum } ?: 0) + 1
+            )
+        ))
+        return replaceListByType(list, category.type)
     }
 
-    fun appendNewCategoryByType(
-        category: Category,
-        type: CategoryType
-    ): CategoriesWithSubcategories {
-        return when (type) {
-            CategoryType.Expense -> this.copy(
-                expense = expense + listOf(CategoryWithSubcategories(category))
-            )
-            CategoryType.Income -> this.copy(
-                income = income + listOf(CategoryWithSubcategories(category))
-            )
-        }
-    }
-
-    fun replaceCategory(category: Category, type: CategoryType): CategoriesWithSubcategories {
-        val categoryWithSubcategoriesList = this.getByType(type).map {
+    fun replaceCategory(category: Category): CategoriesWithSubcategories {
+        val categoryWithSubcategoriesList = this.getByType(category.type).map {
             it.takeIf { it.category.id != category.id } ?: it.copy(
                 category = category,
                 subcategoryList = it.changeSubcategoriesColorTo(category.colorWithName)
@@ -67,7 +73,7 @@ data class CategoriesWithSubcategories(
 
         return replaceListByType(
             list = categoryWithSubcategoriesList,
-            type = type
+            type = category.type
         )
     }
 
@@ -77,16 +83,6 @@ data class CategoriesWithSubcategories(
             { it.copy(category = it.category.copy(orderNum = it.category.orderNum - 1)) }
         )
         return replaceListByType(newList, category.type)
-    }
-
-    fun replaceListByType(
-        list: List<CategoryWithSubcategories>,
-        type: CategoryType
-    ): CategoriesWithSubcategories {
-        return when (type) {
-            CategoryType.Expense -> this.copy(expense = list)
-            CategoryType.Income -> this.copy(income = list)
-        }
     }
 
     fun getStatistics(

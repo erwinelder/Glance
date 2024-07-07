@@ -10,10 +10,14 @@ data class CategoryWithSubcategories(
     val subcategoryList: List<Category> = emptyList()
 ) {
 
-    fun appendSubcategory(subcategory: Category): CategoryWithSubcategories {
-        return this.copy(
-            subcategoryList = subcategoryList + listOf(subcategory)
+    fun appendNewSubcategory(subcategory: Category): CategoryWithSubcategories {
+        val list = subcategoryList.toMutableList()
+        list.add(
+            subcategory.copy(
+                orderNum = (list.maxOfOrNull { it.orderNum } ?: 0) + 1
+            )
         )
+        return this.copy(subcategoryList = list)
     }
 
     fun replaceSubcategory(subcategory: Category): CategoryWithSubcategories {

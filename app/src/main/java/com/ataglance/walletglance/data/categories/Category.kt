@@ -2,20 +2,22 @@ package com.ataglance.walletglance.data.categories
 
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
+import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.color.LighterDarkerColors
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.ui.utils.asChar
+import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 
 data class Category(
-    val id: Int,
-    val type: CategoryType,
-    val rank: CategoryRank,
-    val orderNum: Int,
-    val parentCategoryId: Int?,
-    val name: String,
-    val icon: CategoryIcon,
-    val colorWithName: CategoryColorWithName
+    val id: Int = 0,
+    val type: CategoryType = CategoryType.Expense,
+    val rank: CategoryRank = CategoryRank.Parent,
+    val orderNum: Int = 0,
+    val parentCategoryId: Int? = null,
+    val name: String = "",
+    val icon: CategoryIcon = CategoryIcon.Other,
+    val colorWithName: CategoryColorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
 ) {
 
     fun isExpense() = type == CategoryType.Expense

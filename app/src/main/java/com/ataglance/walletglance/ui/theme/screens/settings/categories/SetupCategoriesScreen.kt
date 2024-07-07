@@ -1,15 +1,18 @@
 package com.ataglance.walletglance.ui.theme.screens.settings.categories
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,9 +25,12 @@ import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
-import com.ataglance.walletglance.ui.theme.uielements.containers.CategoriesSetupContainer
+import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeBar
+import com.ataglance.walletglance.ui.theme.uielements.categories.ParentCategorySetupElement
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesUiState
 
 @Composable
@@ -36,57 +42,136 @@ fun SetupCategoriesScreen(
     onResetButton: () -> Unit,
     onSaveAndFinishSetupButton: () -> Unit,
     onShowCategoriesByType: (CategoryType) -> Unit,
-    onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
-    onNavigateToEditCategoryScreen: (Category) -> Unit,
-    onSwapCategories: (Int, Int) -> Unit,
-    onAddNewCategory: () -> Unit
+    onNavigateToEditSubcategoriesScreen: (CategoryWithSubcategories) -> Unit,
+    onNavigateToEditCategoryScreen: (Category?) -> Unit,
+    onSwapCategories: (Int, Int) -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = (if (isAppSetUp) 0.dp else scaffoldPadding.calculateTopPadding()) +
-                    dimensionResource(R.dimen.buttons_gap),
-                bottom = dimensionResource(R.dimen.screen_vertical_padding)
+    SetupDataScreenContainer(
+        topPadding = if (!isAppSetUp) scaffoldPadding.calculateTopPadding() else null,
+        topBar = {
+            CategoryTypeBar(
+                currentCategoryType = uiState.categoryType,
+                onClick = onShowCategoriesByType
             )
-    ) {
-        CategoriesSetupContainer(
-            uiState = uiState,
-            appTheme = appTheme,
-            onShowCategoriesByType = onShowCategoriesByType,
-            onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoryListScreen,
-            onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
-            onSwapCategories = onSwapCategories,
-            onAddNewCategory = onAddNewCategory
-        )
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.widgets_gap)))
-        if (!WindowTypeIsExpanded) {
-            SecondaryButton(
-                onClick = onResetButton,
-                text = stringResource(R.string.reset)
+        },
+        glassSurfaceContent = {
+            GlassSurfaceContent(
+                uiState = uiState,
+                appTheme = appTheme,
+                onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoriesScreen,
+                onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
+                onSwapCategories = onSwapCategories
             )
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
+        },
+        smallPrimaryButton = {
+            SmallPrimaryButton(text = stringResource(R.string.add_category)) {
+                onNavigateToEditCategoryScreen(null)
+            }
+        },
+        secondaryBottomButton = if (!isAppSetUp) {
+            {
+                SecondaryButton(text = stringResource(R.string.reset), onClick = onResetButton)
+            }
+        } else null,
+        primaryBottomButton = {
             PrimaryButton(
-                onClick = onSaveAndFinishSetupButton,
-                text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_finish)
+                text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_finish),
+                onClick = onSaveAndFinishSetupButton
             )
-        } else {
-            Row(
-                horizontalArrangement = Arrangement.Center,
+        }
+
+    )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun GlassSurfaceContent(
+    uiState: SetupCategoriesUiState,
+    appTheme: AppTheme?,
+    onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
+    onNavigateToEditCategoryScreen: (Category?) -> Unit,
+    onSwapCategories: (Int, Int) -> Unit
+) {
+    val categoryWithSubcategoriesList = uiState.getCategoriesWithSubcategoriesListByType()
+
+    AnimatedContent(
+        targetState = categoryWithSubcategoriesList,
+        label = "category list uploading"
+    ) { categoryList ->
+        if (!WindowTypeIsExpanded) {
+            val lazyListState = rememberLazyListState()
+            LazyColumn(
+                state = lazyListState,
+                contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(18.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(2.dp)
             ) {
-                SecondaryButton(
-                    onClick = onResetButton,
-                    text = stringResource(R.string.reset)
-                )
-                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.buttons_gap)))
-                PrimaryButton(
-                    onClick = onSaveAndFinishSetupButton,
-                    text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_finish)
-                )
+                items(
+                    items = categoryList,
+                    key = { it.category.id }
+                ) { item ->
+                    ParentCategorySetupElement(
+                        category = item.category,
+                        appTheme = appTheme,
+                        onNavigateToEditSubcategoryListScreen = {
+                            onNavigateToEditSubcategoryListScreen(item)
+                        },
+                        onEditButton = {
+                            onNavigateToEditCategoryScreen(item.category)
+                        },
+                        onUpButtonClick = {
+                            onSwapCategories(
+                                item.category.orderNum, item.category.orderNum - 1
+                            )
+                        },
+                        upButtonEnabled = item.category.orderNum > 1,
+                        onDownButtonClick = {
+                            onSwapCategories(
+                                item.category.orderNum, item.category.orderNum + 1
+                            )
+                        },
+                        downButtonEnabled = item.category.orderNum < categoryList.size,
+                    )
+                }
+            }
+        } else {
+            val scrollState = rememberScrollState()
+            FlowRow(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .fillMaxWidth()
+                    .padding(9.dp)
+            ) {
+                categoryList.forEach { item ->
+                    Box(modifier = Modifier.padding(9.dp)) {
+                        ParentCategorySetupElement(
+                            category = item.category,
+                            appTheme = appTheme,
+                            onNavigateToEditSubcategoryListScreen = {
+                                onNavigateToEditSubcategoryListScreen(item)
+                            },
+                            onEditButton = {
+                                onNavigateToEditCategoryScreen(item.category)
+                            },
+                            onUpButtonClick = {
+                                onSwapCategories(
+                                    item.category.orderNum, item.category.orderNum - 1
+                                )
+                            },
+                            upButtonEnabled = item.category.orderNum > 1,
+                            onDownButtonClick = {
+                                onSwapCategories(
+                                    item.category.orderNum, item.category.orderNum + 1
+                                )
+                            },
+                            downButtonEnabled = item.category.orderNum < categoryList.size,
+                        )
+                    }
+                }
             }
         }
     }

@@ -29,10 +29,10 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 
 @Composable
 fun SecondaryButton(
-    onClick: () -> Unit,
     text: String,
     enabled: Boolean = true,
-    fontSize: TextUnit = 18.sp
+    fontSize: TextUnit = 18.sp,
+    onClick: () -> Unit
 ) {
     val modifier = if (WindowTypeIsCompact) {
         Modifier.fillMaxWidth(.82f)

@@ -58,7 +58,7 @@ class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
         _uiState.update { it.copy(selectedCurrency = currency) }
     }
 
-    fun onSearchPromptChange(prompt: String) {
+    fun changeSearchPrompt(prompt: String) {
         _searchedPrompt.update { prompt }
         _uiState.update { it.copy(isSearching = prompt.isNotEmpty()) }
     }

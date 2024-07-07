@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,12 +49,12 @@ import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
-import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.ThreeStateCheckbox
 import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
-import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.theme.uielements.dividers.TextDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
@@ -74,34 +73,37 @@ fun EditCategoryCollectionScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.buttons_gap)),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = dimensionResource(R.dimen.screen_vertical_padding))
-    ) {
-        if (allowDeleting) {
-            PrimaryButton(text = stringResource(R.string.delete), onClick = onDeleteButton)
+    SetupDataScreenContainer(
+        topButton = if (allowDeleting) {
+            {
+                SecondaryButton(
+                    text = stringResource(R.string.delete),
+                    onClick = onDeleteButton
+                )
+            }
+        } else null,
+        glassSurfaceContent = {
+            EditCategoryCollectionGlassSurface(
+                collection = collection,
+                editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+                expandedCategory = expandedCategory,
+                onNameChange = onNameChange,
+                onCheckedChange = onCheckedChange,
+                onExpandedChange = onExpandedChange
+            )
+        },
+        primaryBottomButton = {
+            PrimaryButton(
+                text = stringResource(R.string.save),
+                onClick = onSaveButton,
+                enabled = allowSaving
+            )
         }
-        EditCategoryCollectionGlassSurface(
-            collection = collection,
-            editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
-            expandedCategory = expandedCategory,
-            onNameChange = onNameChange,
-            onCheckedChange = onCheckedChange,
-            onExpandedChange = onExpandedChange
-        )
-        PrimaryButton(
-            text = stringResource(R.string.save),
-            onClick = onSaveButton,
-            enabled = allowSaving
-        )
-    }
+    )
 }
 
 @Composable
-private fun ColumnScope.EditCategoryCollectionGlassSurface(
+private fun EditCategoryCollectionGlassSurface(
     collection: CategoryCollectionWithCategories,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
@@ -112,21 +114,17 @@ private fun ColumnScope.EditCategoryCollectionGlassSurface(
     val categoriesListState = rememberLazyListState()
     val subcategoriesListState = rememberLazyListState()
 
-    GlassSurface(
-        modifier = Modifier.weight(1f),
-        filledWidth = if (!WindowTypeIsExpanded) .94f else .86f
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                top = dimensionResource(R.dimen.field_gap)
+            )
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = 20.dp,
-                    end = 20.dp,
-                    top = dimensionResource(R.dimen.field_gap)
-                )
-        ) {
             CustomTextFieldWithLabel(
                 text = collection.name,
                 placeholderText = stringResource(R.string.collection_name),
@@ -208,7 +206,6 @@ private fun ColumnScope.EditCategoryCollectionGlassSurface(
                 }
             }
         }
-    }
 }
 
 private fun LazyListScope.categoryListItems(

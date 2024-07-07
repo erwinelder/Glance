@@ -126,10 +126,8 @@
     <string name="income_plural">Příjmy</string>
     <string name="mixed">Smíšené</string>
     <string name="transfer">Převod</string>
-    <string name="new_category_name">Nová kategorie</string>
-    <string name="new_subcategory_name">Nová podkategorie</string>
-    <string name="new_category_collection_name">Nová kolekce</string>
-    <string name="category_not_found">Kategorie nebyla nalezena</string>
+    <string name="account_name">Název účtu</string>
+    <string name="category_name">Název kategorie</string>
     <string name="collection_name">Název kolekce</string>
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>

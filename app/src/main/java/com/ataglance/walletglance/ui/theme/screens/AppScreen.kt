@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,10 +30,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
@@ -56,7 +52,7 @@ import com.ataglance.walletglance.ui.theme.screens.settings.SetupLanguageScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.SetupStartScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.CurrencyPickerScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.EditAccountScreen
-import com.ataglance.walletglance.ui.theme.screens.settings.accounts.SetupAccountsScreen
+import com.ataglance.walletglance.ui.theme.screens.settings.accounts.EditAccountsScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditCategoryScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditSubcategoryListScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.SetupCategoriesScreen
@@ -72,7 +68,6 @@ import com.ataglance.walletglance.ui.utils.getMakeRecordStateAndUnitList
 import com.ataglance.walletglance.ui.utils.getMakeTransferState
 import com.ataglance.walletglance.ui.utils.needToMoveScreenTowardsLeft
 import com.ataglance.walletglance.ui.utils.toAccountEntityList
-import com.ataglance.walletglance.ui.utils.toCategoryEntityList
 import com.ataglance.walletglance.ui.utils.toCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
 import com.ataglance.walletglance.ui.viewmodels.AppUiSettings
@@ -82,14 +77,13 @@ import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
 import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModel
-import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModelFactory
-import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModel
+import com.ataglance.walletglance.ui.viewmodels.categories.EditCategoriesViewModel
+import com.ataglance.walletglance.ui.viewmodels.categories.EditCategoryViewModel
 import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categoryCollections.CategoryCollectionsViewModel
 import com.ataglance.walletglance.ui.viewmodels.categoryCollections.CategoryCollectionsViewModelFactory
@@ -616,31 +610,33 @@ fun NavGraphBuilder.accountsGraph(
 ) {
     navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
         composable<AccountsSettingsScreens.EditAccounts> { backStack ->
-            val viewModel = backStack.sharedViewModel<EditAccountsViewModel>(
+
+            val accountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(
                 navController = navController,
                 factory = EditAccountsViewModelFactory(accountList)
             )
-            val accountListState by viewModel.accountListState.collectAsStateWithLifecycle()
+            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
+                navController = navController
+            )
+
+            val accountsUiState by accountsViewModel.accountsUiState.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
-            SetupAccountsScreen(
+            EditAccountsScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
-                accountsList = accountListState,
                 appTheme = appUiSettings.appTheme,
-                navigateToEditAccountScreen = { orderNum ->
-                    navController.navigate(AccountsSettingsScreens.EditAccount(orderNum))
+                accountsList = accountsUiState,
+                onNavigateToEditAccountScreen = { account ->
+                    editAccountViewModel.applyAccountData(
+                        account = account ?: accountsViewModel.getNewAccount()
+                    )
+                    navController.navigate(AccountsSettingsScreens.EditAccount)
                 },
-                onAddNewAccount = {
-                    viewModel.addNewDefaultAccount()
-                },
-                swapAccounts = viewModel::swapAccounts,
-                onResetButton = {
-                    viewModel.resetAccountsList()
-                },
-                onSaveButton = { newAccountsList ->
+                onSwapAccounts = accountsViewModel::swapAccounts,
+                onSaveButton = {
                     coroutineScope.launch {
-                        appViewModel.saveAccountsToDb(newAccountsList.toAccountEntityList())
+                        appViewModel.saveAccountsToDb(accountsViewModel.getAccountEntities())
                         if (appUiSettings.isSetUp) {
                             navController.popBackStack()
                         } else {
@@ -651,59 +647,50 @@ fun NavGraphBuilder.accountsGraph(
             )
         }
         composable<AccountsSettingsScreens.EditAccount> { backStack ->
-            val accountOrderNum = backStack.toRoute<AccountsSettingsScreens.EditAccount>().orderNum
 
-            val editAccountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(navController)
-            val showDeleteAccountButton by editAccountsViewModel.showDeleteAccountButton.collectAsState()
-            val account = editAccountsViewModel.getAccountByOrderNum(accountOrderNum)
-            val coroutineScope = rememberCoroutineScope()
-
-            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
-                navController = navController,
-                factory = EditAccountViewModelFactory(
-                    uiState = account?.toEditAccountUiState() ?: EditAccountUiState()
-                )
+            val accountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(
+                navController = navController
             )
-            val editAccountUiState by editAccountViewModel.uiState.collectAsStateWithLifecycle()
-            account?.let {
-                LaunchedEffect(it.id) {
-                    if (editAccountUiState.id != account.id) {
-                        editAccountViewModel.applyAccountData(it)
-                    }
-                }
-            }
+            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
+                navController = navController
+            )
+
+            val accountUiState by editAccountViewModel
+                .editAccountUiState.collectAsStateWithLifecycle()
+            val allowDeleting by accountsViewModel.allowDeleting.collectAsStateWithLifecycle()
+            val allowSaving by editAccountViewModel.allowSaving.collectAsStateWithLifecycle()
+            val coroutineScope = rememberCoroutineScope()
 
             EditAccountScreen(
                 scaffoldPadding = scaffoldPadding,
-                uiState = editAccountUiState,
                 appTheme = appUiSettings.appTheme,
-                showDeleteAccountButton = showDeleteAccountButton,
+                editAccountUiState = accountUiState,
+                allowDeleting = allowDeleting,
+                allowSaving = allowSaving,
                 onColorChange = editAccountViewModel::changeColor,
                 onNameChange = editAccountViewModel::changeName,
                 onNavigateToEditAccountCurrencyScreen = {
                     navController.navigate(
-                        AccountsSettingsScreens.EditAccountCurrency(editAccountUiState.currency)
+                        AccountsSettingsScreens.EditAccountCurrency(accountUiState.currency)
                     )
                 },
                 onBalanceChange = editAccountViewModel::changeBalance,
                 onHideChange = editAccountViewModel::changeHide,
                 onHideBalanceChange = editAccountViewModel::changeHideBalance,
                 onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
-                onDeleteButton = { idToDelete: Int ->
+                onDeleteButton = { accountId ->
                     navController.popBackStack()
-                    editAccountsViewModel.deleteAccountById(idToDelete)?.let {
+                    accountsViewModel.deleteAccountById(accountId)?.let {
                         coroutineScope.launch {
                             appViewModel.deleteAccountWithItsRecords(
-                                accountId = idToDelete,
+                                accountId = accountId,
                                 updatedAccountList = it.toAccountEntityList()
                             )
                         }
                     }
                 },
                 onSaveButton = {
-                    if (account != null) {
-                        editAccountsViewModel.saveAccountData(editAccountUiState.toAccount())
-                    }
+                    accountsViewModel.saveAccount(editAccountViewModel.getAccount())
                     navController.popBackStack()
                 }
             )
@@ -711,16 +698,27 @@ fun NavGraphBuilder.accountsGraph(
         composable<AccountsSettingsScreens.EditAccountCurrency> { backStack ->
             val currency = backStack.toRoute<AccountsSettingsScreens.EditAccountCurrency>().currency
 
-            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
+            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
+                navController = navController
+            )
             val currencyPickerViewModel = viewModel<CurrencyPickerViewModel>(
                 factory = CurrencyPickerViewModelFactory(
                     selectedCurrency = currency
                 )
             )
 
+            val uiState by currencyPickerViewModel.uiState.collectAsStateWithLifecycle()
+            val currencyList by currencyPickerViewModel.currencyList.collectAsStateWithLifecycle()
+            val searchedPrompt by currencyPickerViewModel
+                .searchedPrompt.collectAsStateWithLifecycle()
+
             CurrencyPickerScreen(
-                viewModel = currencyPickerViewModel,
                 scaffoldPadding = scaffoldPadding,
+                uiState = uiState,
+                currencyList = currencyList,
+                searchedPrompt = searchedPrompt,
+                onSearchPromptChange = currencyPickerViewModel::changeSearchPrompt,
+                onSelectCurrency = currencyPickerViewModel::selectCurrency,
                 onSaveButtonClick = { selectedCurrency ->
                     editAccountViewModel.changeCurrency(selectedCurrency)
                     navController.popBackStack()
@@ -741,7 +739,8 @@ fun NavGraphBuilder.categoriesGraph(
         startDestination = CategoriesSettingsScreens.EditCategories
     ) {
         composable<CategoriesSettingsScreens.EditCategories> { backStack ->
-            val viewModel = backStack.sharedViewModel<SetupCategoriesViewModel>(
+
+            val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
                 navController = navController,
                 factory = SetupCategoriesViewModelFactory(
                     categoriesWithSubcategories = categoriesWithSubcategories
@@ -749,94 +748,109 @@ fun NavGraphBuilder.categoriesGraph(
                         ?: DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
                 )
             )
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(
+                navController = navController
+            )
+
+            val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
-            val context = LocalContext.current
+
             LaunchedEffect(true) {
-                if (uiState.subcategoryList.isNotEmpty()) viewModel.clearSubcategoryList()
+                if (categoriesUiState.categoryWithSubcategories != null) {
+                    categoriesViewModel.clearSubcategoryList()
+                }
             }
 
             SetupCategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
                 appTheme = appUiSettings.appTheme,
-                uiState = uiState,
-                onShowCategoriesByType = viewModel::changeCategoryTypeToShow,
-                onNavigateToEditSubcategoryListScreen = { category: CategoryWithSubcategories ->
-                    viewModel.applySubcategoryListToEdit(category)
+                uiState = categoriesUiState,
+                onShowCategoriesByType = categoriesViewModel::changeCategoryTypeToShow,
+                onNavigateToEditSubcategoriesScreen = { categoryWithSubcategories ->
+                    categoriesViewModel.applySubcategoryListToEdit(categoryWithSubcategories)
                     navController.navigate(CategoriesSettingsScreens.EditSubcategories)
                 },
-                onNavigateToEditCategoryScreen = { category ->
-                    viewModel.applyCategoryToEdit(category)
+                onNavigateToEditCategoryScreen = { categoryOrNull ->
+                    editCategoryViewModel.applyCategory(
+                        category = categoryOrNull ?: categoriesViewModel.getNewParentCategory()
+                    )
                     navController.navigate(CategoriesSettingsScreens.EditCategory)
                 },
-                onSwapCategories = viewModel::swapParentCategories,
-                onAddNewCategory = {
-                    viewModel.addNewParentCategory(context)
-                },
-                onResetButton = viewModel::reapplyCategoryLists,
+                onSwapCategories = categoriesViewModel::swapParentCategories,
+                onResetButton = categoriesViewModel::reapplyCategoryLists,
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
                         appViewModel.saveCategoriesToDb(
-                            viewModel.getAllCategories().toCategoryEntityList()
+                            categoriesViewModel.getAllCategoryEntities()
                         )
-                        if (appUiSettings.isSetUp) {
-                            navController.popBackStack()
-                        } else {
-                            appViewModel.preFinishSetup()
-                        }
+                        if (appUiSettings.isSetUp) navController.popBackStack()
+                        else appViewModel.preFinishSetup()
                     }
                 }
             )
         }
-        composable<CategoriesSettingsScreens.EditSubcategories> {
-            val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            val context = LocalContext.current
+        composable<CategoriesSettingsScreens.EditSubcategories> { backStack ->
+
+            val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
+                navController = navController
+            )
+            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(
+                navController = navController
+            )
+
+            val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
             EditSubcategoryListScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
-                categoryWithSubcategories = uiState.categoryWithSubcategories,
+                categoryWithSubcategories = categoriesUiState.categoryWithSubcategories,
                 onSaveButton = {
-                    viewModel.saveSubcategoryList()
+                    categoriesViewModel.saveSubcategoryList()
                     navController.popBackStack()
                 },
-                onNavigateToEditCategoryScreen = { category ->
-                    viewModel.applyCategoryToEdit(category)
+                onNavigateToEditCategoryScreen = { categoryOrNull ->
+                    editCategoryViewModel.applyCategory(
+                        category = categoryOrNull ?: categoriesViewModel.getNewSubcategory()
+                    )
                     navController.navigate(CategoriesSettingsScreens.EditCategory)
                 },
-                onSwapCategories = viewModel::swapSubcategories,
-                onAddNewSubcategory = {
-                    viewModel.addNewSubcategory(context)
-                }
+                onSwapCategories = categoriesViewModel::swapSubcategories
             )
         }
-        composable<CategoriesSettingsScreens.EditCategory> {
-            val viewModel = it.sharedViewModel<SetupCategoriesViewModel>(navController)
-            val uiState by viewModel.editCategoryUiState.collectAsStateWithLifecycle()
+        composable<CategoriesSettingsScreens.EditCategory> { backStack ->
 
-            uiState.category?.let { category ->
-                EditCategoryScreen(
-                    scaffoldPadding = scaffoldPadding,
-                    appTheme = appUiSettings.appTheme,
-                    category = category,
-                    showDeleteButton = uiState.showDeleteCategoryButton,
-                    allowSaving = uiState.allowSaving,
-                    onNameChange = viewModel::onCategoryNameChange,
-                    onCategoryColorChange = viewModel::onCategoryColorChange,
-                    onIconChange = viewModel::onCategoryIconChange,
-                    onDeleteButton = {
-                        viewModel.deleteCategory()
-                        navController.popBackStack()
-                    },
-                    onSaveButton = {
-                        viewModel.saveEditedCategory()
-                        navController.popBackStack()
-                    },
-                    categoryIconList = CategoryPossibleIcons().asList()
-                )
-            } ?: Text(text = stringResource(R.string.category_not_found))
+            val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
+                navController = navController
+            )
+            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(
+                navController = navController
+            )
+
+            val categoryUiState by editCategoryViewModel
+                .categoryUiState.collectAsStateWithLifecycle()
+            val allowDeleting by editCategoryViewModel.allowDeleting.collectAsStateWithLifecycle()
+            val allowSaving by editCategoryViewModel.allowSaving.collectAsStateWithLifecycle()
+
+            EditCategoryScreen(
+                scaffoldPadding = scaffoldPadding,
+                appTheme = appUiSettings.appTheme,
+                category = categoryUiState,
+                allowDeleting = allowDeleting,
+                allowSaving = allowSaving,
+                onNameChange = editCategoryViewModel::changeName,
+                onCategoryColorChange = editCategoryViewModel::changeColor,
+                onIconChange = editCategoryViewModel::changeIcon,
+                onDeleteButton = {
+                    categoriesViewModel.deleteCategory(editCategoryViewModel.getCategory())
+                    navController.popBackStack()
+                },
+                onSaveButton = {
+                    categoriesViewModel.saveEditedCategory(editCategoryViewModel.getCategory())
+                    navController.popBackStack()
+                },
+                categoryIconList = CategoryPossibleIcons().asList()
+            )
         }
     }
 }

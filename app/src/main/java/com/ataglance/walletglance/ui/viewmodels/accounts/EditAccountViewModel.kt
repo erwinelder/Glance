@@ -1,43 +1,44 @@
 package com.ataglance.walletglance.ui.viewmodels.accounts
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
 import com.ataglance.walletglance.ui.utils.toAccountColorWithName
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.util.Locale
 
-class EditAccountViewModel(
-    uiState: EditAccountUiState
-) : ViewModel() {
-    private val _uiState: MutableStateFlow<EditAccountUiState> = MutableStateFlow(
-        uiState.copy(
-            allowSaving = validateAccountData(
-                uiState.name, uiState.currency, uiState.balance
-            )
-        )
-    )
-    val uiState: StateFlow<EditAccountUiState> = _uiState.asStateFlow()
+class EditAccountViewModel : ViewModel() {
 
-    private fun validateAccountData(
-        name: String = uiState.value.name,
-        currency: String = uiState.value.currency,
-        balance: String = uiState.value.balance
-    ): Boolean {
-        return name.isNotBlank() &&
-                currency.isNotBlank() &&
-                balance.isNotBlank() &&
-                balance.last() != '.'
-    }
+    private val _editAccountUiState: MutableStateFlow<EditAccountUiState> =
+        MutableStateFlow(EditAccountUiState())
+    val editAccountUiState: StateFlow<EditAccountUiState> = _editAccountUiState.asStateFlow()
+
+    val allowSaving: StateFlow<Boolean> =
+        combine(_editAccountUiState) { editAccountUiStateArray ->
+            editAccountUiStateArray[0].let {
+                it.name.isNotBlank() &&
+                        it.currency.isNotBlank() &&
+                        it.balance.isNotBlank() &&
+                        it.balance.last() != '.'
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false
+        )
+
 
     fun applyAccountData(account: Account) {
-        _uiState.update {
+        _editAccountUiState.update {
             it.copy(
                 id = account.id,
                 orderNum = account.orderNum,
@@ -48,60 +49,50 @@ class EditAccountViewModel(
                 hide = account.hide,
                 hideBalance = account.hideBalance,
                 withoutBalance = account.withoutBalance,
-                isActive = account.isActive,
-                allowSaving = validateAccountData(
-                    account.name, account.currency, account.balance.toString()
-                )
+                isActive = account.isActive
             )
         }
     }
 
     fun changeColor(colorName: String) {
-        _uiState.update {
+        _editAccountUiState.update {
             it.copy(color = AccountPossibleColors().getByName(colorName))
         }
     }
 
     fun changeName(value: String) {
-        _uiState.update {
-            it.copy(
-                name = value,
-                allowSaving = validateAccountData(name = value)
-            )
+        _editAccountUiState.update {
+            it.copy(name = value)
         }
     }
     fun changeCurrency(value: String) {
-        _uiState.update {
-            it.copy(
-                currency = value,
-                allowSaving = validateAccountData(currency = value)
-            )
+        _editAccountUiState.update {
+            it.copy(currency = value)
         }
     }
     fun changeBalance(value: String) {
-        _uiState.update {
+        _editAccountUiState.update {
             it.copy(
                 balance = value.takeIf {
                     Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(value)
-                } ?: return,
-                allowSaving = validateAccountData(balance = value)
+                } ?: return
             )
         }
     }
     fun changeHide(value: Boolean) {
-        _uiState.update {
+        _editAccountUiState.update {
             it.copy(hide = value)
         }
     }
     fun changeHideBalance(value: Boolean) {
-        if (uiState.value.withoutBalance) return
+        if (editAccountUiState.value.withoutBalance) return
 
-        _uiState.update {
+        _editAccountUiState.update {
             it.copy(hideBalance = value)
         }
     }
     fun changeWithoutBalance(value: Boolean) {
-        _uiState.update {
+        _editAccountUiState.update {
             it.copy(
                 hideBalance = false,
                 withoutBalance = value
@@ -109,15 +100,10 @@ class EditAccountViewModel(
         }
     }
 
-}
-
-data class EditAccountViewModelFactory(
-    val uiState: EditAccountUiState
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return EditAccountViewModel(uiState) as T
+    fun getAccount(): Account {
+        return editAccountUiState.value.toAccount()
     }
+
 }
 
 data class EditAccountUiState(
@@ -130,8 +116,7 @@ data class EditAccountUiState(
     val hide: Boolean = false,
     val hideBalance: Boolean = false,
     val withoutBalance: Boolean = false,
-    val isActive: Boolean = false,
-    val allowSaving: Boolean = false
+    val isActive: Boolean = false
 ) {
 
     fun toAccount(): Account {
