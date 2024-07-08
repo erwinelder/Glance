@@ -4,7 +4,6 @@ import android.content.Context
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
-import com.ataglance.walletglance.ui.utils.findById
 import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 
 data class DefaultCategoriesPackage(
@@ -628,20 +627,6 @@ data class DefaultCategoriesPackage(
                 )
             )
         )
-    }
-
-    fun translateDefaultCategoriesIn(
-        categoriesWithSubcategories: CategoriesWithSubcategories
-    ): List<Category> {
-        val translatedDefaultCategories = getDefaultCategories().concatenateAsCategoryList()
-        val currentCategoriesToTranslate = categoriesWithSubcategories.concatenateAsCategoryList()
-            .filter { translatedDefaultCategories.findById(it.id) != null }
-
-        return currentCategoriesToTranslate.map { currentCategory ->
-            translatedDefaultCategories.findById(currentCategory.id)?.let{
-                currentCategory.copy(name = it.name)
-            } ?: currentCategory
-        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.ui.viewmodels
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -11,6 +12,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppLanguage
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
@@ -131,7 +133,42 @@ class AppViewModel(
             initialValue = null
         )
 
+    fun translateAndSaveCategoriesWithDefaultNames(
+        currentLangCode: String,
+        newLangCode: String,
+        context: Context
+    ) {
+        val defaultCurrentCategoryList = getDefaultCategoriesByLanguage(currentLangCode, context)
+        val defaultNewCategoryList = getDefaultCategoriesByLanguage(newLangCode, context)
+
+        val currentCategoryList = categoriesWithSubcategories.value.concatenateAsCategoryList()
+
+        val namesToTranslateMap = currentCategoryList.mapNotNull { currentCategory ->
+            defaultCurrentCategoryList.find { it.name == currentCategory.name }
+                ?.let { defaultCurrentCategory ->
+                    currentCategory.id to defaultNewCategoryList
+                        .find { it.id == defaultCurrentCategory.id }!!.name
+                }
+        }.toMap()
+        val translatedCategoryList = currentCategoryList.mapNotNull { currentCategory ->
+            namesToTranslateMap[currentCategory.id]?.let { currentCategory.copy(name = it) }
+        }
+
+        viewModelScope.launch {
+            categoryRepository.upsertCategories(translatedCategoryList.toCategoryEntityList())
+        }
+    }
+
+    private fun getDefaultCategoriesByLanguage(langCode: String, context: Context): List<Category> {
+        val langContext = context.createConfigurationContext(Configuration().apply {
+            setLocale(Locale(langCode))
+        })
+        return DefaultCategoriesPackage(langContext).getDefaultCategories()
+            .concatenateAsCategoryList()
+    }
+
     fun setLanguage(langCode: String) {
+
         viewModelScope.launch {
             settingsRepository.saveLanguagePreference(langCode)
         }
@@ -144,16 +181,7 @@ class AppViewModel(
 
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
         AppCompatDelegate.setApplicationLocales(appLocale)
-    }
 
-    fun translateDefaultCategories(context: Context) {
-        val translatedCategories = DefaultCategoriesPackage(context).translateDefaultCategoriesIn(
-            categoriesWithSubcategories = categoriesWithSubcategories.value
-        )
-
-        viewModelScope.launch {
-            categoryRepository.upsertCategories(translatedCategories.toCategoryEntityList())
-        }
     }
 
     fun setUseDeviceTheme(value: Boolean) {

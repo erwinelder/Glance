@@ -535,8 +535,12 @@ fun NavGraphBuilder.settingsGraph(
         composable<SettingsScreens.Language> {
             val viewModel = viewModel<LanguageViewModel>()
             val chosenLanguage by viewModel.langCode.collectAsState()
-            if (chosenLanguage == null) {
-                viewModel.chooseNewLanguage(appUiSettings.langCode)
+            val context = LocalContext.current
+
+            LaunchedEffect(true) {
+                if (chosenLanguage == null) {
+                    viewModel.chooseNewLanguage(appUiSettings.langCode)
+                }
             }
 
             SetupLanguageScreen(
@@ -545,11 +549,15 @@ fun NavGraphBuilder.settingsGraph(
                 appLanguage = appUiSettings.langCode,
                 chosenLanguage = chosenLanguage,
                 chooseNewLanguage = viewModel::chooseNewLanguage,
-                onApplyButton = { langCode: String ->
+                onApplyLanguageButton = { langCode: String ->
+                    appViewModel.translateAndSaveCategoriesWithDefaultNames(
+                        currentLangCode = appUiSettings.langCode,
+                        newLangCode = langCode,
+                        context = context
+                    )
                     appViewModel.setLanguage(langCode)
                 },
-                onContextChange = appViewModel::translateDefaultCategories,
-                onNextNavigationButton = {
+                onContinueButton = {
                     navController.navigate(SettingsScreens.Appearance)
                 }
             )
