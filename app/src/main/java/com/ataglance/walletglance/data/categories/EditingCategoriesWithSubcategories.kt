@@ -96,7 +96,9 @@ data class EditingCategoriesWithSubcategories(
     fun getCheckedCategories(): List<Category> {
         (expense + income).let { list ->
             val withoutAndWithSubcategories = list.partition { it.subcategoryList.isEmpty() }
-            val parentCategories = withoutAndWithSubcategories.first.map { it.category }
+            val parentCategories = withoutAndWithSubcategories.first
+                .filter { it.checked != false }
+                .map { it.category }
             val subcategories = withoutAndWithSubcategories.second.flatMap { item ->
                 item.subcategoryList.filter { it.checked }.map { it.category }
             }
