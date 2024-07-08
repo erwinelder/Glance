@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,6 +63,9 @@ fun CategoryPicker(
     var chosenCategoryWithSubcategories: CategoryWithSubcategories? by remember {
         mutableStateOf(null)
     }
+    var subcategoryList: List<Category> by remember { mutableStateOf(emptyList()) }
+    chosenCategoryWithSubcategories?.subcategoryList?.takeIf { it.isNotEmpty() }
+        ?.let { subcategoryList = it }
 
     AnimatedVisibility(
         visible = visible,
@@ -129,9 +133,7 @@ fun CategoryPicker(
         enter = dialogSlideFromBottomTransition,
         exit = dialogSlideToBottomTransition
     ) {
-        LazyColumn(
-            state = subcategoryListState,
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
@@ -144,33 +146,41 @@ fun CategoryPicker(
                         else -> .5f
                     }
                 )
+                .padding(bottom = 4.dp)
         ) {
-            items(
-                items = chosenCategoryWithSubcategories?.subcategoryList ?: emptyList(),
-                key = { it.id }
-            ) { category ->
-                if (category.orderNum != 1) {
-                    SmallDivider()
-                }
-                CategoryListItem(
-                    category = category,
-                    onClick = { subcategory ->
-                        chosenCategoryWithSubcategories?.category?.let { parentCategory ->
-                            onCategoryChoose(
-                                CategoryWithSubcategory(parentCategory, subcategory)
-                            )
-                            onDismissRequest()
-                            if (chosenCategoryWithSubcategories != null) {
-                                chosenCategoryWithSubcategories = null
+            LazyColumn(
+                state = subcategoryListState,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .fillMaxWidth()
+            ) {
+                items(
+                    items = subcategoryList,
+                    key = { it.id }
+                ) { category ->
+                    if (category.orderNum != 1) {
+                        SmallDivider()
+                    }
+                    CategoryListItem(
+                        category = category,
+                        onClick = { subcategory ->
+                            chosenCategoryWithSubcategories?.category?.let { parentCategory ->
+                                onCategoryChoose(
+                                    CategoryWithSubcategory(parentCategory, subcategory)
+                                )
+                                onDismissRequest()
+                                if (chosenCategoryWithSubcategories != null) {
+                                    chosenCategoryWithSubcategories = null
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
-            item {
-                SmallDivider(filledWidth = .6f)
-                CloseButton(onClick = { chosenCategoryWithSubcategories = null })
-            }
+            SmallDivider(filledWidth = .6f)
+            CloseButton(onClick = { chosenCategoryWithSubcategories = null })
         }
     }
 }
