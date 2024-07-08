@@ -2,17 +2,16 @@ package com.ataglance.walletglance.domain.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.ataglance.walletglance.domain.entities.Record
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplaceRecords(recordList: List<Record>)
+    @Upsert
+    suspend fun upsertRecords(recordList: List<Record>)
 
     @Delete
     suspend fun deleteRecords(recordList: List<Record>)

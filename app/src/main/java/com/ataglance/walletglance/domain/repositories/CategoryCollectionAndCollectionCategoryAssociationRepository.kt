@@ -31,13 +31,13 @@ class CategoryCollectionAndCollectionCategoryAssociationRepository(
         if (collectionsIdsToDelete.isNotEmpty()) {
             categoryCollectionDao.deleteCollectionsByIds(collectionsIdsToDelete)
         }
-        categoryCollectionDao.insertOrReplaceCollections(collectionListToUpsert)
+        categoryCollectionDao.upsertCollections(collectionListToUpsert)
 
         if (associationsToDelete.isNotEmpty()) {
             categoryCollectionCategoryAssociationDao.deleteAssociations(associationsToDelete)
         }
         categoryCollectionCategoryAssociationDao
-            .insertOrReplaceCategoryCollectionCategoryAssociations(associationsToUpsert)
+            .upsertCategoryCollectionCategoryAssociations(associationsToUpsert)
     }
 
 }

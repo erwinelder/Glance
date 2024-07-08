@@ -23,10 +23,8 @@ data class CategoryEntity(
 ) {
 
     fun isExpense() = type == '-'
-    fun isIncome() = type == '+'
 
     fun isParentCategory() = rank == 'c'
-    fun isSubcategory() = rank == 's'
 
     fun toCategory(icon: CategoryIcon, color: CategoryColorWithName): Category {
         return Category(

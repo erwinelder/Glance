@@ -9,7 +9,7 @@ class CategoryRepository(
 ) {
 
     suspend fun upsertCategories(categoryList: List<CategoryEntity>) {
-        dao.insertOrReplaceCategories(categoryList)
+        dao.upsertCategories(categoryList)
     }
 
     suspend fun deleteAllCategories() {

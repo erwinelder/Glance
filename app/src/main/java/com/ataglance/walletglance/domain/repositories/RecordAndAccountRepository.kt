@@ -16,8 +16,8 @@ class RecordAndAccountRepository(
         recordList: List<Record>,
         accountList: List<AccountEntity>
     ) {
-        recordDao.insertOrReplaceRecords(recordList)
-        accountDao.insertOrReplaceAccounts(accountList)
+        recordDao.upsertRecords(recordList)
+        accountDao.upsertAccounts(accountList)
     }
 
     @Transaction
@@ -27,8 +27,8 @@ class RecordAndAccountRepository(
         accountList: List<AccountEntity>
     ) {
         recordDao.deleteRecords(recordListToDelete)
-        recordDao.insertOrReplaceRecords(recordListToUpsert)
-        accountDao.insertOrReplaceAccounts(accountList)
+        recordDao.upsertRecords(recordListToUpsert)
+        accountDao.upsertAccounts(accountList)
     }
 
     @Transaction
@@ -37,7 +37,7 @@ class RecordAndAccountRepository(
         accountList: List<AccountEntity>
     ) {
         recordDao.deleteRecords(recordList)
-        accountDao.insertOrReplaceAccounts(accountList)
+        accountDao.upsertAccounts(accountList)
     }
 
     @Transaction
@@ -46,7 +46,7 @@ class RecordAndAccountRepository(
         accountListToUpsert: List<AccountEntity>
     ) {
         accountDao.deleteAccountsByIds(accountIdToDelete)
-        accountDao.insertOrReplaceAccounts(accountListToUpsert)
+        accountDao.upsertAccounts(accountListToUpsert)
         recordDao.deleteRecordsByAccountIds(accountIdToDelete)
         recordDao.convertTransfersToRecords(accountIdToDelete.map { it.toString() })
     }

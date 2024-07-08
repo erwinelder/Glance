@@ -9,7 +9,7 @@ class AccountRepository(
 ) {
 
     suspend fun upsertAccounts(accountList: List<AccountEntity>) {
-        dao.insertOrReplaceAccounts(accountList)
+        dao.upsertAccounts(accountList)
     }
 
     suspend fun deleteAllAccounts() {

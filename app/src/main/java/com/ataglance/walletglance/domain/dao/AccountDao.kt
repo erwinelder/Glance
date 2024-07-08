@@ -1,20 +1,19 @@
 package com.ataglance.walletglance.domain.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.ataglance.walletglance.domain.entities.AccountEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplaceAccount(account: AccountEntity)
+    @Upsert
+    suspend fun upsertAccount(account: AccountEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplaceAccounts(accountsList: List<AccountEntity>)
+    @Upsert
+    suspend fun upsertAccounts(accountsList: List<AccountEntity>)
 
     @Query("DELETE FROM Account WHERE id IN (:idList)")
     suspend fun deleteAccountsByIds(idList: List<Int>)
