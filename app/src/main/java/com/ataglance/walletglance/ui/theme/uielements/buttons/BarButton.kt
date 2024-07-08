@@ -24,10 +24,10 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 
 @Composable
 fun BarButton(
-    onClick: () -> Unit,
     active: Boolean,
     text: String,
-    fontSize: TextUnit = 16.sp
+    fontSize: TextUnit = 16.sp,
+    onClick: () -> Unit
 ) {
     val containerColorLighter by animateColorAsState(
         targetValue = if (active) {

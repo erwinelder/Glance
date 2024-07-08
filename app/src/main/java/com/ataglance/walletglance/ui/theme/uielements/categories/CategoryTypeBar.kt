@@ -34,15 +34,15 @@ fun CategoryTypeBar(
         ) {
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
-                onClick = { onClick(CategoryType.Income) },
-                active = currentCategoryType == CategoryType.Income,
-                text = stringResource(R.string.income_plural)
+                active = currentCategoryType == CategoryType.Expense,
+                text = stringResource(R.string.expenses),
+                onClick = { onClick(CategoryType.Expense) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                onClick = { onClick(CategoryType.Expense) },
-                active = currentCategoryType == CategoryType.Expense,
-                text = stringResource(R.string.expenses)
+                active = currentCategoryType == CategoryType.Income,
+                text = stringResource(R.string.income_plural),
+                onClick = { onClick(CategoryType.Income) }
             )
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }
