@@ -6,19 +6,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,21 +58,7 @@ fun SubcategorySetupElement(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(category.icon.res),
-                contentDescription = "category ${category.name} icon",
-                tint = GlanceTheme.surface,
-                modifier = Modifier
-                    .shadow(
-                        elevation = 8.dp,
-                        spotColor = category.getColorByTheme(appTheme).darker,
-                        shape = RoundedCornerShape(30)
-                    )
-                    .clip(RoundedCornerShape(30))
-                    .background(category.getColorByTheme(appTheme).darker)
-                    .size(32.dp)
-                    .padding(5.dp)
-            )
+            CategoryIconComponent(category, appTheme)
             Text(
                 text = category.name,
                 color = GlanceTheme.onSurface,

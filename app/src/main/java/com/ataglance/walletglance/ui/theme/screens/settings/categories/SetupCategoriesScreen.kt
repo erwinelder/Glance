@@ -79,7 +79,6 @@ fun SetupCategoriesScreen(
                 onClick = onSaveAndFinishSetupButton
             )
         }
-
     )
 }
 

@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
@@ -57,7 +58,7 @@ import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditCateg
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditSubcategoryListScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.SetupCategoriesScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.EditCategoryCollectionScreen
-import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.SetupCategoryCollectionsScreen
+import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.EditCategoryCollectionsScreen
 import com.ataglance.walletglance.ui.theme.uielements.BottomNavBar
 import com.ataglance.walletglance.ui.theme.uielements.SetupProgressTopBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.CustomDateRangeWindow
@@ -582,6 +583,7 @@ fun NavGraphBuilder.settingsGraph(
         categoryCollectionsGraph(
             navController = navController,
             appViewModel = appViewModel,
+            appTheme = appUiSettings.appTheme,
             categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsWithIds = categoryCollectionsUiState
         )
@@ -849,6 +851,7 @@ fun NavGraphBuilder.categoriesGraph(
 fun NavGraphBuilder.categoryCollectionsGraph(
     navController: NavHostController,
     appViewModel: AppViewModel,
+    appTheme: AppTheme?,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     categoryCollectionsWithIds: CategoryCollectionsWithIds
 ) {
@@ -879,7 +882,8 @@ fun NavGraphBuilder.categoryCollectionsGraph(
 
             val coroutineScope = rememberCoroutineScope()
 
-            SetupCategoryCollectionsScreen(
+            EditCategoryCollectionsScreen(
+                appTheme = appTheme,
                 collectionsWithCategories = collectionListByType,
                 collectionType = categoryCollectionType,
                 onCategoryTypeChange = collectionsViewModel::changeCategoryType,

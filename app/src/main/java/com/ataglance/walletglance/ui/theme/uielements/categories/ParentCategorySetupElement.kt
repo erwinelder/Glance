@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
@@ -67,21 +66,7 @@ fun ParentCategorySetupElement(
                 onNavigateToEditSubcategoryListScreen(category.orderNum)
             }
         ) {
-            Icon(
-                painter = painterResource(category.icon.res),
-                contentDescription = "category ${category.name} icon",
-                tint = GlanceTheme.surface,
-                modifier = Modifier
-                    .shadow(
-                        elevation = 8.dp,
-                        spotColor = category.getColorByTheme(appTheme).darker,
-                        shape = RoundedCornerShape(30)
-                    )
-                    .clip(RoundedCornerShape(30))
-                    .background(category.getColorByTheme(appTheme).darker)
-                    .size(32.dp)
-                    .padding(5.dp)
-            )
+            CategoryIconComponent(category, appTheme)
             Text(
                 text = category.name,
                 color = GlanceTheme.onSurface,

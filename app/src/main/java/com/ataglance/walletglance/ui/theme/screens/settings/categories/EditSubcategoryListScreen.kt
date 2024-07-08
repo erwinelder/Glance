@@ -41,7 +41,7 @@ fun EditSubcategoryListScreen(
     SetupDataScreenContainer(
         topPadding = scaffoldPadding.calculateTopPadding(),
         glassSurfaceContent = {
-            EditSubcategoryListContainer(
+            GlassSurfaceContent(
                 subcategoryList = categoryWithSubcategories?.subcategoryList ?: emptyList(),
                 appTheme = appTheme,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
@@ -63,7 +63,7 @@ fun EditSubcategoryListScreen(
 }
 
 @Composable
-private fun EditSubcategoryListContainer(
+private fun GlassSurfaceContent(
     subcategoryList: List<Category>,
     appTheme: AppTheme?,
     onNavigateToEditCategoryScreen: (Category) -> Unit,

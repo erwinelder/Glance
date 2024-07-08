@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -41,6 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoryRank
+import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.color.CategoryColors
+import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.ui.theme.GlanceTheme
@@ -50,10 +57,13 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryIconComponent
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeBar
+import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 
 @Composable
-fun SetupCategoryCollectionsScreen(
+fun EditCategoryCollectionsScreen(
+    appTheme: AppTheme?,
     collectionsWithCategories: List<CategoryCollectionWithCategories>,
     collectionType: CategoryCollectionType,
     onCategoryTypeChange: (CategoryCollectionType) -> Unit,
@@ -69,6 +79,7 @@ fun SetupCategoryCollectionsScreen(
         },
         glassSurfaceContent = {
             GlassSurfaceContent(
+                appTheme = appTheme,
                 collectionsWithCategories = collectionsWithCategories,
                 onNavigateToEditCategoryCollectionScreen = onNavigateToEditCollectionScreen
             )
@@ -93,6 +104,7 @@ fun SetupCategoryCollectionsScreen(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun GlassSurfaceContent(
+    appTheme: AppTheme?,
     collectionsWithCategories: List<CategoryCollectionWithCategories>,
     onNavigateToEditCategoryCollectionScreen: (CategoryCollectionWithCategories) -> Unit,
 ) {
@@ -118,7 +130,7 @@ private fun GlassSurfaceContent(
                         items = targetCollectionsWithCategories,
                         key = { it.id }
                     ) { collection ->
-                        CategoryCollectionSetupComponent(collection) {
+                        CategoryCollectionSetupComponent(appTheme, collection) {
                             onNavigateToEditCategoryCollectionScreen(collection)
                         }
                     }
@@ -134,7 +146,7 @@ private fun GlassSurfaceContent(
                 ) {
                     targetCollectionsWithCategories.forEach { collection ->
                         Box(modifier = Modifier.padding(9.dp)) {
-                            CategoryCollectionSetupComponent(collection) {
+                            CategoryCollectionSetupComponent(appTheme, collection) {
                                 onNavigateToEditCategoryCollectionScreen(collection)
                             }
                         }
@@ -149,12 +161,21 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun CategoryCollectionSetupComponent(
+    appTheme: AppTheme?,
     collection: CategoryCollectionWithCategories,
     onClick: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+    val lazyListState = rememberLazyListState()
+    val categoriesWithUniqueIcons = collection.categoryList
+        ?.groupBy { it.icon }
+        ?.flatMap { (_, categories) ->
+            categories.distinctBy { it.colorWithName }
+        }
+        ?: emptyList()
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .bounceClickEffect(.98f, onClick = onClick)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
@@ -172,20 +193,34 @@ private fun CategoryCollectionSetupComponent(
             )
             .padding(horizontal = 15.dp, vertical = 12.dp)
     ) {
-        Text(
-            text = collection.name,
-            color = GlanceTheme.onSurface,
-            fontSize = 20.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            modifier = Modifier.weight(1f, false)
-        )
-        Icon(
-            painter = painterResource(R.drawable.short_arrow_right_icon),
-            contentDescription = "right arrow",
-            tint = GlanceTheme.onSurface,
-            modifier = Modifier.size(12.dp, 20.dp)
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = collection.name,
+                color = GlanceTheme.onSurface,
+                fontSize = 20.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.weight(1f, false)
+            )
+            Icon(
+                painter = painterResource(R.drawable.short_arrow_right_icon),
+                contentDescription = "right arrow",
+                tint = GlanceTheme.onSurface,
+                modifier = Modifier.size(12.dp, 20.dp)
+            )
+        }
+        LazyRow(
+            state = lazyListState,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            userScrollEnabled = false
+        ) {
+            items(items = categoriesWithUniqueIcons, key = { it.id }) { category ->
+                CategoryIconComponent(category, appTheme)
+            }
+        }
     }
 }
 
@@ -209,6 +244,79 @@ private fun NoItemsMessage() {
 @Preview
 @Composable
 private fun SetupCategoryCollectionsScreenPreview() {
+    val categoryList = listOf(
+        Category(
+            id = 13,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Sub,
+            orderNum = 1,
+            parentCategoryId = 1,
+            name = "Groceries",
+            icon = CategoryIcon.Groceries,
+            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+        ),
+        Category(
+            id = 14,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Parent,
+            orderNum = 2,
+            parentCategoryId = null,
+            name = "Category 2",
+            icon = CategoryIcon.TravelTickets,
+            colorWithName = CategoryColors.Blue.toCategoryColorWithName()
+        ),
+        Category(
+            id = 25,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Parent,
+            orderNum = 3,
+            parentCategoryId = null,
+            name = "Category 3",
+            icon = CategoryIcon.Sales,
+            colorWithName = CategoryColors.Lavender.toCategoryColorWithName()
+        ),
+        Category(
+            id = 30,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Parent,
+            orderNum = 3,
+            parentCategoryId = null,
+            name = "Category 3",
+            icon = CategoryIcon.Other,
+            colorWithName = CategoryColors.Camel.toCategoryColorWithName()
+        ),
+        Category(
+            id = 32,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Parent,
+            orderNum = 3,
+            parentCategoryId = null,
+            name = "Category 3",
+            icon = CategoryIcon.Other,
+            colorWithName = CategoryColors.Red.toCategoryColorWithName()
+        ),
+        Category(
+            id = 31,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Parent,
+            orderNum = 3,
+            parentCategoryId = null,
+            name = "Category 3",
+            icon = CategoryIcon.Clothes,
+            colorWithName = CategoryColors.Pink.toCategoryColorWithName()
+        ),
+        Category(
+            id = 33,
+            type = CategoryType.Expense,
+            rank = CategoryRank.Parent,
+            orderNum = 3,
+            parentCategoryId = null,
+            name = "Category 3",
+            icon = CategoryIcon.Other,
+            colorWithName = CategoryColors.Red.toCategoryColorWithName()
+        ),
+    )
+
     BoxWithConstraints {
         WalletGlanceTheme(
             useDeviceTheme = false,
@@ -225,28 +333,29 @@ private fun SetupCategoryCollectionsScreenPreview() {
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.fillMaxSize()
                 )
-                SetupCategoryCollectionsScreen(
+                EditCategoryCollectionsScreen(
+                    appTheme = AppTheme.LightDefault,
                     collectionsWithCategories = listOf(
                         CategoryCollectionWithCategories(
                             id = 1,
                             orderNum = 1,
                             type = CategoryCollectionType.Mixed,
                             name = "Category collection collection 1",
-                            categoryList = listOf()
+                            categoryList = categoryList
                         ),
                         CategoryCollectionWithCategories(
                             id = 2,
                             orderNum = 2,
                             type = CategoryCollectionType.Mixed,
-                            name = "Category collection 2",
-                            categoryList = listOf()
+                            name = "Collection 2",
+                            categoryList = categoryList
                         ),
                         CategoryCollectionWithCategories(
                             id = 3,
                             orderNum = 3,
                             type = CategoryCollectionType.Mixed,
                             name = "Category collection 3",
-                            categoryList = listOf()
+                            categoryList = categoryList
                         ),
                     ),
                     collectionType = CategoryCollectionType.Mixed,
