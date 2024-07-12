@@ -112,7 +112,7 @@ class EditCategoriesViewModel(
 
         return Category(
             type = uiState.value.categoryType,
-            parentCategoryId = parentCategory.parentCategoryId,
+            parentCategoryId = parentCategory.id,
             name = "",
             icon = parentCategory.icon,
             colorWithName = parentCategory.colorWithName
