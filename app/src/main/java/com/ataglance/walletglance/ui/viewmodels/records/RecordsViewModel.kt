@@ -26,6 +26,7 @@ class RecordsViewModel(
 
     fun setCollectionType(type: CategoryCollectionType) {
         _collectionType.update { type }
+        resetSelectedCollection()
     }
 
 
@@ -52,6 +53,13 @@ class RecordsViewModel(
 
     fun selectCollection(collection: CategoryCollectionWithIds) {
         _selectedCollection.update { collection }
+    }
+
+    private fun resetSelectedCollection() {
+        _selectedCollection.update {
+            categoryCollections.getByType(collectionType.value).firstOrNull()
+                ?: CategoryCollectionWithIds()
+        }
     }
 
 

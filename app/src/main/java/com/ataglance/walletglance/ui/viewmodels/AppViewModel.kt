@@ -971,28 +971,6 @@ class AppViewModel(
         return LocalDateTime.now().hour.getGreetingsWidgetTitleRes()
     }
 
-    /*private fun getRecordsTotalAmount(
-        recordStackList: List<RecordStack>,
-        startDate: Long,
-        endDate: Long,
-        type: RecordType
-    ): Double {
-        return accountsUiState.value.activeAccount?.let { activeAccount ->
-            recordStackList
-                .filter {
-                    it.account.id == activeAccount.id &&
-                            it.date in startDate..endDate && (
-                            (it.isOfType(type)) ||
-                                    (it.isOutTransfer() && type == RecordType.Expense) ||
-                                    (it.isInTransfer() && type == RecordType.Income)
-                            )
-                }
-                .fold(0.0) { total, recordStack ->
-                    total + recordStack.totalAmount
-                }
-        } ?: 0.0
-    }*/
-
 
     fun fetchDataOnStart() {
         fetchAccountsFromDb()

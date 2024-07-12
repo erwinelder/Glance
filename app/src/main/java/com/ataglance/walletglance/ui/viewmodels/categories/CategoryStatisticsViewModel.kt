@@ -64,6 +64,7 @@ class CategoryStatisticsViewModel(
 
         if (parentCategoryStatistics.value != null) clearParentCategory()
         _categoryType.update { newCategoryType }
+        resetSelectedCollection()
     }
 
 
@@ -82,7 +83,15 @@ class CategoryStatisticsViewModel(
     val selectedCollection = _selectedCollection.asStateFlow()
 
     fun selectCollection(collection: CategoryCollectionWithIds) {
+        if (parentCategoryStatistics.value != null) clearParentCategory()
         _selectedCollection.update { collection }
+    }
+
+    private fun resetSelectedCollection() {
+        _selectedCollection.update {
+            categoryCollections.getByCategoryType(categoryType.value).firstOrNull()
+                ?: CategoryCollectionWithIds()
+        }
     }
 
 

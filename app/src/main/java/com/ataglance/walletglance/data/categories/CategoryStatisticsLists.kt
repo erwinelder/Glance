@@ -16,11 +16,4 @@ data class CategoryStatisticsLists(
         return (expense + income).find { it.categoryId == id }
     }
 
-    fun getItemByParentCategoryIdAndType(
-        id: Int,
-        type: CategoryType
-    ): CategoryStatisticsElementUiState? {
-        return getByType(type).find { it.categoryId == id }
-    }
-
 }
