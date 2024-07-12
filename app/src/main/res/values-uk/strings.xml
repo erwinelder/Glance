@@ -129,6 +129,7 @@
     <string name="account_name">Назва рахунку</string>
     <string name="category_name">Назва категорії</string>
     <string name="collection_name">Назва колекції</string>
+    <string name="all_categories">Всі категорії</string>
     <string name="no_collections_of_this_type">Немає колекцій цього типу</string>
     <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>
     <string name="reset_data_warning">Ви впевнені, що хочете скинути всі дані?</string>

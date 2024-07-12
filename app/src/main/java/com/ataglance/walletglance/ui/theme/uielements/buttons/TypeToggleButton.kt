@@ -22,9 +22,9 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 
 @Composable
 fun TypeToggleButton(
-    onClick: () -> Unit,
     text: String,
     fontSize: TextUnit = 16.sp,
+    onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,

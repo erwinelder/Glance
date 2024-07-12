@@ -15,7 +15,7 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.DateFilterBar
-import com.ataglance.walletglance.ui.theme.uielements.containers.SmallAccountsContainer
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFilterBar
 
 @Composable
 fun AppMainTopBar(
@@ -38,7 +38,7 @@ fun AppMainTopBar(
             )
     ) {
         if (accountList.size > 1) {
-            SmallAccountsContainer(
+            AccountsFilterBar(
                 accountList = accountList,
                 appTheme = appTheme,
                 onAccountClick = onAccountClick

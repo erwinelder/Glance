@@ -26,4 +26,8 @@ data class DateRangeState(
         } + " ${fromPast / 100000000}"
     }
 
+    fun getRangePair(): Pair<Long, Long> {
+        return fromPast to toFuture
+    }
+
 }

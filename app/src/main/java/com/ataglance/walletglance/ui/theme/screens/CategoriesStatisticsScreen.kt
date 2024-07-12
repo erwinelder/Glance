@@ -19,9 +19,9 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
+import com.ataglance.walletglance.ui.theme.screencontainers.DataPresentationScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryStatisticsItemComponent
-import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeBar
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryTypeToggleButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 
@@ -35,38 +35,44 @@ fun CategoriesStatisticsScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    viewModel: CategoryStatisticsViewModel,
-    parentCategoryId: Int?
+    viewModel: CategoryStatisticsViewModel
 ) {
     LaunchedEffect(currentDateRangeEnum, accountList) {
         viewModel.clearParentCategory()
     }
-    LaunchedEffect(parentCategoryId) {
-        viewModel.setParentCategoryById(parentCategoryId)
-    }
 
     val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
-    val parentCategory by viewModel.parentCategory.collectAsStateWithLifecycle()
-    val categoryList by viewModel.categoryList.collectAsStateWithLifecycle()
+    val parentCategory by viewModel.parentCategoryStatistics.collectAsStateWithLifecycle()
+    val categoryStatisticsList by viewModel.categoryStatisticsList.collectAsStateWithLifecycle()
+    val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
+    val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
 
-    ScreenDataContainer(
+    DataPresentationScreenContainer(
         scaffoldAppScreenPadding = scaffoldAppScreenPadding,
-        accountList = accountList,
         appTheme = appTheme,
+        accountList = accountList,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         onDateRangeChange = onDateRangeChange,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
+        collectionList = collectionList,
+        selectedCollection = selectedCollection,
+        onCollectionSelect = {
+            viewModel.selectCollection(it)
+        },
+        typeToggleButton = {
+            CategoryTypeToggleButton(
+                currentType = categoryType,
+                onClick = {
+                    viewModel.setCategoryType(it)
+                }
+            )
+        },
         animationContentLabel = "all categories statistics",
-        animatedContentTargetState = Pair(categoryList, parentCategory),
-        visibleNoDataMessage = categoryList.isEmpty(),
-        noDataMessageResource = R.string.no_data_for_the_selected_filter,
-        typeFilterBar = {
-            CategoryTypeBar(categoryType) {
-                viewModel.setCategoryType(it)
-            }
-        }
+        animatedContentTargetState = Pair(categoryStatisticsList, parentCategory),
+        visibleNoDataMessage = categoryStatisticsList.isEmpty(),
+        noDataMessageRes = R.string.no_data_for_the_selected_filter
     ) { categoryListAndParCategory ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

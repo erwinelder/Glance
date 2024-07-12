@@ -129,6 +129,7 @@
     <string name="account_name">Название счёта</string>
     <string name="category_name">Название категории</string>
     <string name="collection_name">Название коллекции</string>
+    <string name="all_categories">Все категории</string>
     <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
     <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>
     <string name="reset_data_warning">Вы уверены, что хотите сбросить все данные?</string>

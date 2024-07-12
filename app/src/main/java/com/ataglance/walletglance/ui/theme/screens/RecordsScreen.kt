@@ -8,49 +8,49 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordsTypeFilter
-import com.ataglance.walletglance.ui.theme.screencontainers.ScreenDataContainer
+import com.ataglance.walletglance.ui.theme.screencontainers.DataPresentationScreenContainer
+import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeToggleButton
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
-import com.ataglance.walletglance.ui.theme.uielements.records.RecordsTypeFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
-import com.ataglance.walletglance.ui.utils.findById
 import com.ataglance.walletglance.ui.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.ui.utils.findById
+import com.ataglance.walletglance.ui.utils.toggle
+import com.ataglance.walletglance.ui.viewmodels.records.RecordsViewModel
 
 @Composable
 fun RecordsScreen(
     scaffoldAppScreenPadding: PaddingValues,
     appTheme: AppTheme?,
     accountList: List<Account>,
-    recordStackList: List<RecordStack>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
+    viewModel: RecordsViewModel,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
-    var recordsType by remember { mutableStateOf(RecordsTypeFilter.All) }
-    val lazyListState = rememberLazyListState()
-    val filteredRecordStackList = when (recordsType) {
-        RecordsTypeFilter.All -> recordStackList
-        RecordsTypeFilter.Expenses -> recordStackList.filter { it.isExpenseOrOutTransfer() }
-        RecordsTypeFilter.Income -> recordStackList.filter { it.isIncomeOrInTransfer() }
-    }
-    val includeYearToRecordDate = recordStackList.containsRecordsFromDifferentYears()
+    val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
+    val recordsFilteredByDateAndAccountAndCollection by viewModel
+        .recordsFilteredByDateAndAccountAndCollection.collectAsStateWithLifecycle()
+    val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
+    val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
 
-    ScreenDataContainer(
+    val includeYearToRecordDate = recordsFilteredByDateAndAccountAndCollection
+        .containsRecordsFromDifferentYears()
+    val lazyListState = rememberLazyListState()
+
+    DataPresentationScreenContainer(
         scaffoldAppScreenPadding = scaffoldAppScreenPadding,
         accountList = accountList,
         appTheme = appTheme,
@@ -59,19 +59,27 @@ fun RecordsScreen(
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         onDateRangeChange = onDateRangeChange,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
+        collectionList = collectionList,
+        selectedCollection = selectedCollection,
+        onCollectionSelect = {
+            viewModel.selectCollection(it)
+        },
         animationContentLabel = "records history widget content",
-        animatedContentTargetState = Pair(filteredRecordStackList, recordsType),
-        visibleNoDataMessage = filteredRecordStackList.isEmpty(),
-        noDataMessageResource = when(recordsType) {
-            RecordsTypeFilter.All -> R.string.you_have_no_records_in_date_range
-            RecordsTypeFilter.Expenses -> R.string.you_have_no_expenses_in_date_range
-            RecordsTypeFilter.Income -> R.string.you_have_no_income_in_date_range
+        animatedContentTargetState = Pair(
+            recordsFilteredByDateAndAccountAndCollection,
+            collectionType
+        ),
+        visibleNoDataMessage = recordsFilteredByDateAndAccountAndCollection.isEmpty(),
+        noDataMessageRes = when(collectionType) {
+            CategoryCollectionType.Mixed -> R.string.you_have_no_records_in_date_range
+            CategoryCollectionType.Expense -> R.string.you_have_no_expenses_in_date_range
+            CategoryCollectionType.Income -> R.string.you_have_no_income_in_date_range
         },
-        typeFilterBar = {
-            RecordsTypeFilterBar(recordsType) {
-                recordsType = it
+        typeToggleButton = {
+            CategoryCollectionTypeToggleButton(collectionType) {
+                viewModel.setCollectionType(collectionType.toggle())
             }
-        },
+        }
     ) { targetRecordStackListAndTypeFilter ->
         LazyColumn(
             state = lazyListState,

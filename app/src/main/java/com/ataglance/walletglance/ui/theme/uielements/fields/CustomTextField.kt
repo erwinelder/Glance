@@ -36,6 +36,7 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholderText: String = "",
+    readOnly: Boolean = false,
     isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     fontSize: TextUnit = 22.sp,
@@ -50,6 +51,7 @@ fun CustomTextField(
     BasicTextField(
         value = text,
         onValueChange = onValueChange,
+        readOnly = readOnly,
         interactionSource = interactionSource,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType

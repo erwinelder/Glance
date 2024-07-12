@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,27 +26,32 @@ import androidx.compose.ui.text.style.TextAlign
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFilterBar
+import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionPicker
 import com.ataglance.walletglance.ui.theme.uielements.containers.DateFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
-import com.ataglance.walletglance.ui.theme.uielements.containers.SmallAccountsContainer
 
 @Composable
-fun <S> ScreenDataContainer(
+fun <S> DataPresentationScreenContainer(
     scaffoldAppScreenPadding: PaddingValues,
-    accountList: List<Account>,
     appTheme: AppTheme?,
+    accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
+    collectionList: List<CategoryCollectionWithIds>,
+    selectedCollection: CategoryCollectionWithIds,
+    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    typeToggleButton: @Composable () -> Unit,
     animationContentLabel: String,
     animatedContentTargetState: S,
     visibleNoDataMessage: Boolean,
-    noDataMessageResource: Int,
-    typeFilterBar: @Composable () -> Unit,
+    noDataMessageRes: Int,
     animatedContent: @Composable (S) -> Unit
 ) {
     Column(
@@ -61,7 +67,7 @@ fun <S> ScreenDataContainer(
             )
     ) {
         if (accountList.size > 1) {
-            SmallAccountsContainer(
+            AccountsFilterBar(
                 accountList = accountList,
                 appTheme = appTheme,
                 onAccountClick = onAccountClick
@@ -73,7 +79,14 @@ fun <S> ScreenDataContainer(
             onDateRangeChange = onDateRangeChange,
             onCustomDateRangeButtonClick = onCustomDateRangeButtonClick
         )
-        typeFilterBar()
+        Row {
+            CategoryCollectionPicker(
+                collectionList = collectionList,
+                selectedCollection = selectedCollection,
+                onCollectionSelect = onCollectionSelect
+            )
+            typeToggleButton()
+        }
         Spacer(modifier = Modifier)
         GlassSurface(
             modifier = Modifier
@@ -109,7 +122,7 @@ fun <S> ScreenDataContainer(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Text(
-                                text = stringResource(noDataMessageResource),
+                                text = stringResource(noDataMessageRes),
                                 color = GlanceTheme.onSurface.copy(.6f),
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Light

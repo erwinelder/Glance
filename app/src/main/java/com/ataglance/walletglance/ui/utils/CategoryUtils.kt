@@ -6,18 +6,26 @@ import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.data.categories.CheckedCategory
 import com.ataglance.walletglance.data.categories.EditingCategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
-import com.ataglance.walletglance.data.categories.CheckedCategory
 import com.ataglance.walletglance.data.color.ColorWithName
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 
 
 fun CategoryType.asChar(): Char {
     return if (this == CategoryType.Expense) '-' else '+'
+}
+
+
+fun CategoryType.toggle(): CategoryType {
+    return when (this) {
+        CategoryType.Expense -> CategoryType.Income
+        CategoryType.Income -> CategoryType.Expense
+    }
 }
 
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
@@ -94,6 +96,8 @@ import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.records.RecordsViewModel
+import com.ataglance.walletglance.ui.viewmodels.records.RecordsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.settings.LanguageViewModel
 import com.ataglance.walletglance.ui.viewmodels.sharedViewModel
 import kotlinx.coroutines.launch
@@ -306,11 +310,25 @@ fun HomeNavHost(
             )
         }
         composable<MainScreens.Records> {
+
+            val viewModel = viewModel<RecordsViewModel>(
+                factory = RecordsViewModelFactory(
+                    categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
+                        name = stringResource(R.string.all_categories)
+                    ),
+                    recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount
+                )
+            )
+            LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
+                viewModel.setRecordsFilteredByDateAndAccount(
+                    widgetsUiState.recordsFilteredByDateAndAccount
+                )
+            }
+
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
-                recordStackList = widgetsUiState.filteredRecordStackList,
                 onAccountClick = { orderNum ->
                     appViewModel.applyActiveAccountByOrderNum(orderNum)
                 },
@@ -318,6 +336,7 @@ fun HomeNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::changeDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
+                viewModel = viewModel,
                 onRecordClick = { recordNum: Int ->
                     changeMoveScreenTowardsLeft(true)
                     navController.navigate(
@@ -342,11 +361,22 @@ fun HomeNavHost(
 
             val viewModel = viewModel<CategoryStatisticsViewModel>(
                 factory = CategoryStatisticsViewModelFactory(
-                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists
+                    categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
+                        name = stringResource(R.string.all_categories)
+                    ),
+                    categoriesWithSubcategories = categoriesWithSubcategories,
+                    recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount,
+                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
+                    parentCategoryId = parentCategoryId
                 )
             )
             LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
                 viewModel.setCategoryStatisticsLists(widgetsUiState.categoryStatisticsLists)
+            }
+            LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
+                viewModel.setRecordsFilteredByDateAndAccount(
+                    widgetsUiState.recordsFilteredByDateAndAccount
+                )
             }
 
             CategoriesStatisticsScreen(
@@ -360,8 +390,7 @@ fun HomeNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::changeDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                viewModel = viewModel,
-                parentCategoryId = parentCategoryId
+                viewModel = viewModel
             )
         }
         composable<MainScreens.MakeRecord>(

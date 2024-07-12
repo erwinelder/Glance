@@ -25,6 +25,7 @@ import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.ui.utils.filterByDateAndAccount
 import com.ataglance.walletglance.ui.utils.getFormattedDateWithTime
 import com.ataglance.walletglance.ui.utils.toAccountEntityList
 import com.ataglance.walletglance.ui.utils.toLongWithTime
@@ -279,9 +280,9 @@ class WalletGlanceInstrumentedTest {
 
         composeTestRule.setContent {
             RecordHistoryWidget(
-                recordStackList = appViewModel.filterRecordStackForWidgetsUiState(
-                    recordStackList = appViewModel.recordStackList.value,
-                    dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
+                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                        .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
@@ -372,9 +373,9 @@ class WalletGlanceInstrumentedTest {
 
         composeTestRule.setContent {
             RecordHistoryWidget(
-                recordStackList = appViewModel.filterRecordStackForWidgetsUiState(
-                    recordStackList = appViewModel.recordStackList.value,
-                    dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
+                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                        .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
@@ -507,9 +508,9 @@ class WalletGlanceInstrumentedTest {
 
         composeTestRule.setContent {
             RecordHistoryWidget(
-                recordStackList = appViewModel.filterRecordStackForWidgetsUiState(
-                    recordStackList = appViewModel.recordStackList.value,
-                    dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
+                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                        .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
@@ -607,9 +608,9 @@ class WalletGlanceInstrumentedTest {
 
         composeTestRule.setContent {
             RecordHistoryWidget(
-                recordStackList = appViewModel.filterRecordStackForWidgetsUiState(
-                    recordStackList = appViewModel.recordStackList.value,
-                    dateRangeState = appViewModel.dateRangeMenuUiState.value.dateRangeState,
+                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                        .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,

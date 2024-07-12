@@ -136,7 +136,7 @@ private fun CompactLayout(
         item {
             StartAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
-                    uiState = widgetsUiState.expensesIncome,
+                    uiState = widgetsUiState.expensesIncomeState,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
                     accountCurrency = accountsUiState.activeAccount?.currency ?: ""
                 )
@@ -149,7 +149,7 @@ private fun CompactLayout(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     RecordHistoryWidget(
-                        recordStackList = widgetsUiState.filteredRecordStackList.take(3),
+                        recordStackList = widgetsUiState.recordsFilteredByDateAndAccount.take(3),
                         accountList = accountsUiState.accountList,
                         appTheme = appTheme,
                         isCustomDateRange =
@@ -242,7 +242,7 @@ private fun ExpandedLayout(
             }
             StartAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
-                    uiState = widgetsUiState.expensesIncome,
+                    uiState = widgetsUiState.expensesIncomeState,
                     dateRangeState = dateRangeMenuUiState.dateRangeState,
                     accountCurrency = accountsUiState.activeAccount?.currency ?: ""
                 )

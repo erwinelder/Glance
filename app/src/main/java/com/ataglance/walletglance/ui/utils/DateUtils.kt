@@ -327,3 +327,13 @@ fun getFormattedDateFromAndToByFormatDayMonthYear(
             context.getString(R.string.to) + " " +
             convertDateLongToDayMonthYear(toFuture, context)
 }
+
+
+fun Int.getGreetingsWidgetTitleRes(): Int {
+    return when (this) {
+        in 6..11 -> R.string.greetings_title_morning
+        in 12..17 -> R.string.greetings_title_afternoon
+        in 18..22 -> R.string.greetings_title_evening
+        else -> R.string.greetings_title_night
+    }
+}

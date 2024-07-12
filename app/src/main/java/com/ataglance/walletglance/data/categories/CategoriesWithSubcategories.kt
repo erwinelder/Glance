@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.data.categories
 
-import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
 import com.ataglance.walletglance.data.records.RecordStack
@@ -85,20 +84,15 @@ data class CategoriesWithSubcategories(
         return replaceListByType(newList, category.type)
     }
 
-    fun getStatistics(
-        recordStackList: List<RecordStack>,
-        appTheme: AppTheme?
-    ): CategoryStatisticsLists {
+    fun getStatistics(recordStackList: List<RecordStack>): CategoryStatisticsLists {
         return CategoryStatisticsLists(
             expense = getCategoryStatisticsByType(
                 recordStackList = recordStackList,
                 type = RecordType.Expense,
-                appTheme = appTheme,
             ),
             income = getCategoryStatisticsByType(
                 recordStackList = recordStackList,
                 type = RecordType.Income,
-                appTheme = appTheme,
             )
         )
     }
@@ -106,7 +100,6 @@ data class CategoriesWithSubcategories(
     private fun getCategoryStatisticsByType(
         recordStackList: List<RecordStack>,
         type: RecordType,
-        appTheme: AppTheme?,
     ): List<CategoryStatisticsElementUiState> {
         val categoryStatsMap = mutableMapOf<Int, CategoriesStatsMapItem>()
         val subcategoriesStatsMap = mutableMapOf<Int, MutableMap<Int, CategoriesStatsMapItem>>()
@@ -131,7 +124,6 @@ data class CategoriesWithSubcategories(
         return categoryStatsMap.values.sortedByDescending { it.totalAmount }
             .map { statsMapItem ->
                 statsMapItem.toCategoryStatisticsElementUiState(
-                    appTheme = appTheme,
                     accountCurrency = accountCurrency,
                     allCategoriesTotalAmount = totalAmount,
                     subcategoriesStatistics = subcategoriesStatsMap[statsMapItem.category.id]

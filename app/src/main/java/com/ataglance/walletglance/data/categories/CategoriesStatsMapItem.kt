@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.data.categories
 
-import com.ataglance.walletglance.data.app.AppTheme
 import java.util.Locale
 
 data class CategoriesStatsMapItem(
@@ -9,7 +8,6 @@ data class CategoriesStatsMapItem(
 ) {
 
     fun toCategoryStatisticsElementUiState(
-        appTheme: AppTheme?,
         accountCurrency: String,
         allCategoriesTotalAmount: Double,
         subcategoriesStatistics: MutableMap<Int, CategoriesStatsMapItem>? = null
@@ -26,7 +24,6 @@ data class CategoriesStatsMapItem(
                 ?.sortedByDescending { it.totalAmount }
                 ?.map {
                     it.toCategoryStatisticsElementUiState(
-                        appTheme = appTheme,
                         accountCurrency = accountCurrency,
                         allCategoriesTotalAmount = totalAmount
                     )

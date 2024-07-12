@@ -40,6 +40,7 @@ import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.utils.breakOnCollectionsAndAssociations
 import com.ataglance.walletglance.ui.utils.checkOrderNumbers
 import com.ataglance.walletglance.ui.utils.convertCalendarMillisToLongWithoutSpecificTime
+import com.ataglance.walletglance.ui.utils.filterByDateAndAccount
 import com.ataglance.walletglance.ui.utils.findById
 import com.ataglance.walletglance.ui.utils.findByOrderNum
 import com.ataglance.walletglance.ui.utils.fixOrderNumbers
@@ -47,10 +48,13 @@ import com.ataglance.walletglance.ui.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.ui.utils.getCalendarEndLong
 import com.ataglance.walletglance.ui.utils.getCalendarStartLong
 import com.ataglance.walletglance.ui.utils.getDateRangeState
+import com.ataglance.walletglance.ui.utils.getExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.ui.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.ui.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.ui.utils.getOutAndInTransfersByOneRecordNum
 import com.ataglance.walletglance.ui.utils.getTodayDateLong
 import com.ataglance.walletglance.ui.utils.getTotalAmount
+import com.ataglance.walletglance.ui.utils.getTotalAmountByType
 import com.ataglance.walletglance.ui.utils.inverse
 import com.ataglance.walletglance.ui.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.ui.utils.toAccountEntityList
@@ -929,61 +933,29 @@ class AppViewModel(
         _accountsUiState,
         recordStackList,
         _categoriesWithSubcategories,
-        _appTheme,
         _greetingsWidgetTitleRes
-    ) { combinedArray ->
-        val dateRangeMenuUiState = combinedArray[0] as DateRangeMenuUiState
-        val accountsUiState = combinedArray[1] as AccountsUiState
-        val recordStackList = combinedArray[2] as List<RecordStack>
-        val categoriesWithSubcategories = combinedArray[3] as CategoriesWithSubcategories
-        val appTheme = combinedArray[4] as AppTheme
-        val greetingsWidgetTitleRes = combinedArray[5] as Int
+    ) { dateRangeMenuUiState, accountsUiState, recordStackList,
+        categoriesWithSubcategories, greetingsWidgetTitleRes ->
 
-        val expensesTotalForPeriod = getRecordsTotalAmount(
-            recordStackList = recordStackList,
-            startDate = dateRangeMenuUiState.dateRangeState.fromPast,
-            endDate = dateRangeMenuUiState.dateRangeState.toFuture,
-            type = RecordType.Expense
-        )
-        val incomeTotalForPeriod = getRecordsTotalAmount(
-            recordStackList = recordStackList,
-            startDate = dateRangeMenuUiState.dateRangeState.fromPast,
-            endDate = dateRangeMenuUiState.dateRangeState.toFuture,
-            type = RecordType.Income
-        )
-        val expensesIncomePercentage = (expensesTotalForPeriod + incomeTotalForPeriod)
-            .let { if (it == 0.0) null else it }
-            ?.let {
-                (100 / it) * expensesTotalForPeriod to (100 / it) * incomeTotalForPeriod
-            } ?: (0.0 to 0.0)
-        val filteredRecordStackList = filterRecordStackForWidgetsUiState(
-            recordStackList = recordStackList,
-            dateRangeState = dateRangeMenuUiState.dateRangeState,
+        val recordsFilteredByDateAndAccount = recordStackList.filterByDateAndAccount(
+            dateRangeFromAndTo = dateRangeMenuUiState.dateRangeState.getRangePair(),
             activeAccount = accountsUiState.activeAccount
         )
+
         WidgetsUiState(
-            filteredRecordStackList = filteredRecordStackList,
+            recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
             greetings = GreetingsWidgetUiState(
                 titleRes = greetingsWidgetTitleRes,
-                expensesTotal = getRecordsTotalAmount(
-                    recordStackList = recordStackList,
-                    startDate = getTodayDateLong(),
-                    endDate = getTodayDateLong() + 2359,
-                    type = RecordType.Expense
-                )
+                expensesTotal = recordStackList
+                    .filterByDateAndAccount(
+                        dateRangeFromAndTo = getTodayDateLong().let { it to it + 2359 },
+                        activeAccount = accountsUiState.activeAccount
+                    )
+                    .getTotalAmountByType(RecordType.Expense)
             ),
-            expensesIncome = ExpensesIncomeWidgetUiState(
-                expensesTotal = expensesTotalForPeriod,
-                incomeTotal = incomeTotalForPeriod,
-                expensesPercentage = expensesIncomePercentage.first,
-                incomePercentage = expensesIncomePercentage.second,
-                expensesPercentageFloat = (expensesIncomePercentage.first / 100).toFloat(),
-                incomePercentageFloat = (expensesIncomePercentage.second / 100).toFloat()
-            ),
-            categoryStatisticsLists = categoriesWithSubcategories.getStatistics(
-                recordStackList = filteredRecordStackList,
-                appTheme = appTheme
-            )
+            expensesIncomeState = recordsFilteredByDateAndAccount.getExpensesIncomeWidgetUiState(),
+            categoryStatisticsLists = categoriesWithSubcategories
+                .getStatistics(recordsFilteredByDateAndAccount)
         )
     }.stateIn(
         scope = viewModelScope,
@@ -991,31 +963,15 @@ class AppViewModel(
         initialValue = WidgetsUiState()
     )
 
-    fun filterRecordStackForWidgetsUiState(
-        recordStackList: List<RecordStack>,
-        dateRangeState: DateRangeState,
-        activeAccount: Account?
-    ): List<RecordStack> {
-        return recordStackList.filter {
-            it.date in dateRangeState.fromPast..dateRangeState.toFuture &&
-                    it.account.id == activeAccount?.id
-        }
-    }
-
     fun updateGreetingsWidgetTitle() {
         _greetingsWidgetTitleRes.update { getGreetingsWidgetTitleRes() }
     }
 
     private fun getGreetingsWidgetTitleRes(): Int {
-        return when (LocalDateTime.now().hour) {
-            in 6..11 -> R.string.greetings_title_morning
-            in 12..17 -> R.string.greetings_title_afternoon
-            in 18..22 -> R.string.greetings_title_evening
-            else -> R.string.greetings_title_night
-        }
+        return LocalDateTime.now().hour.getGreetingsWidgetTitleRes()
     }
 
-    private fun getRecordsTotalAmount(
+    /*private fun getRecordsTotalAmount(
         recordStackList: List<RecordStack>,
         startDate: Long,
         endDate: Long,
@@ -1035,7 +991,7 @@ class AppViewModel(
                     total + recordStack.totalAmount
                 }
         } ?: 0.0
-    }
+    }*/
 
 
     fun fetchDataOnStart() {
@@ -1123,9 +1079,9 @@ data class MadeTransferState(
 }
 
 data class WidgetsUiState(
-    val filteredRecordStackList: List<RecordStack> = emptyList(),
+    val recordsFilteredByDateAndAccount: List<RecordStack> = emptyList(),
     val greetings: GreetingsWidgetUiState = GreetingsWidgetUiState(),
-    val expensesIncome: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
+    val expensesIncomeState: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
     val categoryStatisticsLists: CategoryStatisticsLists = CategoryStatisticsLists()
 )
 
@@ -1142,6 +1098,7 @@ data class ExpensesIncomeWidgetUiState(
     val expensesPercentageFloat: Float = 0.0f,
     val incomePercentageFloat: Float = 0.0f,
 ) {
+
     private fun getFormattedNumberWithSpaces(number: Double): String {
         var numberString = "%.2f".format(Locale.US, number)
         var formattedNumber = numberString.let {
@@ -1172,4 +1129,5 @@ data class ExpensesIncomeWidgetUiState(
     fun getIncomeTotalFormatted(): String {
         return getFormattedNumberWithSpaces(incomeTotal)
     }
+
 }
