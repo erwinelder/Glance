@@ -189,6 +189,7 @@
     <string name="games">Spiele</string>
     <string name="drugs_and_vitamins">Medikamente &amp; Vitamine</string>
     <string name="doctor">Arzt</string>
+    <string name="teeth_care">Zahnpflege</string>
     <string name="vaccination">Impfung</string>
     <string name="school_and_university">Schule &amp; Universität</string>
     <string name="courses">Kurse</string>
@@ -206,6 +207,7 @@
     <string name="realty">Immobilien</string>
     <string name="savings">Sparen</string>
     <string name="missing">Fehlend</string>
+    <string name="post_services">Postdienste</string>
     <string name="public_toilets">Öffentliche Toiletten</string>
 
     <!-- Parent categories income -->

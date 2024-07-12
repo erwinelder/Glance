@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.color.CategoryColors
@@ -134,7 +133,6 @@ private fun EditCategoryCollectionScreenPreview() {
         Category(
             id = 13,
             type = CategoryType.Expense,
-            rank = CategoryRank.Sub,
             orderNum = 1,
             parentCategoryId = 1,
             name = "Groceries",
@@ -144,7 +142,6 @@ private fun EditCategoryCollectionScreenPreview() {
         Category(
             id = 14,
             type = CategoryType.Expense,
-            rank = CategoryRank.Parent,
             orderNum = 2,
             parentCategoryId = null,
             name = "Category 2",
@@ -154,7 +151,6 @@ private fun EditCategoryCollectionScreenPreview() {
         Category(
             id = 25,
             type = CategoryType.Expense,
-            rank = CategoryRank.Parent,
             orderNum = 3,
             parentCategoryId = null,
             name = "Category 3",
@@ -164,7 +160,6 @@ private fun EditCategoryCollectionScreenPreview() {
         Category(
             id = 30,
             type = CategoryType.Expense,
-            rank = CategoryRank.Parent,
             orderNum = 3,
             parentCategoryId = null,
             name = "Category 3",

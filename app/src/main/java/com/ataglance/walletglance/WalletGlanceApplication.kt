@@ -8,7 +8,7 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.data.AppDatabase
+import com.ataglance.walletglance.domain.AppDatabase
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionRepository

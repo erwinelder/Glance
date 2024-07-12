@@ -12,7 +12,6 @@ import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 data class Category(
     val id: Int = 0,
     val type: CategoryType = CategoryType.Expense,
-    val rank: CategoryRank = CategoryRank.Parent,
     val orderNum: Int = 0,
     val parentCategoryId: Int? = null,
     val name: String = "",
@@ -23,7 +22,7 @@ data class Category(
     fun isExpense() = type == CategoryType.Expense
     private fun isIncome() = type == CategoryType.Income
 
-    fun isParentCategory() = rank == CategoryRank.Parent
+    fun isParentCategory() = parentCategoryId == null
 
     fun getColorByTheme(theme: AppTheme?): LighterDarkerColors {
         return colorWithName.getColorByTheme(theme)
@@ -37,7 +36,6 @@ data class Category(
         return CategoryEntity(
             id = id,
             type = type.asChar(),
-            rank = rank.asChar(),
             orderNum = orderNum,
             parentCategoryId = parentCategoryId,
             name = name,

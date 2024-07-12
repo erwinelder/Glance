@@ -189,6 +189,7 @@
     <string name="games">Hry</string>
     <string name="drugs_and_vitamins">Léky a vitamíny</string>
     <string name="doctor">Lékař</string>
+    <string name="teeth_care">Péče o zuby</string>
     <string name="vaccination">Očkování</string>
     <string name="school_and_university">Škola a univerzita</string>
     <string name="courses">Kurzy</string>
@@ -206,6 +207,7 @@
     <string name="realty">Nemovitost</string>
     <string name="savings">Spoření</string>
     <string name="missing">Chybějící</string>
+    <string name="post_services">Poštovní služby</string>
     <string name="public_toilets">Veřejné záchody</string>
 
     <!-- Parent categories income -->

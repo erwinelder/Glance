@@ -189,6 +189,7 @@
     <string name="games">Ігри</string>
     <string name="drugs_and_vitamins">Ліки та вітаміни</string>
     <string name="doctor">Лікар</string>
+    <string name="teeth_care">Догляд за зубами</string>
     <string name="vaccination">Вакцинація</string>
     <string name="school_and_university">Школа та університет</string>
     <string name="courses">Курси</string>
@@ -206,6 +207,7 @@
     <string name="realty">Нерухомість</string>
     <string name="savings">Заощадження</string>
     <string name="missing">Зникле</string>
+    <string name="post_services">Поштові послуги</string>
     <string name="public_toilets">Громадські туалети</string>
 
     <!-- Parent categories income -->

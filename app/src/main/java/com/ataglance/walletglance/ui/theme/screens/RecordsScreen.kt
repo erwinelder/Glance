@@ -41,13 +41,12 @@ fun RecordsScreen(
     onTransferClick: (Int) -> Unit
 ) {
     val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
-    val recordsFilteredByDateAndAccountAndCollection by viewModel
-        .recordsFilteredByDateAndAccountAndCollection.collectAsStateWithLifecycle()
+    val filteredRecords by viewModel
+        .recordsFilteredByDateAccountAndCollection.collectAsStateWithLifecycle()
     val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
     val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
 
-    val includeYearToRecordDate = recordsFilteredByDateAndAccountAndCollection
-        .containsRecordsFromDifferentYears()
+    val includeYearToRecordDate = filteredRecords.containsRecordsFromDifferentYears()
     val lazyListState = rememberLazyListState()
 
     DataPresentationScreenContainer(
@@ -65,11 +64,8 @@ fun RecordsScreen(
             viewModel.selectCollection(it)
         },
         animationContentLabel = "records history widget content",
-        animatedContentTargetState = Pair(
-            recordsFilteredByDateAndAccountAndCollection,
-            collectionType
-        ),
-        visibleNoDataMessage = recordsFilteredByDateAndAccountAndCollection.isEmpty(),
+        animatedContentTargetState = Pair(filteredRecords, collectionType),
+        visibleNoDataMessage = filteredRecords.isEmpty(),
         noDataMessageRes = when(collectionType) {
             CategoryCollectionType.Mixed -> R.string.you_have_no_records_in_date_range
             CategoryCollectionType.Expense -> R.string.you_have_no_expenses_in_date_range

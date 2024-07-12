@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.data
+package com.ataglance.walletglance.domain
 
 import android.content.Context
 import androidx.room.Database
@@ -10,9 +10,9 @@ import com.ataglance.walletglance.domain.dao.CategoryCollectionDao
 import com.ataglance.walletglance.domain.dao.CategoryDao
 import com.ataglance.walletglance.domain.dao.RecordDao
 import com.ataglance.walletglance.domain.entities.AccountEntity
-import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.CategoryCollection
 import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.Record
 
 @Database(
@@ -23,7 +23,7 @@ import com.ataglance.walletglance.domain.entities.Record
         CategoryCollectionCategoryAssociation::class,
         Record::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -44,7 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context, AppDatabase::class.java, "app_data"
                 )
 
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
 
                     /*.addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {

@@ -63,7 +63,7 @@ class RecordsViewModel(
     }
 
 
-    val recordsFilteredByDateAndAccountAndCollection = combine(
+    val recordsFilteredByDateAccountAndCollection = combine(
         _recordsFilteredByDateAndAccount,
         _collectionType,
         _selectedCollection

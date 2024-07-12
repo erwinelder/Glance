@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.color.CategoryColors
@@ -101,7 +100,6 @@ class EditCategoriesViewModel(
     fun getNewParentCategory(): Category {
         return Category(
             type = uiState.value.categoryType,
-            rank = CategoryRank.Parent,
             parentCategoryId = null,
             name = "",
             icon = CategoryIcon.Other,
@@ -114,7 +112,6 @@ class EditCategoriesViewModel(
 
         return Category(
             type = uiState.value.categoryType,
-            rank = CategoryRank.Sub,
             parentCategoryId = parentCategory.parentCategoryId,
             name = "",
             icon = parentCategory.icon,

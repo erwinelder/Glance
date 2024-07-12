@@ -190,6 +190,7 @@
     <string name="games">Games</string>
     <string name="drugs_and_vitamins">Drugs &amp; vitamins</string>
     <string name="doctor">Doctor</string>
+    <string name="teeth_care">Teeth care</string>
     <string name="vaccination">Vaccination</string>
     <string name="school_and_university">School &amp; university</string>
     <string name="courses">Courses</string>
@@ -207,6 +208,7 @@
     <string name="realty">Realty</string>
     <string name="savings">Savings</string>
     <string name="missing">Missing</string>
+    <string name="post_services">Post services</string>
     <string name="public_toilets">Public toilets</string>
 
     <!-- Parent categories income -->

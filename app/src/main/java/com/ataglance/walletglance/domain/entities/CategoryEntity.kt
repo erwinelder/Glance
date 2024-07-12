@@ -3,7 +3,6 @@ package com.ataglance.walletglance.domain.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.color.CategoryColorName
 import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
@@ -14,7 +13,6 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val type: Char,
-    val rank: Char,
     val orderNum: Int,
     val parentCategoryId: Int?,
     val name: String,
@@ -24,13 +22,12 @@ data class CategoryEntity(
 
     fun isExpense() = type == '-'
 
-    fun isParentCategory() = rank == 'c'
+    fun isParentCategory() = parentCategoryId == null
 
     fun toCategory(icon: CategoryIcon, color: CategoryColorWithName): Category {
         return Category(
             id = id,
             type = if (isExpense()) CategoryType.Expense else CategoryType.Income,
-            rank = if (isParentCategory()) CategoryRank.Parent else CategoryRank.Sub,
             orderNum = orderNum,
             parentCategoryId = parentCategoryId,
             name = name,

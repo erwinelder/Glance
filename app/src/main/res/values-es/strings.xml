@@ -190,6 +190,7 @@
     <string name="games">Juegos</string>
     <string name="drugs_and_vitamins">Medicamentos y vitaminas</string>
     <string name="doctor">Doctor</string>
+    <string name="teeth_care">Cuidado dental</string>
     <string name="vaccination">Vacunación</string>
     <string name="school_and_university">Escuela y universidad</string>
     <string name="courses">Cursos</string>
@@ -207,6 +208,7 @@
     <string name="realty">Bienes raíces</string>
     <string name="savings">Ahorros</string>
     <string name="missing">Desconocido</string>
+    <string name="post_services">Servicios postales</string>
     <string name="public_toilets">Baños públicos</string>
 
     <!-- Parent categories income -->

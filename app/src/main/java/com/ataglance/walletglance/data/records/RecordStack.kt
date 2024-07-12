@@ -26,8 +26,7 @@ data class RecordStack(
     fun isTransfer() = isOutTransfer() || isInTransfer()
 
     fun isOfType(passedType: RecordType): Boolean {
-        return (isExpense() && passedType == RecordType.Expense) ||
-                (isIncome() && passedType == RecordType.Income)
+        return type == passedType
     }
 
     fun toRecordList(): List<Record> {

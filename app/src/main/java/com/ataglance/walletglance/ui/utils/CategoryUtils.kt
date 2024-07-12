@@ -3,7 +3,6 @@ package com.ataglance.walletglance.ui.utils
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryRank
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.CheckedCategory
@@ -26,11 +25,6 @@ fun CategoryType.toggle(): CategoryType {
         CategoryType.Expense -> CategoryType.Income
         CategoryType.Income -> CategoryType.Expense
     }
-}
-
-
-fun CategoryRank.asChar(): Char {
-    return if (this == CategoryRank.Parent) 'c' else 's'
 }
 
 
