@@ -38,7 +38,8 @@ fun RecordsScreen(
     onCustomDateRangeButtonClick: () -> Unit,
     viewModel: RecordsViewModel,
     onRecordClick: (Int) -> Unit,
-    onTransferClick: (Int) -> Unit
+    onTransferClick: (Int) -> Unit,
+    onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
     val filteredRecords by viewModel
@@ -75,7 +76,8 @@ fun RecordsScreen(
             CategoryCollectionTypeToggleButton(collectionType) {
                 viewModel.setCollectionType(collectionType.toggle())
             }
-        }
+        },
+        onDimBackgroundChange = onDimBackgroundChange
     ) { targetRecordStackListAndTypeFilter ->
         LazyColumn(
             state = lazyListState,

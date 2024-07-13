@@ -35,7 +35,8 @@ fun CategoriesStatisticsScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    viewModel: CategoryStatisticsViewModel
+    viewModel: CategoryStatisticsViewModel,
+    onDimBackgroundChange: (Boolean) -> Unit
 ) {
     LaunchedEffect(currentDateRangeEnum, accountList) {
         viewModel.clearParentCategory()
@@ -72,7 +73,8 @@ fun CategoriesStatisticsScreen(
         animationContentLabel = "all categories statistics",
         animatedContentTargetState = Pair(categoryStatisticsList, parentCategory),
         visibleNoDataMessage = categoryStatisticsList.isEmpty(),
-        noDataMessageRes = R.string.no_data_for_the_selected_filter
+        noDataMessageRes = R.string.no_data_for_the_selected_filter,
+        onDimBackgroundChange = onDimBackgroundChange
     ) { categoryListAndParCategory ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

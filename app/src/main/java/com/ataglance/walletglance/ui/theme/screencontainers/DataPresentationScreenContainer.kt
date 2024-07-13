@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +29,7 @@ import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWit
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFilterBar
-import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionPicker
+import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionPickerContainer
 import com.ataglance.walletglance.ui.theme.uielements.containers.DateFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
@@ -52,6 +51,7 @@ fun <S> DataPresentationScreenContainer(
     animatedContentTargetState: S,
     visibleNoDataMessage: Boolean,
     noDataMessageRes: Int,
+    onDimBackgroundChange: (Boolean) -> Unit = {},
     animatedContent: @Composable (S) -> Unit
 ) {
     Column(
@@ -79,14 +79,13 @@ fun <S> DataPresentationScreenContainer(
             onDateRangeChange = onDateRangeChange,
             onCustomDateRangeButtonClick = onCustomDateRangeButtonClick
         )
-        Row {
-            CategoryCollectionPicker(
-                collectionList = collectionList,
-                selectedCollection = selectedCollection,
-                onCollectionSelect = onCollectionSelect
-            )
-            typeToggleButton()
-        }
+        CategoryCollectionPickerContainer(
+            collectionList = collectionList,
+            selectedCollection = selectedCollection,
+            onCollectionSelect = onCollectionSelect,
+            typeToggleButton = typeToggleButton,
+            onDimBackgroundChange = onDimBackgroundChange
+        )
         Spacer(modifier = Modifier)
         GlassSurface(
             modifier = Modifier

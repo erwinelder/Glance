@@ -1,8 +1,6 @@
 package com.ataglance.walletglance.ui.theme.uielements.fields
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -64,13 +62,7 @@ fun CustomTextField(
             fontFamily = Manrope,
             textAlign = TextAlign.Center
         ),
-        modifier = modifier
-            .animateContentSize(
-                animationSpec = tween(
-                    durationMillis = 200,
-                    easing = EaseIn
-                )
-            )
+        modifier = modifier.animateContentSize()
     ) {
         TextFieldDefaults.DecorationBox(
             value = text,

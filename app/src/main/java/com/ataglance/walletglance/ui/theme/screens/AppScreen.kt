@@ -1,5 +1,10 @@
 package com.ataglance.walletglance.ui.theme.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -122,6 +127,8 @@ fun AppScreen(
     val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
 
+    var dimBackground by remember { mutableStateOf(false) }
+
     var openCustomDateRangeWindow by remember { mutableStateOf(false) }
     var openDateRangePickerDialog by remember { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState()
@@ -130,109 +137,125 @@ fun AppScreen(
         dateRangeMenuUiState.endCalendarDateMillis
     )
 
-    Scaffold(
-        topBar = {
-            SetupProgressTopBar(
-                visible = appUiSettings.startMainDestination != MainScreens.Home &&
-                        !navBackStackEntry.currentScreenIs(SettingsScreens.Start) &&
-                        !navBackStackEntry.currentScreenIs(MainScreens.FinishSetup),
-                navBackStackEntry = navBackStackEntry,
-                onBackNavigationButton = navController::popBackStack
-            )
-        },
-        bottomBar = {
-            BottomNavBar(
-                appTheme = appUiSettings.appTheme,
-                isAppSetUp = appUiSettings.isSetUp,
-                navBackStackEntry = navBackStackEntry,
-                onNavigateBack = navController::popBackStack,
-                onNavigateToScreen = { screenNavigateTo: MainScreens ->
-                    navBackStackEntry.fromMainScreen().let { currentScreen ->
-                        moveScreenTowardsLeft = needToMoveScreenTowardsLeft(
-                            currentScreen, screenNavigateTo
-                        )
-                    }
-                    navController.navigate(screenNavigateTo) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
-                },
-                onMakeRecordButtonClick = {
-                    moveScreenTowardsLeft = true
-                    navController.navigate(
-                        MainScreens.MakeRecord(
-                            status = MakeRecordStatus.Create.name,
-                            recordNum = appUiSettings.nextRecordNum()
-                        )
-                    ) {
-                        launchSingleTop = true
-                    }
-                }
-            )
-        },
-        containerColor = Color.Transparent
-    ) { scaffoldPadding ->
-        HomeNavHost(
-            moveScreenTowardsLeft = moveScreenTowardsLeft,
-            changeMoveScreenTowardsLeft = {
-                moveScreenTowardsLeft = it
+    Box {
+        Scaffold(
+            topBar = {
+                SetupProgressTopBar(
+                    visible = appUiSettings.startMainDestination != MainScreens.Home &&
+                            !navBackStackEntry.currentScreenIs(SettingsScreens.Start) &&
+                            !navBackStackEntry.currentScreenIs(MainScreens.FinishSetup),
+                    navBackStackEntry = navBackStackEntry,
+                    onBackNavigationButton = navController::popBackStack
+                )
             },
-            navController = navController,
-            scaffoldPadding = scaffoldPadding,
-            appViewModel = appViewModel,
-            appUiSettings = appUiSettings,
-            themeUiState = themeUiState,
-            accountsUiState = accountsUiState,
-            categoriesWithSubcategories = categoriesWithSubcategories,
-            categoryCollectionsUiState = categoryCollectionsUiState,
-            dateRangeMenuUiState = dateRangeMenuUiState,
-            recordStackList = recordStackList,
-            widgetsUiState = widgetsUiState,
-            openCustomDateRangeWindow = openCustomDateRangeWindow,
-            onCustomDateRangeButtonClick = {
-                openCustomDateRangeWindow = !openCustomDateRangeWindow
-            }
-        )
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            CustomDateRangeWindow(
-                visible = openCustomDateRangeWindow,
-                padding = PaddingValues(
-                    top = scaffoldPadding.calculateTopPadding() +
-                            scaffoldPadding.calculateTopPadding(),
-                    bottom = scaffoldPadding.calculateBottomPadding() +
-                            scaffoldPadding.calculateBottomPadding(),
-                    end = 16.dp
-                ),
-                currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
-                dateRangePickerState = dateRangePickerState,
-                onDismissRequest = {
-                    openCustomDateRangeWindow = false
+            bottomBar = {
+                BottomNavBar(
+                    appTheme = appUiSettings.appTheme,
+                    isAppSetUp = appUiSettings.isSetUp,
+                    navBackStackEntry = navBackStackEntry,
+                    onNavigateBack = navController::popBackStack,
+                    onNavigateToScreen = { screenNavigateTo: MainScreens ->
+                        navBackStackEntry.fromMainScreen().let { currentScreen ->
+                            moveScreenTowardsLeft = needToMoveScreenTowardsLeft(
+                                currentScreen, screenNavigateTo
+                            )
+                        }
+                        navController.navigate(screenNavigateTo) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = false
+                            }
+                            launchSingleTop = true
+                        }
+                    },
+                    onMakeRecordButtonClick = {
+                        moveScreenTowardsLeft = true
+                        navController.navigate(
+                            MainScreens.MakeRecord(
+                                status = MakeRecordStatus.Create.name,
+                                recordNum = appUiSettings.nextRecordNum()
+                            )
+                        ) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            },
+            containerColor = Color.Transparent
+        ) { scaffoldPadding ->
+            HomeNavHost(
+                moveScreenTowardsLeft = moveScreenTowardsLeft,
+                changeMoveScreenTowardsLeft = {
+                    moveScreenTowardsLeft = it
                 },
-                onDateRangeEnumClick = { dateRangeEnum ->
-                    appViewModel.changeDateRange(dateRangeEnum)
-                    openCustomDateRangeWindow = false
+                navController = navController,
+                scaffoldPadding = scaffoldPadding,
+                appViewModel = appViewModel,
+                appUiSettings = appUiSettings,
+                themeUiState = themeUiState,
+                accountsUiState = accountsUiState,
+                categoriesWithSubcategories = categoriesWithSubcategories,
+                categoryCollectionsUiState = categoryCollectionsUiState,
+                dateRangeMenuUiState = dateRangeMenuUiState,
+                recordStackList = recordStackList,
+                widgetsUiState = widgetsUiState,
+                openCustomDateRangeWindow = openCustomDateRangeWindow,
+                onCustomDateRangeButtonClick = {
+                    openCustomDateRangeWindow = !openCustomDateRangeWindow
                 },
-                onCustomDateRangeFieldClick = {
-                    openDateRangePickerDialog = true
-                },
-                onConfirmButtonClick = {
-                    openCustomDateRangeWindow = false
-                    appViewModel.changeDateRangeToCustom(
-                        dateRangePickerState.selectedStartDateMillis,
-                        dateRangePickerState.selectedEndDateMillis
-                    )
+                onDimBackgroundChange = { value: Boolean ->
+                    dimBackground = value
                 }
             )
-            CustomDateRangePicker(
-                state = dateRangePickerState,
-                openDialog = openDateRangePickerDialog,
-                onOpenDialogChange = {
-                    openDateRangePickerDialog = it
-                }
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CustomDateRangeWindow(
+                    visible = openCustomDateRangeWindow,
+                    padding = PaddingValues(
+                        top = scaffoldPadding.calculateTopPadding() +
+                                scaffoldPadding.calculateTopPadding(),
+                        bottom = scaffoldPadding.calculateBottomPadding() +
+                                scaffoldPadding.calculateBottomPadding(),
+                        end = 16.dp
+                    ),
+                    currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
+                    dateRangePickerState = dateRangePickerState,
+                    onDismissRequest = {
+                        openCustomDateRangeWindow = false
+                    },
+                    onDateRangeEnumClick = { dateRangeEnum ->
+                        appViewModel.changeDateRange(dateRangeEnum)
+                        openCustomDateRangeWindow = false
+                    },
+                    onCustomDateRangeFieldClick = {
+                        openDateRangePickerDialog = true
+                    },
+                    onConfirmButtonClick = {
+                        openCustomDateRangeWindow = false
+                        appViewModel.changeDateRangeToCustom(
+                            dateRangePickerState.selectedStartDateMillis,
+                            dateRangePickerState.selectedEndDateMillis
+                        )
+                    }
+                )
+                CustomDateRangePicker(
+                    state = dateRangePickerState,
+                    openDialog = openDateRangePickerDialog,
+                    onOpenDialogChange = {
+                        openDateRangePickerDialog = it
+                    }
+                )
+            }
+        }
+        AnimatedVisibility(
+            visible = dimBackground,
+            enter = fadeIn(tween(300)),
+            exit = fadeOut(tween(300))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(.2f))
             )
         }
     }
@@ -254,7 +277,8 @@ fun HomeNavHost(
     recordStackList: List<RecordStack>,
     widgetsUiState: WidgetsUiState,
     openCustomDateRangeWindow: Boolean,
-    onCustomDateRangeButtonClick: () -> Unit
+    onCustomDateRangeButtonClick: () -> Unit,
+    onDimBackgroundChange: (Boolean) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -352,7 +376,8 @@ fun HomeNavHost(
                     ) {
                         launchSingleTop = true
                     }
-                }
+                },
+                onDimBackgroundChange = onDimBackgroundChange
             )
         }
         composable<MainScreens.CategoryStatistics> { backStack ->
@@ -390,7 +415,8 @@ fun HomeNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::changeDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onDimBackgroundChange = onDimBackgroundChange
             )
         }
         composable<MainScreens.MakeRecord>(
