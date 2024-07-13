@@ -169,7 +169,7 @@ private fun PickerButton(
             tint = selectedColor,
             modifier = Modifier
                 .scale(scaleX = 1F, scaleY = scaleY)
-                .width(22.dp)
+                .width(20.dp)
         )
     }
 }
