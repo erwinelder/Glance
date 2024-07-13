@@ -68,17 +68,24 @@ data class CategoryWithSubcategories(
         checkedCategoryList: List<Category>
     ): EditingCategoryWithSubcategories {
         val subcategoryList = subcategoryList.toCheckedCategoryList(checkedCategoryList)
-        val checkedAndUnchecked = subcategoryList.partition { it.checked }
+        val (checkedSubcategoryList, uncheckedSubcategoryList) = subcategoryList
+            .partition { it.checked }
 
-        return EditingCategoryWithSubcategories(
-            category = category,
-            checked = if (checkedAndUnchecked.first.isEmpty()) {
+        val checked = if (subcategoryList.isNotEmpty()) {
+            if (checkedSubcategoryList.isEmpty()) {
                 false
-            } else if (checkedAndUnchecked.second.isEmpty()) {
+            } else if (uncheckedSubcategoryList.isEmpty()) {
                 true
             } else {
                 null
-            },
+            }
+        } else {
+            checkedCategoryList.findById(category.id) != null
+        }
+
+        return EditingCategoryWithSubcategories(
+            category = category,
+            checked = checked,
             subcategoryList = subcategoryList
         )
     }
