@@ -57,6 +57,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.Manrope
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
@@ -155,6 +156,7 @@ private fun PickerButton(
                 text = collectionName,
                 color = selectedColor,
                 fontSize = 17.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Normal,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
