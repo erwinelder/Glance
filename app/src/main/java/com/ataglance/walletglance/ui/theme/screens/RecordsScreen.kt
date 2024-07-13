@@ -39,6 +39,7 @@ fun RecordsScreen(
     viewModel: RecordsViewModel,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
+    onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
@@ -77,6 +78,7 @@ fun RecordsScreen(
                 viewModel.setCollectionType(collectionType.toggle())
             }
         },
+        onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
         onDimBackgroundChange = onDimBackgroundChange
     ) { targetRecordStackListAndTypeFilter ->
         LazyColumn(

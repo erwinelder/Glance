@@ -334,11 +334,12 @@ fun HomeNavHost(
             )
         }
         composable<MainScreens.Records> {
+            val defaultCollectionName = stringResource(R.string.all_categories)
 
             val viewModel = viewModel<RecordsViewModel>(
                 factory = RecordsViewModelFactory(
                     categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
-                        name = stringResource(R.string.all_categories)
+                        name = defaultCollectionName
                     ),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount
                 )
@@ -346,6 +347,11 @@ fun HomeNavHost(
             LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
                 viewModel.setRecordsFilteredByDateAndAccount(
                     widgetsUiState.recordsFilteredByDateAndAccount
+                )
+            }
+            LaunchedEffect(categoryCollectionsUiState) {
+                viewModel.setCategoryCollections(
+                    categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
                 )
             }
 
@@ -377,19 +383,27 @@ fun HomeNavHost(
                         launchSingleTop = true
                     }
                 },
+                onNavigateToEditCollectionsScreen = {
+                    navController.navigate(
+                        CategoryCollectionsSettingsScreens.EditCategoryCollections
+                    ) {
+                        launchSingleTop = true
+                    }
+                },
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
         composable<MainScreens.CategoryStatistics> { backStack ->
             val parentCategoryId =
                 backStack.toRoute<MainScreens.CategoryStatistics>().parentCategoryId
+            val defaultCollectionName = stringResource(R.string.all_categories)
 
             val viewModel = viewModel<CategoryStatisticsViewModel>(
                 factory = CategoryStatisticsViewModelFactory(
-                    categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
-                        name = stringResource(R.string.all_categories)
-                    ),
                     categoriesWithSubcategories = categoriesWithSubcategories,
+                    categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
+                        name = defaultCollectionName
+                    ),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount,
                     categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
                     parentCategoryId = parentCategoryId
@@ -401,6 +415,11 @@ fun HomeNavHost(
             LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
                 viewModel.setRecordsFilteredByDateAndAccount(
                     widgetsUiState.recordsFilteredByDateAndAccount
+                )
+            }
+            LaunchedEffect(categoryCollectionsUiState) {
+                viewModel.setCategoryCollections(
+                    categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
                 )
             }
 
@@ -416,6 +435,13 @@ fun HomeNavHost(
                 onDateRangeChange = appViewModel::changeDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 viewModel = viewModel,
+                onNavigateToEditCollectionsScreen = {
+                    navController.navigate(
+                        CategoryCollectionsSettingsScreens.EditCategoryCollections
+                    ) {
+                        launchSingleTop = true
+                    }
+                },
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
@@ -975,12 +1001,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 navController = navController
             )
             val editCollectionViewModel = backStack
-                .sharedViewModel<EditCategoryCollectionViewModel>(
-                    navController = navController,
-                    factory = EditCategoryCollectionViewModelFactory(
-                        categoriesWithSubcategories = categoriesWithSubcategories
-                    )
-                )
+                .sharedViewModel<EditCategoryCollectionViewModel>(navController = navController)
 
             val collectionUiState by editCollectionViewModel
                 .collectionUiState.collectAsStateWithLifecycle()

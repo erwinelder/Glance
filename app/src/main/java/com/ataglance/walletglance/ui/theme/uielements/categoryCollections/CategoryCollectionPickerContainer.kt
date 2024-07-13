@@ -17,6 +17,7 @@ fun CategoryCollectionPickerContainer(
     selectedCollection: CategoryCollectionWithIds,
     onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
     typeToggleButton: @Composable () -> Unit,
+    onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     Row(
@@ -28,6 +29,7 @@ fun CategoryCollectionPickerContainer(
             collectionList = collectionList,
             selectedCollection = selectedCollection,
             onCollectionSelect = onCollectionSelect,
+            onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
             onDimBackgroundChange = onDimBackgroundChange
         )
         typeToggleButton()

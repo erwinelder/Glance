@@ -19,12 +19,20 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class CategoryStatisticsViewModel(
-    private val categoryCollections: CategoryCollectionsWithIds,
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
+    passedCategoryCollections: CategoryCollectionsWithIds,
     recordsFilteredByDateAndAccount: List<RecordStack>,
     categoryStatisticsLists: CategoryStatisticsLists,
     parentCategoryId: Int
 ) : ViewModel() {
+
+    private val _categoryCollections = MutableStateFlow(passedCategoryCollections)
+    val categoryCollections = _categoryCollections.asStateFlow()
+
+    fun setCategoryCollections(collections: CategoryCollectionsWithIds) {
+        _categoryCollections.update { collections }
+    }
+
 
     private val _recordsFilteredByDateAndAccount = MutableStateFlow(recordsFilteredByDateAndAccount)
 
@@ -69,7 +77,7 @@ class CategoryStatisticsViewModel(
 
 
     val currentCollectionList = combine(_categoryType) { categoryTypeArray ->
-        categoryCollections.getByCategoryType(categoryTypeArray[0])
+        passedCategoryCollections.getByCategoryType(categoryTypeArray[0])
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -77,7 +85,7 @@ class CategoryStatisticsViewModel(
     )
 
     private val _selectedCollection = MutableStateFlow(
-        categoryCollections.getByCategoryType(categoryType.value).firstOrNull()
+        passedCategoryCollections.getByCategoryType(categoryType.value).firstOrNull()
             ?: CategoryCollectionWithIds()
     )
     val selectedCollection = _selectedCollection.asStateFlow()
@@ -89,7 +97,7 @@ class CategoryStatisticsViewModel(
 
     private fun resetSelectedCollection() {
         _selectedCollection.update {
-            categoryCollections.getByCategoryType(categoryType.value).firstOrNull()
+            categoryCollections.value.getByCategoryType(categoryType.value).firstOrNull()
                 ?: CategoryCollectionWithIds()
         }
     }
@@ -121,8 +129,8 @@ class CategoryStatisticsViewModel(
 }
 
 class CategoryStatisticsViewModelFactory(
-    private val categoryCollections: CategoryCollectionsWithIds,
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
+    private val categoryCollections: CategoryCollectionsWithIds,
     private val recordsFilteredByDateAndAccount: List<RecordStack>,
     private val categoryStatisticsLists: CategoryStatisticsLists,
     private val parentCategoryId: Int
@@ -130,8 +138,8 @@ class CategoryStatisticsViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return CategoryStatisticsViewModel(
-            categoryCollections = categoryCollections,
             categoriesWithSubcategories = categoriesWithSubcategories,
+            passedCategoryCollections = categoryCollections,
             recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
             categoryStatisticsLists = categoryStatisticsLists,
             parentCategoryId = parentCategoryId

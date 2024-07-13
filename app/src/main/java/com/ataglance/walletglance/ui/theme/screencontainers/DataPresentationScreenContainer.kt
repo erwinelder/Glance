@@ -51,6 +51,7 @@ fun <S> DataPresentationScreenContainer(
     animatedContentTargetState: S,
     visibleNoDataMessage: Boolean,
     noDataMessageRes: Int,
+    onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit = {},
     animatedContent: @Composable (S) -> Unit
 ) {
@@ -84,6 +85,7 @@ fun <S> DataPresentationScreenContainer(
             selectedCollection = selectedCollection,
             onCollectionSelect = onCollectionSelect,
             typeToggleButton = typeToggleButton,
+            onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
             onDimBackgroundChange = onDimBackgroundChange
         )
         Spacer(modifier = Modifier)

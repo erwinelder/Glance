@@ -36,6 +36,7 @@ fun CategoriesStatisticsScreen(
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
     viewModel: CategoryStatisticsViewModel,
+    onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     LaunchedEffect(currentDateRangeEnum, accountList) {
@@ -74,6 +75,7 @@ fun CategoriesStatisticsScreen(
         animatedContentTargetState = Pair(categoryStatisticsList, parentCategory),
         visibleNoDataMessage = categoryStatisticsList.isEmpty(),
         noDataMessageRes = R.string.no_data_for_the_selected_filter,
+        onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
         onDimBackgroundChange = onDimBackgroundChange
     ) { categoryListAndParCategory ->
         Column(

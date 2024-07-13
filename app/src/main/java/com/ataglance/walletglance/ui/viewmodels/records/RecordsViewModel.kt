@@ -17,9 +17,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class RecordsViewModel(
-    private val categoryCollections: CategoryCollectionsWithIds,
+    passedCategoryCollections: CategoryCollectionsWithIds,
     recordsFilteredByDateAndAccount: List<RecordStack>,
 ) : ViewModel() {
+
+    private val _categoryCollections = MutableStateFlow(passedCategoryCollections)
+    val categoryCollections = _categoryCollections.asStateFlow()
+
+    fun setCategoryCollections(collections: CategoryCollectionsWithIds) {
+        _categoryCollections.update { collections }
+    }
+
 
     private val _collectionType = MutableStateFlow(CategoryCollectionType.Mixed)
     val collectionType = _collectionType.asStateFlow()
@@ -38,7 +46,7 @@ class RecordsViewModel(
 
 
     val currentCollectionList = combine(_collectionType) { collectionTypeArray ->
-        categoryCollections.getByType(collectionTypeArray[0])
+        categoryCollections.value.getByType(collectionTypeArray[0])
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -46,7 +54,7 @@ class RecordsViewModel(
     )
 
     private val _selectedCollection = MutableStateFlow(
-        categoryCollections.getByType(collectionType.value).firstOrNull()
+        categoryCollections.value.getByType(collectionType.value).firstOrNull()
             ?: CategoryCollectionWithIds()
     )
     val selectedCollection = _selectedCollection.asStateFlow()
@@ -57,7 +65,7 @@ class RecordsViewModel(
 
     private fun resetSelectedCollection() {
         _selectedCollection.update {
-            categoryCollections.getByType(collectionType.value).firstOrNull()
+            categoryCollections.value.getByType(collectionType.value).firstOrNull()
                 ?: CategoryCollectionWithIds()
         }
     }
@@ -89,7 +97,7 @@ class RecordsViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return RecordsViewModel(
-            categoryCollections = categoryCollections,
+            passedCategoryCollections = categoryCollections,
             recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount
         ) as T
     }

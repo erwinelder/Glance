@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.ui.theme.uielements.categoryCollections
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.MutableTransitionState
@@ -43,6 +44,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,6 +58,7 @@ import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionTyp
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
@@ -63,6 +66,7 @@ fun RowScope.CategoryCollectionPicker(
     collectionList: List<CategoryCollectionWithIds>,
     selectedCollection: CategoryCollectionWithIds,
     onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val expandedState = remember { MutableTransitionState(false) }
@@ -103,7 +107,8 @@ fun RowScope.CategoryCollectionPicker(
                             onDimBackgroundChange(it)
                             expandedState.targetState = it
                         },
-                        selectedColor = selectedColor
+                        selectedColor = selectedColor,
+                        onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen
                     )
                 }
             }
@@ -174,10 +179,13 @@ private fun PopupContent(
     onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
     expandedState: MutableTransitionState<Boolean>,
     onExpandedChange: (Boolean) -> Unit,
-    selectedColor: Color
+    selectedColor: Color,
+    onNavigateToEditCollectionsScreen: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
-    val itemAppearanceAnimSpeed = 300 / (collectionList.size.takeIf { it != 0 } ?: 1)
+    val itemAppearanceAnimSpeed = 300 / (collectionList.size
+        .takeIf { it != 0 } ?: 1)
+        .let { it.takeUnless { it == 1 } ?: 2 }
     val itemAppearanceAnimationFloat: (Int) -> FiniteAnimationSpec<Float> = { orderNum ->
         tween(
             durationMillis = 300,
@@ -216,7 +224,7 @@ private fun PopupContent(
             items = collectionList,
             key = { it.id }
         ) { collection ->
-            androidx.compose.animation.AnimatedVisibility(
+            AnimatedVisibility(
                 visibleState = expandedState,
                 enter = fadeIn(itemAppearanceAnimationFloat(collection.orderNum)) +
                         scaleIn(itemAppearanceAnimationFloat(collection.orderNum)) +
@@ -271,6 +279,36 @@ private fun PopupContent(
                 )
             }
         }
+        item {
+            if (collectionList.size == 1) {
+                AnimatedVisibility(
+                    visibleState = expandedState,
+                    enter = fadeIn(itemAppearanceAnimationFloat(2)) +
+                            scaleIn(itemAppearanceAnimationFloat(2)) +
+                            slideInVertically(
+                                animationSpec = itemAppearanceAnimationOffset(2),
+                                initialOffsetY = { -it }
+                            ),
+                    /*exit = fadeOut(itemDisappearanceAnimationFloat(collection.orderNum)) +
+                            scaleOut(itemDisappearanceAnimationFloat(collection.orderNum)) +
+                            slideOutVertically(
+                                animationSpec = itemDisappearanceAnimationOffset(collection.orderNum),
+                                targetOffsetY = { -it }
+                            ),*/
+                    exit = fadeOut(tween(300)) +
+                            scaleOut(tween(300)) +
+                            slideOutVertically(
+                                animationSpec = tween(300),
+                                targetOffsetY = { -it }
+                            )
+                ) {
+                    SmallPrimaryButton(text = stringResource(R.string.add_collection)) {
+                        onExpandedChange(false)
+                        onNavigateToEditCollectionsScreen()
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -309,7 +347,8 @@ private fun Preview() {
                 collectionList = collectionList,
                 selectedCollection = collectionList[0],
                 onCollectionSelect = {},
-                onDimBackgroundChange = {}
+                onDimBackgroundChange = {},
+                onNavigateToEditCollectionsScreen = {}
             )
         }
     }
