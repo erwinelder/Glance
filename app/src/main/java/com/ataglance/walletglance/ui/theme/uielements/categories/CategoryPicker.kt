@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.uielements.pickers
+package com.ataglance.walletglance.ui.theme.uielements.categories
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

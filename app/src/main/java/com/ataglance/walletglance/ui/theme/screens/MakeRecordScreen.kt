@@ -65,12 +65,12 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconBut
 import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.ui.theme.uielements.fields.CategoryField
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryField
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
 import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldContainer
-import com.ataglance.walletglance.ui.theme.uielements.pickers.AccountPicker
-import com.ataglance.walletglance.ui.theme.uielements.pickers.CategoryPicker
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPicker
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar

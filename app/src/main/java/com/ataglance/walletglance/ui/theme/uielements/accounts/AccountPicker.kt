@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.uielements.pickers
+package com.ataglance.walletglance.ui.theme.uielements.accounts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +21,6 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlanceDialog
 
 @Composable

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.theme.uielements.fields
+package com.ataglance.walletglance.ui.theme.uielements.categories
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

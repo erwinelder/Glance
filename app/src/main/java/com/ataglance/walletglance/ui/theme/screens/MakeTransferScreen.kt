@@ -38,7 +38,7 @@ import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
 import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldContainer
-import com.ataglance.walletglance.ui.theme.uielements.pickers.AccountPicker
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
