@@ -513,6 +513,7 @@ fun HomeNavHost(
                     }
                     navController.popBackStack()
                 },
+                onDimBackgroundChange = onDimBackgroundChange
             )
         }
         composable<MainScreens.MakeTransfer>(

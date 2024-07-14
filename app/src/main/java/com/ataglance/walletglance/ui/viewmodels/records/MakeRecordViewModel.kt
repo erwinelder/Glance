@@ -77,11 +77,11 @@ class MakeRecordViewModel(
         }
     }
 
-    fun chooseAccount(account: Account) {
+    fun selectAccount(account: Account) {
         _uiState.update { it.copy(account = account) }
     }
 
-    fun changeAccount(currentAccount: Account, accountList: List<Account>) {
+    fun toggleSelectedAccount(currentAccount: Account, accountList: List<Account>) {
         if (accountList.size < 2) return
 
         for (i in accountList.indices) {

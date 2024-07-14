@@ -59,18 +59,17 @@ import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPopupPicker
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryField
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryField
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
 import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldContainer
-import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPicker
-import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
@@ -90,11 +89,9 @@ fun MakeRecordScreen(
     onMakeTransferButtonClick: () -> Unit,
     onSaveButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,
     onRepeatButton: (MakeRecordUiState, List<MakeRecordUnitUiState>) -> Unit,
-    onDeleteButton: (Int) -> Unit
+    onDeleteButton: (Int) -> Unit,
+    onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    val fieldsCornerSize = 15.dp
-    val lazyListState: LazyListState = rememberLazyListState()
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val recordUnitList by viewModel.recordUnitList.collectAsStateWithLifecycle()
     val savingIsAllowed = recordUnitList.none { recordUnit ->
@@ -104,10 +101,9 @@ fun MakeRecordScreen(
                 recordUnit.categoryWithSubcategory == null
     } && uiState.account != null
 
-    val openDateDialog = remember { mutableStateOf(false) }
-    val openTimeDialog = remember { mutableStateOf(false) }
-    val openAccountDialog = remember { mutableStateOf(false) }
-    var openCategoryDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+    var showCategoryPicker by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = uiState.dateTimeState.calendar.timeInMillis
@@ -142,73 +138,21 @@ fun MakeRecordScreen(
             }
 
             GlassSurface(modifier = Modifier.weight(1f), filledWidth = .96f) {
-                LazyColumn(
-                    state = lazyListState,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
-                    contentPadding = PaddingValues(12.dp, 18.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    item {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                        ) {
-                            DateField(
-                                dateFormatted = uiState.dateTimeState.dateFormatted,
-                                cornerSize = fieldsCornerSize,
-                                onClick = { openDateDialog.value = true }
-                            )
-                            MakeRecordFieldContainer(R.string.account) {
-                                AnimatedContent(
-                                    targetState = uiState.account,
-                                    label = "account field at the make record screen"
-                                ) { targetAccount ->
-                                    SmallAccount(targetAccount, appTheme) {
-                                        if (accountList.size == 2) {
-                                            uiState.account?.let { account ->
-                                                viewModel.changeAccount(account, accountList)
-                                            }
-                                        } else if (accountList.size > 1) {
-                                            openAccountDialog.value = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                GlassSurfaceContent(
+                    appTheme = appTheme,
+                    viewModel = viewModel,
+                    uiState = uiState,
+                    recordUnitList = recordUnitList,
+                    accountList = accountList,
+                    onDimBackgroundChange = onDimBackgroundChange,
+                    onShowDateDialogChange = {
+                        showDatePicker = it
+                    },
+                    onShowCategoryPickerChange = {
+                        showCategoryPicker = it
                     }
-                    items(items = recordUnitList, key = { it.lazyListKey }) { recordUnit ->
-                        RecordUnitBlock(
-                            recordUnitUiState = recordUnit,
-                            onNoteValueChange = { value ->
-                                viewModel.changeNoteValue(recordUnit.index, value)
-                            },
-                            categoryIconRes = recordUnit.getSubcategoryOrCategory()?.icon?.res,
-                            onCategoryClick = {
-                                viewModel.changeClickedUnitIndex(recordUnit.index)
-                                openCategoryDialog = true
-                            },
-                            onAmountValueChange = { value ->
-                                viewModel.changeAmountValue(recordUnit.index, value)
-                            },
-                            onQuantityChange = { value ->
-                                viewModel.changeQuantityValue(recordUnit.index, value)
-                            },
-                            lastIndex = recordUnitList.last().index,
-                            onSwapUnits = viewModel::swapRecordUnits,
-                            onDeleteButton = viewModel::deleteRecordUnit,
-                            fieldsCornerSize = fieldsCornerSize,
-                            collapsed = recordUnit.collapsed,
-                            onChangeCollapsedValue = { value ->
-                                viewModel.changeCollapsedValue(recordUnit.index, value)
-                            },
-                            accountCurrency = uiState.account?.currency
-                        )
-                    }
-                    item {
-                        AddNewRecordUnitButton(viewModel::addNewRecordUnit)
-                    }
-                }
+
+                )
             }
 
             MakeRecordBottomButtonBlock(
@@ -222,39 +166,118 @@ fun MakeRecordScreen(
 
         }
         CustomDatePicker(
-            openDialog = openDateDialog.value,
-            onOpenDateDialogChange = { openDateDialog.value = it },
+            openDialog = showDatePicker,
+            onOpenDateDialogChange = { showDatePicker = it },
             onConfirmButton = {
                 datePickerState.selectedDateMillis?.let { viewModel.selectNewDate(it) }
-                openDateDialog.value = false
-                openTimeDialog.value = true
+                showDatePicker = false
+                showTimePicker = true
             },
             state = datePickerState
         )
         CustomTimePicker(
-            openDialog = openTimeDialog.value,
-            onOpenTimeDialogChange = { openTimeDialog.value = it },
+            openDialog = showTimePicker,
+            onOpenTimeDialogChange = { showTimePicker = it },
             onConfirmButton = {
                 viewModel.selectNewTime(timePickerState.hour, timePickerState.minute)
-                openTimeDialog.value = false
+                showTimePicker = false
             },
             state = timePickerState
         )
-        AccountPicker(
-            visible = openAccountDialog.value,
-            accountList = accountList,
-            appTheme = appTheme,
-            onDismissRequest = { openAccountDialog.value = false },
-            onAccountChoose = viewModel::chooseAccount
-        )
         CategoryPicker(
-            visible = openCategoryDialog,
+            visible = showCategoryPicker,
             categoriesWithSubcategories = categoriesWithSubcategories,
             type = if (uiState.type == RecordType.Expense) CategoryType.Expense
                 else CategoryType.Income,
-            onDismissRequest = { openCategoryDialog = false },
+            onDismissRequest = { showCategoryPicker = false },
             onCategoryChoose = viewModel::chooseCategory
         )
+    }
+}
+
+@Composable
+private fun GlassSurfaceContent(
+    appTheme: AppTheme?,
+    viewModel: MakeRecordViewModel,
+    uiState: MakeRecordUiState,
+    recordUnitList: List<MakeRecordUnitUiState>,
+    accountList: List<Account>,
+    onDimBackgroundChange: (Boolean) -> Unit,
+    onShowDateDialogChange: (Boolean) -> Unit,
+    onShowCategoryPickerChange: (Boolean) -> Unit
+) {
+    val fieldsCornerSize = 15.dp
+    val lazyListState: LazyListState = rememberLazyListState()
+
+    LazyColumn(
+        state = lazyListState,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(12.dp, 18.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        item {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                DateField(
+                    dateFormatted = uiState.dateTimeState.dateFormatted,
+                    cornerSize = fieldsCornerSize,
+                    onClick = {
+                        onShowDateDialogChange(true)
+                    }
+                )
+                MakeRecordFieldContainer(R.string.account) {
+                    AccountPopupPicker(
+                        appTheme = appTheme,
+                        accountList = accountList,
+                        selectedAccount = uiState.account,
+                        onAccountSelect = { account ->
+                            if (accountList.size == 2) {
+                                uiState.account?.let { currentAccount ->
+                                    viewModel.toggleSelectedAccount(currentAccount, accountList)
+                                }
+                            } else if (accountList.size > 1) {
+                                viewModel.selectAccount(account)
+                            }
+                        },
+                        onDimBackgroundChange = onDimBackgroundChange
+                    )
+                }
+            }
+        }
+        items(items = recordUnitList, key = { it.lazyListKey }) { recordUnit ->
+            RecordUnitBlock(
+                recordUnitUiState = recordUnit,
+                onNoteValueChange = { value ->
+                    viewModel.changeNoteValue(recordUnit.index, value)
+                },
+                categoryIconRes = recordUnit.getSubcategoryOrCategory()?.icon?.res,
+                onCategoryClick = {
+                    viewModel.changeClickedUnitIndex(recordUnit.index)
+                    onShowCategoryPickerChange(true)
+                },
+                onAmountValueChange = { value ->
+                    viewModel.changeAmountValue(recordUnit.index, value)
+                },
+                onQuantityChange = { value ->
+                    viewModel.changeQuantityValue(recordUnit.index, value)
+                },
+                lastIndex = recordUnitList.last().index,
+                onSwapUnits = viewModel::swapRecordUnits,
+                onDeleteButton = viewModel::deleteRecordUnit,
+                fieldsCornerSize = fieldsCornerSize,
+                collapsed = recordUnit.collapsed,
+                onChangeCollapsedValue = { value ->
+                    viewModel.changeCollapsedValue(recordUnit.index, value)
+                },
+                accountCurrency = uiState.account?.currency
+            )
+        }
+        item {
+            AddNewRecordUnitButton(viewModel::addNewRecordUnit)
+        }
     }
 }
 

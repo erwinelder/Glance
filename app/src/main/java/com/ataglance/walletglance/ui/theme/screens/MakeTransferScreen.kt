@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -30,6 +31,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
@@ -38,7 +40,6 @@ import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
 import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldContainer
-import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
@@ -70,10 +71,10 @@ fun MakeTransferScreen(
             uiState.fromAccount != null &&
             uiState.toAccount != null)
 
-    val openDateDialog = remember { mutableStateOf(false) }
-    val openTimeDialog = remember { mutableStateOf(false) }
-    val openDialogFromAccount = remember { mutableStateOf(false) }
-    val openDialogToAccount = remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+    var showFromAccountPicker by remember { mutableStateOf(false) }
+    var showToAccountPicker by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = uiState.dateTimeState.calendar.timeInMillis
@@ -111,7 +112,9 @@ fun MakeTransferScreen(
                     DateField(
                         dateFormatted = uiState.dateTimeState.dateFormatted,
                         cornerSize = fieldsCornerSize,
-                        onClick = { openDateDialog.value = true }
+                        onClick = {
+                            showDatePicker = true
+                        }
                     )
                     MakeRecordFieldContainer(R.string.from_account) {
                         AnimatedContent(
@@ -122,7 +125,7 @@ fun MakeTransferScreen(
                                 if (accountList.size == 2) {
                                     viewModel.changeFromAccount()
                                 } else {
-                                    openDialogFromAccount.value = true
+                                    showFromAccountPicker = true
                                 }
                             }
                         }
@@ -136,7 +139,7 @@ fun MakeTransferScreen(
                                 if (accountList.size == 2) {
                                     viewModel.changeToAccount()
                                 } else {
-                                    openDialogToAccount.value = true
+                                    showToAccountPicker = true
                                 }
                             }
                         }
@@ -196,49 +199,51 @@ fun MakeTransferScreen(
                 onSaveButton = { onSaveButton(uiState) },
                 onRepeatButton = { onRepeatButton(uiState) },
                 onDeleteButton = {
-                    uiState.recordNum?.let {
-                        onDeleteButton(it)
-                    }
+                    uiState.recordNum?.let { onDeleteButton(it) }
                 },
                 buttonsAreEnabled = savingIsAllowed
             )
 
         }
         CustomDatePicker(
-            openDialog = openDateDialog.value,
-            onOpenDateDialogChange = { openDateDialog.value = it },
+            openDialog = showDatePicker,
+            onOpenDateDialogChange = {
+                showDatePicker = it
+            },
             onConfirmButton = {
                 datePickerState.selectedDateMillis?.let { viewModel.selectNewDate(it) }
-                openDateDialog.value = false
-                openTimeDialog.value = true
+                showDatePicker = false
+                showTimePicker = true
             },
             state = datePickerState
         )
         CustomTimePicker(
-            openDialog = openTimeDialog.value,
-            onOpenTimeDialogChange = { openTimeDialog.value = it },
+            openDialog = showTimePicker,
+            onOpenTimeDialogChange = {
+                showTimePicker = it
+            },
             onConfirmButton = {
                 viewModel.selectNewTime(timePickerState.hour, timePickerState.minute)
-                openTimeDialog.value = false
+                showTimePicker = false
             },
             state = timePickerState
         )
         AccountPicker(
-            visible = openDialogFromAccount.value || openDialogToAccount.value,
+            visible = showFromAccountPicker || showToAccountPicker,
             accountList = accountList,
             appTheme = appTheme,
             onDismissRequest = {
-                if (openDialogFromAccount.value) {
-                    openDialogFromAccount.value = false
+                if (showFromAccountPicker) {
+                    showFromAccountPicker = false
                 }
-                if (openDialogToAccount.value) {
-                    openDialogToAccount.value = false
+                if (showToAccountPicker) {
+                    showToAccountPicker = false
                 }
             },
             onAccountChoose = { account ->
-                if (openDialogFromAccount.value) {
+                if (showFromAccountPicker) {
                     viewModel.chooseFromAccount(account)
-                } else if (openDialogToAccount.value) {
+                } else if (showToAccountPicker) {
                     viewModel.chooseToAccount(account)
                 }
             }
