@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.settings.SettingsCategories
 import com.ataglance.walletglance.data.settings.SettingsCategory
 import com.ataglance.walletglance.ui.theme.GlanceTheme
@@ -36,7 +37,6 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
-import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
 @Composable
@@ -71,7 +71,7 @@ fun SettingsHomeScreen(
                 fontFamily = Manrope
             )
             Text(
-                text = stringResource(R.string.version) + " 1.1.0",
+                text = stringResource(R.string.version) + " 2.0",
                 color = GlanceTheme.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
