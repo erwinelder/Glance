@@ -10,3 +10,7 @@ inline fun <T> List<T>.deleteItemAndMoveOrderNum(
 
     return this.take(index) + this.drop(index + 1).map(transform)
 }
+
+fun String.addZeroIfDotIsAtTheBeginning(): String {
+    return this.let { it.takeUnless { it.firstOrNull() == '.' } ?: ("0$it") }
+}

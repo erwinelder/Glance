@@ -73,6 +73,7 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldCont
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
+import com.ataglance.walletglance.ui.utils.addZeroIfDotIsAtTheBeginning
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
@@ -97,7 +98,7 @@ fun MakeRecordScreen(
     val savingIsAllowed = recordUnitList.none { recordUnit ->
         recordUnit.amount.isBlank() ||
                 recordUnit.amount.last() == '.' ||
-                recordUnit.amount.toDouble() == 0.0 ||
+                recordUnit.amount.addZeroIfDotIsAtTheBeginning().toDouble() == 0.0 ||
                 recordUnit.categoryWithSubcategory == null
     } && uiState.account != null
 

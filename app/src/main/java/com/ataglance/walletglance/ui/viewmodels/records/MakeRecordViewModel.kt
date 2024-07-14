@@ -116,7 +116,7 @@ class MakeRecordViewModel(
     fun changeAmountValue(index: Int, value: String) {
         val newList = recordUnitList.value.toMutableList()
         val newValue = value.takeIf {
-            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
+            Regex("^.?(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
         } ?: return
         newList[index] = newList[index].copy(amount = newValue)
         _recordUnitList.update { newList }
