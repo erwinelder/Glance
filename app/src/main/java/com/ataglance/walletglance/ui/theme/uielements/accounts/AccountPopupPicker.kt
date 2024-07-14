@@ -38,6 +38,7 @@ fun AccountPopupPicker(
     appTheme: AppTheme?,
     accountList: List<Account>,
     selectedAccount: Account?,
+    onToggleAccounts: () -> Unit,
     onAccountSelect: (Account) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
@@ -47,8 +48,12 @@ fun AccountPopupPicker(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         PickerButton(appTheme = appTheme, selectedAccount = selectedAccount) {
-            onDimBackgroundChange(it)
-            expandedState.targetState = it
+            if (accountList.size == 2) {
+                onToggleAccounts()
+            } else if (accountList.size > 1) {
+                onDimBackgroundChange(it)
+                expandedState.targetState = it
+            }
         }
         Box{
             if (expandedState.targetState || expandedState.currentState || !expandedState.isIdle) {

@@ -234,14 +234,13 @@ private fun GlassSurfaceContent(
                         appTheme = appTheme,
                         accountList = accountList,
                         selectedAccount = uiState.account,
-                        onAccountSelect = { account ->
-                            if (accountList.size == 2) {
-                                uiState.account?.let { currentAccount ->
-                                    viewModel.toggleSelectedAccount(currentAccount, accountList)
-                                }
-                            } else if (accountList.size > 1) {
-                                viewModel.selectAccount(account)
+                        onToggleAccounts = {
+                            uiState.account?.let { currentAccount ->
+                                viewModel.toggleSelectedAccount(currentAccount, accountList)
                             }
+                        },
+                        onAccountSelect = { account ->
+                            viewModel.selectAccount(account)
                         },
                         onDimBackgroundChange = onDimBackgroundChange
                     )
