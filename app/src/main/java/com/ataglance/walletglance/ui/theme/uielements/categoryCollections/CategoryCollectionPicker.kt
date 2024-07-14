@@ -200,18 +200,6 @@ private fun PopupContent(
             delayMillis = itemAppearanceAnimSpeed * orderNum
         )
     }
-    /*val itemDisappearanceAnimationFloat: (Int) -> FiniteAnimationSpec<Float> = { orderNum ->
-        tween(
-            durationMillis = 300,
-            delayMillis = itemAppearanceAnimSpeed * abs(orderNum - selectedCollection.orderNum) * 3
-        )
-    }
-    val itemDisappearanceAnimationOffset: (Int) -> FiniteAnimationSpec<IntOffset> = { orderNum ->
-        tween(
-            durationMillis = 300,
-            delayMillis = itemAppearanceAnimSpeed * abs(orderNum - selectedCollection.orderNum) * 3
-        )
-    }*/
 
     LazyColumn(
         state = lazyListState,
@@ -234,12 +222,6 @@ private fun PopupContent(
                             animationSpec = itemAppearanceAnimationOffset(collection.orderNum),
                             initialOffsetY = { -it }
                         ),
-                /*exit = fadeOut(itemDisappearanceAnimationFloat(collection.orderNum)) +
-                        scaleOut(itemDisappearanceAnimationFloat(collection.orderNum)) +
-                        slideOutVertically(
-                            animationSpec = itemDisappearanceAnimationOffset(collection.orderNum),
-                            targetOffsetY = { -it }
-                        ),*/
                 exit = fadeOut(tween(300)) +
                         scaleOut(tween(300)) +
                         slideOutVertically(
@@ -289,19 +271,13 @@ private fun PopupContent(
                             scaleIn(itemAppearanceAnimationFloat(2)) +
                             slideInVertically(
                                 animationSpec = itemAppearanceAnimationOffset(2),
-                                initialOffsetY = { -it }
+                                initialOffsetY = { it / 2 }
                             ),
-                    /*exit = fadeOut(itemDisappearanceAnimationFloat(collection.orderNum)) +
-                            scaleOut(itemDisappearanceAnimationFloat(collection.orderNum)) +
-                            slideOutVertically(
-                                animationSpec = itemDisappearanceAnimationOffset(collection.orderNum),
-                                targetOffsetY = { -it }
-                            ),*/
                     exit = fadeOut(tween(300)) +
                             scaleOut(tween(300)) +
                             slideOutVertically(
                                 animationSpec = tween(300),
-                                targetOffsetY = { -it }
+                                targetOffsetY = { it / 2 }
                             )
                 ) {
                     SmallPrimaryButton(text = stringResource(R.string.add_collection)) {
