@@ -1,13 +1,16 @@
 package com.ataglance.walletglance.ui.theme.screens.settings.accounts
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -123,10 +126,10 @@ private fun GlassSurfaceContent(
     onWithoutBalanceChange: (Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val verticalGap = dimensionResource(R.dimen.field_gap)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.field_gap)),
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(scrollState)
@@ -136,29 +139,39 @@ private fun GlassSurfaceContent(
             color = uiState.color.getColorAndColorOnByTheme(appTheme).first.lighter,
             onClick = onColorButtonClick
         )
+        Spacer(modifier = Modifier.height(verticalGap))
         CustomTextFieldWithLabel(
             text = uiState.name,
             placeholderText = stringResource(R.string.account_name),
             onValueChange = onNameChange,
             labelText = stringResource(R.string.name)
         )
+        Spacer(modifier = Modifier.height(verticalGap))
         CurrencyField(uiState.currency, onNavigateToEditAccountCurrencyScreen)
-        CustomTextFieldWithLabel(
-            text = uiState.balance,
-            onValueChange = onBalanceChange,
-            keyboardType = KeyboardType.Number,
-            labelText = stringResource(R.string.balance)
-        )
+        AnimatedVisibility(visible = !uiState.withoutBalance) {
+            Column {
+                Spacer(modifier = Modifier.height(verticalGap))
+                CustomTextFieldWithLabel(
+                    text = uiState.balance,
+                    onValueChange = onBalanceChange,
+                    keyboardType = KeyboardType.Number,
+                    labelText = stringResource(R.string.balance)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(verticalGap))
         SwitchBlock(
             checked = uiState.hide,
             onCheckedChange = onHideChange,
             labelText = stringResource(R.string.hide_from_top_bar)
         )
+        Spacer(modifier = Modifier.height(verticalGap))
         SwitchBlock(
             checked = uiState.hideBalance,
             onCheckedChange = onHideBalanceChange,
             labelText = stringResource(R.string.hide_balance)
         )
+        Spacer(modifier = Modifier.height(verticalGap))
         SwitchBlock(
             checked = uiState.withoutBalance,
             onCheckedChange = onWithoutBalanceChange,
