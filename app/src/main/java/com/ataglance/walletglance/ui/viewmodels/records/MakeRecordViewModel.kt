@@ -116,7 +116,7 @@ class MakeRecordViewModel(
     fun changeAmountValue(index: Int, value: String) {
         val newList = recordUnitList.value.toMutableList()
         val newValue = value.takeIf {
-            Regex("^.?(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
+            Regex("^,?(?:\\d{1,10}(?:\\.\\d{0,2})?|\\.(?:\\d{1,2})?)?\$").matches(it)
         } ?: return
         newList[index] = newList[index].copy(amount = newValue)
         _recordUnitList.update { newList }
@@ -318,7 +318,8 @@ data class MakeRecordUnitUiState(
     fun getFormattedAmountWithSpaces(): String {
         var numberString = "%.2f".format(
             Locale.US,
-            amount.takeIf { it.isNotBlank() }?.toDouble() ?: return "------"
+            amount.takeIf { it.isNotBlank() && !(it.length == 1 && it.firstOrNull() == '.') }
+                ?.toDouble() ?: return "------"
         )
         var formattedNumber = numberString.let {
             it.substring(startIndex = it.length - 3)
