@@ -23,7 +23,7 @@ import com.ataglance.walletglance.domain.entities.Record
         CategoryCollectionCategoryAssociation::class,
         Record::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -44,7 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context, AppDatabase::class.java, "app_data"
                 )
 
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
 
                     /*.addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {

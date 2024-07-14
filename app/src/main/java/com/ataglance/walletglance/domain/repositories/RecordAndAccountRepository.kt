@@ -47,7 +47,6 @@ class RecordAndAccountRepository(
     ) {
         accountDao.deleteAccountsByIds(accountIdToDelete)
         accountDao.upsertAccounts(accountListToUpsert)
-        recordDao.deleteRecordsByAccountIds(accountIdToDelete)
         recordDao.convertTransfersToRecords(accountIdToDelete.map { it.toString() })
     }
 

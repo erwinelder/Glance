@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
@@ -11,7 +12,17 @@ import com.ataglance.walletglance.ui.utils.findById
 import com.ataglance.walletglance.ui.utils.getRecordTypeByChar
 import com.ataglance.walletglance.ui.utils.toCategoryType
 
-@Entity(tableName = "Record")
+@Entity(
+    tableName = "Record",
+    foreignKeys = [
+        ForeignKey(
+            entity = AccountEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["accountId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class Record(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
