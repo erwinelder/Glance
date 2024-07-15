@@ -74,7 +74,7 @@ class EditAccountViewModel : ViewModel() {
         _editAccountUiState.update {
             it.copy(
                 balance = value.takeIf {
-                    Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(value)
+                    Regex("^-?(?:\\d{1,10}(?:\\.\\d{0,2})?)?\$").matches(value)
                 } ?: return
             )
         }
