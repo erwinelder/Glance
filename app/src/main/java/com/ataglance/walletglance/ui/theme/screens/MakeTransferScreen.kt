@@ -99,97 +99,108 @@ fun MakeTransferScreen(
 
             BackButton(onNavigateBack)
 
-            GlassSurface(modifier = Modifier.weight(1f)) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .verticalScroll(scrollState)
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(6.dp))
-                    DateField(
-                        dateFormatted = uiState.dateTimeState.dateFormatted,
-                        cornerSize = fieldsCornerSize,
-                        onClick = {
-                            showDatePicker = true
-                        }
-                    )
-                    MakeRecordFieldContainer(R.string.from_account) {
-                        AnimatedContent(
-                            targetState = uiState.fromAccount,
-                            label = "from account field at the make transfer screen"
-                        ) { targetAccount ->
-                            SmallAccount(targetAccount, appTheme) {
-                                if (accountList.size == 2) {
-                                    viewModel.changeFromAccount()
-                                } else {
-                                    showFromAccountPicker = true
+                    GlassSurface(modifier = Modifier.weight(1f, fill = false)) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp)
+                                .verticalScroll(scrollState)
+                        ) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            DateField(
+                                dateFormatted = uiState.dateTimeState.dateFormatted,
+                                cornerSize = fieldsCornerSize,
+                                onClick = {
+                                    showDatePicker = true
+                                }
+                            )
+                            MakeRecordFieldContainer(R.string.from_account) {
+                                AnimatedContent(
+                                    targetState = uiState.fromAccount,
+                                    label = "from account field at the make transfer screen"
+                                ) { targetAccount ->
+                                    SmallAccount(targetAccount, appTheme) {
+                                        if (accountList.size == 2) {
+                                            viewModel.changeFromAccount()
+                                        } else {
+                                            showFromAccountPicker = true
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                    MakeRecordFieldContainer(R.string.to_account) {
-                        AnimatedContent(
-                            targetState = uiState.toAccount,
-                            label = "to account field at the make transfer screen"
-                        ) { targetAccount ->
-                            SmallAccount(targetAccount, appTheme) {
-                                if (accountList.size == 2) {
-                                    viewModel.changeToAccount()
-                                } else {
-                                    showToAccountPicker = true
+                            MakeRecordFieldContainer(R.string.to_account) {
+                                AnimatedContent(
+                                    targetState = uiState.toAccount,
+                                    label = "to account field at the make transfer screen"
+                                ) { targetAccount ->
+                                    SmallAccount(targetAccount, appTheme) {
+                                        if (accountList.size == 2) {
+                                            viewModel.changeToAccount()
+                                        } else {
+                                            showToAccountPicker = true
+                                        }
+                                    }
                                 }
                             }
+                            SmallDivider(Modifier.padding(top = 4.dp))
+                            MakeRecordFieldContainer(R.string.rate) {
+                                CustomTextField(
+                                    text = uiState.startRate,
+                                    placeholderText = "1",
+                                    fontSize = 18.sp,
+                                    cornerSize = fieldsCornerSize,
+                                    onValueChange = viewModel::changeStartRate,
+                                    keyboardType = KeyboardType.Number,
+                                    modifier = Modifier.bounceClickEffect(.97f)
+                                )
+                            }
+                            MakeRecordFieldContainer(R.string.start_amount) {
+                                CustomTextField(
+                                    text = uiState.startAmount,
+                                    placeholderText = "0.00",
+                                    fontSize = 22.sp,
+                                    cornerSize = fieldsCornerSize,
+                                    onValueChange = viewModel::changeStartAmount,
+                                    keyboardType = KeyboardType.Number,
+                                    modifier = Modifier.bounceClickEffect(.97f)
+                                )
+                            }
+                            MakeRecordFieldContainer(R.string.final_amount) {
+                                CustomTextField(
+                                    text = uiState.finalAmount,
+                                    placeholderText = "0.00",
+                                    fontSize = 22.sp,
+                                    cornerSize = fieldsCornerSize,
+                                    onValueChange = viewModel::changeFinalAmount,
+                                    keyboardType = KeyboardType.Number,
+                                    modifier = Modifier.bounceClickEffect(.97f)
+                                )
+                            }
+                            MakeRecordFieldContainer(R.string.rate) {
+                                CustomTextField(
+                                    text = uiState.finalRate,
+                                    placeholderText = "1",
+                                    fontSize = 18.sp,
+                                    cornerSize = fieldsCornerSize,
+                                    onValueChange = viewModel::changeFinalRate,
+                                    keyboardType = KeyboardType.Number,
+                                    modifier = Modifier.bounceClickEffect(.97f)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
-                    SmallDivider(Modifier.padding(top = 4.dp))
-                    MakeRecordFieldContainer(R.string.rate) {
-                        CustomTextField(
-                            text = uiState.startRate,
-                            placeholderText = "1",
-                            fontSize = 18.sp,
-                            cornerSize = fieldsCornerSize,
-                            onValueChange = viewModel::changeStartRate,
-                            keyboardType = KeyboardType.Number,
-                            modifier = Modifier.bounceClickEffect(.97f)
-                        )
-                    }
-                    MakeRecordFieldContainer(R.string.start_amount) {
-                        CustomTextField(
-                            text = uiState.startAmount,
-                            placeholderText = "0.00",
-                            fontSize = 22.sp,
-                            cornerSize = fieldsCornerSize,
-                            onValueChange = viewModel::changeStartAmount,
-                            keyboardType = KeyboardType.Number,
-                            modifier = Modifier.bounceClickEffect(.97f)
-                        )
-                    }
-                    MakeRecordFieldContainer(R.string.final_amount) {
-                        CustomTextField(
-                            text = uiState.finalAmount,
-                            placeholderText = "0.00",
-                            fontSize = 22.sp,
-                            cornerSize = fieldsCornerSize,
-                            onValueChange = viewModel::changeFinalAmount,
-                            keyboardType = KeyboardType.Number,
-                            modifier = Modifier.bounceClickEffect(.97f)
-                        )
-                    }
-                    MakeRecordFieldContainer(R.string.rate) {
-                        CustomTextField(
-                            text = uiState.finalRate,
-                            placeholderText = "1",
-                            fontSize = 18.sp,
-                            cornerSize = fieldsCornerSize,
-                            onValueChange = viewModel::changeFinalRate,
-                            keyboardType = KeyboardType.Number,
-                            modifier = Modifier.bounceClickEffect(.97f)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
                 }
             }
 
