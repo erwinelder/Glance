@@ -6,15 +6,13 @@ class GeneralRepository(
     private val settingsRepository: SettingsRepository,
     private val accountRepository: AccountRepository,
     private val categoryRepository: CategoryRepository,
-    private val categoryCollectionRepository: CategoryCollectionRepository,
-    private val recordRepository: RecordRepository
+    private val categoryCollectionRepository: CategoryCollectionRepository
 ) {
     @Transaction
     suspend fun resetAllData() {
         settingsRepository.saveIsSetUpPreference(0)
         accountRepository.deleteAllAccounts()
         categoryRepository.deleteAllCategories()
-        recordRepository.deleteAllRecords()
         categoryCollectionRepository.deleteAllCollections()
     }
 }

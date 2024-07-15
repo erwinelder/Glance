@@ -50,8 +50,7 @@ class WalletGlanceApplication: Application() {
             settingsRepository = settingsRepository,
             accountRepository = accountRepository,
             categoryRepository = categoryRepository,
-            categoryCollectionRepository = categoryCollectionRepository,
-            recordRepository = recordRepository
+            categoryCollectionRepository = categoryCollectionRepository
         )
     }
 
