@@ -58,6 +58,7 @@ import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.records.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPopupPicker
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
@@ -138,7 +139,10 @@ fun MakeRecordScreen(
                 )
             }
 
-            GlassSurface(modifier = Modifier.weight(1f), filledWidth = .96f) {
+            GlassSurface(
+                modifier = Modifier.weight(1f),
+                filledWidth = .96f.takeIf { WindowTypeIsCompact }
+            ) {
                 GlassSurfaceContent(
                     appTheme = appTheme,
                     viewModel = viewModel,
