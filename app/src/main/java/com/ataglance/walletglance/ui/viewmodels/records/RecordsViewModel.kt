@@ -45,8 +45,11 @@ class RecordsViewModel(
     }
 
 
-    val currentCollectionList = combine(_collectionType) { collectionTypeArray ->
-        categoryCollections.value.getByType(collectionTypeArray[0])
+    val currentCollectionList = combine(
+        _categoryCollections,
+        _collectionType
+    ) { collections, collectionType ->
+        collections.getByType(collectionType)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

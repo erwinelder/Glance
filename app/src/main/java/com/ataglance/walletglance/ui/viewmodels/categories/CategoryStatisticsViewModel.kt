@@ -76,8 +76,11 @@ class CategoryStatisticsViewModel(
     }
 
 
-    val currentCollectionList = combine(_categoryType) { categoryTypeArray ->
-        passedCategoryCollections.getByCategoryType(categoryTypeArray[0])
+    val currentCollectionList = combine(
+        _categoryCollections,
+        _categoryType
+    ) { collections, categoryType ->
+        collections.getByCategoryType(categoryType)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
