@@ -384,6 +384,7 @@ fun HomeNavHost(
                     }
                 },
                 onNavigateToEditCollectionsScreen = {
+                    changeMoveScreenTowardsLeft(true)
                     navController.navigate(
                         CategoryCollectionsSettingsScreens.EditCategoryCollections
                     ) {
@@ -436,6 +437,7 @@ fun HomeNavHost(
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 viewModel = viewModel,
                 onNavigateToEditCollectionsScreen = {
+                    changeMoveScreenTowardsLeft(true)
                     navController.navigate(
                         CategoryCollectionsSettingsScreens.EditCategoryCollections
                     ) {
