@@ -28,6 +28,7 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionPickerContainer
 import com.ataglance.walletglance.ui.theme.uielements.containers.DateFilterBar
@@ -93,7 +94,7 @@ fun <S> DataPresentationScreenContainer(
             modifier = Modifier
                 .fillMaxHeight()
                 .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)),
-            filledWidth = 1f
+            filledWidth = 1f.takeIf { WindowTypeIsCompact }
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
