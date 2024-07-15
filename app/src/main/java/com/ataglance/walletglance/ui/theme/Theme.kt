@@ -15,8 +15,8 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.app.WindowType
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.app.WindowType
 import com.ataglance.walletglance.data.color.GlanceColors
 
 private val LightDefaultPalette = GlanceColors(
@@ -58,6 +58,7 @@ private val LightDefaultPalette = GlanceColors(
     onGlassSurfaceGradient = md_theme_light_default_onGlassSurfaceGradient,
     onGlassSurfaceBorder = md_theme_light_default_onGlassSurfaceBorder,
     glassGradientLightToDark = md_theme_light_default_glassGradientLightToDark,
+    surfaceGradient = md_theme_light_default_surfaceGradient,
     disabledGradientLightToDark = md_theme_light_default_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_light_default_errorGradientLightToDark,
     greenGradientPaleToSaturated = md_theme_light_default_green,
@@ -103,6 +104,7 @@ private val DarkDefaultPalette = GlanceColors(
     onGlassSurfaceGradient = md_theme_dark_default_onGlassSurfaceGradient,
     onGlassSurfaceBorder = md_theme_dark_default_onGlassSurfaceBorder,
     glassGradientLightToDark = md_theme_dark_default_glassGradientLightToDark,
+    surfaceGradient = md_theme_dark_default_surfaceGradient,
     disabledGradientLightToDark = md_theme_dark_default_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_dark_default_errorGradientLightToDark,
     greenGradientPaleToSaturated = md_theme_dark_default_green,
@@ -148,6 +150,7 @@ private val DarkBluePalette = GlanceColors(
     onGlassSurfaceGradient = md_theme_dark_blue_onGlassSurfaceGradient,
     onGlassSurfaceBorder = md_theme_dark_blue_onGlassSurfaceBorder,
     glassGradientLightToDark = md_theme_dark_blue_glassGradientLightToDark,
+    surfaceGradient = md_theme_dark_blue_surfaceGradient,
     disabledGradientLightToDark = md_theme_dark_blue_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_dark_blue_errorGradientLightToDark,
     greenGradientPaleToSaturated = md_theme_dark_blue_green,

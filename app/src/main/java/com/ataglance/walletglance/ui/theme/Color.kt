@@ -81,6 +81,10 @@ val md_theme_light_default_glassGradientLightToDark = Pair(
     Color(255, 255, 255, 90),
     Color(233, 233, 233, 90)
 )
+val md_theme_light_default_surfaceGradient = listOf(
+    Color(232, 232, 232, 255),
+    Color(239, 239, 239, 255)
+)
 val md_theme_light_default_disabledGradientLightToDark = Pair(
     Color(180, 171, 175),
     Color(107, 102, 104)
@@ -149,6 +153,10 @@ val md_theme_dark_default_glassGradientLightToDark = Pair(
     Color(197, 197, 197, 10),
     Color(63, 63, 63, 10)
 )
+val md_theme_dark_default_surfaceGradient = listOf(
+    Color(22, 22, 22, 255),
+    Color(29, 29, 29, 255)
+)
 val md_theme_dark_default_disabledGradientLightToDark = Pair(
     Color(122, 115, 119),
     Color(51, 48, 50)
@@ -216,6 +224,10 @@ val md_theme_dark_blue_onGlassSurfaceBorder = Color(255, 255, 255, 100)
 val md_theme_dark_blue_glassGradientLightToDark = Pair(
     Color(255, 255, 255, 120),
     Color(201, 201, 201, 120)
+)
+val md_theme_dark_blue_surfaceGradient = listOf(
+    Color(22, 22, 22, 255),
+    Color(29, 29, 29, 255)
 )
 val md_theme_dark_blue_disabledGradientLightToDark = Pair(
     Color(122, 115, 119),

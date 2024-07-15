@@ -12,6 +12,7 @@ data class GlanceColors(
     val onGlassSurfaceGradient: List<Color>,
     val onGlassSurfaceBorder: Color,
     val glassGradientLightToDark: Pair<Color, Color>,
+    val surfaceGradient: List<Color>,
     val disabledGradientLightToDark: Pair<Color, Color>,
     val errorGradientLightToDark: Pair<Color, Color>,
     val greenGradientPaleToSaturated: Pair<Color, Color>,

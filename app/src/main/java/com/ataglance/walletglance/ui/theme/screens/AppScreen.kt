@@ -255,7 +255,13 @@ fun AppScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(.2f))
+                    .background(Color.Black.copy(
+                        when (appUiSettings.appTheme) {
+                            AppTheme.LightDefault -> .2f
+                            AppTheme.DarkDefault -> .4f
+                            else -> .0f
+                        }
+                    ))
             )
         }
     }

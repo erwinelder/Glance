@@ -249,12 +249,7 @@ private fun PopupContent(
                         .clip(RoundedCornerShape(40))
                         .background(
                             brush = Brush.linearGradient(
-                                colors = GlanceTheme.glassGradientLightToDark.let {
-                                    listOf(
-                                        it.second.copy(1f),
-                                        it.first.copy(1f)
-                                    )
-                                },
+                                colors = GlanceTheme.surfaceGradient,
                                 start = Offset(75f, 210f),
                                 end = Offset(95f, -10f)
                             )
