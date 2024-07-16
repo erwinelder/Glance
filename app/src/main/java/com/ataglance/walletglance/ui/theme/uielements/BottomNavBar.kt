@@ -41,12 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.navigation.BottomBarButtons
 import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
-import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.utils.currentScreenIs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

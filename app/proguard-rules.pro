@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepnames class com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens$*
+-keepnames class com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens$*
+-keepnames class com.ataglance.walletglance.ui.theme.navigation.screens.AccountsSettingsScreens$*
+-keepnames class com.ataglance.walletglance.ui.theme.navigation.screens.CategoriesSettingsScreens$*
+-keepnames class com.ataglance.walletglance.ui.theme.navigation.screens.CategoryCollectionsSettingsScreens$*
