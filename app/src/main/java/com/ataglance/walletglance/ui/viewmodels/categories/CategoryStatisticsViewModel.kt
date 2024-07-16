@@ -22,8 +22,7 @@ class CategoryStatisticsViewModel(
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
     passedCategoryCollections: CategoryCollectionsWithIds,
     recordsFilteredByDateAndAccount: List<RecordStack>,
-    categoryStatisticsLists: CategoryStatisticsLists,
-    parentCategoryId: Int
+    categoryStatisticsLists: CategoryStatisticsLists
 ) : ViewModel() {
 
     private val _categoryCollections = MutableStateFlow(passedCategoryCollections)
@@ -48,13 +47,12 @@ class CategoryStatisticsViewModel(
     }
 
 
-    private val _parentCategoryStatistics = MutableStateFlow(
-        categoryStatisticsLists.getItemByParentCategoryId(parentCategoryId)
-    )
+    private val _parentCategoryStatistics =
+        MutableStateFlow<CategoryStatisticsElementUiState?>(null)
     val parentCategoryStatistics = _parentCategoryStatistics.asStateFlow()
 
-    fun setParentCategory(parentCategory: CategoryStatisticsElementUiState) {
-        if (parentCategory.subcategoriesStatisticsUiState != null) {
+    fun setParentCategory(parentCategory: CategoryStatisticsElementUiState?) {
+        if (parentCategory?.subcategoriesStatisticsUiState != null) {
             _parentCategoryStatistics.update { parentCategory }
         }
     }
@@ -135,8 +133,7 @@ class CategoryStatisticsViewModelFactory(
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
     private val categoryCollections: CategoryCollectionsWithIds,
     private val recordsFilteredByDateAndAccount: List<RecordStack>,
-    private val categoryStatisticsLists: CategoryStatisticsLists,
-    private val parentCategoryId: Int
+    private val categoryStatisticsLists: CategoryStatisticsLists
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -144,8 +141,7 @@ class CategoryStatisticsViewModelFactory(
             categoriesWithSubcategories = categoriesWithSubcategories,
             passedCategoryCollections = categoryCollections,
             recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
-            categoryStatisticsLists = categoryStatisticsLists,
-            parentCategoryId = parentCategoryId
+            categoryStatisticsLists = categoryStatisticsLists
         ) as T
     }
 }

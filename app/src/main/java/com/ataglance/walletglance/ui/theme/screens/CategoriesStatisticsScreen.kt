@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,10 +38,6 @@ fun CategoriesStatisticsScreen(
     onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    LaunchedEffect(currentDateRangeEnum, accountList) {
-        viewModel.clearParentCategory()
-    }
-
     val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
     val parentCategory by viewModel.parentCategoryStatistics.collectAsStateWithLifecycle()
     val categoryStatisticsList by viewModel.categoryStatisticsList.collectAsStateWithLifecycle()

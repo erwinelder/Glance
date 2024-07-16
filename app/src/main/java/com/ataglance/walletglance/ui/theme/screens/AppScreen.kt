@@ -255,13 +255,15 @@ fun AppScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(
-                        when (appUiSettings.appTheme) {
-                            AppTheme.LightDefault -> .2f
-                            AppTheme.DarkDefault -> .4f
-                            else -> .0f
-                        }
-                    ))
+                    .background(
+                        Color.Black.copy(
+                            when (appUiSettings.appTheme) {
+                                AppTheme.LightDefault -> .2f
+                                AppTheme.DarkDefault -> .4f
+                                else -> .0f
+                            }
+                        )
+                    )
             )
         }
     }
@@ -412,8 +414,7 @@ fun HomeNavHost(
                         name = defaultCollectionName
                     ),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount,
-                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
-                    parentCategoryId = parentCategoryId
+                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists
                 )
             )
             LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
@@ -428,6 +429,18 @@ fun HomeNavHost(
                 viewModel.setCategoryCollections(
                     categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
                 )
+            }
+            LaunchedEffect(dateRangeMenuUiState.dateRangeState.enum, accountsUiState.accountList) {
+                viewModel.clearParentCategory()
+            }
+            LaunchedEffect(parentCategoryId) {
+                if (parentCategoryId != 0) {
+                    viewModel.setParentCategory(
+                        widgetsUiState.categoryStatisticsLists.getItemByParentCategoryId(
+                            id = parentCategoryId
+                        )
+                    )
+                }
             }
 
             CategoriesStatisticsScreen(
