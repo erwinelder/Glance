@@ -6,21 +6,21 @@
   <path
       android:pathData="M25,47.5C37.426,47.5 47.5,37.426 47.5,25C47.5,12.574 37.426,2.5 25,2.5C12.574,2.5 2.5,12.574 2.5,25C2.5,37.426 12.574,47.5 25,47.5Z"
       android:strokeLineJoin="round"
-      android:strokeWidth="2"
+      android:strokeWidth="3"
       android:fillColor="#00000000"
       android:strokeColor="#000000"
       android:strokeLineCap="round"/>
   <path
       android:pathData="M34.615,12.5C34.615,12.5 15.385,13.847 15.385,20.833C15.385,27.82 34.615,22.18 34.615,29.167C34.615,36.153 15.385,37.5 15.385,37.5"
       android:strokeLineJoin="round"
-      android:strokeWidth="2"
+      android:strokeWidth="3"
       android:fillColor="#00000000"
       android:strokeColor="#000000"
       android:strokeLineCap="round"/>
   <path
       android:pathData="M25,9.7V40.3"
       android:strokeLineJoin="round"
-      android:strokeWidth="2"
+      android:strokeWidth="3"
       android:fillColor="#00000000"
       android:strokeColor="#000000"
       android:strokeLineCap="round"/>

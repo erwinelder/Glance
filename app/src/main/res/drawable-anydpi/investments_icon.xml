@@ -6,21 +6,21 @@
   <path
       android:pathData="M31.46,32.3C32.307,36.709 31.723,43.083 31.328,46.384C24.887,46.798 10.431,46.798 3.99,46.384C3.297,42.806 2.955,36.091 3.99,31.679C6.517,24.223 11.816,20.703 17.659,20.703C22.376,20.703 26.738,22.997 29.574,27.803"
       android:strokeLineJoin="round"
-      android:strokeWidth="2"
+      android:strokeWidth="3"
       android:fillColor="#00000000"
       android:strokeColor="#080808"
       android:strokeLineCap="round"/>
   <path
       android:pathData="M17.659,20.703C22.463,20.703 26.358,16.808 26.358,12.004C26.358,7.2 22.463,3.306 17.659,3.306C12.855,3.306 8.961,7.2 8.961,12.004C8.961,16.808 12.855,20.703 17.659,20.703Z"
       android:strokeLineJoin="round"
-      android:strokeWidth="2"
+      android:strokeWidth="3"
       android:fillColor="#00000000"
       android:strokeColor="#080808"
       android:strokeLineCap="round"/>
   <path
       android:pathData="M21.563,41.274L39.823,10.774L34.441,9.805L46.317,4.853L47.072,17.698L43.842,13.285L24.433,43.068"
       android:strokeLineJoin="round"
-      android:strokeWidth="2"
+      android:strokeWidth="3"
       android:fillColor="#00000000"
       android:strokeColor="#080808"
       android:strokeLineCap="round"/>
