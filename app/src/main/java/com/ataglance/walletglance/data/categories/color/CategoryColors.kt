@@ -1,8 +1,17 @@
 package com.ataglance.walletglance.data.categories.color
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.color.LighterDarkerColors
 import com.ataglance.walletglance.data.color.LighterDarkerColorsByTheme
+import com.ataglance.walletglance.ui.theme.screens.settings.categories.SetupCategoriesScreen
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
+import com.ataglance.walletglance.ui.viewmodels.categories.SetupCategoriesUiState
 
 sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {
 
@@ -10,10 +19,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Olive,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(185, 207, 145), Color(161, 180, 126)
+                Color(185, 207, 147), Color(163, 182, 129)
             ),
             darkDefault = LighterDarkerColors(
-                Color(116, 130, 91), Color(139, 156, 109)
+                Color(109, 120, 92), Color(132, 145, 111)
             )
         )
     )
@@ -22,10 +31,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Camel,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(227, 188, 129), Color(202, 167, 115)
+                Color(232, 195, 144), Color(207, 175, 129)
             ),
             darkDefault = LighterDarkerColors(
-                Color(150, 125, 86), Color(176, 146, 100)
+                Color(150, 123, 83), Color(175, 144, 96)
             )
         )
     )
@@ -34,10 +43,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Pink,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(255, 145, 204), Color(229, 130, 183)
+                Color(250, 167, 211), Color(224, 150, 190)
             ),
             darkDefault = LighterDarkerColors(
-                Color(179, 102, 143), Color(204, 116, 163)
+                Color(161, 100, 133), Color(185, 114, 153)
             )
         )
     )
@@ -46,10 +55,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Green,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(148, 224, 154), Color(131, 199, 137)
+                Color(157, 227, 164), Color(138, 201, 144)
             ),
             darkDefault = LighterDarkerColors(
-                Color(98, 148, 102), Color(114, 173, 119)
+                Color(99, 130, 101), Color(118, 156, 121)
             )
         )
     )
@@ -58,10 +67,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Red,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(255, 131, 131), Color(229, 118, 118)
+                Color(255, 148, 148), Color(230, 133, 133)
             ),
             darkDefault = LighterDarkerColors(
-                Color(179, 93, 93), Color(204, 104, 104)
+                Color(168, 88, 88), Color(194, 100, 100)
             )
         )
     )
@@ -70,10 +79,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.LightBlue,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(133, 186, 248), Color(121, 169, 225)
+                Color(150, 197, 250), Color(134, 176, 224)
             ),
             darkDefault = LighterDarkerColors(
-                Color(94, 131, 173), Color(107, 150, 199)
+                Color(95, 126, 161), Color(109, 144, 185)
             )
         )
     )
@@ -82,10 +91,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Lavender,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(211, 148, 250), Color(190, 133, 225)
+                Color(218, 162, 250), Color(195, 146, 224)
             ),
             darkDefault = LighterDarkerColors(
-                Color(146, 102, 173), Color(168, 117, 199)
+                Color(139, 104, 161), Color(162, 121, 187)
             )
         )
     )
@@ -94,10 +103,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Blue,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(141, 145, 242), Color(126, 129, 216)
+                Color(154, 157, 245), Color(138, 141, 219)
             ),
             darkDefault = LighterDarkerColors(
-                Color(96, 98, 166), Color(111, 114, 191)
+                Color(104, 107, 166), Color(119, 122, 190)
             )
         )
     )
@@ -106,10 +115,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Aquamarine,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(135, 240, 201), Color(120, 213, 179)
+                Color(135, 232, 196), Color(120, 206, 174)
             ),
             darkDefault = LighterDarkerColors(
-                Color(91, 163, 137), Color(106, 189, 158)
+                Color(95, 148, 128), Color(110, 173, 150)
             )
         )
     )
@@ -118,10 +127,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Orange,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(255, 170, 121), Color(229, 153, 109)
+                Color(255, 186, 145), Color(230, 167, 131)
             ),
             darkDefault = LighterDarkerColors(
-                Color(179, 120, 86), Color(204, 136, 96)
+                Color(168, 114, 82), Color(194, 132, 96)
             )
         )
     )
@@ -130,10 +139,10 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.Yellow,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(242, 226, 84), Color(217, 202, 75)
+                Color(247, 226, 116), Color(223, 203, 104)
             ),
             darkDefault = LighterDarkerColors(
-                Color(166, 155, 58), Color(191, 179, 67)
+                Color(158, 133, 65), Color(184, 156, 76)
             )
         )
     )
@@ -142,7 +151,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         CategoryColorName.GrayDefault,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
-                Color(181, 181, 181), Color(155, 155, 155)
+                Color(186, 186, 186), Color(160, 160, 160)
             ),
             darkDefault = LighterDarkerColors(
                 Color(105, 105, 105), Color(130, 130, 130)
@@ -150,4 +159,29 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
+}
+
+
+
+@Preview(heightDp = 1520)
+@Composable
+private fun Preview() {
+    PreviewContainer(AppTheme.DarkDefault) {
+        val context = LocalContext.current
+        SetupCategoriesScreen(
+            scaffoldPadding = PaddingValues(),
+            appTheme = AppTheme.DarkDefault,
+            isAppSetUp = true,
+            uiState = SetupCategoriesUiState(
+                categoriesWithSubcategories = DefaultCategoriesPackage(context)
+                    .getDefaultCategories()
+            ),
+            onResetButton = {},
+            onSaveAndFinishSetupButton = {},
+            onShowCategoriesByType = {},
+            onNavigateToEditSubcategoriesScreen = {},
+            onNavigateToEditCategoryScreen = {},
+            onSwapCategories = { _, _ -> }
+        )
+    }
 }
