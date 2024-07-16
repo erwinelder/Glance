@@ -71,8 +71,8 @@ fun ThreeStateCheckbox(
             containerColor = checkboxBackground
         ),
         modifier = Modifier
-            .border(2.dp, checkboxBorderColor, RoundedCornerShape(15))
-            .size(30.dp)
+            .border(1.5.dp, checkboxBorderColor, RoundedCornerShape(15))
+            .size(28.dp)
     ) {
         AnimatedContent(
             targetState = iconRes,

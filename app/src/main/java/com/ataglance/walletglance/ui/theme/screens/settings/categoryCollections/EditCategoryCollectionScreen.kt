@@ -82,7 +82,7 @@ fun EditCategoryCollectionScreen(
             }
         } else null,
         glassSurfaceContent = {
-            EditCategoryCollectionGlassSurface(
+            GlassSurfaceContent(
                 collection = collection,
                 editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,
@@ -102,7 +102,7 @@ fun EditCategoryCollectionScreen(
 }
 
 @Composable
-private fun EditCategoryCollectionGlassSurface(
+private fun GlassSurfaceContent(
     collection: CategoryCollectionWithCategories,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
@@ -258,8 +258,8 @@ private fun CollectionCategoryItem(
         Spacer(modifier = Modifier.size(10.dp, 48.dp))
         RecordCategory(
             category = category,
-            iconSize = 28.dp,
-            fontSize = 21.sp
+            iconSize = 26.dp,
+            fontSize = 20.sp
         )
         if (expanded != null) {
             Spacer(modifier = Modifier.width(8.dp))
