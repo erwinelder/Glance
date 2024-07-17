@@ -23,18 +23,23 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 
 @Composable
 fun RecordCategory(
     category: Category?,
     appTheme: AppTheme?,
     iconSize: Dp = 27.dp,
-    fontSize: TextUnit = 18.sp
+    fontSize: TextUnit = 18.sp,
+    onClick: ((Category) -> Unit)? = null
 ) {
     category?.let {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = onClick?.let {
+                Modifier.bounceClickEffect { onClick(category) }
+            } ?: Modifier
         ) {
             Icon(
                 painter = painterResource(category.icon.res),

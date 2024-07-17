@@ -194,6 +194,7 @@ fun MakeRecordScreen(
             categoriesWithSubcategories = categoriesWithSubcategories,
             type = if (uiState.type == RecordType.Expense) CategoryType.Expense
                 else CategoryType.Income,
+            appTheme = appTheme,
             onDismissRequest = { showCategoryPicker = false },
             onCategoryChoose = viewModel::chooseCategory
         )

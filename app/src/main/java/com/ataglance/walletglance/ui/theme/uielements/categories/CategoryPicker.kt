@@ -6,21 +6,16 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,11 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
@@ -44,7 +37,6 @@ import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.ui.theme.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
@@ -55,6 +47,7 @@ fun CategoryPicker(
     visible: Boolean,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     type: CategoryType,
+    appTheme: AppTheme?,
     onDismissRequest: () -> Unit,
     onCategoryChoose: (CategoryWithSubcategory) -> Unit
 ) {
@@ -112,19 +105,16 @@ fun CategoryPicker(
                 if (categoryWithSubcategories.category.orderNum != 1) {
                     SmallDivider()
                 }
-                CategoryListItem(
-                    category = categoryWithSubcategories.category,
-                    onClick = {
-                        if (categoryWithSubcategories.subcategoryList.isNotEmpty()) {
-                            chosenCategoryWithSubcategories = categoryWithSubcategories
-                        } else {
-                            onCategoryChoose(
-                                CategoryWithSubcategory(categoryWithSubcategories.category)
-                            )
-                            onDismissRequest()
-                        }
+                CategoryListItem(categoryWithSubcategories.category, appTheme) {
+                    if (categoryWithSubcategories.subcategoryList.isNotEmpty()) {
+                        chosenCategoryWithSubcategories = categoryWithSubcategories
+                    } else {
+                        onCategoryChoose(
+                            CategoryWithSubcategory(categoryWithSubcategories.category)
+                        )
+                        onDismissRequest()
                     }
-                )
+                }
             }
         }
     }
@@ -163,20 +153,17 @@ fun CategoryPicker(
                     if (category.orderNum != 1) {
                         SmallDivider()
                     }
-                    CategoryListItem(
-                        category = category,
-                        onClick = { subcategory ->
-                            chosenCategoryWithSubcategories?.category?.let { parentCategory ->
-                                onCategoryChoose(
-                                    CategoryWithSubcategory(parentCategory, subcategory)
-                                )
-                                onDismissRequest()
-                                if (chosenCategoryWithSubcategories != null) {
-                                    chosenCategoryWithSubcategories = null
-                                }
+                    CategoryListItem(category, appTheme) { subcategory ->
+                        chosenCategoryWithSubcategories?.category?.let { parentCategory ->
+                            onCategoryChoose(
+                                CategoryWithSubcategory(parentCategory, subcategory)
+                            )
+                            onDismissRequest()
+                            if (chosenCategoryWithSubcategories != null) {
+                                chosenCategoryWithSubcategories = null
                             }
                         }
-                    )
+                    }
                 }
             }
             SmallDivider(filledWidth = .6f)
@@ -188,29 +175,15 @@ fun CategoryPicker(
 @Composable
 private fun CategoryListItem(
     category: Category,
+    appTheme: AppTheme?,
     onClick: (Category) -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .bounceClickEffect { onClick(category) }
-            .padding(vertical = 14.dp)
-    ) {
-        category.icon.res.let {
-            Icon(
-                painter = painterResource(it),
-                contentDescription = category.name + " icon",
-                tint = GlanceTheme.onSurface,
-                modifier = Modifier
-                    .size(25.dp)
-            )
-        }
-        Text(
-            text = category.name,
-            color = GlanceTheme.onSurface,
-            fontSize = 18.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+    Box(modifier = Modifier.padding(vertical = 12.dp)) {
+        RecordCategory(
+            category = category,
+            appTheme = appTheme,
+            iconSize = 30.dp,
+            onClick = onClick
         )
     }
 }
