@@ -253,11 +253,11 @@ private fun GlassSurfaceContent(
         }
         items(items = recordUnitList, key = { it.lazyListKey }) { recordUnit ->
             RecordUnitBlock(
+                appTheme = appTheme,
                 recordUnitUiState = recordUnit,
                 onNoteValueChange = { value ->
                     viewModel.changeNoteValue(recordUnit.index, value)
                 },
-                categoryIconRes = recordUnit.getSubcategoryOrCategory()?.icon?.res,
                 onCategoryClick = {
                     viewModel.changeClickedUnitIndex(recordUnit.index)
                     onShowCategoryPickerChange(true)
@@ -287,9 +287,9 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun LazyItemScope.RecordUnitBlock(
+    appTheme: AppTheme?,
     recordUnitUiState: MakeRecordUnitUiState,
     onNoteValueChange: (String) -> Unit,
-    categoryIconRes: Int?,
     onCategoryClick: () -> Unit,
     onAmountValueChange: (String) -> Unit,
     onQuantityChange: (String) -> Unit,
@@ -314,13 +314,13 @@ private fun LazyItemScope.RecordUnitBlock(
             if (targetCollapsed) {
                 RecordUnitBlockCollapsed(
                     noteText = recordUnitUiState.note,
-                    category = recordUnitUiState.categoryWithSubcategory
-                        ?.getSubcategoryOrCategory(),
+                    category = recordUnitUiState.categoryWithSubcategory?.getSubcategoryOrCategory(),
                     amount = recordUnitUiState.getFormattedAmountWithSpaces(),
                     quantity = recordUnitUiState.quantity,
                     accountCurrency = accountCurrency,
                     index = recordUnitUiState.index,
                     lastIndex = lastIndex,
+                    appTheme = appTheme,
                     onSwapUnits = onSwapUnits,
                     onDeleteButton = onDeleteButton,
                     onExpandButton = { onChangeCollapsedValue(false) }
@@ -329,9 +329,7 @@ private fun LazyItemScope.RecordUnitBlock(
                 RecordUnitBlockExpanded(
                     noteText = recordUnitUiState.note,
                     onNoteValueChange = onNoteValueChange,
-                    category = recordUnitUiState.categoryWithSubcategory
-                        ?.getSubcategoryOrCategory(),
-                    categoryIconRes = categoryIconRes,
+                    category = recordUnitUiState.categoryWithSubcategory?.getSubcategoryOrCategory(),
                     onCategoryClick = onCategoryClick,
                     amount = recordUnitUiState.amount,
                     onAmountValueChange = onAmountValueChange,
@@ -339,6 +337,7 @@ private fun LazyItemScope.RecordUnitBlock(
                     onQuantityChange = onQuantityChange,
                     index = recordUnitUiState.index,
                     lastIndex = lastIndex,
+                    appTheme = appTheme,
                     onSwapUnits = onSwapUnits,
                     onDeleteButton = onDeleteButton,
                     fieldsCornerSize = fieldsCornerSize,
@@ -358,6 +357,7 @@ private fun RecordUnitBlockCollapsed(
     accountCurrency: String?,
     index: Int,
     lastIndex: Int,
+    appTheme: AppTheme?,
     onSwapUnits: (Int, Int) -> Unit,
     onDeleteButton: (Int) -> Unit,
     onExpandButton: () -> Unit
@@ -411,7 +411,8 @@ private fun RecordUnitBlockCollapsed(
         ) { targetCategory ->
             RecordCategory(
                 category = targetCategory,
-                iconSize = 24.dp,
+                appTheme = appTheme,
+                iconSize = 32.dp,
                 fontSize = 20.sp
             )
         }
@@ -437,7 +438,6 @@ private fun RecordUnitBlockExpanded(
     noteText: String,
     onNoteValueChange: (String) -> Unit,
     category: Category?,
-    categoryIconRes: Int?,
     onCategoryClick: () -> Unit,
     amount: String,
     onAmountValueChange: (String) -> Unit,
@@ -445,6 +445,7 @@ private fun RecordUnitBlockExpanded(
     onQuantityChange: (String) -> Unit,
     index: Int,
     lastIndex: Int,
+    appTheme: AppTheme?,
     onSwapUnits: (Int, Int) -> Unit,
     onDeleteButton: (Int) -> Unit,
     fieldsCornerSize: Dp,
@@ -468,14 +469,14 @@ private fun RecordUnitBlockExpanded(
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.category) {
             AnimatedContent(
-                targetState = category to categoryIconRes,
+                targetState = category,
                 label = "category field at the make record screen"
-            ) { targetCategoryAndIconRes ->
+            ) { targetCategory ->
                 CategoryField(
-                    category = targetCategoryAndIconRes.first,
-                    categoryIconRes = targetCategoryAndIconRes.second,
+                    category = targetCategory,
                     fontSize = 20.sp,
                     cornerSize = fieldsCornerSize,
+                    appTheme = appTheme,
                     onClick = onCategoryClick
                 )
             }

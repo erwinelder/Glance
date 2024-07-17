@@ -6,10 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,10 +24,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,13 +42,13 @@ import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
-import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.ThreeStateCheckbox
 import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.theme.uielements.dividers.TextDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
@@ -61,6 +56,7 @@ import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 
 @Composable
 fun EditCategoryCollectionScreen(
+    appTheme: AppTheme?,
     collection: CategoryCollectionWithCategories,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
@@ -83,6 +79,7 @@ fun EditCategoryCollectionScreen(
         } else null,
         glassSurfaceContent = {
             GlassSurfaceContent(
+                appTheme = appTheme,
                 collection = collection,
                 editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,
@@ -103,6 +100,7 @@ fun EditCategoryCollectionScreen(
 
 @Composable
 private fun GlassSurfaceContent(
+    appTheme: AppTheme?,
     collection: CategoryCollectionWithCategories,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
@@ -145,12 +143,14 @@ private fun GlassSurfaceContent(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     categoryListItems(
+                        appTheme = appTheme,
                         list = editingCategoriesWithSubcategories.expense,
                         listType = CategoryType.Expense,
                         onCheckedChange = onCheckedChange,
                         onExpandedChange = onExpandedChange
                     )
                     categoryListItems(
+                        appTheme = appTheme,
                         list = editingCategoriesWithSubcategories.income,
                         listType = CategoryType.Income,
                         onCheckedChange = onCheckedChange,
@@ -169,6 +169,7 @@ private fun GlassSurfaceContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CollectionCategoryItem(
+                            appTheme = appTheme,
                             category = expandedCategory.category,
                             checked = expandedCategory.checked,
                             expanded = expandedCategory.expanded,
@@ -194,6 +195,7 @@ private fun GlassSurfaceContent(
                                 key = { it.category.id }
                             ) { item ->
                                 CollectionSubcategoryItem(
+                                    appTheme = appTheme,
                                     checkedCategory = item,
                                     onCheckedChange = {
                                         onCheckedChange(item.category)
@@ -208,6 +210,7 @@ private fun GlassSurfaceContent(
 }
 
 private fun LazyListScope.categoryListItems(
+    appTheme: AppTheme?,
     list: List<EditingCategoryWithSubcategories>,
     listType: CategoryType,
     onCheckedChange: (Category) -> Unit,
@@ -227,6 +230,7 @@ private fun LazyListScope.categoryListItems(
         key = { it.category.id }
     ) { item ->
         CollectionCategoryItem(
+            appTheme = appTheme,
             category = item.category,
             checked = item.checked,
             expanded = item.expanded.takeIf { item.subcategoryList.isNotEmpty() },
@@ -242,6 +246,7 @@ private fun LazyListScope.categoryListItems(
 
 @Composable
 private fun CollectionCategoryItem(
+    appTheme: AppTheme?,
     category: Category,
     checked: Boolean?,
     expanded: Boolean?,
@@ -258,6 +263,7 @@ private fun CollectionCategoryItem(
         Spacer(modifier = Modifier.size(10.dp, 48.dp))
         RecordCategory(
             category = category,
+            appTheme = appTheme,
             iconSize = 26.dp,
             fontSize = 20.sp
         )
@@ -279,6 +285,7 @@ private fun CollectionCategoryItem(
 
 @Composable
 private fun CollectionSubcategoryItem(
+    appTheme: AppTheme?,
     checkedCategory: CheckedCategory,
     onCheckedChange: () -> Unit
 ) {
@@ -292,6 +299,7 @@ private fun CollectionSubcategoryItem(
         Spacer(modifier = Modifier.width(8.dp))
         RecordCategory(
             category = checkedCategory.category,
+            appTheme = appTheme,
             iconSize = 28.dp,
             fontSize = 21.sp
         )
@@ -349,37 +357,21 @@ private fun EditCategoryCollectionScreenPreview() {
         categoryList = categoryList
     )
 
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = AppTheme.LightDefault.name,
-            boxWithConstraintsScope = this
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_light),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                EditCategoryCollectionScreen(
-                    collection = collection,
-                    editingCategoriesWithSubcategories =
-                        DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-                            .toEditingCategoriesWithSubcategories(collection),
-                    expandedCategory = null,
-                    allowDeleting = true,
-                    allowSaving = true,
-                    onNameChange = {},
-                    onCheckedChange = {},
-                    onExpandedChange = {},
-                    onDeleteButton = {},
-                    onSaveButton = {}
-                )
-            }
-        }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        EditCategoryCollectionScreen(
+            appTheme = AppTheme.LightDefault,
+            collection = collection,
+            editingCategoriesWithSubcategories =
+            DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+                .toEditingCategoriesWithSubcategories(collection),
+            expandedCategory = null,
+            allowDeleting = true,
+            allowSaving = true,
+            onNameChange = {},
+            onCheckedChange = {},
+            onExpandedChange = {},
+            onDeleteButton = {},
+            onSaveButton = {}
+        )
     }
 }

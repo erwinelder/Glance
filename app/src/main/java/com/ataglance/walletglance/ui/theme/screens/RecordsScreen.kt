@@ -104,6 +104,7 @@ fun RecordsScreen(
                     )
                 } else {
                     RecordStackComponent(
+                        appTheme = appTheme,
                         recordStack = recordStack,
                         includeYearToDate = includeYearToRecordDate,
                         onRecordClick = onRecordClick

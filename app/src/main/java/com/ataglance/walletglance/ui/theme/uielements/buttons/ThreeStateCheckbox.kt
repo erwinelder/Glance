@@ -39,6 +39,7 @@ import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWit
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.EditCategoryCollectionScreen
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
 
 @Composable
@@ -175,37 +176,21 @@ private fun EditCategoryCollectionScreenPreview() {
         categoryList = categoryList
     )
 
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = AppTheme.LightDefault.name,
-            boxWithConstraintsScope = this
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_light),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                EditCategoryCollectionScreen(
-                    collection = collection,
-                    editingCategoriesWithSubcategories =
-                    DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-                        .toEditingCategoriesWithSubcategories(collection),
-                    expandedCategory = null,
-                    allowDeleting = true,
-                    allowSaving = true,
-                    onNameChange = {},
-                    onCheckedChange = {},
-                    onExpandedChange = {},
-                    onDeleteButton = {},
-                    onSaveButton = {}
-                )
-            }
-        }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        EditCategoryCollectionScreen(
+            appTheme = AppTheme.LightDefault,
+            collection = collection,
+            editingCategoriesWithSubcategories =
+            DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+                .toEditingCategoriesWithSubcategories(collection),
+            expandedCategory = null,
+            allowDeleting = true,
+            allowSaving = true,
+            onNameChange = {},
+            onCheckedChange = {},
+            onExpandedChange = {},
+            onDeleteButton = {},
+            onSaveButton = {}
+        )
     }
 }

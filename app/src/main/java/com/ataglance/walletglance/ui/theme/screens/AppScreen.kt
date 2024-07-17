@@ -1035,6 +1035,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 .allowSaving.collectAsStateWithLifecycle()
 
             EditCategoryCollectionScreen(
+                appTheme = appTheme,
                 collection = collectionUiState,
                 editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,

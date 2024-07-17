@@ -102,6 +102,7 @@ private fun RecordStackList(
         for (recordStack in recordStackList) {
             if (recordStack.isExpenseOrIncome()) {
                 RecordStackComponent(
+                    appTheme = appTheme,
                     recordStack = recordStack,
                     includeYearToDate = includeYearToRecordDate,
                     onRecordClick = onRecordClick
