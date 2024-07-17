@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.ui.theme.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,7 +50,12 @@ fun RecordsScreen(
     val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
 
     val includeYearToRecordDate = filteredRecords.containsRecordsFromDifferentYears()
+
     val lazyListState = rememberLazyListState()
+    /*val visibleItemsInfo = remember {
+        derivedStateOf { lazyListState.layoutInfo.visibleItemsInfo }
+    }*/
+
 
     DataPresentationScreenContainer(
         scaffoldAppScreenPadding = scaffoldAppScreenPadding,
@@ -81,35 +87,79 @@ fun RecordsScreen(
         onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
         onDimBackgroundChange = onDimBackgroundChange
     ) { targetRecordStackListAndTypeFilter ->
-        LazyColumn(
-            state = lazyListState,
-            contentPadding = PaddingValues(vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(
-                items = targetRecordStackListAndTypeFilter.first,
-                key = { it.recordNum }
-            ) { recordStack ->
-                if (recordStack.isTransfer()) {
-                    TransferComponent(
-                        recordStack = recordStack,
-                        includeYearToDate = includeYearToRecordDate,
-                        appTheme = appTheme,
-                        secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
-                            accountList.findById(it)?.toRecordAccount()
-                        },
-                        onTransferClick = onTransferClick
-                    )
-                } else {
-                    RecordStackComponent(
-                        appTheme = appTheme,
-                        recordStack = recordStack,
-                        includeYearToDate = includeYearToRecordDate,
-                        onRecordClick = onRecordClick
-                    )
+        Column {
+            LazyColumn(
+                state = lazyListState,
+                contentPadding = PaddingValues(vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(
+                    items = targetRecordStackListAndTypeFilter.first,
+                    key = { it.recordNum }
+                ) { recordStack ->
+                    if (recordStack.isTransfer()) {
+                        TransferComponent(
+                            recordStack = recordStack,
+                            includeYearToDate = includeYearToRecordDate,
+                            appTheme = appTheme,
+                            secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
+                                accountList.findById(it)?.toRecordAccount()
+                            },
+                            onTransferClick = onTransferClick
+                        )
+                    } else {
+                        RecordStackComponent(
+                            appTheme = appTheme,
+                            recordStack = recordStack,
+                            includeYearToDate = includeYearToRecordDate,
+                            onRecordClick = onRecordClick
+                        )
+                    }
                 }
+                /*itemsIndexed(
+                    items = targetRecordStackListAndTypeFilter.first,
+                    key = { _, item -> item.recordNum }
+                ) { index, recordStack ->
+                    val itemScale by animateFloatAsState(
+                        targetValue = visibleItemsInfo.value
+                            .getOrNull(
+                                index - (visibleItemsInfo.value.getOrNull(0)?.index ?: 0)
+                            )
+                            ?.takeIf { it.size > 0 }
+                            ?.let { item ->
+                                ((100.0 / item.size) * -(item.offset.takeIf { it <= 0 } ?: 0)) / 100
+                            }
+                            ?.toFloat()
+                            ?: 0.0f,
+                        label = "item scale"
+                    )
+
+                    if (recordStack.isTransfer()) {
+                        TransferComponent(
+                            recordStack = recordStack,
+                            includeYearToDate = includeYearToRecordDate,
+                            appTheme = appTheme,
+                            secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
+                                accountList.findById(it)?.toRecordAccount()
+                            },
+                            onTransferClick = onTransferClick
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .scale(1f - itemScale)
+                        ) {
+                            RecordStackComponent(
+                                appTheme = appTheme,
+                                recordStack = recordStack,
+                                includeYearToDate = includeYearToRecordDate,
+                                onRecordClick = onRecordClick
+                            )
+                        }
+                    }
+                }*/
             }
         }
     }

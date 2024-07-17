@@ -264,7 +264,7 @@ private fun CollectionCategoryItem(
         RecordCategory(
             category = category,
             appTheme = appTheme,
-            iconSize = 26.dp,
+            iconSize = 32.dp,
             fontSize = 20.sp
         )
         if (expanded != null) {
