@@ -2,6 +2,7 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     tableName = "CategoryCollectionCategoryAssociation",
@@ -19,7 +20,8 @@ import androidx.room.ForeignKey
             childColumns = ["categoryId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["categoryId"])]
 )
 data class CategoryCollectionCategoryAssociation(
     val categoryCollectionId: Int,
