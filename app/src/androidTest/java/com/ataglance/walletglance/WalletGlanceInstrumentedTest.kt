@@ -11,7 +11,9 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.color.CategoryColorName
 import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.AccountEntity
 import com.ataglance.walletglance.domain.entities.CategoryEntity
@@ -30,8 +32,6 @@ import com.ataglance.walletglance.ui.utils.getFormattedDateWithTime
 import com.ataglance.walletglance.ui.utils.toAccountEntityList
 import com.ataglance.walletglance.ui.utils.toLongWithTime
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
@@ -148,7 +148,6 @@ class WalletGlanceInstrumentedTest {
                 CategoryEntity(
                     id = 1,
                     type = '-',
-                    rank = 'c',
                     orderNum = 1,
                     parentCategoryId = null,
                     name = "Category 1",
@@ -158,7 +157,6 @@ class WalletGlanceInstrumentedTest {
                 CategoryEntity(
                     id = 2,
                     type = '+',
-                    rank = 'c',
                     orderNum = 1,
                     parentCategoryId = null,
                     name = "Category 2",

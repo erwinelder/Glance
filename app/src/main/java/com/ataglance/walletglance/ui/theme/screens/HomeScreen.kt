@@ -32,9 +32,9 @@ import com.ataglance.walletglance.ui.theme.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.ui.theme.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.ui.theme.widgets.GreetingsMessage
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.ui.viewmodels.DateRangeMenuUiState
-import com.ataglance.walletglance.ui.viewmodels.WidgetsUiState
+import com.ataglance.walletglance.data.accounts.AccountsUiState
+import com.ataglance.walletglance.data.date.DateRangeMenuUiState
+import com.ataglance.walletglance.data.widgets.WidgetsUiState
 
 @Composable
 fun HomeScreen(

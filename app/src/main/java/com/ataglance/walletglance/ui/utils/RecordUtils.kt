@@ -6,14 +6,14 @@ import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.ui.viewmodels.AccountsUiState
-import com.ataglance.walletglance.ui.viewmodels.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
+import com.ataglance.walletglance.data.accounts.AccountsUiState
+import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import java.util.Locale
 

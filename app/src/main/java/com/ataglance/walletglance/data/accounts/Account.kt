@@ -4,6 +4,7 @@ import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.ui.utils.formatWithSpaces
 import com.ataglance.walletglance.ui.utils.toAccountColorWithName
 import java.util.Locale
 
@@ -44,57 +45,33 @@ data class Account(
         )
     }
 
-    fun getFormattedBalanceWithSpaces(): String {
-        if (hideBalance || withoutBalance) {
-            return "***"
+    private fun getHiddenBalance(): String? {
+        return if (hideBalance) {
+            "***"
+        } else if (withoutBalance) {
+            ""
+        } else {
+            null
         }
-
-        var numberString = "%.2f".format(Locale.US, balance)
-        var formattedNumber = numberString.let {
-            it.substring(startIndex = it.length - 3)
-        }
-        numberString = numberString.let {
-            it.substring(0, it.length - 3)
-        }
-        var digitCount = 0
-
-        for (i in numberString.length - 1 downTo 0) {
-            formattedNumber = numberString[i] + formattedNumber
-            digitCount++
-            if (digitCount % 3 == 0 && i != 0) {
-                formattedNumber = " $formattedNumber"
-            }
-        }
-
-        return formattedNumber
     }
 
-    fun getFormattedBalanceWithSpacesWithCurrency(): String {
-        if (hideBalance || withoutBalance) {
-            return "***"
-        }
+    fun getFormattedBalance(): String {
+        return getHiddenBalance() ?: balance.formatWithSpaces()
+    }
 
-        return getFormattedBalanceWithSpaces() + " $currency"
+    fun getFormattedBalanceWithCurrency(): String {
+        return getHiddenBalance() ?: (getFormattedBalance() + " $currency")
     }
 
     fun getFormattedBalanceBeforeDecimalSeparator(): String {
-        if (hideBalance) {
-            return "***"
-        } else if (withoutBalance) {
-            return ""
-        }
-
-        return getFormattedBalanceWithSpaces().let {
+        return getHiddenBalance() ?: getFormattedBalance().let {
             it.substring(0, it.length - 3)
         }
     }
 
     fun getFormattedBalanceAfterDecimalSeparator(): String {
-        if (hideBalance || withoutBalance) {
-            return ""
-        }
-
-        return getFormattedBalanceWithSpaces().let {
+        return if (hideBalance || withoutBalance) ""
+        else getFormattedBalance().let {
             it.substring(startIndex = it.length - 3)
         }
     }

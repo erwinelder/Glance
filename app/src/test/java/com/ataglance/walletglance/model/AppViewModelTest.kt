@@ -2,7 +2,8 @@ package com.ataglance.walletglance.model
 
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.color.CategoryColors
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MadeTransferState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
 import com.ataglance.walletglance.data.records.RecordType
@@ -16,7 +17,6 @@ import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.MadeTransferState
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -277,108 +277,108 @@ class AppViewModelTest {
     fun testFixCategoriesOrderNumbers() {
         val currentCategoryList = listOf(
             CategoryEntity(
-                id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
+                id = 1, type = '-', orderNum = 1, parentCategoryId = 1,
                 name = "category 1", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 2, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 2,
+                id = 2, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "category 2", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
 
             CategoryEntity(
-                id = 13, type = '-', rank = 's', orderNum = 1, parentCategoryId = 1,
+                id = 13, type = '-', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 14, type = '-', rank = 's', orderNum = 2, parentCategoryId = 1,
+                id = 14, type = '-', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
 
             CategoryEntity(
-                id = 15, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
+                id = 15, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 16, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
+                id = 16, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 17, type = '-', rank = 's', orderNum = 3, parentCategoryId = 2,
+                id = 17, type = '-', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 18, type = '-', rank = 's', orderNum = 4, parentCategoryId = 2,
+                id = 18, type = '-', orderNum = 4, parentCategoryId = 2,
                 name = "subcategory 24", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 19, type = '-', rank = 's', orderNum = 5, parentCategoryId = 2,
+                id = 19, type = '-', orderNum = 5, parentCategoryId = 2,
                 name = "subcategory 25", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 20, type = '-', rank = 's', orderNum = 6, parentCategoryId = 2,
+                id = 20, type = '-', orderNum = 6, parentCategoryId = 2,
                 name = "subcategory 26", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             )
         )
         val expectedCategoryList = listOf(
             CategoryEntity(
-                id = 1, type = '-', rank = 'c', orderNum = 1, parentCategoryId = 1,
+                id = 1, type = '-', orderNum = 1, parentCategoryId = 1,
                 name = "category 1", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 2, type = '-', rank = 'c', orderNum = 2, parentCategoryId = 2,
+                id = 2, type = '-', orderNum = 2, parentCategoryId = 2,
                 name = "category 2", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
 
             CategoryEntity(
-                id = 13, type = '-', rank = 's', orderNum = 1, parentCategoryId = 1,
+                id = 13, type = '-', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 14, type = '-', rank = 's', orderNum = 2, parentCategoryId = 1,
+                id = 14, type = '-', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
 
             CategoryEntity(
-                id = 15, type = '-', rank = 's', orderNum = 1, parentCategoryId = 2,
+                id = 15, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 16, type = '-', rank = 's', orderNum = 2, parentCategoryId = 2,
+                id = 16, type = '-', orderNum = 2, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 17, type = '-', rank = 's', orderNum = 3, parentCategoryId = 2,
+                id = 17, type = '-', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 18, type = '-', rank = 's', orderNum = 4, parentCategoryId = 2,
+                id = 18, type = '-', orderNum = 4, parentCategoryId = 2,
                 name = "subcategory 24", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 19, type = '-', rank = 's', orderNum = 5, parentCategoryId = 2,
+                id = 19, type = '-', orderNum = 5, parentCategoryId = 2,
                 name = "subcategory 25", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 20, type = '-', rank = 's', orderNum = 6, parentCategoryId = 2,
+                id = 20, type = '-', orderNum = 6, parentCategoryId = 2,
                 name = "subcategory 26", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             )

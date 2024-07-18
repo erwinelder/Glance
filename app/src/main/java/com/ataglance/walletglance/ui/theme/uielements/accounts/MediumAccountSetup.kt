@@ -115,7 +115,7 @@ fun MediumAccountSetup(
                         color = onAccountColor.copy(.65f)
                     )
                     Text(
-                        text = account.getFormattedBalanceWithSpacesWithCurrency(),
+                        text = account.getFormattedBalanceWithCurrency(),
                         fontSize = (fontSize + 4).sp,
                         fontWeight = FontWeight.Light,
                         maxLines = 1,

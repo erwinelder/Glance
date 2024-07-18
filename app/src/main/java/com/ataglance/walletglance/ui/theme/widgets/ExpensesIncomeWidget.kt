@@ -41,7 +41,7 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.utils.getFormattedDateFromAndToByFormatDayMonthYear
 import com.ataglance.walletglance.data.date.DateRangeState
-import com.ataglance.walletglance.ui.viewmodels.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.data.date.DateRange
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import java.util.Locale

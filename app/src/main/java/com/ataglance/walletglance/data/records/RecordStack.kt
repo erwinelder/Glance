@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.data.records
 
 import com.ataglance.walletglance.data.accounts.RecordAccount
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.ui.utils.asChar
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
+import com.ataglance.walletglance.ui.utils.formatWithSpaces
 import java.util.Locale
 
 data class RecordStack(
@@ -53,42 +53,22 @@ data class RecordStack(
                 index = index,
                 categoryWithSubcategory = unit.categoryWithSubcategory,
                 note = unit.note ?: "",
-                amount = "%.2f".format(Locale.US, unit.amount / (unit.quantity ?: 1)),
+                amount = "%.2f".format(
+                    Locale.US,
+                    unit.amount / (unit.quantity.takeUnless { it == 0 } ?: 1)
+                ),
                 quantity = unit.quantity?.toString() ?: "",
                 collapsed = stack.size != 1
             )
         }
     }
 
+    private fun getSign(): Char {
+        return if (isExpenseOrOutTransfer()) '-' else '+'
+    }
+
     fun getFormattedAmountWithSpaces(): String {
-        var numberString = "%.2f".format(Locale.US, totalAmount)
-        var formattedNumber = numberString.let {
-            it.substring(startIndex = it.length - 3)
-        }
-        numberString = numberString.let {
-            it.substring(0, it.length - 3)
-        }
-        var digitCount = 0
-
-        for (i in numberString.length - 1 downTo 0) {
-            formattedNumber = numberString[i] + formattedNumber
-            digitCount++
-            if (digitCount % 3 == 0 && i != 0) {
-                formattedNumber = " $formattedNumber"
-            }
-        }
-
-        val sign = if (isExpenseOrOutTransfer()) '-' else '+'
-
-        return "%c %s %s".format(sign, formattedNumber, account.currency)
+        return "%c %s %s".format(getSign(), totalAmount.formatWithSpaces(), account.currency)
     }
 
 }
-
-data class RecordStackUnit(
-    val id: Int = 0,
-    val amount: Double,
-    val quantity: Int?,
-    val categoryWithSubcategory: CategoryWithSubcategory?,
-    val note: String?
-)

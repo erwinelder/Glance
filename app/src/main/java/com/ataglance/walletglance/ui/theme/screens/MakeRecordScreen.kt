@@ -53,9 +53,10 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
@@ -75,8 +76,6 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
 import com.ataglance.walletglance.ui.utils.addZeroIfDotIsAtTheBeginning
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import java.util.Calendar
 
@@ -314,29 +313,21 @@ private fun LazyItemScope.RecordUnitBlock(
         ) { targetCollapsed ->
             if (targetCollapsed) {
                 RecordUnitBlockCollapsed(
-                    noteText = recordUnitUiState.note,
-                    category = recordUnitUiState.categoryWithSubcategory?.getSubcategoryOrCategory(),
-                    amount = recordUnitUiState.getFormattedAmountWithSpaces(),
-                    quantity = recordUnitUiState.quantity,
+                    recordUnitUiState = recordUnitUiState,
                     accountCurrency = accountCurrency,
-                    index = recordUnitUiState.index,
                     lastIndex = lastIndex,
                     appTheme = appTheme,
                     onSwapUnits = onSwapUnits,
-                    onDeleteButton = onDeleteButton,
-                    onExpandButton = { onChangeCollapsedValue(false) }
+                    onDeleteButtonClick = onDeleteButton,
+                    onExpandButtonClick = { onChangeCollapsedValue(false) }
                 )
             } else {
                 RecordUnitBlockExpanded(
-                    noteText = recordUnitUiState.note,
+                    recordUnitUiState = recordUnitUiState,
                     onNoteValueChange = onNoteValueChange,
-                    category = recordUnitUiState.categoryWithSubcategory?.getSubcategoryOrCategory(),
                     onCategoryClick = onCategoryClick,
-                    amount = recordUnitUiState.amount,
                     onAmountValueChange = onAmountValueChange,
-                    quantity = recordUnitUiState.quantity,
                     onQuantityChange = onQuantityChange,
-                    index = recordUnitUiState.index,
                     lastIndex = lastIndex,
                     appTheme = appTheme,
                     onSwapUnits = onSwapUnits,
@@ -351,25 +342,21 @@ private fun LazyItemScope.RecordUnitBlock(
 
 @Composable
 private fun RecordUnitBlockCollapsed(
-    noteText: String,
-    category: Category?,
-    amount: String,
-    quantity: String,
+    recordUnitUiState: MakeRecordUnitUiState,
     accountCurrency: String?,
-    index: Int,
     lastIndex: Int,
     appTheme: AppTheme?,
     onSwapUnits: (Int, Int) -> Unit,
-    onDeleteButton: (Int) -> Unit,
-    onExpandButton: () -> Unit
+    onDeleteButtonClick: (Int) -> Unit,
+    onExpandButtonClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
-        if (noteText.isNotBlank()) {
+        recordUnitUiState.note.takeIf { it.isNotBlank() }?.let { note ->
             Text(
-                text = noteText,
+                text = note,
                 color = GlanceTheme.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light,
@@ -383,7 +370,7 @@ private fun RecordUnitBlockCollapsed(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.Bottom
         ) {
-            if (quantity.isNotBlank()) {
+            recordUnitUiState.quantity.takeIf { it.isNotBlank() }?.let { quantity ->
                 Text(
                     text = "$quantity x",
                     fontSize = 18.sp,
@@ -392,7 +379,7 @@ private fun RecordUnitBlockCollapsed(
                 )
             }
             Text(
-                text = amount,
+                text = recordUnitUiState.getFormattedAmount(),
                 fontSize = 22.sp,
                 color = GlanceTheme.onSurface,
             )
@@ -407,7 +394,7 @@ private fun RecordUnitBlockCollapsed(
         }
         Spacer(modifier = Modifier.height(4.dp))
         AnimatedContent(
-            targetState = category,
+            targetState = recordUnitUiState.categoryWithSubcategory?.getSubcategoryOrCategory(),
             label = "record unit category"
         ) { targetCategory ->
             RecordCategory(
@@ -419,16 +406,16 @@ private fun RecordUnitBlockCollapsed(
         }
         Spacer(modifier = Modifier.height(12.dp))
         ControlPanel(
-            index = index,
+            index = recordUnitUiState.index,
             lastIndex = lastIndex,
             spaceSize = 12.dp,
             onSwapUnits = onSwapUnits,
-            onDeleteButton = onDeleteButton
+            onDeleteButton = onDeleteButtonClick
         ) {
             SmallFilledIconButton(
                 iconRes = R.drawable.expand_icon,
                 iconContendDescription = "expand record unit",
-                onClick = onExpandButton
+                onClick = onExpandButtonClick
             )
         }
     }
@@ -436,15 +423,11 @@ private fun RecordUnitBlockCollapsed(
 
 @Composable
 private fun RecordUnitBlockExpanded(
-    noteText: String,
+    recordUnitUiState: MakeRecordUnitUiState,
     onNoteValueChange: (String) -> Unit,
-    category: Category?,
     onCategoryClick: () -> Unit,
-    amount: String,
     onAmountValueChange: (String) -> Unit,
-    quantity: String,
     onQuantityChange: (String) -> Unit,
-    index: Int,
     lastIndex: Int,
     appTheme: AppTheme?,
     onSwapUnits: (Int, Int) -> Unit,
@@ -458,7 +441,7 @@ private fun RecordUnitBlockExpanded(
     ) {
         MakeRecordFieldContainer(R.string.amount) {
             CustomTextField(
-                text = amount,
+                text = recordUnitUiState.amount,
                 placeholderText = "0.00",
                 fontSize = 22.sp,
                 cornerSize = fieldsCornerSize,
@@ -470,7 +453,7 @@ private fun RecordUnitBlockExpanded(
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.category) {
             AnimatedContent(
-                targetState = category,
+                targetState = recordUnitUiState.categoryWithSubcategory?.getSubcategoryOrCategory(),
                 label = "category field at the make record screen"
             ) { targetCategory ->
                 CategoryField(
@@ -485,7 +468,7 @@ private fun RecordUnitBlockExpanded(
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.note) {
             CustomTextField(
-                text = noteText,
+                text = recordUnitUiState.note,
                 placeholderText = stringResource(R.string.note_placeholder),
                 fontSize = 18.sp,
                 cornerSize = fieldsCornerSize,
@@ -496,7 +479,7 @@ private fun RecordUnitBlockExpanded(
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.quantity) {
             CustomTextField(
-                text = quantity,
+                text = recordUnitUiState.quantity,
                 placeholderText = stringResource(R.string.quantity_placeholder),
                 fontSize = 18.sp,
                 cornerSize = fieldsCornerSize,
@@ -511,7 +494,7 @@ private fun RecordUnitBlockExpanded(
             modifier = Modifier.fillMaxWidth()
         ) {
             ControlPanel(
-                index = index,
+                index = recordUnitUiState.index,
                 lastIndex = lastIndex,
                 spaceSize = 16.dp,
                 onSwapUnits = onSwapUnits,
@@ -579,11 +562,7 @@ private fun ControlPanelButton(
     enabled: Boolean = true
 ) {
     val color by animateColorAsState(
-        targetValue = if (enabled) {
-            GlanceTheme.onSurface
-        } else {
-            GlanceTheme.outline
-        },
+        targetValue = if (enabled) GlanceTheme.onSurface else GlanceTheme.outline,
         label = "make record unit control panel button color"
     )
 

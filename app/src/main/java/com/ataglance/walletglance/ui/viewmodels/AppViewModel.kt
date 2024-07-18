@@ -2,29 +2,32 @@ package com.ataglance.walletglance.ui.viewmodels
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppLanguage
+import com.ataglance.walletglance.data.accounts.AccountsUiState
 import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.data.app.AppUiSettings
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.data.date.DateRangeMenuUiState
 import com.ataglance.walletglance.data.date.DateRangeState
 import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MadeTransferState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.settings.ThemeUiState
+import com.ataglance.walletglance.data.widgets.GreetingsWidgetUiState
+import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.domain.entities.AccountEntity
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.Record
@@ -63,8 +66,8 @@ import com.ataglance.walletglance.ui.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.ui.utils.toCategoryEntityList
 import com.ataglance.walletglance.ui.utils.toRecordStackList
 import com.ataglance.walletglance.ui.utils.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUiState
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordUnitUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -978,134 +981,6 @@ class AppViewModel(
         fetchLastRecordNumFromDb()
         fetchCategoryCollectionsFromDb()
         fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
-    }
-
-}
-
-data class AppUiSettings(
-    val isSetUp: Boolean = false,
-    val startMainDestination: MainScreens = MainScreens.Home,
-    val startSettingsDestination: SettingsScreens = SettingsScreens.Start,
-    val langCode: String = AppLanguage.English.languageCode,
-    val appTheme: AppTheme? = null,
-    val lastRecordNum: Int = 0,
-) {
-
-    fun nextRecordNum(): Int {
-        return lastRecordNum + 1
-    }
-
-}
-
-data class ThemeUiState(
-    val useDeviceTheme: Boolean,
-    val chosenLightTheme: String,
-    val chosenDarkTheme: String,
-    val lastChosenTheme: String
-)
-
-data class AccountsUiState(
-    val accountList: List<Account> = emptyList(),
-    val activeAccount: Account? = null
-)
-
-data class DateRangeMenuUiState(
-    val startCalendarDateMillis: Long,
-    val endCalendarDateMillis: Long,
-    val dateRangeState: DateRangeState
-)
-
-data class MadeTransferState(
-    val idFrom: Int,
-    val idTo: Int,
-    val recordStatus: MakeRecordStatus,
-    val fromAccount: Account,
-    val toAccount: Account,
-    val startAmount: Double,
-    val finalAmount: Double,
-    val dateTimeState: DateTimeState = DateTimeState(),
-    val recordNum: Int
-) {
-    fun toRecordsPair(): Pair<Record, Record> {
-        return Pair(
-            Record(
-                id = idFrom,
-                recordNum = recordNum,
-                date = dateTimeState.dateLong,
-                type = '>',
-                amount = startAmount,
-                quantity = null,
-                categoryId = 0,
-                subcategoryId = null,
-                accountId = fromAccount.id,
-                note = toAccount.id.toString()
-            ),
-            Record(
-                id = idTo,
-                recordNum = recordNum + 1,
-                date = dateTimeState.dateLong,
-                type = '<',
-                amount = finalAmount,
-                quantity = null,
-                categoryId = 0,
-                subcategoryId = null,
-                accountId = toAccount.id,
-                note = fromAccount.id.toString()
-            )
-        )
-    }
-}
-
-data class WidgetsUiState(
-    val recordsFilteredByDateAndAccount: List<RecordStack> = emptyList(),
-    val greetings: GreetingsWidgetUiState = GreetingsWidgetUiState(),
-    val expensesIncomeState: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
-    val categoryStatisticsLists: CategoryStatisticsLists = CategoryStatisticsLists()
-)
-
-data class GreetingsWidgetUiState(
-    @StringRes val titleRes: Int = R.string.greetings_empty_message,
-    val expensesTotal: Double = 0.0
-)
-
-data class ExpensesIncomeWidgetUiState(
-    val expensesTotal: Double = 0.0,
-    val incomeTotal: Double = 0.0,
-    val expensesPercentage: Double = 0.0,
-    val incomePercentage: Double = 0.0,
-    val expensesPercentageFloat: Float = 0.0f,
-    val incomePercentageFloat: Float = 0.0f,
-) {
-
-    private fun getFormattedNumberWithSpaces(number: Double): String {
-        var numberString = "%.2f".format(Locale.US, number)
-        var formattedNumber = numberString.let {
-            it.substring(startIndex = it.length - 3)
-        }
-        numberString = numberString.let {
-            it.substring(0, it.length - 3)
-        }
-        var digitCount = 0
-
-        for (i in numberString.length - 1 downTo 0) {
-            formattedNumber = numberString[i] + formattedNumber
-            digitCount++
-            if (digitCount % 3 == 0 && i != 0) {
-                formattedNumber = " $formattedNumber"
-            }
-        }
-
-        return formattedNumber
-    }
-
-    fun getTotalFormatted(): String {
-        return getFormattedNumberWithSpaces(incomeTotal - expensesTotal)
-    }
-    fun getExpensesTotalFormatted(): String {
-        return getFormattedNumberWithSpaces(expensesTotal)
-    }
-    fun getIncomeTotalFormatted(): String {
-        return getFormattedNumberWithSpaces(incomeTotal)
     }
 
 }

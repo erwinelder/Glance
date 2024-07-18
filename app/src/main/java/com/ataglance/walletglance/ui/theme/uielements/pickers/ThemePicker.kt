@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.ui.viewmodels.ThemeUiState
+import com.ataglance.walletglance.data.settings.ThemeUiState
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface

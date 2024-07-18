@@ -4,20 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.records.MakeRecordStatus
-import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.ui.utils.copyWithCategoryWithSubcategory
 import com.ataglance.walletglance.ui.utils.toCategoryType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.util.Locale
 
 class MakeRecordViewModel(
     categoryWithSubcategory: CategoryWithSubcategory?,
@@ -222,122 +218,4 @@ class MakeRecordViewModelFactory(
             makeRecordUnitList = makeRecordUnitList,
         ) as T
     }
-}
-
-data class MakeRecordUiState(
-    val recordStatus: MakeRecordStatus,
-    val recordNum: Int,
-    val account: Account?,
-    val type: RecordType = RecordType.Expense,
-    val clickedUnitIndex: Int = 0,
-    val dateTimeState: DateTimeState = DateTimeState()
-) {
-
-    fun toRecordList(unitList: List<MakeRecordUnitUiState>): List<Record> {
-        val recordList = mutableListOf<Record>()
-
-        unitList.forEach { unit ->
-            if (account != null && unit.categoryWithSubcategory != null) {
-                recordList.add(
-                    Record(
-                        recordNum = recordNum,
-                        date = dateTimeState.dateLong,
-                        type = if (type == RecordType.Expense) '-' else '+',
-                        amount = if (unit.quantity.isNotBlank()) {
-                            "%.2f".format(
-                                Locale.US,
-                                unit.amount.toDouble() * unit.quantity.toInt()
-                            ).toDouble()
-                        } else {
-                            unit.amount.toDouble()
-                        },
-                        quantity = unit.quantity.ifBlank { null }?.toInt(),
-                        categoryId = unit.categoryWithSubcategory.category.id,
-                        subcategoryId = unit.categoryWithSubcategory.subcategory?.id,
-                        accountId = account.id,
-                        note = unit.note.ifBlank { null }
-                    )
-                )
-            }
-        }
-
-        return recordList
-    }
-
-    fun toRecordListWithOldIds(
-        unitList: List<MakeRecordUnitUiState>,
-        recordStack: RecordStack
-    ): List<Record> {
-        val recordList = mutableListOf<Record>()
-
-        unitList.forEach { unit ->
-            if (account != null && unit.categoryWithSubcategory != null) {
-                recordList.add(
-                    Record(
-                        id = recordStack.stack[unit.index].id,
-                        recordNum = recordStack.recordNum,
-                        date = dateTimeState.dateLong,
-                        type = if (type == RecordType.Expense) '-' else '+',
-                        amount = if (unit.quantity.isNotBlank()) {
-                            "%.2f".format(
-                                Locale.US,
-                                unit.amount.toDouble() * unit.quantity.toInt()
-                            ).toDouble()
-                        } else {
-                            unit.amount.toDouble()
-                        },
-                        quantity = unit.quantity.ifBlank { null }?.toInt(),
-                        categoryId = unit.categoryWithSubcategory.category.id,
-                        subcategoryId = unit.categoryWithSubcategory.subcategory?.id,
-                        accountId = account.id,
-                        note = unit.note.ifBlank { null }
-                    )
-                )
-            }
-        }
-
-        return recordList
-    }
-
-}
-
-data class MakeRecordUnitUiState(
-    val lazyListKey: Int,
-    val index: Int,
-    val categoryWithSubcategory: CategoryWithSubcategory?,
-    val note: String = "",
-    val amount: String = "",
-    val quantity: String = "",
-    val collapsed: Boolean = true
-) {
-
-    fun getSubcategoryOrCategory(): Category? {
-        return categoryWithSubcategory?.getSubcategoryOrCategory()
-    }
-
-    fun getFormattedAmountWithSpaces(): String {
-        var numberString = "%.2f".format(
-            Locale.US,
-            amount.takeIf { it.isNotBlank() && !(it.length == 1 && it.firstOrNull() == '.') }
-                ?.toDouble() ?: return "------"
-        )
-        var formattedNumber = numberString.let {
-            it.substring(startIndex = it.length - 3)
-        }
-        numberString = numberString.let {
-            it.substring(0, it.length - 3)
-        }
-        var digitCount = 0
-
-        for (i in numberString.length - 1 downTo 0) {
-            formattedNumber = numberString[i] + formattedNumber
-            digitCount++
-            if (digitCount % 3 == 0 && i != 0) {
-                formattedNumber = " $formattedNumber"
-            }
-        }
-
-        return formattedNumber
-    }
-
 }

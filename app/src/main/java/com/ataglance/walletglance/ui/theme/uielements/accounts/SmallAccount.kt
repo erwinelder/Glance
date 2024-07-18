@@ -103,7 +103,7 @@ fun SmallAccount(
                 )
                 if (account != null && showBalanceBlock) {
                     Text(
-                        text = account.getFormattedBalanceWithSpaces(),
+                        text = account.getFormattedBalance(),
                         color = onAccountColor,
                         textAlign = TextAlign.Center,
                         fontSize = fontSize,

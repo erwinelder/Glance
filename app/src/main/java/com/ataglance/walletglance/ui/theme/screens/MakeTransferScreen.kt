@@ -29,7 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.records.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountPicker
 import com.ataglance.walletglance.ui.theme.uielements.accounts.SmallAccount
