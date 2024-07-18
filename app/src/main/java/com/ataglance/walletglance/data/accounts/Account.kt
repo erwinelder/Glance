@@ -5,7 +5,6 @@ import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.AccountEntity
 import com.ataglance.walletglance.ui.utils.toAccountColorWithName
-import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 import java.util.Locale
 
 data class Account(
@@ -42,21 +41,6 @@ data class Account(
             name = name,
             currency = currency,
             color = color
-        )
-    }
-
-    fun toEditAccountUiState(): EditAccountUiState {
-        return EditAccountUiState(
-            id = id,
-            orderNum = orderNum,
-            name = name,
-            currency = currency,
-            balance = balance.toString(),
-            color = color,
-            hide = hide,
-            hideBalance = hideBalance,
-            withoutBalance = withoutBalance,
-            isActive = isActive
         )
     }
 
