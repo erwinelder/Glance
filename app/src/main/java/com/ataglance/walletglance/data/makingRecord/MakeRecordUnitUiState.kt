@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.data.makingRecord
 
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.ui.utils.formatWithSpaces
+import com.ataglance.walletglance.data.utils.formatWithSpaces
 
 data class MakeRecordUnitUiState(
     val lazyListKey: Int,

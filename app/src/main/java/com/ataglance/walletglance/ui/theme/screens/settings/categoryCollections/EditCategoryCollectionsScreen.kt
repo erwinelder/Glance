@@ -58,7 +58,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryIconComponent
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeBar
-import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
+import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 @Composable
 fun EditCategoryCollectionsScreen(

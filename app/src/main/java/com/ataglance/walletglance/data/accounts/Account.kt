@@ -4,8 +4,8 @@ import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.entities.AccountEntity
-import com.ataglance.walletglance.ui.utils.formatWithSpaces
-import com.ataglance.walletglance.ui.utils.toAccountColorWithName
+import com.ataglance.walletglance.data.utils.formatWithSpaces
+import com.ataglance.walletglance.data.utils.toAccountColorWithName
 import java.util.Locale
 
 data class Account(

@@ -7,6 +7,7 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -15,7 +16,6 @@ import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.ui.utils.fixOrderNumbers
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -206,7 +206,8 @@ class AppViewModelTest {
 
         Assertions.assertEquals(
             getAccountListByBalances(expectedBalances),
-            result?.sortedBy { it.id })
+            result?.sortedBy { it.id }
+        )
     }
 
 

@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.data.widgets
 
-import com.ataglance.walletglance.ui.utils.formatWithSpaces
+import com.ataglance.walletglance.data.utils.formatWithSpaces
 
 data class ExpensesIncomeWidgetUiState(
     val expensesTotal: Double = 0.0,

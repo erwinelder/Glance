@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.utils
+package com.ataglance.walletglance.data.utils
 
 import java.util.Locale
 
@@ -20,21 +20,18 @@ fun String.addZeroIfDotIsAtTheBeginning(): String {
 
 
 fun Double.formatWithSpaces(): String {
-    var numberString = "%.2f".format(Locale.US, this)
-    var formattedNumber = numberString.let {
-        it.substring(startIndex = it.length - 3)
-    }
-    numberString = numberString.let {
-        it.substring(0, it.length - 3)
-    }
-    var digitCount = 0
+    val numberString = "%.2f".format(Locale.US, this)
+    var formattedNumber = numberString.takeLast(3)
+    val decimalPart = numberString.dropLast(3)
 
-    for (i in numberString.length - 1 downTo 0) {
-        formattedNumber = numberString[i] + formattedNumber
-        digitCount++
-        if (digitCount % 3 == 0 && i != 0) {
+    for ((index, char) in decimalPart.reversed().withIndex()) {
+
+        formattedNumber = char + formattedNumber
+
+        if (index % 3 == 2 && index != decimalPart.lastIndex) {
             formattedNumber = " $formattedNumber"
         }
+
     }
 
     return formattedNumber

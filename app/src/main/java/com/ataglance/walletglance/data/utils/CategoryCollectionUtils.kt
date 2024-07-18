@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.utils
+package com.ataglance.walletglance.data.utils
 
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType

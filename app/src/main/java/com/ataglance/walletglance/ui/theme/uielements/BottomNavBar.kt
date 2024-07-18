@@ -47,7 +47,7 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.navigation.BottomBarButtons
 import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
-import com.ataglance.walletglance.ui.utils.currentScreenIs
+import com.ataglance.walletglance.data.utils.currentScreenIs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

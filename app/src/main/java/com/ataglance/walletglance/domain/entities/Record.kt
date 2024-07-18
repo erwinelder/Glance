@@ -8,9 +8,9 @@ import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
-import com.ataglance.walletglance.ui.utils.findById
-import com.ataglance.walletglance.ui.utils.getRecordTypeByChar
-import com.ataglance.walletglance.ui.utils.toCategoryType
+import com.ataglance.walletglance.data.utils.findById
+import com.ataglance.walletglance.data.utils.getRecordTypeByChar
+import com.ataglance.walletglance.data.utils.toCategoryType
 
 @Entity(
     tableName = "Record",

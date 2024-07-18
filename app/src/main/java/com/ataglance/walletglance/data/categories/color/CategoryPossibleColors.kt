@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.categories.color
 
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.color.ColorWithName
-import com.ataglance.walletglance.ui.utils.toColorWithName
+import com.ataglance.walletglance.data.utils.toColorWithName
 
 data class CategoryPossibleColors(
     val olive: CategoryColors = CategoryColors.Olive,

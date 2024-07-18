@@ -52,7 +52,7 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContaine
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.theme.uielements.dividers.TextDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
-import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
+import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 @Composable
 fun EditCategoryCollectionScreen(

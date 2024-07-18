@@ -22,9 +22,9 @@ import com.ataglance.walletglance.ui.theme.screencontainers.DataPresentationScre
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeToggleButton
 import com.ataglance.walletglance.ui.theme.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.ui.theme.uielements.records.TransferComponent
-import com.ataglance.walletglance.ui.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.ui.utils.findById
-import com.ataglance.walletglance.ui.utils.toggle
+import com.ataglance.walletglance.data.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.data.utils.findById
+import com.ataglance.walletglance.data.utils.toggle
 import com.ataglance.walletglance.ui.viewmodels.records.RecordsViewModel
 
 @Composable

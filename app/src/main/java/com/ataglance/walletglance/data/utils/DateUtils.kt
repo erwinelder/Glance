@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.ui.utils
+package com.ataglance.walletglance.data.utils
 
 import android.content.Context
 import com.ataglance.walletglance.R

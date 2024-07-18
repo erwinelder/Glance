@@ -17,7 +17,7 @@ import com.ataglance.walletglance.data.color.ColorByTheme
 import com.ataglance.walletglance.data.color.LighterDarkerColors
 import com.ataglance.walletglance.data.color.LighterDarkerColorsByTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
-import com.ataglance.walletglance.ui.utils.toAccountColorWithName
+import com.ataglance.walletglance.data.utils.toAccountColorWithName
 
 sealed class AccountColors(
     val name: AccountColorName,

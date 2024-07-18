@@ -7,7 +7,6 @@
     <dimen name="buttons_gap">20dp</dimen>
     <dimen name="nav_widget_gap">10dp</dimen>
     <dimen name="big_spacer_line_height">4dp</dimen>
-    <dimen name="statistic_column_height">20dp</dimen>
     <dimen name="large_button_corners">26dp</dimen>
     <dimen name="medium_button_corners">22dp</dimen>
 
@@ -16,8 +15,6 @@
 
     <dimen name="widget_corner_size">38dp</dimen>
     <dimen name="widget_content_padding">18dp</dimen>
-    <dimen name="widget_surface_padding_horizontal">20dp</dimen>
-    <dimen name="widget_surface_padding_vertical">17dp</dimen>
     <dimen name="account_card_corner_size">28dp</dimen>
     <dimen name="record_corner_size">26dp</dimen>
 

@@ -40,7 +40,7 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.screens.settings.categoryCollections.EditCategoryCollectionScreen
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
-import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
+import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 @Composable
 fun ThreeStateCheckbox(

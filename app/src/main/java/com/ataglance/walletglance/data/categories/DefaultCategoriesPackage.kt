@@ -4,7 +4,7 @@ import android.content.Context
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
-import com.ataglance.walletglance.ui.utils.toCategoryColorWithName
+import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 data class DefaultCategoriesPackage(
     val context: Context

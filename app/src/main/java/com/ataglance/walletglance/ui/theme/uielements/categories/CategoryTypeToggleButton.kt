@@ -5,7 +5,7 @@ import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.ui.theme.uielements.buttons.TypeToggleButton
-import com.ataglance.walletglance.ui.utils.toggle
+import com.ataglance.walletglance.data.utils.toggle
 
 @Composable
 fun CategoryTypeToggleButton(

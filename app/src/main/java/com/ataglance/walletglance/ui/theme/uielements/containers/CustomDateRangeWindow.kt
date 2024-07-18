@@ -34,7 +34,7 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
-import com.ataglance.walletglance.ui.utils.formatDateRangeForCustomDateRangeField
+import com.ataglance.walletglance.data.utils.formatDateRangeForCustomDateRangeField
 import com.ataglance.walletglance.data.date.DateRange
 import com.ataglance.walletglance.data.date.DateRangeEnum
 

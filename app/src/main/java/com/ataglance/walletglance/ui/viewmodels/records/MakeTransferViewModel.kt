@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.ui.utils.getOtherFrom
+import com.ataglance.walletglance.data.utils.getOtherFrom
 import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

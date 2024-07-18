@@ -23,7 +23,7 @@ import com.ataglance.walletglance.ui.theme.navigation.screens.AccountsSettingsSc
 import com.ataglance.walletglance.ui.theme.navigation.screens.CategoriesSettingsScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
-import com.ataglance.walletglance.ui.utils.currentScreenIs
+import com.ataglance.walletglance.data.utils.currentScreenIs
 
 @Composable
 fun SetupProgressTopBar(

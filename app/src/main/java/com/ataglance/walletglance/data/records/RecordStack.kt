@@ -3,8 +3,8 @@ package com.ataglance.walletglance.data.records
 import com.ataglance.walletglance.data.accounts.RecordAccount
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.ui.utils.asChar
-import com.ataglance.walletglance.ui.utils.formatWithSpaces
+import com.ataglance.walletglance.data.utils.asChar
+import com.ataglance.walletglance.data.utils.formatWithSpaces
 import java.util.Locale
 
 data class RecordStack(

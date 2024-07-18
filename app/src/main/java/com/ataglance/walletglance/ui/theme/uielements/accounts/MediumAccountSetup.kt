@@ -41,7 +41,7 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.utils.toAccountColorWithName
+import com.ataglance.walletglance.data.utils.toAccountColorWithName
 
 @Composable
 fun MediumAccountSetup(

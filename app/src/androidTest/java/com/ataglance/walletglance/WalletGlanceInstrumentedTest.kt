@@ -27,10 +27,10 @@ import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.ui.utils.filterByDateAndAccount
-import com.ataglance.walletglance.ui.utils.getFormattedDateWithTime
-import com.ataglance.walletglance.ui.utils.toAccountEntityList
-import com.ataglance.walletglance.ui.utils.toLongWithTime
+import com.ataglance.walletglance.data.utils.filterByDateAndAccount
+import com.ataglance.walletglance.data.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.data.utils.toAccountEntityList
+import com.ataglance.walletglance.data.utils.toLongWithTime
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState

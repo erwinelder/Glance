@@ -8,8 +8,8 @@ import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.ui.utils.copyWithCategoryWithSubcategory
-import com.ataglance.walletglance.ui.utils.toCategoryType
+import com.ataglance.walletglance.data.utils.copyWithCategoryWithSubcategory
+import com.ataglance.walletglance.data.utils.toCategoryType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
