@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.data.categories
 
-import java.util.Locale
+import com.ataglance.walletglance.data.utils.formatWithSpaces
 
 data class CategoriesStatsMapItem(
     val category: Category,
@@ -17,7 +17,7 @@ data class CategoriesStatsMapItem(
             categoryName = category.name,
             categoryIconRes = category.icon.res,
             categoryColor = category.colorWithName.color,
-            totalAmount = getFormattedTotalAmount(),
+            totalAmount = totalAmount.formatWithSpaces(),
             currency = accountCurrency,
             percentage = getPercentage(allCategoriesTotalAmount),
             subcategoriesStatisticsUiState = subcategoriesStatistics?.values
@@ -29,10 +29,6 @@ data class CategoriesStatsMapItem(
                     )
                 }
         )
-    }
-
-    private fun getFormattedTotalAmount(): String {
-        return "%.2f".format(Locale.US, totalAmount)
     }
 
     private fun getPercentage(allCategoriesTotalAmount: Double): Float {

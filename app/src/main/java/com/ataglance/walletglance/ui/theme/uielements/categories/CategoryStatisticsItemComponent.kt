@@ -106,7 +106,7 @@ fun CategoryStatisticsItemComponent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = uiState?.let{ "${it.totalAmount} ${it.currency}" } ?: "---",
+                    text = uiState?.getTotalAmountWithCurrency() ?: "---",
                     color = GlanceTheme.onSurface,
                     fontSize = 18.sp,
                     maxLines = 1,
