@@ -50,6 +50,12 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.settings.ThemeUiState
+import com.ataglance.walletglance.data.utils.currentScreenIs
+import com.ataglance.walletglance.data.utils.fromMainScreen
+import com.ataglance.walletglance.data.utils.getMakeRecordStateAndUnitList
+import com.ataglance.walletglance.data.utils.getMakeTransferState
+import com.ataglance.walletglance.data.utils.needToMoveScreenTowardsLeft
+import com.ataglance.walletglance.data.utils.toCollectionsWithIds
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.ui.theme.animation.screenEnterTransition
 import com.ataglance.walletglance.ui.theme.animation.screenExitTransition
@@ -76,12 +82,6 @@ import com.ataglance.walletglance.ui.theme.uielements.BottomNavBar
 import com.ataglance.walletglance.ui.theme.uielements.SetupProgressTopBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.CustomDateRangeWindow
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDateRangePicker
-import com.ataglance.walletglance.data.utils.currentScreenIs
-import com.ataglance.walletglance.data.utils.fromMainScreen
-import com.ataglance.walletglance.data.utils.getMakeRecordStateAndUnitList
-import com.ataglance.walletglance.data.utils.getMakeTransferState
-import com.ataglance.walletglance.data.utils.needToMoveScreenTowardsLeft
-import com.ataglance.walletglance.data.utils.toCollectionsWithIds
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModelFactory
@@ -414,7 +414,8 @@ fun HomeNavHost(
                         name = defaultCollectionName
                     ),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount,
-                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists
+                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
+                    parentCategoryId = parentCategoryId
                 )
             )
             LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
@@ -433,14 +434,9 @@ fun HomeNavHost(
             LaunchedEffect(dateRangeMenuUiState.dateRangeState.enum, accountsUiState.accountList) {
                 viewModel.clearParentCategory()
             }
-            LaunchedEffect(parentCategoryId) {
-                if (parentCategoryId != 0) {
-                    viewModel.setParentCategory(
-                        widgetsUiState.categoryStatisticsLists.getItemByParentCategoryId(
-                            id = parentCategoryId
-                        )
-                    )
-                }
+            LaunchedEffect(true) {
+                viewModel.setParentCategory()
+                viewModel.clearParentCategoryId()
             }
 
             CategoriesStatisticsScreen(

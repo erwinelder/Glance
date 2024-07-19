@@ -22,8 +22,16 @@ class CategoryStatisticsViewModel(
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
     passedCategoryCollections: CategoryCollectionsWithIds,
     recordsFilteredByDateAndAccount: List<RecordStack>,
-    categoryStatisticsLists: CategoryStatisticsLists
+    categoryStatisticsLists: CategoryStatisticsLists,
+    passedParentCategoryId: Int
 ) : ViewModel() {
+
+    private val _parentCategoryId = MutableStateFlow(passedParentCategoryId.takeIf { it != 0 })
+    val parentCategoryId = _parentCategoryId.asStateFlow()
+
+    fun clearParentCategoryId() {
+        _parentCategoryId.update { null }
+    }
 
     private val _categoryCollections = MutableStateFlow(passedCategoryCollections)
     val categoryCollections = _categoryCollections.asStateFlow()
@@ -41,6 +49,7 @@ class CategoryStatisticsViewModel(
 
 
     private val _defaultCategoryStatisticsLists = MutableStateFlow(categoryStatisticsLists)
+    private val defaultCategoryStatisticsLists = _defaultCategoryStatisticsLists.asStateFlow()
 
     fun setCategoryStatisticsLists(newCategoryStatisticsLists: CategoryStatisticsLists) {
         _defaultCategoryStatisticsLists.update { newCategoryStatisticsLists }
@@ -51,9 +60,18 @@ class CategoryStatisticsViewModel(
         MutableStateFlow<CategoryStatisticsElementUiState?>(null)
     val parentCategoryStatistics = _parentCategoryStatistics.asStateFlow()
 
-    fun setParentCategory(parentCategory: CategoryStatisticsElementUiState?) {
-        if (parentCategory?.subcategoriesStatisticsUiState != null) {
-            _parentCategoryStatistics.update { parentCategory }
+    fun setParentCategory() {
+        parentCategoryId.value
+            ?.let { defaultCategoryStatisticsLists.value.getItemByParentCategoryId(it) }
+            ?.takeIf { it.subcategoriesStatisticsUiState != null }
+            ?.let { parentCategory ->
+                _parentCategoryStatistics.update { parentCategory }
+            }
+    }
+
+    fun setParentCategory(category: CategoryStatisticsElementUiState) {
+        if (category.subcategoriesStatisticsUiState != null) {
+            _parentCategoryStatistics.update { category }
         }
     }
 
@@ -133,7 +151,8 @@ class CategoryStatisticsViewModelFactory(
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
     private val categoryCollections: CategoryCollectionsWithIds,
     private val recordsFilteredByDateAndAccount: List<RecordStack>,
-    private val categoryStatisticsLists: CategoryStatisticsLists
+    private val categoryStatisticsLists: CategoryStatisticsLists,
+    private val parentCategoryId: Int
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -141,7 +160,8 @@ class CategoryStatisticsViewModelFactory(
             categoriesWithSubcategories = categoriesWithSubcategories,
             passedCategoryCollections = categoryCollections,
             recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
-            categoryStatisticsLists = categoryStatisticsLists
+            categoryStatisticsLists = categoryStatisticsLists,
+            passedParentCategoryId = parentCategoryId
         ) as T
     }
 }
