@@ -2,17 +2,22 @@ package com.ataglance.walletglance.ui.viewmodels.records
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.utils.addZeroIfDotIsAtTheBeginning
 import com.ataglance.walletglance.data.utils.copyWithCategoryWithSubcategory
 import com.ataglance.walletglance.data.utils.toCategoryType
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class MakeRecordViewModel(
@@ -61,6 +66,23 @@ class MakeRecordViewModel(
             )
     )
     val recordUnitList: StateFlow<List<MakeRecordUnitUiState>> = _recordUnitList.asStateFlow()
+
+
+    val allowSaving = combine(
+        _recordUnitList, _uiState
+    ) { recordUnitList, uiState ->
+        recordUnitList.none { recordUnit ->
+            recordUnit.amount.isBlank() ||
+                    recordUnit.amount.last() == '.' ||
+                    recordUnit.amount.addZeroIfDotIsAtTheBeginning().toDouble() == 0.0 ||
+                    recordUnit.categoryWithSubcategory == null
+        } && uiState.account != null
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
+
 
     private fun changeAllUnitCategoriesByType(
         type: RecordType,

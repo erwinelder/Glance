@@ -75,7 +75,6 @@ import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldCont
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
 import com.ataglance.walletglance.ui.theme.uielements.records.MakeRecordTypeBar
-import com.ataglance.walletglance.data.utils.addZeroIfDotIsAtTheBeginning
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import java.util.Calendar
 
@@ -95,12 +94,7 @@ fun MakeRecordScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val recordUnitList by viewModel.recordUnitList.collectAsStateWithLifecycle()
-    val savingIsAllowed = recordUnitList.none { recordUnit ->
-        recordUnit.amount.isBlank() ||
-                recordUnit.amount.last() == '.' ||
-                recordUnit.amount.addZeroIfDotIsAtTheBeginning().toDouble() == 0.0 ||
-                recordUnit.categoryWithSubcategory == null
-    } && uiState.account != null
+    val savingIsAllowed by viewModel.allowSaving.collectAsStateWithLifecycle()
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }

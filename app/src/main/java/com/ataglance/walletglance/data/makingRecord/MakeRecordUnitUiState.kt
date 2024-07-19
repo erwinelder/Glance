@@ -1,8 +1,10 @@
 package com.ataglance.walletglance.data.makingRecord
 
+import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.utils.formatWithSpaces
 
+@Stable
 data class MakeRecordUnitUiState(
     val lazyListKey: Int,
     val index: Int,
