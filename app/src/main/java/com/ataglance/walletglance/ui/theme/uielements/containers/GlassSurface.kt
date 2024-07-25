@@ -52,7 +52,7 @@ fun GlassSurface(
                 offsetX = -(5).dp,
                 offsetY = 5.dp,
                 blur = 13.dp,
-                spread = 3.dp,
+                spread = 3.dp
             )
             .innerShadow(
                 shape = RoundedCornerShape(cornerSize),
@@ -60,7 +60,7 @@ fun GlassSurface(
                 offsetX = 5.dp,
                 offsetY = -(5).dp,
                 blur = 13.dp,
-                spread = 3.dp,
+                spread = 3.dp
             )
             .border(
                 2.dp,
