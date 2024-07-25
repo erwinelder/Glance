@@ -1,13 +1,10 @@
 package com.ataglance.walletglance.ui.theme
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,9 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
@@ -29,6 +24,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 val md_theme_light_default_primary = Color(165, 93, 135, 255)
 val md_theme_light_default_onPrimary = Color(0xFFFFFFFF)
@@ -250,58 +246,41 @@ val md_theme_dark_blue_red = Pair(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewColors() {
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = AppTheme.DarkDefault.name,
-            boxWithConstraintsScope = this
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(40.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_dark),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(70.dp),
-                    modifier = Modifier.fillMaxWidth()
+            BarButton(onClick = {}, text = "Apply", active = true)
+//            PrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
+            PrimaryButton(onClick = {}, text = "ApplyApplyApply")
+            PrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
+//            SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
+            SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply")
+            SmallPrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
+            GlassSurface {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.size(300.dp)
                 ) {
-                    BarButton(onClick = {}, text = "Apply", active = true)
-//                PrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
-                    PrimaryButton(onClick = {}, text = "ApplyApplyApply")
-                    PrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
-//                SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
-                    SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply")
-                    SmallPrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
-                    GlassSurface {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.size(300.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                                    .background(
-                                        brush = Brush.linearGradient(
-                                            colors = GlanceTheme.onGlassSurfaceGradient,
-                                            start = Offset(75f, 200f),
-                                            end = Offset(100f, 0f)
-                                        )
-                                    )
-                                    .border(
-                                        1.dp,
-                                        GlanceTheme.onGlassSurfaceBorder,
-                                        RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
-                                    )
-                                    .size(150.dp, 100.dp)
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = GlanceTheme.onGlassSurfaceGradient,
+                                    start = Offset(75f, 200f),
+                                    end = Offset(100f, 0f)
+                                )
                             )
-                        }
-                    }
+                            .border(
+                                1.dp,
+                                GlanceTheme.onGlassSurfaceBorder,
+                                RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
+                            )
+                            .size(150.dp, 100.dp)
+                    )
                 }
             }
         }

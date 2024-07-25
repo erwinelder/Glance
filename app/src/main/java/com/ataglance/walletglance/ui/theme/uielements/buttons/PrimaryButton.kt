@@ -1,17 +1,13 @@
 package com.ataglance.walletglance.ui.theme.uielements.buttons
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -26,20 +22,18 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.Manrope
-import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
 fun PrimaryButton(
@@ -130,23 +124,7 @@ private fun Shadow(enabled: Boolean, enabledColor: Color) {
 @Preview(showSystemUi = true)
 @Composable
 private fun PreviewPrimaryButton() {
-    BoxWithConstraints {
-        WalletGlanceTheme(boxWithConstraintsScope = this, useDeviceTheme = false, lastChosenTheme = AppTheme.LightDefault.name) {
-            Box(
-                contentAlignment = Alignment.BottomCenter,
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_light),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                Box(modifier = Modifier.padding(bottom = 90.dp)) {
-                    PrimaryButton(text = "Save and continue")
-                }
-            }
-        }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        PrimaryButton(text = "Save and continue")
     }
 }

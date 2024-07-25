@@ -1,26 +1,22 @@
 package com.ataglance.walletglance.ui.theme.uielements.containers
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
@@ -36,8 +32,7 @@ fun GlassSurface(
     Box(
         modifier = modifier
             .fillMaxWidth(
-                filledWidth ?:
-                when {
+                filledWidth ?: when {
                     WindowTypeIsCompact -> .9f
                     WindowTypeIsMedium -> .67f
                     else -> .44f
@@ -80,24 +75,9 @@ fun GlassSurface(
 @Preview(showSystemUi = true)
 @Composable
 private fun GlassSurfacePreview() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(R.drawable.main_background_light),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
-        /*AccountCard(
-            account = Account(color = AccountColors.Blue(AppTheme.LightDefault).name.name),
-            appTheme = AppTheme.LightDefault,
-            todayExpenses = 0.0
-        )*/
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
         GlassSurface {
             Box(modifier = Modifier.size(300.dp))
         }
     }
-
 }
