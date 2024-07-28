@@ -18,7 +18,7 @@ interface CategoryCollectionCategoryAssociationDao {
     suspend fun deleteAssociations(associations: List<CategoryCollectionCategoryAssociation>)
 
     @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
-    suspend fun getAllCollectionAndCategoryAssociations():
+    suspend fun getAllCategoryCollectionCategoryAssociations():
             List<CategoryCollectionCategoryAssociation>
 
 }

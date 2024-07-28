@@ -17,7 +17,7 @@ class CategoryCollectionAndCollectionCategoryAssociationRepository(
     {
         val collections = categoryCollectionDao.getAllCollections()
         val collectionCategoryAssociations =
-            categoryCollectionCategoryAssociationDao.getAllCollectionAndCategoryAssociations()
+            categoryCollectionCategoryAssociationDao.getAllCategoryCollectionCategoryAssociations()
         return collections to collectionCategoryAssociations
     }
 
