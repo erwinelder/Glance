@@ -125,6 +125,7 @@ fun AppScreen(
         .collectAsStateWithLifecycle()
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
+    val budgetsList by appViewModel.budgetList.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
 
     var dimBackground by remember { mutableStateOf(false) }

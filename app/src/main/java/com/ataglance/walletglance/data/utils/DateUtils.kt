@@ -5,6 +5,8 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.data.date.DateRangeState
 import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.date.YearMonthDay
+import com.ataglance.walletglance.data.date.YearMonthDayHourMinute
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -253,14 +255,35 @@ fun getTodayDateLong(): Long {
 }
 
 
+fun Long.extractYearMonthDay(): YearMonthDay {
+    val year = (this / 100000000).toInt()
+    val month = (this / 1000000 - year * 100).toInt()
+    val day = (this / 10000 - year * 10000 - month * 100).toInt()
+    return YearMonthDay(year, month, day)
+}
+
+
+fun Long.extractYearMonthDayHourMinute(): YearMonthDayHourMinute {
+    val year = (this / 100000000).toInt()
+    val month = (this / 1000000 - year * 100).toInt()
+    val day = (this / 10000 - year * 10000 - month * 100).toInt()
+    val hour = (this / 100 - year * 1000000 - month * 10000 - day * 100).toInt()
+    val minute = (this - year * 100000000 - month * 1000000 - day * 10000 - hour * 100).toInt()
+    return YearMonthDayHourMinute(year, month, day, hour, minute)
+}
+
+
 fun getNewDateByRecordLongDate(recordDateLong: Long): DateTimeState {
     val calendar = Calendar.getInstance()
-    val year = (recordDateLong / 100000000).toInt()
-    val month = (recordDateLong / 1000000 - year * 100).toInt()
-    val day = (recordDateLong / 10000 - year * 10000 - month * 100).toInt()
-    val hour = (recordDateLong / 100 - year * 1000000 - month * 10000 - day * 100).toInt()
-    val minute = (recordDateLong - year * 100000000 - month * 1000000 - day * 10000 - hour * 100).toInt()
-    calendar.set(year, month - 1, day, hour, minute)
+    val dateSeparated = recordDateLong.extractYearMonthDayHourMinute()
+
+    calendar.set(
+        dateSeparated.year,
+        dateSeparated.month - 1,
+        dateSeparated.day,
+        dateSeparated.hour,
+        dateSeparated.minute
+    )
 
     return DateTimeState(
         calendar = calendar,
@@ -308,12 +331,14 @@ fun convertDateLongToDayMonthYear(
     context: Context,
     includeYear: Boolean = true
 ): String {
-    val year = (date / 100000000).toInt()
-    val month = (date / 1000000 - year * 100).toInt()
-    val monthString = getMonthStringByMonthValue(month, context)
-    val day = date / 10000 - year * 10000 - month * 100
+    val dateSeparated = date.extractYearMonthDay()
+    val monthString = getMonthStringByMonthValue(dateSeparated.month, context)
 
-    return if (includeYear) "$day $monthString $year" else "$day $monthString"
+    return if (includeYear) {
+        "${dateSeparated.day} $monthString ${dateSeparated.year}"
+    } else {
+        "${dateSeparated.day} $monthString"
+    }
 }
 
 

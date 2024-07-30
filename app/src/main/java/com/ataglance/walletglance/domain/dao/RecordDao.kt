@@ -16,6 +16,9 @@ interface RecordDao {
     @Delete
     suspend fun deleteRecords(recordList: List<Record>)
 
+    @Query("DELETE FROM Record WHERE id IN (:idList)")
+    suspend fun deleteRecordsByIds(idList: List<Int>)
+
     @Query("DELETE FROM Record WHERE recordNum IN (:recordNumbers)")
     suspend fun deleteRecordsByRecordNumbers(recordNumbers: List<Int>)
 

@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.utils.getOtherFrom
-import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -190,23 +190,23 @@ data class MakeTransferUiState(
     val finalRate: String = "1",
     val dateTimeState: DateTimeState = DateTimeState(),
     val recordNum: Int? = null,
-    val idFrom: Int = 0,
-    val idTo: Int = 0
+    val recordIdFrom: Int = 0,
+    val recordIdTo: Int = 0
 ) {
 
     fun toMadeTransferState(lastRecordNum: Int): MadeTransferState? {
         if (fromAccount == null || toAccount == null) return null
 
         return MadeTransferState(
-            idFrom = idFrom,
-            idTo = idTo,
+            recordIdFrom = recordIdFrom,
+            recordIdTo = recordIdTo,
             recordStatus = recordStatus,
             fromAccount = fromAccount,
             toAccount = toAccount,
             startAmount = startAmount.toDouble(),
             finalAmount = finalAmount.toDouble(),
             dateTimeState = dateTimeState,
-            recordNum = recordNum ?: (lastRecordNum + 1)
+            recordNum = recordNum ?: lastRecordNum
         )
     }
 

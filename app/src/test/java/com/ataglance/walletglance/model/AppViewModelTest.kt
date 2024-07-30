@@ -10,9 +10,11 @@ import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
+import com.ataglance.walletglance.domain.repositories.RecordAndAccountAndBudgetRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
@@ -35,12 +37,17 @@ class AppViewModelTest {
             settingsRepository = Mockito.mock(SettingsRepository::class.java),
             accountRepository = Mockito.mock(AccountRepository::class.java),
             categoryRepository = Mockito.mock(CategoryRepository::class.java),
-            categoryCollectionAndCollectionCategoryAssociationRepository =
-                Mockito.mock(
-                    CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
-                ),
+            categoryCollectionAndCollectionCategoryAssociationRepository = Mockito.mock(
+                CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
+            ),
             recordRepository = Mockito.mock(RecordRepository::class.java),
             recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
+            recordAndAccountAndBudgetRepository = Mockito.mock(
+                RecordAndAccountAndBudgetRepository::class.java
+            ),
+            budgetAndBudgetAccountAssociationRepository = Mockito.mock(
+                BudgetAndBudgetAccountAssociationRepository::class.java
+            ),
             generalRepository = Mockito.mock(GeneralRepository::class.java)
         )
     }
@@ -64,8 +71,8 @@ class AppViewModelTest {
         finalAmount: Double,
     ): MadeTransferState {
         return MadeTransferState(
-            idFrom = fromAccount.id,
-            idTo = toAccount.id,
+            recordIdFrom = fromAccount.id,
+            recordIdTo = toAccount.id,
             recordStatus = MakeRecordStatus.Edit,
             fromAccount = fromAccount,
             toAccount = toAccount,

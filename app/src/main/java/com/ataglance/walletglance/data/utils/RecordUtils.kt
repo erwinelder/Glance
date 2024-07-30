@@ -1,19 +1,19 @@
 package com.ataglance.walletglance.data.utils
 
 import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.accounts.AccountsUiState
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.data.accounts.AccountsUiState
-import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
+import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import java.util.Locale
 
@@ -88,6 +88,16 @@ fun List<Record>.toRecordStackList(
 
 fun List<RecordStack>.findByOrderNum(recordNum: Int): RecordStack? {
     return this.find { it.recordNum == recordNum }
+}
+
+
+fun List<Record>.getIdsThatAreNotInList(list: List<Record>): List<Int> {
+    return this
+        .mapNotNull { record ->
+            record.id.takeIf { id ->
+                list.find { it.id == id } == null
+            }
+        }
 }
 
 
@@ -235,7 +245,7 @@ fun List<RecordStack>.getMakeTransferState(
 }
 
 
-fun List<RecordStack>.getOutAndInTransfersByOneRecordNum(
+fun List<RecordStack>.getOutAndInTransfersByRecordNum(
     recordNum: Int
 ): Pair<RecordStack, RecordStack>? {
     val first = this.findByOrderNum(recordNum) ?: return null
@@ -263,8 +273,8 @@ private fun Pair<RecordStack, RecordStack>.toMakeTransferUiState(
         startRate = "%.2f".format(Locale.US, startAndFinalRate.first),
         finalRate = "%.2f".format(Locale.US, startAndFinalRate.second),
         dateTimeState = getNewDateByRecordLongDate(this.first.date),
-        idFrom = this.first.stack.firstOrNull()?.id ?: 0,
-        idTo = this.second.stack.firstOrNull()?.id ?: 0
+        recordIdFrom = this.first.stack.firstOrNull()?.id ?: 0,
+        recordIdTo = this.second.stack.firstOrNull()?.id ?: 0
     )
 }
 
@@ -280,4 +290,16 @@ fun List<MakeRecordUnitUiState>.getTotalAmount(): Double {
     return this.fold(0.0) { total, recordUnit ->
         total + (recordUnit.amount.toDouble() * recordUnit.quantity.ifBlank { "1" }.toInt())
     }
+}
+
+
+fun List<MakeRecordUnitUiState>.getTotalAmountByCategory(categoryId: Int): Double {
+    return this
+        .filter {
+            it.categoryWithSubcategory?.subcategory?.id == categoryId ||
+                    it.categoryWithSubcategory?.category?.id == categoryId
+        }
+        .fold(0.0) { total, recordUnit ->
+            total + (recordUnit.getTotalAmount() ?: 0.0)
+        }
 }

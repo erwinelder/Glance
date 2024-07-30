@@ -27,7 +27,7 @@ fun List<AccountEntity>.toAccountList(): List<Account> {
 }
 
 
-fun List<Account>.toAccountEntityList(): List<AccountEntity> {
+fun List<Account>.toEntityList(): List<AccountEntity> {
     return this.map { it.toAccountEntity() }
 }
 
@@ -67,6 +67,19 @@ fun List<Account>.getIdsThatAreNotInList(list: List<AccountEntity>): List<Int> {
     return this
         .filter { list.findById(it.id) == null }
         .map { it.id }
+}
+
+
+fun List<Account>.mergeWith(list: List<Account>): List<Account> {
+    val mergedList = this.toMutableList()
+
+    list.forEach { accountFromSecondaryList ->
+        accountFromSecondaryList
+            .takeIf { mergedList.findById(it.id) == null }
+            ?.let { mergedList.add(it) }
+    }
+
+    return mergedList
 }
 
 

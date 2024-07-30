@@ -15,22 +15,24 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.utils.filterByDateAndAccount
+import com.ataglance.walletglance.data.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.data.utils.toEntityList
+import com.ataglance.walletglance.data.utils.toLongWithTime
 import com.ataglance.walletglance.domain.entities.AccountEntity
 import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
+import com.ataglance.walletglance.domain.repositories.RecordAndAccountAndBudgetRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
 import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.data.utils.filterByDateAndAccount
-import com.ataglance.walletglance.data.utils.getFormattedDateWithTime
-import com.ataglance.walletglance.data.utils.toAccountEntityList
-import com.ataglance.walletglance.data.utils.toLongWithTime
 import com.ataglance.walletglance.ui.viewmodels.AppViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
@@ -60,6 +62,10 @@ class WalletGlanceInstrumentedTest {
             CategoryCollectionAndCollectionCategoryAssociationRepository
     private lateinit var mockRecordRepository: RecordRepository
     private lateinit var mockRecordAndAccountRepository: RecordAndAccountRepository
+    private lateinit var mockRecordAndAccountAndBudgetRepository:
+            RecordAndAccountAndBudgetRepository
+    private lateinit var budgetAndBudgetAccountAssociationRepository:
+            BudgetAndBudgetAccountAssociationRepository
     private lateinit var mockGeneralRepository: GeneralRepository
 
     private lateinit var mockSettingsRepository: SettingsRepository
@@ -80,6 +86,8 @@ class WalletGlanceInstrumentedTest {
         setupRecordRepository()
         mockRecordAndAccountRepository = mockk()
         setupRecordAndAccountRepository()
+        mockRecordAndAccountAndBudgetRepository = mockk()
+        budgetAndBudgetAccountAssociationRepository = mockk()
         mockGeneralRepository = mockk()
 
         appViewModel = AppViewModel(
@@ -89,6 +97,8 @@ class WalletGlanceInstrumentedTest {
                 categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = mockRecordRepository,
             recordAndAccountRepository = mockRecordAndAccountRepository,
+            recordAndAccountAndBudgetRepository = mockRecordAndAccountAndBudgetRepository,
+            budgetAndBudgetAccountAssociationRepository = budgetAndBudgetAccountAssociationRepository,
             generalRepository = mockGeneralRepository,
             settingsRepository = mockSettingsRepository
         )
@@ -185,7 +195,7 @@ class WalletGlanceInstrumentedTest {
 
     private fun setupRecordAndAccountRepository() {
         coEvery {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(any(), any())
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())
         } returns Unit
     }
 
@@ -263,8 +273,8 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveRecord(viewModel.uiState.value, viewModel.recordUnitList.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList.toAccountEntityList()
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
+                expectedRecordList, expectedAccountList.toEntityList()
             )
         }
 
@@ -356,8 +366,8 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveRecord(viewModel.uiState.value, viewModel.recordUnitList.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList.toAccountEntityList()
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
+                expectedRecordList, expectedAccountList.toEntityList()
             )
         }
 
@@ -420,7 +430,7 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveRecord(viewModel.uiState.value, viewModel.recordUnitList.value)
 
         coVerify(exactly = 0) {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(any(), any())
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())
         }
 
     }
@@ -445,8 +455,8 @@ class WalletGlanceInstrumentedTest {
             toAccount = accountsUiState.accountList[1],
             startAmount = "100",
             finalAmount = "200",
-            idFrom = 0,
-            idTo = 0
+            recordIdFrom = 0,
+            recordIdTo = 0
         )
         val viewModel = MakeTransferViewModel(
             accountList = accountsUiState.accountList,
@@ -491,8 +501,8 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveTransfer(viewModel.uiState.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList.toAccountEntityList()
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
+                expectedRecordList, expectedAccountList.toEntityList()
             )
         }
 
@@ -545,8 +555,8 @@ class WalletGlanceInstrumentedTest {
             toAccount = accountsUiState.accountList[1],
             startAmount = "100",
             finalAmount = "200",
-            idFrom = 0,
-            idTo = 0
+            recordIdFrom = 0,
+            recordIdTo = 0
         )
         val viewModel = MakeTransferViewModel(
             accountList = accountsUiState.accountList,
@@ -591,8 +601,8 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveTransfer(viewModel.uiState.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                expectedRecordList, expectedAccountList.toAccountEntityList()
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
+                expectedRecordList, expectedAccountList.toEntityList()
             )
         }
 
@@ -639,8 +649,8 @@ class WalletGlanceInstrumentedTest {
             toAccount = null,
             startAmount = "100",
             finalAmount = "200",
-            idFrom = 0,
-            idTo = 0
+            recordIdFrom = 0,
+            recordIdTo = 0
         )
         val viewModel = MakeTransferViewModel(
             accountList = accountsUiState.accountList,
@@ -650,7 +660,7 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveTransfer(viewModel.uiState.value)
 
         coVerify(exactly = 0) {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(any(), any())
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())
         }
 
     }

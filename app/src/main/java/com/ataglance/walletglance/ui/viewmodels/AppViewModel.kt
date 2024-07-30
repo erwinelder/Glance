@@ -10,6 +10,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.accounts.AccountsUiState
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.app.AppUiSettings
+import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
@@ -23,29 +24,21 @@ import com.ataglance.walletglance.data.date.DateRangeState
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.data.settings.ThemeUiState
-import com.ataglance.walletglance.data.widgets.GreetingsWidgetUiState
-import com.ataglance.walletglance.data.widgets.WidgetsUiState
-import com.ataglance.walletglance.domain.entities.AccountEntity
-import com.ataglance.walletglance.domain.entities.CategoryEntity
-import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.domain.repositories.AccountRepository
-import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.domain.repositories.CategoryRepository
-import com.ataglance.walletglance.domain.repositories.GeneralRepository
-import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
-import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
-import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
+import com.ataglance.walletglance.data.utils.addAmountWhereAccountIdAndCategoryIdAre
+import com.ataglance.walletglance.data.utils.addAmountsOfRecordUnitListWithAccountId
+import com.ataglance.walletglance.data.utils.breakOnBudgetsAndAssociations
 import com.ataglance.walletglance.data.utils.breakOnCollectionsAndAssociations
 import com.ataglance.walletglance.data.utils.checkOrderNumbers
 import com.ataglance.walletglance.data.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.data.utils.filterByDateAndAccount
 import com.ataglance.walletglance.data.utils.findById
 import com.ataglance.walletglance.data.utils.findByOrderNum
+import com.ataglance.walletglance.data.utils.findCategoryById
 import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.data.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.data.utils.getCalendarEndLong
@@ -54,20 +47,39 @@ import com.ataglance.walletglance.data.utils.getDateRangeState
 import com.ataglance.walletglance.data.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.data.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.data.utils.getIdsThatAreNotInList
-import com.ataglance.walletglance.data.utils.getOutAndInTransfersByOneRecordNum
+import com.ataglance.walletglance.data.utils.getOutAndInTransfersByRecordNum
 import com.ataglance.walletglance.data.utils.getTodayDateLong
 import com.ataglance.walletglance.data.utils.getTotalAmount
 import com.ataglance.walletglance.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.data.utils.inverse
+import com.ataglance.walletglance.data.utils.mergeWith
+import com.ataglance.walletglance.data.utils.resetIfNeeded
 import com.ataglance.walletglance.data.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
-import com.ataglance.walletglance.data.utils.toAccountEntityList
+import com.ataglance.walletglance.data.utils.subtractAmountWhereAccountIdAndCategoryIdAre
+import com.ataglance.walletglance.data.utils.subtractAmountsOfRecordStack
 import com.ataglance.walletglance.data.utils.toAccountList
 import com.ataglance.walletglance.data.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.data.utils.toCategoryEntityList
+import com.ataglance.walletglance.data.utils.toEntityList
 import com.ataglance.walletglance.data.utils.toRecordStackList
 import com.ataglance.walletglance.data.utils.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
+import com.ataglance.walletglance.data.widgets.GreetingsWidgetUiState
+import com.ataglance.walletglance.data.widgets.WidgetsUiState
+import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.domain.entities.BudgetEntity
+import com.ataglance.walletglance.domain.entities.CategoryEntity
+import com.ataglance.walletglance.domain.entities.Record
+import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
+import com.ataglance.walletglance.domain.repositories.CategoryRepository
+import com.ataglance.walletglance.domain.repositories.GeneralRepository
+import com.ataglance.walletglance.domain.repositories.RecordAndAccountAndBudgetRepository
+import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
+import com.ataglance.walletglance.domain.repositories.RecordRepository
+import com.ataglance.walletglance.domain.repositories.SettingsRepository
+import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -88,6 +100,8 @@ class AppViewModel(
         CategoryCollectionAndCollectionCategoryAssociationRepository,
     val recordRepository: RecordRepository,
     val recordAndAccountRepository: RecordAndAccountRepository,
+    val recordAndAccountAndBudgetRepository: RecordAndAccountAndBudgetRepository,
+    val budgetAndBudgetAccountAssociationRepository: BudgetAndBudgetAccountAssociationRepository,
     val generalRepository: GeneralRepository
 ) : ViewModel() {
 
@@ -361,7 +375,7 @@ class AppViewModel(
             viewModelScope.launch {
                 recordAndAccountRepository
                     .deleteAndUpdateAccountsAndDeleteRecordsByAccountIdAndConvertTransfersToRecords(
-                        accountIdToDelete = listOfIdsToDelete,
+                        accountsIdsToDelete = listOfIdsToDelete,
                         accountListToUpsert = accountsList
                     )
             }
@@ -467,48 +481,56 @@ class AppViewModel(
     }
 
 
-    private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> =
-        MutableStateFlow(
-            DateRangeMenuUiState(
-                startCalendarDateMillis = DateRangeEnum.ThisMonth.getCalendarStartLong(),
-                endCalendarDateMillis = DateRangeEnum.ThisMonth.getCalendarEndLong(),
-                dateRangeState = DateRangeEnum.ThisMonth.getDateRangeState()
-            )
-        )
-    val dateRangeMenuUiState: StateFlow<DateRangeMenuUiState> = _dateRangeMenuUiState.asStateFlow()
+    private val _budgetList: MutableStateFlow<List<Budget>> = MutableStateFlow(emptyList())
+    val budgetList: StateFlow<List<Budget>> = _budgetList.asStateFlow()
 
-    fun changeDateRange(dateRangeEnum: DateRangeEnum) {
-        _dateRangeMenuUiState.update {
-            DateRangeMenuUiState(
-                startCalendarDateMillis = dateRangeEnum
-                    .getCalendarStartLong(dateRangeMenuUiState.value.dateRangeState),
-                endCalendarDateMillis = dateRangeEnum
-                    .getCalendarEndLong(dateRangeMenuUiState.value.dateRangeState),
-                dateRangeState = dateRangeEnum
-                    .getDateRangeState(dateRangeMenuUiState.value.dateRangeState)
-            )
+    private fun fetchBudgetsFromDb() {
+        viewModelScope.launch {
+            val (budgetEntityList, associationList) = budgetAndBudgetAccountAssociationRepository
+                .getBudgetsAndBudgetAccountAssociations()
+            val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
+
+            val budgetList = budgetEntityList.mapNotNull { budgetEntity ->
+                budgetEntity.toBudget(
+                    category = categoryWithSubcategoriesList
+                        .findCategoryById(budgetEntity.categoryId),
+                    budgetAccountsIds = associationList
+                        .filter { it.budgetId == budgetEntity.id }
+                        .map { it.accountId }
+                )
+            }
+            val resetBudgetList = budgetList.resetIfNeeded()
+
+            if (resetBudgetList.isEmpty()) {
+                _budgetList.update { resetBudgetList }
+            } else {
+                saveBudgetsToDb(resetBudgetList)
+                fetchBudgetsFromDb()
+            }
+
         }
-        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
     }
 
-    fun changeDateRangeToCustom(pastDateMillis: Long?, futureDateMillis: Long?) {
-        if (pastDateMillis == null || futureDateMillis == null) {
-            return
-        }
+    suspend fun saveBudgetsToDb(budgetListToSave: List<Budget>) {
+        val (newBudgets, newAssociations) = budgetListToSave
+            .breakOnBudgetsAndAssociations()
+        val (originalCollections, originalAssociations) = budgetList.value
+            .breakOnBudgetsAndAssociations()
 
-        _dateRangeMenuUiState.update {
-            DateRangeMenuUiState(
-                startCalendarDateMillis = pastDateMillis,
-                endCalendarDateMillis = futureDateMillis,
-                dateRangeState = DateRangeState(
-                    enum = DateRangeEnum.Custom,
-                    fromPast = convertCalendarMillisToLongWithoutSpecificTime(pastDateMillis),
-                    toFuture =
-                        convertCalendarMillisToLongWithoutSpecificTime(futureDateMillis) + 2359
+        val budgetsIdsToDelete = originalCollections.getIdsThatAreNotInList(newBudgets)
+        val associationsToDelete = originalAssociations
+            .getAssociationsThatAreNotInList(newAssociations)
+
+        viewModelScope.launch {
+            budgetAndBudgetAccountAssociationRepository
+                .deleteAndUpsertBudgetsAndDeleteAndUpsertAssociations(
+                    budgetsIdsToDelete = budgetsIdsToDelete,
+                    budgetListToUpsert = newBudgets,
+                    associationsToDelete = associationsToDelete,
+                    associationsToUpsert = newAssociations
                 )
-            )
+            fetchBudgetsFromDb()
         }
-        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
     }
 
 
@@ -552,18 +574,22 @@ class AppViewModel(
         uiState.account ?: return
 
         val recordList = uiState.toRecordList(unitList)
-        val updatedAccountList = mergeAccountLists(
-            listOf(
-                uiState.account.cloneAndAddToOrSubtractFromBalance(
-                    amount = unitList.getTotalAmount(),
-                    recordType = uiState.type
-                )
+        val updatedAccounts = listOf(
+            uiState.account.cloneAndAddToOrSubtractFromBalance(
+                amount = unitList.getTotalAmount(), recordType = uiState.type
             )
         )
+            .mergeWith(accountsUiState.value.accountList)
+            .toEntityList()
+        val updatedBudgets = budgetList.value.addAmountsOfRecordUnitListWithAccountId(
+            accountId = uiState.account.id,
+            recordUnitList = unitList,
+            recordDate = uiState.dateTimeState.dateLong
+        ).toEntityList()
 
         viewModelScope.launch {
-            recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                recordList, updatedAccountList.toAccountEntityList()
+            recordAndAccountAndBudgetRepository.upsertRecordsAndUpsertAccountsAnsUpsertBudgets(
+                recordList, updatedAccounts, updatedBudgets
             )
         }
     }
@@ -572,151 +598,89 @@ class AppViewModel(
         uiState: MakeRecordUiState,
         unitList: List<MakeRecordUnitUiState>
     ) {
+        uiState.account ?: return
+
         val currentRecordStack = recordStackList.value.findByOrderNum(uiState.recordNum) ?: return
+        val updatedAccounts = getUpdatedAccountsAfterRecordEditing(
+            uiState = uiState,
+            recordStack = currentRecordStack,
+            newTotalAmount = unitList.getTotalAmount()
+        )
+            ?.mergeWith(accountsUiState.value.accountList)
+            ?.toEntityList()
+            ?: return
+        val updatedBudgets = getUpdatedBudgetsAfterRecordEditing(
+            prevRecordStack = currentRecordStack,
+            newRecordAccountId = uiState.account.id,
+            newRecordUnitList = unitList,
+            recordDate = uiState.dateTimeState.dateLong
+        ).toEntityList()
 
         if (unitList.size == currentRecordStack.stack.size) {
-            updateEditedRecord(
-                uiState = uiState,
-                newRecordList = uiState.toRecordListWithOldIds(unitList, currentRecordStack),
-                recordStack = currentRecordStack,
-                thisRecordTotalAmount = unitList.getTotalAmount()
-            )
-        } else {
-            deleteRecordAndSaveNewOne(
-                uiState = uiState,
-                currentRecordStack = currentRecordStack,
-                currentRecordList = currentRecordStack.toRecordList(),
-                newRecordList = uiState.toRecordList(unitList),
-                thisRecordTotalAmount = unitList.getTotalAmount()
-            )
-        }
-    }
-
-    private suspend fun updateEditedRecord(
-        uiState: MakeRecordUiState,
-        newRecordList: List<Record>,
-        recordStack: RecordStack,
-        thisRecordTotalAmount: Double
-    ) {
-        uiState.account ?: return
-
-        if (uiState.account.id == recordStack.account.id) {
-            val updatedAccountList = mergeAccountLists(
-                listOf(
-                    uiState.account.cloneAndReapplyAmountToBalance(
-                        prevAmount = recordStack.totalAmount,
-                        newAmount = thisRecordTotalAmount,
-                        recordType = uiState.type
-                    )
-                )
-            )
             viewModelScope.launch {
-                recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                    newRecordList, updatedAccountList.toAccountEntityList()
+                recordAndAccountAndBudgetRepository.upsertRecordsAndUpsertAccountsAnsUpsertBudgets(
+                    recordList = uiState.toRecordListWithOldIds(unitList, currentRecordStack),
+                    accountList = updatedAccounts,
+                    budgetList = updatedBudgets
                 )
             }
         } else {
-            accountsUiState.value.accountList.findById(recordStack.account.id)?.let {
-                updateEditedRecordDifferentAccounts(
-                    recordList = newRecordList,
-                    prevAccount = it,
-                    newAccount = uiState.account,
+            viewModelScope.launch {
+                recordAndAccountAndBudgetRepository
+                    .deleteAndUpsertRecordsAndUpsertAccountsAndUpsertBudgets(
+                        recordListToDelete = currentRecordStack.toRecordList(),
+                        recordListToUpsert = uiState.toRecordList(unitList),
+                        accountList = updatedAccounts,
+                        budgetList = updatedBudgets
+                    )
+            }
+        }
+    }
+
+    private fun getUpdatedAccountsAfterRecordEditing(
+        uiState: MakeRecordUiState,
+        recordStack: RecordStack,
+        newTotalAmount: Double
+    ): List<Account>? {
+        uiState.account ?: return null
+
+        return if (uiState.account.id == recordStack.account.id) {
+            listOf(
+                uiState.account.cloneAndReapplyAmountToBalance(
                     prevAmount = recordStack.totalAmount,
-                    newAmount = thisRecordTotalAmount,
+                    newAmount = newTotalAmount,
                     recordType = uiState.type
                 )
-            }
-        }
-    }
-
-    private suspend fun updateEditedRecordDifferentAccounts(
-        recordList: List<Record>,
-        prevAccount: Account,
-        newAccount: Account,
-        prevAmount: Double,
-        newAmount: Double,
-        recordType: RecordType
-    ) {
-        val updatedAccountList = mergeAccountLists(
-            (prevAccount to newAccount).returnAmountToFirstBalanceAndUpdateSecondBalance(
-                prevAmount = prevAmount,
-                newAmount = newAmount,
-                recordType = recordType
-            ).toList()
-        )
-        viewModelScope.launch {
-            recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                recordList, updatedAccountList.toAccountEntityList()
             )
-        }
-    }
-
-    private suspend fun deleteRecordAndSaveNewOne(
-        uiState: MakeRecordUiState,
-        currentRecordStack: RecordStack,
-        currentRecordList: List<Record>,
-        newRecordList: List<Record>,
-        thisRecordTotalAmount: Double
-    ) {
-        uiState.account ?: return
-
-        if (uiState.account.id == currentRecordStack.account.id) {
-            val updatedAccountList = mergeAccountLists(
-                listOf(
-                    uiState.account.cloneAndReapplyAmountToBalance(
-                        prevAmount = currentRecordStack.totalAmount,
-                        newAmount = thisRecordTotalAmount,
-                        recordType = uiState.type
-                    )
-                )
-            )
-            viewModelScope.launch {
-                recordAndAccountRepository.deleteAndUpsertRecordsAndUpdateAccounts(
-                    currentRecordList, newRecordList, updatedAccountList.toAccountEntityList()
-                )
-            }
         } else {
-            accountsUiState.value.accountList
-                .findById(currentRecordStack.account.id)
-                ?.let { prevAccount ->
-                    deleteRecordAndSaveNewOneDifferentAccounts(
-                        currentRecordList = currentRecordList,
-                        newRecordList = newRecordList,
-                        prevAccount = prevAccount,
-                        newAccount = uiState.account,
-                        prevAmount = currentRecordStack.totalAmount,
-                        newAmount = thisRecordTotalAmount,
-                        recordType = uiState.type,
-                    )
-                }
+            accountsUiState.value.getAccountById(recordStack.account.id)?.let { prevAccount ->
+                (prevAccount to uiState.account).returnAmountToFirstBalanceAndUpdateSecondBalance(
+                    prevAmount = recordStack.totalAmount,
+                    newAmount = newTotalAmount,
+                    recordType = uiState.type
+                ).toList()
+            }
         }
     }
 
-    private suspend fun deleteRecordAndSaveNewOneDifferentAccounts(
-        currentRecordList: List<Record>,
-        newRecordList: List<Record>,
-        prevAccount: Account,
-        newAccount: Account,
-        prevAmount: Double,
-        newAmount: Double,
-        recordType: RecordType
-    ) {
-        val updatedAccountList = mergeAccountLists(
-            Pair(prevAccount, newAccount).returnAmountToFirstBalanceAndUpdateSecondBalance(
-                prevAmount = prevAmount,
-                newAmount = newAmount,
-                recordType = recordType
-            ).toList()
+    private fun getUpdatedBudgetsAfterRecordEditing(
+        prevRecordStack: RecordStack,
+        newRecordAccountId: Int,
+        newRecordUnitList: List<MakeRecordUnitUiState>,
+        recordDate: Long
+    ): List<Budget> {
+        val prevUsedBudgets = budgetList.value.subtractAmountsOfRecordStack(
+            recordStack = prevRecordStack,
+            recordDate = recordDate
         )
-        viewModelScope.launch {
-            viewModelScope.launch {
-                recordAndAccountRepository.deleteAndUpsertRecordsAndUpdateAccounts(
-                    recordListToDelete = currentRecordList,
-                    recordListToUpsert = newRecordList,
-                    accountList = updatedAccountList.toAccountEntityList()
-                )
-            }
-        }
+        val newUsedBudgets = prevUsedBudgets
+            .mergeWith(budgetList.value)
+            .addAmountsOfRecordUnitListWithAccountId(
+                accountId = newRecordAccountId,
+                recordUnitList = newRecordUnitList,
+                recordDate = recordDate
+            )
+        return newUsedBudgets.mergeWith(prevUsedBudgets)
     }
 
     suspend fun repeatRecord(
@@ -733,9 +697,7 @@ class AppViewModel(
     }
 
     suspend fun deleteRecord(recordNum: Int) {
-
         val recordStack = recordStackList.value.findByOrderNum(recordNum) ?: return
-        val recordList = recordStack.toRecordList()
 
         val account = accountsUiState.value.accountList
             .findById(recordStack.account.id)
@@ -744,74 +706,91 @@ class AppViewModel(
                 recordType = recordStack.type.inverse()
             )
             ?: return
-        val updatedAccountList = mergeAccountLists(listOf(account))
+        val updatedAccounts = listOf(account)
+            .mergeWith(accountsUiState.value.accountList)
+            .toEntityList()
+        val updatedBudgets = budgetList.value
+            .subtractAmountsOfRecordStack(recordStack = recordStack, recordDate = recordStack.date)
+            .toEntityList()
 
         viewModelScope.launch {
-            recordAndAccountRepository.deleteRecordsAndUpdateAccounts(
-                recordList, updatedAccountList.toAccountEntityList()
+            recordAndAccountAndBudgetRepository.deleteRecordsAndUpsertAccountsAndUpsertBudgets(
+                recordList = recordStack.toRecordList(),
+                accountList = updatedAccounts,
+                budgetList = updatedBudgets
             )
         }
     }
 
     suspend fun saveTransfer(uiState: MakeTransferUiState) {
         if (uiState.fromAccount == uiState.toAccount) return
-        val madeTransferState =
-            uiState.toMadeTransferState(appUiSettings.value.lastRecordNum) ?: return
+        val madeTransferState = uiState.toMadeTransferState(appUiSettings.value.nextRecordNum())
+            ?: return
 
-        val recordListAndUpdatedAccountList = if (
+        val (recordList, updatedAccounts, updatedBudgets) = if (
             madeTransferState.recordStatus == MakeRecordStatus.Create
         ) {
-            getRecordListAndUpdatedAccountListAfterNewTransfer(madeTransferState)
+            getRecordsAndUpdatedAccountsAndBudgetsAfterNewTransfer(madeTransferState)
         } else {
-            getRecordListAndUpdatedAccountListAfterEditedTransfer(madeTransferState)
+            getRecordsAndUpdatedAccountsAndBudgetsAfterEditedTransfer(madeTransferState) ?: return
         }
-
-        recordListAndUpdatedAccountList ?: return
 
         viewModelScope.launch {
-            recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                recordList = recordListAndUpdatedAccountList.first,
-                accountList = recordListAndUpdatedAccountList.second
+            recordAndAccountAndBudgetRepository.upsertRecordsAndUpsertAccountsAnsUpsertBudgets(
+                recordList = recordList,
+                accountList = updatedAccounts,
+                budgetList = updatedBudgets
             )
         }
     }
 
-    private fun getRecordListAndUpdatedAccountListAfterNewTransfer(
+    private fun getRecordsAndUpdatedAccountsAndBudgetsAfterNewTransfer(
         state: MadeTransferState
-    ): Pair<List<Record>, List<AccountEntity>> {
+    ): Triple<List<Record>, List<AccountEntity>, List<BudgetEntity>> {
         val recordList = state.toRecordsPair().toList()
-        val updatedAccountList = mergeAccountLists(
-            listOf(
-                state.fromAccount.cloneAndSubtractFromBalance(state.startAmount),
-                state.toAccount.cloneAndAddToBalance(state.finalAmount)
-            )
+        val updatedAccountList = listOf(
+            state.fromAccount.cloneAndSubtractFromBalance(state.startAmount),
+            state.toAccount.cloneAndAddToBalance(state.finalAmount)
         )
+            .mergeWith(accountsUiState.value.accountList)
+            .toEntityList()
+        val updatedBudgets = budgetList.value
+            .addAmountWhereAccountIdAndCategoryIdAre(
+                amount = state.startAmount,
+                accountId = state.fromAccount.id,
+                categoryIds = listOf(12, 77),
+                recordDate = state.dateTimeState.dateLong
+            )
+            .toEntityList()
 
-        return recordList to updatedAccountList.toAccountEntityList()
+        return Triple(recordList, updatedAccountList, updatedBudgets)
     }
 
-    private fun getRecordListAndUpdatedAccountListAfterEditedTransfer(
+    private fun getRecordsAndUpdatedAccountsAndBudgetsAfterEditedTransfer(
         state: MadeTransferState
-    ): Pair<List<Record>, List<AccountEntity>>? {
-        val firstRecordStack = recordStackList.value.findByOrderNum(state.recordNum) ?: return null
-        val recordNumDifference = if (firstRecordStack.isOutTransfer()) 1 else -1
-        val secondRecordStack = recordStackList.value
-            .findByOrderNum(state.recordNum + recordNumDifference) ?: return null
+    ): Triple<List<Record>, List<AccountEntity>, List<BudgetEntity>>? {
+        val (currRecordStackFrom, currRecordStackTo) = recordStackList.value
+            .getOutAndInTransfersByRecordNum(state.recordNum) ?: return null
 
-        val recordList = state.copy(
-            recordNum = state.recordNum - (if (firstRecordStack.isOutTransfer()) 0 else 1)
-        ).toRecordsPair().toList()
-        val updatedAccountList = getUpdatedAccountsAfterEditedTransfer(
+        val recordList = state
+            .copy(recordNum = state.recordNum -
+                    (if (state.recordNum == currRecordStackFrom.recordNum) 0 else 1))
+            .toRecordsPair()
+            .toList()
+        val updatedAccounts = getUpdatedAccountsAfterEditedTransfer(
             uiState = state,
-            currRecordStackFrom = if (firstRecordStack.isOutTransfer()) firstRecordStack
-                else secondRecordStack,
-            currRecordStackTo = if (firstRecordStack.isOutTransfer()) secondRecordStack
-                else firstRecordStack
-        )?.let {
-            mergeAccountLists(it)
-        }
+            currRecordStackFrom = currRecordStackFrom,
+            currRecordStackTo = currRecordStackTo
+        )
+            ?.mergeWith(accountsUiState.value.accountList)
+            ?.toEntityList()
+            ?: return null
+        val updatedBudgets = getUpdatedBudgetsAfterEditedTransfer(
+            prevRecordStackFrom = currRecordStackFrom,
+            state = state
+        ).toEntityList()
 
-        return updatedAccountList?.let { recordList to it.toAccountEntityList() }
+        return Triple(recordList, updatedAccounts, updatedBudgets)
     }
 
     fun getUpdatedAccountsAfterEditedTransfer(
@@ -819,7 +798,6 @@ class AppViewModel(
         currRecordStackFrom: RecordStack,
         currRecordStackTo: RecordStack
     ): List<Account>? {
-
         val prevFromAccount = accountsUiState.value.accountList
             .findById(currRecordStackFrom.account.id) ?: return null
         val prevToAccount = accountsUiState.value.accountList
@@ -829,15 +807,15 @@ class AppViewModel(
             prevFromAccount.cloneAndAddToBalance(currRecordStackFrom.totalAmount),
             prevToAccount.cloneAndSubtractFromBalance(currRecordStackTo.totalAmount)
         )
-        val updatedAccounts = applyAmountsToAccountAfterTransfer(
+        val updatedAccounts = applyAmountsToAccountsAfterTransfer(
             state = uiState,
             prevAccounts = updatedPreviousAccounts
         )
 
-        return updatedAccounts?.let { mergeAccountLists(it, updatedPreviousAccounts) }
+        return updatedAccounts?.mergeWith(updatedPreviousAccounts)
     }
 
-    private fun applyAmountsToAccountAfterTransfer(
+    private fun applyAmountsToAccountsAfterTransfer(
         state: MadeTransferState,
         prevAccounts: List<Account>
     ): List<Account>? {
@@ -858,72 +836,130 @@ class AppViewModel(
         return updatedAccounts
     }
 
-    private fun mergeAccountLists(
-        primaryList: List<Account>,
-        secondaryList: List<Account> = accountsUiState.value.accountList
-    ): List<Account> {
-        val mergedList = mutableListOf<Account>()
-
-        primaryList.forEach { accountFromPrimaryList ->
-            mergedList.add(accountFromPrimaryList)
-        }
-        secondaryList.forEach { accountFromSecondaryList ->
-            if (primaryList.findById(accountFromSecondaryList.id) == null) {
-                mergedList.add(accountFromSecondaryList)
-            }
-        }
-
-        return mergedList
+    private fun getUpdatedBudgetsAfterEditedTransfer(
+        prevRecordStackFrom: RecordStack,
+        state: MadeTransferState
+    ): List<Budget> {
+        val prevUsedBudgets = budgetList.value.addAmountWhereAccountIdAndCategoryIdAre(
+            amount = prevRecordStackFrom.totalAmount,
+            accountId = prevRecordStackFrom.account.id,
+            categoryIds = listOf(12, 77),
+            recordDate = state.dateTimeState.dateLong
+        )
+        val newUsedBudgets = prevUsedBudgets
+            .mergeWith(budgetList.value)
+            .subtractAmountWhereAccountIdAndCategoryIdAre(
+                amount = state.startAmount,
+                accountId = state.fromAccount.id,
+                categoryIds = listOf(12, 77),
+                recordDate = state.dateTimeState.dateLong
+            )
+        return newUsedBudgets.mergeWith(prevUsedBudgets)
     }
 
     suspend fun repeatTransfer(uiState: MakeTransferUiState) {
         if (uiState.fromAccount == uiState.toAccount) return
 
-        val madeTransferState = uiState.toMadeTransferState(appUiSettings.value.lastRecordNum)
-            ?.copy(
-                recordNum = appUiSettings.value.nextRecordNum(),
-                dateTimeState = DateTimeState(),
-                idFrom = 0,
-                idTo = 0
-            ) ?: return
+        val madeTransferState = uiState
+            .copy(
+                recordIdFrom = 0,
+                recordIdTo = 0,
+                recordNum = null,
+                dateTimeState = DateTimeState()
+            )
+            .toMadeTransferState(appUiSettings.value.nextRecordNum())
+            ?: return
 
-        val recordListAndUpdatedAccountList =
-            getRecordListAndUpdatedAccountListAfterNewTransfer(madeTransferState)
+        val (recordList, updatedAccounts, updatedBudgets) =
+            getRecordsAndUpdatedAccountsAndBudgetsAfterNewTransfer(madeTransferState)
 
         viewModelScope.launch {
-            recordAndAccountRepository.upsertRecordsAndUpdateAccounts(
-                recordList = recordListAndUpdatedAccountList.first,
-                accountList = recordListAndUpdatedAccountList.second
+            recordAndAccountAndBudgetRepository.upsertRecordsAndUpsertAccountsAnsUpsertBudgets(
+                recordList = recordList,
+                accountList = updatedAccounts,
+                budgetList = updatedBudgets
             )
         }
     }
 
     suspend fun deleteTransfer(recordNum: Int) {
+        val (outTransfer, inTransfer) = recordStackList.value
+            .getOutAndInTransfersByRecordNum(recordNum) ?: return
 
-        val outAndInTransfers = recordStackList.value
-            .getOutAndInTransfersByOneRecordNum(recordNum) ?: return
-
-        val recordList = outAndInTransfers.first.toRecordList() +
-                outAndInTransfers.second.toRecordList()
+        val recordList = outTransfer.toRecordList() + inTransfer.toRecordList()
 
         val prevAccounts = Pair(
-            accountsUiState.value.accountList.findById(outAndInTransfers.first.account.id) ?: return,
-            accountsUiState.value.accountList.findById(outAndInTransfers.second.account.id) ?: return
+            accountsUiState.value.accountList.findById(outTransfer.account.id) ?: return,
+            accountsUiState.value.accountList.findById(inTransfer.account.id) ?: return
         )
 
         val updatedAccountList = listOf(
-            prevAccounts.first.cloneAndAddToBalance(outAndInTransfers.first.totalAmount),
-            prevAccounts.second.cloneAndSubtractFromBalance(outAndInTransfers.second.totalAmount)
-        ).let {
-            mergeAccountLists(it)
-        }
+            prevAccounts.first.cloneAndAddToBalance(outTransfer.totalAmount),
+            prevAccounts.second.cloneAndSubtractFromBalance(inTransfer.totalAmount)
+        )
+            .mergeWith(accountsUiState.value.accountList)
+            .toEntityList()
+        val updatedBudgets = budgetList.value
+            .subtractAmountWhereAccountIdAndCategoryIdAre(
+                amount = outTransfer.totalAmount,
+                accountId = outTransfer.account.id,
+                categoryIds = listOf(12, 77),
+                recordDate = outTransfer.date
+            )
+            .toEntityList()
 
         viewModelScope.launch {
-            recordAndAccountRepository.deleteRecordsAndUpdateAccounts(
-                recordList, updatedAccountList.toAccountEntityList()
+            recordAndAccountAndBudgetRepository.deleteRecordsAndUpsertAccountsAndUpsertBudgets(
+                recordList = recordList,
+                accountList = updatedAccountList,
+                budgetList = updatedBudgets
             )
         }
+    }
 
+
+    private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> =
+        MutableStateFlow(
+            DateRangeMenuUiState(
+                startCalendarDateMillis = DateRangeEnum.ThisMonth.getCalendarStartLong(),
+                endCalendarDateMillis = DateRangeEnum.ThisMonth.getCalendarEndLong(),
+                dateRangeState = DateRangeEnum.ThisMonth.getDateRangeState()
+            )
+        )
+    val dateRangeMenuUiState: StateFlow<DateRangeMenuUiState> = _dateRangeMenuUiState.asStateFlow()
+
+    fun changeDateRange(dateRangeEnum: DateRangeEnum) {
+        _dateRangeMenuUiState.update {
+            DateRangeMenuUiState(
+                startCalendarDateMillis = dateRangeEnum
+                    .getCalendarStartLong(dateRangeMenuUiState.value.dateRangeState),
+                endCalendarDateMillis = dateRangeEnum
+                    .getCalendarEndLong(dateRangeMenuUiState.value.dateRangeState),
+                dateRangeState = dateRangeEnum
+                    .getDateRangeState(dateRangeMenuUiState.value.dateRangeState)
+            )
+        }
+        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
+    }
+
+    fun changeDateRangeToCustom(pastDateMillis: Long?, futureDateMillis: Long?) {
+        if (pastDateMillis == null || futureDateMillis == null) {
+            return
+        }
+
+        _dateRangeMenuUiState.update {
+            DateRangeMenuUiState(
+                startCalendarDateMillis = pastDateMillis,
+                endCalendarDateMillis = futureDateMillis,
+                dateRangeState = DateRangeState(
+                    enum = DateRangeEnum.Custom,
+                    fromPast = convertCalendarMillisToLongWithoutSpecificTime(pastDateMillis),
+                    toFuture =
+                    convertCalendarMillisToLongWithoutSpecificTime(futureDateMillis) + 2359
+                )
+            )
+        }
+        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
     }
 
 
@@ -981,6 +1017,7 @@ class AppViewModel(
         fetchLastRecordNumFromDb()
         fetchCategoryCollectionsFromDb()
         fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.dateRangeState)
+        fetchBudgetsFromDb()
     }
 
 }

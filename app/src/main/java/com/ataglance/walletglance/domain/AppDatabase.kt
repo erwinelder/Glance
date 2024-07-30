@@ -5,11 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ataglance.walletglance.domain.dao.AccountDao
+import com.ataglance.walletglance.domain.dao.BudgetAccountAssociationDao
+import com.ataglance.walletglance.domain.dao.BudgetDao
 import com.ataglance.walletglance.domain.dao.CategoryCollectionCategoryAssociationDao
 import com.ataglance.walletglance.domain.dao.CategoryCollectionDao
 import com.ataglance.walletglance.domain.dao.CategoryDao
 import com.ataglance.walletglance.domain.dao.RecordDao
 import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.domain.entities.BudgetAccountAssociation
+import com.ataglance.walletglance.domain.entities.BudgetEntity
 import com.ataglance.walletglance.domain.entities.CategoryCollection
 import com.ataglance.walletglance.domain.entities.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.domain.entities.CategoryEntity
@@ -21,9 +25,11 @@ import com.ataglance.walletglance.domain.entities.Record
         CategoryEntity::class,
         CategoryCollection::class,
         CategoryCollectionCategoryAssociation::class,
-        Record::class
+        Record::class,
+        BudgetEntity::class,
+        BudgetAccountAssociation::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -33,6 +39,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val categoryCollectionDao: CategoryCollectionDao
     abstract val categoryCollectionCategoryAssociationDao: CategoryCollectionCategoryAssociationDao
     abstract val recordDao: RecordDao
+    abstract val budgetDao: BudgetDao
+    abstract val budgetAccountAssociationDao: BudgetAccountAssociationDao
 
     companion object {
         @Volatile
@@ -45,7 +53,8 @@ abstract class AppDatabase : RoomDatabase() {
                 )
 
                     .addMigrations(
-                        MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6
+                        MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
+                        MIGRATION_6_7
                     )
 
                     /*.addCallback(object : Callback() {

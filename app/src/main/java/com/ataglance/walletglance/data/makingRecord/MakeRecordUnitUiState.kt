@@ -14,6 +14,7 @@ data class MakeRecordUnitUiState(
     val quantity: String = "",
     val collapsed: Boolean = true
 ) {
+
     fun getFormattedAmount(): String {
         return amount
             .takeIf { it.isNotBlank() && !(it.length == 1 && it.firstOrNull() == '.') }
@@ -21,4 +22,11 @@ data class MakeRecordUnitUiState(
             ?.formatWithSpaces()
             ?: return "------"
     }
+
+    fun getTotalAmount(): Double? {
+        return amount.toDoubleOrNull()?.let { amountDouble ->
+            amountDouble * (quantity.toIntOrNull() ?: 1)
+        }
+    }
+
 }

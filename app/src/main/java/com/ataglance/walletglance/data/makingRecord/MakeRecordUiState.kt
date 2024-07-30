@@ -29,7 +29,7 @@ data class MakeRecordUiState(
                         amount = if (unit.quantity.isNotBlank()) {
                             "%.2f".format(
                                 Locale.US,
-                                unit.amount.toDouble() * unit.quantity.toInt()
+                                unit.getTotalAmount() ?: 0.0
                             ).toDouble()
                         } else {
                             unit.amount.toDouble()
@@ -57,14 +57,14 @@ data class MakeRecordUiState(
             if (account != null && unit.categoryWithSubcategory != null) {
                 recordList.add(
                     Record(
-                        id = recordStack.stack[unit.index].id,
+                        id = recordStack.stack.getOrNull(unit.index)?.id ?: 0,
                         recordNum = recordStack.recordNum,
                         date = dateTimeState.dateLong,
                         type = if (type == RecordType.Expense) '-' else '+',
                         amount = if (unit.quantity.isNotBlank()) {
                             "%.2f".format(
                                 Locale.US,
-                                unit.amount.toDouble() * unit.quantity.toInt()
+                                unit.getTotalAmount() ?: 0.0
                             ).toDouble()
                         } else {
                             unit.amount.toDouble()

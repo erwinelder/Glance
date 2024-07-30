@@ -12,7 +12,7 @@ class RecordAndAccountRepository(
 ) {
 
     @Transaction
-    suspend fun upsertRecordsAndUpdateAccounts(
+    suspend fun upsertRecordsAndUpsertAccounts(
         recordList: List<Record>,
         accountList: List<AccountEntity>
     ) {
@@ -21,33 +21,13 @@ class RecordAndAccountRepository(
     }
 
     @Transaction
-    suspend fun deleteAndUpsertRecordsAndUpdateAccounts(
-        recordListToDelete: List<Record>,
-        recordListToUpsert: List<Record>,
-        accountList: List<AccountEntity>
-    ) {
-        recordDao.deleteRecords(recordListToDelete)
-        recordDao.upsertRecords(recordListToUpsert)
-        accountDao.upsertAccounts(accountList)
-    }
-
-    @Transaction
-    suspend fun deleteRecordsAndUpdateAccounts(
-        recordList: List<Record>,
-        accountList: List<AccountEntity>
-    ) {
-        recordDao.deleteRecords(recordList)
-        accountDao.upsertAccounts(accountList)
-    }
-
-    @Transaction
     suspend fun deleteAndUpdateAccountsAndDeleteRecordsByAccountIdAndConvertTransfersToRecords(
-        accountIdToDelete: List<Int>,
+        accountsIdsToDelete: List<Int>,
         accountListToUpsert: List<AccountEntity>
     ) {
-        accountDao.deleteAccountsByIds(accountIdToDelete)
+        accountDao.deleteAccountsByIds(accountsIdsToDelete)
         accountDao.upsertAccounts(accountListToUpsert)
-        recordDao.convertTransfersToRecords(accountIdToDelete.map { it.toString() })
+        recordDao.convertTransfersToRecords(accountsIdsToDelete.map { it.toString() })
     }
 
 }

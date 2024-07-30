@@ -10,10 +10,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.domain.AppDatabase
 import com.ataglance.walletglance.domain.repositories.AccountRepository
+import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
+import com.ataglance.walletglance.domain.repositories.RecordAndAccountAndBudgetRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
@@ -45,6 +47,15 @@ class WalletGlanceApplication: Application() {
     private val recordAndAccountRepository by lazy {
         RecordAndAccountRepository(db.recordDao, db.accountDao)
     }
+    private val recordAndAccountAndBudgetRepository by lazy {
+        RecordAndAccountAndBudgetRepository(db.recordDao, db.accountDao, db.budgetDao)
+    }
+    private val budgetAndBudgetAccountAssociationRepository by lazy {
+        BudgetAndBudgetAccountAssociationRepository(
+            budgetDao = db.budgetDao,
+            budgetAccountAssociationDao = db.budgetAccountAssociationDao
+        )
+    }
     private val generalRepository by lazy {
         GeneralRepository(
             settingsRepository = settingsRepository,
@@ -54,16 +65,21 @@ class WalletGlanceApplication: Application() {
         )
     }
 
-    val appViewModel by lazy { AppViewModel(
-        settingsRepository = settingsRepository,
-        accountRepository = accountRepository,
-        categoryRepository = categoryRepository,
-        categoryCollectionAndCollectionCategoryAssociationRepository =
-            categoryCollectionAndCollectionCategoryAssociationRepository,
-        recordRepository = recordRepository,
-        recordAndAccountRepository = recordAndAccountRepository,
-        generalRepository = generalRepository
-    ) }
+    val appViewModel by lazy {
+        AppViewModel(
+            settingsRepository = settingsRepository,
+            accountRepository = accountRepository,
+            categoryRepository = categoryRepository,
+            categoryCollectionAndCollectionCategoryAssociationRepository =
+                categoryCollectionAndCollectionCategoryAssociationRepository,
+            recordRepository = recordRepository,
+            recordAndAccountRepository = recordAndAccountRepository,
+            recordAndAccountAndBudgetRepository = recordAndAccountAndBudgetRepository,
+            budgetAndBudgetAccountAssociationRepository =
+                budgetAndBudgetAccountAssociationRepository,
+            generalRepository = generalRepository
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()
