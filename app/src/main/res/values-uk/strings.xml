@@ -36,6 +36,7 @@
 
     <!-- Settings categories -->
     <string name="accounts">Рахунки</string>
+    <string name="budgets">Бюджети</string>
     <string name="categories">Категорії</string>
     <string name="category_collections">Колекції категорій</string>
     <string name="appearance">Зовнішній вигляд</string>

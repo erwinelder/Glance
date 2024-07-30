@@ -37,6 +37,7 @@
 
     <!-- Settings categories -->
     <string name="accounts">Cuentas</string>
+    <string name="budgets">Presupuestos</string>
     <string name="categories">Categorías</string>
     <string name="category_collections">Colecciones de categorías</string>
     <string name="appearance">Apariencia</string>

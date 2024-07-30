@@ -36,6 +36,7 @@
 
     <!-- Settings categories -->
     <string name="accounts">Účty</string>
+    <string name="budgets">Rozpočty</string>
     <string name="categories">Kategorie</string>
     <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
