@@ -60,6 +60,7 @@ import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.ui.theme.animation.screenEnterTransition
 import com.ataglance.walletglance.ui.theme.animation.screenExitTransition
 import com.ataglance.walletglance.ui.theme.navigation.screens.AccountsSettingsScreens
+import com.ataglance.walletglance.ui.theme.navigation.screens.BudgetsSettingsScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.CategoriesSettingsScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
@@ -681,6 +682,12 @@ fun NavGraphBuilder.settingsGraph(
             appUiSettings = appUiSettings,
             accountList = accountList
         )
+        budgetsGraph(
+            navController = navController,
+            scaffoldPadding = scaffoldPadding,
+            appViewModel = appViewModel,
+            appUiSettings = appUiSettings
+        )
         categoriesGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
@@ -825,6 +832,24 @@ fun NavGraphBuilder.accountsGraph(
                     navController.popBackStack()
                 }
             )
+        }
+    }
+}
+
+fun NavGraphBuilder.budgetsGraph(
+    navController: NavHostController,
+    scaffoldPadding: PaddingValues,
+    appViewModel: AppViewModel,
+    appUiSettings: AppUiSettings
+) {
+    navigation<SettingsScreens.Budgets>(
+        startDestination = BudgetsSettingsScreens.EditBudgets
+    ) {
+        composable<BudgetsSettingsScreens.EditBudgets> { backStack ->
+
+        }
+        composable<BudgetsSettingsScreens.EditBudget> { backStack ->
+
         }
     }
 }
