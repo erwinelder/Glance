@@ -1,10 +1,12 @@
 package com.ataglance.walletglance.domain.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import com.ataglance.walletglance.domain.entities.BudgetAccountAssociation
 
+@Dao
 interface BudgetAccountAssociationDao {
 
     @Upsert

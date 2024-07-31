@@ -1,9 +1,11 @@
 package com.ataglance.walletglance.domain.dao
 
+import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.ataglance.walletglance.domain.entities.BudgetEntity
 
+@Dao
 interface BudgetDao {
 
     @Upsert
