@@ -14,6 +14,9 @@ sealed interface SettingsScreens {
     data object Accounts : SettingsScreens
 
     @Serializable
+    data object Budgets : SettingsScreens
+
+    @Serializable
     data object Categories : SettingsScreens
 
     @Serializable

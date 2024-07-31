@@ -25,6 +25,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
@@ -38,6 +39,7 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
 fun SettingsHomeScreen(
@@ -103,6 +105,9 @@ fun SettingsHomeScreen(
                 SettingPlate(category = settingsCategories.categories) {
                     onNavigateToScreen(SettingsScreens.Categories)
                 }
+                SettingPlate(category = settingsCategories.budgets) {
+                    onNavigateToScreen(SettingsScreens.Budgets)
+                }
                 SettingPlate(category = settingsCategories.accounts) {
                     onNavigateToScreen(SettingsScreens.Accounts)
                 }
@@ -121,6 +126,11 @@ fun SettingsHomeScreen(
                 item {
                     SettingPlate(category = settingsCategories.accounts) {
                         onNavigateToScreen(SettingsScreens.Accounts)
+                    }
+                }
+                item {
+                    SettingPlate(category = settingsCategories.budgets) {
+                        onNavigateToScreen(SettingsScreens.Budgets)
                     }
                 }
                 item {
@@ -197,5 +207,20 @@ fun SettingPlate(
                     .size(30.dp)
             )
         }
+    }
+}
+
+
+@Preview
+@Composable
+private fun SettingsHomeScreenPreview() {
+    val appTheme = AppTheme.LightDefault
+
+    PreviewContainer(appTheme = appTheme) {
+        SettingsHomeScreen(
+            scaffoldPadding = PaddingValues(0.dp),
+            appTheme = appTheme,
+            onNavigateToScreen = {}
+        )
     }
 }
