@@ -24,6 +24,7 @@
     <string name="add_category">Agregar categoría</string>
     <string name="add_subcategory">Agregar subcategoría</string>
     <string name="add_collection">Agregar colección</string>
+    <string name="add_budget">Agregar presupuesto</string>
     <string name="save_record">Guardar registro</string>
     <string name="make_transfer">Hacer transferencia</string>
     <string name="repeat">Repetir</string>
