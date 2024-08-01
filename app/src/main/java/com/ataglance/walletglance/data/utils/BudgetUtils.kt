@@ -162,8 +162,8 @@ fun List<Budget>.resetIfNeeded(): List<Budget> {
     val currentDate = getTodayDateLong()
 
     return this.mapNotNull { budget ->
-        budget.takeIf { it.getNextResetDate() <= currentDate }?.copy(
-            lastResetDate = currentDate
-        )
+        budget.takeIf {
+            it.getNextResetDate()?.let { date -> date <= currentDate } == true
+        }?.copy(lastResetDate = currentDate)
     }
 }

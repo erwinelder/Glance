@@ -6,8 +6,8 @@ import com.ataglance.walletglance.domain.entities.BudgetEntity
 
 data class Budget(
     val id: Int,
-    val usedAmount: Double,
     val amountLimit: Double,
+    val usedAmount: Double,
     val usedPercentage: Float,
     val category: Category?,
     val name: String,
@@ -50,13 +50,14 @@ data class Budget(
         return this.copy(usedAmount = usedAmount - amount)
     }
 
-    fun getNextResetDate(): Long {
+    fun getNextResetDate(): Long? {
         return when (repeatingPeriod) {
+            BudgetRepeatingPeriod.OneTime -> null
             BudgetRepeatingPeriod.Daily -> lastResetDate.extractYearMonthDay().addDays(1)
             BudgetRepeatingPeriod.Weekly -> lastResetDate.extractYearMonthDay().addDays(7)
             BudgetRepeatingPeriod.Monthly -> lastResetDate.extractYearMonthDay().addMonths(1)
             BudgetRepeatingPeriod.Yearly -> lastResetDate.extractYearMonthDay().addYears(1)
-        }.concatenate()
+        }?.concatenate()
     }
 
 }
