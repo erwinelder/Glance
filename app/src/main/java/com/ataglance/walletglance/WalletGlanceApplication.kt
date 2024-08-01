@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.domain.AppDatabase
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.domain.repositories.BudgetRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
@@ -50,6 +51,9 @@ class WalletGlanceApplication: Application() {
     private val recordAndAccountAndBudgetRepository by lazy {
         RecordAndAccountAndBudgetRepository(db.recordDao, db.accountDao, db.budgetDao)
     }
+    private val budgetRepository by lazy {
+        BudgetRepository(db.budgetDao)
+    }
     private val budgetAndBudgetAccountAssociationRepository by lazy {
         BudgetAndBudgetAccountAssociationRepository(
             budgetDao = db.budgetDao,
@@ -75,6 +79,7 @@ class WalletGlanceApplication: Application() {
             recordRepository = recordRepository,
             recordAndAccountRepository = recordAndAccountRepository,
             recordAndAccountAndBudgetRepository = recordAndAccountAndBudgetRepository,
+            budgetRepository = budgetRepository,
             budgetAndBudgetAccountAssociationRepository =
                 budgetAndBudgetAccountAssociationRepository,
             generalRepository = generalRepository

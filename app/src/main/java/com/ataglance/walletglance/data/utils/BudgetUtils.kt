@@ -2,6 +2,7 @@ package com.ataglance.walletglance.data.utils
 
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetRepeatingPeriod
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.domain.entities.BudgetAccountAssociation
@@ -21,6 +22,22 @@ fun getRepeatingPeriodByString(periodValue: String): BudgetRepeatingPeriod? {
 
 fun List<Budget>.toEntityList(): List<BudgetEntity> {
     return this.map { it.toBudgetEntity() }
+}
+
+
+fun List<BudgetEntity>.toBudgetList(
+    categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
+    associationList: List<BudgetAccountAssociation>
+): List<Budget> {
+    return this.mapNotNull { budgetEntity ->
+        budgetEntity.toBudget(
+            category = categoryWithSubcategoriesList
+                .findCategoryById(budgetEntity.categoryId),
+            budgetAccountsIds = associationList
+                .filter { it.budgetId == budgetEntity.id }
+                .map { it.accountId }
+        )
+    }
 }
 
 
@@ -158,7 +175,14 @@ fun List<Budget>.mergeWith(list: List<Budget>): List<Budget> {
 }
 
 
-fun List<Budget>.resetIfNeeded(): List<Budget> {
+fun List<Budget>.replaceById(budgetToReplaceWith: Budget): List<Budget> {
+    return this.map { budget ->
+        budget.takeUnless { it.id == budgetToReplaceWith.id } ?: budgetToReplaceWith
+    }
+}
+
+
+fun List<BudgetEntity>.resetIfNeeded(): List<BudgetEntity> {
     val currentDate = getTodayDateLong()
 
     return this.mapNotNull { budget ->

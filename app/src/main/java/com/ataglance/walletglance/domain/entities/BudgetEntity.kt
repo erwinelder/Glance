@@ -5,7 +5,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.data.budgets.Budget
+import com.ataglance.walletglance.data.budgets.BudgetRepeatingPeriod
 import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.utils.extractYearMonthDay
 import com.ataglance.walletglance.data.utils.getRepeatingPeriodByString
 
 @Entity(
@@ -45,6 +47,18 @@ data class BudgetEntity(
             lastResetDate = lastResetDate,
             linkedAccountsIds = budgetAccountsIds
         )
+    }
+
+    fun getNextResetDate(): Long? {
+        val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
+
+        return when (repeatingPeriodEnum) {
+            BudgetRepeatingPeriod.OneTime -> null
+            BudgetRepeatingPeriod.Daily -> lastResetDate.extractYearMonthDay().addDays(1)
+            BudgetRepeatingPeriod.Weekly -> lastResetDate.extractYearMonthDay().addDays(7)
+            BudgetRepeatingPeriod.Monthly -> lastResetDate.extractYearMonthDay().addMonths(1)
+            BudgetRepeatingPeriod.Yearly -> lastResetDate.extractYearMonthDay().addYears(1)
+        }?.concatenate()
     }
 
 }

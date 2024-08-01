@@ -41,6 +41,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.accounts.AccountsUiState
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.app.AppUiSettings
+import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
@@ -74,6 +75,7 @@ import com.ataglance.walletglance.ui.theme.screens.settings.SetupStartScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.CurrencyPickerScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.EditAccountScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.EditAccountsScreen
+import com.ataglance.walletglance.ui.theme.screens.settings.budgets.EditBudgetScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditCategoryScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditSubcategoryListScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.SetupCategoriesScreen
@@ -89,6 +91,9 @@ import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.budgets.EditBudgetViewModel
+import com.ataglance.walletglance.ui.viewmodels.budgets.EditBudgetsViewModel
+import com.ataglance.walletglance.ui.viewmodels.budgets.EditBudgetsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModel
 import com.ataglance.walletglance.ui.viewmodels.categories.CategoryStatisticsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.categories.EditCategoriesViewModel
@@ -126,7 +131,7 @@ fun AppScreen(
         .collectAsStateWithLifecycle()
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
-    val budgetsList by appViewModel.budgetList.collectAsStateWithLifecycle()
+    val budgetList by appViewModel.budgetList.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
 
     var dimBackground by remember { mutableStateOf(false) }
@@ -199,6 +204,7 @@ fun AppScreen(
                 categoryCollectionsUiState = categoryCollectionsUiState,
                 dateRangeMenuUiState = dateRangeMenuUiState,
                 recordStackList = recordStackList,
+                budgetList = budgetList,
                 widgetsUiState = widgetsUiState,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
                 onCustomDateRangeButtonClick = {
@@ -285,6 +291,7 @@ fun HomeNavHost(
     categoryCollectionsUiState: CategoryCollectionsWithIds,
     dateRangeMenuUiState: DateRangeMenuUiState,
     recordStackList: List<RecordStack>,
+    budgetList: List<Budget>,
     widgetsUiState: WidgetsUiState,
     openCustomDateRangeWindow: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
@@ -587,7 +594,8 @@ fun HomeNavHost(
             themeUiState = themeUiState,
             accountList = accountsUiState.accountList,
             categoriesWithSubcategories = categoriesWithSubcategories,
-            categoryCollectionsUiState = categoryCollectionsUiState
+            categoryCollectionsUiState = categoryCollectionsUiState,
+            budgetList = budgetList
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()
@@ -611,7 +619,8 @@ fun NavGraphBuilder.settingsGraph(
     themeUiState: ThemeUiState,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsUiState: CategoryCollectionsWithIds
+    categoryCollectionsUiState: CategoryCollectionsWithIds,
+    budgetList: List<Budget>
 ) {
     navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
         composable<SettingsScreens.Start> {
@@ -686,7 +695,8 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings
+            appUiSettings = appUiSettings,
+            budgetList = budgetList
         )
         categoriesGraph(
             navController = navController,
@@ -840,13 +850,40 @@ fun NavGraphBuilder.budgetsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings
+    appUiSettings: AppUiSettings,
+    budgetList: List<Budget>
 ) {
     navigation<SettingsScreens.Budgets>(
         startDestination = BudgetsSettingsScreens.EditBudgets
     ) {
         composable<BudgetsSettingsScreens.EditBudgets> { backStack ->
+            val editBudgetsViewModel = backStack.sharedViewModel<EditBudgetsViewModel>(
+                navController = navController,
+                factory = EditBudgetsViewModelFactory(budgetList = budgetList)
+            )
+            val editBudgetViewModel = backStack.sharedViewModel<EditBudgetViewModel>(
+                navController = navController
+            )
 
+            val budgetListState by editBudgetsViewModel.budgets.collectAsStateWithLifecycle()
+            val coroutineScope = rememberCoroutineScope()
+
+            EditBudgetScreen(
+                scaffoldPadding = scaffoldPadding,
+                appTheme = appUiSettings.appTheme,
+                budgetList = budgetListState,
+                onNavigateToEditBudgetScreen = { budget: Budget? ->
+                    editBudgetViewModel.applyBudget(budget)
+                    navController.navigate(BudgetsSettingsScreens.EditBudget)
+                },
+                onSaveBudgetsButton = {
+                    coroutineScope.launch {
+                        appViewModel.saveBudgetsToDb(
+                            budgets = editBudgetsViewModel.getBudgetList()
+                        )
+                    }
+                }
+            )
         }
         composable<BudgetsSettingsScreens.EditBudget> { backStack ->
 

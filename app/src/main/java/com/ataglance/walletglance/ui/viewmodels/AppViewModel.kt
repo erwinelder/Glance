@@ -38,7 +38,6 @@ import com.ataglance.walletglance.data.utils.convertCalendarMillisToLongWithoutS
 import com.ataglance.walletglance.data.utils.filterByDateAndAccount
 import com.ataglance.walletglance.data.utils.findById
 import com.ataglance.walletglance.data.utils.findByOrderNum
-import com.ataglance.walletglance.data.utils.findCategoryById
 import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.data.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.data.utils.getCalendarEndLong
@@ -58,6 +57,7 @@ import com.ataglance.walletglance.data.utils.returnAmountToFirstBalanceAndUpdate
 import com.ataglance.walletglance.data.utils.subtractAmountWhereAccountIdAndCategoryIdAre
 import com.ataglance.walletglance.data.utils.subtractAmountsOfRecordStack
 import com.ataglance.walletglance.data.utils.toAccountList
+import com.ataglance.walletglance.data.utils.toBudgetList
 import com.ataglance.walletglance.data.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.data.utils.toCategoryEntityList
 import com.ataglance.walletglance.data.utils.toEntityList
@@ -71,6 +71,7 @@ import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.domain.entities.Record
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.domain.repositories.BudgetRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
@@ -101,6 +102,7 @@ class AppViewModel(
     val recordRepository: RecordRepository,
     val recordAndAccountRepository: RecordAndAccountRepository,
     val recordAndAccountAndBudgetRepository: RecordAndAccountAndBudgetRepository,
+    val budgetRepository: BudgetRepository,
     val budgetAndBudgetAccountAssociationRepository: BudgetAndBudgetAccountAssociationRepository,
     val generalRepository: GeneralRepository
 ) : ViewModel() {
@@ -490,30 +492,24 @@ class AppViewModel(
                 .getBudgetsAndBudgetAccountAssociations()
             val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
 
-            val budgetList = budgetEntityList.mapNotNull { budgetEntity ->
-                budgetEntity.toBudget(
-                    category = categoryWithSubcategoriesList
-                        .findCategoryById(budgetEntity.categoryId),
-                    budgetAccountsIds = associationList
-                        .filter { it.budgetId == budgetEntity.id }
-                        .map { it.accountId }
-                )
-            }
-            val resetBudgetList = budgetList.resetIfNeeded()
+            val resetBudgetEntityList = budgetEntityList.resetIfNeeded()
 
-            if (resetBudgetList.isEmpty()) {
-                _budgetList.update { resetBudgetList }
+            if (resetBudgetEntityList.isEmpty()) {
+                val budgetList = budgetEntityList.toBudgetList(
+                    categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+                    associationList = associationList
+                )
+                _budgetList.update { budgetList }
             } else {
-                saveBudgetsToDb(resetBudgetList)
+                saveBudgetsEntitiesToDb(resetBudgetEntityList)
                 fetchBudgetsFromDb()
             }
 
         }
     }
 
-    suspend fun saveBudgetsToDb(budgetListToSave: List<Budget>) {
-        val (newBudgets, newAssociations) = budgetListToSave
-            .breakOnBudgetsAndAssociations()
+    suspend fun saveBudgetsToDb(budgets: List<Budget>) {
+        val (newBudgets, newAssociations) = budgets.breakOnBudgetsAndAssociations()
         val (originalCollections, originalAssociations) = budgetList.value
             .breakOnBudgetsAndAssociations()
 
@@ -529,6 +525,13 @@ class AppViewModel(
                     associationsToDelete = associationsToDelete,
                     associationsToUpsert = newAssociations
                 )
+            fetchBudgetsFromDb()
+        }
+    }
+
+    private suspend fun saveBudgetsEntitiesToDb(budgetEntityList: List<BudgetEntity>) {
+        viewModelScope.launch {
+            budgetRepository.upsertBudgets(budgetList = budgetEntityList)
             fetchBudgetsFromDb()
         }
     }

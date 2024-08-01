@@ -2,18 +2,19 @@ package com.ataglance.walletglance.data.budgets
 
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.utils.getTodayDateLong
 
 @Stable
 data class EditingBudgetUiState(
-    val id: Int,
-    val usedAmount: String,
-    val amountLimit: String,
-    val usedPercentage: Float,
-    val category: Category?,
-    val name: String,
-    val repeatingPeriod: BudgetRepeatingPeriod,
-    val lastResetDay: Long,
-    val linkedAccountsIds: List<Int>
+    val id: Int = 0,
+    val usedAmount: String = "",
+    val amountLimit: String = "",
+    val usedPercentage: Float = 0f,
+    val category: Category? = null,
+    val name: String = "",
+    val repeatingPeriod: BudgetRepeatingPeriod = BudgetRepeatingPeriod.OneTime,
+    val lastResetDay: Long = getTodayDateLong(),
+    val linkedAccountsIds: List<Int> = emptyList()
 ) {
 
     fun toBudget(): Budget? {
@@ -24,7 +25,7 @@ data class EditingBudgetUiState(
             id = id,
             usedAmount = newCurrentAmount,
             amountLimit = newAmountLimit,
-            usedPercentage = usedPercentage,
+            usedPercentage = ".2f".format(100 / newAmountLimit * newCurrentAmount).toFloat(),
             category = category,
             name = name.trim(),
             repeatingPeriod = repeatingPeriod,
@@ -34,7 +35,10 @@ data class EditingBudgetUiState(
     }
 
     fun allowSaving(): Boolean {
-        return name.isNotBlank()
+        val newCurrentAmount = usedAmount.toDoubleOrNull() ?: return false
+        val newAmountLimit = amountLimit.toDoubleOrNull() ?: return false
+
+        return name.isNotBlank() && newAmountLimit >= newCurrentAmount
     }
 
 }
