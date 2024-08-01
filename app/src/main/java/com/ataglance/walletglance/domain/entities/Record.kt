@@ -2,6 +2,7 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
@@ -21,7 +22,8 @@ import com.ataglance.walletglance.data.utils.toCategoryType
             childColumns = ["accountId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["accountId"])]
 )
 data class Record(
     @PrimaryKey(autoGenerate = true)

@@ -109,6 +109,11 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {
 
         db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_Record_accountId
+            ON Record(accountId)
+        """.trimIndent())
+
+        db.execSQL("""
             CREATE TABLE IF NOT EXISTS Budget (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 usedAmount INTEGER NOT NULL,
@@ -133,6 +138,11 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
                 FOREIGN KEY (budgetId) REFERENCES Budget(id) ON DELETE CASCADE,
                 FOREIGN KEY (accountId) REFERENCES Account(id) ON DELETE CASCADE
             )
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_BudgetAccountAssociation_accountId
+            ON BudgetAccountAssociation(accountId)
         """.trimIndent())
 
     }

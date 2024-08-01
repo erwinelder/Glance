@@ -2,6 +2,7 @@ package com.ataglance.walletglance.domain.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     tableName = "BudgetAccountAssociation",
@@ -19,7 +20,8 @@ import androidx.room.ForeignKey
             childColumns = ["accountId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["accountId"])]
 )
 data class BudgetAccountAssociation(
     val budgetId: Int,
