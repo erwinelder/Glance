@@ -7,7 +7,7 @@ import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 data class DefaultCategoriesPackage(
-    val context: Context
+    private val context: Context
 ) {
 
     fun getDefaultCategories(): CategoriesWithSubcategories {
