@@ -5,17 +5,25 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
@@ -34,12 +45,14 @@ import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.ui.theme.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.ui.theme.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
+import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 
 @Composable
@@ -48,6 +61,7 @@ fun CategoryPicker(
     categoriesWithSubcategories: CategoriesWithSubcategories,
     type: CategoryType,
     appTheme: AppTheme?,
+    allowChoosingParentCategory: Boolean = false,
     onDismissRequest: () -> Unit,
     onCategoryChoose: (CategoryWithSubcategory) -> Unit
 ) {
@@ -103,16 +117,55 @@ fun CategoryPicker(
                 key = { it.category.id }
             ) { categoryWithSubcategories ->
                 if (categoryWithSubcategories.category.orderNum != 1) {
-                    SmallDivider()
+                    SmallDivider(color = GlanceTheme.outline.copy(.5f))
                 }
-                CategoryListItem(categoryWithSubcategories.category, appTheme) {
-                    if (categoryWithSubcategories.subcategoryList.isNotEmpty()) {
-                        chosenCategoryWithSubcategories = categoryWithSubcategories
-                    } else {
-                        onCategoryChoose(
-                            CategoryWithSubcategory(categoryWithSubcategories.category)
-                        )
-                        onDismissRequest()
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CategoryListItem(categoryWithSubcategories.category, appTheme) {
+                        if (categoryWithSubcategories.subcategoryList.isNotEmpty()) {
+                            chosenCategoryWithSubcategories = categoryWithSubcategories
+                        } else {
+                            onCategoryChoose(
+                                CategoryWithSubcategory(categoryWithSubcategories.category)
+                            )
+                            onDismissRequest()
+                        }
+                    }
+                    if (allowChoosingParentCategory) {
+                        FilledIconButton(
+                            enabled = categoryWithSubcategories.subcategoryList.isNotEmpty(),
+                            shape = RoundedCornerShape(30),
+                            colors = IconButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = GlanceTheme.primary.copy(.6f),
+                                disabledContainerColor = Color.Transparent,
+                                disabledContentColor = GlanceTheme.outline.copy(.3f)
+                            ),
+                            onClick = {
+                                chosenCategoryWithSubcategories = categoryWithSubcategories
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.short_arrow_right_icon),
+                                contentDescription = "open subcategory list icon",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .border(
+                                        width = 1.dp,
+                                        color = if (
+                                            categoryWithSubcategories.subcategoryList.isEmpty()
+                                        ) {
+                                            GlanceTheme.outline.copy(.3f)
+                                        } else {
+                                            GlanceTheme.primary.copy(.6f)
+                                        },
+                                        shape = RoundedCornerShape(30)
+                                    )
+                                    .padding(8.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -151,16 +204,18 @@ fun CategoryPicker(
                     key = { it.id }
                 ) { category ->
                     if (category.orderNum != 1) {
-                        SmallDivider()
+                        SmallDivider(color = GlanceTheme.outline.copy(.5f))
                     }
-                    CategoryListItem(category, appTheme) { subcategory ->
-                        chosenCategoryWithSubcategories?.category?.let { parentCategory ->
-                            onCategoryChoose(
-                                CategoryWithSubcategory(parentCategory, subcategory)
-                            )
-                            onDismissRequest()
-                            if (chosenCategoryWithSubcategories != null) {
-                                chosenCategoryWithSubcategories = null
+                    Row {
+                        CategoryListItem(category, appTheme) { subcategory ->
+                            chosenCategoryWithSubcategories?.category?.let { parentCategory ->
+                                onCategoryChoose(
+                                    CategoryWithSubcategory(parentCategory, subcategory)
+                                )
+                                onDismissRequest()
+                                if (chosenCategoryWithSubcategories != null) {
+                                    chosenCategoryWithSubcategories = null
+                                }
                             }
                         }
                     }
@@ -173,17 +228,42 @@ fun CategoryPicker(
 }
 
 @Composable
-private fun CategoryListItem(
+private fun RowScope.CategoryListItem(
     category: Category,
     appTheme: AppTheme?,
     onClick: (Category) -> Unit
 ) {
-    Box(modifier = Modifier.padding(vertical = 12.dp)) {
+    Box(
+        modifier = Modifier
+            .weight(1f, fill = false)
+            .padding(vertical = 12.dp)
+    ) {
         RecordCategory(
             category = category,
             appTheme = appTheme,
             iconSize = 30.dp,
             onClick = onClick
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun CategoryPickerPreview() {
+    val appTheme = AppTheme.LightDefault
+    val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
+        .getDefaultCategories()
+
+    PreviewContainer(appTheme = appTheme) {
+        CategoryPicker(
+            visible = true,
+            categoriesWithSubcategories = categoriesWithSubcategories,
+            type = CategoryType.Expense,
+            appTheme = appTheme,
+            allowChoosingParentCategory = true,
+            onDismissRequest = {},
+            onCategoryChoose = {}
         )
     }
 }
