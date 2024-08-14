@@ -108,6 +108,8 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
 val MIGRATION_6_7 = object : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {
 
+        db.execSQL("ALTER TABLE Record ADD COLUMN includeInBudgets INTEGER NOT NULL DEFAULT '1'")
+
         db.execSQL("""
             CREATE INDEX IF NOT EXISTS index_Record_accountId
             ON Record(accountId)
@@ -116,12 +118,11 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Budget (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                usedAmount INTEGER NOT NULL,
                 amountLimit INTEGER NOT NULL,
                 categoryId INTEGER NOT NULL,
                 name TEXT NOT NULL,
                 repeatingPeriod TEXT NOT NULL,
-                lastResetDate INTEGER NOT NULL
+                nextResetDate INTEGER NOT NULL
             )
         """.trimIndent())
 

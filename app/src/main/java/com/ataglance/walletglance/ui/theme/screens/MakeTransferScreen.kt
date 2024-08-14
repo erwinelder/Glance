@@ -37,7 +37,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.BackButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.MakeRecordBottomButtonBlock
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
-import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
+import com.ataglance.walletglance.ui.theme.uielements.fields.GlanceTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
 import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldContainer
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
@@ -155,7 +155,7 @@ fun MakeTransferScreen(
                             }
                             SmallDivider(Modifier.padding(top = 4.dp))
                             MakeRecordFieldContainer(R.string.rate) {
-                                CustomTextField(
+                                GlanceTextField(
                                     text = uiState.startRate,
                                     placeholderText = "1",
                                     fontSize = 18.sp,
@@ -166,7 +166,7 @@ fun MakeTransferScreen(
                                 )
                             }
                             MakeRecordFieldContainer(R.string.start_amount) {
-                                CustomTextField(
+                                GlanceTextField(
                                     text = uiState.startAmount,
                                     placeholderText = "0.00",
                                     fontSize = 22.sp,
@@ -177,7 +177,7 @@ fun MakeTransferScreen(
                                 )
                             }
                             MakeRecordFieldContainer(R.string.final_amount) {
-                                CustomTextField(
+                                GlanceTextField(
                                     text = uiState.finalAmount,
                                     placeholderText = "0.00",
                                     fontSize = 22.sp,
@@ -188,7 +188,7 @@ fun MakeTransferScreen(
                                 )
                             }
                             MakeRecordFieldContainer(R.string.rate) {
-                                CustomTextField(
+                                GlanceTextField(
                                     text = uiState.finalRate,
                                     placeholderText = "1",
                                     fontSize = 18.sp,

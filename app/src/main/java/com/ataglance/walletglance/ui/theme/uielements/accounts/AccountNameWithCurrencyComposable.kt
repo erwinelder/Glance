@@ -34,7 +34,7 @@ import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
-fun SmallAccount(
+fun AccountNameWithCurrencyComposable(
     account: Account?,
     appTheme: AppTheme?,
     fontSize: TextUnit = 21.sp,
@@ -42,8 +42,7 @@ fun SmallAccount(
     horizontalPadding: Dp = 9.dp,
     verticalPadding: Dp = 4.dp,
     outerPadding: PaddingValues = PaddingValues(0.dp),
-    adjustStyleByActiveStatus: Boolean = false,
-    showBalance: Boolean = true,
+    enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
     val accountAndOnAccountColor = account?.let {
@@ -51,12 +50,11 @@ fun SmallAccount(
     } ?: Pair(LighterDarkerColors(), Color.White)
     val transparency by animateFloatAsState(
         targetValue =
-            if (adjustStyleByActiveStatus && account != null && !account.isActive) 0.6f else 1f,
+        if (!enabled && account != null) 0.5f else 1f,
         label = "account transparency"
     )
     val accountGradientColor = accountAndOnAccountColor.first
     val onAccountColor = accountAndOnAccountColor.second
-    val showBalanceBlock = account != null && !account.withoutBalance && showBalance
 
     Box(
         modifier = Modifier
@@ -97,12 +95,12 @@ fun SmallAccount(
                         .padding(
                             top = verticalPadding - 1.dp, bottom = verticalPadding,
                             start = horizontalPadding,
-                            end = horizontalPadding - if (showBalanceBlock) 1.dp else 0.dp
+                            end = horizontalPadding - 1.dp
                         )
                 )
-                if (account != null && showBalanceBlock) {
+                if (account != null) {
                     Text(
-                        text = account.getFormattedBalance(),
+                        text = account.currency,
                         color = onAccountColor,
                         textAlign = TextAlign.Center,
                         fontSize = fontSize,
@@ -134,10 +132,10 @@ fun SmallAccount(
 
 @Preview(showSystemUi = false)
 @Composable
-private fun SmallAccountPreview() {
+private fun AccountNameWithCurrencyComposablePreview() {
     val appTheme = AppTheme.LightDefault
 
     PreviewContainer {
-        SmallAccount(Account(balance = 516.41), appTheme = appTheme)
+        AccountNameWithCurrencyComposable(Account(balance = 516.41), appTheme = appTheme)
     }
 }

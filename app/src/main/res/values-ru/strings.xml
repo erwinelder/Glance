@@ -7,6 +7,7 @@
     <string name="setup">Настройка</string>
 
     <!-- Buttons -->
+    <string name="create">Создать</string>
     <string name="save">Сохранить</string>
     <string name="apply">Применить</string>
     <string name="confirm">Подтвердить</string>
@@ -74,6 +75,13 @@
     <string name="rate">Курс</string>
     <string name="quantity">Количество</string>
     <string name="quantity_placeholder">Без количества</string>
+    <string name="account_name">Название счёта</string>
+    <string name="budget_name">Название бюджета</string>
+    <string name="category_name">Название категории</string>
+    <string name="collection_name">Название коллекции</string>
+    <string name="budget_limit">Лимит бюджета</string>
+    <string name="repeating_period">Повторяющийся период</string>
+    <string name="include_existing_records_to_used_amount">Включить существующие записи в использованную сумму</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>
@@ -117,6 +125,10 @@
     <string name="november_full">Ноябрь</string>
     <string name="december_short">Дек</string>
     <string name="december_full">Декабрь</string>
+    <string name="daily">Ежедневно</string>
+    <string name="weekly">Еженедельно</string>
+    <string name="monthly">Ежемесячно</string>
+    <string name="yearly">Ежегодно</string>
 
     <!-- Other -->
     <string name="hello">Привет</string>
@@ -128,9 +140,6 @@
     <string name="income_plural">Доходы</string>
     <string name="mixed">Смешанные</string>
     <string name="transfer">Перевод</string>
-    <string name="account_name">Название счёта</string>
-    <string name="category_name">Название категории</string>
-    <string name="collection_name">Название коллекции</string>
     <string name="all_categories">Все категории</string>
     <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
     <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>

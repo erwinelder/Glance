@@ -29,7 +29,7 @@ import com.ataglance.walletglance.ui.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTextField(
+fun GlanceTextField(
     text: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,

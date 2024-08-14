@@ -11,12 +11,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.domain.AppDatabase
 import com.ataglance.walletglance.domain.repositories.AccountRepository
 import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.domain.repositories.BudgetRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
-import com.ataglance.walletglance.domain.repositories.RecordAndAccountAndBudgetRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
@@ -48,12 +46,6 @@ class WalletGlanceApplication: Application() {
     private val recordAndAccountRepository by lazy {
         RecordAndAccountRepository(db.recordDao, db.accountDao)
     }
-    private val recordAndAccountAndBudgetRepository by lazy {
-        RecordAndAccountAndBudgetRepository(db.recordDao, db.accountDao, db.budgetDao)
-    }
-    private val budgetRepository by lazy {
-        BudgetRepository(db.budgetDao)
-    }
     private val budgetAndBudgetAccountAssociationRepository by lazy {
         BudgetAndBudgetAccountAssociationRepository(
             budgetDao = db.budgetDao,
@@ -78,8 +70,6 @@ class WalletGlanceApplication: Application() {
                 categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = recordRepository,
             recordAndAccountRepository = recordAndAccountRepository,
-            recordAndAccountAndBudgetRepository = recordAndAccountAndBudgetRepository,
-            budgetRepository = budgetRepository,
             budgetAndBudgetAccountAssociationRepository =
                 budgetAndBudgetAccountAssociationRepository,
             generalRepository = generalRepository

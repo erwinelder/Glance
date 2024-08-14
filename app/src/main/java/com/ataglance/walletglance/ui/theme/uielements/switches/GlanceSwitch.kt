@@ -26,7 +26,7 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.modifiers.innerShadow
 
 @Composable
-fun CustomSwitch(
+fun GlanceSwitch(
     checked: Boolean,
     onChecked: (Boolean) -> Unit,
     width: Dp = 54.dp,

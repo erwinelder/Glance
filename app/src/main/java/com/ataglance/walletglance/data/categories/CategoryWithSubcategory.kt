@@ -17,4 +17,9 @@ data class CategoryWithSubcategory(
         } ?: false
     }
 
+    fun groupParentAndSubcategoryOrderNums(): Double {
+        return category.orderNum.toDouble() +
+                (subcategory?.orderNum?.let { it.toDouble() / 100 } ?: 0.0)
+    }
+
 }

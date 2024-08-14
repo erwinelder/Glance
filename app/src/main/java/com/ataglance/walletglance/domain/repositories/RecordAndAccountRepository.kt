@@ -12,12 +12,32 @@ class RecordAndAccountRepository(
 ) {
 
     @Transaction
-    suspend fun upsertRecordsAndUpsertAccounts(
-        recordList: List<Record>,
-        accountList: List<AccountEntity>
+    suspend fun deleteAndUpsertRecordsAndUpsertAccounts(
+        recordListToDelete: List<Record>,
+        recordListToUpsert: List<Record>,
+        accountListToUpsert: List<AccountEntity>
     ) {
-        recordDao.upsertRecords(recordList)
-        accountDao.upsertAccounts(accountList)
+        if (recordListToDelete.isNotEmpty()) recordDao.deleteRecords(recordListToDelete)
+        recordDao.upsertRecords(recordListToUpsert)
+        accountDao.upsertAccounts(accountListToUpsert)
+    }
+
+    @Transaction
+    suspend fun upsertRecordsAndUpsertAccounts(
+        recordListToUpsert: List<Record>,
+        accountListToUpsert: List<AccountEntity>
+    ) {
+        recordDao.upsertRecords(recordListToUpsert)
+        accountDao.upsertAccounts(accountListToUpsert)
+    }
+
+    @Transaction
+    suspend fun deleteRecordsAndUpsertAccounts(
+        recordListToDelete: List<Record>,
+        accountListToUpsert: List<AccountEntity>
+    ) {
+        recordDao.deleteRecords(recordListToDelete)
+        accountDao.upsertAccounts(accountListToUpsert)
     }
 
     @Transaction
@@ -27,7 +47,7 @@ class RecordAndAccountRepository(
     ) {
         accountDao.deleteAccountsByIds(accountsIdsToDelete)
         accountDao.upsertAccounts(accountListToUpsert)
-        recordDao.convertTransfersToRecords(accountsIdsToDelete.map { it.toString() })
+        recordDao.convertTransfersToRecords(noteValues = accountsIdsToDelete.map { it.toString() })
     }
 
 }

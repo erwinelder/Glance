@@ -42,10 +42,10 @@ import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenConta
 import com.ataglance.walletglance.ui.theme.uielements.buttons.ColorButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
-import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.fields.FieldLabel
+import com.ataglance.walletglance.ui.theme.uielements.fields.TextFieldWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.pickers.ColorPicker
-import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
+import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchWithLabel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountUiState
 
 @Composable
@@ -140,7 +140,7 @@ private fun GlassSurfaceContent(
             onClick = onColorButtonClick
         )
         Spacer(modifier = Modifier.height(verticalGap))
-        CustomTextFieldWithLabel(
+        TextFieldWithLabel(
             text = uiState.name,
             placeholderText = stringResource(R.string.account_name),
             onValueChange = onNameChange,
@@ -151,7 +151,7 @@ private fun GlassSurfaceContent(
         AnimatedVisibility(visible = !uiState.withoutBalance) {
             Column {
                 Spacer(modifier = Modifier.height(verticalGap))
-                CustomTextFieldWithLabel(
+                TextFieldWithLabel(
                     text = uiState.balance,
                     onValueChange = onBalanceChange,
                     keyboardType = KeyboardType.Number,
@@ -160,19 +160,19 @@ private fun GlassSurfaceContent(
             }
         }
         Spacer(modifier = Modifier.height(verticalGap))
-        SwitchBlock(
+        SwitchWithLabel(
             checked = uiState.hide,
             onCheckedChange = onHideChange,
             labelText = stringResource(R.string.hide_from_top_bar)
         )
         Spacer(modifier = Modifier.height(verticalGap))
-        SwitchBlock(
+        SwitchWithLabel(
             checked = uiState.hideBalance,
             onCheckedChange = onHideBalanceChange,
             labelText = stringResource(R.string.hide_balance)
         )
         Spacer(modifier = Modifier.height(verticalGap))
-        SwitchBlock(
+        SwitchWithLabel(
             checked = uiState.withoutBalance,
             onCheckedChange = onWithoutBalanceChange,
             labelText = stringResource(R.string.without_balance)

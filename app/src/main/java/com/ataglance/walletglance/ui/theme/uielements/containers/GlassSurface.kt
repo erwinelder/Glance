@@ -3,6 +3,7 @@ package com.ataglance.walletglance.ui.theme.uielements.containers
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +28,7 @@ fun GlassSurface(
     modifier: Modifier = Modifier,
     filledWidth: Float? = null,
     cornerSize: Dp = dimensionResource(R.dimen.widget_corner_size),
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = modifier

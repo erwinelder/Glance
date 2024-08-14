@@ -23,7 +23,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.settings.ThemeUiState
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
-import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchBlock
+import com.ataglance.walletglance.ui.theme.uielements.switches.SwitchWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 
 @Composable
@@ -62,7 +62,7 @@ fun ThemePicker(
                     borderColor = Color(40, 40, 40)
                 )
             }
-            SwitchBlock(
+            SwitchWithLabel(
                 checked = themeUiState.useDeviceTheme,
                 onCheckedChange = onSetUseDeviceTheme,
                 labelText = stringResource(R.string.use_device_theme)

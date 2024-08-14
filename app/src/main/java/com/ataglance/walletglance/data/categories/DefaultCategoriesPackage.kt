@@ -386,28 +386,28 @@ data class DefaultCategoriesPackage(
                             id = 52, type = CategoryType.Expense,
                             orderNum = 3, parentCategoryId = 9,
                             name = context.getString(R.string.food_and_drinks),
-                            icon = CategoryIcon.Travels,
+                            icon = CategoryIcon.FoodAndDrinks,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         ),
                         Category(
                             id = 53, type = CategoryType.Expense,
                             orderNum = 4, parentCategoryId = 9,
                             name = context.getString(R.string.transport),
-                            icon = CategoryIcon.Travels,
+                            icon = CategoryIcon.Transport,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         ),
                         Category(
                             id = 54, type = CategoryType.Expense,
                             orderNum = 5, parentCategoryId = 9,
                             name = context.getString(R.string.shopping),
-                            icon = CategoryIcon.Travels,
+                            icon = CategoryIcon.Shopping,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         ),
                         Category(
                             id = 55, type = CategoryType.Expense,
                             orderNum = 6, parentCategoryId = 9,
                             name = context.getString(R.string.entertainment),
-                            icon = CategoryIcon.Travels,
+                            icon = CategoryIcon.Entertainment,
                             colorWithName = CategoryColors.Aquamarine.toCategoryColorWithName()
                         ),
                         Category(
@@ -439,7 +439,7 @@ data class DefaultCategoriesPackage(
                             id = 58, type = CategoryType.Expense,
                             orderNum = 2, parentCategoryId = 10,
                             name = context.getString(R.string.cinema_theater_concerts),
-                            icon = CategoryIcon.Entertainment,
+                            icon = CategoryIcon.CinemaTheater,
                             colorWithName = CategoryColors.Orange.toCategoryColorWithName()
                         ),
                         Category(
@@ -467,7 +467,7 @@ data class DefaultCategoriesPackage(
                             id = 62, type = CategoryType.Expense,
                             orderNum = 6, parentCategoryId = 10,
                             name = context.getString(R.string.gifts_and_charity),
-                            icon = CategoryIcon.Entertainment,
+                            icon = CategoryIcon.Gifts,
                             colorWithName = CategoryColors.Orange.toCategoryColorWithName()
                         )
                     )

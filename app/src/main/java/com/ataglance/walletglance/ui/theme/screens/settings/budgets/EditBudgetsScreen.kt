@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetRepeatingPeriod
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.utils.getTodayDateLong
 import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
@@ -23,7 +23,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
-fun EditBudgetScreen(
+fun EditBudgetsScreen(
     scaffoldPadding: PaddingValues,
     appTheme: AppTheme?,
     budgetList: List<Budget>,
@@ -81,7 +81,7 @@ private fun GlassSurfaceContent(
 
 @Preview
 @Composable
-fun EditBudgetScreenPreview() {
+fun EditBudgetsScreenPreview() {
     val context = LocalContext.current
     val appTheme = AppTheme.LightDefault
     val budgetList = listOf(
@@ -92,8 +92,10 @@ fun EditBudgetScreenPreview() {
             usedPercentage = 62.5F,
             category = DefaultCategoriesPackage(context).getDefaultCategories().expense[0].category,
             name = "Food & drinks",
-            repeatingPeriod = BudgetRepeatingPeriod.OneTime,
+            repeatingPeriod = RepeatingPeriod.OneTime,
             lastResetDate = getTodayDateLong(),
+            nextResetDate = getTodayDateLong(),
+            currency = "USD",
             linkedAccountsIds = listOf(1, 2)
         ),
         Budget(
@@ -103,14 +105,16 @@ fun EditBudgetScreenPreview() {
             usedPercentage = 25F,
             category = DefaultCategoriesPackage(context).getDefaultCategories().expense[1].category,
             name = "Housing",
-            repeatingPeriod = BudgetRepeatingPeriod.OneTime,
+            repeatingPeriod = RepeatingPeriod.OneTime,
             lastResetDate = getTodayDateLong(),
+            nextResetDate = getTodayDateLong(),
+            currency = "CZK",
             linkedAccountsIds = listOf(1, 2)
         )
     )
 
     PreviewContainer {
-        EditBudgetScreen(
+        EditBudgetsScreen(
             scaffoldPadding = PaddingValues(0.dp),
             appTheme = appTheme,
             budgetList = budgetList,

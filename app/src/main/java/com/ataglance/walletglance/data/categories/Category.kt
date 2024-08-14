@@ -5,9 +5,9 @@ import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.color.LighterDarkerColors
-import com.ataglance.walletglance.domain.entities.CategoryEntity
 import com.ataglance.walletglance.data.utils.asChar
 import com.ataglance.walletglance.data.utils.toCategoryColorWithName
+import com.ataglance.walletglance.domain.entities.CategoryEntity
 
 data class Category(
     val id: Int = 0,

@@ -3,8 +3,10 @@ package com.ataglance.walletglance.data.utils
 import android.content.Context
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.data.date.DateRangeState
+import com.ataglance.walletglance.data.date.DateRangeWithEnum
 import com.ataglance.walletglance.data.date.DateTimeState
+import com.ataglance.walletglance.data.date.LongDateRange
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.date.YearMonthDay
 import com.ataglance.walletglance.data.date.YearMonthDayHourMinute
 import java.time.LocalDate
@@ -13,19 +15,33 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 
-private data class LocalDateRange(
-    val startPast: LocalDate,
-    val endFuture: LocalDate
+data class LocalDateRange(
+    val from: LocalDate,
+    val to: LocalDate
 ) {
 
     fun toDateRangeState(
         enum: DateRangeEnum
-    ): DateRangeState {
-        return DateRangeState(
+    ): DateRangeWithEnum {
+        return DateRangeWithEnum(
             enum = enum,
-            fromPast = startPast.toLongWithoutTime(),
-            toFuture = endFuture.toLongWithoutTime() + 2359
+            dateRange = LongDateRange(from.toLongWithoutTime(), to.toLongWithoutTime() + 2359)
         )
+    }
+
+    fun toLongDateRangeWithTime(): LongDateRange {
+        return this.let { localDateRange ->
+            LongDateRange(
+                from = localDateRange.from.let {
+                    YearMonthDayHourMinute(it.year, it.monthValue, it.dayOfMonth, 0, 0)
+                        .concatenate()
+                },
+                to = localDateRange.to.let {
+                    YearMonthDayHourMinute(it.year, it.monthValue, it.dayOfMonth, 23, 59)
+                        .concatenate()
+                }
+            )
+        }
     }
 
 }
@@ -144,27 +160,33 @@ private fun getLastYearLocalDateRange(): LocalDateRange {
 
 
 private fun getLocalDateRangeBySpecificMonth(
-    month: DateRangeEnum, currentDateRangeState: DateRangeState?
+    month: DateRangeEnum, currentDateRangeWithEnum: DateRangeWithEnum?
 ): LocalDateRange {
     val monthValue = month.getMonthValue()
 
-    if (monthValue == null || currentDateRangeState == null) {
+    if (monthValue == null || currentDateRangeWithEnum == null) {
         return getThisMonthLocalDateRange()
     }
 
     val today = LocalDate.now()
-    val firstDay = today.withYear((currentDateRangeState.fromPast / 100000000).toInt())
-        .withMonth(monthValue).withDayOfMonth(1)
-    val lastDay = today.withYear((currentDateRangeState.toFuture / 100000000).toInt())
-        .withMonth(monthValue).plusMonths(1).withDayOfMonth(1).minusDays(1)
+    val firstDay = today
+        .withYear(currentDateRangeWithEnum.dateRange.from.extractYear())
+        .withMonth(monthValue)
+        .withDayOfMonth(1)
+    val lastDay = today
+        .withYear(currentDateRangeWithEnum.dateRange.to.extractYear())
+        .withMonth(monthValue)
+        .plusMonths(1)
+        .withDayOfMonth(1)
+        .minusDays(1)
 
     return LocalDateRange(firstDay, lastDay)
 }
 
 
-fun DateRangeEnum.getDateRangeState(
-    currentDateRangeState: DateRangeState? = null
-): DateRangeState {
+fun DateRangeEnum.withLongDateRange(
+    currentDateRangeWithEnum: DateRangeWithEnum? = null
+): DateRangeWithEnum {
     return when (this) {
         DateRangeEnum.ThisWeek ->
             getThisWeekLocalDateRange().toDateRangeState(DateRangeEnum.ThisWeek)
@@ -178,7 +200,7 @@ fun DateRangeEnum.getDateRangeState(
             getThisYearLocalDateRange().toDateRangeState(DateRangeEnum.ThisYear)
         DateRangeEnum.LastYear ->
             getLastYearLocalDateRange().toDateRangeState(DateRangeEnum.LastYear)
-        else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeState)
+        else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeWithEnum)
             .toDateRangeState(this)
     }
 }
@@ -222,36 +244,82 @@ private fun getMonthStringByMonthValue(value: Int, context: Context): String? {
 }
 
 
-fun DateRangeEnum.getCalendarStartLong(currentDateRangeState: DateRangeState? = null): Long {
-    return when(this) {
-        DateRangeEnum.ThisMonth -> getThisMonthLocalDateRange().startPast.toCalendarLong()
-        DateRangeEnum.LastMonth -> getLastMonthLocalDateRange().startPast.toCalendarLong()
-        DateRangeEnum.ThisWeek -> getThisWeekLocalDateRange().startPast.toCalendarLong()
-        DateRangeEnum.SevenDays -> getSevenDaysLocalDateRange().startPast.toCalendarLong()
-        DateRangeEnum.ThisYear -> getThisYearLocalDateRange().startPast.toCalendarLong()
-        DateRangeEnum.LastYear -> getLastYearLocalDateRange().startPast.toCalendarLong()
-        else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeState)
-            .startPast.toCalendarLong()
-    }
-}
-
-
-fun DateRangeEnum.getCalendarEndLong(currentDateRangeState: DateRangeState? = null): Long {
-    return when(this) {
-        DateRangeEnum.ThisMonth -> getThisMonthLocalDateRange().endFuture.toCalendarLong()
-        DateRangeEnum.LastMonth -> getLastMonthLocalDateRange().endFuture.toCalendarLong()
-        DateRangeEnum.ThisWeek -> getThisWeekLocalDateRange().endFuture.toCalendarLong()
-        DateRangeEnum.SevenDays -> getSevenDaysLocalDateRange().endFuture.toCalendarLong()
-        DateRangeEnum.ThisYear -> getThisYearLocalDateRange().endFuture.toCalendarLong()
-        DateRangeEnum.LastYear -> getLastYearLocalDateRange().endFuture.toCalendarLong()
-        else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeState)
-            .endFuture.toCalendarLong()
-    }
+fun Long.asOneDayDateRange(): LongDateRange {
+    return LongDateRange(this, this + 2359)
 }
 
 
 fun getTodayDateLong(): Long {
     return LocalDate.now().toLongWithoutTime()
+}
+
+
+fun getTodayLongDateRange(): LongDateRange {
+    return getTodayDateLong().asOneDayDateRange()
+}
+
+
+fun DateRangeEnum.getCalendarStartLong(currentDateRangeWithEnum: DateRangeWithEnum? = null): Long {
+    return when(this) {
+        DateRangeEnum.ThisMonth -> getThisMonthLocalDateRange().from.toCalendarLong()
+        DateRangeEnum.LastMonth -> getLastMonthLocalDateRange().from.toCalendarLong()
+        DateRangeEnum.ThisWeek -> getThisWeekLocalDateRange().from.toCalendarLong()
+        DateRangeEnum.SevenDays -> getSevenDaysLocalDateRange().from.toCalendarLong()
+        DateRangeEnum.ThisYear -> getThisYearLocalDateRange().from.toCalendarLong()
+        DateRangeEnum.LastYear -> getLastYearLocalDateRange().from.toCalendarLong()
+        else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeWithEnum)
+            .from.toCalendarLong()
+    }
+}
+
+
+fun DateRangeEnum.getCalendarEndLong(currentDateRangeWithEnum: DateRangeWithEnum? = null): Long {
+    return when(this) {
+        DateRangeEnum.ThisMonth -> getThisMonthLocalDateRange().to.toCalendarLong()
+        DateRangeEnum.LastMonth -> getLastMonthLocalDateRange().to.toCalendarLong()
+        DateRangeEnum.ThisWeek -> getThisWeekLocalDateRange().to.toCalendarLong()
+        DateRangeEnum.SevenDays -> getSevenDaysLocalDateRange().to.toCalendarLong()
+        DateRangeEnum.ThisYear -> getThisYearLocalDateRange().to.toCalendarLong()
+        DateRangeEnum.LastYear -> getLastYearLocalDateRange().to.toCalendarLong()
+        else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeWithEnum).to
+            .toCalendarLong()
+    }
+}
+
+
+fun getRepeatingPeriodByString(periodValue: String): RepeatingPeriod? {
+    return when (periodValue) {
+        RepeatingPeriod.Daily.name -> RepeatingPeriod.Daily
+        RepeatingPeriod.Weekly.name -> RepeatingPeriod.Weekly
+        RepeatingPeriod.Monthly.name -> RepeatingPeriod.Monthly
+        RepeatingPeriod.Yearly.name -> RepeatingPeriod.Yearly
+        else -> null
+    }
+}
+
+
+fun RepeatingPeriod.asLocalizedString(context: Context): String {
+    return when (this) {
+        RepeatingPeriod.Daily -> context.getString(R.string.daily)
+        RepeatingPeriod.Weekly -> context.getString(R.string.weekly)
+        RepeatingPeriod.Monthly -> context.getString(R.string.monthly)
+        RepeatingPeriod.Yearly -> context.getString(R.string.yearly)
+    }
+}
+
+
+fun RepeatingPeriod.getLongDateRangeWithTime(): LongDateRange {
+    return when (this) {
+        RepeatingPeriod.Daily -> getTodayLongDateRange()
+        RepeatingPeriod.Weekly -> getThisWeekLocalDateRange().toLongDateRangeWithTime()
+        RepeatingPeriod.Monthly -> getThisMonthLocalDateRange().toLongDateRangeWithTime()
+        RepeatingPeriod.Yearly -> getThisYearLocalDateRange().toLongDateRangeWithTime()
+    }
+}
+
+
+fun Long.extractYear(): Int {
+    return (this / 100000000).toInt()
 }
 
 
@@ -270,6 +338,11 @@ fun Long.extractYearMonthDayHourMinute(): YearMonthDayHourMinute {
     val hour = (this / 100 - year * 1000000 - month * 10000 - day * 100).toInt()
     val minute = (this - year * 100000000 - month * 1000000 - day * 10000 - hour * 100).toInt()
     return YearMonthDayHourMinute(year, month, day, hour, minute)
+}
+
+
+fun Long.isInRange(dateRange: LongDateRange): Boolean {
+    return this >= dateRange.from && this <= dateRange.to
 }
 
 

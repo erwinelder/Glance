@@ -1,23 +1,13 @@
 package com.ataglance.walletglance.data.utils
 
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetRepeatingPeriod
+import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
-import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.domain.entities.BudgetAccountAssociation
 import com.ataglance.walletglance.domain.entities.BudgetEntity
-
-
-fun getRepeatingPeriodByString(periodValue: String): BudgetRepeatingPeriod? {
-    return when (periodValue) {
-        BudgetRepeatingPeriod.Daily.name -> BudgetRepeatingPeriod.Daily
-        BudgetRepeatingPeriod.Weekly.name -> BudgetRepeatingPeriod.Weekly
-        BudgetRepeatingPeriod.Monthly.name -> BudgetRepeatingPeriod.Monthly
-        BudgetRepeatingPeriod.Yearly.name -> BudgetRepeatingPeriod.Yearly
-        else -> null
-    }
-}
+import com.ataglance.walletglance.domain.entities.Record
 
 
 fun List<Budget>.toEntityList(): List<BudgetEntity> {
@@ -27,26 +17,56 @@ fun List<Budget>.toEntityList(): List<BudgetEntity> {
 
 fun List<BudgetEntity>.toBudgetList(
     categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
-    associationList: List<BudgetAccountAssociation>
+    associationList: List<BudgetAccountAssociation>,
+    accountList: List<Account>
 ): List<Budget> {
     return this.mapNotNull { budgetEntity ->
         budgetEntity.toBudget(
-            category = categoryWithSubcategoriesList
-                .findCategoryById(budgetEntity.categoryId),
-            budgetAccountsIds = associationList
+            categoryWithSubcategory = categoryWithSubcategoriesList
+                .getCategoryWithSubcategoryById(budgetEntity.categoryId),
+            linkedAccountsIds = associationList
                 .filter { it.budgetId == budgetEntity.id }
-                .map { it.accountId }
+                .map { it.accountId },
+            accountList = accountList
         )
     }
 }
 
 
-fun List<Budget>.breakOnBudgetsAndAssociations():
+fun List<Budget>.groupByType(): BudgetsByType {
+    var dailyBudgets: List<Budget>
+    var weeklyBudgets: List<Budget>
+    var monthlyBudgets: List<Budget>
+    var otherBudgets: List<Budget>
+
+    this.partition { it.repeatingPeriod == RepeatingPeriod.Daily }.let {
+        dailyBudgets = it.first
+        otherBudgets = it.second
+    }
+    otherBudgets.partition { it.repeatingPeriod == RepeatingPeriod.Weekly }.let {
+        weeklyBudgets = it.first
+        otherBudgets = it.second
+    }
+    otherBudgets.partition { it.repeatingPeriod == RepeatingPeriod.Monthly }.let {
+        monthlyBudgets = it.first
+        otherBudgets = it.second
+    }
+    val yearlyBudgets = otherBudgets.partition { it.repeatingPeriod == RepeatingPeriod.Yearly }
+        .first
+
+    return BudgetsByType(
+        daily = dailyBudgets,
+        weekly = weeklyBudgets,
+        monthly = monthlyBudgets,
+        yearly = yearlyBudgets
+    )
+}
+
+
+fun List<Budget>.divideIntoBudgetsAndAssociations():
         Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
 {
-    val budgetList = this.map { budget ->
-        budget.toBudgetEntity()
-    }
+    val budgetList = this.toEntityList()
     val associationList = this.flatMap { budget ->
         budget.linkedAccountsIds.map { accountId ->
             BudgetAccountAssociation(
@@ -64,6 +84,13 @@ fun List<Budget>.findById(id: Int): Budget? {
 }
 
 
+fun List<Budget>.replaceById(budgetToReplaceWith: Budget): List<Budget> {
+    return this.map { budget ->
+        budget.takeUnless { it.id == budgetToReplaceWith.id } ?: budgetToReplaceWith
+    }
+}
+
+
 fun List<BudgetEntity>.getIdsThatAreNotInList(
     list: List<BudgetEntity>
 ): List<Int> {
@@ -73,6 +100,7 @@ fun List<BudgetEntity>.getIdsThatAreNotInList(
         }
         .map { it.id }
 }
+
 
 fun List<BudgetAccountAssociation>.getAssociationsThatAreNotInList(
     list: List<BudgetAccountAssociation>
@@ -87,107 +115,24 @@ fun List<BudgetAccountAssociation>.getAssociationsThatAreNotInList(
 }
 
 
-fun List<Budget>.addAmountsOfRecordUnitListWithAccountId(
-    accountId: Int,
-    recordUnitList: List<MakeRecordUnitUiState>,
-    recordDate: Long
-): List<Budget> {
-    return this
-        .getBudgetsLinkedWithAccount(accountId)
-        .mapNotNull { budget ->
-            budget
-                .takeIf { it.lastResetDate < recordDate && it.category != null }
-                ?.addToUsedAmount(
-                    amount = recordUnitList.getTotalAmountByCategory(budget.category!!.id)
-                )
-        }
-}
-
-
-fun List<Budget>.addAmountWhereAccountIdAndCategoryIdAre(
-    amount: Double,
-    accountId: Int,
-    categoryIds: List<Int>,
-    recordDate: Long
-): List<Budget> {
-    return this
-        .getBudgetsLinkedWithAccount(accountId)
-        .mapNotNull { budget ->
-            budget
-                .takeIf {
-                    it.lastResetDate < recordDate && it.category != null &&
-                            categoryIds.contains(it.category.id)
-                }
-                ?.addToUsedAmount(amount)
-        }
-}
-
-
-fun List<Budget>.subtractAmountsOfRecordStack(
-    recordStack: RecordStack,
-    recordDate: Long
-): List<Budget> {
-    return this
-        .getBudgetsLinkedWithAccount(recordStack.account.id)
-        .mapNotNull { budget ->
-            budget
-                .takeIf { it.lastResetDate < recordDate && it.category != null }
-                ?.subtractFromUsedAmount(
-                    amount = recordStack.getTotalAmountByCategory(budget.category!!.id)
-                )
-        }
-}
-
-
-fun List<Budget>.subtractAmountWhereAccountIdAndCategoryIdAre(
-    amount: Double,
-    accountId: Int,
-    categoryIds: List<Int>,
-    recordDate: Long
-): List<Budget> {
-    return this
-        .getBudgetsLinkedWithAccount(accountId)
-        .mapNotNull { budget ->
-            budget.takeIf {
-                it.lastResetDate < recordDate && it.category != null &&
-                        categoryIds.contains(it.category.id)
-            }
-                ?.subtractFromUsedAmount(amount)
-        }
-}
-
-
-fun List<Budget>.getBudgetsLinkedWithAccount(accountId: Int): List<Budget> {
-    return this.filter { it.linkedAccountsIds.contains(accountId) }
-}
-
-
-fun List<Budget>.mergeWith(list: List<Budget>): List<Budget> {
-    val mergedList = this.toMutableList()
-
-    list.forEach { budget ->
-        budget
-            .takeIf { mergedList.findById(it.id) == null }
-            ?.let { mergedList.add(it) }
-    }
-
-    return mergedList
-}
-
-
-fun List<Budget>.replaceById(budgetToReplaceWith: Budget): List<Budget> {
+fun List<Budget>.fillUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
     return this.map { budget ->
-        budget.takeUnless { it.id == budgetToReplaceWith.id } ?: budgetToReplaceWith
+        budget.applyUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
     }
 }
 
 
-fun List<BudgetEntity>.resetIfNeeded(): List<BudgetEntity> {
-    val currentDate = getTodayDateLong()
+fun List<Budget>.addUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
+    if (recordList.isEmpty()) return this
+    return this.map { budget ->
+        budget.addToUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
+    }
+}
 
-    return this.mapNotNull { budget ->
-        budget.takeIf {
-            it.getNextResetDate()?.let { date -> date <= currentDate } == true
-        }?.copy(lastResetDate = currentDate)
+
+fun List<Budget>.subtractUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
+    if (recordList.isEmpty()) return this
+    return this.map { budget ->
+        budget.subtractFromUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
     }
 }

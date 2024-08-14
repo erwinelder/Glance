@@ -7,6 +7,7 @@
     <string name="setup">Налаштування</string>
 
     <!-- Buttons -->
+    <string name="create">Створити</string>
     <string name="save">Зберегти</string>
     <string name="apply">Застосувати</string>
     <string name="confirm">Підтвердити</string>
@@ -74,6 +75,13 @@
     <string name="rate">Курс</string>
     <string name="quantity">Кількість</string>
     <string name="quantity_placeholder">Без кількості</string>
+    <string name="account_name">Назва рахунку</string>
+    <string name="budget_name">Назва бюджету</string>
+    <string name="category_name">Назва категорії</string>
+    <string name="collection_name">Назва колекції</string>
+    <string name="budget_limit">Ліміт бюджета</string>
+    <string name="repeating_period">Повторюваний період</string>
+    <string name="include_existing_records_to_used_amount">Включити існуючі записи до використаної суми</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>
@@ -117,6 +125,10 @@
     <string name="november_full">Листопад</string>
     <string name="december_short">Груд</string>
     <string name="december_full">Грудень</string>
+    <string name="daily">Щоденно</string>
+    <string name="weekly">Щотижня</string>
+    <string name="monthly">Щомісяця</string>
+    <string name="yearly">Щорічно</string>
 
     <!-- Other -->
     <string name="hello">Привіт</string>
@@ -128,9 +140,6 @@
     <string name="income_plural">Доходи</string>
     <string name="mixed">Змішані</string>
     <string name="transfer">Переказ</string>
-    <string name="account_name">Назва рахунку</string>
-    <string name="category_name">Назва категорії</string>
-    <string name="collection_name">Назва колекції</string>
     <string name="all_categories">Всі категорії</string>
     <string name="no_collections_of_this_type">Немає колекцій цього типу</string>
     <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>

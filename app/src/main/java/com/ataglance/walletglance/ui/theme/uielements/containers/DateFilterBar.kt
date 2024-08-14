@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.date.DateRange
+import com.ataglance.walletglance.data.date.DateRangeAssets
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 
@@ -38,26 +38,26 @@ fun DateFilterBar(
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
                 onClick = {
-                    onDateRangeChange(DateRange.ThisMonth.enum)
+                    onDateRangeChange(DateRangeAssets.ThisMonth.enum)
                     if (isCustomDateRangeWindowOpened) {
                         onCustomDateRangeButtonClick()
                     }
                 },
                 active = currentDateRangeEnum == DateRangeEnum.ThisMonth &&
                         !isCustomDateRangeWindowOpened,
-                text = stringResource(DateRange.ThisMonth.nameRes)
+                text = stringResource(DateRangeAssets.ThisMonth.nameRes)
             )
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
                 onClick = {
-                    onDateRangeChange(DateRange.LastMonth.enum)
+                    onDateRangeChange(DateRangeAssets.LastMonth.enum)
                     if (isCustomDateRangeWindowOpened) {
                         onCustomDateRangeButtonClick()
                     }
                 },
                 active = currentDateRangeEnum == DateRangeEnum.LastMonth &&
                         !isCustomDateRangeWindowOpened,
-                text = stringResource(DateRange.LastMonth.nameRes)
+                text = stringResource(DateRangeAssets.LastMonth.nameRes)
             )
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(

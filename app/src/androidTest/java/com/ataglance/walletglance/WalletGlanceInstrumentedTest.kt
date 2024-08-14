@@ -27,7 +27,6 @@ import com.ataglance.walletglance.domain.repositories.BudgetAndBudgetAccountAsso
 import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.domain.repositories.CategoryRepository
 import com.ataglance.walletglance.domain.repositories.GeneralRepository
-import com.ataglance.walletglance.domain.repositories.RecordAndAccountAndBudgetRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
@@ -283,13 +282,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
                         .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
@@ -376,13 +375,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
                         .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
@@ -511,13 +510,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
                         .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),
@@ -611,13 +610,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
+                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
                         .getRangePair(),
                     activeAccount = accountsUiState.activeAccount
                 ),

@@ -7,6 +7,7 @@
     <string name="setup">Nastavování</string>
 
     <!-- Buttons -->
+    <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
     <string name="apply">Použít</string>
     <string name="confirm">Potvrdit</string>
@@ -55,7 +56,7 @@
     <!-- Fields -->
     <string name="use_device_theme">Použít téma zařízení</string>
     <string name="color">Barva</string>
-    <string name="name">Jméno</string>
+    <string name="name">Název</string>
     <string name="currency">Měna</string>
     <string name="balance">Zůstatek</string>
     <string name="hide_from_top_bar">Skrýt z horního panelu</string>
@@ -74,6 +75,13 @@
     <string name="rate">Kurz</string>
     <string name="quantity">Množství</string>
     <string name="quantity_placeholder">Bez množství</string>
+    <string name="account_name">Název účtu</string>
+    <string name="budget_name">Název rozpočtu</string>
+    <string name="category_name">Název kategorie</string>
+    <string name="collection_name">Název kolekce</string>
+    <string name="budget_limit">Rozpočtový limit</string>
+    <string name="repeating_period">Opakovaný interval</string>
+    <string name="include_existing_records_to_used_amount">Zahrnout stávající záznamy do použité částky</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
@@ -117,6 +125,10 @@
     <string name="november_full">Listopad</string>
     <string name="december_short">Pros</string>
     <string name="december_full">Prosinec</string>
+    <string name="daily">Denně</string>
+    <string name="weekly">Týdně</string>
+    <string name="monthly">Měsíčně</string>
+    <string name="yearly">Ročně</string>
 
     <!-- Other -->
     <string name="hello">Ahoj</string>
@@ -128,9 +140,6 @@
     <string name="income_plural">Příjmy</string>
     <string name="mixed">Smíšené</string>
     <string name="transfer">Převod</string>
-    <string name="account_name">Název účtu</string>
-    <string name="category_name">Název kategorie</string>
-    <string name="collection_name">Název kolekce</string>
     <string name="all_categories">Všechny kategorie</string>
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>

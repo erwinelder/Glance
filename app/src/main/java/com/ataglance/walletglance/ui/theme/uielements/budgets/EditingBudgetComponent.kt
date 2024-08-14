@@ -23,7 +23,7 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.utils.formatWithSpaces
 import com.ataglance.walletglance.ui.theme.GlanceTheme
-import com.ataglance.walletglance.ui.theme.screens.settings.budgets.EditBudgetScreenPreview
+import com.ataglance.walletglance.ui.theme.screens.settings.budgets.EditBudgetsScreenPreview
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryIconComponent
 import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceLineChart
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
@@ -94,5 +94,5 @@ fun EditingBudgetComponent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun EditingBudgetComponentPreview() {
-    EditBudgetScreenPreview()
+    EditBudgetsScreenPreview()
 }

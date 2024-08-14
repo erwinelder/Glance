@@ -32,15 +32,11 @@ interface RecordDao {
     fun getAllRecords(): Flow<List<Record>>
 
     @Query("""    
-        SELECT * FROM Record WHERE
-            (date BETWEEN :startPastDate AND :endFutureDate) OR
-            (date BETWEEN :todayStartPast AND :todayEndFuture)
+        SELECT * FROM Record
+        WHERE date BETWEEN :startPastDate AND :endFutureDate
         ORDER BY date DESC
     """)
-    fun getRecordsInDateRange(
-        todayStartPast: Long, todayEndFuture: Long,
-        startPastDate: Long, endFutureDate: Long
-    ): Flow<List<Record>>
+    fun getRecordsInDateRange(startPastDate: Long, endFutureDate: Long): Flow<List<Record>>
 
     @Query("SELECT * FROM Record WHERE (accountId == :accountId) AND (type == 60 OR type == 62)")
     fun getTransfersByAccountId(accountId: Int): Flow<List<Record>>

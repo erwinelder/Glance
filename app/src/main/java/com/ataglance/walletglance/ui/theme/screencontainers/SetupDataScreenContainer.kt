@@ -2,6 +2,7 @@ package com.ataglance.walletglance.ui.theme.screencontainers
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +24,7 @@ fun SetupDataScreenContainer(
     fillGlassSurface: Boolean = true,
     topButton: @Composable (() -> Unit)? = null,
     topBar: @Composable (() -> Unit)? = null,
-    glassSurfaceContent: @Composable () -> Unit,
+    glassSurfaceContent: @Composable BoxScope.() -> Unit,
     smallPrimaryButton: @Composable (() -> Unit)? = null,
     secondaryBottomButton: @Composable (() -> Unit)? = null,
     primaryBottomButton: @Composable () -> Unit

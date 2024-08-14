@@ -38,7 +38,8 @@ data class MakeRecordUiState(
                         categoryId = unit.categoryWithSubcategory.category.id,
                         subcategoryId = unit.categoryWithSubcategory.subcategory?.id,
                         accountId = account.id,
-                        note = unit.note.ifBlank { null }
+                        note = unit.note.ifBlank { null },
+                        includeInBudgets =
                     )
                 )
             }
@@ -73,7 +74,8 @@ data class MakeRecordUiState(
                         categoryId = unit.categoryWithSubcategory.category.id,
                         subcategoryId = unit.categoryWithSubcategory.subcategory?.id,
                         accountId = account.id,
-                        note = unit.note.ifBlank { null }
+                        note = unit.note.ifBlank { null },
+                        includeInBudgets =
                     )
                 )
             }

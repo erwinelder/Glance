@@ -19,7 +19,7 @@ data class RecordStack(
     private fun isExpense() = type == RecordType.Expense
     private fun isIncome() = type == RecordType.Income
     fun isOutTransfer() = type == RecordType.OutTransfer
-    fun isInTransfer() = type == RecordType.InTransfer
+    private fun isInTransfer() = type == RecordType.InTransfer
     fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
     fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
     fun isExpenseOrIncome() = isExpense() || isIncome()
@@ -41,7 +41,8 @@ data class RecordStack(
                 quantity = unit.quantity,
                 categoryId = unit.categoryWithSubcategory?.category?.id ?: 0,
                 subcategoryId = unit.categoryWithSubcategory?.subcategory?.id,
-                note = unit.note
+                note = unit.note,
+                includeInBudgets = unit.includeInBudgets
             )
         }
     }

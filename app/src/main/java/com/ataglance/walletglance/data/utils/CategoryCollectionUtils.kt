@@ -58,7 +58,7 @@ fun CategoryCollectionType.asChar(): Char {
 }
 
 
-fun List<CategoryCollectionWithIds>.breakOnCollectionsAndAssociations():
+fun List<CategoryCollectionWithIds>.divideIntoCollectionsAndAssociations():
         Pair<List<CategoryCollection>, List<CategoryCollectionCategoryAssociation>>
 {
     val categoryCollectionList = this.map { collectionWithIds ->

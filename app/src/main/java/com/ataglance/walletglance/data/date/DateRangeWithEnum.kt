@@ -3,10 +3,9 @@ package com.ataglance.walletglance.data.date
 import android.content.Context
 import com.ataglance.walletglance.R
 
-data class DateRangeState(
+data class DateRangeWithEnum(
     val enum: DateRangeEnum,
-    val fromPast: Long,
-    val toFuture: Long
+    val dateRange: LongDateRange
 ) {
 
     fun getFormattedMonth(context: Context): String {
@@ -23,11 +22,11 @@ data class DateRangeState(
             DateRangeEnum.October -> context.getString(R.string.october_full)
             DateRangeEnum.November -> context.getString(R.string.november_full)
             else -> context.getString(R.string.december_full)
-        } + " ${fromPast / 100000000}"
+        } + " ${dateRange.from / 100000000}"
     }
 
     fun getRangePair(): Pair<Long, Long> {
-        return fromPast to toFuture
+        return dateRange.from to dateRange.to
     }
 
 }

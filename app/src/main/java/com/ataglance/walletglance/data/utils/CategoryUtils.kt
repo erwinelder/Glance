@@ -5,6 +5,7 @@ import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.CheckedCategory
 import com.ataglance.walletglance.data.categories.EditingCategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
@@ -125,6 +126,26 @@ fun List<CategoryWithSubcategories>.findCategoryById(id: Int): Category? {
     this.forEach { categoryWithSubcategories ->
         categoryWithSubcategories.category.takeIf { it.id == id }?.let { return it }
             ?: categoryWithSubcategories.subcategoryList.findById(id)?.let { return it }
+    }
+    return null
+}
+
+
+fun List<CategoryWithSubcategories>.getCategoryWithSubcategoryById(
+    id: Int
+): CategoryWithSubcategory? {
+    this.forEach { categoryWithSubcategories ->
+        categoryWithSubcategories
+            .takeIf { it.category.id == id }
+            ?.let {
+                return CategoryWithSubcategory(it.category)
+            }
+            ?: categoryWithSubcategories.getWithSubcategoryWithId(id)
+                .let { categoryWithSubcategory ->
+                    categoryWithSubcategory
+                        .takeIf { it.subcategory != null }
+                        ?.let { return it }
+                }
     }
     return null
 }

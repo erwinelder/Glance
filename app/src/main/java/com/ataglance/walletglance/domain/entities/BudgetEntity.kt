@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetRepeatingPeriod
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.utils.extractYearMonthDay
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.data.utils.getRepeatingPeriodByString
 
 @Entity(
@@ -25,40 +25,33 @@ import com.ataglance.walletglance.data.utils.getRepeatingPeriodByString
 data class BudgetEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val usedAmount: Double,
     val amountLimit: Double,
     val categoryId: Int,
     val name: String,
-    val repeatingPeriod: String,
-    val lastResetDate: Long,
+    val repeatingPeriod: String
 ) {
 
-    fun toBudget(category: Category?, budgetAccountsIds: List<Int>): Budget? {
+    fun toBudget(
+        categoryWithSubcategory: CategoryWithSubcategory?,
+        linkedAccountsIds: List<Int>,
+        accountList: List<Account>
+    ): Budget? {
         val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
+        val linkedAccounts = accountList.filter { linkedAccountsIds.contains(it.id) }
 
         return Budget(
             id = id,
-            usedAmount = usedAmount,
+            priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
+            usedAmount = 0.0,
             amountLimit = amountLimit,
-            usedPercentage = (100 / amountLimit * usedAmount).toFloat(),
-            category = category,
+            usedPercentage = 0F,
+            category = categoryWithSubcategory?.getSubcategoryOrCategory(),
             name = name,
             repeatingPeriod = repeatingPeriodEnum,
-            lastResetDate = lastResetDate,
-            linkedAccountsIds = budgetAccountsIds
+            dateRange = repeatingPeriodEnum.getLongDateRangeWithTime(),
+            currency = linkedAccounts.firstOrNull()?.currency ?: "",
+            linkedAccountsIds = linkedAccounts.map { it.id }
         )
-    }
-
-    fun getNextResetDate(): Long? {
-        val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
-
-        return when (repeatingPeriodEnum) {
-            BudgetRepeatingPeriod.OneTime -> null
-            BudgetRepeatingPeriod.Daily -> lastResetDate.extractYearMonthDay().addDays(1)
-            BudgetRepeatingPeriod.Weekly -> lastResetDate.extractYearMonthDay().addDays(7)
-            BudgetRepeatingPeriod.Monthly -> lastResetDate.extractYearMonthDay().addMonths(1)
-            BudgetRepeatingPeriod.Yearly -> lastResetDate.extractYearMonthDay().addYears(1)
-        }?.concatenate()
     }
 
 }

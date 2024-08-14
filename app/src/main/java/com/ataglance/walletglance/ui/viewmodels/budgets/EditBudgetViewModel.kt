@@ -1,8 +1,9 @@
 package com.ataglance.walletglance.ui.viewmodels.budgets
 
 import androidx.lifecycle.ViewModel
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetRepeatingPeriod
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
 import com.ataglance.walletglance.data.categories.Category
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,15 +18,42 @@ class EditBudgetViewModel : ViewModel() {
     val budget: StateFlow<EditingBudgetUiState> = _budget.asStateFlow()
 
     fun applyBudget(
-        budget: Budget?,
+        budget: EditingBudgetUiState?,
         category: Category? = null,
         newBudgetName: String = ""
     ) {
         _budget.update {
-            budget?.toBudgetUiState() ?: EditingBudgetUiState(
+            budget ?: EditingBudgetUiState(
+                isNew = true,
                 category = category,
                 name = newBudgetName
             )
+        }
+    }
+
+    fun changeNextResetDate(date: Long) {
+        _budget.update {
+            it.copy(nextResetDay = date)
+        }
+    }
+
+    fun changeIncludeExistingRecords(value: Boolean) {
+        _budget.update {
+            it.copy(
+                includeExistingRecords = value
+            )
+        }
+    }
+
+    fun changeRepeatingPeriod(repeatingPeriod: RepeatingPeriod) {
+        _budget.update {
+            it.copy(repeatingPeriod = repeatingPeriod)
+        }
+    }
+
+    fun changeCategory(category: Category) {
+        _budget.update {
+            it.copy(category = category)
         }
     }
 
@@ -41,41 +69,28 @@ class EditBudgetViewModel : ViewModel() {
         }
     }
 
-    fun changeCategory(category: Category) {
-        _budget.update {
-            it.copy(category = category)
-        }
-    }
-
     fun changeName(value: String) {
         _budget.update {
             it.copy(name = value)
         }
     }
 
-    fun changeRepeatingPeriod(repeatingPeriod: BudgetRepeatingPeriod) {
+    fun linkWithAccount(account: Account) {
+        val newList = budget.value.linkedAccounts.toMutableList()
+        if (!newList.contains(account)) {
+            newList.add(account)
+        }
+
         _budget.update {
-            it.copy(repeatingPeriod = repeatingPeriod)
+            it.copy(linkedAccounts = newList)
         }
     }
 
-    fun linkWithAccount(accountId: Int) {
-        val newList = budget.value.linkedAccountsIds.toMutableList()
-        if (!newList.contains(accountId)) {
-            newList.add(accountId)
-        }
+    fun unlinkWithAccount(account: Account) {
+        val newList = budget.value.linkedAccounts.filter { it.id != account.id }
 
         _budget.update {
-            it.copy(linkedAccountsIds = newList)
-        }
-    }
-
-    fun unlinkWithAccount(accountId: Int) {
-        val newList = budget.value.linkedAccountsIds.toMutableList()
-        newList.remove(accountId)
-
-        _budget.update {
-            it.copy(linkedAccountsIds = newList)
+            it.copy(linkedAccounts = newList)
         }
     }
 

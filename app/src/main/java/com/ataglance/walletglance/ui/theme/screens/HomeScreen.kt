@@ -58,7 +58,7 @@ fun HomeScreen(
             StartAnimatedContainer(appTheme != null) {
                 AppMainTopBar(
                     accountList = accountsUiState.accountList.filter { !it.hide },
-                    currentDateRangeEnum = dateRangeMenuUiState.dateRangeState.enum,
+                    currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
                     appTheme = appTheme,
@@ -137,7 +137,7 @@ private fun CompactLayout(
             StartAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncomeState,
-                    dateRangeState = dateRangeMenuUiState.dateRangeState,
+                    dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
                     accountCurrency = accountsUiState.activeAccount?.currency ?: ""
                 )
             }
@@ -153,7 +153,7 @@ private fun CompactLayout(
                         accountList = accountsUiState.accountList,
                         appTheme = appTheme,
                         isCustomDateRange =
-                            dateRangeMenuUiState.dateRangeState.enum == DateRangeEnum.Custom,
+                            dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
                         onRecordClick = onRecordClick,
                         onTransferClick = onTransferClick
                     )
@@ -243,7 +243,7 @@ private fun ExpandedLayout(
             StartAnimatedContainer(appTheme != null, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncomeState,
-                    dateRangeState = dateRangeMenuUiState.dateRangeState,
+                    dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
                     accountCurrency = accountsUiState.activeAccount?.currency ?: ""
                 )
             }
@@ -259,7 +259,7 @@ private fun ExpandedLayout(
                     accountList = accountsUiState.accountList,
                     appTheme = appTheme,
                     isCustomDateRange =
-                        dateRangeMenuUiState.dateRangeState.enum == DateRangeEnum.Custom,
+                        dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
                     onRecordClick = onRecordClick,
                     onTransferClick = onTransferClick
                 )

@@ -35,7 +35,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
 import com.ataglance.walletglance.data.utils.formatDateRangeForCustomDateRangeField
-import com.ataglance.walletglance.data.date.DateRange
+import com.ataglance.walletglance.data.date.DateRangeAssets
 import com.ataglance.walletglance.data.date.DateRangeEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,37 +85,37 @@ fun BoxScope.CustomDateRangeWindow(
                     )*/
                     .padding(20.dp, 16.dp)
             ) {
-                CustomDateRangeComponent(DateRange.ThisWeek, currentDateRangeEnum, onDateRangeEnumClick)
-                CustomDateRangeComponent(DateRange.SevenDays, currentDateRangeEnum, onDateRangeEnumClick)
-                CustomDateRangeComponent(DateRange.ThisYear, currentDateRangeEnum, onDateRangeEnumClick)
-                CustomDateRangeComponent(DateRange.LastYear, currentDateRangeEnum, onDateRangeEnumClick)
+                CustomDateRangeComponent(DateRangeAssets.ThisWeek, currentDateRangeEnum, onDateRangeEnumClick)
+                CustomDateRangeComponent(DateRangeAssets.SevenDays, currentDateRangeEnum, onDateRangeEnumClick)
+                CustomDateRangeComponent(DateRangeAssets.ThisYear, currentDateRangeEnum, onDateRangeEnumClick)
+                CustomDateRangeComponent(DateRangeAssets.LastYear, currentDateRangeEnum, onDateRangeEnumClick)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRange.January, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.February, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.March, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.January, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.February, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.March, currentDateRangeEnum, onDateRangeEnumClick)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRange.April, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.May, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.June, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.April, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.May, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.June, currentDateRangeEnum, onDateRangeEnumClick)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRange.July, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.August, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.September, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.July, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.August, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.September, currentDateRangeEnum, onDateRangeEnumClick)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRange.October, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.November, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRange.December, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.October, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.November, currentDateRangeEnum, onDateRangeEnumClick)
+                    CustomDateRangeComponent(DateRangeAssets.December, currentDateRangeEnum, onDateRangeEnumClick)
                 }
                 DateField(
                     dateFormatted = formatDateRangeForCustomDateRangeField(
@@ -136,12 +136,12 @@ fun BoxScope.CustomDateRangeWindow(
 
 @Composable
 private fun CustomDateRangeComponent(
-    dateRange: DateRange,
+    dateRangeAssets: DateRangeAssets,
     currentDateRangeEnum: DateRangeEnum,
     onClick: (DateRangeEnum) -> Unit
 ) {
     val color by animateColorAsState(
-        targetValue = if (dateRange.enum == currentDateRangeEnum) {
+        targetValue = if (dateRangeAssets.enum == currentDateRangeEnum) {
             GlanceTheme.primary
         } else {
             GlanceTheme.onSurface
@@ -150,13 +150,13 @@ private fun CustomDateRangeComponent(
     )
 
     Text(
-        text = stringResource(dateRange.nameRes),
+        text = stringResource(dateRangeAssets.nameRes),
         color = color,
         fontSize = 19.sp,
         fontFamily = Manrope,
         modifier = Modifier
             .bounceClickEffect(.97f) {
-                onClick(dateRange.enum)
+                onClick(dateRangeAssets.enum)
             }
     )
 }

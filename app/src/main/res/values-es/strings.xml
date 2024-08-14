@@ -8,6 +8,7 @@
     <string name="setup">Configuración</string>
 
     <!-- Buttons -->
+    <string name="create">Crear</string>
     <string name="save">Guardar</string>
     <string name="apply">Aplicar</string>
     <string name="confirm">Confirmar</string>
@@ -75,6 +76,13 @@
     <string name="rate">Tasa</string>
     <string name="quantity">Cantidad</string>
     <string name="quantity_placeholder">Sin cantidad</string>
+    <string name="account_name">Nombre de la cuenta</string>
+    <string name="budget_name">Nombre del presupuesto</string>
+    <string name="category_name">Nombre de la categoría</string>
+    <string name="collection_name">Nombre de la colección</string>
+    <string name="budget_limit">Límite del presupuesto</string>
+    <string name="repeating_period">Período repetitivo</string>
+    <string name="include_existing_records_to_used_amount">Incluir registros existentes en el importe utilizado</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>
@@ -118,6 +126,10 @@
     <string name="november_full">noviembre</string>
     <string name="december_short">Dic</string>
     <string name="december_full">diciembre</string>
+    <string name="daily">Diario</string>
+    <string name="weekly">Semanal</string>
+    <string name="monthly">Mensual</string>
+    <string name="yearly">Anual</string>
 
     <!-- Other -->
     <string name="hello">Hola</string>
@@ -129,9 +141,6 @@
     <string name="income_plural">Ingresos</string>
     <string name="mixed">Mixto</string>
     <string name="transfer">Transferencia</string>
-    <string name="account_name">Nombre de la cuenta</string>
-    <string name="category_name">Nombre de la categoría</string>
-    <string name="collection_name">Nombre de la colección</string>
     <string name="all_categories">Todas las categorías</string>
     <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
     <string name="reset_data_description">Restablecer todos los datos de la aplicación, incluidas las cuentas, los registros, las categorías y la configuración.</string>

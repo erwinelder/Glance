@@ -40,32 +40,33 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.data.utils.getFormattedDateFromAndToByFormatDayMonthYear
-import com.ataglance.walletglance.data.date.DateRangeState
+import com.ataglance.walletglance.data.date.DateRangeWithEnum
 import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.data.date.DateRange
+import com.ataglance.walletglance.data.date.DateRangeAssets
 import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.data.date.LongDateRange
 import java.util.Locale
 
 @Composable
 fun ExpensesIncomeWidget(
     uiState: ExpensesIncomeWidgetUiState,
-    dateRangeState: DateRangeState,
+    dateRangeWithEnum: DateRangeWithEnum,
     accountCurrency: String
 ) {
-    val period = when(dateRangeState.enum) {
-        DateRangeEnum.ThisMonth -> stringResource(DateRange.ThisMonth.nameRes)
-        DateRangeEnum.LastMonth -> stringResource(DateRange.LastMonth.nameRes)
-        DateRangeEnum.ThisWeek -> stringResource(DateRange.ThisWeek.nameRes)
-        DateRangeEnum.SevenDays -> stringResource(DateRange.SevenDays.nameRes)
-        DateRangeEnum.ThisYear -> stringResource(DateRange.ThisYear.nameRes)
-        DateRangeEnum.LastYear -> stringResource(DateRange.LastYear.nameRes)
+    val period = when(dateRangeWithEnum.enum) {
+        DateRangeEnum.ThisMonth -> stringResource(DateRangeAssets.ThisMonth.nameRes)
+        DateRangeEnum.LastMonth -> stringResource(DateRangeAssets.LastMonth.nameRes)
+        DateRangeEnum.ThisWeek -> stringResource(DateRangeAssets.ThisWeek.nameRes)
+        DateRangeEnum.SevenDays -> stringResource(DateRangeAssets.SevenDays.nameRes)
+        DateRangeEnum.ThisYear -> stringResource(DateRangeAssets.ThisYear.nameRes)
+        DateRangeEnum.LastYear -> stringResource(DateRangeAssets.LastYear.nameRes)
         DateRangeEnum.January, DateRangeEnum.February, DateRangeEnum.March,
         DateRangeEnum.April, DateRangeEnum.May, DateRangeEnum.June,
         DateRangeEnum.July, DateRangeEnum.August, DateRangeEnum.September,
         DateRangeEnum.October, DateRangeEnum.November, DateRangeEnum.December ->
-            dateRangeState.getFormattedMonth(LocalContext.current)
+            dateRangeWithEnum.getFormattedMonth(LocalContext.current)
         DateRangeEnum.Custom -> getFormattedDateFromAndToByFormatDayMonthYear(
-            dateRangeState.fromPast, dateRangeState.toFuture, LocalContext.current
+            dateRangeWithEnum.dateRange.from, dateRangeWithEnum.dateRange.to, LocalContext.current
         )
     }
     val expensesPercentage by animateFloatAsState(
@@ -225,7 +226,10 @@ private fun ExpensesIncomeWidgetPreview() {
                         expensesPercentageFloat = 0.8f,
                         incomePercentageFloat = 0.67f
                     ),
-                    dateRangeState = DateRangeState(DateRangeEnum.ThisMonth, 0, 0),
+                    dateRangeWithEnum = DateRangeWithEnum(
+                        enum = DateRangeEnum.ThisMonth,
+                        dateRange = LongDateRange(0, 0)
+                    ),
                     accountCurrency = "USD"
                 )
             }

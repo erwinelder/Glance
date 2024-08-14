@@ -7,5 +7,6 @@ data class RecordStackUnit(
     val amount: Double,
     val quantity: Int?,
     val categoryWithSubcategory: CategoryWithSubcategory?,
-    val note: String?
+    val note: String?,
+    val includeInBudgets: Boolean
 )

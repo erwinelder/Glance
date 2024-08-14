@@ -8,6 +8,7 @@
     <string name="setup">Setup</string>
 
     <!-- Buttons -->
+    <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
     <string name="confirm">Confirm</string>
@@ -75,6 +76,13 @@
     <string name="rate">Rate</string>
     <string name="quantity">Quantity</string>
     <string name="quantity_placeholder">Without quantity</string>
+    <string name="account_name">Account name</string>
+    <string name="budget_name">Budget name</string>
+    <string name="category_name">Category name</string>
+    <string name="collection_name">Collection name</string>
+    <string name="budget_limit">Budget limit</string>
+    <string name="repeating_period">Repeating period</string>
+    <string name="include_existing_records_to_used_amount">Include existing records to used amount</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>
@@ -118,6 +126,10 @@
     <string name="november_full">November</string>
     <string name="december_short">Dec</string>
     <string name="december_full">December</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
 
     <!-- Other -->
     <string name="hello">Hello</string>
@@ -129,9 +141,6 @@
     <string name="income_plural">Income</string>
     <string name="mixed">Mixed</string>
     <string name="transfer">Transfer</string>
-    <string name="account_name">Account name</string>
-    <string name="category_name">Category name</string>
-    <string name="collection_name">Collection name</string>
     <string name="all_categories">All categories</string>
     <string name="no_collections_of_this_type">No collections of this type</string>
     <string name="reset_data_description">Reset all app data, including accounts, records, categories, and settings.</string>

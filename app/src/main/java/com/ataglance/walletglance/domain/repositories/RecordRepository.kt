@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.domain.repositories
 
-import com.ataglance.walletglance.data.date.DateRangeState
+import com.ataglance.walletglance.data.date.LongDateRange
+import com.ataglance.walletglance.data.utils.getTodayLongDateRange
 import com.ataglance.walletglance.domain.dao.RecordDao
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.data.utils.getTodayDateLong
 import kotlinx.coroutines.flow.Flow
 
 class RecordRepository(
@@ -18,12 +18,13 @@ class RecordRepository(
         return dao.getAllRecords()
     }
 
-    fun getRecordsInDateRange(dateRangeState: DateRangeState): Flow<List<Record>> {
-        val today = getTodayDateLong()
-        return dao.getRecordsInDateRange(
-            today, today + 2359,
-            dateRangeState.fromPast, dateRangeState.toFuture
-        )
+    fun getRecordsForToday(): Flow<List<Record>> {
+        val todayDateRange = getTodayLongDateRange()
+        return dao.getRecordsInDateRange(todayDateRange.from, todayDateRange.to)
+    }
+
+    fun getRecordsInDateRange(longDateRange: LongDateRange): Flow<List<Record>> {
+        return dao.getRecordsInDateRange(longDateRange.from, longDateRange.to)
     }
 
 }

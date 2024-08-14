@@ -51,7 +51,7 @@ import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.theme.uielements.dividers.TextDivider
-import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
+import com.ataglance.walletglance.ui.theme.uielements.fields.TextFieldWithLabel
 import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 @Composable
@@ -122,7 +122,7 @@ private fun GlassSurfaceContent(
                 top = dimensionResource(R.dimen.field_gap)
             )
     ) {
-            CustomTextFieldWithLabel(
+            TextFieldWithLabel(
                 text = collection.name,
                 placeholderText = stringResource(R.string.collection_name),
                 onValueChange = onNameChange,

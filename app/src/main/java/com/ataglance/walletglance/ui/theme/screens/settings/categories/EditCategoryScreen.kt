@@ -38,7 +38,7 @@ import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenConta
 import com.ataglance.walletglance.ui.theme.uielements.buttons.ColorButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
-import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextFieldWithLabel
+import com.ataglance.walletglance.ui.theme.uielements.fields.TextFieldWithLabel
 import com.ataglance.walletglance.ui.theme.uielements.pickers.ColorPicker
 
 @Composable
@@ -117,7 +117,7 @@ private fun GlassSurfaceContent(
             .height(IntrinsicSize.Min)
             .padding(start = 12.dp, end = 12.dp, top = 24.dp)
     ) {
-        CustomTextFieldWithLabel(
+        TextFieldWithLabel(
             text = category.name,
             placeholderText = stringResource(R.string.category_name),
             labelText = stringResource(R.string.name),

@@ -69,8 +69,8 @@ import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryPicker
 import com.ataglance.walletglance.ui.theme.uielements.categories.RecordCategory
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.DateField
+import com.ataglance.walletglance.ui.theme.uielements.fields.GlanceTextField
 import com.ataglance.walletglance.ui.theme.uielements.fields.MakeRecordFieldContainer
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomDatePicker
 import com.ataglance.walletglance.ui.theme.uielements.pickers.CustomTimePicker
@@ -434,7 +434,7 @@ private fun RecordUnitBlockExpanded(
         modifier = Modifier.padding(horizontal = 24.dp, vertical = 22.dp)
     ) {
         MakeRecordFieldContainer(R.string.amount) {
-            CustomTextField(
+            GlanceTextField(
                 text = recordUnitUiState.amount,
                 placeholderText = "0.00",
                 fontSize = 22.sp,
@@ -461,7 +461,7 @@ private fun RecordUnitBlockExpanded(
         }
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.note) {
-            CustomTextField(
+            GlanceTextField(
                 text = recordUnitUiState.note,
                 placeholderText = stringResource(R.string.note_placeholder),
                 fontSize = 18.sp,
@@ -472,7 +472,7 @@ private fun RecordUnitBlockExpanded(
         }
         Spacer(modifier = Modifier.height(12.dp))
         MakeRecordFieldContainer(R.string.quantity) {
-            CustomTextField(
+            GlanceTextField(
                 text = recordUnitUiState.quantity,
                 placeholderText = stringResource(R.string.quantity_placeholder),
                 fontSize = 18.sp,

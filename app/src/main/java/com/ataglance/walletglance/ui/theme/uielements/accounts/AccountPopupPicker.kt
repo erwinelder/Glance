@@ -55,7 +55,7 @@ fun AccountPopupPicker(
                 expandedState.targetState = it
             }
         }
-        Box{
+        Box {
             if (expandedState.targetState || expandedState.currentState || !expandedState.isIdle) {
                 Popup(
                     properties = PopupProperties(

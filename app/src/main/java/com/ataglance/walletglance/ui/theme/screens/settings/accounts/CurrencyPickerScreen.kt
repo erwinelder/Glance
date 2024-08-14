@@ -25,7 +25,7 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
-import com.ataglance.walletglance.ui.theme.uielements.fields.CustomTextField
+import com.ataglance.walletglance.ui.theme.uielements.fields.GlanceTextField
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyItem
 import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerUiState
 
@@ -47,7 +47,7 @@ fun CurrencyPickerScreen(
                 targetState = uiState.selectedCurrency?.currencyCode,
                 label = "selected currency code"
             ) { targetCurrencyCode ->
-                CustomTextField(
+                GlanceTextField(
                     text = searchedPrompt,
                     onValueChange = onSearchPromptChange,
                     placeholderText = "\"${targetCurrencyCode}\"",

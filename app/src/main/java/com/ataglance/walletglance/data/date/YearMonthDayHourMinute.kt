@@ -6,4 +6,10 @@ data class YearMonthDayHourMinute(
     val day: Int,
     val hour: Int,
     val minute: Int
-)
+) {
+
+    fun concatenate(): Long {
+        return year.toLong() * 100000000 + month * 1000000 + day * 10000 + hour * 100 + minute
+    }
+
+}

@@ -18,15 +18,45 @@ data class YearMonthDay(
         return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
     }
 
+    fun subtractYears(yearsToSubtract: Int): YearMonthDay {
+        val localDate = LocalDate.of(year, month, day)
+        localDate.minusYears(yearsToSubtract.toLong())
+        return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
+    }
+
     fun addMonths(monthsToAdd: Int): YearMonthDay {
         val localDate = LocalDate.of(year, month, day)
         localDate.plusMonths(monthsToAdd.toLong())
         return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
     }
 
+    fun subtractMonths(monthsToSubtract: Int): YearMonthDay {
+        val localDate = LocalDate.of(year, month, day)
+        localDate.minusMonths(monthsToSubtract.toLong())
+        return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
+    }
+
+    fun addWeeks(weeksToAdd: Int): YearMonthDay {
+        val localDate = LocalDate.of(year, month, day)
+        localDate.plusWeeks(weeksToAdd.toLong())
+        return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
+    }
+
+    fun subtractWeeks(weeksToSubtract: Int): YearMonthDay {
+        val localDate = LocalDate.of(year, month, day)
+        localDate.minusWeeks(weeksToSubtract.toLong())
+        return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
+    }
+
     fun addDays(daysToAdd: Int): YearMonthDay {
         val localDate = LocalDate.of(year, month, day)
         localDate.plusDays(daysToAdd.toLong())
+        return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
+    }
+
+    fun subtractDays(daysToSubtract: Int): YearMonthDay {
+        val localDate = LocalDate.of(year, month, day)
+        localDate.minusDays(daysToSubtract.toLong())
         return YearMonthDay(localDate.year, localDate.monthValue, localDate.dayOfMonth)
     }
 

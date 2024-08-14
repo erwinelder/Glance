@@ -1,25 +1,42 @@
 package com.ataglance.walletglance.data.budgets
 
 import androidx.compose.runtime.Stable
+import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.utils.getTodayDateLong
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 
 @Stable
 data class EditingBudgetUiState(
+    val isNew: Boolean = true,
     val id: Int = 0,
-    val usedAmount: String = "",
     val amountLimit: String = "",
-    val usedPercentage: Float = 0f,
     val category: Category? = null,
     val name: String = "",
-    val repeatingPeriod: BudgetRepeatingPeriod = BudgetRepeatingPeriod.OneTime,
-    val lastResetDay: Long = getTodayDateLong(),
-    val linkedAccountsIds: List<Int> = emptyList()
+    val repeatingPeriod: RepeatingPeriod = RepeatingPeriod.Monthly,
+    val linkedAccounts: List<Account> = emptyList()
 ) {
 
+    fun allowSaving(): Boolean {
+        val newAmountLimit = amountLimit.toDoubleOrNull() ?: return false
+
+        return name.isNotBlank() && newAmountLimit > 0.0
+    }
+
     fun toBudget(): Budget? {
-        val newCurrentAmount = usedAmount.toDoubleOrNull() ?: return null
         val newAmountLimit = amountLimit.toDoubleOrNull() ?: return null
+
+        return Budget(
+            id = id,
+            amountLimit = newAmountLimit,
+            usedAmount = ,
+            usedPercentage = usedPercentage,
+            category = category,
+            name = name,
+            repeatingPeriod = repeatingPeriod,
+            dateRange = validityDateRange,
+            currency = currency,
+            linkedAccountsIds = linkedAccountsIds
+        )
 
         return Budget(
             id = id,
@@ -29,16 +46,9 @@ data class EditingBudgetUiState(
             category = category,
             name = name.trim(),
             repeatingPeriod = repeatingPeriod,
-            lastResetDate = lastResetDay,
-            linkedAccountsIds = linkedAccountsIds
+            currency = linkedAccounts.firstOrNull()?.currency ?: "",
+            linkedAccountsIds = linkedAccounts.map { it.id }
         )
-    }
-
-    fun allowSaving(): Boolean {
-        val newCurrentAmount = usedAmount.toDoubleOrNull() ?: return false
-        val newAmountLimit = amountLimit.toDoubleOrNull() ?: return false
-
-        return name.isNotBlank() && newAmountLimit >= newCurrentAmount
     }
 
 }
