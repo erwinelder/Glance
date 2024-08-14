@@ -40,6 +40,15 @@ data class BudgetsByType(
         }
     }
 
+    fun deleteBudget(id: Int, repeatingPeriod: RepeatingPeriod): BudgetsByType {
+        return when (repeatingPeriod) {
+            RepeatingPeriod.Daily -> this.copy(daily = daily.filter { it.id != id })
+            RepeatingPeriod.Weekly -> this.copy(weekly = weekly.filter { it.id != id })
+            RepeatingPeriod.Monthly -> this.copy(monthly = monthly.filter { it.id != id })
+            RepeatingPeriod.Yearly -> this.copy(yearly = yearly.filter { it.id != id })
+        }
+    }
+
     fun getMaxDateRange(): LongDateRange? {
         return (yearly.takeIf { it.isNotEmpty() }
             ?: monthly.takeIf { it.isNotEmpty() }

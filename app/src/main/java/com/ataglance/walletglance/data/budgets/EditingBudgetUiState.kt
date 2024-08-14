@@ -14,7 +14,8 @@ data class EditingBudgetUiState(
     val amountLimit: String = "",
     val category: Category? = null,
     val name: String = "",
-    val repeatingPeriod: RepeatingPeriod = RepeatingPeriod.Monthly,
+    val currRepeatingPeriod: RepeatingPeriod = RepeatingPeriod.Monthly,
+    val newRepeatingPeriod: RepeatingPeriod = RepeatingPeriod.Monthly,
     val linkedAccounts: List<Account> = emptyList()
 ) {
 
@@ -35,8 +36,8 @@ data class EditingBudgetUiState(
             usedPercentage = 0F,
             category = category,
             name = name,
-            repeatingPeriod = repeatingPeriod,
-            dateRange = repeatingPeriod.getLongDateRangeWithTime(),
+            repeatingPeriod = newRepeatingPeriod,
+            dateRange = newRepeatingPeriod.getLongDateRangeWithTime(),
             currency = linkedAccounts.firstOrNull()?.currency ?: "",
             linkedAccountsIds = linkedAccounts.map { it.id }
         )
@@ -49,7 +50,7 @@ data class EditingBudgetUiState(
             amountLimit = newAmountLimit,
             category = category,
             name = name,
-            repeatingPeriod = repeatingPeriod,
+            repeatingPeriod = newRepeatingPeriod,
             linkedAccountsIds = linkedAccounts.map { it.id }
         )
     }

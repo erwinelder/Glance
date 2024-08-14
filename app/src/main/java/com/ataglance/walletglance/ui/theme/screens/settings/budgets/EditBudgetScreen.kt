@@ -33,8 +33,8 @@ import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.utils.asStringRes
@@ -42,6 +42,7 @@ import com.ataglance.walletglance.data.utils.toAccountColorWithName
 import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.TwoStateCheckbox
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryField
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryPicker
@@ -54,16 +55,17 @@ import com.ataglance.walletglance.ui.theme.uielements.pickers.PopupFloatingPicke
 @Composable
 fun EditBudgetScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme,
+    appTheme: AppTheme?,
     budget: EditingBudgetUiState,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     onNameChange: (String) -> Unit,
-    onCategoryChange: (Category) -> Unit,
+    onCategoryChange: (CategoryWithSubcategory) -> Unit,
     onAmountLimitChange: (String) -> Unit,
     onRepeatingPeriodChange: (RepeatingPeriod) -> Unit,
-    onLinkAccount: () -> Unit,
-    onUnlinkAccount: () -> Unit,
+    onLinkAccount: (Account) -> Unit,
+    onUnlinkAccount: (Account) -> Unit,
+    onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
     var showCategoryPicker by remember { mutableStateOf(false) }
@@ -74,6 +76,13 @@ fun EditBudgetScreen(
     ) {
         SetupDataScreenContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
+            fillGlassSurface = false,
+            topButton = if (!budget.isNew) { {
+                SecondaryButton(
+                    text = stringResource(R.string.delete),
+                    onClick = onDeleteButton
+                )
+            } } else null,
             glassSurfaceContent = {
                 GlassSurfaceContent(
                     appTheme = appTheme,
@@ -101,22 +110,22 @@ fun EditBudgetScreen(
             appTheme = appTheme,
             allowChoosingParentCategory = true,
             onDismissRequest = { showCategoryPicker = false },
-            onCategoryChoose = { onCategoryChange(it.getSubcategoryOrCategory()) }
+            onCategoryChoose = { onCategoryChange(it) }
         )
     }
 }
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme,
+    appTheme: AppTheme?,
     budget: EditingBudgetUiState,
     accountList: List<Account>,
     onNameChange: (String) -> Unit,
     onCategoryFieldClick: () -> Unit,
     onAmountLimitChange: (String) -> Unit,
     onRepeatingPeriodChange: (RepeatingPeriod) -> Unit,
-    onLinkAccount: () -> Unit,
-    onUnlinkAccount: () -> Unit
+    onLinkAccount: (Account) -> Unit,
+    onUnlinkAccount: (Account) -> Unit
 ) {
     val context = LocalContext.current
     val scrollStateConnection = rememberNestedScrollInteropConnection()
@@ -131,7 +140,7 @@ private fun GlassSurfaceContent(
     ) {
         FieldWithLabel(stringResource(R.string.repeating_period)) {
             PopupFloatingPicker(
-                selectedItemText = stringResource(budget.repeatingPeriod.asStringRes()),
+                selectedItemText = stringResource(budget.newRepeatingPeriod.asStringRes()),
                 itemList = listOf(
                     RepeatingPeriod.Daily,
                     RepeatingPeriod.Weekly,
@@ -186,8 +195,8 @@ private fun AccountCheckedList(
     budget: EditingBudgetUiState,
     accountList: List<Account>,
     appTheme: AppTheme?,
-    onAccountCheck: () -> Unit,
-    onAccountUncheck: () -> Unit,
+    onAccountCheck: (Account) -> Unit,
+    onAccountUncheck: (Account) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -213,7 +222,7 @@ private fun AccountCheckedList(
                         checked = budget.linkedAccounts.find { it.id == account.id } != null,
                         enabled = enabled,
                         onClick = { isChecked ->
-                            if (isChecked) onAccountCheck() else onAccountUncheck()
+                            if (isChecked) onAccountCheck(account) else onAccountUncheck(account)
                         }
                     )
                     AccountNameWithCurrencyComposable(
@@ -237,8 +246,7 @@ private fun EditBudgetScreenPreview() {
         Account(id = 2, color = AccountPossibleColors().blue.toAccountColorWithName()),
         Account(id = 3, color = AccountPossibleColors().default.toAccountColorWithName(), currency = "CZK"),
     )
-    val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
-        .getDefaultCategories()
+    val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
     val budget = EditingBudgetUiState(
         isNew = true,
         amountLimit = "4000",
@@ -259,6 +267,7 @@ private fun EditBudgetScreenPreview() {
             onRepeatingPeriodChange = {},
             onLinkAccount = {},
             onUnlinkAccount = {},
+            onDeleteButton = {},
             onSaveButton = {}
         )
     }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
 import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,13 +33,16 @@ class EditBudgetViewModel : ViewModel() {
 
     fun changeRepeatingPeriod(repeatingPeriod: RepeatingPeriod) {
         _budget.update {
-            it.copy(repeatingPeriod = repeatingPeriod)
+            it.copy(newRepeatingPeriod = repeatingPeriod)
         }
     }
 
-    fun changeCategory(category: Category) {
+    fun changeCategory(categoryWithSubcategory: CategoryWithSubcategory) {
         _budget.update {
-            it.copy(category = category)
+            it.copy(
+                priorityNum = categoryWithSubcategory.groupParentAndSubcategoryOrderNums(),
+                category = categoryWithSubcategory.getSubcategoryOrCategory()
+            )
         }
     }
 
@@ -56,9 +60,9 @@ class EditBudgetViewModel : ViewModel() {
 
     fun linkWithAccount(account: Account) {
         val newList = budget.value.linkedAccounts.toMutableList()
-        if (!newList.contains(account)) {
-            newList.add(account)
-        }
+        if (newList.contains(account)) return
+
+        newList.add(account)
 
         _budget.update {
             it.copy(linkedAccounts = newList)

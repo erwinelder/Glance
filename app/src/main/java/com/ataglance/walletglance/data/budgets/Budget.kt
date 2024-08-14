@@ -56,7 +56,8 @@ data class Budget(
             amountLimit = amountLimit.toString(),
             category = category,
             name = name,
-            repeatingPeriod = repeatingPeriod,
+            currRepeatingPeriod = repeatingPeriod,
+            newRepeatingPeriod = repeatingPeriod,
             linkedAccounts = accountList.filter { linkedAccountsIds.contains(it.id) }
         )
     }

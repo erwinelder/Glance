@@ -76,6 +76,7 @@ import com.ataglance.walletglance.ui.theme.screens.settings.SetupStartScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.CurrencyPickerScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.EditAccountScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.accounts.EditAccountsScreen
+import com.ataglance.walletglance.ui.theme.screens.settings.budgets.EditBudgetScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.budgets.EditBudgetsScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditCategoryScreen
 import com.ataglance.walletglance.ui.theme.screens.settings.categories.EditSubcategoryListScreen
@@ -698,7 +699,8 @@ fun NavGraphBuilder.settingsGraph(
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             budgetsByType = budgetsByType,
-            accountList = accountList
+            accountList = accountList,
+            categoriesWithSubcategories = categoriesWithSubcategories
         )
         categoriesGraph(
             navController = navController,
@@ -854,7 +856,8 @@ fun NavGraphBuilder.budgetsGraph(
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     budgetsByType: BudgetsByType,
-    accountList: List<Account>
+    accountList: List<Account>,
+    categoriesWithSubcategories: CategoriesWithSubcategories
 ) {
     navigation<SettingsScreens.Budgets>(
         startDestination = BudgetsSettingsScreens.EditBudgets
@@ -900,6 +903,28 @@ fun NavGraphBuilder.budgetsGraph(
 
             val budgetState by editBudgetViewModel.budget.collectAsStateWithLifecycle()
 
+            EditBudgetScreen(
+                scaffoldPadding = scaffoldPadding,
+                appTheme = appUiSettings.appTheme,
+                budget = budgetState,
+                accountList = accountList,
+                categoriesWithSubcategories = categoriesWithSubcategories,
+                onNameChange = editBudgetViewModel::changeName,
+                onCategoryChange = editBudgetViewModel::changeCategory,
+                onAmountLimitChange = editBudgetViewModel::changeAmountLimit,
+                onRepeatingPeriodChange = editBudgetViewModel::changeRepeatingPeriod,
+                onLinkAccount = editBudgetViewModel::linkWithAccount,
+                onUnlinkAccount = editBudgetViewModel::unlinkWithAccount,
+                onDeleteButton = {
+                    editBudgetsViewModel.deleteBudget(
+                        id = budgetState.id,
+                        repeatingPeriod = budgetState.currRepeatingPeriod
+                    )
+                },
+                onSaveButton = {
+                    editBudgetsViewModel.saveBudget(editBudgetViewModel.getBudgetUiState())
+                }
+            )
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.utils.groupByType
 import com.ataglance.walletglance.data.utils.replaceById
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +33,11 @@ class EditBudgetsViewModel(
             budgetsByType.concatenate().replaceById(budgetUiState).groupByType()
         }
 
+        _budgetsByType.update { newBudgetsByType }
+    }
+
+    fun deleteBudget(id: Int, repeatingPeriod: RepeatingPeriod) {
+        val newBudgetsByType = budgetsByType.value.deleteBudget(id, repeatingPeriod)
         _budgetsByType.update { newBudgetsByType }
     }
 
