@@ -13,7 +13,8 @@ data class MakeRecordUiState(
     val account: Account?,
     val type: RecordType = RecordType.Expense,
     val clickedUnitIndex: Int = 0,
-    val dateTimeState: DateTimeState = DateTimeState()
+    val dateTimeState: DateTimeState = DateTimeState(),
+    val includeInBudgets: Boolean = true
 ) {
 
     fun toRecordList(unitList: List<MakeRecordUnitUiState>): List<Record> {
@@ -39,7 +40,7 @@ data class MakeRecordUiState(
                         subcategoryId = unit.categoryWithSubcategory.subcategory?.id,
                         accountId = account.id,
                         note = unit.note.ifBlank { null },
-                        includeInBudgets =
+                        includeInBudgets = includeInBudgets
                     )
                 )
             }
@@ -75,7 +76,7 @@ data class MakeRecordUiState(
                         subcategoryId = unit.categoryWithSubcategory.subcategory?.id,
                         accountId = account.id,
                         note = unit.note.ifBlank { null },
-                        includeInBudgets =
+                        includeInBudgets = includeInBudgets
                     )
                 )
             }

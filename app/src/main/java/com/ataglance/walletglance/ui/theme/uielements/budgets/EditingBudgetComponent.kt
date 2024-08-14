@@ -11,8 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +25,6 @@ import com.ataglance.walletglance.data.utils.formatWithSpaces
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.screens.settings.budgets.EditBudgetsScreenPreview
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryIconComponent
-import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceLineChart
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 
 @Composable
@@ -40,7 +39,7 @@ fun EditingBudgetComponent(
         paddingValues = PaddingValues(24.dp, 16.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -62,28 +61,28 @@ fun EditingBudgetComponent(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = budget.usedAmount.formatWithSpaces(),
-                        color = GlanceTheme.onSurface,
-                    )
-                    Text(
-                        text = budget.amountLimit.formatWithSpaces(),
-                        color = GlanceTheme.onSurface,
-                    )
-                }
-                GlanceLineChart(
-                    filledWidth = budget.usedPercentage / 100,
-                    gradientBrushColors = budget.category?.colorWithName?.color?.getByTheme(appTheme)
-                        ?.asListDarkToLight() ?: emptyList(),
-                    shadowColor = budget.category?.colorWithName?.color?.getByTheme(appTheme)?.darker
-                        ?: Color.Transparent
+                Text(
+                    text = stringResource(R.string.limit) + ":",
+                    color = GlanceTheme.outline,
+                    fontSize = 17.sp
+                )
+                Text(
+                    text = budget.amountLimit.formatWithSpaces(),
+                    color = GlanceTheme.onSurface,
+                    fontSize = 19.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                Text(
+                    text = budget.currency,
+                    color = GlanceTheme.onSurface,
+                    fontSize = 18.sp
                 )
             }
         }

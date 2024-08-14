@@ -79,9 +79,9 @@
     <string name="budget_name">Назва бюджету</string>
     <string name="category_name">Назва категорії</string>
     <string name="collection_name">Назва колекції</string>
+    <string name="limit">Ліміт</string>
     <string name="budget_limit">Ліміт бюджета</string>
     <string name="repeating_period">Повторюваний період</string>
-    <string name="include_existing_records_to_used_amount">Включити існуючі записи до використаної суми</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>

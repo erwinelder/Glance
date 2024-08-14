@@ -42,6 +42,7 @@ import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
+import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SecondaryButton
@@ -52,7 +53,6 @@ import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContaine
 import com.ataglance.walletglance.ui.theme.uielements.dividers.BigDivider
 import com.ataglance.walletglance.ui.theme.uielements.dividers.TextDivider
 import com.ataglance.walletglance.ui.theme.uielements.fields.TextFieldWithLabel
-import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 @Composable
 fun EditCategoryCollectionScreen(
@@ -219,9 +219,9 @@ private fun LazyListScope.categoryListItems(
     if (list.isNotEmpty()) {
         item {
             TextDivider(
-                modifier = Modifier.padding(top = 16.dp),
                 textRes = if (listType == CategoryType.Expense) R.string.expenses
-                else R.string.income_plural
+                    else R.string.income_plural,
+                modifier = Modifier.padding(top = 16.dp)
             )
         }
     }

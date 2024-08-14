@@ -2,10 +2,9 @@ package com.ataglance.walletglance.ui.viewmodels.budgets
 
 import androidx.lifecycle.ViewModel
 import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
 import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,20 +30,6 @@ class EditBudgetViewModel : ViewModel() {
         }
     }
 
-    fun changeNextResetDate(date: Long) {
-        _budget.update {
-            it.copy(nextResetDay = date)
-        }
-    }
-
-    fun changeIncludeExistingRecords(value: Boolean) {
-        _budget.update {
-            it.copy(
-                includeExistingRecords = value
-            )
-        }
-    }
-
     fun changeRepeatingPeriod(repeatingPeriod: RepeatingPeriod) {
         _budget.update {
             it.copy(repeatingPeriod = repeatingPeriod)
@@ -54,12 +39,6 @@ class EditBudgetViewModel : ViewModel() {
     fun changeCategory(category: Category) {
         _budget.update {
             it.copy(category = category)
-        }
-    }
-
-    fun changeUsedAmount(value: String) {
-        _budget.update {
-            it.copy(usedAmount = value)
         }
     }
 
@@ -94,8 +73,8 @@ class EditBudgetViewModel : ViewModel() {
         }
     }
 
-    fun getBudget(): Budget? {
-        return budget.value.toBudget()
+    fun getBudgetUiState(): EditingBudgetUiState {
+        return budget.value
     }
 
 }

@@ -79,9 +79,9 @@
     <string name="budget_name">Budgetname</string>
     <string name="category_name">Kategorie Name</string>
     <string name="collection_name">Sammlungsname</string>
+    <string name="limit">Limit</string>
     <string name="budget_limit">Budgetlimit</string>
     <string name="repeating_period">Wiederkehrender Zeitraum</string>
-    <string name="include_existing_records_to_used_amount">Bestehende Einträge zur verbrauchten Summe hinzufügen</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>

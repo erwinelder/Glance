@@ -79,9 +79,9 @@
     <string name="budget_name">Název rozpočtu</string>
     <string name="category_name">Název kategorie</string>
     <string name="collection_name">Název kolekce</string>
+    <string name="limit">Limit</string>
     <string name="budget_limit">Rozpočtový limit</string>
     <string name="repeating_period">Opakovaný interval</string>
-    <string name="include_existing_records_to_used_amount">Zahrnout stávající záznamy do použité částky</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>

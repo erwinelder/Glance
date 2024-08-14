@@ -3,16 +3,12 @@ package com.ataglance.walletglance.data.utils
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
+import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.domain.entities.BudgetAccountAssociation
 import com.ataglance.walletglance.domain.entities.BudgetEntity
 import com.ataglance.walletglance.domain.entities.Record
-
-
-fun List<Budget>.toEntityList(): List<BudgetEntity> {
-    return this.map { it.toBudgetEntity() }
-}
 
 
 fun List<BudgetEntity>.toBudgetList(
@@ -30,6 +26,11 @@ fun List<BudgetEntity>.toBudgetList(
             accountList = accountList
         )
     }
+}
+
+
+fun List<Budget>.toEntityList(): List<BudgetEntity> {
+    return this.map { it.toBudgetEntity() }
 }
 
 
@@ -79,18 +80,6 @@ fun List<Budget>.divideIntoBudgetsAndAssociations():
 }
 
 
-fun List<Budget>.findById(id: Int): Budget? {
-    return this.find { it.id == id }
-}
-
-
-fun List<Budget>.replaceById(budgetToReplaceWith: Budget): List<Budget> {
-    return this.map { budget ->
-        budget.takeUnless { it.id == budgetToReplaceWith.id } ?: budgetToReplaceWith
-    }
-}
-
-
 fun List<BudgetEntity>.getIdsThatAreNotInList(
     list: List<BudgetEntity>
 ): List<Int> {
@@ -112,6 +101,24 @@ fun List<BudgetAccountAssociation>.getAssociationsThatAreNotInList(
                         it.accountId == thisAssociation.accountId
             } == null
         }
+}
+
+
+fun List<Budget>.findById(id: Int): Budget? {
+    return this.find { it.id == id }
+}
+
+
+fun List<Budget>.getMaxIdOrZero(): Int {
+    return this.maxOfOrNull { it.id } ?: 0
+}
+
+
+fun List<Budget>.replaceById(editingBudgetUiState: EditingBudgetUiState): List<Budget> {
+    return this.map { budget ->
+        budget.takeUnless { it.id == editingBudgetUiState.id }
+            ?: editingBudgetUiState.copyDataToBudget(budget)
+    }
 }
 
 

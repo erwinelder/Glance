@@ -4,11 +4,13 @@ import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.date.RepeatingPeriod
+import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
 
 @Stable
 data class EditingBudgetUiState(
     val isNew: Boolean = true,
     val id: Int = 0,
+    val priorityNum: Double = 0.0,
     val amountLimit: String = "",
     val category: Category? = null,
     val name: String = "",
@@ -22,31 +24,32 @@ data class EditingBudgetUiState(
         return name.isNotBlank() && newAmountLimit > 0.0
     }
 
-    fun toBudget(): Budget? {
+    fun toNewBudget(): Budget? {
         val newAmountLimit = amountLimit.toDoubleOrNull() ?: return null
 
         return Budget(
             id = id,
+            priorityNum = priorityNum,
             amountLimit = newAmountLimit,
-            usedAmount = ,
-            usedPercentage = usedPercentage,
+            usedAmount = 0.0,
+            usedPercentage = 0F,
             category = category,
             name = name,
             repeatingPeriod = repeatingPeriod,
-            dateRange = validityDateRange,
-            currency = currency,
-            linkedAccountsIds = linkedAccountsIds
-        )
-
-        return Budget(
-            id = id,
-            usedAmount = newCurrentAmount,
-            amountLimit = newAmountLimit,
-            usedPercentage = ".2f".format(100 / newAmountLimit * newCurrentAmount).toFloat(),
-            category = category,
-            name = name.trim(),
-            repeatingPeriod = repeatingPeriod,
+            dateRange = repeatingPeriod.getLongDateRangeWithTime(),
             currency = linkedAccounts.firstOrNull()?.currency ?: "",
+            linkedAccountsIds = linkedAccounts.map { it.id }
+        )
+    }
+
+    fun copyDataToBudget(budget: Budget): Budget {
+        val newAmountLimit = amountLimit.toDoubleOrNull() ?: return budget
+
+        return budget.copy(
+            amountLimit = newAmountLimit,
+            category = category,
+            name = name,
+            repeatingPeriod = repeatingPeriod,
             linkedAccountsIds = linkedAccounts.map { it.id }
         )
     }

@@ -80,9 +80,9 @@
     <string name="budget_name">Budget name</string>
     <string name="category_name">Category name</string>
     <string name="collection_name">Collection name</string>
+    <string name="limit">Limit</string>
     <string name="budget_limit">Budget limit</string>
     <string name="repeating_period">Repeating period</string>
-    <string name="include_existing_records_to_used_amount">Include existing records to used amount</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>

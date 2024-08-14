@@ -162,7 +162,7 @@ fun List<Record>.getTotalAmountByType(type: CategoryType): Double {
 }
 
 
-fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
+fun List<RecordStack>.getStackTotalAmountByType(type: CategoryType): Double {
     return this
         .filter {
             type == CategoryType.Expense && it.isExpenseOrOutTransfer() ||
@@ -184,8 +184,8 @@ fun getTotalPercentages(expensesTotal: Double, incomeTotal: Double): Pair<Double
 
 
 fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiState {
-    val expensesTotal = this.getTotalAmountByType(CategoryType.Expense)
-    val incomeTotal = this.getTotalAmountByType(CategoryType.Income)
+    val expensesTotal = this.getStackTotalAmountByType(CategoryType.Expense)
+    val incomeTotal = this.getStackTotalAmountByType(CategoryType.Income)
     val (expensesPercentage, incomePercentage) = getTotalPercentages(expensesTotal, incomeTotal)
 
     return ExpensesIncomeWidgetUiState(

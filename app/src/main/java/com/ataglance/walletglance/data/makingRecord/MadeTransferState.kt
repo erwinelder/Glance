@@ -13,7 +13,8 @@ data class MadeTransferState(
     val startAmount: Double,
     val finalAmount: Double,
     val dateTimeState: DateTimeState = DateTimeState(),
-    val recordNum: Int
+    val recordNum: Int,
+    val includeInBudgets: Boolean = true
 ) {
     fun toRecordsPair(): Pair<Record, Record> {
         return Pair(
@@ -27,7 +28,8 @@ data class MadeTransferState(
                 categoryId = 0,
                 subcategoryId = null,
                 accountId = fromAccount.id,
-                note = toAccount.id.toString()
+                note = toAccount.id.toString(),
+                includeInBudgets = includeInBudgets
             ),
             Record(
                 id = recordIdTo,
@@ -39,7 +41,8 @@ data class MadeTransferState(
                 categoryId = 0,
                 subcategoryId = null,
                 accountId = toAccount.id,
-                note = fromAccount.id.toString()
+                note = fromAccount.id.toString(),
+                includeInBudgets = includeInBudgets
             )
         )
     }

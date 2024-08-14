@@ -80,9 +80,9 @@
     <string name="budget_name">Nombre del presupuesto</string>
     <string name="category_name">Nombre de la categoría</string>
     <string name="collection_name">Nombre de la colección</string>
+    <string name="limit">Limite</string>
     <string name="budget_limit">Límite del presupuesto</string>
     <string name="repeating_period">Período repetitivo</string>
-    <string name="include_existing_records_to_used_amount">Incluir registros existentes en el importe utilizado</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>

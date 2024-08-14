@@ -298,12 +298,12 @@ fun getRepeatingPeriodByString(periodValue: String): RepeatingPeriod? {
 }
 
 
-fun RepeatingPeriod.asLocalizedString(context: Context): String {
+fun RepeatingPeriod.asStringRes(): Int {
     return when (this) {
-        RepeatingPeriod.Daily -> context.getString(R.string.daily)
-        RepeatingPeriod.Weekly -> context.getString(R.string.weekly)
-        RepeatingPeriod.Monthly -> context.getString(R.string.monthly)
-        RepeatingPeriod.Yearly -> context.getString(R.string.yearly)
+        RepeatingPeriod.Daily -> R.string.daily
+        RepeatingPeriod.Weekly -> R.string.weekly
+        RepeatingPeriod.Monthly -> R.string.monthly
+        RepeatingPeriod.Yearly -> R.string.yearly
     }
 }
 

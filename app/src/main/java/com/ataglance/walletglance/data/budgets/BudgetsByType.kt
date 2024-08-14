@@ -1,8 +1,10 @@
 package com.ataglance.walletglance.data.budgets
 
 import com.ataglance.walletglance.data.date.LongDateRange
+import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.utils.addUsedAmountsByRecords
 import com.ataglance.walletglance.data.utils.fillUsedAmountsByRecords
+import com.ataglance.walletglance.data.utils.getMaxIdOrZero
 import com.ataglance.walletglance.data.utils.subtractUsedAmountsByRecords
 import com.ataglance.walletglance.domain.entities.Record
 
@@ -15,6 +17,27 @@ data class BudgetsByType(
 
     fun concatenate(): List<Budget> {
         return daily + weekly + monthly + yearly
+    }
+
+    fun getByType(type: RepeatingPeriod): List<Budget> {
+        return when (type) {
+            RepeatingPeriod.Daily -> daily
+            RepeatingPeriod.Weekly -> weekly
+            RepeatingPeriod.Monthly -> monthly
+            RepeatingPeriod.Yearly -> yearly
+        }
+    }
+
+    fun addBudget(budget: Budget): BudgetsByType {
+        val newId = concatenate().getMaxIdOrZero() + 1
+        val listOfNewBudget = listOf(budget.copy(id = newId))
+
+        return when (budget.repeatingPeriod) {
+            RepeatingPeriod.Daily -> this.copy(daily = daily + listOfNewBudget)
+            RepeatingPeriod.Weekly -> this.copy(daily = weekly + listOfNewBudget)
+            RepeatingPeriod.Monthly -> this.copy(daily = monthly + listOfNewBudget)
+            RepeatingPeriod.Yearly -> this.copy(daily = yearly + listOfNewBudget)
+        }
     }
 
     fun getMaxDateRange(): LongDateRange? {

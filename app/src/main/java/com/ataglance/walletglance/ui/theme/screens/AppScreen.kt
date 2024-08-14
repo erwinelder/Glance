@@ -862,19 +862,20 @@ fun NavGraphBuilder.budgetsGraph(
         composable<BudgetsSettingsScreens.EditBudgets> { backStack ->
             val editBudgetsViewModel = backStack.sharedViewModel<EditBudgetsViewModel>(
                 navController = navController,
-                factory = EditBudgetsViewModelFactory(budgetList = budgetsByType)
+                factory = EditBudgetsViewModelFactory(budgetsByType = budgetsByType)
             )
             val editBudgetViewModel = backStack.sharedViewModel<EditBudgetViewModel>(
                 navController = navController
             )
 
-            val budgetListState by editBudgetsViewModel.budgets.collectAsStateWithLifecycle()
+            val budgetsByTypeState by editBudgetsViewModel.budgetsByType
+                .collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditBudgetsScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
-                budgetList = budgetListState,
+                budgetsByType = budgetsByTypeState,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
                     editBudgetViewModel.applyBudget(budget?.toBudgetUiState(accountList))
                     navController.navigate(BudgetsSettingsScreens.EditBudget)
@@ -891,7 +892,7 @@ fun NavGraphBuilder.budgetsGraph(
         composable<BudgetsSettingsScreens.EditBudget> { backStack ->
             val editBudgetsViewModel = backStack.sharedViewModel<EditBudgetsViewModel>(
                 navController = navController,
-                factory = EditBudgetsViewModelFactory(budgetList = budgetsByType)
+                factory = EditBudgetsViewModelFactory(budgetsByType = budgetsByType)
             )
             val editBudgetViewModel = backStack.sharedViewModel<EditBudgetViewModel>(
                 navController = navController

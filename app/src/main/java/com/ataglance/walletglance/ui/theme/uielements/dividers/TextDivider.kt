@@ -19,8 +19,8 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 
 @Composable
 fun TextDivider(
-    modifier: Modifier = Modifier,
-    textRes: Int
+    textRes: Int,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
