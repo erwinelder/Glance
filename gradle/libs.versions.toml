@@ -1,5 +1,5 @@
 [versions]
-activityCompose = "1.9.0"
+activityCompose = "1.9.1"
 androidGradlePlugin = "8.5.2"
 androidxCoreKtx = "1.6.1"
 appcompat = "1.7.0"
@@ -21,7 +21,7 @@ junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
 kotlin = "2.0.0"
 kotlinxCoroutinesTest = "1.7.3"
-lifecycleRuntimeKtx = "2.8.3"
+lifecycleRuntimeKtx = "2.8.4"
 material3 = "1.2.1"
 mockitoCore = "5.11.0"
 mockk = "1.13.10"
@@ -33,7 +33,6 @@ runner = "1.6.1"
 kotlinxSerializationJson = "1.6.3"
 uiTestManifest = "1.6.8"
 junitKtx = "1.2.1"
-junitJupiterVersion = "5.10.2"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -84,7 +83,6 @@ review = { module = "com.google.android.play:review", version.ref = "review" }
 review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "review" }
 test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidxCoreKtx" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
-jupiter-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiterVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

@@ -105,8 +105,8 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.junit.ktx)
-    testImplementation(libs.jupiter.junit.jupiter)
-    androidTestImplementation(libs.jupiter.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.jupiter)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
