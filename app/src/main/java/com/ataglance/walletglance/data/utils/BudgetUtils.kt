@@ -56,10 +56,10 @@ fun List<Budget>.groupByType(): BudgetsByType {
         .first
 
     return BudgetsByType(
-        daily = dailyBudgets,
-        weekly = weeklyBudgets,
-        monthly = monthlyBudgets,
-        yearly = yearlyBudgets
+        daily = dailyBudgets.sortedBy { it.priorityNum },
+        weekly = weeklyBudgets.sortedBy { it.priorityNum },
+        monthly = monthlyBudgets.sortedBy { it.priorityNum },
+        yearly = yearlyBudgets.sortedBy { it.priorityNum }
     )
 }
 

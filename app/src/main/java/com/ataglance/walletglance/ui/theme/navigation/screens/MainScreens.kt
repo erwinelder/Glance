@@ -14,6 +14,9 @@ sealed interface MainScreens {
     data class CategoryStatistics(val parentCategoryId: Int) : MainScreens
 
     @Serializable
+    data object Budgets : MainScreens
+
+    @Serializable
     data class MakeRecord(val status: String, val recordNum: Int) : MainScreens
 
     @Serializable

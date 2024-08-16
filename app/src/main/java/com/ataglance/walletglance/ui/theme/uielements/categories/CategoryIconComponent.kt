@@ -27,11 +27,11 @@ fun CategoryIconComponent(
         modifier = Modifier
             .shadow(
                 elevation = 8.dp,
-                spotColor = category.colorWithName.color.getByTheme(appTheme).darker,
+                spotColor = category.getColorByTheme(appTheme).darker,
                 shape = RoundedCornerShape(30)
             )
             .clip(RoundedCornerShape(30))
-            .background(category.colorWithName.color.getByTheme(appTheme).darker)
+            .background(category.getColorByTheme(appTheme).darker)
             .size(32.dp)
             .padding(5.dp)
     )

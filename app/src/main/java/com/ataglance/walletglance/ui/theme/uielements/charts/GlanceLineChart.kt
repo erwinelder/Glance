@@ -13,8 +13,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.screens.BudgetsScreenPreview
 
 @Composable
 fun GlanceLineChart(
@@ -31,15 +33,10 @@ fun GlanceLineChart(
         Spacer(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
-                /*.background(
-                    uiState?.let { GlanceTheme.glassGradientLightToDark.first }
-                        ?: Color.Transparent
-                )*/
                 .background(GlanceTheme.glassGradientLightToDark.first)
                 .fillMaxWidth()
                 .height(16.dp)
         )
-//        uiState?.let {
         Spacer(
             modifier = Modifier
                 .shadow(
@@ -52,6 +49,12 @@ fun GlanceLineChart(
                 .fillMaxWidth(filledWidth)
                 .height(16.dp)
         )
-//        }
     }
+}
+
+
+@Preview
+@Composable
+private fun Preview() {
+    BudgetsScreenPreview()
 }

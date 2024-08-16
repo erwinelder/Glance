@@ -28,16 +28,22 @@ data class BudgetsByType(
         }
     }
 
+    private fun replaceListByType(list: List<Budget>, type: RepeatingPeriod): BudgetsByType {
+        return when (type) {
+            RepeatingPeriod.Daily -> this.copy(daily = list)
+            RepeatingPeriod.Weekly -> this.copy(daily = list)
+            RepeatingPeriod.Monthly -> this.copy(daily = list)
+            RepeatingPeriod.Yearly -> this.copy(daily = list)
+        }
+    }
+
     fun addBudget(budget: Budget): BudgetsByType {
         val newId = concatenate().getMaxIdOrZero() + 1
-        val listOfNewBudget = listOf(budget.copy(id = newId))
 
-        return when (budget.repeatingPeriod) {
-            RepeatingPeriod.Daily -> this.copy(daily = daily + listOfNewBudget)
-            RepeatingPeriod.Weekly -> this.copy(daily = weekly + listOfNewBudget)
-            RepeatingPeriod.Monthly -> this.copy(daily = monthly + listOfNewBudget)
-            RepeatingPeriod.Yearly -> this.copy(daily = yearly + listOfNewBudget)
-        }
+        val newList = (getByType(budget.repeatingPeriod) + listOf(budget.copy(id = newId)))
+            .sortedBy { it.priorityNum }
+
+        return replaceListByType(newList, budget.repeatingPeriod)
     }
 
     fun deleteBudget(id: Int, repeatingPeriod: RepeatingPeriod): BudgetsByType {

@@ -1,78 +1,55 @@
-package com.ataglance.walletglance.ui.theme.screens.settings.budgets
+package com.ataglance.walletglance.ui.theme.screens
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.ui.theme.screencontainers.SetupDataScreenContainer
+import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.ui.theme.uielements.budgets.BudgetComponent
 import com.ataglance.walletglance.ui.theme.uielements.budgets.BudgetListsByPeriodComponent
-import com.ataglance.walletglance.ui.theme.uielements.budgets.EditingBudgetComponent
-import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
-import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
-fun EditBudgetsScreen(
+fun BudgetsScreen(
     scaffoldPadding: PaddingValues,
     appTheme: AppTheme?,
     budgetsByType: BudgetsByType,
-    onNavigateToEditBudgetScreen: (Budget?) -> Unit,
-    onSaveBudgetsButton: () -> Unit,
+    onBudgetClick: (Budget) -> Unit
 ) {
-    SetupDataScreenContainer(
-        topPadding = scaffoldPadding.calculateTopPadding(),
-        glassSurfaceContent = {
-            GlassSurfaceContent(
-                appTheme = appTheme,
-                budgetsByType = budgetsByType,
-                onBudgetClick = onNavigateToEditBudgetScreen,
-            )
-        },
-        smallPrimaryButton = {
-            SmallPrimaryButton(
-                onClick = {
-                    onNavigateToEditBudgetScreen(null)
-                },
-                text = stringResource(R.string.add_budget)
-            )
-        },
-        primaryBottomButton = {
-            PrimaryButton(
-                onClick = onSaveBudgetsButton,
-                text = stringResource(R.string.save)
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 16.dp, bottom = 16.dp + scaffoldPadding.calculateBottomPadding())
+    ) {
+        GlassSurface(
+            modifier = Modifier.weight(1f),
+            filledWidth = if (!WindowTypeIsExpanded) null else .86f
+        ) {
+            BudgetListsByPeriodComponent(budgetsByType) { budget ->
+                BudgetComponent(appTheme = appTheme, budget = budget, onClick = onBudgetClick)
+            }
         }
-    )
-}
-
-@Composable
-private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
-    budgetsByType: BudgetsByType,
-    onBudgetClick: (Budget?) -> Unit,
-) {
-    BudgetListsByPeriodComponent(budgetsByType) { budget ->
-        EditingBudgetComponent(
-            appTheme = appTheme,
-            budget = budget,
-            onClick = onBudgetClick
-        )
     }
 }
 
 
 @Preview
 @Composable
-fun EditBudgetsScreenPreview() {
+fun BudgetsScreenPreview() {
     val context = LocalContext.current
     val appTheme = AppTheme.LightDefault
     val defaultCategories = DefaultCategoriesPackage(context).getDefaultCategories()
@@ -109,19 +86,6 @@ fun EditBudgetsScreenPreview() {
         ),
         monthly = listOf(
             Budget(
-                id = 3,
-                priorityNum = 3.0,
-                amountLimit = 4000.0,
-                usedAmount = 1000.0,
-                usedPercentage = 25F,
-                category = defaultCategories.expense[2].category,
-                name = "Shopping",
-                repeatingPeriod = RepeatingPeriod.Monthly,
-                dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
-                currency = "CZK",
-                linkedAccountsIds = listOf(3, 4)
-            ),
-            Budget(
                 id = 1,
                 priorityNum = 1.0,
                 amountLimit = 4000.0,
@@ -133,17 +97,29 @@ fun EditBudgetsScreenPreview() {
                 dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
                 currency = "USD",
                 linkedAccountsIds = listOf(1, 2)
+            ),
+            Budget(
+                id = 3,
+                priorityNum = 3.0,
+                amountLimit = 4000.0,
+                usedAmount = 1000.0,
+                usedPercentage = 25F,
+                category = defaultCategories.expense[2].category,
+                name = "Shopping",
+                repeatingPeriod = RepeatingPeriod.Monthly,
+                dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                currency = "CZK",
+                linkedAccountsIds = listOf(3, 4)
             )
         )
     )
 
     PreviewContainer {
-        EditBudgetsScreen(
-            scaffoldPadding = PaddingValues(0.dp),
+        BudgetsScreen(
+            scaffoldPadding = PaddingValues(),
             appTheme = appTheme,
             budgetsByType = budgetsByType,
-            onNavigateToEditBudgetScreen = {},
-            onSaveBudgetsButton = {}
+            onBudgetClick = {}
         )
     }
 }

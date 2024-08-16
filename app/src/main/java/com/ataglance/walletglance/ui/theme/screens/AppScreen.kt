@@ -473,6 +473,16 @@ fun HomeNavHost(
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
+        composable<MainScreens.Budgets> {
+            BudgetsScreen(
+                scaffoldPadding = scaffoldPadding,
+                appTheme = appUiSettings.appTheme,
+                budgetsByType = budgetsByType,
+                onBudgetClick = {
+                    
+                }
+            )
+        }
         composable<MainScreens.MakeRecord>(
             enterTransition = { screenEnterTransition() },
             popEnterTransition = { screenEnterTransition(!moveScreenTowardsLeft) },
