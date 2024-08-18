@@ -10,9 +10,9 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.accounts.AccountsUiState
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.app.AppUiSettings
-import com.ataglance.walletglance.data.app.DataAfterRecordOperation
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
+import com.ataglance.walletglance.data.budgets.TotalAmountByRange
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
@@ -25,6 +25,7 @@ import com.ataglance.walletglance.data.date.DateRangeMenuUiState
 import com.ataglance.walletglance.data.date.DateRangeWithEnum
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.date.LongDateRange
+import com.ataglance.walletglance.data.makingRecord.DataAfterRecordOperation
 import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
@@ -79,6 +80,7 @@ import com.ataglance.walletglance.domain.repositories.SettingsRepository
 import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
 import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -551,6 +553,13 @@ class AppViewModel(
 
             _budgetsByType.update { filledBudgets }
         }
+    }
+
+    fun fetchBudgetsTotalUsedAmountsByDateRanges(
+        budget: Budget,
+        dateRanges: List<LongDateRange>
+    ): Flow<List<TotalAmountByRange>> {
+        return recordRepository.getTotalAmountForBudgetInDateRanges(budget, dateRanges)
     }
 
     suspend fun saveBudgetsToDb(budgetList: List<Budget>) {

@@ -4,8 +4,8 @@ data class YearMonthDayHourMinute(
     val year: Int,
     val month: Int,
     val day: Int,
-    val hour: Int,
-    val minute: Int
+    val hour: Int = 0,
+    val minute: Int = 0
 ) {
 
     fun concatenate(): Long {

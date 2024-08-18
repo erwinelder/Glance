@@ -1,11 +1,14 @@
 package com.ataglance.walletglance.data.utils
 
+import android.content.Context
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
+import com.ataglance.walletglance.data.budgets.TotalAmountByRange
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.date.RepeatingPeriod
+import com.ataglance.walletglance.data.statistics.ColumnChartUiState
 import com.ataglance.walletglance.domain.entities.BudgetAccountAssociation
 import com.ataglance.walletglance.domain.entities.BudgetEntity
 import com.ataglance.walletglance.domain.entities.Record
@@ -30,7 +33,7 @@ fun List<BudgetEntity>.toBudgetList(
 
 
 fun List<Budget>.toEntityList(): List<BudgetEntity> {
-    return this.map { it.toBudgetEntity() }
+    return this.map { it.toEntity() }
 }
 
 
@@ -142,4 +145,26 @@ fun List<Budget>.subtractUsedAmountsByRecords(recordList: List<Record>): List<Bu
     return this.map { budget ->
         budget.subtractFromUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
     }
+}
+
+
+fun List<TotalAmountByRange>.toColumnChartUiState(
+    horizontalLinesCount: Int,
+    repeatingPeriod: RepeatingPeriod,
+    context: Context
+): ColumnChartUiState {
+    val maxAmount = this.maxOfOrNull { it.totalAmount } ?: 0.0
+
+    val columnChartItemUiStateList = this.map { amountByRange ->
+        amountByRange.toColumnChartItemUiState(
+            maxTotalAmount = maxAmount,
+            repeatingPeriod = repeatingPeriod,
+            context = context
+        )
+    }
+
+    return ColumnChartUiState(
+        columns = columnChartItemUiStateList,
+        horizontalLinesNames = maxAmount.getColumnChartHorizontalLinesNames(horizontalLinesCount)
+    )
 }

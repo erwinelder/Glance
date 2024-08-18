@@ -2,6 +2,7 @@ package com.ataglance.walletglance.data.utils
 
 import android.content.Context
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.app.LongRange
 import com.ataglance.walletglance.data.date.DateRangeEnum
 import com.ataglance.walletglance.data.date.DateRangeWithEnum
 import com.ataglance.walletglance.data.date.DateTimeState
@@ -25,7 +26,7 @@ data class LocalDateRange(
     ): DateRangeWithEnum {
         return DateRangeWithEnum(
             enum = enum,
-            dateRange = LongDateRange(from.toLongWithoutTime(), to.toLongWithoutTime() + 2359)
+            dateRange = LongDateRange(from.toLong(), to.toLong() + 2359)
         )
     }
 
@@ -73,11 +74,9 @@ fun Calendar.minute(): Int {
 
 
 fun Calendar.toLongWithTime(): Long {
-    return this.year().toLong() * 100000000 +
-            (this.month() + 1) * 1000000 +
-            this.day() * 10000 +
-            this.hour() * 100 +
-            this.minute()
+    return YearMonthDayHourMinute(
+        this.year(), this.month() + 1, this.day(), this.hour(), this.minute()
+    ).concatenate()
 }
 
 
@@ -92,10 +91,15 @@ fun Calendar.getFormattedDateWithTime(): String {
 }
 
 
-fun LocalDate.toLongWithoutTime(): Long {
-    return this.year.toLong() * 100000000 +
-            this.monthValue * 1000000 +
-            this.dayOfMonth * 10000
+fun LocalDate.toLong(): Long {
+    return YearMonthDay(this.year, this.monthValue, this.dayOfMonth).concatenate()
+}
+
+
+fun LocalDateTime.toLong(): Long {
+    return YearMonthDayHourMinute(
+        this.year, this.monthValue, this.dayOfMonth, this.hour, this.minute
+    ).concatenate()
 }
 
 
@@ -225,32 +229,33 @@ private fun DateRangeEnum.getMonthValue(): Int? {
 }
 
 
-private fun getMonthStringByMonthValue(value: Int, context: Context): String? {
-    return when (value) {
-        1 -> context.getString(R.string.january_short)
-        2 -> context.getString(R.string.february_short)
-        3 -> context.getString(R.string.march_short)
-        4 -> context.getString(R.string.april_short)
-        5 -> context.getString(R.string.may_short)
-        6 -> context.getString(R.string.june_short)
-        7 -> context.getString(R.string.july_short)
-        8 -> context.getString(R.string.august_short)
-        9 -> context.getString(R.string.september_short)
-        10 -> context.getString(R.string.october_short)
-        11 -> context.getString(R.string.november_short)
-        12 -> context.getString(R.string.december_short)
+fun Int.getMonthNameRes(): Int? {
+    return when (this) {
+        1 -> R.string.january_short
+        2 -> R.string.february_short
+        3 -> R.string.march_short
+        4 -> R.string.april_short
+        5 -> R.string.may_short
+        6 -> R.string.june_short
+        7 -> R.string.july_short
+        8 -> R.string.august_short
+        9 -> R.string.september_short
+        10 -> R.string.october_short
+        11 -> R.string.november_short
+        12 -> R.string.december_short
         else -> null
     }
 }
 
 
 fun Long.asOneDayDateRange(): LongDateRange {
-    return LongDateRange(this, this + 2359)
+    val bottomBorder = this / 100 * 100
+    return LongDateRange(bottomBorder, bottomBorder + 2359)
 }
 
 
 fun getTodayDateLong(): Long {
-    return LocalDate.now().toLongWithoutTime()
+    return LocalDate.now().toLong()
 }
 
 
@@ -318,8 +323,104 @@ fun RepeatingPeriod.getLongDateRangeWithTime(): LongDateRange {
 }
 
 
+fun RepeatingPeriod.getPrevDateRanges(
+    topRangeIndex: Long = 1,
+    lowRangeIndex: Long = this.getDefaultRangesCount() - 1L
+): List<LongDateRange> {
+    val stepsRange = LongRange(topRangeIndex, lowRangeIndex)
+    return when (this) {
+        RepeatingPeriod.Daily -> getLastDateRanges(
+            lastDatesRange = stepsRange,
+            bottomDateBorderTransformation = { today, i ->
+                today.minusDays(i).withHour(0).withMinute(0)
+            },
+            topDateBorderTransformation = { today, i ->
+                today.minusDays(i).withHour(23).withMinute(59)
+            }
+        )
+        RepeatingPeriod.Weekly -> getLastDateRanges(
+            lastDatesRange = stepsRange,
+            bottomDateBorderTransformation = { today, i ->
+                today.minusDays(today.dayOfWeek.value - 1L).minusWeeks(i).withHour(0).withMinute(0)
+            },
+            topDateBorderTransformation = { today, i ->
+                today.plusDays(7L - today.dayOfWeek.value).minusWeeks(i).withHour(23).withMinute(59)
+            }
+        )
+        RepeatingPeriod.Monthly -> getLastDateRanges(
+            lastDatesRange = stepsRange,
+            bottomDateBorderTransformation = { today, i ->
+                today.minusMonths(i).withDayOfMonth(1).withHour(0).withMinute(0)
+            },
+            topDateBorderTransformation = { today, i ->
+                today.minusMonths(i - 1).withDayOfMonth(1).minusDays(1).withHour(23).withMinute(59)
+            }
+        )
+        RepeatingPeriod.Yearly -> getLastDateRanges(
+            lastDatesRange = stepsRange,
+            bottomDateBorderTransformation = { today, i ->
+                today.minusYears(i).withMonth(1).withDayOfMonth(1).withHour(0).withMinute(0)
+            },
+            topDateBorderTransformation = { today, i ->
+                today.minusYears(i).withMonth(12).withDayOfMonth(31).withHour(23).withMinute(59)
+            }
+        )
+    }
+}
+
+
+private fun RepeatingPeriod.getDefaultRangesCount(): Int {
+    return when (this) {
+        RepeatingPeriod.Daily -> 7
+        RepeatingPeriod.Weekly -> 4
+        RepeatingPeriod.Monthly -> 6
+        RepeatingPeriod.Yearly -> 3
+    }
+}
+
+
+private fun getLastDateRanges(
+    lastDatesRange: LongRange,
+    bottomDateBorderTransformation: (LocalDateTime, Long) -> LocalDateTime,
+    topDateBorderTransformation: (LocalDateTime, Long) -> LocalDateTime
+): List<LongDateRange> {
+    val today = LocalDateTime.now()
+    val list = mutableListOf<LongDateRange>()
+
+    for (i in lastDatesRange.from..lastDatesRange.to) {
+        val longDateRange = LongDateRange(
+            from = bottomDateBorderTransformation(today, i).toLong(),
+            to = topDateBorderTransformation(today, i).toLong()
+        )
+        list.add(longDateRange)
+    }
+
+    return list
+}
+
+
+fun RepeatingPeriod.getColumnNameForColumnChart(
+    dateRange: LongDateRange,
+    context: Context
+): String {
+    return when (this) {
+        RepeatingPeriod.Daily -> dateRange.from.extractYearMonthDay().getDayWithMonthValueAsString()
+        RepeatingPeriod.Weekly -> dateRange.getDayWithMonthValueRangeAsString()
+        RepeatingPeriod.Monthly -> dateRange.from.extractMonth().getMonthNameRes()
+            ?.let { context.getString(it) }
+            ?: ""
+        RepeatingPeriod.Yearly -> dateRange.from.extractYear().toString()
+    }
+}
+
+
 fun Long.extractYear(): Int {
     return (this / 100000000).toInt()
+}
+
+
+fun Long.extractMonth(): Int {
+    return (this / 1000000 - this.extractYear() * 100).toInt()
 }
 
 
@@ -405,7 +506,7 @@ fun convertDateLongToDayMonthYear(
     includeYear: Boolean = true
 ): String {
     val dateSeparated = date.extractYearMonthDay()
-    val monthString = getMonthStringByMonthValue(dateSeparated.month, context)
+    val monthString = dateSeparated.month.getMonthNameRes()?.let { context.getString(it) } ?: ""
 
     return if (includeYear) {
         "${dateSeparated.day} $monthString ${dateSeparated.year}"

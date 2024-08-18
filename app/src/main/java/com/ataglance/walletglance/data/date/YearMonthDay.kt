@@ -12,6 +12,10 @@ data class YearMonthDay(
         return year.toLong() * 100000000 + month * 1000000 + day * 10000
     }
 
+    fun getDayWithMonthValueAsString(): String {
+        return "$day.$month"
+    }
+
     fun addYears(yearsToAdd: Int): YearMonthDay {
         val localDate = LocalDate.of(year, month, day)
         localDate.plusYears(yearsToAdd.toLong())

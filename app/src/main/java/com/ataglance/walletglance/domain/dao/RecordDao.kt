@@ -38,6 +38,20 @@ interface RecordDao {
     """)
     fun getRecordsInDateRange(startPastDate: Long, endFutureDate: Long): Flow<List<Record>>
 
+    @Query("""
+        SELECT SUM(amount) FROM Record
+        WHERE includeInBudgets = 1
+            AND accountId IN (:linkedAccountsIds)
+            AND (categoryId = :categoryId OR subcategoryId = :categoryId)
+            AND date BETWEEN :from AND :to
+    """)
+    fun getTotalAmountForBudgetInDateRange(
+        linkedAccountsIds: List<Int>,
+        categoryId: Int,
+        from: Long,
+        to: Long
+    ): Flow<Double>
+
     @Query("SELECT * FROM Record WHERE (accountId == :accountId) AND (type == 60 OR type == 62)")
     fun getTransfersByAccountId(accountId: Int): Flow<List<Record>>
 

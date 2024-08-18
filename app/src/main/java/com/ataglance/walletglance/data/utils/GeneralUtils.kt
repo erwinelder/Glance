@@ -1,6 +1,17 @@
 package com.ataglance.walletglance.data.utils
 
 import java.util.Locale
+import kotlin.math.pow
+
+
+fun <A, B> Pair<A?, B?>.takeIfNoneIsNull(): Pair<A, B>? {
+    val (first, second) = this
+    return if (first != null && second != null) {
+        first to second
+    } else {
+        null
+    }
+}
 
 
 inline fun <T> List<T>.deleteItemAndMoveOrderNum(
@@ -35,4 +46,19 @@ fun Double.formatWithSpaces(): String {
     }
 
     return formattedNumber
+}
+
+
+fun Double.getColumnChartHorizontalLinesNames(horizontalLinesCount: Int): List<String> {
+    val stepDecimal = this.toInt() / 4
+    val stepDigitCountHalf = stepDecimal.toString().length / 2
+    val multiplicationStep = 10.0.pow(stepDigitCountHalf.toDouble()).toInt()
+    val roundedStep = stepDecimal / multiplicationStep * multiplicationStep + multiplicationStep
+
+    val list = mutableListOf("0")
+    for (i in 1..<horizontalLinesCount) {
+        list.add((roundedStep * i).toString())
+    }
+
+    return list
 }

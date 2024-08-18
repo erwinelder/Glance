@@ -39,7 +39,7 @@ data class Budget(
         return applyUsedAmount(usedAmount - amount)
     }
 
-    fun toBudgetEntity(): BudgetEntity {
+    fun toEntity(): BudgetEntity {
         return BudgetEntity(
             id = id,
             amountLimit = amountLimit,

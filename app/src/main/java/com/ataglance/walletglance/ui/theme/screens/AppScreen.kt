@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,8 +58,11 @@ import com.ataglance.walletglance.data.utils.currentScreenIs
 import com.ataglance.walletglance.data.utils.fromMainScreen
 import com.ataglance.walletglance.data.utils.getMakeRecordStateAndUnitList
 import com.ataglance.walletglance.data.utils.getMakeTransferState
+import com.ataglance.walletglance.data.utils.getPrevDateRanges
 import com.ataglance.walletglance.data.utils.needToMoveScreenTowardsLeft
+import com.ataglance.walletglance.data.utils.takeIfNoneIsNull
 import com.ataglance.walletglance.data.utils.toCollectionsWithIds
+import com.ataglance.walletglance.data.utils.toColumnChartUiState
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.ui.theme.animation.screenEnterTransition
 import com.ataglance.walletglance.ui.theme.animation.screenExitTransition
@@ -93,6 +98,8 @@ import com.ataglance.walletglance.ui.viewmodels.accounts.CurrencyPickerViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModel
 import com.ataglance.walletglance.ui.viewmodels.accounts.EditAccountsViewModelFactory
+import com.ataglance.walletglance.ui.viewmodels.budgets.BudgetStatisticsViewModel
+import com.ataglance.walletglance.ui.viewmodels.budgets.BudgetStatisticsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.budgets.EditBudgetViewModel
 import com.ataglance.walletglance.ui.viewmodels.budgets.EditBudgetsViewModel
 import com.ataglance.walletglance.ui.viewmodels.budgets.EditBudgetsViewModelFactory
@@ -113,6 +120,7 @@ import com.ataglance.walletglance.ui.viewmodels.records.RecordsViewModel
 import com.ataglance.walletglance.ui.viewmodels.records.RecordsViewModelFactory
 import com.ataglance.walletglance.ui.viewmodels.settings.LanguageViewModel
 import com.ataglance.walletglance.ui.viewmodels.sharedViewModel
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -479,9 +487,48 @@ fun HomeNavHost(
                 appTheme = appUiSettings.appTheme,
                 budgetsByType = budgetsByType,
                 onBudgetClick = {
-                    
+
                 }
             )
+        }
+        composable<MainScreens.BudgetStatistics> { backStack ->
+            val budgetId = backStack.toRoute<MainScreens.BudgetStatistics>().id
+            val budget by remember {
+                derivedStateOf { budgetsByType.findById(budgetId) }
+            }
+            val context = LocalContext.current
+
+            val budgetStatisticsViewModel = viewModel<BudgetStatisticsViewModel>(
+                factory = BudgetStatisticsViewModelFactory(
+                    budget = budget,
+                    usedAmountByRangeList = budget?.let {
+                        appViewModel.fetchBudgetsTotalUsedAmountsByDateRanges(
+                            budget = it,
+                            dateRanges = it.repeatingPeriod.getPrevDateRanges()
+                        )
+                    } ?: emptyFlow()
+                )
+            )
+
+            val budgetsTotalAmountsByRanges by budgetStatisticsViewModel
+                .budgetsTotalAmountsByRanges.collectAsState()
+            val columnChartDataUiState by derivedStateOf {
+                budget?.let {
+                    budgetsTotalAmountsByRanges.toColumnChartUiState(
+                        horizontalLinesCount = 5,
+                        repeatingPeriod = it.repeatingPeriod,
+                        context = context
+                    )
+                }
+            }
+
+            (budget to columnChartDataUiState).takeIfNoneIsNull()?.let { (budget, chartUiState) ->
+                BudgetStatisticsScreen(
+                    appTheme = appUiSettings.appTheme,
+                    budget = budget,
+                    columnChartUiState = chartUiState
+                )
+            } ?: Text(text = "Budget not found")
         }
         composable<MainScreens.MakeRecord>(
             enterTransition = { screenEnterTransition() },

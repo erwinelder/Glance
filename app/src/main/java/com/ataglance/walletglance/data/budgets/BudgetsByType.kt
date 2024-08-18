@@ -4,6 +4,7 @@ import com.ataglance.walletglance.data.date.LongDateRange
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.utils.addUsedAmountsByRecords
 import com.ataglance.walletglance.data.utils.fillUsedAmountsByRecords
+import com.ataglance.walletglance.data.utils.findById
 import com.ataglance.walletglance.data.utils.getMaxIdOrZero
 import com.ataglance.walletglance.data.utils.subtractUsedAmountsByRecords
 import com.ataglance.walletglance.domain.entities.Record
@@ -14,6 +15,13 @@ data class BudgetsByType(
     val monthly: List<Budget> = emptyList(),
     val yearly: List<Budget> = emptyList()
 ) {
+
+    fun findById(id: Int): Budget? {
+        return daily.findById(id)
+            ?: weekly.findById(id)
+            ?: monthly.findById(id)
+            ?: yearly.findById(id)
+    }
 
     fun concatenate(): List<Budget> {
         return daily + weekly + monthly + yearly

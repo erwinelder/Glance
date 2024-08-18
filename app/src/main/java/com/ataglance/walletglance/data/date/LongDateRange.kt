@@ -1,5 +1,7 @@
 package com.ataglance.walletglance.data.date
 
+import com.ataglance.walletglance.data.utils.extractYearMonthDay
+
 data class LongDateRange(
     val from: Long,
     val to: Long
@@ -11,6 +13,11 @@ data class LongDateRange(
 
     fun containsDateRange(dateRange: LongDateRange): Boolean {
         return from <= dateRange.from && to >= dateRange.to
+    }
+
+    fun getDayWithMonthValueRangeAsString(): String {
+        return "${from.extractYearMonthDay().getDayWithMonthValueAsString()} - " +
+                to.extractYearMonthDay().getDayWithMonthValueAsString()
     }
 
 }
