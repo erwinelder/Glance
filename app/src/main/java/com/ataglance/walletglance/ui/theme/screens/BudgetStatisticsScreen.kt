@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.ui.theme.screens
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -50,6 +44,7 @@ import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFlowRow
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryBigIconComponent
 import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceColumnChart
+import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.ui.theme.uielements.containers.BackButtonBlock
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
@@ -130,7 +125,7 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
     val pieChartPercentage by remember {
         derivedStateOf { -(3.6 * usedPercentage).toFloat() }
     }
-    val canvasBrush = if (usedPercentage < 50.0) {
+    val pieChartBrush = if (usedPercentage < 50.0) {
         listOf(Color.Green, Color.Green.copy(green = .5f)).reversed()
     } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
         listOf(Color.Yellow, Color.Yellow.copy(red = .5f)).reversed()
@@ -149,20 +144,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                Canvas(
-                    modifier = Modifier
-                        .padding(end = 5.dp)
-                        .size(70.dp)
-                        .rotate(-82f)
-                ) {
-                    drawArc(
-                        brush = Brush.sweepGradient(canvasBrush),
-                        startAngle = -8f,
-                        sweepAngle = pieChartPercentage,
-                        useCenter = false,
-                        style = Stroke(width = 10.dp.toPx(), cap = StrokeCap.Round)
-                    )
-                }
+                GlanceSingleValuePieChart(
+                    percentage = pieChartPercentage,
+                    brush = pieChartBrush,
+                    size = 70.dp
+                )
                 Text(
                     text = "${usedPercentage.toInt()}%",
                     color = GlanceTheme.onSurface,
