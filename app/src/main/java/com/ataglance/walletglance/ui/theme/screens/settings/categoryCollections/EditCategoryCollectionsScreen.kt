@@ -35,8 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,6 +57,7 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryIconComponent
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeBar
+import com.ataglance.walletglance.ui.theme.uielements.containers.MessageContainer
 
 @Composable
 fun EditCategoryCollectionsScreen(
@@ -153,7 +152,7 @@ private fun GlassSurfaceContent(
                 }
             }
         } else {
-            NoItemsMessage()
+            MessageContainer(message = stringResource(R.string.no_collections_of_this_type))
         }
     }
 }
@@ -220,21 +219,6 @@ private fun CategoryCollectionSetupComponent(
                 CategoryIconComponent(category, appTheme)
             }
         }
-    }
-}
-
-@Composable
-private fun NoItemsMessage() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(
-            text = stringResource(R.string.no_collections_of_this_type),
-            color = GlanceTheme.onSurface.copy(.6f),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Light
-        )
     }
 }
 

@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
@@ -20,6 +22,7 @@ import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.ui.theme.uielements.budgets.BudgetComponent
 import com.ataglance.walletglance.ui.theme.uielements.budgets.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
+import com.ataglance.walletglance.ui.theme.uielements.containers.MessageContainer
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
@@ -39,8 +42,12 @@ fun BudgetsScreen(
             modifier = Modifier.weight(1f),
             filledWidth = if (!WindowTypeIsExpanded) null else .86f
         ) {
-            BudgetListsByPeriodComponent(budgetsByType) { budget ->
-                BudgetComponent(appTheme = appTheme, budget = budget, onClick = onBudgetClick)
+            if (budgetsByType.areEmpty()) {
+                MessageContainer(message = stringResource(R.string.you_have_no_budgets_yet))
+            } else {
+                BudgetListsByPeriodComponent(budgetsByType) { budget ->
+                    BudgetComponent(appTheme = appTheme, budget = budget, onClick = onBudgetClick)
+                }
             }
         }
     }

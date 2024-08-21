@@ -14,25 +14,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionPickerContainer
 import com.ataglance.walletglance.ui.theme.uielements.containers.DateFilterBar
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
+import com.ataglance.walletglance.ui.theme.uielements.containers.MessageContainer
 
 @Composable
 fun <S> DataPresentationScreenContainer(
@@ -119,17 +116,7 @@ fun <S> DataPresentationScreenContainer(
                         exit = fadeOut(animationSpec = tween(90)),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text(
-                                text = stringResource(noDataMessageRes),
-                                color = GlanceTheme.onSurface.copy(.6f),
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Light
-                            )
-                        }
+                        MessageContainer(message = stringResource(noDataMessageRes))
                     }
                 }
             }
