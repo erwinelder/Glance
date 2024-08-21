@@ -61,8 +61,8 @@ private val LightDefaultPalette = GlanceColors(
     surfaceGradient = md_theme_light_default_surfaceGradient,
     disabledGradientLightToDark = md_theme_light_default_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_light_default_errorGradientLightToDark,
-    greenGradientPaleToSaturated = md_theme_light_default_green,
-    redGradientPaleToSaturated = md_theme_light_default_red
+    greenGradientPaleToSaturated = md_theme_light_default_pale_green,
+    redGradientPaleToSaturated = md_theme_light_default_pale_red
 )
 
 private val DarkDefaultPalette = GlanceColors(

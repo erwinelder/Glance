@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
@@ -15,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -60,20 +61,24 @@ fun BudgetStatisticsScreen(
     val averageSpending by remember {
         derivedStateOf { columnChartUiState.averageValue.formatWithSpaces(budget.currency) }
     }
+    val verticalGap = 16.dp
 
-    Column {
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         BackButtonBlock(onBackButtonClick)
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(
-                bottom = dimensionResource(id = R.dimen.screen_vertical_padding)
-            ),
+            verticalArrangement = Arrangement.SpaceAround,
+            contentPadding = PaddingValues(bottom = 8.dp),
             modifier = Modifier
                 .nestedScroll(nestedScrollInterop)
                 .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.screen_horizontal_padding))
+                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
         ) {
+            item { Spacer(modifier = Modifier.height(verticalGap)) }
             item {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,6 +106,7 @@ fun BudgetStatisticsScreen(
                     AccountsFlowRow(accountList = budgetAccounts, appTheme = appTheme, maxLines = 5)
                 }
             }
+            item { Spacer(modifier = Modifier.height(verticalGap)) }
             item {
                 GlanceColumnChart(
                     uiState = columnChartUiState,
@@ -113,6 +119,7 @@ fun BudgetStatisticsScreen(
                     StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
                 }
             }
+            item { Spacer(modifier = Modifier.height(verticalGap)) }
         }
     }
 }
@@ -123,14 +130,14 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
         derivedStateOf { 100 / budget.amountLimit * totalAmount }
     }
     val pieChartPercentage by remember {
-        derivedStateOf { -(3.6 * usedPercentage).toFloat() }
+        derivedStateOf { (3.6 * usedPercentage).toFloat() }
     }
     val pieChartBrush = if (usedPercentage < 50.0) {
-        listOf(Color.Green, Color.Green.copy(green = .5f)).reversed()
+        GlanceTheme.greenGradientPaleToSaturated.toList()
     } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
-        listOf(Color.Yellow, Color.Yellow.copy(red = .5f)).reversed()
+        GlanceTheme.greenGradientPaleToSaturated.toList()
     } else {
-        listOf(Color.Red, Color.Red.copy(red = .5f)).reversed()
+        GlanceTheme.redGradientPaleToSaturated.toList()
     }
 
     Column(
@@ -219,34 +226,7 @@ fun BudgetStatisticsScreenPreview() {
         Account(
             id = 2,
             orderNum = 2,
-            name = "Main CZK Main CZK Main CZK",
-            currency = "CZK",
-            balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
-            isActive = false
-        ),
-        Account(
-            id = 2,
-            orderNum = 2,
-            name = "Main CZK Main CZK Main CZK",
-            currency = "CZK",
-            balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
-            isActive = false
-        ),
-        Account(
-            id = 2,
-            orderNum = 2,
-            name = "Main CZK Main CZK Main CZK",
-            currency = "CZK",
-            balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
-            isActive = false
-        ),
-        Account(
-            id = 2,
-            orderNum = 2,
-            name = "Main CZK Main CZK Main CZK",
+            name = "Local Card CZK",
             currency = "CZK",
             balance = 1412.13,
             color = AccountPossibleColors().pink.toAccountColorWithName(),

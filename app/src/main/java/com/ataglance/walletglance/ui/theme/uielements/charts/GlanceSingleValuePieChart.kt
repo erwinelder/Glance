@@ -28,7 +28,7 @@ fun GlanceSingleValuePieChart(
         drawArc(
             brush = Brush.sweepGradient(brush),
             startAngle = -8f,
-            sweepAngle = percentage,
+            sweepAngle = -percentage,
             useCenter = false,
             style = Stroke(width = 10.dp.toPx(), cap = StrokeCap.Round)
         )

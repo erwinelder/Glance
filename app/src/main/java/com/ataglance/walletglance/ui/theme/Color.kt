@@ -1,29 +1,22 @@
 package com.ataglance.walletglance.ui.theme
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.ui.theme.uielements.buttons.BarButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
+import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 val md_theme_light_default_primary = Color(165, 93, 135, 255)
@@ -89,13 +82,17 @@ val md_theme_light_default_errorGradientLightToDark = Pair(
     Color(206, 53, 53),
     Color(119, 36, 36)
 )
-val md_theme_light_default_green = Pair(
+val md_theme_light_default_pale_green = Pair(
     Color(173, 207, 153),
     Color(151, 192, 127)
 )
-val md_theme_light_default_red = Pair(
+val md_theme_light_default_pale_red = Pair(
     Color(203, 139, 137),
     Color(201, 104, 98)
+)
+val md_theme_light_default_green = Pair(
+    Color(173, 207, 153),
+    Color(151, 192, 127)
 )
 
 val md_theme_dark_default_primary = Color(154, 92, 128)
@@ -243,7 +240,7 @@ val md_theme_dark_blue_red = Pair(
 )
 
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun PreviewColors() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
@@ -252,34 +249,27 @@ private fun PreviewColors() {
             verticalArrangement = Arrangement.spacedBy(40.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            BarButton(onClick = {}, text = "Apply", active = true)
+//            BarButton(onClick = {}, text = "Apply", active = true)
 //            PrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
             PrimaryButton(onClick = {}, text = "ApplyApplyApply")
-            PrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
+//            PrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
 //            SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
             SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply")
-            SmallPrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
+//            SmallPrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
             GlassSurface {
-                Box(
-                    contentAlignment = Alignment.Center,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.size(300.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                            .background(
-                                brush = Brush.linearGradient(
-                                    colors = GlanceTheme.onGlassSurfaceGradient,
-                                    start = Offset(75f, 200f),
-                                    end = Offset(100f, 0f)
-                                )
-                            )
-                            .border(
-                                1.dp,
-                                GlanceTheme.onGlassSurfaceBorder,
-                                RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
-                            )
-                            .size(150.dp, 100.dp)
+                    GlassSurfaceOnGlassSurface {
+                        Box(
+                            modifier = Modifier.size(150.dp, 100.dp)
+                        )
+                    }
+                    GlanceSingleValuePieChart(
+                        percentage = 50f * 3.6f,
+                        brush = GlanceTheme.primaryGradientLightToDark.toList(),
+                        size = 90.dp
                     )
                 }
             }
