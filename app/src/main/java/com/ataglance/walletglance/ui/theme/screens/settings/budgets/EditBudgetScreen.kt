@@ -99,6 +99,7 @@ fun EditBudgetScreen(
             primaryBottomButton = {
                 PrimaryButton(
                     text = stringResource(if (budget.isNew) R.string.create else R.string.save),
+                    enabled = budget.allowSaving(),
                     onClick = onSaveButton
                 )
             }

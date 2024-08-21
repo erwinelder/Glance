@@ -22,7 +22,10 @@ data class EditingBudgetUiState(
     fun allowSaving(): Boolean {
         val newAmountLimit = amountLimit.toDoubleOrNull() ?: return false
 
-        return name.isNotBlank() && newAmountLimit > 0.0
+        return name.isNotBlank()
+                && newAmountLimit > 0.0
+                && category != null
+                && linkedAccounts.isNotEmpty()
     }
 
     fun toNewBudget(): Budget? {

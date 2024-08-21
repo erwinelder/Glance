@@ -988,9 +988,11 @@ fun NavGraphBuilder.budgetsGraph(
                         id = budgetState.id,
                         repeatingPeriod = budgetState.currRepeatingPeriod
                     )
+                    navController.popBackStack()
                 },
                 onSaveButton = {
                     editBudgetsViewModel.saveBudget(editBudgetViewModel.getBudgetUiState())
+                    navController.popBackStack()
                 }
             )
         }
