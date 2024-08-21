@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 
 @Composable
@@ -20,6 +21,7 @@ fun MessageContainer(message: String) {
         Text(
             text = message,
             color = GlanceTheme.onSurface.copy(.75f),
+            fontSize = 18.sp,
             textAlign = TextAlign.Center
         )
     }
