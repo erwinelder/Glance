@@ -18,6 +18,7 @@ import com.ataglance.walletglance.ui.theme.uielements.budgets.BudgetListsByPerio
 import com.ataglance.walletglance.ui.theme.uielements.budgets.EditingBudgetComponent
 import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.ui.theme.uielements.containers.MessageContainer
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
@@ -60,12 +61,16 @@ private fun GlassSurfaceContent(
     budgetsByType: BudgetsByType,
     onBudgetClick: (Budget?) -> Unit,
 ) {
-    BudgetListsByPeriodComponent(budgetsByType) { budget ->
-        EditingBudgetComponent(
-            appTheme = appTheme,
-            budget = budget,
-            onClick = onBudgetClick
-        )
+    if (budgetsByType.areEmpty()) {
+        MessageContainer(message = stringResource(R.string.you_have_no_budgets_yet))
+    } else {
+        BudgetListsByPeriodComponent(budgetsByType) { budget ->
+            EditingBudgetComponent(
+                appTheme = appTheme,
+                budget = budget,
+                onClick = onBudgetClick
+            )
+        }
     }
 }
 

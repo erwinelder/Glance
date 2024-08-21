@@ -156,6 +156,7 @@
     <string name="you_have_no_expenses_in_date_range">No tienes gastos en este período</string>
     <string name="you_have_no_income_in_date_range">No tienes ingresos en este período</string>
     <string name="no_data_for_the_selected_filter">No hay datos para el filtro seleccionado</string>
+    <string name="you_have_no_budgets_yet">Aún no tienes presupuestos</string>
 
 
 

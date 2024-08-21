@@ -155,6 +155,7 @@
     <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>
     <string name="no_data_for_the_selected_filter">Žádná data pro vybraný filtr</string>
+    <string name="you_have_no_budgets_yet">Ještě nemáte žádné rozpočty</string>
 
 
 

@@ -16,6 +16,10 @@ data class BudgetsByType(
     val yearly: List<Budget> = emptyList()
 ) {
 
+    fun areEmpty(): Boolean {
+        return daily.isEmpty() && weekly.isEmpty() && monthly.isEmpty() && yearly.isEmpty()
+    }
+
     fun findById(id: Int): Budget? {
         return daily.findById(id)
             ?: weekly.findById(id)
