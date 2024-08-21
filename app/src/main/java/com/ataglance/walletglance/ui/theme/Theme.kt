@@ -62,7 +62,10 @@ private val LightDefaultPalette = GlanceColors(
     disabledGradientLightToDark = md_theme_light_default_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_light_default_errorGradientLightToDark,
     greenGradientPaleToSaturated = md_theme_light_default_pale_green,
-    redGradientPaleToSaturated = md_theme_light_default_pale_red
+    redGradientPaleToSaturated = md_theme_light_default_pale_red,
+    greenGradient = md_theme_light_default_green,
+    yellowGradient = md_theme_light_default_yellow,
+    redGradient = md_theme_light_default_red
 )
 
 private val DarkDefaultPalette = GlanceColors(
@@ -107,8 +110,11 @@ private val DarkDefaultPalette = GlanceColors(
     surfaceGradient = md_theme_dark_default_surfaceGradient,
     disabledGradientLightToDark = md_theme_dark_default_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_dark_default_errorGradientLightToDark,
-    greenGradientPaleToSaturated = md_theme_dark_default_green,
-    redGradientPaleToSaturated = md_theme_dark_default_red
+    greenGradientPaleToSaturated = md_theme_dark_default_pale_green,
+    redGradientPaleToSaturated = md_theme_dark_default_pale_red,
+    greenGradient = md_theme_dark_default_green,
+    yellowGradient = md_theme_dark_default_yellow,
+    redGradient = md_theme_dark_default_red
 )
 
 private val DarkBluePalette = GlanceColors(
@@ -153,8 +159,11 @@ private val DarkBluePalette = GlanceColors(
     surfaceGradient = md_theme_dark_blue_surfaceGradient,
     disabledGradientLightToDark = md_theme_dark_blue_disabledGradientLightToDark,
     errorGradientLightToDark = md_theme_dark_blue_errorGradientLightToDark,
-    greenGradientPaleToSaturated = md_theme_dark_blue_green,
-    redGradientPaleToSaturated = md_theme_dark_blue_red
+    greenGradientPaleToSaturated = md_theme_dark_blue_pale_green,
+    redGradientPaleToSaturated = md_theme_dark_blue_pale_red,
+    greenGradient = md_theme_dark_blue_green,
+    yellowGradient = md_theme_dark_blue_yellow,
+    redGradient = md_theme_dark_blue_red
 )
 
 private val LocalColors = staticCompositionLocalOf { LightDefaultPalette }

@@ -40,6 +40,8 @@ import com.ataglance.walletglance.data.statistics.ColumnChartColumnUiState
 import com.ataglance.walletglance.data.statistics.ColumnChartUiState
 import com.ataglance.walletglance.data.utils.formatWithSpaces
 import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.animation.popupEnterToTopAnimation
 import com.ataglance.walletglance.ui.theme.animation.popupExitToBottomAnimation
@@ -59,7 +61,13 @@ fun GlanceColumnChart(
 ) {
     val graphHeight = 250.dp
 
-    GlassSurface(filledWidth = 1f) {
+    GlassSurface(
+        filledWidth = when {
+            WindowTypeIsCompact -> 1f
+            WindowTypeIsMedium -> .8f
+            else -> .5f
+        }
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),

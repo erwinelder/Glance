@@ -16,7 +16,10 @@ data class GlanceColors(
     val disabledGradientLightToDark: Pair<Color, Color>,
     val errorGradientLightToDark: Pair<Color, Color>,
     val greenGradientPaleToSaturated: Pair<Color, Color>,
-    val redGradientPaleToSaturated: Pair<Color, Color>
+    val redGradientPaleToSaturated: Pair<Color, Color>,
+    val greenGradient: Pair<Color, Color>,
+    val yellowGradient: Pair<Color, Color>,
+    val redGradient: Pair<Color, Color>
 ) {
     val primary: Color get() = material.primary
     val onPrimary: Color get() = material.onPrimary

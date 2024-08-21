@@ -133,11 +133,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
         derivedStateOf { (3.6 * usedPercentage).toFloat() }
     }
     val pieChartBrush = if (usedPercentage < 50.0) {
-        GlanceTheme.greenGradientPaleToSaturated.toList()
+        GlanceTheme.greenGradient.let { listOf(it.second, it.first) }
     } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
-        GlanceTheme.greenGradientPaleToSaturated.toList()
+        GlanceTheme.yellowGradient.let { listOf(it.second, it.first) }
     } else {
-        GlanceTheme.redGradientPaleToSaturated.toList()
+        GlanceTheme.redGradient.let { listOf(it.second, it.first) }
     }
 
     Column(

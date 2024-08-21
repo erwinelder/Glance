@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,8 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
-import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurface
 import com.ataglance.walletglance.ui.theme.uielements.containers.GlassSurfaceOnGlassSurface
@@ -41,7 +40,7 @@ val md_theme_light_default_surface = Color(0xFFF7F7F7)
 val md_theme_light_default_onSurface = Color(0xFF1F1A1C)
 val md_theme_light_default_surfaceVariant = Color(255, 255, 255, 128)
 val md_theme_light_default_inverseSurface = Color(233, 233, 233, 128)
-val md_theme_light_default_onSurfaceVariant = Color(255, 255, 255, 128) // semi transparent background on widgets
+val md_theme_light_default_onSurfaceVariant = Color(255, 255, 255, 128)
 val md_theme_light_default_outline = Color(0xFFB4ABAF)
 val md_theme_light_default_inverseOnSurface = Color(0xFFEDEDED)
 val md_theme_light_default_inversePrimary = Color(0xFFFFAEDA)
@@ -94,6 +93,14 @@ val md_theme_light_default_green = Pair(
     Color(173, 207, 153),
     Color(151, 192, 127)
 )
+val md_theme_light_default_yellow = Pair(
+    Color(211, 185, 131, 255),
+    Color(209, 179, 104, 255)
+)
+val md_theme_light_default_red = Pair(
+    Color(204, 127, 124, 255),
+    Color(202, 102, 96, 255)
+)
 
 val md_theme_dark_default_primary = Color(154, 92, 128)
 val md_theme_dark_default_onPrimary = Color(0xFFE7D4E1)
@@ -117,7 +124,7 @@ val md_theme_dark_default_surface = Color(33, 33, 33, 255)
 val md_theme_dark_default_onSurface = Color(0xFFE2D9DC)
 val md_theme_dark_default_surfaceVariant = Color(34, 34, 34, 128)
 val md_theme_dark_default_inverseSurface = Color(24, 24, 24, 128)
-val md_theme_dark_default_onSurfaceVariant = Color(70, 70, 70, 128) // semi transparent background on widgets
+val md_theme_dark_default_onSurfaceVariant = Color(70, 70, 70, 128)
 val md_theme_dark_default_outline = Color(0xFF7A7377)
 val md_theme_dark_default_inverseOnSurface = Color(0xFF1D1D1D)
 val md_theme_dark_default_inversePrimary = Color(0xFF934173)
@@ -158,13 +165,25 @@ val md_theme_dark_default_errorGradientLightToDark = Pair(
     Color(177, 55, 55),
     Color(104, 33, 33)
 )
-val md_theme_dark_default_green = Pair(
+val md_theme_dark_default_pale_green = Pair(
     Color(78, 107, 58, 255),
     Color(107, 163, 72, 255)
 )
-val md_theme_dark_default_red = Pair(
+val md_theme_dark_default_pale_red = Pair(
     Color(107, 44, 44, 255),
     Color(158, 56, 51, 255)
+)
+val md_theme_dark_default_green = Pair(
+    Color(108, 156, 78, 255),
+    Color(83, 115, 62, 255)
+)
+val md_theme_dark_default_yellow = Pair(
+    Color(181, 158, 109, 255),
+    Color(186, 158, 87, 255)
+)
+val md_theme_dark_default_red = Pair(
+    Color(171, 95, 92, 255),
+    Color(176, 84, 79, 255)
 )
 
 val md_theme_dark_blue_primary = Color(0xFFB15E8B)
@@ -189,7 +208,7 @@ val md_theme_dark_blue_surface = Color(0xFF1F1A1C)
 val md_theme_dark_blue_onSurface = Color(0xFFEAE0E3)
 val md_theme_dark_blue_surfaceVariant = Color(0xFF504349)
 val md_theme_dark_blue_inverseSurface = Color(0xFFEAE0E3)
-val md_theme_dark_blue_onSurfaceVariant = Color(0xFFD3C2C9) // semi transparent background on widgets
+val md_theme_dark_blue_onSurfaceVariant = Color(0xFFD3C2C9)
 val md_theme_dark_blue_outline = Color(0xFF9C8D93)
 val md_theme_dark_blue_inverseOnSurface = Color(0xFF1F1A1C)
 val md_theme_dark_blue_inversePrimary = Color(0xFF934173)
@@ -230,20 +249,32 @@ val md_theme_dark_blue_errorGradientLightToDark = Pair(
     Color(184, 59, 59),
     Color(136, 44, 44)
 )
-val md_theme_dark_blue_green = Pair(
+val md_theme_dark_blue_pale_green = Pair(
     Color(78, 107, 58, 255),
     Color(107, 163, 72, 255)
 )
-val md_theme_dark_blue_red = Pair(
+val md_theme_dark_blue_pale_red = Pair(
     Color(107, 44, 44, 255),
     Color(158, 56, 51, 255)
+)
+val md_theme_dark_blue_green = Pair(
+    Color(108, 156, 78, 255),
+    Color(83, 115, 62, 255)
+)
+val md_theme_dark_blue_yellow = Pair(
+    Color(181, 158, 109, 255),
+    Color(186, 158, 87, 255)
+)
+val md_theme_dark_blue_red = Pair(
+    Color(171, 95, 92, 255),
+    Color(176, 84, 79, 255)
 )
 
 
 @Preview
 @Composable
 private fun PreviewColors() {
-    PreviewContainer(appTheme = AppTheme.LightDefault) {
+    PreviewContainer(appTheme = AppTheme.DarkDefault) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(40.dp),
@@ -251,15 +282,18 @@ private fun PreviewColors() {
         ) {
 //            BarButton(onClick = {}, text = "Apply", active = true)
 //            PrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
-            PrimaryButton(onClick = {}, text = "ApplyApplyApply")
+//            PrimaryButton(onClick = {}, text = "ApplyApplyApply")
 //            PrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
 //            SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply", enabledGradientColor = md_theme_dark_default_errorGradientLightToDark)
-            SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply")
+//            SmallPrimaryButton(onClick = {}, text = "ApplyApplyApply")
 //            SmallPrimaryButton(onClick = {}, enabled = false, text = "ApplyApplyApply")
             GlassSurface {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.size(300.dp)
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp)
                 ) {
                     GlassSurfaceOnGlassSurface {
                         Box(
@@ -268,7 +302,17 @@ private fun PreviewColors() {
                     }
                     GlanceSingleValuePieChart(
                         percentage = 50f * 3.6f,
-                        brush = GlanceTheme.primaryGradientLightToDark.toList(),
+                        brush = GlanceTheme.greenGradient.toList().reversed(),
+                        size = 90.dp
+                    )
+                    GlanceSingleValuePieChart(
+                        percentage = 95f * 3.6f,
+                        brush = GlanceTheme.yellowGradient.toList().reversed(),
+                        size = 90.dp
+                    )
+                    GlanceSingleValuePieChart(
+                        percentage = 100f * 3.6f,
+                        brush = GlanceTheme.redGradient.toList().reversed(),
                         size = 90.dp
                     )
                 }
