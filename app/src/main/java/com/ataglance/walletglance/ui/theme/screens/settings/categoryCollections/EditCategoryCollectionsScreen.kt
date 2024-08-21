@@ -49,6 +49,7 @@ import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
+import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WalletGlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsExpanded
@@ -58,7 +59,6 @@ import com.ataglance.walletglance.ui.theme.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryIconComponent
 import com.ataglance.walletglance.ui.theme.uielements.categoryCollections.CategoryCollectionTypeBar
-import com.ataglance.walletglance.data.utils.toCategoryColorWithName
 
 @Composable
 fun EditCategoryCollectionsScreen(
@@ -174,7 +174,7 @@ private fun CategoryCollectionSetupComponent(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .bounceClickEffect(.98f, onClick = onClick)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
@@ -190,7 +190,7 @@ private fun CategoryCollectionSetupComponent(
                 GlanceTheme.outlineVariant,
                 RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
-            .padding(horizontal = 15.dp, vertical = 12.dp)
+            .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
