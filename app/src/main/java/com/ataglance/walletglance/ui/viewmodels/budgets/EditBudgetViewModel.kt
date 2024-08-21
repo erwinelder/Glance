@@ -26,7 +26,7 @@ class EditBudgetViewModel : ViewModel() {
             budget ?: EditingBudgetUiState(
                 isNew = true,
                 category = category,
-                name = newBudgetName
+                name = newBudgetName.takeIf { it.isNotBlank() } ?: category?.name ?: ""
             )
         }
     }
@@ -38,10 +38,14 @@ class EditBudgetViewModel : ViewModel() {
     }
 
     fun changeCategory(categoryWithSubcategory: CategoryWithSubcategory) {
-        _budget.update {
-            it.copy(
+        val category = categoryWithSubcategory.getSubcategoryOrCategory()
+        _budget.update { budget ->
+            budget.copy(
                 priorityNum = categoryWithSubcategory.groupParentAndSubcategoryOrderNums(),
-                category = categoryWithSubcategory.getSubcategoryOrCategory()
+                category = category,
+                name = budget.name.takeIf {
+                    it.isNotBlank() && budget.name != budget.category?.name
+                } ?: category.name
             )
         }
     }
