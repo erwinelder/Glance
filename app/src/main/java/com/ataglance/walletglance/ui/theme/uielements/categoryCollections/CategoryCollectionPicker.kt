@@ -91,8 +91,7 @@ fun RowScope.CategoryCollectionPicker(
             if (expandedState.targetState || expandedState.currentState || !expandedState.isIdle) {
                 Popup(
                     properties = PopupProperties(
-                        focusable = true,
-                        excludeFromSystemGesture = true
+                        focusable = true
                     ),
                     onDismissRequest = {
                         onDimBackgroundChange(false)

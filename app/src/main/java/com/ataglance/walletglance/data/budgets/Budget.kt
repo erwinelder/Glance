@@ -62,4 +62,8 @@ data class Budget(
         )
     }
 
+    fun getTotalAmountByCurrentDateRange(): TotalAmountByRange {
+        return TotalAmountByRange(dateRange = dateRange, totalAmount = usedAmount)
+    }
+
 }

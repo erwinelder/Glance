@@ -1,7 +1,9 @@
 package com.ataglance.walletglance.data.color
 
+import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.app.AppTheme
 
+@Stable
 data class LighterDarkerColorsByTheme(
     val lightDefault: LighterDarkerColors = LighterDarkerColors(),
     val darkDefault: LighterDarkerColors = LighterDarkerColors()

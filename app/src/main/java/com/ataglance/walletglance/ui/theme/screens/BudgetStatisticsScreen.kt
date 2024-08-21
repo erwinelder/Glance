@@ -1,72 +1,280 @@
 package com.ataglance.walletglance.ui.theme.screens
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.Budget
+import com.ataglance.walletglance.data.budgets.TotalAmountByRange
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.statistics.ColumnChartItemUiState
 import com.ataglance.walletglance.data.statistics.ColumnChartUiState
+import com.ataglance.walletglance.data.utils.formatWithSpaces
 import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.data.utils.getPrevDateRanges
+import com.ataglance.walletglance.data.utils.getSpendingInRecentStringRes
+import com.ataglance.walletglance.data.utils.toAccountColorWithName
+import com.ataglance.walletglance.ui.theme.GlanceTheme
+import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountsFlowRow
+import com.ataglance.walletglance.ui.theme.uielements.categories.CategoryBigIconComponent
+import com.ataglance.walletglance.ui.theme.uielements.charts.GlanceColumnChart
+import com.ataglance.walletglance.ui.theme.uielements.containers.BackButtonBlock
 import com.ataglance.walletglance.ui.theme.uielements.containers.PreviewContainer
 
 @Composable
 fun BudgetStatisticsScreen(
     appTheme: AppTheme?,
     budget: Budget,
-    columnChartUiState: ColumnChartUiState
+    columnChartUiState: ColumnChartUiState,
+    budgetAccounts: List<Account>,
+    onBackButtonClick: () -> Unit
 ) {
+    val nestedScrollInterop = rememberNestedScrollInteropConnection()
+    val averageSpending by remember {
+        derivedStateOf { columnChartUiState.averageValue.formatWithSpaces(budget.currency) }
+    }
 
+    Column {
+        BackButtonBlock(onBackButtonClick)
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(
+                bottom = dimensionResource(id = R.dimen.screen_vertical_padding)
+            ),
+            modifier = Modifier
+                .nestedScroll(nestedScrollInterop)
+                .fillMaxSize()
+                .padding(horizontal = dimensionResource(id = R.dimen.screen_horizontal_padding))
+        ) {
+            item {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    budget.category?.let {
+                        CategoryBigIconComponent(category = it, appTheme = appTheme)
+                    }
+                    Text(
+                        text = budget.name,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.amount_currency_spending_limit,
+                            budget.amountLimit.formatWithSpaces(), budget.currency
+                        ),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    AccountsFlowRow(accountList = budgetAccounts, appTheme = appTheme, maxLines = 5)
+                }
+            }
+            item {
+                GlanceColumnChart(
+                    uiState = columnChartUiState,
+                    columnsColor = budget.category?.getColorByTheme(appTheme)?.lighter,
+                    title = stringResource(
+                        id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
+                    ),
+                    bottomNote = "Average spending: $averageSpending"
+                ) { totalAmountByPeriod ->
+                    StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Double) {
+    val usedPercentage by remember {
+        derivedStateOf { 100 / budget.amountLimit * totalAmount }
+    }
+    val pieChartPercentage by remember {
+        derivedStateOf { -(3.6 * usedPercentage).toFloat() }
+    }
+    val canvasBrush = if (usedPercentage < 50.0) {
+        listOf(Color.Green, Color.Green.copy(green = .5f)).reversed()
+    } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
+        listOf(Color.Yellow, Color.Yellow.copy(red = .5f)).reversed()
+    } else {
+        listOf(Color.Red, Color.Red.copy(red = .5f)).reversed()
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+                Canvas(
+                    modifier = Modifier
+                        .padding(end = 5.dp)
+                        .size(70.dp)
+                        .rotate(-82f)
+                ) {
+                    drawArc(
+                        brush = Brush.sweepGradient(canvasBrush),
+                        startAngle = -8f,
+                        sweepAngle = pieChartPercentage,
+                        useCenter = false,
+                        style = Stroke(width = 10.dp.toPx(), cap = StrokeCap.Round)
+                    )
+                }
+                Text(
+                    text = "${usedPercentage.toInt()}%",
+                    color = GlanceTheme.onSurface,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(text = stringResource(R.string.of_limit_used))
+                Text(
+                    text = "(${totalAmount.formatWithSpaces(budget.currency)})",
+                    color = GlanceTheme.primary,
+                    fontSize = 18.sp,
+                )
+            }
+        }
+    }
 }
 
 
-@Preview
+@Preview(locale = "en")
 @Composable
-private fun BudgetStatisticsScreenPreview() {
+fun BudgetStatisticsScreenPreview() {
+    val context = LocalContext.current
     val appTheme = AppTheme.LightDefault
+    val category = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+        .expense[0].category
     val budget = Budget(
         id = 1,
         priorityNum = 1.0,
         amountLimit = 4000.0,
         usedAmount = 2500.0,
         usedPercentage = 62.5F,
-        category = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-            .expense[0].category,
-        name = "Food & drinks",
-        repeatingPeriod = RepeatingPeriod.Daily,
-        dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
+        category = category,
+        name = category.name,
+        repeatingPeriod = RepeatingPeriod.Monthly,
+        dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
         currency = "USD",
         linkedAccountsIds = listOf(1, 2)
     )
-    val columnChartUiState = ColumnChartUiState(
-        columns = listOf(
-            ColumnChartItemUiState(
-                name = "first",
-                popUpValue = "first value",
-                percentageOnGraph = 50f
-            ),
-            ColumnChartItemUiState(
-                name = "second",
-                popUpValue = "second value",
-                percentageOnGraph = 25f
-            ),
-            ColumnChartItemUiState(
-                name = "third",
-                popUpValue = "third value",
-                percentageOnGraph = 75f
-            ),
+    val totalAmountsByRanges = budget.repeatingPeriod.getPrevDateRanges()
+        .mapIndexed { index, dateRange ->
+            TotalAmountByRange(dateRange = dateRange, totalAmount = 5000.0 / (index + 1))
+        }
+        .let { totalAmountsByRanges ->
+            budget.let { listOf(TotalAmountByRange(it.dateRange, it.usedAmount)) } +
+                    totalAmountsByRanges
+        }
+        .reversed()
+    val columnChartUiState = ColumnChartUiState.createAsBudgetStatistics(
+        totalAmountsByRanges = totalAmountsByRanges,
+        rowsCount = 5,
+        repeatingPeriod = budget.repeatingPeriod,
+        context = context
+    )
+    val accountList = listOf(
+        Account(
+            id = 1,
+            orderNum = 1,
+            name = "Main USD",
+            currency = "USD",
+            balance = 112.13,
+            color = AccountPossibleColors().default.toAccountColorWithName(),
+            isActive = false
         ),
-        horizontalLinesNames = listOf("1", "2", "3", "4", "5"),
-        selectedColumnIndex = null
+        Account(
+            id = 2,
+            orderNum = 2,
+            name = "Main CZK Main CZK Main CZK",
+            currency = "CZK",
+            balance = 1412.13,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = false
+        ),
+        Account(
+            id = 2,
+            orderNum = 2,
+            name = "Main CZK Main CZK Main CZK",
+            currency = "CZK",
+            balance = 1412.13,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = false
+        ),
+        Account(
+            id = 2,
+            orderNum = 2,
+            name = "Main CZK Main CZK Main CZK",
+            currency = "CZK",
+            balance = 1412.13,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = false
+        ),
+        Account(
+            id = 2,
+            orderNum = 2,
+            name = "Main CZK Main CZK Main CZK",
+            currency = "CZK",
+            balance = 1412.13,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = false
+        ),
     )
 
     PreviewContainer(appTheme) {
         BudgetStatisticsScreen(
             appTheme = appTheme,
             budget = budget,
-            columnChartUiState = columnChartUiState
+            columnChartUiState = columnChartUiState,
+            budgetAccounts = accountList,
+            onBackButtonClick = {}
         )
     }
 }

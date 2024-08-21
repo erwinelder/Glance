@@ -6,10 +6,12 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.navigation.NavBackStackEntry
 
 
@@ -57,3 +59,18 @@ val dialogSlideToBottomTransition = slideOutVertically(spring(stiffness = 320F))
     (it * 1.1).toInt()
 } + scaleOut(tween(400), .8f)
 
+
+
+val popupEnterToTopAnimation = scaleIn(
+    initialScale = .5f,
+    animationSpec = spring(stiffness = 700f),
+    transformOrigin = TransformOrigin(0.5f, 1.0f)
+) + fadeIn(
+    animationSpec = spring(stiffness = 700f)
+)
+val popupExitToBottomAnimation = scaleOut(
+    targetScale = .2f,
+    transformOrigin = TransformOrigin(0.5f, 1.0f)
+) + fadeOut(
+    animationSpec = spring(stiffness = 700f)
+)

@@ -96,6 +96,12 @@
     <string name="from_account_meaning">from</string>
     <string name="to_account_meaning">to</string>
     <string name="total">Total:</string>
+    <string name="spending_in_recent_days_with_currency">Spending in recent days (%s)</string>
+    <string name="spending_in_recent_weeks_with_currency">Spending in recent weeks (%s)</string>
+    <string name="spending_in_recent_months_with_currency">Spending in recent months (%s)</string>
+    <string name="spending_in_recent_years_with_currency">Spending in recent years (%s)</string>
+    <string name="amount_currency_spending_limit">%s %s spending limit</string>
+    <string name="of_limit_used">of limit used</string>
 
     <!-- Date ranges -->
     <string name="this_week">This week</string>

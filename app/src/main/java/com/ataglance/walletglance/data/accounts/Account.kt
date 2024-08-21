@@ -1,13 +1,15 @@
 package com.ataglance.walletglance.data.accounts
 
+import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.AccountEntity
 import com.ataglance.walletglance.data.utils.formatWithSpaces
 import com.ataglance.walletglance.data.utils.toAccountColorWithName
+import com.ataglance.walletglance.domain.entities.AccountEntity
 import java.util.Locale
 
+@Stable
 data class Account(
     val id: Int = 0,
     val orderNum: Int = 0,

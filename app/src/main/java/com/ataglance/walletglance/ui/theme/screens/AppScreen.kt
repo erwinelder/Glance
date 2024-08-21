@@ -54,6 +54,7 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.settings.ThemeUiState
+import com.ataglance.walletglance.data.statistics.ColumnChartUiState
 import com.ataglance.walletglance.data.utils.currentScreenIs
 import com.ataglance.walletglance.data.utils.fromMainScreen
 import com.ataglance.walletglance.data.utils.getMakeRecordStateAndUnitList
@@ -62,7 +63,6 @@ import com.ataglance.walletglance.data.utils.getPrevDateRanges
 import com.ataglance.walletglance.data.utils.needToMoveScreenTowardsLeft
 import com.ataglance.walletglance.data.utils.takeIfNoneIsNull
 import com.ataglance.walletglance.data.utils.toCollectionsWithIds
-import com.ataglance.walletglance.data.utils.toColumnChartUiState
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.ui.theme.animation.screenEnterTransition
 import com.ataglance.walletglance.ui.theme.animation.screenExitTransition
@@ -514,19 +514,27 @@ fun HomeNavHost(
                 .budgetsTotalAmountsByRanges.collectAsState()
             val columnChartDataUiState by derivedStateOf {
                 budget?.let {
-                    budgetsTotalAmountsByRanges.toColumnChartUiState(
-                        horizontalLinesCount = 5,
+                    ColumnChartUiState.createAsBudgetStatistics(
+                        totalAmountsByRanges = budgetsTotalAmountsByRanges,
+                        rowsCount = 5,
                         repeatingPeriod = it.repeatingPeriod,
                         context = context
                     )
                 }
+            }
+            val budgetAccounts by remember {
+                derivedStateOf { accountsUiState.filterByBudget(budget) }
             }
 
             (budget to columnChartDataUiState).takeIfNoneIsNull()?.let { (budget, chartUiState) ->
                 BudgetStatisticsScreen(
                     appTheme = appUiSettings.appTheme,
                     budget = budget,
-                    columnChartUiState = chartUiState
+                    columnChartUiState = chartUiState,
+                    budgetAccounts = budgetAccounts,
+                    onBackButtonClick = {
+                        navController.popBackStack()
+                    }
                 )
             } ?: Text(text = "Budget not found")
         }

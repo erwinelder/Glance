@@ -95,6 +95,12 @@
     <string name="from_account_meaning">з</string>
     <string name="to_account_meaning">на</string>
     <string name="total">Всього:</string>
+    <string name="spending_in_recent_days_with_currency">Витрати за останні кілька днів (%s)</string>
+    <string name="spending_in_recent_weeks_with_currency">Витрати за останні кілька тижнів (%s)</string>
+    <string name="spending_in_recent_months_with_currency">Витрати за останні кілька місяців (%s)</string>
+    <string name="spending_in_recent_years_with_currency">Витрати за останні кілька років (%s)</string>
+    <string name="amount_currency_spending_limit">Ліміт витрат %s %s</string>
+    <string name="of_limit_used">ліміту використано</string>
 
     <!-- Date ranges -->
     <string name="this_week">Цей тиждень</string>

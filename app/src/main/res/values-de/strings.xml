@@ -95,6 +95,12 @@
     <string name="from_account_meaning">von</string>
     <string name="to_account_meaning">auf</string>
     <string name="total">Gesamt:</string>
+    <string name="spending_in_recent_days_with_currency">Ausgaben der letzten Tage (%s)</string>
+    <string name="spending_in_recent_weeks_with_currency">Ausgaben der letzten Wochen (%s)</string>
+    <string name="spending_in_recent_months_with_currency">Ausgaben der letzten Monate (%s)</string>
+    <string name="spending_in_recent_years_with_currency">Ausgaben der letzten Jahre (%s)</string>
+    <string name="amount_currency_spending_limit">Ausgabelimit von %s %s</string>
+    <string name="of_limit_used">des Limits genutzt</string>
 
     <!-- Date ranges -->
     <string name="this_week">Diese Woche</string>

@@ -44,7 +44,7 @@ fun SmallAccount(
     outerPadding: PaddingValues = PaddingValues(0.dp),
     adjustStyleByActiveStatus: Boolean = false,
     showBalance: Boolean = true,
-    onClick: () -> Unit = {}
+    onClick: (() -> Unit)? = null
 ) {
     val accountAndOnAccountColor = account?.let {
         account.color.getColorAndColorOnByTheme(appTheme)
@@ -65,7 +65,11 @@ fun SmallAccount(
     ) {
         Box(
             modifier = Modifier
-                .bounceClickEffect(.97f, onClick = onClick)
+                .bounceClickEffect(
+                    .97f,
+                    onClick = { onClick?.let { it() } },
+                    enabled = onClick != null
+                )
                 .clip(RoundedCornerShape(roundedCornerSize + 1.dp))
                 .background(GlanceTheme.onSurface.copy(.15f))
                 .padding(2.dp)

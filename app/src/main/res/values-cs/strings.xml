@@ -95,6 +95,12 @@
     <string name="from_account_meaning">z</string>
     <string name="to_account_meaning">na</string>
     <string name="total">Celkem:</string>
+    <string name="spending_in_recent_days_with_currency">Výdaje za posledních několik dní (%s)</string>
+    <string name="spending_in_recent_weeks_with_currency">Výdaje za posledních několik týdnů (%s)</string>
+    <string name="spending_in_recent_months_with_currency">Výdaje za posledních několik měsíců (%s)</string>
+    <string name="spending_in_recent_years_with_currency">Výdaje za posledních několik let (%s)</string>
+    <string name="amount_currency_spending_limit">Limit výdajů %s %s</string>
+    <string name="of_limit_used">limitu využito</string>
 
     <!-- Date ranges -->
     <string name="this_week">Tento týden</string>

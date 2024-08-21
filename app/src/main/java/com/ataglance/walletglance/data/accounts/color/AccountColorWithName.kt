@@ -1,11 +1,13 @@
 package com.ataglance.walletglance.data.accounts.color
 
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.color.ColorByTheme
 import com.ataglance.walletglance.data.color.LighterDarkerColors
 import com.ataglance.walletglance.data.color.LighterDarkerColorsByTheme
 
+@Stable
 data class AccountColorWithName(
     val name: AccountColorName,
     val color: LighterDarkerColorsByTheme,

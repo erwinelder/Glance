@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.data.utils
 
 import java.util.Locale
-import kotlin.math.pow
 
 
 fun <A, B> Pair<A?, B?>.takeIfNoneIsNull(): Pair<A, B>? {
@@ -30,7 +29,25 @@ fun String.addZeroIfDotIsAtTheBeginning(): String {
 }
 
 
-fun Double.formatWithSpaces(): String {
+fun Int.formatWithSpaces(): String {
+    val numberString = this.toString()
+    var formattedNumber = ""
+
+    for ((index, char) in numberString.reversed().withIndex()) {
+
+        formattedNumber = char + formattedNumber
+
+        if (index % 3 == 2 && index != numberString.lastIndex) {
+            formattedNumber = " $formattedNumber"
+        }
+
+    }
+
+    return formattedNumber
+}
+
+
+fun Double.formatWithSpaces(additionToEnd: String? = null): String {
     val numberString = "%.2f".format(Locale.US, this)
     var formattedNumber = numberString.takeLast(3)
     val decimalPart = numberString.dropLast(3)
@@ -45,20 +62,5 @@ fun Double.formatWithSpaces(): String {
 
     }
 
-    return formattedNumber
-}
-
-
-fun Double.getColumnChartHorizontalLinesNames(horizontalLinesCount: Int): List<String> {
-    val stepDecimal = this.toInt() / 4
-    val stepDigitCountHalf = stepDecimal.toString().length / 2
-    val multiplicationStep = 10.0.pow(stepDigitCountHalf.toDouble()).toInt()
-    val roundedStep = stepDecimal / multiplicationStep * multiplicationStep + multiplicationStep
-
-    val list = mutableListOf("0")
-    for (i in 1..<horizontalLinesCount) {
-        list.add((roundedStep * i).toString())
-    }
-
-    return list
+    return formattedNumber + (additionToEnd?.let { " $it" } ?: "")
 }

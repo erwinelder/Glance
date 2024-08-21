@@ -1,7 +1,9 @@
 package com.ataglance.walletglance.data.color
 
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
+@Stable
 data class LighterDarkerColors(
     val lighter: Color = Color.Gray,
     val darker: Color = Color.Gray

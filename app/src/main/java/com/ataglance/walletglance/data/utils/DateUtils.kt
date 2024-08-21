@@ -313,6 +313,16 @@ fun RepeatingPeriod.asStringRes(): Int {
 }
 
 
+fun RepeatingPeriod.getSpendingInRecentStringRes(): Int {
+    return when (this) {
+        RepeatingPeriod.Daily -> R.string.spending_in_recent_days_with_currency
+        RepeatingPeriod.Weekly -> R.string.spending_in_recent_weeks_with_currency
+        RepeatingPeriod.Monthly -> R.string.spending_in_recent_months_with_currency
+        RepeatingPeriod.Yearly -> R.string.spending_in_recent_years_with_currency
+    }
+}
+
+
 fun RepeatingPeriod.getLongDateRangeWithTime(): LongDateRange {
     return when (this) {
         RepeatingPeriod.Daily -> getTodayLongDateRange()
