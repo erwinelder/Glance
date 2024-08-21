@@ -3,7 +3,6 @@ package com.ataglance.walletglance.ui.viewmodels.budgets
 import androidx.lifecycle.ViewModel
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
-import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,12 +18,15 @@ class EditBudgetViewModel : ViewModel() {
 
     fun applyBudget(
         budget: EditingBudgetUiState?,
-        category: Category? = null,
+        categoryWithSubcategory: CategoryWithSubcategory? = null,
         newBudgetName: String = ""
     ) {
+        val category = categoryWithSubcategory?.category
+
         _budget.update {
             budget ?: EditingBudgetUiState(
                 isNew = true,
+                priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
                 category = category,
                 name = newBudgetName.takeIf { it.isNotBlank() } ?: category?.name ?: ""
             )

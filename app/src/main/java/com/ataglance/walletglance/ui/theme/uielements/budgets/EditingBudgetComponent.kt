@@ -51,7 +51,7 @@ fun EditingBudgetComponent(
                 Text(
                     text = budget.name,
                     color = GlanceTheme.onSurface,
-                    fontSize = 19.sp,
+                    fontSize = 20.sp,
                     modifier = Modifier.weight(1f),
                     overflow = TextOverflow.Ellipsis
                 )
@@ -69,12 +69,12 @@ fun EditingBudgetComponent(
                 Text(
                     text = stringResource(R.string.limit) + ":",
                     color = GlanceTheme.outline,
-                    fontSize = 17.sp
+                    fontSize = 18.sp
                 )
                 Text(
                     text = budget.amountLimit.formatWithSpaces(),
                     color = GlanceTheme.onSurface,
-                    fontSize = 19.sp,
+                    fontSize = 20.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false)
@@ -82,7 +82,7 @@ fun EditingBudgetComponent(
                 Text(
                     text = budget.currency,
                     color = GlanceTheme.onSurface,
-                    fontSize = 18.sp
+                    fontSize = 19.sp
                 )
             }
         }

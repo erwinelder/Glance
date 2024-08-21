@@ -28,14 +28,12 @@ class CategoryCollectionAndCollectionCategoryAssociationRepository(
         associationsToDelete: List<CategoryCollectionCategoryAssociation>,
         associationsToUpsert: List<CategoryCollectionCategoryAssociation>
     ) {
-        if (collectionsIdsToDelete.isNotEmpty()) {
+        if (collectionsIdsToDelete.isNotEmpty())
             categoryCollectionDao.deleteCollectionsByIds(collectionsIdsToDelete)
-        }
         categoryCollectionDao.upsertCollections(collectionListToUpsert)
 
-        if (associationsToDelete.isNotEmpty()) {
+        if (associationsToDelete.isNotEmpty())
             categoryCollectionCategoryAssociationDao.deleteAssociations(associationsToDelete)
-        }
         categoryCollectionCategoryAssociationDao
             .upsertCategoryCollectionCategoryAssociations(associationsToUpsert)
     }

@@ -48,6 +48,10 @@ data class CategoryWithSubcategories(
         return CategoryWithSubcategory(category, subcategoryList.findById(id))
     }
 
+    fun getWithFirstSubcategory(): CategoryWithSubcategory {
+        return CategoryWithSubcategory(category, subcategoryList.firstOrNull())
+    }
+
     fun getWithLastSubcategory(): CategoryWithSubcategory {
         return CategoryWithSubcategory(category, subcategoryList.lastOrNull())
     }

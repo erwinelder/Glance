@@ -77,22 +77,22 @@ data class BudgetsByType(
 
     fun fillUsedAmountsByRecords(recordList: List<Record>): BudgetsByType {
         var recordsInDateRange = recordList.filterByBudgetsDateRange(yearly)
-        val filledYearlyBudgets = recordsInDateRange?.let { yearly.fillUsedAmountsByRecords(it) }
+        val filledYearlyBudgets = recordsInDateRange.let { yearly.fillUsedAmountsByRecords(it) }
 
-        recordsInDateRange = recordsInDateRange?.filterByBudgetsDateRange(monthly)
-        val filledMonthlyBudgets = recordsInDateRange?.let { monthly.fillUsedAmountsByRecords(it) }
+        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(monthly)
+        val filledMonthlyBudgets = recordsInDateRange.let { monthly.fillUsedAmountsByRecords(it) }
 
-        recordsInDateRange = recordsInDateRange?.filterByBudgetsDateRange(weekly)
-        val filledWeeklyBudgets = recordsInDateRange?.let { weekly.fillUsedAmountsByRecords(it) }
+        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(weekly)
+        val filledWeeklyBudgets = recordsInDateRange.let { weekly.fillUsedAmountsByRecords(it) }
 
-        recordsInDateRange = recordsInDateRange?.filterByBudgetsDateRange(daily)
-        val filledDailyBudgets = recordsInDateRange?.let { daily.fillUsedAmountsByRecords(it) }
+        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(daily)
+        val filledDailyBudgets = recordsInDateRange.let { daily.fillUsedAmountsByRecords(it) }
 
         return this.copy(
-            daily = filledDailyBudgets ?: emptyList(),
-            weekly = filledWeeklyBudgets ?: emptyList(),
-            monthly = filledMonthlyBudgets ?: emptyList(),
-            yearly = filledYearlyBudgets ?: emptyList()
+            daily = filledDailyBudgets,
+            weekly = filledWeeklyBudgets,
+            monthly = filledMonthlyBudgets,
+            yearly = filledYearlyBudgets
         )
     }
 
@@ -119,33 +119,29 @@ data class BudgetsByType(
         applyFunction: List<Budget>.(List<Record>) -> List<Budget>
     ): BudgetsByType {
         var recordsInDateRange = recordList.filterByBudgetsDateRange(yearly)
-            ?.takeIf { it.isNotEmpty() }
-        val filledYearlyBudgets = recordsInDateRange?.let { yearly.applyFunction(it) }
+        val filledYearlyBudgets = recordsInDateRange.let { yearly.applyFunction(it) }
 
-        recordsInDateRange = recordsInDateRange?.filterByBudgetsDateRange(monthly)
-            ?.takeIf { it.isNotEmpty() }
-        val filledMonthlyBudgets = recordsInDateRange?.let { monthly.applyFunction(it) }
+        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(monthly)
+        val filledMonthlyBudgets = recordsInDateRange.let { monthly.applyFunction(it) }
 
-        recordsInDateRange = recordsInDateRange?.filterByBudgetsDateRange(weekly)
-            ?.takeIf { it.isNotEmpty() }
-        val filledWeeklyBudgets = recordsInDateRange?.let { weekly.applyFunction(it) }
+        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(weekly)
+        val filledWeeklyBudgets = recordsInDateRange.let { weekly.applyFunction(it) }
 
-        recordsInDateRange = recordsInDateRange?.filterByBudgetsDateRange(daily)
-            ?.takeIf { it.isNotEmpty() }
-        val filledDailyBudgets = recordsInDateRange?.let { daily.applyFunction(it) }
+        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(daily)
+        val filledDailyBudgets = recordsInDateRange.let { daily.applyFunction(it) }
 
         return this.copy(
-            daily = filledDailyBudgets ?: daily,
-            weekly = filledWeeklyBudgets ?: weekly,
-            monthly = filledMonthlyBudgets ?: monthly,
-            yearly = filledYearlyBudgets ?: yearly
+            daily = filledDailyBudgets,
+            weekly = filledWeeklyBudgets,
+            monthly = filledMonthlyBudgets,
+            yearly = filledYearlyBudgets
         )
     }
 
-    private fun List<Record>.filterByBudgetsDateRange(budgetList: List<Budget>): List<Record>? {
+    private fun List<Record>.filterByBudgetsDateRange(budgetList: List<Budget>): List<Record> {
         return budgetList.firstOrNull()?.dateRange?.let { dateRange ->
             this.filter { dateRange.containsDate(it.date) }
-        }
+        } ?: this
     }
 
 }

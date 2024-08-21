@@ -17,7 +17,8 @@ class RecordAndAccountRepository(
         recordListToUpsert: List<Record>,
         accountListToUpsert: List<AccountEntity>
     ) {
-        if (recordListToDelete.isNotEmpty()) recordDao.deleteRecords(recordListToDelete)
+        if (recordListToDelete.isNotEmpty())
+            recordDao.deleteRecords(recordListToDelete)
         recordDao.upsertRecords(recordListToUpsert)
         accountDao.upsertAccounts(accountListToUpsert)
     }

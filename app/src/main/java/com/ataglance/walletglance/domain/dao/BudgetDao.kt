@@ -11,7 +11,7 @@ interface BudgetDao {
     @Upsert
     suspend fun upsertBudgets(budgetList: List<BudgetEntity>)
 
-    @Query("DELETE FROM Budget WHERE id in (:idList)")
+    @Query("DELETE FROM Budget WHERE id IN (:idList)")
     suspend fun deleteBudgetsByIds(idList: List<Int>)
 
     @Query("SELECT * FROM Budget")

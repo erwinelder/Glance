@@ -947,7 +947,8 @@ fun NavGraphBuilder.budgetsGraph(
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
                     editBudgetViewModel.applyBudget(
                         budget = budget?.toBudgetUiState(accountList),
-                        category = categoriesWithSubcategories.expense.getOrNull(0)?.category
+                        categoryWithSubcategory = categoriesWithSubcategories.expense.getOrNull(0)
+                            ?.getWithFirstSubcategory()
                     )
                     navController.navigate(BudgetsSettingsScreens.EditBudget)
                 },
@@ -957,6 +958,7 @@ fun NavGraphBuilder.budgetsGraph(
                             budgetList = editBudgetsViewModel.getBudgetList()
                         )
                     }
+                    navController.popBackStack()
                 }
             )
         }

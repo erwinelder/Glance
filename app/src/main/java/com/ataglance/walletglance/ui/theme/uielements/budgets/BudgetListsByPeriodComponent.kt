@@ -30,8 +30,8 @@ fun BudgetListsByPeriodComponent(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        item {
-            budgetsByType.daily.takeIf { it.isNotEmpty() }?.let { budgetList ->
+        budgetsByType.daily.takeIf { it.isNotEmpty() }?.let { budgetList ->
+            item {
                 BudgetListByTypeComponent(
                     budgetList = budgetList,
                     repeatingPeriod = RepeatingPeriod.Daily,
@@ -39,8 +39,8 @@ fun BudgetListsByPeriodComponent(
                 )
             }
         }
-        item {
-            budgetsByType.weekly.takeIf { it.isNotEmpty() }?.let { budgetList ->
+        budgetsByType.weekly.takeIf { it.isNotEmpty() }?.let { budgetList ->
+            item {
                 BudgetListByTypeComponent(
                     budgetList = budgetList,
                     repeatingPeriod = RepeatingPeriod.Weekly,
@@ -48,8 +48,8 @@ fun BudgetListsByPeriodComponent(
                 )
             }
         }
-        item {
-            budgetsByType.monthly.takeIf { it.isNotEmpty() }?.let { budgetList ->
+        budgetsByType.monthly.takeIf { it.isNotEmpty() }?.let { budgetList ->
+            item {
                 BudgetListByTypeComponent(
                     budgetList = budgetList,
                     repeatingPeriod = RepeatingPeriod.Monthly,
@@ -57,8 +57,8 @@ fun BudgetListsByPeriodComponent(
                 )
             }
         }
-        item {
-            budgetsByType.yearly.takeIf { it.isNotEmpty() }?.let { budgetList ->
+        budgetsByType.yearly.takeIf { it.isNotEmpty() }?.let { budgetList ->
+            item {
                 BudgetListByTypeComponent(
                     budgetList = budgetList,
                     repeatingPeriod = RepeatingPeriod.Yearly,

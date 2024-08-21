@@ -82,7 +82,7 @@ fun EditBudgetsScreenPreview() {
     val appTheme = AppTheme.LightDefault
     val defaultCategories = DefaultCategoriesPackage(context).getDefaultCategories()
     val budgetsByType = BudgetsByType(
-        daily = listOf(
+        /*daily = listOf(
             Budget(
                 id = 1,
                 priorityNum = 1.0,
@@ -96,7 +96,7 @@ fun EditBudgetsScreenPreview() {
                 currency = "USD",
                 linkedAccountsIds = listOf(1, 2)
             )
-        ),
+        ),*/
         weekly = listOf(
             Budget(
                 id = 2,
