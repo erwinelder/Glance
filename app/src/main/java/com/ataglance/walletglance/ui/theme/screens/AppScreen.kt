@@ -945,7 +945,10 @@ fun NavGraphBuilder.budgetsGraph(
                 appTheme = appUiSettings.appTheme,
                 budgetsByType = budgetsByTypeState,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
-                    editBudgetViewModel.applyBudget(budget?.toBudgetUiState(accountList))
+                    editBudgetViewModel.applyBudget(
+                        budget = budget?.toBudgetUiState(accountList),
+                        category = categoriesWithSubcategories.expense.getOrNull(0)?.category
+                    )
                     navController.navigate(BudgetsSettingsScreens.EditBudget)
                 },
                 onSaveBudgetsButton = {

@@ -1,11 +1,12 @@
 package com.ataglance.walletglance.ui.theme.uielements.pickers
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,9 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +37,8 @@ import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
+import com.ataglance.walletglance.ui.theme.animation.popupEnterToBottomAnimation
+import com.ataglance.walletglance.ui.theme.animation.popupExitToTopAnimation
 import com.ataglance.walletglance.ui.theme.uielements.dividers.SmallDivider
 
 @Composable
@@ -47,38 +48,50 @@ fun <T>PopupFloatingPicker(
     itemToString: (T) -> String,
     onItemSelect: (T) -> Unit,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
+    val isExpandedState = remember {
+        MutableTransitionState(false)
+    }
     val selectedColor by animateColorAsState(
-        targetValue = if (isExpanded) GlanceTheme.primary else GlanceTheme.onSurface,
+        targetValue = if (isExpandedState.targetState)
+            GlanceTheme.primary else GlanceTheme.onSurface,
         label = "selected color"
     )
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         PickerButton(
             text = selectedItemText,
-            isExpanded = isExpanded,
-            selectedColor = selectedColor,
-            onClick = { isExpanded = true }
-        )
-        Box {
-            if (isExpanded) {
+            isExpanded = isExpandedState.targetState,
+            selectedColor = selectedColor
+        ) {
+            isExpandedState.targetState = true
+        }
+        Column {
+            if (isExpandedState.targetState || isExpandedState.currentState) {
                 Popup(
+                    alignment = Alignment.TopCenter,
+                    onDismissRequest = {
+                        isExpandedState.targetState = false
+                    },
                     properties = PopupProperties(
-                        focusable = true,
-                        excludeFromSystemGesture = true
-                    ),
-                    onDismissRequest = { isExpanded = false }
+                        focusable = true
+                    )
                 ) {
-                    androidx.compose.animation.AnimatedVisibility(
-                        visible = isExpanded
+                    AnimatedVisibility(
+                        visibleState = isExpandedState,
+                        enter = popupEnterToBottomAnimation,
+                        exit = popupExitToTopAnimation
                     ) {
                         PopupContent(
                             selectedItemText = selectedItemText,
                             itemList = itemList,
                             itemToString = itemToString,
-                            onItemSelect = onItemSelect
+                            onItemSelect = {
+                                onItemSelect(it)
+                                isExpandedState.targetState = false
+                            }
                         )
                     }
                 }
@@ -145,6 +158,7 @@ private fun <T>PopupContent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(8.dp, 12.dp),
         modifier = Modifier
+            .padding(8.dp)
             .clip(RoundedCornerShape(20.dp))
             .shadow(10.dp, RoundedCornerShape(20.dp))
             .background(GlanceTheme.surface)

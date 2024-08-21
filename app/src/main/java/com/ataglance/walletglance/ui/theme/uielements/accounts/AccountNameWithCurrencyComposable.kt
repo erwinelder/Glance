@@ -43,14 +43,13 @@ fun AccountNameWithCurrencyComposable(
     verticalPadding: Dp = 4.dp,
     outerPadding: PaddingValues = PaddingValues(0.dp),
     enabled: Boolean = true,
-    onClick: () -> Unit = {}
+    onClick: (() -> Unit)? = null
 ) {
     val accountAndOnAccountColor = account?.let {
         account.color.getColorAndColorOnByTheme(appTheme)
     } ?: Pair(LighterDarkerColors(), Color.White)
     val transparency by animateFloatAsState(
-        targetValue =
-        if (!enabled && account != null) 0.5f else 1f,
+        targetValue = if (!enabled && account != null) 0.5f else 1f,
         label = "account transparency"
     )
     val accountGradientColor = accountAndOnAccountColor.first
@@ -63,7 +62,9 @@ fun AccountNameWithCurrencyComposable(
     ) {
         Box(
             modifier = Modifier
-                .bounceClickEffect(.97f, onClick = onClick)
+                .bounceClickEffect(.97f, enabled = onClick != null && enabled) {
+                    onClick?.let { it() }
+                }
                 .clip(RoundedCornerShape(roundedCornerSize + 1.dp))
                 .background(GlanceTheme.onSurface.copy(.15f))
                 .padding(2.dp)
@@ -98,33 +99,31 @@ fun AccountNameWithCurrencyComposable(
                             end = horizontalPadding - 1.dp
                         )
                 )
-                if (account != null) {
-                    Text(
-                        text = account.currency,
-                        color = onAccountColor,
-                        textAlign = TextAlign.Center,
-                        fontSize = fontSize,
-                        fontWeight = FontWeight.Light,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(roundedCornerSize))
-                            .background(
-                                if (
-                                    appTheme != null &&
-                                    account.color.name == AccountColors.Default.name
-                                ) {
-                                    GlanceTheme.background.copy(.07f)
-                                } else {
-                                    Color.White.copy(.09f)
-                                }
-                            )
-                            .padding(
-                                top = verticalPadding - 1.dp, bottom = verticalPadding,
-                                start = horizontalPadding, end = horizontalPadding
-                            )
-                    )
-                }
+                Text(
+                    text = account?.currency ?: "???",
+                    color = onAccountColor,
+                    textAlign = TextAlign.Center,
+                    fontSize = fontSize,
+                    fontWeight = FontWeight.Light,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(roundedCornerSize))
+                        .background(
+                            if (
+                                appTheme != null &&
+                                account?.color?.name == AccountColors.Default.name
+                            ) {
+                                GlanceTheme.background.copy(.07f)
+                            } else {
+                                Color.White.copy(.09f)
+                            }
+                        )
+                        .padding(
+                            top = verticalPadding - 1.dp, bottom = verticalPadding,
+                            start = horizontalPadding, end = horizontalPadding
+                        )
+                )
             }
         }
     }

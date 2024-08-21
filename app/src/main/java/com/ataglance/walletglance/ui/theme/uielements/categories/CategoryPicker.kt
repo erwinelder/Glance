@@ -49,6 +49,7 @@ import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.ui.theme.GlanceTheme
 import com.ataglance.walletglance.ui.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.ui.theme.WindowTypeIsMedium
+import com.ataglance.walletglance.ui.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.ui.theme.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.ui.theme.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.ui.theme.uielements.buttons.CloseButton
@@ -124,7 +125,10 @@ fun CategoryPicker(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CategoryListItem(categoryWithSubcategories.category, appTheme) {
-                        if (categoryWithSubcategories.subcategoryList.isNotEmpty()) {
+                        if (
+                            categoryWithSubcategories.subcategoryList.isNotEmpty() &&
+                                !allowChoosingParentCategory
+                        ) {
                             chosenCategoryWithSubcategories = categoryWithSubcategories
                         } else {
                             onCategoryChoose(
@@ -145,13 +149,14 @@ fun CategoryPicker(
                             ),
                             onClick = {
                                 chosenCategoryWithSubcategories = categoryWithSubcategories
-                            }
+                            },
+                            modifier = Modifier.bounceClickEffect()
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.short_arrow_right_icon),
                                 contentDescription = "open subcategory list icon",
                                 modifier = Modifier
-                                    .size(40.dp)
+                                    .size(36.dp)
                                     .border(
                                         width = 1.dp,
                                         color = if (

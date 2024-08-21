@@ -188,7 +188,7 @@ private fun ChartColumns(
     columnPopupDetailsContent: @Composable (Double) -> Unit
 ) {
     var selectedColumnIndex by remember {
-        mutableStateOf<Int?>(2)
+        mutableStateOf<Int?>(null)
     }
 
     Row(

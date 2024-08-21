@@ -74,3 +74,19 @@ val popupExitToBottomAnimation = scaleOut(
 ) + fadeOut(
     animationSpec = spring(stiffness = 700f)
 )
+
+
+
+val popupEnterToBottomAnimation = scaleIn(
+    initialScale = .5f,
+    animationSpec = spring(stiffness = 700f),
+    transformOrigin = TransformOrigin(0.5f, 0.0f)
+) + fadeIn(
+    animationSpec = spring(stiffness = 700f)
+)
+val popupExitToTopAnimation = scaleOut(
+    targetScale = .2f,
+    transformOrigin = TransformOrigin(0.5f, 0.0f)
+) + fadeOut(
+    animationSpec = spring(stiffness = 700f)
+)

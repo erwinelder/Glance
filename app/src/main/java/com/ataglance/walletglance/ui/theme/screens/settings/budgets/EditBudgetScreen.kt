@@ -152,11 +152,11 @@ private fun GlassSurfaceContent(
             )
         }
         budget.category?.let { category ->
-            AnimatedContent(
-                targetState = category,
-                label = "category field at the edit budget screen"
-            ) { targetCategory ->
-                FieldWithLabel(stringResource(R.string.category)) {
+            FieldWithLabel(stringResource(R.string.category)) {
+                AnimatedContent(
+                    targetState = category,
+                    label = "category field at the edit budget screen"
+                ) { targetCategory ->
                     CategoryField(
                         category = targetCategory,
                         fontSize = 20.sp,
@@ -175,10 +175,10 @@ private fun GlassSurfaceContent(
         )
         TextFieldWithLabel(
             text = budget.amountLimit,
-            placeholderText = "0.0",
             onValueChange = onAmountLimitChange,
             keyboardType = KeyboardType.Number,
-            labelText = stringResource(R.string.budget_limit)
+            labelText = stringResource(R.string.budget_limit),
+            placeholderText = "0.0"
         )
         AccountCheckedList(
             budget = budget,
@@ -228,6 +228,7 @@ private fun AccountCheckedList(
                     AccountNameWithCurrencyComposable(
                         account = account,
                         appTheme = appTheme,
+                        fontSize = 19.sp,
                         enabled = enabled
                     )
                 }
