@@ -18,12 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.utils.currentScreenIs
 import com.ataglance.walletglance.presentation.theme.GlanceTheme
 import com.ataglance.walletglance.presentation.theme.navigation.screens.AccountsSettingsScreens
 import com.ataglance.walletglance.presentation.theme.navigation.screens.CategoriesSettingsScreens
+import com.ataglance.walletglance.presentation.theme.navigation.screens.MainScreens
 import com.ataglance.walletglance.presentation.theme.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.presentation.theme.uielements.buttons.BackButton
-import com.ataglance.walletglance.data.utils.currentScreenIs
 
 @Composable
 fun SetupProgressTopBar(
@@ -72,4 +73,13 @@ fun SetupProgressTopBar(
             }
         }
     }
+}
+
+fun shouldDisplaySetupProgressTopBar(
+    mainStartDestination: MainScreens,
+    navBackStackEntry: NavBackStackEntry?
+): Boolean {
+    return mainStartDestination != MainScreens.Home &&
+            !navBackStackEntry.currentScreenIs(SettingsScreens.Start) &&
+            !navBackStackEntry.currentScreenIs(MainScreens.FinishSetup)
 }

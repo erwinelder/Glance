@@ -28,25 +28,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.data.date.DateRangeAssets
+import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.data.utils.formatDateRangeForCustomDateRangeField
 import com.ataglance.walletglance.presentation.theme.GlanceTheme
 import com.ataglance.walletglance.presentation.theme.Manrope
 import com.ataglance.walletglance.presentation.theme.animation.bounceClickEffect
 import com.ataglance.walletglance.presentation.theme.uielements.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.presentation.theme.uielements.dividers.SmallDivider
 import com.ataglance.walletglance.presentation.theme.uielements.fields.DateField
-import com.ataglance.walletglance.data.utils.formatDateRangeForCustomDateRangeField
-import com.ataglance.walletglance.data.date.DateRangeAssets
-import com.ataglance.walletglance.data.date.DateRangeEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BoxScope.CustomDateRangeWindow(
+fun BoxScope.GlanceDateRangeAssetsPicker(
     visible: Boolean,
     padding: PaddingValues,
     currentDateRangeEnum: DateRangeEnum,
     dateRangePickerState: DateRangePickerState,
     onDismissRequest: () -> Unit,
-    onDateRangeEnumClick: (DateRangeEnum) -> Unit,
+    onDateRangeSelect: (DateRangeEnum) -> Unit,
     onCustomDateRangeFieldClick: () -> Unit,
     onConfirmButtonClick: () -> Unit
 ) {
@@ -85,37 +85,37 @@ fun BoxScope.CustomDateRangeWindow(
                     )*/
                     .padding(20.dp, 16.dp)
             ) {
-                CustomDateRangeComponent(DateRangeAssets.ThisWeek, currentDateRangeEnum, onDateRangeEnumClick)
-                CustomDateRangeComponent(DateRangeAssets.SevenDays, currentDateRangeEnum, onDateRangeEnumClick)
-                CustomDateRangeComponent(DateRangeAssets.ThisYear, currentDateRangeEnum, onDateRangeEnumClick)
-                CustomDateRangeComponent(DateRangeAssets.LastYear, currentDateRangeEnum, onDateRangeEnumClick)
+                DateRangeAssetComponent(DateRangeAssets.ThisWeek, currentDateRangeEnum, onDateRangeSelect)
+                DateRangeAssetComponent(DateRangeAssets.SevenDays, currentDateRangeEnum, onDateRangeSelect)
+                DateRangeAssetComponent(DateRangeAssets.ThisYear, currentDateRangeEnum, onDateRangeSelect)
+                DateRangeAssetComponent(DateRangeAssets.LastYear, currentDateRangeEnum, onDateRangeSelect)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRangeAssets.January, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.February, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.March, currentDateRangeEnum, onDateRangeEnumClick)
+                    DateRangeAssetComponent(DateRangeAssets.January, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.February, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.March, currentDateRangeEnum, onDateRangeSelect)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRangeAssets.April, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.May, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.June, currentDateRangeEnum, onDateRangeEnumClick)
+                    DateRangeAssetComponent(DateRangeAssets.April, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.May, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.June, currentDateRangeEnum, onDateRangeSelect)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRangeAssets.July, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.August, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.September, currentDateRangeEnum, onDateRangeEnumClick)
+                    DateRangeAssetComponent(DateRangeAssets.July, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.August, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.September, currentDateRangeEnum, onDateRangeSelect)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomDateRangeComponent(DateRangeAssets.October, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.November, currentDateRangeEnum, onDateRangeEnumClick)
-                    CustomDateRangeComponent(DateRangeAssets.December, currentDateRangeEnum, onDateRangeEnumClick)
+                    DateRangeAssetComponent(DateRangeAssets.October, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.November, currentDateRangeEnum, onDateRangeSelect)
+                    DateRangeAssetComponent(DateRangeAssets.December, currentDateRangeEnum, onDateRangeSelect)
                 }
                 DateField(
                     dateFormatted = formatDateRangeForCustomDateRangeField(
@@ -135,10 +135,10 @@ fun BoxScope.CustomDateRangeWindow(
 }
 
 @Composable
-private fun CustomDateRangeComponent(
+private fun DateRangeAssetComponent(
     dateRangeAssets: DateRangeAssets,
     currentDateRangeEnum: DateRangeEnum,
-    onClick: (DateRangeEnum) -> Unit
+    onSelect: (DateRangeEnum) -> Unit
 ) {
     val color by animateColorAsState(
         targetValue = if (dateRangeAssets.enum == currentDateRangeEnum) {
@@ -155,8 +155,8 @@ private fun CustomDateRangeComponent(
         fontSize = 19.sp,
         fontFamily = Manrope,
         modifier = Modifier
-            .bounceClickEffect(.97f) {
-                onClick(dateRangeAssets.enum)
+            .bounceClickEffect {
+                onSelect(dateRangeAssets.enum)
             }
     )
 }

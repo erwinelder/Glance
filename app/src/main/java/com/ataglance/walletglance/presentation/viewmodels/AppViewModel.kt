@@ -116,7 +116,7 @@ class AppViewModel(
         ) { setupStage, language, appTheme, lastRecordNum ->
             AppUiSettings(
                 isSetUp = setupStage == 1,
-                startMainDestination = when(setupStage) {
+                mainStartDestination = when(setupStage) {
                     1 -> MainScreens.Home
                     0 -> MainScreens.Settings
                     else -> MainScreens.FinishSetup
@@ -903,7 +903,7 @@ class AppViewModel(
         )
     val dateRangeMenuUiState: StateFlow<DateRangeMenuUiState> = _dateRangeMenuUiState.asStateFlow()
 
-    fun changeDateRange(dateRangeEnum: DateRangeEnum) {
+    fun selectDateRange(dateRangeEnum: DateRangeEnum) {
         val currDateRangeWithEnum = dateRangeMenuUiState.value.dateRangeWithEnum
 
         if (currDateRangeWithEnum.enum == dateRangeEnum) return
@@ -918,7 +918,7 @@ class AppViewModel(
         fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
 
-    fun changeDateRangeToCustom(pastDateMillis: Long?, futureDateMillis: Long?) {
+    fun selectCustomDateRange(pastDateMillis: Long?, futureDateMillis: Long?) {
         if (pastDateMillis == null || futureDateMillis == null) {
             return
         }

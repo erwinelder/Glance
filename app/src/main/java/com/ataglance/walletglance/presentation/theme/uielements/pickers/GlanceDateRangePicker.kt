@@ -15,24 +15,22 @@ import com.ataglance.walletglance.presentation.theme.GlanceTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDateRangePicker(
-    openDialog: Boolean,
-    onOpenDialogChange: (Boolean) -> Unit,
-    state: DateRangePickerState
+fun GlanceDateRangePicker(
+    visible: Boolean,
+    dateRangePickerState: DateRangePickerState,
+    onCloseDialog: () -> Unit
 ) {
-    AnimatedVisibility(visible = openDialog) {
+    AnimatedVisibility(visible = visible) {
         DatePickerDialog(
-            onDismissRequest = { onOpenDialogChange(false) },
+            onDismissRequest = onCloseDialog,
             confirmButton = {
-                TextButton(
-                    onClick = { onOpenDialogChange(false) }
-                ) {
+                TextButton(onClick = onCloseDialog) {
                     Text(text = stringResource(R.string.close))
                 }
             }
         ) {
             DateRangePicker(
-                state = state,
+                state = dateRangePickerState,
                 colors = DatePickerDefaults.colors(
                     containerColor = GlanceTheme.surface,
                     titleContentColor = GlanceTheme.onSurface,

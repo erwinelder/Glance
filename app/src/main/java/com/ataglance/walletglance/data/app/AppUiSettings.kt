@@ -5,7 +5,7 @@ import com.ataglance.walletglance.presentation.theme.navigation.screens.Settings
 
 data class AppUiSettings(
     val isSetUp: Boolean = false,
-    val startMainDestination: MainScreens = MainScreens.Home,
+    val mainStartDestination: MainScreens = MainScreens.Home,
     val startSettingsDestination: SettingsScreens = SettingsScreens.Start,
     val langCode: String = AppLanguage.English.languageCode,
     val appTheme: AppTheme? = null,
