@@ -27,74 +27,96 @@ import kotlinx.coroutines.withContext
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class WalletGlanceApplication: Application() {
+class WalletGlanceApplication : Application() {
 
     private lateinit var settingsRepository: SettingsRepository
-    private val db by lazy { AppDatabase.getDatabase(this) }
-
-    private val accountRepository by lazy { AccountRepository(db.accountDao) }
-    private val categoryRepository by lazy { CategoryRepository(db.categoryDao) }
-    private val categoryCollectionRepository by lazy {
-        CategoryCollectionRepository(db.categoryCollectionDao)
-    }
-    private val categoryCollectionAndCollectionCategoryAssociationRepository by lazy {
-        CategoryCollectionAndCollectionCategoryAssociationRepository(
-            categoryCollectionDao = db.categoryCollectionDao,
-            categoryCollectionCategoryAssociationDao = db.categoryCollectionCategoryAssociationDao
-        )
-    }
-    private val recordRepository by lazy { RecordRepository(db.recordDao) }
-    private val recordAndAccountRepository by lazy {
-        RecordAndAccountRepository(db.recordDao, db.accountDao)
-    }
-    private val budgetAndBudgetAccountAssociationRepository by lazy {
-        BudgetAndBudgetAccountAssociationRepository(
-            budgetDao = db.budgetDao,
-            budgetAccountAssociationDao = db.budgetAccountAssociationDao
-        )
-    }
-    private val generalRepository by lazy {
-        GeneralRepository(
-            settingsRepository = settingsRepository,
-            accountRepository = accountRepository,
-            categoryRepository = categoryRepository,
-            categoryCollectionRepository = categoryCollectionRepository
-        )
-    }
-
-    val appViewModel by lazy {
-        AppViewModel(
-            settingsRepository = settingsRepository,
-            accountRepository = accountRepository,
-            categoryRepository = categoryRepository,
-            categoryCollectionAndCollectionCategoryAssociationRepository =
-                categoryCollectionAndCollectionCategoryAssociationRepository,
-            recordRepository = recordRepository,
-            recordAndAccountRepository = recordAndAccountRepository,
-            budgetAndBudgetAccountAssociationRepository =
-                budgetAndBudgetAccountAssociationRepository,
-            generalRepository = generalRepository
-        )
-    }
+    lateinit var appViewModel: AppViewModel
 
     override fun onCreate() {
         super.onCreate()
         Log.d("Custom message onCreate", "----------------------------")
 
+        initializeSettingsRepository()
+        initializeAppViewModel()
+
+        applyAppLanguage()
+        updateSetupStageIfNeeded()
+    }
+
+    private fun initializeSettingsRepository() {
         settingsRepository = SettingsRepository(dataStore)
+    }
 
+    /**
+     * Initialize repositories and then initialize AppViewModel with passing them into it.
+     */
+    private fun initializeAppViewModel() {
+        val db by lazy { AppDatabase.getDatabase(this) }
+
+        val accountRepository = AccountRepository(db.accountDao)
+        val categoryRepository = CategoryRepository(db.categoryDao)
+        val categoryCollectionRepository = CategoryCollectionRepository(db.categoryCollectionDao)
+        val categoryCollectionAndCollectionCategoryAssociationRepository =
+            CategoryCollectionAndCollectionCategoryAssociationRepository(
+                categoryCollectionDao = db.categoryCollectionDao,
+                categoryCollectionCategoryAssociationDao = db.categoryCollectionCategoryAssociationDao
+            )
+        val recordRepository = RecordRepository(db.recordDao)
+        val budgetAndBudgetAccountAssociationRepository =
+            BudgetAndBudgetAccountAssociationRepository(
+                budgetDao = db.budgetDao,
+                budgetAccountAssociationDao = db.budgetAccountAssociationDao
+            )
+
+        val recordAndAccountRepository by lazy {
+            RecordAndAccountRepository(db.recordDao, db.accountDao)
+        }
+        val generalRepository by lazy {
+            GeneralRepository(
+                settingsRepository = settingsRepository,
+                accountRepository = accountRepository,
+                categoryRepository = categoryRepository,
+                categoryCollectionRepository = categoryCollectionRepository
+            )
+        }
+
+        appViewModel = AppViewModel(
+            settingsRepository = settingsRepository,
+            accountRepository = accountRepository,
+            categoryRepository = categoryRepository,
+            categoryCollectionAndCollectionCategoryAssociationRepository =
+            categoryCollectionAndCollectionCategoryAssociationRepository,
+            recordRepository = recordRepository,
+            recordAndAccountRepository = recordAndAccountRepository,
+            budgetAndBudgetAccountAssociationRepository =
+            budgetAndBudgetAccountAssociationRepository,
+            generalRepository = generalRepository
+        )
+    }
+
+
+    /**
+     * Apply app language saved in data preferences to the app using AppCompatDelegate's
+     * setApplicationLocales method.
+     */
+    private fun applyAppLanguage() {
         CoroutineScope(Dispatchers.IO).launch {
-
-            /* apply saved language preference in datastore preferences */
             val langCode = settingsRepository.language.first()
             val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
             withContext(Dispatchers.Main) {
                 AppCompatDelegate.setApplicationLocales(appLocale)
             }
+        }
+    }
 
-             /* if app has been set up but finish screen was not closed (so 2 still saved as a
-             start destination in the datastore preferences, which is finish screen), reassign this
-             preference to 1 (home screen) */
+    /**
+     * Check for right screen setting after the first app setup.
+     * If the app has been setup but finish screen was not closed (so 2 is still saved as a start
+     * destination in the datastore preferences, which is the finish screen), reassign this
+     * preference to 1 (home screen).
+     */
+    private fun updateSetupStageIfNeeded() {
+        CoroutineScope(Dispatchers.IO).launch {
             val isSetUp = settingsRepository.setupStage.first()
             if (isSetUp == 2) {
                 settingsRepository.saveIsSetUpPreference(1)
