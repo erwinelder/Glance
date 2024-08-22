@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.data.app
 
-import com.ataglance.walletglance.ui.theme.navigation.screens.MainScreens
-import com.ataglance.walletglance.ui.theme.navigation.screens.SettingsScreens
+import com.ataglance.walletglance.presentation.theme.navigation.screens.MainScreens
+import com.ataglance.walletglance.presentation.theme.navigation.screens.SettingsScreens
 
 data class AppUiSettings(
     val isSetUp: Boolean = false,

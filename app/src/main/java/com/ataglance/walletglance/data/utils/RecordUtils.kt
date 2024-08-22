@@ -16,7 +16,7 @@ import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
+import com.ataglance.walletglance.presentation.viewmodels.records.MakeTransferUiState
 import java.util.Locale
 
 

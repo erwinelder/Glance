@@ -17,7 +17,7 @@ import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.ui.viewmodels.AppViewModel
+import com.ataglance.walletglance.presentation.viewmodels.AppViewModel
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

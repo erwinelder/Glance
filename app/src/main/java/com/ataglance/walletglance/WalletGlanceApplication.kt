@@ -18,7 +18,7 @@ import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.ui.viewmodels.AppViewModel
+import com.ataglance.walletglance.presentation.viewmodels.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -28,6 +28,7 @@ import kotlinx.coroutines.withContext
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class WalletGlanceApplication: Application() {
+
     private lateinit var settingsRepository: SettingsRepository
     private val db by lazy { AppDatabase.getDatabase(this) }
 
@@ -100,4 +101,5 @@ class WalletGlanceApplication: Application() {
             }
         }
     }
+
 }
