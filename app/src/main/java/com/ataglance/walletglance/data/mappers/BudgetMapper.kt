@@ -11,7 +11,7 @@ import com.ataglance.walletglance.domain.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.domain.utils.getRepeatingPeriodByString
 
 
-fun BudgetEntity.toDomainModel(
+fun BudgetEntity.toBudget(
     categoryWithSubcategory: CategoryWithSubcategory?,
     linkedAccountsIds: List<Int>,
     accountList: List<Account>
@@ -34,13 +34,13 @@ fun BudgetEntity.toDomainModel(
     )
 }
 
-fun List<BudgetEntity>.toDomainModels(
+fun List<BudgetEntity>.toBudgetList(
     categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
     associationList: List<BudgetAccountAssociation>,
     accountList: List<Account>
 ): List<Budget> {
     return this.mapNotNull { budgetEntity ->
-        budgetEntity.toDomainModel(
+        budgetEntity.toBudget(
             categoryWithSubcategory = categoryWithSubcategoriesList
                 .getCategoryWithSubcategoryById(budgetEntity.categoryId),
             linkedAccountsIds = associationList
@@ -53,7 +53,7 @@ fun List<BudgetEntity>.toDomainModels(
 
 
 
-fun Budget.toDataModel(): BudgetEntity {
+fun Budget.toBudgetEntity(): BudgetEntity {
     return BudgetEntity(
         id = id,
         amountLimit = amountLimit,
@@ -63,14 +63,14 @@ fun Budget.toDataModel(): BudgetEntity {
     )
 }
 
-fun List<Budget>.toDataModels(): List<BudgetEntity> {
-    return this.map { it.toDataModel() }
+fun List<Budget>.toBudgetEntityList(): List<BudgetEntity> {
+    return this.map { it.toBudgetEntity() }
 }
 
 fun List<Budget>.divideIntoBudgetsAndAssociations():
         Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
 {
-    val budgetList = this.toDataModels()
+    val budgetList = this.toBudgetEntityList()
     val associationList = this.flatMap { budget ->
         budget.linkedAccountsIds.map { accountId ->
             BudgetAccountAssociation(

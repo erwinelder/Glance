@@ -6,7 +6,7 @@ import com.ataglance.walletglance.data.local.entities.AccountEntity
 
 
 
-fun AccountEntity.toDomainModel(accountColorProvider: (String) -> AccountColorWithName): Account {
+fun AccountEntity.toAccount(accountColorProvider: (String) -> AccountColorWithName): Account {
     return Account(
         id = id,
         orderNum = orderNum,
@@ -21,17 +21,17 @@ fun AccountEntity.toDomainModel(accountColorProvider: (String) -> AccountColorWi
     )
 }
 
-fun List<AccountEntity>.toDomainModels(
+fun List<AccountEntity>.toAccountList(
     accountColorProvider: (String) -> AccountColorWithName
 ): List<Account> {
     return this.map {
-        it.toDomainModel(accountColorProvider = accountColorProvider)
+        it.toAccount(accountColorProvider = accountColorProvider)
     }
 }
 
 
 
-fun Account.toDataModel(): AccountEntity {
+fun Account.toAccountEntity(): AccountEntity {
     return AccountEntity(
         id = id,
         orderNum = orderNum,
@@ -46,6 +46,6 @@ fun Account.toDataModel(): AccountEntity {
     )
 }
 
-fun List<Account>.toDataModels(): List<AccountEntity> {
-    return this.map { it.toDataModel() }
+fun List<Account>.toAccountEntityList(): List<AccountEntity> {
+    return this.map { it.toAccountEntity() }
 }

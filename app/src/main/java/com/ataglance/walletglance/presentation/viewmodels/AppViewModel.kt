@@ -35,10 +35,10 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.mappers.divideIntoBudgetsAndAssociations
 import com.ataglance.walletglance.data.mappers.divideIntoCollectionsAndAssociations
+import com.ataglance.walletglance.data.mappers.toAccountEntityList
+import com.ataglance.walletglance.data.mappers.toBudgetList
 import com.ataglance.walletglance.data.mappers.toCategoriesWithSubcategories
 import com.ataglance.walletglance.data.mappers.toCategoryEntityList
-import com.ataglance.walletglance.data.mappers.toDataModels
-import com.ataglance.walletglance.data.mappers.toDomainModels
 import com.ataglance.walletglance.data.mappers.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.data.preferences.SettingsRepository
 import com.ataglance.walletglance.data.records.RecordStack
@@ -536,7 +536,7 @@ class AppViewModel(
             val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
 
             val budgetsByType = budgetEntityList
-                .toDomainModels(
+                .toBudgetList(
                     categoryWithSubcategoriesList = categoryWithSubcategoriesList,
                     associationList = associationList,
                     accountList = accountsUiState.value.accountList
@@ -622,7 +622,7 @@ class AppViewModel(
             )
         )
             .mergeWith(accountsUiState.value.accountList)
-            .toDataModels()
+            .toAccountEntityList()
         val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList)
 
         return DataAfterRecordOperation(
@@ -647,7 +647,7 @@ class AppViewModel(
             newTotalAmount = unitList.getTotalAmount()
         )
             ?.mergeWith(accountsUiState.value.accountList)
-            ?.toDataModels()
+            ?.toAccountEntityList()
             ?: return null
         val budgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(currentRecordList)
 
@@ -722,7 +722,7 @@ class AppViewModel(
         val recordList = recordStack.toRecordList()
         val updatedAccounts = listOf(updatedAccount)
             .mergeWith(accountsUiState.value.accountList)
-            .toDataModels()
+            .toAccountEntityList()
         val updatedBudgets = budgetsByType.value.subtractUsedAmountsByRecords(recordList)
 
         _budgetsByType.update { updatedBudgets }
@@ -767,7 +767,7 @@ class AppViewModel(
             state.toAccount.cloneAndAddToBalance(state.finalAmount)
         )
             .mergeWith(accountsUiState.value.accountList)
-            .toDataModels()
+            .toAccountEntityList()
         val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList)
 
         return DataAfterRecordOperation(
@@ -794,7 +794,7 @@ class AppViewModel(
             currRecordStackTo = currRecordStackTo
         )
             ?.mergeWith(accountsUiState.value.accountList)
-            ?.toDataModels()
+            ?.toAccountEntityList()
             ?: return null
         val updatedBudgetsByType = budgetsByType.value
             .subtractUsedAmountsByRecords(
@@ -880,7 +880,7 @@ class AppViewModel(
             prevAccounts.second.cloneAndSubtractFromBalance(inTransfer.totalAmount)
         )
             .mergeWith(accountsUiState.value.accountList)
-            .toDataModels()
+            .toAccountEntityList()
         val updatedBudgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(recordList)
 
         _budgetsByType.update { updatedBudgetsByType }

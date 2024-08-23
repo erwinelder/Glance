@@ -7,7 +7,7 @@ import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.color.ColorWithName
 import com.ataglance.walletglance.data.local.entities.AccountEntity
-import com.ataglance.walletglance.data.mappers.toDomainModels
+import com.ataglance.walletglance.data.mappers.toAccountList
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.data.utils.findById
 import java.util.Locale
@@ -25,7 +25,7 @@ fun AccountColors.toColorWithName(theme: AppTheme?): ColorWithName {
 
 fun List<AccountEntity>.toAccountList(): List<Account> {
     val possibleColors = AccountPossibleColors()
-    return this.toDomainModels(accountColorProvider = possibleColors::getByName)
+    return this.toAccountList(accountColorProvider = possibleColors::getByName)
 }
 
 
