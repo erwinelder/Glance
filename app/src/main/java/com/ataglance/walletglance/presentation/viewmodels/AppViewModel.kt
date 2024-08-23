@@ -35,6 +35,8 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.mappers.divideIntoBudgetsAndAssociations
 import com.ataglance.walletglance.data.mappers.divideIntoCollectionsAndAssociations
+import com.ataglance.walletglance.data.mappers.toCategoriesWithSubcategories
+import com.ataglance.walletglance.data.mappers.toCategoryEntityList
 import com.ataglance.walletglance.data.mappers.toDataModels
 import com.ataglance.walletglance.data.mappers.toDomainModels
 import com.ataglance.walletglance.data.mappers.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
@@ -74,8 +76,6 @@ import com.ataglance.walletglance.domain.utils.isInRange
 import com.ataglance.walletglance.domain.utils.mergeWith
 import com.ataglance.walletglance.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.domain.utils.toAccountList
-import com.ataglance.walletglance.domain.utils.toCategoriesWithSubcategories
-import com.ataglance.walletglance.domain.utils.toCategoryEntityList
 import com.ataglance.walletglance.domain.utils.toRecordStackList
 import com.ataglance.walletglance.domain.utils.withLongDateRange
 import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens

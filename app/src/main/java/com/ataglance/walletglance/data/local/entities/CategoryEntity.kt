@@ -2,10 +2,8 @@ package com.ataglance.walletglance.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.color.CategoryColorName
-import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 
 @Entity(tableName = "Category")
@@ -24,16 +22,12 @@ data class CategoryEntity(
 
     fun isParentCategory() = parentCategoryId == null
 
-    fun toCategory(icon: CategoryIcon, color: CategoryColorWithName): Category {
-        return Category(
-            id = id,
-            type = if (isExpense()) CategoryType.Expense else CategoryType.Income,
-            orderNum = orderNum,
-            parentCategoryId = parentCategoryId,
-            name = name,
-            icon = icon,
-            colorWithName = color
-        )
+    fun getCategoryType(): CategoryType? {
+        return when (type) {
+            '-' -> CategoryType.Expense
+            '+' -> CategoryType.Income
+            else -> null
+        }
     }
 
 }

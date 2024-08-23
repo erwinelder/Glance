@@ -5,9 +5,7 @@ import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.color.LighterDarkerColors
-import com.ataglance.walletglance.domain.utils.asChar
 import com.ataglance.walletglance.domain.utils.toCategoryColorWithName
-import com.ataglance.walletglance.data.local.entities.CategoryEntity
 
 data class Category(
     val id: Int = 0,
@@ -30,18 +28,6 @@ data class Category(
 
     fun canBeDeleted(): Boolean {
         return (isExpense() && id != 12 && id != 66) || (isIncome() && id != 77)
-    }
-
-    fun toCategoryEntity(): CategoryEntity {
-        return CategoryEntity(
-            id = id,
-            type = type.asChar(),
-            orderNum = orderNum,
-            parentCategoryId = parentCategoryId,
-            name = name,
-            iconName = icon.name,
-            colorName = colorWithName.getNameValue()
-        )
     }
 
     fun toCheckedCategory(checkedCategoryList: List<Category>): CheckedCategory {
