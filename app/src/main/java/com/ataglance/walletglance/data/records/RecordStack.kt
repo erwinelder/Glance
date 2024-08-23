@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.data.records
 
 import com.ataglance.walletglance.data.accounts.RecordAccount
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.domain.utils.asChar
 import com.ataglance.walletglance.domain.utils.formatWithSpaces
-import com.ataglance.walletglance.data.local.entities.Record
 import java.util.Locale
 
 data class RecordStack(
@@ -29,9 +29,9 @@ data class RecordStack(
         return type == passedType
     }
 
-    fun toRecordList(): List<Record> {
+    fun toRecordList(): List<RecordEntity> {
         return stack.map { unit ->
-            Record(
+            RecordEntity(
                 id = unit.id,
                 recordNum = recordNum,
                 date = date,

@@ -4,7 +4,8 @@ import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
+import com.ataglance.walletglance.data.utils.getTotalAmountCorrespondingToBudget
 
 
 fun List<Budget>.groupByType(): BudgetsByType {
@@ -55,14 +56,14 @@ fun List<Budget>.replaceById(editingBudgetUiState: EditingBudgetUiState): List<B
 }
 
 
-fun List<Budget>.fillUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
+fun List<Budget>.fillUsedAmountsByRecords(recordList: List<RecordEntity>): List<Budget> {
     return this.map { budget ->
         budget.applyUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
     }
 }
 
 
-fun List<Budget>.addUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
+fun List<Budget>.addUsedAmountsByRecords(recordList: List<RecordEntity>): List<Budget> {
     if (recordList.isEmpty()) return this
     return this.map { budget ->
         budget.addToUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
@@ -70,7 +71,7 @@ fun List<Budget>.addUsedAmountsByRecords(recordList: List<Record>): List<Budget>
 }
 
 
-fun List<Budget>.subtractUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
+fun List<Budget>.subtractUsedAmountsByRecords(recordList: List<RecordEntity>): List<Budget> {
     if (recordList.isEmpty()) return this
     return this.map { budget ->
         budget.subtractFromUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))

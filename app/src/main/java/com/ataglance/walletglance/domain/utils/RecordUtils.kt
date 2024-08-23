@@ -2,8 +2,6 @@ package com.ataglance.walletglance.domain.utils
 
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.accounts.AccountsUiState
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
@@ -15,7 +13,6 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.data.local.entities.Record
 import com.ataglance.walletglance.presentation.viewmodels.records.MakeTransferUiState
 import java.util.Locale
 
@@ -60,46 +57,8 @@ fun getRecordTypeByChar(char: Char): RecordType? {
 }
 
 
-fun List<Record>.toRecordStackList(
-    accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories
-): List<RecordStack> {
-    val recordStackList = mutableListOf<RecordStack>()
-
-    this.forEach { record ->
-        if (recordStackList.lastOrNull()?.recordNum != record.recordNum) {
-            record.toRecordStack(accountList, categoriesWithSubcategories)
-                ?.let { recordStackList.add(it) }
-        } else {
-            recordStackList.lastOrNull()?.let { lastRecordStack ->
-                record.toRecordStackUnit(categoriesWithSubcategories)?.let { recordStackUnit ->
-                    val stack = lastRecordStack.stack.toMutableList()
-                    stack.add(recordStackUnit)
-                    recordStackList[recordStackList.lastIndex] = lastRecordStack.copy(
-                        totalAmount = lastRecordStack.totalAmount + recordStackUnit.amount,
-                        stack = stack
-                    )
-                }
-            }
-        }
-    }
-
-    return recordStackList
-}
-
-
 fun List<RecordStack>.findByOrderNum(recordNum: Int): RecordStack? {
     return this.find { it.recordNum == recordNum }
-}
-
-
-fun List<Record>.getIdsThatAreNotInList(list: List<Record>): List<Int> {
-    return this
-        .mapNotNull { record ->
-            record.id.takeIf { id ->
-                list.find { it.id == id } == null
-            }
-        }
 }
 
 
@@ -136,29 +95,6 @@ fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds):
             .takeIf { it.isNotEmpty() }
             ?.let { recordStack.copy(stack = it) }
     }
-}
-
-fun List<Record>.getTotalAmountCorrespondingToBudget(budget: Budget): Double {
-    return this
-        .filter {
-            it.containsParentOrSubcategoryId(budget.category?.id) &&
-                    budget.containsAccountId(it.accountId)
-        }
-        .fold(0.0) { total, record ->
-            total + record.amount
-        }
-}
-
-
-fun List<Record>.getTotalAmountByType(type: CategoryType): Double {
-    return this
-        .filter {
-            type == CategoryType.Expense && it.isExpenseOrOutTransfer() ||
-                    type == CategoryType.Income && it.isIncomeOrInTransfer()
-        }
-        .fold(0.0) { total, record ->
-            total + record.amount
-        }
 }
 
 

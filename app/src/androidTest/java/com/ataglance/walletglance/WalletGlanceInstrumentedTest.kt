@@ -21,7 +21,7 @@ import com.ataglance.walletglance.data.mappers.toAccountEntityList
 import com.ataglance.walletglance.domain.utils.toLongWithTime
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 import com.ataglance.walletglance.data.repository.AccountRepository
 import com.ataglance.walletglance.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -70,7 +70,7 @@ class WalletGlanceInstrumentedTest {
     private lateinit var mockSettingsRepository: SettingsRepository
     private lateinit var appViewModel: AppViewModel
 
-    private val providedRecordList = mutableListOf<Record>()
+    private val providedRecordList = mutableListOf<RecordEntity>()
 
     @Before
     fun setUp() {

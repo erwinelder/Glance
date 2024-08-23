@@ -17,7 +17,7 @@ import com.ataglance.walletglance.data.local.entities.BudgetEntity
 import com.ataglance.walletglance.data.local.entities.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.data.local.entities.CategoryCollectionEntity
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 
 @Database(
     entities = [
@@ -25,7 +25,7 @@ import com.ataglance.walletglance.data.local.entities.Record
         CategoryEntity::class,
         CategoryCollectionEntity::class,
         CategoryCollectionCategoryAssociation::class,
-        Record::class,
+        RecordEntity::class,
         BudgetEntity::class,
         BudgetAccountAssociation::class
     ],

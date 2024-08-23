@@ -27,7 +27,7 @@ import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.date.LongDateRange
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 import com.ataglance.walletglance.data.makingRecord.DataAfterRecordOperation
 import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
@@ -39,6 +39,9 @@ import com.ataglance.walletglance.data.mappers.toAccountEntityList
 import com.ataglance.walletglance.data.mappers.toBudgetList
 import com.ataglance.walletglance.data.mappers.toCategoriesWithSubcategories
 import com.ataglance.walletglance.data.mappers.toCategoryEntityList
+import com.ataglance.walletglance.data.mappers.toRecordList
+import com.ataglance.walletglance.data.mappers.toRecordListWithOldIds
+import com.ataglance.walletglance.data.mappers.toRecordStackList
 import com.ataglance.walletglance.data.mappers.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.data.preferences.SettingsRepository
 import com.ataglance.walletglance.data.records.RecordStack
@@ -55,6 +58,7 @@ import com.ataglance.walletglance.data.utils.checkOrderNumbers
 import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.data.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.data.utils.getIdsThatAreNotInList
+import com.ataglance.walletglance.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.data.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.domain.utils.convertCalendarMillisToLongWithoutSpecificTime
@@ -69,14 +73,12 @@ import com.ataglance.walletglance.domain.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.domain.utils.getOutAndInTransfersByRecordNum
 import com.ataglance.walletglance.domain.utils.getTodayLongDateRange
 import com.ataglance.walletglance.domain.utils.getTotalAmount
-import com.ataglance.walletglance.domain.utils.getTotalAmountByType
 import com.ataglance.walletglance.domain.utils.groupByType
 import com.ataglance.walletglance.domain.utils.inverse
 import com.ataglance.walletglance.domain.utils.isInRange
 import com.ataglance.walletglance.domain.utils.mergeWith
 import com.ataglance.walletglance.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.domain.utils.toAccountList
-import com.ataglance.walletglance.domain.utils.toRecordStackList
 import com.ataglance.walletglance.domain.utils.withLongDateRange
 import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
@@ -482,7 +484,7 @@ class AppViewModel(
     }
 
 
-    private val _todayRecordList: MutableStateFlow<List<Record>> = MutableStateFlow(emptyList())
+    private val _todayRecordList: MutableStateFlow<List<RecordEntity>> = MutableStateFlow(emptyList())
 
     private fun fetchRecordsFromDbForToday() {
         viewModelScope.launch {
@@ -964,7 +966,7 @@ class AppViewModel(
     ) { array ->
         val dateRangeMenuUiState = array[0] as DateRangeMenuUiState
         val accountsUiState = array[1] as AccountsUiState
-        val todayRecordList = array[2] as List<Record>
+        val todayRecordList = array[2] as List<RecordEntity>
         val recordStackList = array[3] as List<RecordStack>
         val categoriesWithSubcategories = array[4] as CategoriesWithSubcategories
         val greetingsWidgetTitleRes = array[5] as Int

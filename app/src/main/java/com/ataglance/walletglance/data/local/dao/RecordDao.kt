@@ -4,17 +4,17 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDao {
 
     @Upsert
-    suspend fun upsertRecords(recordList: List<Record>)
+    suspend fun upsertRecords(recordList: List<RecordEntity>)
 
     @Delete
-    suspend fun deleteRecords(recordList: List<Record>)
+    suspend fun deleteRecords(recordList: List<RecordEntity>)
 
     @Query("DELETE FROM Record WHERE id IN (:idList)")
     suspend fun deleteRecordsByIds(idList: List<Int>)
@@ -29,14 +29,14 @@ interface RecordDao {
     fun getLastRecordOrderNum(): Flow<Int?>
 
     @Query("SELECT * FROM Record")
-    fun getAllRecords(): Flow<List<Record>>
+    fun getAllRecords(): Flow<List<RecordEntity>>
 
     @Query("""    
         SELECT * FROM Record
         WHERE date BETWEEN :startPastDate AND :endFutureDate
         ORDER BY date DESC
     """)
-    fun getRecordsInDateRange(startPastDate: Long, endFutureDate: Long): Flow<List<Record>>
+    fun getRecordsInDateRange(startPastDate: Long, endFutureDate: Long): Flow<List<RecordEntity>>
 
     @Query("""
         SELECT SUM(amount) FROM Record
@@ -53,10 +53,10 @@ interface RecordDao {
     ): Flow<Double>
 
     @Query("SELECT * FROM Record WHERE (accountId == :accountId) AND (type == 60 OR type == 62)")
-    fun getTransfersByAccountId(accountId: Int): Flow<List<Record>>
+    fun getTransfersByAccountId(accountId: Int): Flow<List<RecordEntity>>
 
     @Query("SELECT * FROM Record WHERE recordNum IN (:recordNumbers)")
-    fun getRecordsByRecordNumbers(recordNumbers: List<Int>): Flow<List<Record>>
+    fun getRecordsByRecordNumbers(recordNumbers: List<Int>): Flow<List<RecordEntity>>
 
     @Query(
         """

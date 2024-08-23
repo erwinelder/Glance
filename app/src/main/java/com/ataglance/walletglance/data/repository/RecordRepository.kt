@@ -3,9 +3,9 @@ package com.ataglance.walletglance.data.repository
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.TotalAmountByRange
 import com.ataglance.walletglance.data.date.LongDateRange
-import com.ataglance.walletglance.domain.utils.getTodayLongDateRange
 import com.ataglance.walletglance.data.local.dao.RecordDao
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
+import com.ataglance.walletglance.domain.utils.getTodayLongDateRange
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -18,16 +18,16 @@ class RecordRepository(
         return dao.getLastRecordOrderNum()
     }
 
-    fun getAllRecords(): Flow<List<Record>> {
+    fun getAllRecords(): Flow<List<RecordEntity>> {
         return dao.getAllRecords()
     }
 
-    fun getRecordsForToday(): Flow<List<Record>> {
+    fun getRecordsForToday(): Flow<List<RecordEntity>> {
         val todayDateRange = getTodayLongDateRange()
         return dao.getRecordsInDateRange(todayDateRange.from, todayDateRange.to)
     }
 
-    fun getRecordsInDateRange(longDateRange: LongDateRange): Flow<List<Record>> {
+    fun getRecordsInDateRange(longDateRange: LongDateRange): Flow<List<RecordEntity>> {
         return dao.getRecordsInDateRange(longDateRange.from, longDateRange.to)
     }
 

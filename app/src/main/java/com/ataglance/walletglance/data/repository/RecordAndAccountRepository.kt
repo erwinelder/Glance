@@ -4,7 +4,7 @@ import androidx.room.Transaction
 import com.ataglance.walletglance.data.local.dao.AccountDao
 import com.ataglance.walletglance.data.local.dao.RecordDao
 import com.ataglance.walletglance.data.local.entities.AccountEntity
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 
 class RecordAndAccountRepository(
     private val recordDao: RecordDao,
@@ -13,8 +13,8 @@ class RecordAndAccountRepository(
 
     @Transaction
     suspend fun deleteAndUpsertRecordsAndUpsertAccounts(
-        recordListToDelete: List<Record>,
-        recordListToUpsert: List<Record>,
+        recordListToDelete: List<RecordEntity>,
+        recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
         if (recordListToDelete.isNotEmpty())
@@ -25,7 +25,7 @@ class RecordAndAccountRepository(
 
     @Transaction
     suspend fun upsertRecordsAndUpsertAccounts(
-        recordListToUpsert: List<Record>,
+        recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
         recordDao.upsertRecords(recordListToUpsert)
@@ -34,7 +34,7 @@ class RecordAndAccountRepository(
 
     @Transaction
     suspend fun deleteRecordsAndUpsertAccounts(
-        recordListToDelete: List<Record>,
+        recordListToDelete: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
         recordDao.deleteRecords(recordListToDelete)

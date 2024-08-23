@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.budgets
 
 import com.ataglance.walletglance.data.date.LongDateRange
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 import com.ataglance.walletglance.domain.utils.addUsedAmountsByRecords
 import com.ataglance.walletglance.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.domain.utils.findById
@@ -75,7 +75,7 @@ data class BudgetsByType(
                 ?.first()?.dateRange
     }
 
-    fun fillUsedAmountsByRecords(recordList: List<Record>): BudgetsByType {
+    fun fillUsedAmountsByRecords(recordList: List<RecordEntity>): BudgetsByType {
         var recordsInDateRange = recordList.filterByBudgetsDateRange(yearly)
         val filledYearlyBudgets = recordsInDateRange.let { yearly.fillUsedAmountsByRecords(it) }
 
@@ -96,7 +96,7 @@ data class BudgetsByType(
         )
     }
 
-    fun addUsedAmountsByRecords(recordList: List<Record>): BudgetsByType {
+    fun addUsedAmountsByRecords(recordList: List<RecordEntity>): BudgetsByType {
         if (recordList.isEmpty()) return this
 
         return applyRecordAmountsToBudgets(
@@ -105,7 +105,7 @@ data class BudgetsByType(
         )
     }
 
-    fun subtractUsedAmountsByRecords(recordList: List<Record>): BudgetsByType {
+    fun subtractUsedAmountsByRecords(recordList: List<RecordEntity>): BudgetsByType {
         if (recordList.isEmpty()) return this
 
         return applyRecordAmountsToBudgets(
@@ -115,8 +115,8 @@ data class BudgetsByType(
     }
 
     private fun applyRecordAmountsToBudgets(
-        recordList: List<Record>,
-        applyFunction: List<Budget>.(List<Record>) -> List<Budget>
+        recordList: List<RecordEntity>,
+        applyFunction: List<Budget>.(List<RecordEntity>) -> List<Budget>
     ): BudgetsByType {
         var recordsInDateRange = recordList.filterByBudgetsDateRange(yearly)
         val filledYearlyBudgets = recordsInDateRange.let { yearly.applyFunction(it) }
@@ -138,7 +138,7 @@ data class BudgetsByType(
         )
     }
 
-    private fun List<Record>.filterByBudgetsDateRange(budgetList: List<Budget>): List<Record> {
+    private fun List<RecordEntity>.filterByBudgetsDateRange(budgetList: List<Budget>): List<RecordEntity> {
         return budgetList.firstOrNull()?.dateRange?.let { dateRange ->
             this.filter { dateRange.containsDate(it.date) }
         } ?: this

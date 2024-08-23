@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.makingRecord
 
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.local.entities.Record
+import com.ataglance.walletglance.data.local.entities.RecordEntity
 
 data class MadeTransferState(
     val recordIdFrom: Int,
@@ -16,9 +16,9 @@ data class MadeTransferState(
     val recordNum: Int,
     val includeInBudgets: Boolean = true
 ) {
-    fun toRecordsPair(): Pair<Record, Record> {
+    fun toRecordsPair(): Pair<RecordEntity, RecordEntity> {
         return Pair(
-            Record(
+            RecordEntity(
                 id = recordIdFrom,
                 recordNum = recordNum,
                 date = dateTimeState.dateLong,
@@ -31,7 +31,7 @@ data class MadeTransferState(
                 note = toAccount.id.toString(),
                 includeInBudgets = includeInBudgets
             ),
-            Record(
+            RecordEntity(
                 id = recordIdTo,
                 recordNum = recordNum + 1,
                 date = dateTimeState.dateLong,
