@@ -2,8 +2,8 @@ package com.ataglance.walletglance.data.utils
 
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
-import com.ataglance.walletglance.presentation.theme.navigation.screens.MainScreens
-import com.ataglance.walletglance.presentation.theme.navigation.screens.SettingsScreens
+import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens
+import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
 import kotlin.reflect.KClass
 
 

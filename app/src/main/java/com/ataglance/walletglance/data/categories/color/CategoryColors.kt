@@ -9,8 +9,8 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.color.LighterDarkerColors
 import com.ataglance.walletglance.data.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.presentation.theme.screens.settings.categories.SetupCategoriesScreen
-import com.ataglance.walletglance.presentation.theme.uielements.containers.PreviewContainer
+import com.ataglance.walletglance.presentation.ui.screens.settings.categories.SetupCategoriesScreen
+import com.ataglance.walletglance.presentation.ui.uielements.containers.PreviewContainer
 import com.ataglance.walletglance.presentation.viewmodels.categories.SetupCategoriesUiState
 
 sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {

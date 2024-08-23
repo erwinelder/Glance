@@ -77,8 +77,8 @@ import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.presentation.theme.navigation.screens.MainScreens
-import com.ataglance.walletglance.presentation.theme.navigation.screens.SettingsScreens
+import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens
+import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.presentation.viewmodels.records.MakeTransferUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

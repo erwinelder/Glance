@@ -30,8 +30,8 @@ import com.ataglance.walletglance.domain.repositories.GeneralRepository
 import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
 import com.ataglance.walletglance.domain.repositories.RecordRepository
 import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.presentation.theme.uielements.accounts.AccountCard
-import com.ataglance.walletglance.presentation.theme.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.presentation.ui.uielements.accounts.AccountCard
+import com.ataglance.walletglance.presentation.ui.widgets.RecordHistoryWidget
 import com.ataglance.walletglance.presentation.viewmodels.AppViewModel
 import com.ataglance.walletglance.presentation.viewmodels.records.MakeRecordViewModel
 import com.ataglance.walletglance.presentation.viewmodels.records.MakeTransferUiState
