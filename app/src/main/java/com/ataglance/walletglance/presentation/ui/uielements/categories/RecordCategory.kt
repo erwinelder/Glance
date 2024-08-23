@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.Category
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect
 

@@ -2,9 +2,9 @@ package com.ataglance.walletglance.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.categories.color.CategoryColorName
-import com.ataglance.walletglance.data.categories.icons.CategoryIcon
+import com.ataglance.walletglance.domain.categories.CategoryType
+import com.ataglance.walletglance.domain.categories.color.CategoryColorName
+import com.ataglance.walletglance.domain.categories.icons.CategoryIcon
 
 @Entity(tableName = "Category")
 data class CategoryEntity(

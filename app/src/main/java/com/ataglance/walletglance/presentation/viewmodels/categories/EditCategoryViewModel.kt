@@ -2,9 +2,9 @@ package com.ataglance.walletglance.presentation.viewmodels.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
-import com.ataglance.walletglance.data.categories.icons.CategoryIcon
+import com.ataglance.walletglance.domain.categories.Category
+import com.ataglance.walletglance.domain.categories.color.CategoryPossibleColors
+import com.ataglance.walletglance.domain.categories.icons.CategoryIcon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -3,7 +3,7 @@ package com.ataglance.walletglance.presentation.ui.navigation
 import androidx.annotation.DrawableRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.app.AppTheme
 
 sealed class BottomBarButtons(
     val screen: MainScreens,

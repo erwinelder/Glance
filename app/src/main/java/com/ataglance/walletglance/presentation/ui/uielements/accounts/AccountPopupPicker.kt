@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
 
 @Composable
 fun AccountPopupPicker(

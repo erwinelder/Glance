@@ -2,12 +2,12 @@ package com.ataglance.walletglance.presentation.viewmodels.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
-import com.ataglance.walletglance.data.categories.color.CategoryColors
-import com.ataglance.walletglance.data.categories.icons.CategoryIcon
+import com.ataglance.walletglance.domain.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.domain.categories.Category
+import com.ataglance.walletglance.domain.categories.CategoryType
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.domain.categories.color.CategoryColors
+import com.ataglance.walletglance.domain.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
 import com.ataglance.walletglance.data.mappers.toCategoryEntityList
 import com.ataglance.walletglance.domain.utils.toCategoryColorWithName

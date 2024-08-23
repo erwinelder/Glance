@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
 
 @Entity(tableName = "CategoryCollection")
 data class CategoryCollectionEntity(

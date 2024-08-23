@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.app.AppTheme
 
 @Composable
 fun DimmedBackgroundOverlay(visible: Boolean, appTheme: AppTheme?) {

@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
-import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.date.DateRangeEnum
 import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.domain.utils.findById
 import com.ataglance.walletglance.domain.utils.toggle

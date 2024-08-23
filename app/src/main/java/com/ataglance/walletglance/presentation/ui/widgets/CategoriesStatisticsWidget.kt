@@ -21,11 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.data.categories.CategoryStatisticsLists
-import com.ataglance.walletglance.data.categories.color.CategoryColors
-import com.ataglance.walletglance.data.categories.icons.CategoryIcon
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.domain.categories.CategoryStatisticsLists
+import com.ataglance.walletglance.domain.categories.color.CategoryColors
+import com.ataglance.walletglance.domain.categories.icons.CategoryIcon
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.WalletGlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.categories.CategoryStatisticsItemComponent

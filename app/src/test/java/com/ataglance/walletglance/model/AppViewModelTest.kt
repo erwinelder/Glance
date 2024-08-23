@@ -1,12 +1,12 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.categories.color.CategoryColors
-import com.ataglance.walletglance.data.makingRecord.MadeTransferState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordStackUnit
-import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.categories.color.CategoryColors
+import com.ataglance.walletglance.domain.makingRecord.MadeTransferState
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.domain.records.RecordStack
+import com.ataglance.walletglance.domain.records.RecordStackUnit
+import com.ataglance.walletglance.domain.records.RecordType
 import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
 import com.ataglance.walletglance.data.repository.AccountRepository

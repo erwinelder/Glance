@@ -17,9 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.RecordAccount
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.domain.accounts.RecordAccount
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.records.RecordStack
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.domain.utils.convertDateLongToDayMonthYear

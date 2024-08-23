@@ -12,11 +12,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetsByType
-import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
-import com.ataglance.walletglance.data.date.RepeatingPeriod
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.budgets.Budget
+import com.ataglance.walletglance.domain.budgets.BudgetsByType
+import com.ataglance.walletglance.domain.categories.DefaultCategoriesPackage
+import com.ataglance.walletglance.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.domain.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsExpanded
 import com.ataglance.walletglance.presentation.ui.uielements.budgets.BudgetComponent

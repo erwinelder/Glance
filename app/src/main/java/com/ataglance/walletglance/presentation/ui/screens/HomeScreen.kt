@@ -21,9 +21,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.date.DateRangeEnum
+import com.ataglance.walletglance.domain.records.RecordStack
 import com.ataglance.walletglance.presentation.ui.animation.StartAnimatedContainer
 import com.ataglance.walletglance.presentation.ui.uielements.AppMainTopBar
 import com.ataglance.walletglance.presentation.ui.uielements.accounts.AccountCard
@@ -32,9 +32,9 @@ import com.ataglance.walletglance.presentation.ui.widgets.CategoriesStatisticsWi
 import com.ataglance.walletglance.presentation.ui.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.presentation.ui.widgets.GreetingsMessage
 import com.ataglance.walletglance.presentation.ui.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.data.accounts.AccountsUiState
-import com.ataglance.walletglance.data.date.DateRangeMenuUiState
-import com.ataglance.walletglance.data.widgets.WidgetsUiState
+import com.ataglance.walletglance.domain.accounts.AccountsUiState
+import com.ataglance.walletglance.domain.date.DateRangeMenuUiState
+import com.ataglance.walletglance.domain.widgets.WidgetsUiState
 
 @Composable
 fun HomeScreen(

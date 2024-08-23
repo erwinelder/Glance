@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.data.mappers
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.budgets.Budget
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.local.entities.BudgetAccountAssociation
 import com.ataglance.walletglance.data.local.entities.BudgetEntity
 import com.ataglance.walletglance.domain.utils.getCategoryWithSubcategoryById

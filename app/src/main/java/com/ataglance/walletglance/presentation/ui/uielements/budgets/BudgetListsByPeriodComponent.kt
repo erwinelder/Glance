@@ -11,9 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetsByType
-import com.ataglance.walletglance.data.date.RepeatingPeriod
+import com.ataglance.walletglance.domain.budgets.Budget
+import com.ataglance.walletglance.domain.budgets.BudgetsByType
+import com.ataglance.walletglance.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.domain.utils.asStringRes
 import com.ataglance.walletglance.presentation.ui.screens.settings.budgets.EditBudgetsScreenPreview
 import com.ataglance.walletglance.presentation.ui.uielements.dividers.TextDivider

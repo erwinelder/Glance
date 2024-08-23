@@ -20,8 +20,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsExpanded
 import com.ataglance.walletglance.presentation.ui.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.presentation.ui.uielements.accounts.MediumAccountSetup

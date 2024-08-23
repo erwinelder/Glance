@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.date.DateRangeEnum
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.containers.DateFilterBar
 import com.ataglance.walletglance.presentation.ui.uielements.accounts.AccountsFilterBar

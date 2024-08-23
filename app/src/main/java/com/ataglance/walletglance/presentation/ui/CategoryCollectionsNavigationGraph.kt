@@ -7,9 +7,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.domain.utils.toCollectionsWithIds
 import com.ataglance.walletglance.presentation.ui.navigation.screens.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens

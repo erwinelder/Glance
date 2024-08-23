@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.settings.ThemeUiState
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.settings.ThemeUiState
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect
 import com.ataglance.walletglance.presentation.ui.uielements.switches.SwitchWithLabel
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurface

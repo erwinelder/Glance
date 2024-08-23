@@ -1,18 +1,18 @@
 package com.ataglance.walletglance.domain.utils
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.accounts.AccountsUiState
-import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
-import com.ataglance.walletglance.data.date.LongDateRange
-import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.accounts.AccountsUiState
+import com.ataglance.walletglance.domain.categories.CategoryType
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.date.LongDateRange
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordUnitUiState
+import com.ataglance.walletglance.domain.records.RecordStack
+import com.ataglance.walletglance.domain.records.RecordType
+import com.ataglance.walletglance.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.presentation.viewmodels.records.MakeTransferUiState
 import java.util.Locale
 

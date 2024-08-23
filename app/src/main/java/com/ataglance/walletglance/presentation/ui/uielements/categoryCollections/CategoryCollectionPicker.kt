@@ -54,8 +54,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.Manrope
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect

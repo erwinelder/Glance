@@ -10,10 +10,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.data.app.AppUiSettings
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
-import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.domain.app.AppUiSettings
+import com.ataglance.walletglance.domain.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.domain.categories.DefaultCategoriesPackage
+import com.ataglance.walletglance.domain.categories.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.presentation.ui.navigation.screens.CategoriesSettingsScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.presentation.ui.screens.settings.categories.EditCategoryScreen

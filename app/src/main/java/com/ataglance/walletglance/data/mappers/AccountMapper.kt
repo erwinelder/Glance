@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.data.mappers
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 
 

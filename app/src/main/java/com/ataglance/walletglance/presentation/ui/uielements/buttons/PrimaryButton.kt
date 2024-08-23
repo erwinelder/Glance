@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.Manrope
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsCompact

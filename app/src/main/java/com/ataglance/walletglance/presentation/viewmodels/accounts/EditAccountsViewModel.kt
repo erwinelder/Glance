@@ -2,7 +2,7 @@ package com.ataglance.walletglance.presentation.viewmodels.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.data.accounts.Account
+import com.ataglance.walletglance.domain.accounts.Account
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.data.mappers.toAccountEntityList
 import com.ataglance.walletglance.domain.utils.deleteItemAndMoveOrderNum

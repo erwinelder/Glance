@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.Category
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.modifiers.innerShadow
 import com.ataglance.walletglance.presentation.ui.screens.BudgetStatisticsScreenPreview

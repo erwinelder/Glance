@@ -8,11 +8,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppUiSettings
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.BudgetsByType
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppUiSettings
+import com.ataglance.walletglance.domain.budgets.Budget
+import com.ataglance.walletglance.domain.budgets.BudgetsByType
+import com.ataglance.walletglance.domain.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.presentation.ui.navigation.screens.BudgetsSettingsScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.presentation.ui.screens.settings.budgets.EditBudgetScreen

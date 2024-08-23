@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.presentation.ui.uielements.buttons.PrimaryButton
 import com.ataglance.walletglance.presentation.ui.uielements.pickers.ThemePicker
-import com.ataglance.walletglance.data.settings.ThemeUiState
+import com.ataglance.walletglance.domain.settings.ThemeUiState
 
 @Composable
 fun SetupAppearanceScreen(

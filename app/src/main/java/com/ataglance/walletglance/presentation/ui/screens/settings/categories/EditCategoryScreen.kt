@@ -28,10 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
-import com.ataglance.walletglance.data.categories.icons.CategoryIcon
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.Category
+import com.ataglance.walletglance.domain.categories.color.CategoryPossibleColors
+import com.ataglance.walletglance.domain.categories.icons.CategoryIcon
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect
 import com.ataglance.walletglance.presentation.ui.screencontainers.SetupDataScreenContainer

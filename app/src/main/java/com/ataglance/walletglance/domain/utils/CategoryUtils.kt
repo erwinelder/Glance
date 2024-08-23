@@ -1,17 +1,17 @@
 package com.ataglance.walletglance.domain.utils
 
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.data.categories.CheckedCategory
-import com.ataglance.walletglance.data.categories.EditingCategoryWithSubcategories
-import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
-import com.ataglance.walletglance.data.categories.color.CategoryColors
-import com.ataglance.walletglance.data.categories.color.CategoryPossibleColors
-import com.ataglance.walletglance.data.categories.icons.CategoryPossibleIcons
-import com.ataglance.walletglance.data.color.ColorWithName
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.Category
+import com.ataglance.walletglance.domain.categories.CategoryType
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.domain.categories.CheckedCategory
+import com.ataglance.walletglance.domain.categories.EditingCategoryWithSubcategories
+import com.ataglance.walletglance.domain.categories.color.CategoryColorWithName
+import com.ataglance.walletglance.domain.categories.color.CategoryColors
+import com.ataglance.walletglance.domain.categories.color.CategoryPossibleColors
+import com.ataglance.walletglance.domain.categories.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.domain.color.ColorWithName
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
 import com.ataglance.walletglance.data.mappers.toCategoryList
 

@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.ataglance.walletglance.data.statistics.ColumnChartColumnUiState
-import com.ataglance.walletglance.data.statistics.ColumnChartUiState
+import com.ataglance.walletglance.domain.statistics.ColumnChartColumnUiState
+import com.ataglance.walletglance.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.domain.utils.formatWithSpaces
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsCompact

@@ -11,8 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.records.RecordStack
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.categories.RecordCategory
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurfaceOnGlassSurface

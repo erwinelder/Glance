@@ -1,14 +1,14 @@
 package com.ataglance.walletglance.domain.utils
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
-import com.ataglance.walletglance.data.accounts.color.AccountColors
-import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.color.ColorWithName
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.accounts.color.AccountColorWithName
+import com.ataglance.walletglance.domain.accounts.color.AccountColors
+import com.ataglance.walletglance.domain.accounts.color.AccountPossibleColors
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.color.ColorWithName
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.data.mappers.toAccountList
-import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.records.RecordType
 import com.ataglance.walletglance.data.utils.findById
 import java.util.Locale
 

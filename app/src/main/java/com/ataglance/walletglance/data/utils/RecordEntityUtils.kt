@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.data.utils
 
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.categories.CategoryType
+import com.ataglance.walletglance.domain.budgets.Budget
+import com.ataglance.walletglance.domain.categories.CategoryType
 import com.ataglance.walletglance.data.local.entities.RecordEntity
 
 fun List<RecordEntity>.getIdsThatAreNotInList(list: List<RecordEntity>): List<Int> {

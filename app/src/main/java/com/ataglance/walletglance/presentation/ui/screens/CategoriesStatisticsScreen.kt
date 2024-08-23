@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.date.DateRangeEnum
 import com.ataglance.walletglance.presentation.ui.screencontainers.DataPresentationScreenContainer
 import com.ataglance.walletglance.presentation.ui.uielements.categories.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.presentation.ui.uielements.categories.CategoryTypeToggleButton

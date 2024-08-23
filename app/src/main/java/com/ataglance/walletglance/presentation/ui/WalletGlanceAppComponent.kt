@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.modifiers.NoRippleTheme
 import com.ataglance.walletglance.presentation.viewmodels.AppViewModel
 

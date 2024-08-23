@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.data.mappers
 
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
-import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
-import com.ataglance.walletglance.data.categories.icons.CategoryIcon
+import com.ataglance.walletglance.domain.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.domain.categories.Category
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategories
+import com.ataglance.walletglance.domain.categories.color.CategoryColorWithName
+import com.ataglance.walletglance.domain.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
 import com.ataglance.walletglance.domain.utils.asChar
 import com.ataglance.walletglance.domain.utils.toCategoryList

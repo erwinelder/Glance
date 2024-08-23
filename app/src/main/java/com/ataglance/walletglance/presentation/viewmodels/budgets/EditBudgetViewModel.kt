@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.presentation.viewmodels.budgets
 
 import androidx.lifecycle.ViewModel
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.data.date.RepeatingPeriod
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.budgets.EditingBudgetUiState
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.domain.date.RepeatingPeriod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

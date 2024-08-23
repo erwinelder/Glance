@@ -8,9 +8,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.ataglance.walletglance.data.app.AppLanguage
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.settings.Settings
+import com.ataglance.walletglance.domain.app.AppLanguage
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.settings.Settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first

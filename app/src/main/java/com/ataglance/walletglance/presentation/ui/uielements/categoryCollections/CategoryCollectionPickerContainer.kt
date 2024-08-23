@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
 
 @Composable
 fun CategoryCollectionPickerContainer(

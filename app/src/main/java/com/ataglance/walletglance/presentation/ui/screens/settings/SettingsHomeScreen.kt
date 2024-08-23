@@ -29,9 +29,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.settings.SettingsCategories
-import com.ataglance.walletglance.data.settings.SettingsCategory
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.settings.SettingsCategories
+import com.ataglance.walletglance.domain.settings.SettingsCategory
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.Manrope
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsCompact

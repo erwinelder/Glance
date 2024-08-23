@@ -19,10 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordsTypeFilter
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.records.RecordStack
+import com.ataglance.walletglance.domain.records.RecordsTypeFilter
 import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.domain.utils.findById
 import com.ataglance.walletglance.presentation.ui.GlanceTheme

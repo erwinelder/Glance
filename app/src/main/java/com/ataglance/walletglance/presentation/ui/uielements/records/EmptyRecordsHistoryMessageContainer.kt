@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.records.RecordsTypeFilter
+import com.ataglance.walletglance.domain.records.RecordsTypeFilter
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 
 @Composable

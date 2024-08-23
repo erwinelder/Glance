@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.accounts.color.AccountColors
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.accounts.color.AccountColors
+import com.ataglance.walletglance.domain.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.WalletGlanceTheme
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect

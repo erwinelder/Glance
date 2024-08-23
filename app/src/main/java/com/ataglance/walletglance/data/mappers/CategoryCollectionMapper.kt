@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.data.mappers
 
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.data.local.entities.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.data.local.entities.CategoryCollectionEntity
 import com.ataglance.walletglance.domain.utils.asChar

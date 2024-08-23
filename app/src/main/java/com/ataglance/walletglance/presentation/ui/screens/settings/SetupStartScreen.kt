@@ -40,7 +40,7 @@ import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.WalletGlanceTheme
 import com.ataglance.walletglance.presentation.ui.animation.StartAnimatedContainer
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.app.AppTheme
 
 @Composable
 fun SetupStartScreen(

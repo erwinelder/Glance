@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.data.repository
 
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.budgets.TotalAmountByRange
-import com.ataglance.walletglance.data.date.LongDateRange
+import com.ataglance.walletglance.domain.budgets.Budget
+import com.ataglance.walletglance.domain.budgets.TotalAmountByRange
+import com.ataglance.walletglance.domain.date.LongDateRange
 import com.ataglance.walletglance.data.local.dao.RecordDao
 import com.ataglance.walletglance.data.local.entities.RecordEntity
 import com.ataglance.walletglance.domain.utils.getTodayLongDateRange

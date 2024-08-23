@@ -1,14 +1,14 @@
 package com.ataglance.walletglance.data.mappers
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.categories.CategoriesWithSubcategories
+import com.ataglance.walletglance.domain.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.local.entities.RecordEntity
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordStackUnit
-import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordUiState
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordUnitUiState
+import com.ataglance.walletglance.domain.records.RecordStack
+import com.ataglance.walletglance.domain.records.RecordStackUnit
+import com.ataglance.walletglance.domain.records.RecordType
 import com.ataglance.walletglance.domain.utils.findById
 import com.ataglance.walletglance.domain.utils.getRecordTypeByChar
 import com.ataglance.walletglance.domain.utils.toCategoryType

@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.domain.utils
 
-import com.ataglance.walletglance.data.categories.Category
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.categories.Category
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithCategories
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
 
 
 fun CategoryCollectionType.toggle(): CategoryCollectionType {

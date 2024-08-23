@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.data.app.AppLanguage
+import com.ataglance.walletglance.domain.app.AppLanguage
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurface

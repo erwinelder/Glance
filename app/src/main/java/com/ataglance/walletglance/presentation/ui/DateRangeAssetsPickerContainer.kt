@@ -13,8 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.data.date.DateRangeMenuUiState
+import com.ataglance.walletglance.domain.date.DateRangeEnum
+import com.ataglance.walletglance.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlanceDateRangeAssetsPicker
 import com.ataglance.walletglance.presentation.ui.uielements.pickers.GlanceDateRangePicker
 

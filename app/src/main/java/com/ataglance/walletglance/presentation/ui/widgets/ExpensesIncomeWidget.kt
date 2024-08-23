@@ -36,15 +36,15 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.WalletGlanceTheme
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurface
 import com.ataglance.walletglance.presentation.ui.uielements.dividers.BigDivider
 import com.ataglance.walletglance.domain.utils.getFormattedDateFromAndToByFormatDayMonthYear
-import com.ataglance.walletglance.data.date.DateRangeWithEnum
-import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.data.date.DateRangeAssets
-import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.data.date.LongDateRange
+import com.ataglance.walletglance.domain.date.DateRangeWithEnum
+import com.ataglance.walletglance.domain.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.domain.date.DateRangeAssets
+import com.ataglance.walletglance.domain.date.DateRangeEnum
+import com.ataglance.walletglance.domain.date.LongDateRange
 import java.util.Locale
 
 @Composable

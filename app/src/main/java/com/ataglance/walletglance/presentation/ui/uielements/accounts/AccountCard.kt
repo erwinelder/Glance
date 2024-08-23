@@ -34,9 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.accounts.color.AccountColors
-import com.ataglance.walletglance.data.app.AppTheme
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.accounts.color.AccountColors
+import com.ataglance.walletglance.domain.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsCompact
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsMedium
 import com.ataglance.walletglance.presentation.ui.uielements.buttons.SmallFilledIconButton

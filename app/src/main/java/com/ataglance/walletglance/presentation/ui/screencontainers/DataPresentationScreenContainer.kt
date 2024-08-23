@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
-import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.date.DateRangeEnum
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsCompact
 import com.ataglance.walletglance.presentation.ui.uielements.accounts.AccountsFilterBar
 import com.ataglance.walletglance.presentation.ui.uielements.categoryCollections.CategoryCollectionPickerContainer

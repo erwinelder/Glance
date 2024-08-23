@@ -2,10 +2,10 @@ package com.ataglance.walletglance.presentation.viewmodels.records
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.makingRecord.MadeTransferState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.date.DateTimeState
+import com.ataglance.walletglance.domain.makingRecord.MadeTransferState
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.domain.utils.getOtherFrom
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

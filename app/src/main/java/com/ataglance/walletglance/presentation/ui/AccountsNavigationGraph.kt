@@ -10,8 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.app.AppUiSettings
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.app.AppUiSettings
 import com.ataglance.walletglance.presentation.ui.navigation.screens.AccountsSettingsScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.presentation.ui.screens.settings.accounts.CurrencyPickerScreen

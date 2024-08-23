@@ -2,10 +2,10 @@ package com.ataglance.walletglance.presentation.viewmodels.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
-import com.ataglance.walletglance.data.accounts.color.AccountColors
-import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
+import com.ataglance.walletglance.domain.accounts.Account
+import com.ataglance.walletglance.domain.accounts.color.AccountColorWithName
+import com.ataglance.walletglance.domain.accounts.color.AccountColors
+import com.ataglance.walletglance.domain.accounts.color.AccountPossibleColors
 import com.ataglance.walletglance.domain.utils.toAccountColorWithName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

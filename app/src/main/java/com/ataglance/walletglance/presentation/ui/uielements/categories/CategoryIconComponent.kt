@@ -11,8 +11,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.Category
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.categories.Category
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 
 @Composable

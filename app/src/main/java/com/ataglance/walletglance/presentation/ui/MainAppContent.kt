@@ -13,9 +13,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ataglance.walletglance.data.app.AppUiSettings
-import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.settings.ThemeUiState
+import com.ataglance.walletglance.domain.app.AppUiSettings
+import com.ataglance.walletglance.domain.makingRecord.MakeRecordStatus
+import com.ataglance.walletglance.domain.settings.ThemeUiState
 import com.ataglance.walletglance.domain.utils.fromMainScreen
 import com.ataglance.walletglance.domain.utils.needToMoveScreenTowardsLeft
 import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens

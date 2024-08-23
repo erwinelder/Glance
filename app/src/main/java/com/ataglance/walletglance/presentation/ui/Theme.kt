@@ -15,9 +15,9 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.app.WindowType
-import com.ataglance.walletglance.data.color.GlanceColors
+import com.ataglance.walletglance.domain.app.AppTheme
+import com.ataglance.walletglance.domain.app.WindowType
+import com.ataglance.walletglance.domain.color.GlanceColors
 
 private val LightDefaultPalette = GlanceColors(
     material = lightColorScheme(

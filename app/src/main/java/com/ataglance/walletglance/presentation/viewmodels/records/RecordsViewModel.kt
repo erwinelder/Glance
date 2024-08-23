@@ -3,10 +3,10 @@ package com.ataglance.walletglance.presentation.viewmodels.records
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
-import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
-import com.ataglance.walletglance.data.records.RecordStack
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionType
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionWithIds
+import com.ataglance.walletglance.domain.categoryCollections.CategoryCollectionsWithIds
+import com.ataglance.walletglance.domain.records.RecordStack
 import com.ataglance.walletglance.domain.utils.filterByCollection
 import com.ataglance.walletglance.domain.utils.filterByCollectionType
 import kotlinx.coroutines.flow.MutableStateFlow
