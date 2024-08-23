@@ -6,7 +6,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.domain.utils.deleteItemAndMoveOrderNum
 import com.ataglance.walletglance.domain.utils.findByOrderNum
-import com.ataglance.walletglance.domain.utils.toEntityList
+import com.ataglance.walletglance.data.mappers.toDataModels
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -121,7 +121,7 @@ class EditAccountsViewModel(
             }
         }
 
-        return accountList.toEntityList()
+        return accountList.toDataModels()
     }
 
 }

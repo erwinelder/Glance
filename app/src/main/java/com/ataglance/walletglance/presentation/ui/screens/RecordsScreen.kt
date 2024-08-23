@@ -18,13 +18,13 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.date.DateRangeEnum
+import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.domain.utils.findById
+import com.ataglance.walletglance.domain.utils.toggle
 import com.ataglance.walletglance.presentation.ui.screencontainers.DataPresentationScreenContainer
 import com.ataglance.walletglance.presentation.ui.uielements.categoryCollections.CategoryCollectionTypeToggleButton
 import com.ataglance.walletglance.presentation.ui.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.presentation.ui.uielements.records.TransferComponent
-import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.domain.utils.findById
-import com.ataglance.walletglance.domain.utils.toggle
 import com.ataglance.walletglance.presentation.viewmodels.records.RecordsViewModel
 
 @Composable

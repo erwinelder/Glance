@@ -17,7 +17,7 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.utils.filterByDateAndAccount
 import com.ataglance.walletglance.domain.utils.getFormattedDateWithTime
-import com.ataglance.walletglance.domain.utils.toEntityList
+import com.ataglance.walletglance.data.mappers.toDataModels
 import com.ataglance.walletglance.domain.utils.toLongWithTime
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
@@ -273,7 +273,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
-                expectedRecordList, expectedAccountList.toEntityList()
+                expectedRecordList, expectedAccountList.toDataModels()
             )
         }
 
@@ -366,7 +366,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
-                expectedRecordList, expectedAccountList.toEntityList()
+                expectedRecordList, expectedAccountList.toDataModels()
             )
         }
 
@@ -501,7 +501,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
-                expectedRecordList, expectedAccountList.toEntityList()
+                expectedRecordList, expectedAccountList.toDataModels()
             )
         }
 
@@ -601,7 +601,7 @@ class WalletGlanceInstrumentedTest {
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
-                expectedRecordList, expectedAccountList.toEntityList()
+                expectedRecordList, expectedAccountList.toDataModels()
             )
         }
 

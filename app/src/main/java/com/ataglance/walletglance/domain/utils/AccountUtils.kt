@@ -7,7 +7,9 @@ import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.color.ColorWithName
 import com.ataglance.walletglance.data.local.entities.AccountEntity
+import com.ataglance.walletglance.data.mappers.toDomainModels
 import com.ataglance.walletglance.data.records.RecordType
+import com.ataglance.walletglance.data.utils.findById
 import java.util.Locale
 
 
@@ -23,21 +25,18 @@ fun AccountColors.toColorWithName(theme: AppTheme?): ColorWithName {
 
 fun List<AccountEntity>.toAccountList(): List<Account> {
     val possibleColors = AccountPossibleColors()
-    return this.map { it.toAccount(color = possibleColors.getByName(it.color)) }
+    return this.toDomainModels(accountColorProvider = possibleColors::getByName)
 }
 
 
-fun List<Account>.toEntityList(): List<AccountEntity> {
-    return this.map { it.toAccountEntity() }
+fun List<Account>.getIdsThatAreNotInList(list: List<AccountEntity>): List<Int> {
+    return this
+        .filter { list.findById(it.id) == null }
+        .map { it.id }
 }
 
 
 fun List<Account>.findById(id: Int): Account? {
-    return this.find { it.id == id }
-}
-
-
-fun List<AccountEntity>.findById(id: Int): AccountEntity? {
     return this.find { it.id == id }
 }
 
@@ -60,13 +59,6 @@ fun List<Account>.getOtherFrom(account: Account): Account {
         }
     }
     return account
-}
-
-
-fun List<Account>.getIdsThatAreNotInList(list: List<AccountEntity>): List<Int> {
-    return this
-        .filter { list.findById(it.id) == null }
-        .map { it.id }
 }
 
 
@@ -101,21 +93,4 @@ fun Pair<Account, Account>.returnAmountToFirstBalanceAndUpdateSecondBalance(
                     if (recordType == RecordType.Expense) -newAmount else newAmount
         ).toDouble()
     )
-}
-
-
-fun List<AccountEntity>.checkOrderNumbers(): Boolean {
-    this.sortedBy { it.orderNum }.forEachIndexed { index, account ->
-        if (account.orderNum != index + 1) {
-            return false
-        }
-    }
-    return true
-}
-
-
-fun List<AccountEntity>.fixOrderNumbers(): List<AccountEntity> {
-    return this.sortedBy { it.orderNum }.mapIndexed { index, account ->
-        account.copy(orderNum = index + 1)
-    }
 }

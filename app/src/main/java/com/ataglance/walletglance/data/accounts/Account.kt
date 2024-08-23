@@ -6,7 +6,6 @@ import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
 import com.ataglance.walletglance.domain.utils.formatWithSpaces
 import com.ataglance.walletglance.domain.utils.toAccountColorWithName
-import com.ataglance.walletglance.data.local.entities.AccountEntity
 import java.util.Locale
 
 @Stable
@@ -22,21 +21,6 @@ data class Account(
     val withoutBalance: Boolean = false,
     val isActive: Boolean = true
 ) {
-
-    fun toAccountEntity(): AccountEntity {
-        return AccountEntity(
-            id = id,
-            orderNum = orderNum,
-            name = name,
-            currency = currency,
-            balance = balance,
-            color = color.getNameValue(),
-            hide = hide,
-            hideBalance = hideBalance,
-            withoutBalance = withoutBalance,
-            isActive = isActive
-        )
-    }
 
     fun toRecordAccount(): RecordAccount {
         return RecordAccount(

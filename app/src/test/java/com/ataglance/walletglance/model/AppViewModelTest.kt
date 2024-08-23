@@ -7,7 +7,7 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.utils.fixOrderNumbers
+import com.ataglance.walletglance.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
 import com.ataglance.walletglance.data.repository.AccountRepository
 import com.ataglance.walletglance.data.repository.BudgetAndBudgetAccountAssociationRepository

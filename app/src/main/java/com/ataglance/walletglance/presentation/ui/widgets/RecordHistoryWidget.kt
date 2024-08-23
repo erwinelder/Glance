@@ -23,13 +23,13 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordsTypeFilter
+import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.domain.utils.findById
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurface
 import com.ataglance.walletglance.presentation.ui.uielements.records.EmptyRecordsHistoryMessageContainer
 import com.ataglance.walletglance.presentation.ui.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.presentation.ui.uielements.records.TransferComponent
-import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.domain.utils.findById
 
 @Composable
 fun RecordHistoryWidget(
