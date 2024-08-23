@@ -4,11 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.domain.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.domain.utils.getRepeatingPeriodByString
 
 @Entity(
     tableName = "Budget",
@@ -29,29 +24,4 @@ data class BudgetEntity(
     val categoryId: Int,
     val name: String,
     val repeatingPeriod: String
-) {
-
-    fun toBudget(
-        categoryWithSubcategory: CategoryWithSubcategory?,
-        linkedAccountsIds: List<Int>,
-        accountList: List<Account>
-    ): Budget? {
-        val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
-        val linkedAccounts = accountList.filter { linkedAccountsIds.contains(it.id) }
-
-        return Budget(
-            id = id,
-            priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
-            usedAmount = 0.0,
-            amountLimit = amountLimit,
-            usedPercentage = 0F,
-            category = categoryWithSubcategory?.getSubcategoryOrCategory(),
-            name = name,
-            repeatingPeriod = repeatingPeriodEnum,
-            dateRange = repeatingPeriodEnum.getLongDateRangeWithTime(),
-            currency = linkedAccounts.firstOrNull()?.currency ?: "",
-            linkedAccountsIds = linkedAccounts.map { it.id }
-        )
-    }
-
-}
+)

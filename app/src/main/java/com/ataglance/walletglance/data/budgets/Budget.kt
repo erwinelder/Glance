@@ -4,7 +4,6 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.date.LongDateRange
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.local.entities.BudgetEntity
 
 data class Budget(
     val id: Int,
@@ -37,16 +36,6 @@ data class Budget(
 
     fun subtractFromUsedAmount(amount: Double): Budget {
         return applyUsedAmount(usedAmount - amount)
-    }
-
-    fun toEntity(): BudgetEntity {
-        return BudgetEntity(
-            id = id,
-            amountLimit = amountLimit,
-            categoryId = category?.id ?: 0,
-            name = name,
-            repeatingPeriod = repeatingPeriod.name
-        )
     }
 
     fun toBudgetUiState(accountList: List<Account>): EditingBudgetUiState {

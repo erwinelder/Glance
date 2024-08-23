@@ -1,37 +1,10 @@
 package com.ataglance.walletglance.domain.utils
 
-import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.budgets.EditingBudgetUiState
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.local.entities.BudgetAccountAssociation
-import com.ataglance.walletglance.data.local.entities.BudgetEntity
 import com.ataglance.walletglance.data.local.entities.Record
-
-
-fun List<BudgetEntity>.toBudgetList(
-    categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
-    associationList: List<BudgetAccountAssociation>,
-    accountList: List<Account>
-): List<Budget> {
-    return this.mapNotNull { budgetEntity ->
-        budgetEntity.toBudget(
-            categoryWithSubcategory = categoryWithSubcategoriesList
-                .getCategoryWithSubcategoryById(budgetEntity.categoryId),
-            linkedAccountsIds = associationList
-                .filter { it.budgetId == budgetEntity.id }
-                .map { it.accountId },
-            accountList = accountList
-        )
-    }
-}
-
-
-fun List<Budget>.toEntityList(): List<BudgetEntity> {
-    return this.map { it.toEntity() }
-}
 
 
 fun List<Budget>.groupByType(): BudgetsByType {
@@ -61,46 +34,6 @@ fun List<Budget>.groupByType(): BudgetsByType {
         monthly = monthlyBudgets.sortedBy { it.priorityNum },
         yearly = yearlyBudgets.sortedBy { it.priorityNum }
     )
-}
-
-
-fun List<Budget>.divideIntoBudgetsAndAssociations():
-        Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
-{
-    val budgetList = this.toEntityList()
-    val associationList = this.flatMap { budget ->
-        budget.linkedAccountsIds.map { accountId ->
-            BudgetAccountAssociation(
-                budgetId = budget.id,
-                accountId = accountId
-            )
-        }
-    }
-    return budgetList to associationList
-}
-
-
-fun List<BudgetEntity>.getIdsThatAreNotInList(
-    list: List<BudgetEntity>
-): List<Int> {
-    return this
-        .filter { budget ->
-            list.find { it.id == budget.id } == null
-        }
-        .map { it.id }
-}
-
-
-fun List<BudgetAccountAssociation>.getAssociationsThatAreNotInList(
-    list: List<BudgetAccountAssociation>
-): List<BudgetAccountAssociation> {
-    return this
-        .filter { thisAssociation ->
-            list.find {
-                it.budgetId == thisAssociation.budgetId &&
-                        it.accountId == thisAssociation.accountId
-            } == null
-        }
 }
 
 

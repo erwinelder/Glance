@@ -33,7 +33,9 @@ import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
+import com.ataglance.walletglance.data.mappers.divideIntoBudgetsAndAssociations
 import com.ataglance.walletglance.data.mappers.toDataModels
+import com.ataglance.walletglance.data.mappers.toDomainModels
 import com.ataglance.walletglance.data.preferences.SettingsRepository
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordsInDateRange
@@ -47,10 +49,11 @@ import com.ataglance.walletglance.data.repository.RecordRepository
 import com.ataglance.walletglance.data.settings.ThemeUiState
 import com.ataglance.walletglance.data.utils.checkOrderNumbers
 import com.ataglance.walletglance.data.utils.fixOrderNumbers
+import com.ataglance.walletglance.data.utils.getAssociationsThatAreNotInList
+import com.ataglance.walletglance.data.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.data.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.domain.utils.convertCalendarMillisToLongWithoutSpecificTime
-import com.ataglance.walletglance.domain.utils.divideIntoBudgetsAndAssociations
 import com.ataglance.walletglance.domain.utils.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.domain.utils.filterByDateAndAccount
 import com.ataglance.walletglance.domain.utils.findById
@@ -71,7 +74,6 @@ import com.ataglance.walletglance.domain.utils.isInRange
 import com.ataglance.walletglance.domain.utils.mergeWith
 import com.ataglance.walletglance.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.domain.utils.toAccountList
-import com.ataglance.walletglance.domain.utils.toBudgetList
 import com.ataglance.walletglance.domain.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.domain.utils.toCategoryEntityList
 import com.ataglance.walletglance.domain.utils.toRecordStackList
@@ -535,7 +537,7 @@ class AppViewModel(
             val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
 
             val budgetsByType = budgetEntityList
-                .toBudgetList(
+                .toDomainModels(
                     categoryWithSubcategoriesList = categoryWithSubcategoriesList,
                     associationList = associationList,
                     accountList = accountsUiState.value.accountList
