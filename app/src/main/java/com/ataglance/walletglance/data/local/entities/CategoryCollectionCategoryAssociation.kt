@@ -9,7 +9,7 @@ import androidx.room.Index
     primaryKeys = ["categoryCollectionId", "categoryId"],
     foreignKeys = [
         ForeignKey(
-            entity = CategoryCollection::class,
+            entity = CategoryCollectionEntity::class,
             parentColumns = ["id"],
             childColumns = ["categoryCollectionId"],
             onDelete = ForeignKey.CASCADE

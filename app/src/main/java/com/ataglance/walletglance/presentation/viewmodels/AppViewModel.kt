@@ -34,8 +34,10 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
 import com.ataglance.walletglance.data.mappers.divideIntoBudgetsAndAssociations
+import com.ataglance.walletglance.data.mappers.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.data.mappers.toDataModels
 import com.ataglance.walletglance.data.mappers.toDomainModels
+import com.ataglance.walletglance.data.mappers.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.data.preferences.SettingsRepository
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordsInDateRange
@@ -54,11 +56,9 @@ import com.ataglance.walletglance.data.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.data.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.domain.utils.convertCalendarMillisToLongWithoutSpecificTime
-import com.ataglance.walletglance.domain.utils.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.domain.utils.filterByDateAndAccount
 import com.ataglance.walletglance.domain.utils.findById
 import com.ataglance.walletglance.domain.utils.findByOrderNum
-import com.ataglance.walletglance.domain.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.domain.utils.getCalendarEndLong
 import com.ataglance.walletglance.domain.utils.getCalendarStartLong
 import com.ataglance.walletglance.domain.utils.getExpensesIncomeWidgetUiState
@@ -77,7 +77,6 @@ import com.ataglance.walletglance.domain.utils.toAccountList
 import com.ataglance.walletglance.domain.utils.toCategoriesWithSubcategories
 import com.ataglance.walletglance.domain.utils.toCategoryEntityList
 import com.ataglance.walletglance.domain.utils.toRecordStackList
-import com.ataglance.walletglance.domain.utils.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.domain.utils.withLongDateRange
 import com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens

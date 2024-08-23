@@ -3,8 +3,8 @@ package com.ataglance.walletglance.data.repository
 import androidx.room.Transaction
 import com.ataglance.walletglance.data.local.dao.CategoryCollectionCategoryAssociationDao
 import com.ataglance.walletglance.data.local.dao.CategoryCollectionDao
-import com.ataglance.walletglance.data.local.entities.CategoryCollection
 import com.ataglance.walletglance.data.local.entities.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.data.local.entities.CategoryCollectionEntity
 
 class CategoryCollectionAndCollectionCategoryAssociationRepository(
     private val categoryCollectionDao: CategoryCollectionDao,
@@ -13,7 +13,7 @@ class CategoryCollectionAndCollectionCategoryAssociationRepository(
 
     @Transaction
     suspend fun getCategoryCollectionsAndCollectionCategoryAssociations():
-            Pair<List<CategoryCollection>, List<CategoryCollectionCategoryAssociation>>
+            Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>
     {
         val collections = categoryCollectionDao.getAllCollections()
         val collectionCategoryAssociations =
@@ -24,7 +24,7 @@ class CategoryCollectionAndCollectionCategoryAssociationRepository(
     @Transaction
     suspend fun deleteAndUpsertCollectionsAndDeleteAndUpsertAssociations(
         collectionsIdsToDelete: List<Int>,
-        collectionListToUpsert: List<CategoryCollection>,
+        collectionListToUpsert: List<CategoryCollectionEntity>,
         associationsToDelete: List<CategoryCollectionCategoryAssociation>,
         associationsToUpsert: List<CategoryCollectionCategoryAssociation>
     ) {

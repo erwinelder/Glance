@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 
 @Entity(tableName = "CategoryCollection")
-data class CategoryCollection(
+data class CategoryCollectionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val orderNum: Int,

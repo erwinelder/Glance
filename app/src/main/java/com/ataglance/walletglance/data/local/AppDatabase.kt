@@ -14,8 +14,8 @@ import com.ataglance.walletglance.data.local.dao.RecordDao
 import com.ataglance.walletglance.data.local.entities.AccountEntity
 import com.ataglance.walletglance.data.local.entities.BudgetAccountAssociation
 import com.ataglance.walletglance.data.local.entities.BudgetEntity
-import com.ataglance.walletglance.data.local.entities.CategoryCollection
 import com.ataglance.walletglance.data.local.entities.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.data.local.entities.CategoryCollectionEntity
 import com.ataglance.walletglance.data.local.entities.CategoryEntity
 import com.ataglance.walletglance.data.local.entities.Record
 
@@ -23,7 +23,7 @@ import com.ataglance.walletglance.data.local.entities.Record
     entities = [
         AccountEntity::class,
         CategoryEntity::class,
-        CategoryCollection::class,
+        CategoryCollectionEntity::class,
         CategoryCollectionCategoryAssociation::class,
         Record::class,
         BudgetEntity::class,
