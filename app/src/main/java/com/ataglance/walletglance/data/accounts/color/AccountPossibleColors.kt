@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.accounts.color
 
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.color.ColorWithName
-import com.ataglance.walletglance.data.utils.toColorWithName
+import com.ataglance.walletglance.domain.utils.toColorWithName
 
 data class AccountPossibleColors(
     val default: AccountColors = AccountColors.Default,

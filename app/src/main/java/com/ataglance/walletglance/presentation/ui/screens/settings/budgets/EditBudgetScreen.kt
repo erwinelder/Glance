@@ -37,8 +37,8 @@ import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.utils.asStringRes
-import com.ataglance.walletglance.data.utils.toAccountColorWithName
+import com.ataglance.walletglance.domain.utils.asStringRes
+import com.ataglance.walletglance.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.presentation.ui.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.presentation.ui.uielements.accounts.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.presentation.ui.uielements.buttons.PrimaryButton

@@ -28,8 +28,8 @@ import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSur
 import com.ataglance.walletglance.presentation.ui.uielements.records.EmptyRecordsHistoryMessageContainer
 import com.ataglance.walletglance.presentation.ui.uielements.records.RecordStackComponent
 import com.ataglance.walletglance.presentation.ui.uielements.records.TransferComponent
-import com.ataglance.walletglance.data.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.data.utils.findById
+import com.ataglance.walletglance.domain.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.domain.utils.findById
 
 @Composable
 fun RecordHistoryWidget(

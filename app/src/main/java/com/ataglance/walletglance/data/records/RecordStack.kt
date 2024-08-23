@@ -2,9 +2,9 @@ package com.ataglance.walletglance.data.records
 
 import com.ataglance.walletglance.data.accounts.RecordAccount
 import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
-import com.ataglance.walletglance.data.utils.asChar
-import com.ataglance.walletglance.data.utils.formatWithSpaces
-import com.ataglance.walletglance.domain.entities.Record
+import com.ataglance.walletglance.domain.utils.asChar
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
+import com.ataglance.walletglance.data.local.entities.Record
 import java.util.Locale
 
 data class RecordStack(

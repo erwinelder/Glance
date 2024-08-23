@@ -6,7 +6,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.makingRecord.MadeTransferState
 import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.utils.getOtherFrom
+import com.ataglance.walletglance.domain.utils.getOtherFrom
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

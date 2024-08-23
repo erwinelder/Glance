@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.data.categories
 
 import com.ataglance.walletglance.data.categories.color.CategoryColorWithName
-import com.ataglance.walletglance.data.utils.deleteItemAndMoveOrderNum
-import com.ataglance.walletglance.data.utils.findById
-import com.ataglance.walletglance.data.utils.toCheckedCategoryList
+import com.ataglance.walletglance.domain.utils.deleteItemAndMoveOrderNum
+import com.ataglance.walletglance.domain.utils.findById
+import com.ataglance.walletglance.domain.utils.toCheckedCategoryList
 
 data class CategoryWithSubcategories(
     val category: Category,

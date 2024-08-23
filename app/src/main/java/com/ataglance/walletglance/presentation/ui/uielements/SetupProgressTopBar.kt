@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.data.utils.currentScreenIs
+import com.ataglance.walletglance.domain.utils.currentScreenIs
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.navigation.screens.AccountsSettingsScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.CategoriesSettingsScreens

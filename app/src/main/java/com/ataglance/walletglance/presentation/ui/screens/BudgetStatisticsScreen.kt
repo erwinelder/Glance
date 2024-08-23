@@ -36,11 +36,11 @@ import com.ataglance.walletglance.data.budgets.TotalAmountByRange
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.date.RepeatingPeriod
 import com.ataglance.walletglance.data.statistics.ColumnChartUiState
-import com.ataglance.walletglance.data.utils.formatWithSpaces
-import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.data.utils.getPrevDateRanges
-import com.ataglance.walletglance.data.utils.getSpendingInRecentStringRes
-import com.ataglance.walletglance.data.utils.toAccountColorWithName
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
+import com.ataglance.walletglance.domain.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.domain.utils.getPrevDateRanges
+import com.ataglance.walletglance.domain.utils.getSpendingInRecentStringRes
+import com.ataglance.walletglance.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.accounts.AccountsFlowRow
 import com.ataglance.walletglance.presentation.ui.uielements.categories.CategoryBigIconComponent

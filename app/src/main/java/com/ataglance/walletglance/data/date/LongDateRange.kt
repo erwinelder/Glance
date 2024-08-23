@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.data.date
 
-import com.ataglance.walletglance.data.utils.extractYearMonthDay
+import com.ataglance.walletglance.domain.utils.extractYearMonthDay
 
 data class LongDateRange(
     val from: Long,

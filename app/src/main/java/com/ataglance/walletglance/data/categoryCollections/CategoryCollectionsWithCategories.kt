@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.data.categoryCollections
 
-import com.ataglance.walletglance.data.utils.deleteItemAndMoveOrderNum
+import com.ataglance.walletglance.domain.utils.deleteItemAndMoveOrderNum
 
 data class CategoryCollectionsWithCategories(
     val expense: List<CategoryCollectionWithCategories> = listOf(),

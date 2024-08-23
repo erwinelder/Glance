@@ -29,10 +29,10 @@ import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.settings.ThemeUiState
 import com.ataglance.walletglance.data.statistics.ColumnChartUiState
-import com.ataglance.walletglance.data.utils.getMakeRecordStateAndUnitList
-import com.ataglance.walletglance.data.utils.getMakeTransferState
-import com.ataglance.walletglance.data.utils.getPrevDateRanges
-import com.ataglance.walletglance.data.utils.takeIfNoneIsNull
+import com.ataglance.walletglance.domain.utils.getMakeRecordStateAndUnitList
+import com.ataglance.walletglance.domain.utils.getMakeTransferState
+import com.ataglance.walletglance.domain.utils.getPrevDateRanges
+import com.ataglance.walletglance.domain.utils.takeIfNoneIsNull
 import com.ataglance.walletglance.data.widgets.WidgetsUiState
 import com.ataglance.walletglance.presentation.ui.animation.screenEnterTransition
 import com.ataglance.walletglance.presentation.ui.animation.screenExitTransition

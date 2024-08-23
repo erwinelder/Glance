@@ -16,7 +16,7 @@ import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.uielements.categories.RecordCategory
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.data.utils.convertDateLongToDayMonthYear
+import com.ataglance.walletglance.domain.utils.convertDateLongToDayMonthYear
 
 @Composable
 fun RecordStackComponent(

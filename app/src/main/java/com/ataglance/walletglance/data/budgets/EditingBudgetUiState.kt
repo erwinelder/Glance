@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.domain.utils.getLongDateRangeWithTime
 
 @Stable
 data class EditingBudgetUiState(

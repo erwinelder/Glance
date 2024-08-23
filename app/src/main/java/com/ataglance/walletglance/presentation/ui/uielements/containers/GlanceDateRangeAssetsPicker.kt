@@ -30,7 +30,7 @@ import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.date.DateRangeAssets
 import com.ataglance.walletglance.data.date.DateRangeEnum
-import com.ataglance.walletglance.data.utils.formatDateRangeForCustomDateRangeField
+import com.ataglance.walletglance.domain.utils.formatDateRangeForCustomDateRangeField
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.Manrope
 import com.ataglance.walletglance.presentation.ui.animation.bounceClickEffect

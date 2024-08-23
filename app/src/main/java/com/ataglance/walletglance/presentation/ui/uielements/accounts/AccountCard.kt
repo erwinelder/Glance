@@ -40,7 +40,7 @@ import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsCompact
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsMedium
 import com.ataglance.walletglance.presentation.ui.uielements.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.data.utils.toAccountColorWithName
+import com.ataglance.walletglance.domain.utils.toAccountColorWithName
 import java.util.Locale
 
 @Composable

@@ -10,7 +10,7 @@ import androidx.navigation.navigation
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.categories.CategoriesWithSubcategories
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
-import com.ataglance.walletglance.data.utils.toCollectionsWithIds
+import com.ataglance.walletglance.domain.utils.toCollectionsWithIds
 import com.ataglance.walletglance.presentation.ui.navigation.screens.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens
 import com.ataglance.walletglance.presentation.ui.screens.settings.categoryCollections.EditCategoryCollectionScreen

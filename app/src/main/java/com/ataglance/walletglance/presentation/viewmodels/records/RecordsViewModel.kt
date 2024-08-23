@@ -7,8 +7,8 @@ import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionTyp
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithIds
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionsWithIds
 import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.utils.filterByCollection
-import com.ataglance.walletglance.data.utils.filterByCollectionType
+import com.ataglance.walletglance.domain.utils.filterByCollection
+import com.ataglance.walletglance.domain.utils.filterByCollectionType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

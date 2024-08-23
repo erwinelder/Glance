@@ -12,7 +12,7 @@ import com.ataglance.walletglance.data.budgets.Budget
 import com.ataglance.walletglance.data.budgets.BudgetsByType
 import com.ataglance.walletglance.data.categories.DefaultCategoriesPackage
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.domain.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.presentation.ui.screencontainers.SetupDataScreenContainer
 import com.ataglance.walletglance.presentation.ui.uielements.budgets.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.presentation.ui.uielements.budgets.EditingBudgetComponent

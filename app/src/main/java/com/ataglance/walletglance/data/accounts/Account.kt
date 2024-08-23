@@ -4,9 +4,9 @@ import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.data.utils.formatWithSpaces
-import com.ataglance.walletglance.data.utils.toAccountColorWithName
-import com.ataglance.walletglance.domain.entities.AccountEntity
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
+import com.ataglance.walletglance.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.data.local.entities.AccountEntity
 import java.util.Locale
 
 @Stable

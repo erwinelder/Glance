@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.categoryCollections
 
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.categories.CategoryType
-import com.ataglance.walletglance.data.utils.toCollectionsWithCategories
+import com.ataglance.walletglance.domain.utils.toCollectionsWithCategories
 
 data class CategoryCollectionsWithIds(
     val expense: List<CategoryCollectionWithIds> = listOf(),

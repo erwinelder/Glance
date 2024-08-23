@@ -5,8 +5,8 @@ import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWit
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordStackUnit
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.data.utils.deleteItemAndMoveOrderNum
-import com.ataglance.walletglance.data.utils.toEditingCategoryWithSubcategoriesList
+import com.ataglance.walletglance.domain.utils.deleteItemAndMoveOrderNum
+import com.ataglance.walletglance.domain.utils.toEditingCategoryWithSubcategoriesList
 
 data class CategoriesWithSubcategories(
     val expense: List<CategoryWithSubcategories> = emptyList(),

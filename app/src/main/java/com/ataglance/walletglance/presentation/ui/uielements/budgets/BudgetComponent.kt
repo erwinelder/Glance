@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.data.budgets.Budget
-import com.ataglance.walletglance.data.utils.formatWithSpaces
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.screens.BudgetsScreenPreview
 import com.ataglance.walletglance.presentation.ui.uielements.categories.CategoryIconComponent

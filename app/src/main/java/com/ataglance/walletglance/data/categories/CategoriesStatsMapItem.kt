@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.data.categories
 
-import com.ataglance.walletglance.data.utils.formatWithSpaces
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
 
 data class CategoriesStatsMapItem(
     val category: Category,

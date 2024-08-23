@@ -6,7 +6,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.accounts.color.AccountColorWithName
 import com.ataglance.walletglance.data.accounts.color.AccountColors
 import com.ataglance.walletglance.data.accounts.color.AccountPossibleColors
-import com.ataglance.walletglance.data.utils.toAccountColorWithName
+import com.ataglance.walletglance.domain.utils.toAccountColorWithName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

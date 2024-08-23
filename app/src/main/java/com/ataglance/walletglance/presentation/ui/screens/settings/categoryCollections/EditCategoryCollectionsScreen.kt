@@ -47,7 +47,7 @@ import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionType
 import com.ataglance.walletglance.data.categoryCollections.CategoryCollectionWithCategories
-import com.ataglance.walletglance.data.utils.toCategoryColorWithName
+import com.ataglance.walletglance.domain.utils.toCategoryColorWithName
 import com.ataglance.walletglance.presentation.ui.GlanceTheme
 import com.ataglance.walletglance.presentation.ui.WalletGlanceTheme
 import com.ataglance.walletglance.presentation.ui.WindowTypeIsExpanded

@@ -39,7 +39,7 @@ import com.ataglance.walletglance.presentation.ui.WalletGlanceTheme
 import com.ataglance.walletglance.data.app.AppTheme
 import com.ataglance.walletglance.presentation.ui.uielements.containers.GlassSurface
 import com.ataglance.walletglance.presentation.ui.uielements.dividers.BigDivider
-import com.ataglance.walletglance.data.utils.getFormattedDateFromAndToByFormatDayMonthYear
+import com.ataglance.walletglance.domain.utils.getFormattedDateFromAndToByFormatDayMonthYear
 import com.ataglance.walletglance.data.date.DateRangeWithEnum
 import com.ataglance.walletglance.data.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.data.date.DateRangeAssets

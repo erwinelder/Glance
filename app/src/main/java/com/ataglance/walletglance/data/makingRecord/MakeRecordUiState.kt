@@ -4,7 +4,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.date.DateTimeState
 import com.ataglance.walletglance.data.records.RecordStack
 import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.Record
+import com.ataglance.walletglance.data.local.entities.Record
 import java.util.Locale
 
 data class MakeRecordUiState(

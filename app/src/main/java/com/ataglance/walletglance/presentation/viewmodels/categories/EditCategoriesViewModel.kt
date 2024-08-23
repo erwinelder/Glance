@@ -8,9 +8,9 @@ import com.ataglance.walletglance.data.categories.CategoryType
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategories
 import com.ataglance.walletglance.data.categories.color.CategoryColors
 import com.ataglance.walletglance.data.categories.icons.CategoryIcon
-import com.ataglance.walletglance.domain.entities.CategoryEntity
-import com.ataglance.walletglance.data.utils.toCategoryColorWithName
-import com.ataglance.walletglance.data.utils.toCategoryEntityList
+import com.ataglance.walletglance.data.local.entities.CategoryEntity
+import com.ataglance.walletglance.domain.utils.toCategoryColorWithName
+import com.ataglance.walletglance.domain.utils.toCategoryEntityList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

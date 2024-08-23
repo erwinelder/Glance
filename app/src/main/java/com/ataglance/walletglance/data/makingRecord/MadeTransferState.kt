@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.makingRecord
 
 import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.domain.entities.Record
+import com.ataglance.walletglance.data.local.entities.Record
 
 data class MadeTransferState(
     val recordIdFrom: Int,

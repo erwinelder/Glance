@@ -2,7 +2,7 @@ package com.ataglance.walletglance.data.makingRecord
 
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.data.utils.formatWithSpaces
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
 
 @Stable
 data class MakeRecordUnitUiState(

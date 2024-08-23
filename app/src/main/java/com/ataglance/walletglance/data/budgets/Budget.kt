@@ -4,7 +4,7 @@ import com.ataglance.walletglance.data.accounts.Account
 import com.ataglance.walletglance.data.categories.Category
 import com.ataglance.walletglance.data.date.LongDateRange
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.domain.entities.BudgetEntity
+import com.ataglance.walletglance.data.local.entities.BudgetEntity
 
 data class Budget(
     val id: Int,

@@ -3,10 +3,10 @@ package com.ataglance.walletglance.presentation.viewmodels.accounts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.domain.entities.AccountEntity
-import com.ataglance.walletglance.data.utils.deleteItemAndMoveOrderNum
-import com.ataglance.walletglance.data.utils.findByOrderNum
-import com.ataglance.walletglance.data.utils.toEntityList
+import com.ataglance.walletglance.data.local.entities.AccountEntity
+import com.ataglance.walletglance.domain.utils.deleteItemAndMoveOrderNum
+import com.ataglance.walletglance.domain.utils.findByOrderNum
+import com.ataglance.walletglance.domain.utils.toEntityList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

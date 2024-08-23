@@ -1,12 +1,12 @@
 package com.ataglance.walletglance.data.date
 
-import com.ataglance.walletglance.data.utils.day
-import com.ataglance.walletglance.data.utils.getFormattedDateWithTime
-import com.ataglance.walletglance.data.utils.hour
-import com.ataglance.walletglance.data.utils.minute
-import com.ataglance.walletglance.data.utils.month
-import com.ataglance.walletglance.data.utils.toLongWithTime
-import com.ataglance.walletglance.data.utils.year
+import com.ataglance.walletglance.domain.utils.day
+import com.ataglance.walletglance.domain.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.domain.utils.hour
+import com.ataglance.walletglance.domain.utils.minute
+import com.ataglance.walletglance.domain.utils.month
+import com.ataglance.walletglance.domain.utils.toLongWithTime
+import com.ataglance.walletglance.domain.utils.year
 import java.util.Calendar
 
 data class DateTimeState(

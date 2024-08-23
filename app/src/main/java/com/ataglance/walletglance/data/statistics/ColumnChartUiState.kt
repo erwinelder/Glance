@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.data.budgets.TotalAmountByRange
 import com.ataglance.walletglance.data.date.RepeatingPeriod
-import com.ataglance.walletglance.data.utils.formatWithSpaces
-import com.ataglance.walletglance.data.utils.getColumnNameForColumnChart
+import com.ataglance.walletglance.domain.utils.formatWithSpaces
+import com.ataglance.walletglance.domain.utils.getColumnNameForColumnChart
 import kotlin.math.pow
 
 @Stable
