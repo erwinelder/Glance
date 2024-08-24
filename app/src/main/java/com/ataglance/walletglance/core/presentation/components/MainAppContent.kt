@@ -8,24 +8,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.navigation.AppNavHost
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
-import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.core.utils.fromMainScreen
-import com.ataglance.walletglance.core.utils.needToMoveScreenTowardsLeft
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.BottomNavBar
-import com.ataglance.walletglance.settings.presentation.components.SetupProgressTopBar
-import com.ataglance.walletglance.settings.presentation.components.shouldDisplaySetupProgressTopBar
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
+import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.components.SetupProgressTopBar
 
 @Composable
 fun MainAppContent(
@@ -35,7 +33,8 @@ fun MainAppContent(
     navController: NavHostController = rememberNavController()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var moveScreenTowardsLeft by remember { mutableStateOf(true) }
+    val navViewModel = viewModel<NavigationViewModel>()
+    val moveScreenTowardsLeft by navViewModel.moveScreenTowardsLeft.collectAsStateWithLifecycle()
 
     val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
     val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories
@@ -54,7 +53,7 @@ fun MainAppContent(
         Scaffold(
             topBar = {
                 SetupProgressTopBar(
-                    visible = shouldDisplaySetupProgressTopBar(
+                    visible = navViewModel.shouldDisplaySetupProgressTopBar(
                         appUiSettings.mainStartDestination, navBackStackEntry
                     ),
                     navBackStackEntry = navBackStackEntry,
@@ -68,28 +67,17 @@ fun MainAppContent(
                     navBackStackEntry = navBackStackEntry,
                     onNavigateBack = navController::popBackStack,
                     onNavigateToScreen = { screenNavigateTo: MainScreens ->
-                        navBackStackEntry.fromMainScreen().let { currentScreen ->
-                            moveScreenTowardsLeft = needToMoveScreenTowardsLeft(
-                                currentScreen, screenNavigateTo
-                            )
-                        }
-                        navController.navigate(screenNavigateTo) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = false
-                            }
-                            launchSingleTop = true
-                        }
+                        navViewModel.navigateToScreen(
+                            navController = navController,
+                            navBackStackEntry = navBackStackEntry,
+                            screenNavigateTo = screenNavigateTo
+                        )
                     },
                     onMakeRecordButtonClick = {
-                        moveScreenTowardsLeft = true
-                        navController.navigate(
-                            MainScreens.MakeRecord(
-                                status = MakeRecordStatus.Create.name,
-                                recordNum = appUiSettings.nextRecordNum()
-                            )
-                        ) {
-                            launchSingleTop = true
-                        }
+                        navViewModel.onMakeRecordButtonClick(
+                            navController = navController,
+                            recordNum = appUiSettings.nextRecordNum()
+                        )
                     }
                 )
             },
@@ -97,9 +85,7 @@ fun MainAppContent(
         ) { scaffoldPadding ->
             AppNavHost(
                 moveScreenTowardsLeft = moveScreenTowardsLeft,
-                changeMoveScreenTowardsLeft = {
-                    moveScreenTowardsLeft = it
-                },
+                changeMoveScreenTowardsLeft = navViewModel::setMoveScreenTowardsLeft,
                 navController = navController,
                 scaffoldPadding = scaffoldPadding,
                 appViewModel = appViewModel,
@@ -133,4 +119,12 @@ fun MainAppContent(
         }
         DimmedBackgroundOverlay(visible = dimBackground, appTheme = appUiSettings.appTheme)
     }
+}
+
+
+
+@Preview
+@Composable
+fun MainAppContentHomeScreenPreview() {
+
 }

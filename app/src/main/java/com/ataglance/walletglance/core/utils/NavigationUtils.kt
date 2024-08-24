@@ -2,6 +2,10 @@ package com.ataglance.walletglance.core.utils
 
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.account.navigation.AccountsSettingsScreens
+import com.ataglance.walletglance.category.navigation.CategoriesSettingsScreens
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlin.reflect.KClass
@@ -43,26 +47,48 @@ fun NavBackStackEntry?.currentScreenIs(screen: Any): Boolean {
 }
 
 
-fun KClass<out Any>.simpleName(): String? {
-    return this.simpleName?.substringAfterLast('$')
+fun NavBackStackEntry?.currentScreenIsOneOf(vararg screens: Any): Boolean {
+    screens.forEach { screen ->
+        if (this.currentScreenIs(screen)) {
+            return true
+        }
+    }
+    return false
 }
 
 
-fun needToMoveScreenTowardsLeft(currentScreen: MainScreens, nextScreen: MainScreens): Boolean {
-    val currentRoute = currentScreen::class.simpleName()
-    val nextRoute = nextScreen::class.simpleName()
-    listOf(
-        MainScreens.Home::class.simpleName(),
-        MainScreens.Records::class.simpleName(),
-        MainScreens.MakeRecord::class.simpleName(),
-        MainScreens.CategoryStatistics(0)::class.simpleName(),
-        MainScreens.Settings::class.simpleName()
-    ).forEach { screenRoute ->
-        if (currentRoute == screenRoute) {
-            return true
-        } else if (nextRoute == screenRoute) {
+fun NavBackStackEntry?.currentScreenIsNoneOf(vararg screens: Any): Boolean {
+    screens.forEach { screen ->
+        if (this.currentScreenIs(screen)) {
             return false
         }
     }
     return true
+}
+
+
+fun NavBackStackEntry?.anyScreenInHierarchyIs(screen: Any): Boolean {
+    return this?.destination?.hierarchy?.any {
+        it.currentScreenIs(screen)
+    } == true
+}
+
+
+fun NavBackStackEntry?.getSetupProgressTopBarTitleRes(): Int {
+    return when {
+        this.currentScreenIs(SettingsScreens.Language) -> R.string.language
+        this.currentScreenIs(SettingsScreens.Appearance) -> R.string.appearance
+        this.currentScreenIs(AccountsSettingsScreens.EditAccounts) ||
+                this.currentScreenIs(AccountsSettingsScreens.EditAccount) ||
+                this.currentScreenIs(AccountsSettingsScreens.EditAccountCurrency) -> R.string.accounts
+        this.currentScreenIs(CategoriesSettingsScreens.EditCategories) ||
+                this.currentScreenIs(CategoriesSettingsScreens.EditSubcategories) ||
+                this.currentScreenIs(CategoriesSettingsScreens.EditCategory) -> R.string.categories
+        else -> R.string.settings
+    }
+}
+
+
+fun KClass<out Any>.simpleName(): String? {
+    return this.simpleName?.substringAfterLast('$')
 }

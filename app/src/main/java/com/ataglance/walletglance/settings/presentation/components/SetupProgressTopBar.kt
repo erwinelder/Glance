@@ -11,20 +11,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
-import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.utils.currentScreenIs
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.account.navigation.AccountsSettingsScreens
-import com.ataglance.walletglance.category.navigation.CategoriesSettingsScreens
-import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import com.ataglance.walletglance.core.presentation.components.buttons.BackButton
+import com.ataglance.walletglance.core.utils.getSetupProgressTopBarTitleRes
 
 @Composable
 fun SetupProgressTopBar(
@@ -32,20 +30,12 @@ fun SetupProgressTopBar(
     navBackStackEntry: NavBackStackEntry?,
     onBackNavigationButton: () -> Unit
 ) {
-    val titleRes = when {
-        navBackStackEntry.currentScreenIs(SettingsScreens.Language) -> R.string.language
-        navBackStackEntry.currentScreenIs(SettingsScreens.Appearance) -> R.string.appearance
-        navBackStackEntry.currentScreenIs(AccountsSettingsScreens.EditAccounts) ||
-                navBackStackEntry.currentScreenIs(AccountsSettingsScreens.EditAccount) ||
-                navBackStackEntry.currentScreenIs(AccountsSettingsScreens.EditAccountCurrency) -> R.string.accounts
-        navBackStackEntry.currentScreenIs(CategoriesSettingsScreens.EditCategories) ||
-                navBackStackEntry.currentScreenIs(CategoriesSettingsScreens.EditSubcategories) ||
-                navBackStackEntry.currentScreenIs(CategoriesSettingsScreens.EditCategory) -> R.string.categories
-        else -> R.string.settings
+    val titleRes by remember {
+        derivedStateOf { navBackStackEntry.getSetupProgressTopBarTitleRes() }
     }
 
     AnimatedVisibility(
-        visible = visible && navBackStackEntry != null,
+        visible = visible,
         enter = slideInVertically { -it },
         exit = slideOutVertically { -it }
     ) {
@@ -73,13 +63,4 @@ fun SetupProgressTopBar(
             }
         }
     }
-}
-
-fun shouldDisplaySetupProgressTopBar(
-    mainStartDestination: MainScreens,
-    navBackStackEntry: NavBackStackEntry?
-): Boolean {
-    return mainStartDestination != MainScreens.Home &&
-            !navBackStackEntry.currentScreenIs(SettingsScreens.Start) &&
-            !navBackStackEntry.currentScreenIs(MainScreens.FinishSetup)
 }

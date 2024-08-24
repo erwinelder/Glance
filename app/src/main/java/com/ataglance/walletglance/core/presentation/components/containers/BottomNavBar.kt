@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,15 +40,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.navigation.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.core.utils.currentScreenIs
+import com.ataglance.walletglance.core.utils.currentScreenIsOneOf
+import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -71,13 +73,17 @@ fun BottomNavBar(
     var timerIsUp by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
+    val isVisible by remember {
+        derivedStateOf {
+            isAppSetUp && navBackStackEntry.currentScreenIsOneOf(
+                MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
+                SettingsScreens.SettingsHome, SettingsScreens.Language
+            )
+        }
+    }
+
     AnimatedVisibility(
-        visible = isAppSetUp &&
-                (navBackStackEntry.currentScreenIs(MainScreens.Home) ||
-                        navBackStackEntry.currentScreenIs(MainScreens.Records) ||
-                        navBackStackEntry.currentScreenIs(MainScreens.CategoryStatistics(0)) ||
-                        navBackStackEntry.currentScreenIs(SettingsScreens.SettingsHome) ||
-                        navBackStackEntry.currentScreenIs(SettingsScreens.Language)),
+        visible = isVisible,
         enter = slideInVertically { (it * 1.5).toInt() },
         exit = slideOutVertically { (it * 1.5).toInt() }
     ) {
@@ -145,11 +151,8 @@ private fun BottomBarButton(
 ) {
 
     AnimatedContent(
-        targetState = if (
-            navBackStackEntry?.destination?.hierarchy?.any {
-                it.currentScreenIs(button.screen)
-            } == true
-        ) button.activeIconRes else button.inactiveIconRes,
+        targetState = if (navBackStackEntry.anyScreenInHierarchyIs(button.screen))
+            button.activeIconRes else button.inactiveIconRes,
         transitionSpec = { fadeIn() togetherWith fadeOut() },
         label = "bottom bar ${button.screen} icon"
     ) { buttonIconRes ->

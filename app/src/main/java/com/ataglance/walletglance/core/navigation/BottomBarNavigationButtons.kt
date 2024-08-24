@@ -1,22 +1,21 @@
 package com.ataglance.walletglance.core.navigation
 
-import androidx.annotation.DrawableRes
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 
 sealed class BottomBarNavigationButtons(
     val screen: MainScreens,
-    val inactiveIconRes: BottomBarIcon,
-    val activeIconRes: BottomBarIcon,
+    val inactiveIconRes: DrawableResByTheme,
+    val activeIconRes: DrawableResByTheme,
 ) {
 
     data object Home : BottomBarNavigationButtons(
         screen = MainScreens.Home,
-        inactiveIconRes = BottomBarIcon(
+        inactiveIconRes = DrawableResByTheme(
             lightDefault = R.drawable.home_light_inactive,
             darkDefault = R.drawable.home_dark_inactive
         ),
-        activeIconRes = BottomBarIcon(
+        activeIconRes = DrawableResByTheme(
             lightDefault = R.drawable.home_light_active,
             darkDefault = R.drawable.home_dark_active
         )
@@ -24,11 +23,11 @@ sealed class BottomBarNavigationButtons(
 
     data object Records : BottomBarNavigationButtons(
         screen = MainScreens.Records,
-        inactiveIconRes = BottomBarIcon(
+        inactiveIconRes = DrawableResByTheme(
             lightDefault = R.drawable.records_light_inactive,
             darkDefault = R.drawable.records_dark_inactive
         ),
-        activeIconRes = BottomBarIcon(
+        activeIconRes = DrawableResByTheme(
             lightDefault = R.drawable.records_light_active,
             darkDefault = R.drawable.records_dark_active
         )
@@ -36,11 +35,11 @@ sealed class BottomBarNavigationButtons(
 
     data object CategoryStatistics : BottomBarNavigationButtons(
         screen = MainScreens.CategoryStatistics(0),
-        inactiveIconRes = BottomBarIcon(
+        inactiveIconRes = DrawableResByTheme(
             lightDefault = R.drawable.statistics_light_inactive,
             darkDefault = R.drawable.statistics_dark_inactive
         ),
-        activeIconRes = BottomBarIcon(
+        activeIconRes = DrawableResByTheme(
             lightDefault = R.drawable.statistics_light_active,
             darkDefault = R.drawable.statistics_dark_active
         )
@@ -48,28 +47,14 @@ sealed class BottomBarNavigationButtons(
 
     data object Settings : BottomBarNavigationButtons(
         screen = MainScreens.Settings,
-        inactiveIconRes = BottomBarIcon(
+        inactiveIconRes = DrawableResByTheme(
             lightDefault = R.drawable.settings_light_inactive,
             darkDefault = R.drawable.settings_dark_inactive
         ),
-        activeIconRes = BottomBarIcon(
+        activeIconRes = DrawableResByTheme(
             lightDefault = R.drawable.settings_light_active,
             darkDefault = R.drawable.settings_dark_active
         )
     )
-
-}
-
-data class BottomBarIcon(
-    @DrawableRes val lightDefault: Int,
-    @DrawableRes val darkDefault: Int
-) {
-
-    fun getByTheme(theme: AppTheme?): Int {
-        return when (theme) {
-            AppTheme.DarkDefault -> darkDefault
-            else -> lightDefault
-        }
-    }
 
 }
