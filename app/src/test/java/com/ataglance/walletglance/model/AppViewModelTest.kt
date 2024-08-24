@@ -1,23 +1,23 @@
 package com.ataglance.walletglance.model
 
+import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.domain.color.CategoryColors
+import com.ataglance.walletglance.category.utils.fixOrderNumbers
+import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
+import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.makingRecord.domain.MadeTransferState
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
+import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.account.utils.fixOrderNumbers
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
-import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.core.data.preferences.SettingsRepository
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -41,9 +41,6 @@ class AppViewModelTest {
             ),
             recordRepository = Mockito.mock(RecordRepository::class.java),
             recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
-            recordAndAccountAndBudgetRepository = Mockito.mock(
-                RecordAndAccountAndBudgetRepository::class.java
-            ),
             budgetAndBudgetAccountAssociationRepository = Mockito.mock(
                 BudgetAndBudgetAccountAssociationRepository::class.java
             ),
@@ -100,7 +97,8 @@ class AppViewModelTest {
                         amount = startAmount,
                         quantity = null,
                         categoryWithSubcategory = null,
-                        note = null
+                        note = null,
+                        includeInBudgets = true
                     )
                 )
             ),
@@ -116,7 +114,8 @@ class AppViewModelTest {
                         amount = finalAmount,
                         quantity = null,
                         categoryWithSubcategory = null,
-                        note = null
+                        note = null,
+                        includeInBudgets = true
                     )
                 )
             )

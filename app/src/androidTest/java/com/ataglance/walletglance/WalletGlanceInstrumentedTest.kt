@@ -5,37 +5,37 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
+import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.color.AccountColorName
-import com.ataglance.walletglance.core.domain.app.AppLanguage
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.color.CategoryColorName
+import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
+import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.domain.app.AppLanguage
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateTimeState
+import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.core.utils.toLongWithTime
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.utils.filterByDateAndAccount
-import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
-import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
-import com.ataglance.walletglance.core.utils.toLongWithTime
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.core.data.repository.GeneralRepository
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
-import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.core.data.preferences.SettingsRepository
-import com.ataglance.walletglance.account.presentation.components.AccountCard
-import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModel
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferUiState
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModel
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.repository.RecordRepository
+import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.utils.filterByDateAndAccount
+import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -61,8 +61,6 @@ class WalletGlanceInstrumentedTest {
             CategoryCollectionAndCollectionCategoryAssociationRepository
     private lateinit var mockRecordRepository: RecordRepository
     private lateinit var mockRecordAndAccountRepository: RecordAndAccountRepository
-    private lateinit var mockRecordAndAccountAndBudgetRepository:
-            RecordAndAccountAndBudgetRepository
     private lateinit var budgetAndBudgetAccountAssociationRepository:
             BudgetAndBudgetAccountAssociationRepository
     private lateinit var mockGeneralRepository: GeneralRepository
@@ -85,7 +83,6 @@ class WalletGlanceInstrumentedTest {
         setupRecordRepository()
         mockRecordAndAccountRepository = mockk()
         setupRecordAndAccountRepository()
-        mockRecordAndAccountAndBudgetRepository = mockk()
         budgetAndBudgetAccountAssociationRepository = mockk()
         mockGeneralRepository = mockk()
 
@@ -96,7 +93,6 @@ class WalletGlanceInstrumentedTest {
                 categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = mockRecordRepository,
             recordAndAccountRepository = mockRecordAndAccountRepository,
-            recordAndAccountAndBudgetRepository = mockRecordAndAccountAndBudgetRepository,
             budgetAndBudgetAccountAssociationRepository = budgetAndBudgetAccountAssociationRepository,
             generalRepository = mockGeneralRepository,
             settingsRepository = mockSettingsRepository
@@ -249,7 +245,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -259,7 +255,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = categoriesWithSubcategories.expense.first().category.id,
                 subcategoryId = null,
-                note = null
+                note = null,
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -282,14 +279,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
-                        .getRangePair(),
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
@@ -342,7 +338,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -352,7 +348,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = categoriesWithSubcategories.expense.first().category.id,
                 subcategoryId = null,
-                note = null
+                note = null,
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -375,14 +372,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
-                        .getRangePair(),
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
@@ -463,7 +459,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -473,9 +469,10 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[1].id.toString()
+                note = accountsUiState.accountList[1].id.toString(),
+                includeInBudgets = true
             ),
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 2,
                 date = dateTimeState.dateLong,
@@ -485,7 +482,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[0].id.toString()
+                note = accountsUiState.accountList[0].id.toString(),
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -510,14 +508,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
-                        .getRangePair(),
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
@@ -563,7 +560,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -573,9 +570,10 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[1].id.toString()
+                note = accountsUiState.accountList[1].id.toString(),
+                includeInBudgets = true
             ),
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 2,
                 date = dateTimeState.dateLong,
@@ -585,7 +583,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[0].id.toString()
+                note = accountsUiState.accountList[0].id.toString(),
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -610,14 +609,13 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
             RecordHistoryWidget(
                 recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeWithEnum
-                        .getRangePair(),
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsUiState.value.accountList,
