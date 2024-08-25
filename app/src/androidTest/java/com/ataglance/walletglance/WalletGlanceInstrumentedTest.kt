@@ -93,7 +93,8 @@ class WalletGlanceInstrumentedTest {
                 categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = mockRecordRepository,
             recordAndAccountRepository = mockRecordAndAccountRepository,
-            budgetAndBudgetAccountAssociationRepository = budgetAndBudgetAccountAssociationRepository,
+            budgetAndBudgetAccountAssociationRepository =
+                budgetAndBudgetAccountAssociationRepository,
             generalRepository = mockGeneralRepository,
             settingsRepository = mockSettingsRepository
         )
