@@ -1,22 +1,25 @@
 package com.ataglance.walletglance.record.utils
 
-import com.ataglance.walletglance.account.utils.findById
-import com.ataglance.walletglance.account.utils.getOtherFrom
-import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
+import androidx.annotation.StringRes
+import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.utils.findById
+import com.ataglance.walletglance.account.utils.getOtherFrom
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferUiState
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferUiState
+import com.ataglance.walletglance.record.domain.RecordsTypeFilter
 import java.util.Locale
 
 
@@ -26,6 +29,15 @@ fun RecordType.inverse(): RecordType {
         RecordType.Income -> RecordType.Expense
         RecordType.OutTransfer -> RecordType.InTransfer
         RecordType.InTransfer -> RecordType.OutTransfer
+    }
+}
+
+
+fun RecordType.toCategoryType(): CategoryType? {
+    return when (this) {
+        RecordType.Expense -> CategoryType.Expense
+        RecordType.Income -> CategoryType.Income
+        else -> null
     }
 }
 
@@ -40,15 +52,6 @@ fun RecordType.asChar(): Char {
 }
 
 
-fun RecordType.toCategoryType(): CategoryType? {
-    return when (this) {
-        RecordType.Expense -> CategoryType.Expense
-        RecordType.Income -> CategoryType.Income
-        else -> null
-    }
-}
-
-
 fun getRecordTypeByChar(char: Char): RecordType? {
     return when (char) {
         '-' -> RecordType.Expense
@@ -56,6 +59,15 @@ fun getRecordTypeByChar(char: Char): RecordType? {
         '>' -> RecordType.OutTransfer
         '<' -> RecordType.InTransfer
         else -> null
+    }
+}
+
+
+@StringRes fun RecordsTypeFilter.getNoRecordsMessageRes(): Int {
+    return when (this) {
+        RecordsTypeFilter.All -> R.string.you_have_no_records_in_date_range
+        RecordsTypeFilter.Expenses -> R.string.you_have_no_expenses_in_date_range
+        RecordsTypeFilter.Income -> R.string.you_have_no_income_in_date_range
     }
 }
 

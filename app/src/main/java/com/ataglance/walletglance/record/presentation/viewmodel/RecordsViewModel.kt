@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.utils.toggle
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.utils.filterByCollection
 import com.ataglance.walletglance.record.utils.filterByCollectionType
@@ -34,6 +35,11 @@ class RecordsViewModel(
 
     fun setCollectionType(type: CategoryCollectionType) {
         _collectionType.update { type }
+        resetSelectedCollection()
+    }
+
+    fun toggleCollectionType() {
+        _collectionType.update { it.toggle() }
         resetSelectedCollection()
     }
 

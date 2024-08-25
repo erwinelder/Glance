@@ -8,24 +8,36 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
-import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.account.utils.findById
-import com.ataglance.walletglance.categoryCollection.utils.toggle
-import com.ataglance.walletglance.core.presentation.components.screenContainers.DataPresentationScreenContainer
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeToggleButton
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.DataPresentationScreenContainer
+import com.ataglance.walletglance.core.utils.getTodayDateLong
+import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.RecordStackUnit
+import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
 import com.ataglance.walletglance.record.presentation.components.TransferComponent
-import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
+import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
 
 @Composable
 fun RecordsScreen(
@@ -37,20 +49,20 @@ fun RecordsScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    viewModel: RecordsViewModel,
+    collectionType: CategoryCollectionType,
+    filteredRecords: List<RecordStack>,
+    collectionList: List<CategoryCollectionWithIds>,
+    selectedCollection: CategoryCollectionWithIds,
+    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    onToggleCollectionType: () -> Unit,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
     onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
-    val filteredRecords by viewModel
-        .recordsFilteredByDateAccountAndCollection.collectAsStateWithLifecycle()
-    val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
-    val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
-
-    val includeYearToRecordDate = filteredRecords.containsRecordsFromDifferentYears()
-
+    val includeYearToRecordDate by remember {
+        derivedStateOf { filteredRecords.containsRecordsFromDifferentYears() }
+    }
     val lazyListState = rememberLazyListState()
     /*val visibleItemsInfo = remember {
         derivedStateOf { lazyListState.layoutInfo.visibleItemsInfo }
@@ -68,9 +80,7 @@ fun RecordsScreen(
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
         collectionList = collectionList,
         selectedCollection = selectedCollection,
-        onCollectionSelect = {
-            viewModel.selectCollection(it)
-        },
+        onCollectionSelect = onCollectionSelect,
         animationContentLabel = "records history widget content",
         animatedContentTargetState = Pair(filteredRecords, collectionType),
         visibleNoDataMessage = filteredRecords.isEmpty(),
@@ -80,9 +90,9 @@ fun RecordsScreen(
             CategoryCollectionType.Income -> R.string.you_have_no_income_in_date_range
         },
         typeToggleButton = {
-            CategoryCollectionTypeToggleButton(collectionType) {
-                viewModel.setCollectionType(collectionType.toggle())
-            }
+            CategoryCollectionTypeToggleButton(
+                currentType = collectionType, onClick = onToggleCollectionType
+            )
         },
         onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
         onDimBackgroundChange = onDimBackgroundChange
@@ -162,5 +172,80 @@ fun RecordsScreen(
                 }*/
             }
         }
+    }
+}
+
+
+
+@Preview(
+    name = "HomeScreen",
+    group = "MainScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun RecordsScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetup: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = true,
+    accountList: List<Account> = listOf(
+        Account(id = 1, orderNum = 1, isActive = true),
+        Account(id = 2, orderNum = 2, isActive = false)
+    ),
+    currentDateRangeEnum: DateRangeEnum = DateRangeEnum.ThisMonth,
+    isCustomDateRangeWindowOpened: Boolean = false,
+    collectionType: CategoryCollectionType = CategoryCollectionType.Mixed,
+    filteredRecords: List<RecordStack> = listOf(
+        RecordStack(
+            recordNum = 1,
+            date = getTodayDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackUnit(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSubcategory = DefaultCategoriesPackage(LocalContext.current)
+                        .getDefaultCategories().expense[0].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        )
+    ),
+    collectionList: List<CategoryCollectionWithIds> = emptyList(),
+    selectedCollection: CategoryCollectionWithIds = CategoryCollectionWithIds(
+        name = stringResource(R.string.all_categories)
+    ),
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Home) }
+    ) { scaffoldPadding ->
+        RecordsScreen(
+            scaffoldAppScreenPadding = scaffoldPadding,
+            appTheme = appTheme,
+            accountList = accountList,
+            onAccountClick = {},
+            currentDateRangeEnum = currentDateRangeEnum,
+            isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
+            onDateRangeChange = {},
+            onCustomDateRangeButtonClick = {},
+            collectionType = collectionType,
+            filteredRecords = filteredRecords,
+            collectionList = collectionList,
+            selectedCollection = selectedCollection,
+            onCollectionSelect = {},
+            onToggleCollectionType = {},
+            onRecordClick = {},
+            onTransferClick = {},
+            onNavigateToEditCollectionsScreen = {},
+            onDimBackgroundChange = {}
+        )
     }
 }

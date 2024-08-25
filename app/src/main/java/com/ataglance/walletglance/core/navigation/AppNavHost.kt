@@ -12,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,37 +21,37 @@ import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.budget.domain.BudgetsByType
+import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
+import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModelFactory
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.presentation.screen.CategoriesStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
+import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
+import com.ataglance.walletglance.core.presentation.screen.HomeScreen
+import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.takeIfNoneIsNull
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
+import com.ataglance.walletglance.makingRecord.presentation.screen.MakeRecordScreen
+import com.ataglance.walletglance.makingRecord.presentation.screen.MakeTransferScreen
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModel
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModelFactory
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModel
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModelFactory
-import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
-import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
-import com.ataglance.walletglance.categoryCollection.navigation.CategoryCollectionsSettingsScreens
-import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
-import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
-import com.ataglance.walletglance.category.presentation.screen.CategoriesStatisticsScreen
-import com.ataglance.walletglance.core.presentation.screen.HomeScreen
-import com.ataglance.walletglance.makingRecord.presentation.screen.MakeRecordScreen
-import com.ataglance.walletglance.makingRecord.presentation.screen.MakeTransferScreen
-import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
-import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
 import com.ataglance.walletglance.record.utils.getMakeRecordStateAndUnitList
@@ -155,6 +156,12 @@ fun AppNavHost(
                 )
             }
 
+            val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
+            val filteredRecords by viewModel
+                .recordsFilteredByDateAccountAndCollection.collectAsStateWithLifecycle()
+            val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
+            val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
+
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
@@ -166,7 +173,12 @@ fun AppNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                viewModel = viewModel,
+                collectionType = collectionType,
+                filteredRecords = filteredRecords,
+                collectionList = collectionList,
+                selectedCollection = selectedCollection,
+                onCollectionSelect = viewModel::selectCollection,
+                onToggleCollectionType = viewModel::toggleCollectionType,
                 onRecordClick = { recordNum: Int ->
                     changeMoveScreenTowardsLeft(true)
                     navController.navigate(

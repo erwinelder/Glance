@@ -25,11 +25,12 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
-import com.ataglance.walletglance.record.presentation.components.TransferComponent
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordsTypeFilter
+import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
+import com.ataglance.walletglance.record.presentation.components.TransferComponent
 import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.record.utils.getNoRecordsMessageRes
 
 @Composable
 fun RecordHistoryWidget(
@@ -61,27 +62,21 @@ fun RecordHistoryWidget(
             AnimatedContent(
                 targetState = Pair(recordStackList, recordsTypeFilter),
                 label = "records history widget content"
-            ) { targetRecordStackListAndTypeFilter ->
+            ) { (targetRecordStackList, targetTypeFilter) ->
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
                     RecordStackList(
-                        recordStackList = targetRecordStackListAndTypeFilter.first,
+                        recordStackList = targetRecordStackList,
                         accountList = accountList,
                         includeYearToRecordDate = includeYearToRecordDate,
                         appTheme = appTheme,
                         onRecordClick = onRecordClick,
                         onTransferClick = onTransferClick
                     )
-                    if (targetRecordStackListAndTypeFilter.first.isEmpty()) {
+                    if (targetRecordStackList.isEmpty()) {
                         MessageContainer(
-                            message = stringResource(
-                                when (recordsTypeFilter) {
-                                    RecordsTypeFilter.All -> R.string.you_have_no_records_in_date_range
-                                    RecordsTypeFilter.Expenses -> R.string.you_have_no_expenses_in_date_range
-                                    RecordsTypeFilter.Income -> R.string.you_have_no_income_in_date_range
-                                }
-                            )
+                            message = stringResource(targetTypeFilter.getNoRecordsMessageRes())
                         )
                     }
                 }

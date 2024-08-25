@@ -1,7 +1,9 @@
 package com.ataglance.walletglance.category.domain
 
+import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 
+@Stable
 data class CategoryWithSubcategory(
     val category: Category,
     val subcategory: Category? = null

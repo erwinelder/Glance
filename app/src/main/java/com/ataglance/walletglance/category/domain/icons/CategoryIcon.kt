@@ -1,8 +1,10 @@
 package com.ataglance.walletglance.category.domain.icons
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.R
 
+@Stable
 sealed class CategoryIcon(val name: String, @DrawableRes val res: Int) {
     data object FoodAndDrinks : CategoryIcon("food_and_drinks", R.drawable.food_and_drinks_icon)
     data object Groceries : CategoryIcon("groceries", R.drawable.groceries_icon)

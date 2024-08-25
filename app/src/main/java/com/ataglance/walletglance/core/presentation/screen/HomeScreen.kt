@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -27,6 +28,7 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.category.domain.CategoryStatisticsLists
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -43,8 +45,11 @@ import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesI
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
 import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
+import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.isScreen
 import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.RecordStackUnit
+import com.ataglance.walletglance.record.domain.RecordType
 
 @Composable
 fun HomeScreen(
@@ -325,7 +330,26 @@ fun HomeScreenPreview(
     ),
     dateRangeMenuUiState: DateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState(),
     widgetsUiState: WidgetsUiState = WidgetsUiState(
-        recordsFilteredByDateAndAccount = emptyList(),
+        recordsFilteredByDateAndAccount = listOf(
+            RecordStack(
+                recordNum = 1,
+                date = getTodayDateLong(),
+                type = RecordType.Expense,
+                account = Account().toRecordAccount(),
+                totalAmount = 42.43,
+                stack = listOf(
+                    RecordStackUnit(
+                        id = 1,
+                        amount = 46.47,
+                        quantity = null,
+                        categoryWithSubcategory = DefaultCategoriesPackage(LocalContext.current)
+                            .getDefaultCategories().expense[0].getWithFirstSubcategory(),
+                        note = null,
+                        includeInBudgets = true
+                    )
+                )
+            )
+        ),
         greetings = GreetingsWidgetUiState(),
         expensesIncomeState = ExpensesIncomeWidgetUiState(
             expensesTotal = 26.27,

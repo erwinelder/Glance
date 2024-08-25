@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.record.domain
 
+import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.RecordAccount
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
@@ -7,6 +8,7 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.utils.asChar
 import java.util.Locale
 
+@Stable
 data class RecordStack(
     val recordNum: Int,
     val date: Long,
