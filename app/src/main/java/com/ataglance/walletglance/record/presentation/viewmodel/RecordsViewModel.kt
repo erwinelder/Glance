@@ -23,7 +23,6 @@ class RecordsViewModel(
 ) : ViewModel() {
 
     private val _categoryCollections = MutableStateFlow(passedCategoryCollections)
-    val categoryCollections = _categoryCollections.asStateFlow()
 
     fun setCategoryCollections(collections: CategoryCollectionsWithIds) {
         _categoryCollections.update { collections }
@@ -32,11 +31,6 @@ class RecordsViewModel(
 
     private val _collectionType = MutableStateFlow(CategoryCollectionType.Mixed)
     val collectionType = _collectionType.asStateFlow()
-
-    fun setCollectionType(type: CategoryCollectionType) {
-        _collectionType.update { type }
-        resetSelectedCollection()
-    }
 
     fun toggleCollectionType() {
         _collectionType.update { it.toggle() }
@@ -63,7 +57,7 @@ class RecordsViewModel(
     )
 
     private val _selectedCollection = MutableStateFlow(
-        categoryCollections.value.getByType(collectionType.value).firstOrNull()
+        _categoryCollections.value.getByType(collectionType.value).firstOrNull()
             ?: CategoryCollectionWithIds()
     )
     val selectedCollection = _selectedCollection.asStateFlow()
@@ -74,7 +68,7 @@ class RecordsViewModel(
 
     private fun resetSelectedCollection() {
         _selectedCollection.update {
-            categoryCollections.value.getByType(collectionType.value).firstOrNull()
+            _categoryCollections.value.getByType(collectionType.value).firstOrNull()
                 ?: CategoryCollectionWithIds()
         }
     }
