@@ -35,6 +35,11 @@ fun NavBackStackEntry?.fromMainScreen(): MainScreens {
 }
 
 
+fun Any.isScreen(screen: Any): Boolean {
+    return this::class.simpleName() == screen.toString()
+}
+
+
 fun NavDestination?.currentScreenIs(screen: Any): Boolean {
     return this?.fromRoute() == screen::class.simpleName()
 }

@@ -15,18 +15,21 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.account.presentation.components.AccountsFilterBar
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionPickerContainer
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.account.presentation.components.AccountsFilterBar
-import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionPickerContainer
 import com.ataglance.walletglance.core.presentation.components.containers.DateFilterBar
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
@@ -53,6 +56,10 @@ fun <S> DataPresentationScreenContainer(
     onDimBackgroundChange: (Boolean) -> Unit = {},
     animatedContent: @Composable (S) -> Unit
 ) {
+    val visibleAccounts by remember {
+        derivedStateOf { accountList.filterNot { it.hide } }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.button_bar_to_widget_gap)),
@@ -65,9 +72,9 @@ fun <S> DataPresentationScreenContainer(
                         dimensionResource(R.dimen.screen_vertical_padding)
             )
     ) {
-        if (accountList.size > 1) {
+        if (visibleAccounts.size > 1) {
             AccountsFilterBar(
-                accountList = accountList,
+                visibleAccounts = visibleAccounts,
                 appTheme = appTheme,
                 onAccountClick = onAccountClick
             )

@@ -19,22 +19,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.category.domain.CategoryStatisticsLists
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
+import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
+import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
-import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
-import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
+import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
 import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.account.domain.AccountsUiState
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
-import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
+import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.record.domain.RecordStack
 
 @Composable
 fun HomeScreen(
@@ -57,7 +67,7 @@ fun HomeScreen(
         topBar = {
             StartAnimatedContainer(appTheme != null) {
                 AppMainTopBar(
-                    accountList = accountsUiState.accountList.filter { !it.hide },
+                    accountList = accountsUiState.accountList,
                     currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -288,5 +298,68 @@ private fun ExpandedLayout(
             }
         }
 
+    }
+}
+
+
+
+@Preview(
+    name = "HomeScreen",
+    group = "MainScreens",
+    apiLevel = 34,
+    heightDp = 1900,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun HomeScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetup: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = true,
+    accountsUiState: AccountsUiState = AccountsUiState(
+        accountList = listOf(
+            Account(id = 1, orderNum = 1, isActive = true),
+            Account(id = 2, orderNum = 2, isActive = false)
+        ),
+        activeAccount = Account(id = 1, orderNum = 1, isActive = true)
+    ),
+    dateRangeMenuUiState: DateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState(),
+    widgetsUiState: WidgetsUiState = WidgetsUiState(
+        recordsFilteredByDateAndAccount = emptyList(),
+        greetings = GreetingsWidgetUiState(),
+        expensesIncomeState = ExpensesIncomeWidgetUiState(
+            expensesTotal = 26.27,
+            incomeTotal = 28.29,
+            expensesPercentage = 30.31,
+            incomePercentage = 32.33,
+            expensesPercentageFloat = .25f,
+            incomePercentageFloat = .75f
+        ),
+        categoryStatisticsLists = CategoryStatisticsLists()
+    ),
+    isCustomDateRangeWindowOpened: Boolean = false
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Home) }
+    ) { scaffoldPadding ->
+        HomeScreen(
+            scaffoldAppScreenPadding = scaffoldPadding,
+            appTheme = appTheme,
+            accountsUiState = accountsUiState,
+            dateRangeMenuUiState = dateRangeMenuUiState,
+            widgetsUiState = widgetsUiState,
+            onChangeHideActiveAccountBalance = {},
+            onDateRangeChange = {},
+            isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
+            onCustomDateRangeButtonClick = {},
+            onTopBarAccountClick = {},
+            onNavigateToRecordsScreen = {},
+            onNavigateToCategoriesStatisticsScreen = {},
+            onRecordClick = {},
+            onTransferClick = {}
+        )
     }
 }

@@ -9,11 +9,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,15 +17,11 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 
 @Composable
 fun AccountsFilterBar(
-    accountList: List<Account>,
+    visibleAccounts: List<Account>,
     appTheme: AppTheme?,
     onAccountClick: (Int) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
-    var finalAccountList by remember { mutableStateOf(accountList.filterNot { it.hide }) }
-    LaunchedEffect(key1 = accountList) {
-        finalAccountList = accountList.filterNot { it.hide }
-    }
 
     LazyRow(
         state = lazyListState,
@@ -40,7 +31,7 @@ fun AccountsFilterBar(
         item {
             Spacer(modifier = Modifier.width(16.dp))
         }
-        items(items = finalAccountList) { account ->
+        items(items = visibleAccounts) { account ->
             SmallAccount(
                 account = account,
                 appTheme = appTheme,

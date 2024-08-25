@@ -60,6 +60,7 @@ import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
+import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
@@ -900,14 +901,9 @@ class AppViewModel(
     }
 
 
-    private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> =
-        MutableStateFlow(
-            DateRangeMenuUiState(
-                startCalendarDateMillis = DateRangeEnum.ThisMonth.getCalendarStartLong(),
-                endCalendarDateMillis = DateRangeEnum.ThisMonth.getCalendarEndLong(),
-                dateRangeWithEnum = DateRangeEnum.ThisMonth.withLongDateRange()
-            )
-        )
+    private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> = MutableStateFlow(
+        DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
+    )
     val dateRangeMenuUiState: StateFlow<DateRangeMenuUiState> = _dateRangeMenuUiState.asStateFlow()
 
     fun selectDateRange(dateRangeEnum: DateRangeEnum) {

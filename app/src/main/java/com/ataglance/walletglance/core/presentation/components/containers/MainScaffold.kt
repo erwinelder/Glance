@@ -1,0 +1,47 @@
+package com.ataglance.walletglance.core.presentation.components.containers
+
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.settings.presentation.components.SetupProgressTopBar
+
+@Composable
+fun MainScaffold(
+    appTheme: AppTheme?,
+    isSetupProgressTopBarVisible: Boolean,
+    setupProgressTopBarTitleRes: Int,
+    isBottomBarVisible: Boolean,
+    onNavigateBack: () -> Unit,
+    onNavigateToScreen: (MainScreens) -> Unit,
+    onMakeRecordButtonClick: () -> Unit,
+    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
+    currentScreenIsScreenProvider: (Any) -> Boolean,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        topBar = {
+            SetupProgressTopBar(
+                visible = isSetupProgressTopBarVisible,
+                titleRes = setupProgressTopBarTitleRes,
+                onBackNavigationButton = onNavigateBack
+            )
+        },
+        bottomBar = {
+            BottomNavBar(
+                appTheme = appTheme,
+                isVisible = isBottomBarVisible,
+                anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                currentScreenIsScreenProvider = currentScreenIsScreenProvider,
+                onNavigateBack = onNavigateBack,
+                onNavigateToScreen = onNavigateToScreen,
+                onMakeRecordButtonClick = onMakeRecordButtonClick
+            )
+        },
+        containerColor = Color.Transparent
+    ) { scaffoldPadding ->
+        content(scaffoldPadding)
+    }
+}

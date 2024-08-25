@@ -4,6 +4,7 @@ import android.content.Context
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.LongRange
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
@@ -289,6 +290,15 @@ fun DateRangeEnum.getCalendarEndLong(currentDateRangeWithEnum: DateRangeWithEnum
         else -> getLocalDateRangeBySpecificMonth(this, currentDateRangeWithEnum).to
             .toCalendarLong()
     }
+}
+
+
+fun DateRangeEnum.getDateRangeMenuUiState(): DateRangeMenuUiState {
+    return DateRangeMenuUiState(
+        startCalendarDateMillis = this.getCalendarStartLong(),
+        endCalendarDateMillis = this.getCalendarEndLong(),
+        dateRangeWithEnum = this.withLongDateRange()
+    )
 }
 
 

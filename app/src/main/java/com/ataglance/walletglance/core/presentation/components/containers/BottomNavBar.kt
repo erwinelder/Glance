@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,16 +38,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.navigation.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.utils.anyScreenInHierarchyIs
-import com.ataglance.walletglance.core.utils.currentScreenIs
-import com.ataglance.walletglance.core.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -57,31 +52,32 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomNavBar(
     appTheme: AppTheme?,
-    isAppSetUp: Boolean,
-    navBackStackEntry: NavBackStackEntry?,
+    isVisible: Boolean,
+    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
+    currentScreenIsScreenProvider: (Any) -> Boolean,
     onNavigateBack: () -> Unit,
     onNavigateToScreen: (MainScreens) -> Unit,
     onMakeRecordButtonClick: () -> Unit
 ) {
-    val bottomBarButtonList = listOf(
-        BottomBarNavigationButtons.Home,
-        BottomBarNavigationButtons.Records,
-        null,
-        BottomBarNavigationButtons.CategoryStatistics,
-        BottomBarNavigationButtons.Settings,
-    )
-    var timerIsUp by remember { mutableStateOf(true) }
-    val coroutineScope = rememberCoroutineScope()
-
-    val isVisible by remember {
-        derivedStateOf {
-            isAppSetUp && navBackStackEntry.currentScreenIsOneOf(
-                MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
-                SettingsScreens.SettingsHome, SettingsScreens.Language
-            )
+    BottomBarContainer(isVisible = isVisible) {
+        BottomBarMainButtonsRow(
+            appTheme = appTheme,
+            anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+            currentScreenIsScreenProvider = currentScreenIsScreenProvider,
+            onNavigateBack = onNavigateBack,
+            onNavigateToScreen = onNavigateToScreen
+        )
+        Box(modifier = Modifier.absoluteOffset(y = -(20).dp)) {
+            MakeRecordButton(onMakeRecordButtonClick)
         }
     }
+}
 
+@Composable
+private fun BottomBarContainer(
+    isVisible: Boolean,
+    content: @Composable () -> Unit
+) {
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically { (it * 1.5).toInt() },
@@ -94,45 +90,62 @@ fun BottomNavBar(
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .shadow(
-                        elevation = 15.dp,
-                        shape = RoundedCornerShape(26.dp),
-                        ambientColor = GlanceTheme.onSurface
-                    )
-                    .clip(RoundedCornerShape(26.dp))
-                    .background(GlanceTheme.surface)
-                    .border(
-                        1.dp,
-                        GlanceTheme.onSurface.copy(alpha = .05f),
-                        RoundedCornerShape(26.dp)
-                    )
-                    .padding(vertical = 16.dp, horizontal = 28.dp)
-            ) {
-                bottomBarButtonList.forEach { button ->
-                    if (button != null) {
-                        BottomBarButton(
-                            button = button,
-                            navBackStackEntry = navBackStackEntry,
-                            onNavigateToScreen = onNavigateToScreen,
-                            onNavigateBack = onNavigateBack,
-                            appTheme = appTheme,
-                            coroutineScope = coroutineScope,
-                            timerIsUp = timerIsUp,
-                            setupTimerIsUp = { timerIsUp = it }
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.width(60.dp))
-                    }
-                }
-            }
-            Box(
-                modifier = Modifier.absoluteOffset(y = -(20).dp)
-            ) {
-                MakeRecordButton(onMakeRecordButtonClick)
+            content()
+        }
+    }
+}
+
+@Composable
+private fun BottomBarMainButtonsRow(
+    appTheme: AppTheme?,
+    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
+    currentScreenIsScreenProvider: (Any) -> Boolean,
+    onNavigateBack: () -> Unit,
+    onNavigateToScreen: (MainScreens) -> Unit,
+) {
+    val bottomBarButtonList = listOf(
+        BottomBarNavigationButtons.Home,
+        BottomBarNavigationButtons.Records,
+        null,
+        BottomBarNavigationButtons.CategoryStatistics,
+        BottomBarNavigationButtons.Settings,
+    )
+    var timerIsUp by remember { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .shadow(
+                elevation = 15.dp,
+                shape = RoundedCornerShape(26.dp),
+                ambientColor = GlanceTheme.onSurface
+            )
+            .clip(RoundedCornerShape(26.dp))
+            .background(GlanceTheme.surface)
+            .border(
+                width = 1.dp,
+                color = GlanceTheme.onSurface.copy(alpha = .05f),
+                shape = RoundedCornerShape(26.dp)
+            )
+            .padding(vertical = 16.dp, horizontal = 28.dp)
+    ) {
+        bottomBarButtonList.forEach { button ->
+            if (button != null) {
+                BottomBarButton(
+                    appTheme = appTheme,
+                    button = button,
+                    anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                    currentScreenIsScreenProvider = currentScreenIsScreenProvider,
+                    onNavigateToScreen = onNavigateToScreen,
+                    onNavigateBack = onNavigateBack,
+                    coroutineScope = coroutineScope,
+                    timerIsUp = timerIsUp,
+                    setupTimerIsUp = { timerIsUp = it }
+                )
+            } else {
+                Spacer(modifier = Modifier.width(60.dp))
             }
         }
     }
@@ -140,18 +153,18 @@ fun BottomNavBar(
 
 @Composable
 private fun BottomBarButton(
+    appTheme: AppTheme?,
     button: BottomBarNavigationButtons,
-    navBackStackEntry: NavBackStackEntry?,
+    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
+    currentScreenIsScreenProvider: (Any) -> Boolean,
     onNavigateToScreen: (MainScreens) -> Unit,
     onNavigateBack: () -> Unit,
-    appTheme: AppTheme?,
     coroutineScope: CoroutineScope,
     timerIsUp: Boolean,
     setupTimerIsUp: (Boolean) -> Unit,
 ) {
-
     AnimatedContent(
-        targetState = if (navBackStackEntry.anyScreenInHierarchyIs(button.screen))
+        targetState = if (anyScreenInHierarchyIsScreenProvider(button.screen))
             button.activeIconRes else button.inactiveIconRes,
         transitionSpec = { fadeIn() togetherWith fadeOut() },
         label = "bottom bar ${button.screen} icon"
@@ -161,8 +174,12 @@ private fun BottomBarButton(
             contentDescription = "bottom bar ${button.screen} icon",
             modifier = Modifier
                 .bounceClickEffect(.97f) {
-                    if (navBackStackEntry.currentScreenIs(button.screen)) return@bounceClickEffect
-                    if (!timerIsUp) return@bounceClickEffect
+                    if (currentScreenIsScreenProvider(button.screen)) {
+                        return@bounceClickEffect
+                    }
+                    if (!timerIsUp) {
+                        return@bounceClickEffect
+                    }
 
                     coroutineScope.launch {
                         setupTimerIsUp(false)
@@ -172,7 +189,7 @@ private fun BottomBarButton(
 
                     if (
                         button.screen == MainScreens.Settings &&
-                        navBackStackEntry.currentScreenIs(SettingsScreens.Language)
+                        currentScreenIsScreenProvider(SettingsScreens.Language)
                     ) {
                         onNavigateBack()
                     } else {
