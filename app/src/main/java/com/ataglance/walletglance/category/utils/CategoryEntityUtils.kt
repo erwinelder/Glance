@@ -16,16 +16,16 @@ fun List<CategoryEntity>.getIdsThatAreNotInList(list: List<CategoryEntity>): Lis
 fun List<CategoryEntity>.fixOrderNumbers(): List<CategoryEntity> {
     val fixedCategoryList = mutableListOf<CategoryEntity>()
 
-    val categoryListsExpenseAndIncome = this.partition { it.isExpense() }
-    val expenseCategoryListsParAndSub = categoryListsExpenseAndIncome.first
+    val (expenseCategoryList, incomeCategoryList) = this.partition { it.isExpense() }
+    val (expenseParentCategoryList, expenseSubcategoryList) = expenseCategoryList
         .partition { it.isParentCategory() }
-    val incomeCategoryListsParAndSub = categoryListsExpenseAndIncome.second
+    val (incomeParentCategoryList, incomeSubcategoryList) = incomeCategoryList
         .partition { it.isParentCategory() }
 
-    fixedCategoryList.addAll(expenseCategoryListsParAndSub.first.getWithFixedOrderNumbers())
-    fixedCategoryList.addAll(incomeCategoryListsParAndSub.first.getWithFixedOrderNumbers())
+    fixedCategoryList.addAll(expenseParentCategoryList.getWithFixedOrderNumbers())
+    fixedCategoryList.addAll(incomeParentCategoryList.getWithFixedOrderNumbers())
 
-    expenseCategoryListsParAndSub.second.sortedBy { it.parentCategoryId }
+    expenseSubcategoryList.sortedBy { it.parentCategoryId }
         .forEach { subcategory ->
             if (
                 fixedCategoryList.lastOrNull()?.isParentCategory() == true ||
@@ -39,10 +39,10 @@ fun List<CategoryEntity>.fixOrderNumbers(): List<CategoryEntity> {
             }
         }
 
-    incomeCategoryListsParAndSub.second.sortedBy { it.parentCategoryId }
+    incomeSubcategoryList.sortedBy { it.parentCategoryId }
         .forEach { subcategory ->
             if (
-                fixedCategoryList.lastOrNull()?.isParentCategory() == true &&
+                fixedCategoryList.lastOrNull()?.isParentCategory() == true ||
                 subcategory.parentCategoryId != fixedCategoryList.lastOrNull()?.parentCategoryId
             ) {
                 fixedCategoryList.add(subcategory.copy(orderNum = 1))

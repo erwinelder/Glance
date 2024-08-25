@@ -283,18 +283,18 @@ class AppViewModelTest {
     fun testFixCategoriesOrderNumbers() {
         val currentCategoryList = listOf(
             CategoryEntity(
-                id = 1, type = '-', orderNum = 1, parentCategoryId = 1,
+                id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 2, type = '-', orderNum = 1, parentCategoryId = 2,
+                id = 2, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 2", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
 
             CategoryEntity(
-                id = 13, type = '-', orderNum = 1, parentCategoryId = 1,
+                id = 13, type = '-', orderNum = 3, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
@@ -319,30 +319,32 @@ class AppViewModelTest {
                 name = "subcategory 23", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
+
             CategoryEntity(
-                id = 18, type = '-', orderNum = 4, parentCategoryId = 2,
-                name = "subcategory 24", iconName = "",
+                id = 3, type = '+', orderNum = 1, parentCategoryId = null,
+                name = "category 3", iconName = "",
+                colorName = CategoryColors.Camel.name.name
+            ),
+
+            CategoryEntity(
+                id = 31, type = '+', orderNum = 4, parentCategoryId = 3,
+                name = "category 31", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 19, type = '-', orderNum = 5, parentCategoryId = 2,
-                name = "subcategory 25", iconName = "",
+                id = 32, type = '+', orderNum = 4, parentCategoryId = 3,
+                name = "category 32", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
-            CategoryEntity(
-                id = 20, type = '-', orderNum = 6, parentCategoryId = 2,
-                name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel.name.name
-            )
         )
         val expectedCategoryList = listOf(
             CategoryEntity(
-                id = 1, type = '-', orderNum = 1, parentCategoryId = 1,
+                id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 2, type = '-', orderNum = 2, parentCategoryId = 2,
+                id = 2, type = '-', orderNum = 2, parentCategoryId = null,
                 name = "category 2", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
@@ -373,25 +375,29 @@ class AppViewModelTest {
                 name = "subcategory 23", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
+
             CategoryEntity(
-                id = 18, type = '-', orderNum = 4, parentCategoryId = 2,
-                name = "subcategory 24", iconName = "",
+                id = 3, type = '+', orderNum = 1, parentCategoryId = null,
+                name = "category 3", iconName = "",
+                colorName = CategoryColors.Camel.name.name
+            ),
+
+            CategoryEntity(
+                id = 31, type = '+', orderNum = 1, parentCategoryId = 3,
+                name = "category 31", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 19, type = '-', orderNum = 5, parentCategoryId = 2,
-                name = "subcategory 25", iconName = "",
+                id = 32, type = '+', orderNum = 2, parentCategoryId = 3,
+                name = "category 32", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
-            CategoryEntity(
-                id = 20, type = '-', orderNum = 6, parentCategoryId = 2,
-                name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel.name.name
-            )
         )
+
+        val fixedCategoryList = currentCategoryList.fixOrderNumbers()
         Assertions.assertArrayEquals(
-            expectedCategoryList.toTypedArray(),
-            currentCategoryList.fixOrderNumbers().toTypedArray()
+            expectedCategoryList.sortedBy { it.id }.toTypedArray(),
+            fixedCategoryList.sortedBy { it.id }.toTypedArray()
         )
     }
 
