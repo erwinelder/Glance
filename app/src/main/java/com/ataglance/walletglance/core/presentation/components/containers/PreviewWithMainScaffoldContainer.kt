@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 
 @Composable
@@ -46,8 +47,9 @@ fun PreviewWithMainScaffoldContainer(
                 )
                 MainScaffold(
                     appTheme = appTheme,
-                    isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-                    setupProgressTopBarTitleRes = R.string.settings,
+                    setupProgressTopBarUiState = SetupProgressTopBarUiState(
+                        isVisible = isSetupProgressTopBarVisible
+                    ),
                     isBottomBarVisible = isBottomBarVisible,
                     onNavigateBack = {},
                     onNavigateToScreen = {},

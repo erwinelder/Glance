@@ -16,17 +16,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.BackButton
 
 @Composable
 fun SetupProgressTopBar(
-    visible: Boolean,
-    titleRes: Int,
+    uiState: SetupProgressTopBarUiState,
     onBackNavigationButton: () -> Unit
 ) {
     AnimatedVisibility(
-        visible = visible,
+        visible = uiState.isVisible,
         enter = slideInVertically { -it },
         exit = slideOutVertically { -it }
     ) {
@@ -40,7 +40,7 @@ fun SetupProgressTopBar(
         ) {
             BackButton(onClick = onBackNavigationButton)
             AnimatedContent(
-                targetState = titleRes,
+                targetState = uiState.titleRes,
                 label = "setup progress bar title"
             ) { targetTitleRes ->
                 Text(

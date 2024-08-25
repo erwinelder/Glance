@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.navigation.AppNavHost
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
@@ -38,15 +39,15 @@ fun MainAppContent(
     val navViewModel = viewModel<NavigationViewModel>()
     val moveScreenTowardsLeft by navViewModel.moveScreenTowardsLeft.collectAsStateWithLifecycle()
 
-    val isSetupProgressTopBarVisible by remember {
+    val setupProgressTopBarUiState by remember {
         derivedStateOf {
-            navViewModel.shouldDisplaySetupProgressTopBar(
-                appUiSettings.mainStartDestination, navBackStackEntry
+            SetupProgressTopBarUiState(
+                isVisible = navViewModel.shouldDisplaySetupProgressTopBar(
+                    appUiSettings.mainStartDestination, navBackStackEntry
+                ),
+                titleRes = navBackStackEntry.getSetupProgressTopBarTitleRes()
             )
         }
-    }
-    val setupProgressTopBarTitleRes by remember {
-        derivedStateOf { navBackStackEntry.getSetupProgressTopBarTitleRes() }
     }
     val isBottomBarVisible by remember {
         derivedStateOf {
@@ -56,6 +57,9 @@ fun MainAppContent(
             )
         }
     }
+
+    var dimBackground by remember { mutableStateOf(false) }
+    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
 
     val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
     val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories
@@ -67,14 +71,10 @@ fun MainAppContent(
     val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
 
-    var dimBackground by remember { mutableStateOf(false) }
-    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
-
     Box {
         MainScaffold(
             appTheme = appUiSettings.appTheme,
-            isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-            setupProgressTopBarTitleRes = setupProgressTopBarTitleRes,
+            setupProgressTopBarUiState = setupProgressTopBarUiState,
             isBottomBarVisible = isBottomBarVisible,
             anyScreenInHierarchyIsScreenProvider = navBackStackEntry::anyScreenInHierarchyIs,
             currentScreenIsScreenProvider = navBackStackEntry::currentScreenIs,

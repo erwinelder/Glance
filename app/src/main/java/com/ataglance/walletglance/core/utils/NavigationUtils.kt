@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.utils
 
+import androidx.annotation.StringRes
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -79,7 +80,7 @@ fun NavBackStackEntry?.anyScreenInHierarchyIs(screen: Any): Boolean {
 }
 
 
-fun NavBackStackEntry?.getSetupProgressTopBarTitleRes(): Int {
+@StringRes fun NavBackStackEntry?.getSetupProgressTopBarTitleRes(): Int {
     return when {
         this.currentScreenIs(SettingsScreens.Language) -> R.string.language
         this.currentScreenIs(SettingsScreens.Appearance) -> R.string.appearance
