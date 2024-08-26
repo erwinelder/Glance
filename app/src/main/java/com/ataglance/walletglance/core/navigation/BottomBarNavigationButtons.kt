@@ -45,6 +45,18 @@ sealed class BottomBarNavigationButtons(
         )
     )
 
+    data object Budgets : BottomBarNavigationButtons(
+        screen = MainScreens.Budgets,
+        inactiveIconRes = DrawableResByTheme(
+            lightDefault = R.drawable.budgets_light_inactive,
+            darkDefault = R.drawable.budgets_dark_inactive
+        ),
+        activeIconRes = DrawableResByTheme(
+            lightDefault = R.drawable.budgets_light_active,
+            darkDefault = R.drawable.budgets_dark_active
+        )
+    )
+
     data object Settings : BottomBarNavigationButtons(
         screen = MainScreens.Settings,
         inactiveIconRes = DrawableResByTheme(
