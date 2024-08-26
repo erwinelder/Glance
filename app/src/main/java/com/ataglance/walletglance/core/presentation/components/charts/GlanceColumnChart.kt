@@ -36,18 +36,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartColumnUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.animation.popupEnterToTopAnimation
-import com.ataglance.walletglance.core.presentation.animation.popupExitToBottomAnimation
-import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
-import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
+import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
+import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
+import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
 fun GlanceColumnChart(
@@ -275,8 +275,8 @@ private fun ChartColumnPopupDetails(
         ) {
             AnimatedVisibility(
                 visibleState = visibilityState,
-                enter = popupEnterToTopAnimation,
-                exit = popupExitToBottomAnimation
+                enter = scaleFadeInAnimation(),
+                exit = scaleFadeOutAnimation()
             ) {
                 Box(
                     modifier = Modifier

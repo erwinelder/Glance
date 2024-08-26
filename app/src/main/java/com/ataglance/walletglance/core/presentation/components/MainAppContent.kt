@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.navigation.AppNavHost
+import com.ataglance.walletglance.core.navigation.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
@@ -53,7 +54,7 @@ fun MainAppContent(
         derivedStateOf {
             appUiSettings.isSetUp && navBackStackEntry.currentScreenIsOneOf(
                 MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
-                SettingsScreens.SettingsHome, SettingsScreens.Language
+                MainScreens.Budgets, SettingsScreens.SettingsHome, SettingsScreens.Language
             )
         }
     }
@@ -91,7 +92,14 @@ fun MainAppContent(
                     navController = navController,
                     recordNum = appUiSettings.nextRecordNum()
                 )
-            }
+            },
+            bottomBarButtons = listOf(
+                BottomBarNavigationButtons.Home,
+                BottomBarNavigationButtons.Records,
+                BottomBarNavigationButtons.CategoryStatistics,
+                BottomBarNavigationButtons.Budgets,
+                BottomBarNavigationButtons.Settings
+            )
         ) { scaffoldPadding ->
             AppNavHost(
                 moveScreenTowardsLeft = moveScreenTowardsLeft,

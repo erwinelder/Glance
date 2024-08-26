@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,10 +37,10 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.animation.popupEnterToBottomAnimation
-import com.ataglance.walletglance.core.presentation.animation.popupExitToTopAnimation
+import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
+import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun <T>PopupFloatingPicker(
@@ -81,8 +82,8 @@ fun <T>PopupFloatingPicker(
                 ) {
                     AnimatedVisibility(
                         visibleState = isExpandedState,
-                        enter = popupEnterToBottomAnimation,
-                        exit = popupExitToTopAnimation
+                        enter = scaleFadeInAnimation(TransformOrigin(.5f, 0f)),
+                        exit = scaleFadeOutAnimation(TransformOrigin(.5f, 0f))
                     ) {
                         PopupContent(
                             selectedItemText = selectedItemText,

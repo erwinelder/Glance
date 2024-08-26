@@ -61,32 +61,58 @@ val dialogSlideToBottomTransition = slideOutVertically(spring(stiffness = 320F))
 
 
 
-val popupEnterToTopAnimation = scaleIn(
-    initialScale = .5f,
-    animationSpec = spring(stiffness = 700f),
-    transformOrigin = TransformOrigin(0.5f, 1.0f)
-) + fadeIn(
-    animationSpec = spring(stiffness = 700f)
-)
-val popupExitToBottomAnimation = scaleOut(
-    targetScale = .2f,
-    transformOrigin = TransformOrigin(0.5f, 1.0f)
-) + fadeOut(
-    animationSpec = spring(stiffness = 700f)
-)
+fun scaleFadeInAnimation(
+    scaleTransformOrigin: TransformOrigin = TransformOrigin(0.5f, 1.0f)
+): EnterTransition {
+    return scaleIn(
+        initialScale = .5f,
+        animationSpec = spring(stiffness = 700f),
+        transformOrigin = scaleTransformOrigin
+    ) + fadeIn(
+        animationSpec = spring(stiffness = 700f)
+    )
+}
+fun scaleFadeOutAnimation(
+    scaleTransformOrigin: TransformOrigin = TransformOrigin(0.5f, 1.0f)
+): ExitTransition {
+    return scaleOut(
+        targetScale = .2f,
+        transformOrigin = scaleTransformOrigin
+    ) + fadeOut(
+        animationSpec = spring(stiffness = 700f)
+    )
+}
 
 
 
-val popupEnterToBottomAnimation = scaleIn(
-    initialScale = .5f,
-    animationSpec = spring(stiffness = 700f),
-    transformOrigin = TransformOrigin(0.5f, 0.0f)
-) + fadeIn(
-    animationSpec = spring(stiffness = 700f)
-)
-val popupExitToTopAnimation = scaleOut(
-    targetScale = .2f,
-    transformOrigin = TransformOrigin(0.5f, 0.0f)
-) + fadeOut(
-    animationSpec = spring(stiffness = 700f)
-)
+fun scaleSlideVerFadeInAnimation(
+    scaleTransformOrigin: TransformOrigin = TransformOrigin(0.5f, 1.0f),
+    slideOffsetCoefficient: Double = 0.25
+): EnterTransition {
+    return scaleIn(
+        initialScale = .5f,
+        animationSpec = spring(stiffness = 700f),
+        transformOrigin = scaleTransformOrigin
+    ) + slideInVertically(
+        animationSpec = spring(stiffness = 700f)
+    ) {
+        (it * slideOffsetCoefficient).toInt()
+    } + fadeIn(
+        animationSpec = spring(stiffness = 700f)
+    )
+}
+fun scaleSlideVerFadeOutAnimation(
+    scaleTransformOrigin: TransformOrigin = TransformOrigin(0.5f, 1.0f),
+    slideOffsetCoefficient: Double = 0.25
+): ExitTransition {
+    return scaleOut(
+        targetScale = .2f,
+        transformOrigin = scaleTransformOrigin
+    ) + slideOutVertically(
+        animationSpec = spring(stiffness = 700f)
+    ) {
+        (it * slideOffsetCoefficient).toInt()
+    } + fadeOut(
+        animationSpec = spring(stiffness = 700f)
+    )
+}
