@@ -4,6 +4,8 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Inicio</string>
+    <string name="records">Registros</string>
+    <string name="statistics">Estadísticas</string>
     <string name="settings">Ajustes</string>
     <string name="setup">Configuración</string>
 

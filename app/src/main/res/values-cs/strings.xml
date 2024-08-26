@@ -3,6 +3,8 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Domů</string>
+    <string name="records">Záznamy</string>
+    <string name="statistics">Statistiky</string>
     <string name="settings">Nastavení</string>
     <string name="setup">Nastavování</string>
 

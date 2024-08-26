@@ -3,6 +3,8 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Главная</string>
+    <string name="records">Записи</string>
+    <string name="statistics">Статистика</string>
     <string name="settings">Настройки</string>
     <string name="setup">Настройка</string>
 

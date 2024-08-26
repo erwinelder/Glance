@@ -3,6 +3,8 @@
 
     <!-- navigation bar buttons -->
     <string name="home">Startseite</string>
+    <string name="records">Einträge</string>
+    <string name="statistics">Statistiken</string>
     <string name="settings">Einstellungen</string>
     <string name="setup">Einrichten</string>
 
