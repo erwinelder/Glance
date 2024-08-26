@@ -2,6 +2,7 @@ package com.ataglance.walletglance.core.presentation.components.containers
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -12,13 +13,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,15 +45,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.navigation.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -55,19 +64,75 @@ fun BottomNavBar(
     isVisible: Boolean,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     currentScreenIsScreenProvider: (Any) -> Boolean,
-    onNavigateBack: () -> Unit,
     onNavigateToScreen: (MainScreens) -> Unit,
     onMakeRecordButtonClick: () -> Unit
 ) {
-    BottomBarContainer(isVisible = isVisible) {
-        BottomBarMainButtonsRow(
-            appTheme = appTheme,
-            anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
-            currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-            onNavigateBack = onNavigateBack,
-            onNavigateToScreen = onNavigateToScreen
-        )
-        Box(modifier = Modifier.absoluteOffset(y = -(20).dp)) {
+    var timerIsUp by remember { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
+    var isExpanded by remember { mutableStateOf(true) }
+
+    val floatingButtonOffset by animateDpAsState(
+        targetValue = if (isExpanded) (-4).dp else (-25).dp,
+        label = "button bar floating button offset"
+    )
+    val onButtonClick = { screen: MainScreens ->
+        if (!currentScreenIsScreenProvider(screen) && timerIsUp) {
+            coroutineScope.launch {
+                timerIsUp = false
+                delay(500)
+                timerIsUp = true
+            }
+
+            onNavigateToScreen(screen)
+            if (isExpanded) {
+                isExpanded = false
+            }
+        }
+    }
+
+    BottomBarContainer(isVisible = isVisible, isExpanded = isExpanded) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .shadow(
+                    elevation = 16.dp,
+                    shape = RoundedCornerShape(26.dp),
+                    ambientColor = GlanceTheme.onSurface
+                )
+                .clip(RoundedCornerShape(26.dp))
+                .background(GlanceTheme.surface)
+                .border(
+                    width = 1.dp,
+                    color = GlanceTheme.onSurface.copy(alpha = .05f),
+                    shape = RoundedCornerShape(26.dp)
+                )
+                .padding(vertical = 16.dp, horizontal = 4.dp)
+        ) {
+            BottomBarOtherButtonsGrid(
+                appTheme = appTheme,
+                isExpanded = isExpanded,
+                anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                onButtonClick = onButtonClick
+            )
+            BottomBarMainButtonsRow(
+                appTheme = appTheme,
+                onIsExpandedToggle = { isExpanded = !isExpanded },
+                anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                onButtonClick = onButtonClick,
+                mainButtons = listOf(
+                    BottomBarNavigationButtons.Home,
+                    BottomBarNavigationButtons.Records,
+                    null,
+                    BottomBarNavigationButtons.CategoryStatistics
+                )
+            )
+        }
+        Box(
+            modifier = Modifier
+                .absoluteOffset {
+                    IntOffset(x = 0, y = floatingButtonOffset.roundToPx())
+                }
+        ) {
             MakeRecordButton(onMakeRecordButtonClick)
         }
     }
@@ -76,19 +141,25 @@ fun BottomNavBar(
 @Composable
 private fun BottomBarContainer(
     isVisible: Boolean,
+    isExpanded: Boolean,
     content: @Composable () -> Unit
 ) {
+    val bottomPadding by animateDpAsState(
+        targetValue = if (isExpanded) 0.dp else 12.dp,
+        label = "bottom nav bar bottom padding"
+    )
+
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically { (it * 1.5).toInt() },
         exit = slideOutVertically { (it * 1.5).toInt() }
     ) {
         Box(
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
                 .bounceClickEffect(.985f)
                 .fillMaxWidth()
-                .padding(bottom = 12.dp)
+                .padding(bottom = bottomPadding)
         ) {
             content()
         }
@@ -98,27 +169,17 @@ private fun BottomBarContainer(
 @Composable
 private fun BottomBarMainButtonsRow(
     appTheme: AppTheme?,
+    onIsExpandedToggle: () -> Unit,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
-    currentScreenIsScreenProvider: (Any) -> Boolean,
-    onNavigateBack: () -> Unit,
-    onNavigateToScreen: (MainScreens) -> Unit,
+    onButtonClick: (MainScreens) -> Unit,
+    mainButtons: List<BottomBarNavigationButtons?>
 ) {
-    val bottomBarButtonList = listOf(
-        BottomBarNavigationButtons.Home,
-        BottomBarNavigationButtons.Records,
-        null,
-        BottomBarNavigationButtons.CategoryStatistics,
-        BottomBarNavigationButtons.Settings,
-    )
-    var timerIsUp by remember { mutableStateOf(true) }
-    val coroutineScope = rememberCoroutineScope()
-
     Row(
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .shadow(
-                elevation = 15.dp,
+                elevation = 16.dp,
                 shape = RoundedCornerShape(26.dp),
                 ambientColor = GlanceTheme.onSurface
             )
@@ -129,26 +190,87 @@ private fun BottomBarMainButtonsRow(
                 color = GlanceTheme.onSurface.copy(alpha = .05f),
                 shape = RoundedCornerShape(26.dp)
             )
-            .padding(vertical = 16.dp, horizontal = 28.dp)
+            .padding(vertical = 16.dp, horizontal = 4.dp)
     ) {
-        bottomBarButtonList.forEach { button ->
+        mainButtons.forEachIndexed { index, button ->
+            ButtonsSpacerGap()
             if (button != null) {
                 BottomBarButton(
                     appTheme = appTheme,
                     button = button,
                     anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
-                    currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-                    onNavigateToScreen = onNavigateToScreen,
-                    onNavigateBack = onNavigateBack,
-                    coroutineScope = coroutineScope,
-                    timerIsUp = timerIsUp,
-                    setupTimerIsUp = { timerIsUp = it }
+                    onClick = onButtonClick
                 )
             } else {
                 Spacer(modifier = Modifier.width(60.dp))
             }
+            if (index == mainButtons.lastIndex) {
+                ButtonsSpacerGap()
+            }
+        }
+        Icon(
+            painter = painterResource(R.drawable.expand_icon),
+            contentDescription = "expand top bar icon",
+            tint = GlanceTheme.onSurface,
+            modifier = Modifier
+                .bounceClickEffect(.97f, onClick = onIsExpandedToggle)
+                .size(36.dp)
+        )
+        ButtonsSpacerGap()
+    }
+}
+
+@Composable
+private fun BottomBarOtherButtonsGrid(
+    appTheme: AppTheme?,
+    isExpanded: Boolean,
+    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
+    onButtonClick: (MainScreens) -> Unit,
+) {
+    val otherButtons = listOf(
+        BottomBarNavigationButtons.Budgets,
+        BottomBarNavigationButtons.Settings,
+        BottomBarNavigationButtons.CategoryStatistics,
+        BottomBarNavigationButtons.CategoryStatistics,
+        BottomBarNavigationButtons.CategoryStatistics,
+        BottomBarNavigationButtons.CategoryStatistics,
+        BottomBarNavigationButtons.CategoryStatistics,
+    )
+
+    AnimatedVisibility(visible = isExpanded) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(5),
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(items = otherButtons) { button ->
+                    BottomBarButton(
+                        appTheme = appTheme,
+                        button = button,
+                        anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                        onClick = onButtonClick
+                    )
+                }
+            }
+            BigDivider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                color = GlanceTheme.outline.copy(.5f)
+            )
         }
     }
+}
+
+@Composable
+private fun RowScope.ButtonsSpacerGap() {
+    Spacer(
+        modifier = Modifier
+            .width(24.dp)
+            .weight(1f, fill = false)
+    )
 }
 
 @Composable
@@ -156,12 +278,7 @@ private fun BottomBarButton(
     appTheme: AppTheme?,
     button: BottomBarNavigationButtons,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
-    currentScreenIsScreenProvider: (Any) -> Boolean,
-    onNavigateToScreen: (MainScreens) -> Unit,
-    onNavigateBack: () -> Unit,
-    coroutineScope: CoroutineScope,
-    timerIsUp: Boolean,
-    setupTimerIsUp: (Boolean) -> Unit,
+    onClick: (MainScreens) -> Unit
 ) {
     AnimatedContent(
         targetState = if (anyScreenInHierarchyIsScreenProvider(button.screen))
@@ -174,27 +291,7 @@ private fun BottomBarButton(
             contentDescription = "bottom bar ${button.screen} icon",
             modifier = Modifier
                 .bounceClickEffect(.97f) {
-                    if (currentScreenIsScreenProvider(button.screen)) {
-                        return@bounceClickEffect
-                    }
-                    if (!timerIsUp) {
-                        return@bounceClickEffect
-                    }
-
-                    coroutineScope.launch {
-                        setupTimerIsUp(false)
-                        delay(500)
-                        setupTimerIsUp(true)
-                    }
-
-                    if (
-                        button.screen == MainScreens.Settings &&
-                        currentScreenIsScreenProvider(SettingsScreens.Language)
-                    ) {
-                        onNavigateBack()
-                    } else {
-                        onNavigateToScreen(button.screen)
-                    }
+                    onClick(button.screen)
                 }
                 .size(36.dp)
         )
@@ -237,5 +334,29 @@ private fun MakeRecordButton(onMakeRecordButtonClick: () -> Unit) {
             tint = GlanceTheme.onPrimary,
             modifier = Modifier.size(24.dp)
         )
+    }
+}
+
+
+
+@Preview
+@Composable
+private fun BottomNavBarPreview() {
+    val appTheme = AppTheme.LightDefault
+
+    PreviewContainer(appTheme = appTheme) {
+        Box(
+            contentAlignment = Alignment.BottomCenter,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            BottomNavBar(
+                appTheme = appTheme,
+                isVisible = true,
+                anyScreenInHierarchyIsScreenProvider = { false },
+                currentScreenIsScreenProvider = { false },
+                onNavigateToScreen = {},
+                onMakeRecordButtonClick = {}
+            )
+        }
     }
 }

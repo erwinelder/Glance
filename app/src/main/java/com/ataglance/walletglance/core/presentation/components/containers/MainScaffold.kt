@@ -34,7 +34,6 @@ fun MainScaffold(
                 isVisible = isBottomBarVisible,
                 anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
                 currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-                onNavigateBack = onNavigateBack,
                 onNavigateToScreen = onNavigateToScreen,
                 onMakeRecordButtonClick = onMakeRecordButtonClick
             )
