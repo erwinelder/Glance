@@ -27,7 +27,8 @@ fun List<RecordEntity>.getTotalAmountByType(type: CategoryType): Double {
 fun List<RecordEntity>.getTotalAmountCorrespondingToBudget(budget: Budget): Double {
     return this
         .filter {
-            it.containsParentOrSubcategoryId(budget.category?.id) &&
+            it.includeInBudgets &&
+                    it.containsParentOrSubcategoryId(budget.category?.id) &&
                     budget.containsAccountId(it.accountId)
         }
         .fold(0.0) { total, record ->
