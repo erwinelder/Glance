@@ -18,8 +18,8 @@ data class DateTimeState(
     fun getNewDate(selectedDateMillis: Long): DateTimeState {
         val calendar = Calendar.getInstance().apply { timeInMillis = selectedDateMillis }
         calendar.set(
-            calendar.year(), calendar.month(), calendar.day(),
-            this.calendar.hour(), this.calendar.minute()
+            calendar.year, calendar.month, calendar.day,
+            this.calendar.hour, this.calendar.minute
         )
         return DateTimeState(
             calendar = calendar,
@@ -30,7 +30,7 @@ data class DateTimeState(
 
     fun getNewTime(hour: Int, minute: Int): DateTimeState {
         val calendar = this.calendar
-        calendar.set(calendar.year(), calendar.month(), calendar.day(), hour, minute)
+        calendar.set(calendar.year, calendar.month, calendar.day, hour, minute)
         return DateTimeState(
             calendar = calendar,
             dateLong = calendar.toLongWithTime(),
