@@ -13,21 +13,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.navigation.accountsGraph
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.budget.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.categoryCollection.navigation.categoryCollectionsGraph
+import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
 import com.ataglance.walletglance.settings.presentation.screen.SetupAppearanceScreen
 import com.ataglance.walletglance.settings.presentation.screen.SetupLanguageScreen
 import com.ataglance.walletglance.settings.presentation.screen.SetupStartScreen
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.category.navigation.categoriesGraph
-import com.ataglance.walletglance.categoryCollection.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
 import kotlinx.coroutines.launch
 
@@ -142,8 +142,7 @@ fun NavGraphBuilder.settingsGraph(
                     coroutineScope.launch {
                         appViewModel.resetAppData()
                     }
-                },
-                onExportData = {}
+                }
             )
         }
     }

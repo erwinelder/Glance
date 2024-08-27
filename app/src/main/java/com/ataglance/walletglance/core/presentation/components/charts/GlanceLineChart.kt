@@ -3,6 +3,7 @@ package com.ataglance.walletglance.core.presentation.components.charts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,28 +15,30 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
+import com.ataglance.walletglance.core.presentation.GlanceTheme
 
 @Composable
 fun GlanceLineChart(
-    filledWidth: Float,
-    gradientBrushColors: List<Color>,
-    shadowColor: Color
+    percentage: Float,
+    brushColors: List<Color>,
+    shadowColor: Color,
+    height: Dp = 16.dp
 ) {
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .fillMaxWidth()
-            .height(16.dp)
+            .height(height)
     ) {
         Spacer(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
                 .background(GlanceTheme.glassGradientLightToDark.first)
                 .fillMaxWidth()
-                .height(16.dp)
+                .fillMaxHeight()
         )
         Spacer(
             modifier = Modifier
@@ -45,9 +48,9 @@ fun GlanceLineChart(
                     shape = RoundedCornerShape(50)
                 )
                 .clip(RoundedCornerShape(50))
-                .background(brush = Brush.linearGradient(gradientBrushColors))
-                .fillMaxWidth(filledWidth)
-                .height(16.dp)
+                .background(brush = Brush.linearGradient(brushColors))
+                .fillMaxWidth(percentage)
+                .fillMaxHeight()
         )
     }
 }

@@ -52,7 +52,6 @@
     <string name="finish">Abschließen</string>
     <string name="_import">Importieren</string>
     <string name="import_data">Daten importieren</string>
-    <string name="export_data">Daten exportieren</string>
     <string name="start_setup">Setup starten</string>
 
     <!-- Fields -->
@@ -152,7 +151,6 @@
     <string name="no_collections_of_this_type">Keine Sammlungen dieses Typs vorhanden</string>
     <string name="reset_data_description">Setzen Sie alle App-Daten zurück, einschließlich Konten, Datensätze, Kategorien und Einstellungen.</string>
     <string name="reset_data_warning">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
-    <string name="export_data_description">App-Daten in eine Datei exportieren.</string>
     <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum</string>
     <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum</string>
     <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum</string>

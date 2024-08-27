@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -14,15 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -35,12 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
+import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import java.util.Locale
@@ -63,7 +60,9 @@ fun ExpensesIncomeWidget(
         label = "income visualizer width"
     )
 
-    GlassSurface {
+    GlassSurface(
+        filledWidths = FilledWidthByScreenType(.86f, .63f, .4f)
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -126,8 +125,7 @@ private fun StatisticBlock(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         AnimatedContent(
             targetState = "${stringResource(titleRes)} ${"%.2f".format(Locale.US, percentage)}%",
@@ -153,31 +151,12 @@ private fun StatisticBlock(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(20.dp)
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .background(GlanceTheme.glassGradientLightToDark.first)
-                    .fillMaxWidth()
-                    .height(20.dp)
-            )
-            Spacer(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 8.dp,
-                        spotColor = gradientColorsPair.first,
-                        shape = RoundedCornerShape(50)
-                    )
-                    .background(brush = Brush.linearGradient(gradientColorsPair.toList()))
-                    .fillMaxWidth(percentageFloat)
-                    .height(20.dp)
-            )
-        }
+        GlanceLineChart(
+            percentage = percentageFloat,
+            brushColors = gradientColorsPair.toList(),
+            shadowColor = gradientColorsPair.first,
+            height = 18.dp
+        )
     }
 }
 

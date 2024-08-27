@@ -167,7 +167,7 @@ private val DarkBluePalette = GlanceColors(
 )
 
 private val LocalColors = staticCompositionLocalOf { LightDefaultPalette }
-private val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
+val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
 
 @Composable
 fun WalletGlanceTheme(

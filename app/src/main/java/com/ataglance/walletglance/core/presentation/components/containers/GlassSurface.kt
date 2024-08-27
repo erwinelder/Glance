@@ -18,27 +18,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
+import com.ataglance.walletglance.core.presentation.LocalWindowType
 import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
 
 @Composable
 fun GlassSurface(
     modifier: Modifier = Modifier,
-    filledWidth: Float? = null,
+    filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(),
     cornerSize: Dp = dimensionResource(R.dimen.widget_corner_size),
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(
-                filledWidth ?: when {
-                    WindowTypeIsCompact -> .9f
-                    WindowTypeIsMedium -> .67f
-                    else -> .44f
-                }
-            )
+            .fillMaxWidth(filledWidths.getByScreenType(LocalWindowType.current))
             .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(

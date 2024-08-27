@@ -53,7 +53,6 @@
     <string name="finish">Finalizar</string>
     <string name="_import">Importar</string>
     <string name="import_data">Importar datos</string>
-    <string name="export_data">Exportar datos</string>
     <string name="start_setup">Iniciar configuración</string>
 
     <!-- Fields -->
@@ -153,7 +152,6 @@
     <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
     <string name="reset_data_description">Restablecer todos los datos de la aplicación, incluidas las cuentas, los registros, las categorías y la configuración.</string>
     <string name="reset_data_warning">¿Está seguro de que desea restablecer todos sus datos?</string>
-    <string name="export_data_description">Exportar datos de la aplicación a un archivo.</string>
     <string name="you_have_no_records_in_date_range">No hay registros en este período</string>
     <string name="you_have_no_expenses_in_date_range">No tienes gastos en este período</string>
     <string name="you_have_no_income_in_date_range">No tienes ingresos en este período</string>

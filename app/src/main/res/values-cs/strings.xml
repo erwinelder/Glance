@@ -52,7 +52,6 @@
     <string name="finish">Dokončit</string>
     <string name="_import">Import</string>
     <string name="import_data">Importovat data</string>
-    <string name="export_data">Exportovat data</string>
     <string name="start_setup">Začít nastavení</string>
 
     <!-- Fields -->
@@ -152,7 +151,6 @@
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
     <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>
-    <string name="export_data_description">Exportovat data aplikace do souboru.</string>
     <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období</string>
     <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>

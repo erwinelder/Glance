@@ -52,7 +52,6 @@
     <string name="finish">Завершить</string>
     <string name="_import">Импорт</string>
     <string name="import_data">Импортировать данные</string>
-    <string name="export_data">Экспортировать данные</string>
     <string name="start_setup">Начать настройку</string>
 
     <!-- Fields -->
@@ -152,7 +151,6 @@
     <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
     <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>
     <string name="reset_data_warning">Вы уверены, что хотите сбросить все данные?</string>
-    <string name="export_data_description">Экспортировать данные приложения в файл.</string>
     <string name="you_have_no_records_in_date_range">У вас нет записей за этот период</string>
     <string name="you_have_no_expenses_in_date_range">У вас нет расходов за этот период</string>
     <string name="you_have_no_income_in_date_range">У вас нет доходов за этот период</string>

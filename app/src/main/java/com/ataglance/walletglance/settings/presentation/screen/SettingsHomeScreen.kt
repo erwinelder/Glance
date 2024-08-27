@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
@@ -169,7 +169,7 @@ fun SettingPlate(
     onClick: () -> Unit
 ) {
     GlassSurface(
-        filledWidth = if (WindowTypeIsCompact) 1f else .75f,
+        filledWidths = FilledWidthByScreenType(1f, .75f, .75f),
         cornerSize = dimensionResource(R.dimen.settings_category_plate_corner_size),
         modifier = Modifier.bounceClickEffect(.98f, onClick = onClick)
     ) {

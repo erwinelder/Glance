@@ -37,11 +37,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartColumnUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
@@ -62,11 +61,7 @@ fun GlanceColumnChart(
     val graphHeight = 250.dp
 
     GlassSurface(
-        filledWidth = when {
-            WindowTypeIsCompact -> 1f
-            WindowTypeIsMedium -> .8f
-            else -> .5f
-        }
+        filledWidths = FilledWidthByScreenType(1f, .8f, .5f)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

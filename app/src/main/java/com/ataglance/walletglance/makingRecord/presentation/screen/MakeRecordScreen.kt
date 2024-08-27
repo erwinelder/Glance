@@ -51,31 +51,31 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.account.presentation.components.AccountPopupPicker
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.account.presentation.components.AccountPopupPicker
-import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordBottomButtonBlock
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.category.presentation.components.CategoryField
 import com.ataglance.walletglance.category.presentation.components.CategoryPicker
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
-import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordFieldContainer
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
+import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
+import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordBottomButtonBlock
+import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordFieldContainer
 import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordTypeBar
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModel
+import com.ataglance.walletglance.record.domain.RecordType
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +134,7 @@ fun MakeRecordScreen(
 
             GlassSurface(
                 modifier = Modifier.weight(1f),
-                filledWidth = .96f.takeIf { WindowTypeIsCompact }
+                filledWidths = FilledWidthByScreenType(compact = .96f)
             ) {
                 GlassSurfaceContent(
                     appTheme = appTheme,

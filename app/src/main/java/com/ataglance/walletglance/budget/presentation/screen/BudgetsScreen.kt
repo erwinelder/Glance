@@ -12,18 +12,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.budget.domain.Budget
 import com.ataglance.walletglance.budget.domain.BudgetsByType
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
-import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.budget.presentation.components.BudgetComponent
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 
 @Composable
 fun BudgetsScreen(
@@ -40,7 +40,7 @@ fun BudgetsScreen(
     ) {
         GlassSurface(
             modifier = Modifier.weight(1f),
-            filledWidth = if (!WindowTypeIsExpanded) null else .86f
+            filledWidths = FilledWidthByScreenType(expanded = .86f)
         ) {
             if (budgetsByType.areEmpty()) {
                 MessageContainer(message = stringResource(R.string.you_have_no_budgets_yet))

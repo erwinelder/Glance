@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
@@ -31,10 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsDataScreen(
-    onResetData: () -> Unit,
-    onExportData: () -> Unit
-) {
+fun SettingsDataScreen(onResetData: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     var resetStep by remember { mutableIntStateOf(0) }
     val job: MutableState<Job?> = remember { mutableStateOf(null) }
@@ -73,7 +71,9 @@ private fun ResetDataBlock(
     onResetDataCancel: () -> Unit,
     onResetDataButton: () -> Unit,
 ) {
-    GlassSurface(filledWidth = 1f) {
+    GlassSurface(
+        filledWidths = FilledWidthByScreenType(1f, .75f, .5f)
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -128,29 +128,6 @@ private fun ResetDataBlock(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ExportDataBlock(onExportData: () -> Unit) {
-    GlassSurface(filledWidth = 1f) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 22.dp, vertical = 18.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.export_data_description),
-                fontSize = 17.sp,
-                textAlign = TextAlign.Center
-            )
-            SmallPrimaryButton(
-                text = stringResource(R.string.export_data),
-                onClick = onExportData,
-            )
         }
     }
 }

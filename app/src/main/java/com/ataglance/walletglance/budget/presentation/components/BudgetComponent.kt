@@ -97,8 +97,8 @@ fun BudgetComponent(
                     }
                 }
                 GlanceLineChart(
-                    filledWidth = budget.usedPercentage / 100,
-                    gradientBrushColors = budget.category?.getColorByTheme(appTheme)
+                    percentage = budget.usedPercentage / 100,
+                    brushColors = budget.category?.getColorByTheme(appTheme)
                         ?.asListDarkToLight() ?: listOf(Color.Black),
                     shadowColor = budget.category?.getColorByTheme(appTheme)?.darker ?: Color.Black
                 )

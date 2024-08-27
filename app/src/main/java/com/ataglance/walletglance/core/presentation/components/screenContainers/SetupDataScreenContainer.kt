@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 
@@ -56,7 +57,7 @@ fun SetupDataScreenContainer(
                 topBar?.let { it() }
                 GlassSurface(
                     modifier = Modifier.weight(1f, fill = fillGlassSurface),
-                    filledWidth = if (!WindowTypeIsExpanded) null else .86f
+                    filledWidths = FilledWidthByScreenType(expanded = .86f)
                 ) {
                     glassSurfaceContent()
                 }
