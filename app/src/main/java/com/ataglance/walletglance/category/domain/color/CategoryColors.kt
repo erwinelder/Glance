@@ -9,7 +9,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.category.presentation.screen.SetupCategoriesScreen
+import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
 
@@ -168,7 +168,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
 private fun Preview() {
     PreviewContainer(AppTheme.DarkDefault) {
         val context = LocalContext.current
-        SetupCategoriesScreen(
+        EditCategoriesScreen(
             scaffoldPadding = PaddingValues(),
             appTheme = AppTheme.DarkDefault,
             isAppSetUp = true,

@@ -34,7 +34,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrim
 import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 
 @Composable
-fun SetupCategoriesScreen(
+fun EditCategoriesScreen(
     scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
     appTheme: AppTheme?,

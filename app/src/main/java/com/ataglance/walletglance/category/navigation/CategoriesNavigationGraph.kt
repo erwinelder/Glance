@@ -17,7 +17,7 @@ import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreen
 import com.ataglance.walletglance.category.presentation.screen.EditSubcategoryListScreen
-import com.ataglance.walletglance.category.presentation.screen.SetupCategoriesScreen
+import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
@@ -58,7 +58,7 @@ fun NavGraphBuilder.categoriesGraph(
                 }
             }
 
-            SetupCategoriesScreen(
+            EditCategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
                 appTheme = appUiSettings.appTheme,
