@@ -49,12 +49,14 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.navigation.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -155,9 +157,14 @@ private fun BottomBarContainer(
 }
 
 @Composable
-private fun ExpandBottomBarButton(onClick: () -> Unit) {
+private fun ExpandBottomBarButton(appTheme: AppTheme?, onClick: () -> Unit) {
+    val iconRes = DrawableResByTheme(
+        lightDefault = R.drawable.show_other_light,
+        darkDefault = R.drawable.show_other_dark
+    ).getByTheme(appTheme)
+
     Image(
-        painter = painterResource(R.drawable.expand_icon),
+        painter = painterResource(iconRes),
         contentDescription = "expand top bar icon",
         modifier = Modifier
             .bounceClickEffect(onClick = onClick)
@@ -219,7 +226,7 @@ private fun BottomBarButtonsRow(
             }
         }
         if (buttonListSize == 4) {
-            ExpandBottomBarButton(onIsExpandedToggle)
+            ExpandBottomBarButton(appTheme = appTheme, onIsExpandedToggle)
             ButtonsSpacerGap()
         }
     }
@@ -261,6 +268,7 @@ private fun PopupButtonsList(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .innerVolumeShadow(shape = RoundedCornerShape(26.dp))
                         .clip(RoundedCornerShape(26.dp))
                         .background(GlanceTheme.surface)
                         .padding(horizontal = 24.dp, vertical = 16.dp)

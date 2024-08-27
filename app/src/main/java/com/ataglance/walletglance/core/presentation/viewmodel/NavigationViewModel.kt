@@ -39,6 +39,7 @@ class NavigationViewModel : ViewModel() {
             MainScreens.Records::class.simpleName(),
             MainScreens.MakeRecord::class.simpleName(),
             MainScreens.CategoryStatistics(0)::class.simpleName(),
+            MainScreens.Budgets::class.simpleName(),
             MainScreens.Settings::class.simpleName()
         ).forEach { screenRoute ->
             if (currentRoute == screenRoute) {

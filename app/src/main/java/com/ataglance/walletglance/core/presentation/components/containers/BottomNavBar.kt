@@ -27,7 +27,9 @@ fun BottomNavBar(
         derivedStateOf { barButtons.take(3) }
     }
     val popupListBarButtons by remember {
-        derivedStateOf { barButtons.subList(2, barButtons.lastIndex).reversed() }
+        derivedStateOf {
+            barButtons.subList(3, barButtons.size).reversed()
+        }
     }
 
     GlanceBottomNavBar(
