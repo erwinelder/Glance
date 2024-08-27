@@ -108,7 +108,9 @@ fun AppNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onNavigateToRecordsScreen = {
                     changeMoveScreenTowardsLeft(true)
-                    navController.navigate(MainScreens.Records)
+                    navController.navigate(MainScreens.Records) {
+                        launchSingleTop = true
+                    }
                 },
                 onNavigateToCategoriesStatisticsScreen = { parentCategoryId: Int ->
                     changeMoveScreenTowardsLeft(true)
@@ -274,8 +276,10 @@ fun AppNavHost(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 budgetsByType = budgetsByType,
-                onBudgetClick = {
-
+                onBudgetClick = { budget ->
+                    navController.navigate(MainScreens.BudgetStatistics(budget.id)) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }

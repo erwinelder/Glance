@@ -62,7 +62,7 @@ class NavigationViewModel : ViewModel() {
     }
 
 
-    fun navigateToScreen(
+    fun navigateToScreenAndPopUp(
         navController: NavController,
         navBackStackEntry: NavBackStackEntry?,
         screenNavigateTo: MainScreens

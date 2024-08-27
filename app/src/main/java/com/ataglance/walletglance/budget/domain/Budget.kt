@@ -26,7 +26,7 @@ data class Budget(
     fun applyUsedAmount(amount: Double): Budget {
         return this.copy(
             usedAmount = amount,
-            usedPercentage = ".2f".format(100 / amountLimit * usedAmount).toFloat()
+            usedPercentage = "%.2f".format(100 / amountLimit * amount).toFloat()
         )
     }
 

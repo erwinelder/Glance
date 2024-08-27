@@ -30,24 +30,24 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.domain.Budget
 import com.ataglance.walletglance.budget.domain.TotalAmountByRange
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.utils.getPrevDateRanges
-import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
-import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.utils.formatWithSpaces
+import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.getPrevDateRanges
+import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
 
 @Composable
 fun BudgetStatisticsScreen(
@@ -58,9 +58,6 @@ fun BudgetStatisticsScreen(
     onBackButtonClick: () -> Unit
 ) {
     val nestedScrollInterop = rememberNestedScrollInteropConnection()
-    val averageSpending by remember {
-        derivedStateOf { columnChartUiState.averageValue.formatWithSpaces(budget.currency) }
-    }
     val verticalGap = 16.dp
 
     Column(
@@ -114,7 +111,8 @@ fun BudgetStatisticsScreen(
                     title = stringResource(
                         id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
                     ),
-                    bottomNote = "Average spending: $averageSpending"
+                    bottomNote = "Average spending: " +
+                            columnChartUiState.averageValue.formatWithSpaces(budget.currency)
                 ) { totalAmountByPeriod ->
                     StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
                 }

@@ -81,7 +81,7 @@ fun MainAppContent(
             currentScreenIsScreenProvider = navBackStackEntry::currentScreenIs,
             onNavigateBack = navController::popBackStack,
             onNavigateToScreen = { screenNavigateTo: MainScreens ->
-                navViewModel.navigateToScreen(
+                navViewModel.navigateToScreenAndPopUp(
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
                     screenNavigateTo = screenNavigateTo
