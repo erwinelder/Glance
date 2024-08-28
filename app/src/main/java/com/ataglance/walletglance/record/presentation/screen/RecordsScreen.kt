@@ -24,14 +24,16 @@ import com.ataglance.walletglance.account.utils.findById
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeToggleButton
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.DataPresentationScreenContainer
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit
 import com.ataglance.walletglance.record.domain.RecordType
@@ -55,19 +57,13 @@ fun RecordsScreen(
     selectedCollection: CategoryCollectionWithIds,
     onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
     onToggleCollectionType: () -> Unit,
-    onRecordClick: (Int) -> Unit,
-    onTransferClick: (Int) -> Unit,
-    onNavigateToEditCollectionsScreen: () -> Unit,
+    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val includeYearToRecordDate by remember {
         derivedStateOf { filteredRecords.containsRecordsFromDifferentYears() }
     }
     val lazyListState = rememberLazyListState()
-    /*val visibleItemsInfo = remember {
-        derivedStateOf { lazyListState.layoutInfo.visibleItemsInfo }
-    }*/
-
 
     DataPresentationScreenContainer(
         scaffoldAppScreenPadding = scaffoldAppScreenPadding,
@@ -94,7 +90,11 @@ fun RecordsScreen(
                 currentType = collectionType, onClick = onToggleCollectionType
             )
         },
-        onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
+        onNavigateToEditCollectionsScreen = {
+            onNavigateToScreenMovingTowardsLeft(
+                CategoryCollectionsSettingsScreens.EditCategoryCollections
+            )
+        },
         onDimBackgroundChange = onDimBackgroundChange
     ) { targetRecordStackListAndTypeFilter ->
         Column {
@@ -116,60 +116,24 @@ fun RecordsScreen(
                             appTheme = appTheme,
                             secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
                                 accountList.findById(it)?.toRecordAccount()
-                            },
-                            onTransferClick = onTransferClick
-                        )
+                            }
+                        ) { recordNum ->
+                            onNavigateToScreenMovingTowardsLeft(
+                                MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
+                            )
+                        }
                     } else {
                         RecordStackComponent(
                             appTheme = appTheme,
                             recordStack = recordStack,
-                            includeYearToDate = includeYearToRecordDate,
-                            onRecordClick = onRecordClick
-                        )
-                    }
-                }
-                /*itemsIndexed(
-                    items = targetRecordStackListAndTypeFilter.first,
-                    key = { _, item -> item.recordNum }
-                ) { index, recordStack ->
-                    val itemScale by animateFloatAsState(
-                        targetValue = visibleItemsInfo.value
-                            .getOrNull(
-                                index - (visibleItemsInfo.value.getOrNull(0)?.index ?: 0)
-                            )
-                            ?.takeIf { it.size > 0 }
-                            ?.let { item ->
-                                ((100.0 / item.size) * -(item.offset.takeIf { it <= 0 } ?: 0)) / 100
-                            }
-                            ?.toFloat()
-                            ?: 0.0f,
-                        label = "item scale"
-                    )
-
-                    if (recordStack.isTransfer()) {
-                        TransferComponent(
-                            recordStack = recordStack,
-                            includeYearToDate = includeYearToRecordDate,
-                            appTheme = appTheme,
-                            secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
-                                accountList.findById(it)?.toRecordAccount()
-                            },
-                            onTransferClick = onTransferClick
-                        )
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .scale(1f - itemScale)
-                        ) {
-                            RecordStackComponent(
-                                appTheme = appTheme,
-                                recordStack = recordStack,
-                                includeYearToDate = includeYearToRecordDate,
-                                onRecordClick = onRecordClick
+                            includeYearToDate = includeYearToRecordDate
+                        ) { recordNum ->
+                            onNavigateToScreenMovingTowardsLeft(
+                                MainScreens.MakeRecord(MakeRecordStatus.Edit.name, recordNum)
                             )
                         }
                     }
-                }*/
+                }
             }
         }
     }
@@ -242,9 +206,7 @@ fun RecordsScreenPreview(
             selectedCollection = selectedCollection,
             onCollectionSelect = {},
             onToggleCollectionType = {},
-            onRecordClick = {},
-            onTransferClick = {},
-            onNavigateToEditCollectionsScreen = {},
+            onNavigateToScreenMovingTowardsLeft = {},
             onDimBackgroundChange = {}
         )
     }

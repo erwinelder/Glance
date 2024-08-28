@@ -8,17 +8,19 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepository
-import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.core.data.repository.GeneralRepository
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
-import com.ataglance.walletglance.record.data.repository.RecordRepository
+import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.record.data.repository.RecordRepository
+import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -29,15 +31,19 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class WalletGlanceApplication : Application() {
 
+    private lateinit var db: AppDatabase
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
+    lateinit var navViewModel: NavigationViewModel
 
     override fun onCreate() {
         super.onCreate()
         Log.d("Custom message onCreate", "----------------------------")
 
+        db = AppDatabase.getDatabase(this)
         initializeSettingsRepository()
         initializeAppViewModel()
+        initializeNavViewModel()
 
         applyAppLanguage()
         updateSetupStageIfNeeded()
@@ -51,8 +57,6 @@ class WalletGlanceApplication : Application() {
      * Initialize repositories and then initialize AppViewModel with passing them into it.
      */
     private fun initializeAppViewModel() {
-        val db by lazy { AppDatabase.getDatabase(this) }
-
         val accountRepository = AccountRepository(db.accountDao)
         val categoryRepository = CategoryRepository(db.categoryDao)
         val categoryCollectionRepository = CategoryCollectionRepository(db.categoryCollectionDao)
@@ -92,6 +96,12 @@ class WalletGlanceApplication : Application() {
             budgetAndBudgetAccountAssociationRepository,
             generalRepository = generalRepository
         )
+    }
+
+    private fun initializeNavViewModel() {
+        val navigationRepository = NavigationRepository(db.navigationButtonDao)
+
+        navViewModel = NavigationViewModel(navigationRepository)
     }
 
 

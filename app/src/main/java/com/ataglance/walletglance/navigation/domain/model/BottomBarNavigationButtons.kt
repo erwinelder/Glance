@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.navigation
+package com.ataglance.walletglance.navigation.domain.model
 
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R

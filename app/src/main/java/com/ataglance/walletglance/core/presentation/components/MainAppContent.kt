@@ -8,24 +8,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
-import com.ataglance.walletglance.core.navigation.AppNavHost
-import com.ataglance.walletglance.core.navigation.BottomBarNavigationButtons
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.core.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.core.utils.currentScreenIs
 import com.ataglance.walletglance.core.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.core.utils.getSetupProgressTopBarTitleRes
+import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.navigation.presentation.AppNavHost
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
@@ -34,11 +33,13 @@ fun MainAppContent(
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
+    navViewModel: NavigationViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val navViewModel = viewModel<NavigationViewModel>()
-    val moveScreenTowardsLeft by navViewModel.moveScreenTowardsLeft.collectAsStateWithLifecycle()
+    val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
+    val bottomBarNavigationButtons by navViewModel.bottomBarNavigationButtons
+        .collectAsStateWithLifecycle()
 
     val setupProgressTopBarUiState by remember {
         derivedStateOf {
@@ -80,7 +81,7 @@ fun MainAppContent(
             anyScreenInHierarchyIsScreenProvider = navBackStackEntry::anyScreenInHierarchyIs,
             currentScreenIsScreenProvider = navBackStackEntry::currentScreenIs,
             onNavigateBack = navController::popBackStack,
-            onNavigateToScreen = { screenNavigateTo: MainScreens ->
+            onNavigateToScreenAndPopUp = { screenNavigateTo: MainScreens ->
                 navViewModel.navigateToScreenAndPopUp(
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
@@ -88,24 +89,21 @@ fun MainAppContent(
                 )
             },
             onMakeRecordButtonClick = {
-                navViewModel.onMakeRecordButtonClick(
+                navViewModel.navigateToScreenMovingTowardsLeft(
                     navController = navController,
-                    recordNum = appUiSettings.nextRecordNum()
+                    screen = MainScreens.MakeRecord(
+                        status = MakeRecordStatus.Create.name,
+                        recordNum = appUiSettings.nextRecordNum()
+                    )
                 )
             },
-            bottomBarButtons = listOf(
-                BottomBarNavigationButtons.Home,
-                BottomBarNavigationButtons.Records,
-                BottomBarNavigationButtons.CategoryStatistics,
-                BottomBarNavigationButtons.Budgets,
-                BottomBarNavigationButtons.Settings
-            )
+            bottomBarButtons = bottomBarNavigationButtons
         ) { scaffoldPadding ->
             AppNavHost(
-                moveScreenTowardsLeft = moveScreenTowardsLeft,
-                changeMoveScreenTowardsLeft = navViewModel::setMoveScreenTowardsLeft,
                 navController = navController,
                 scaffoldPadding = scaffoldPadding,
+                navViewModel = navViewModel,
+                moveScreenTowardsLeft = moveScreenTowardsLeft,
                 appViewModel = appViewModel,
                 appUiSettings = appUiSettings,
                 themeUiState = themeUiState,

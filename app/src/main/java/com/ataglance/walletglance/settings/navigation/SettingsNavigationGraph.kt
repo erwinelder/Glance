@@ -20,7 +20,7 @@ import com.ataglance.walletglance.category.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
 import com.ataglance.walletglance.categoryCollection.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreen

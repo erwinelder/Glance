@@ -33,7 +33,6 @@ runner = "1.6.2"
 kotlinxSerializationJson = "1.6.3"
 uiTestManifest = "1.6.8"
 junitKtx = "1.2.1"
-uiTestJunit4Android = "1.6.8"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

@@ -35,7 +35,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
@@ -47,6 +47,7 @@ import com.ataglance.walletglance.core.presentation.components.widgets.RecordHis
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit
 import com.ataglance.walletglance.record.domain.RecordType
@@ -63,10 +64,7 @@ fun HomeScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     onTopBarAccountClick: (Int) -> Unit,
-    onNavigateToRecordsScreen: () -> Unit,
-    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
-    onRecordClick: (Int) -> Unit,
-    onTransferClick: (Int) -> Unit
+    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -92,10 +90,7 @@ fun HomeScreen(
             dateRangeMenuUiState = dateRangeMenuUiState,
             widgetsUiState = widgetsUiState,
             onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
-            onNavigateToRecordsScreen = onNavigateToRecordsScreen,
-            onNavigateToCategoriesStatisticsScreen = onNavigateToCategoriesStatisticsScreen,
-            onRecordClick = onRecordClick,
-            onTransferClick = onTransferClick
+            onNavigateToScreenMovingTowardsLeft = onNavigateToScreenMovingTowardsLeft
         )
     }
 }
@@ -109,10 +104,7 @@ private fun CompactLayout(
     dateRangeMenuUiState: DateRangeMenuUiState,
     widgetsUiState: WidgetsUiState,
     onChangeHideActiveAccountBalance: () -> Unit,
-    onNavigateToRecordsScreen: () -> Unit,
-    onRecordClick: (Int) -> Unit,
-    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
-    onTransferClick: (Int) -> Unit
+    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -131,13 +123,13 @@ private fun CompactLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            StartAnimatedContainer(appTheme != null, 50) {
+            StartAnimatedContainer(visible = appTheme != null, delayMillis = 50) {
                 GreetingsMessage(widgetsUiState.greetings.titleRes)
             }
         }
         item {
             StartAnimatedContainer(
-                appTheme != null && accountsUiState.activeAccount != null,
+                visible = appTheme != null && accountsUiState.activeAccount != null,
                 delayMillis = 100
             ) {
                 AccountCard(
@@ -149,7 +141,7 @@ private fun CompactLayout(
             }
         }
         item {
-            StartAnimatedContainer(appTheme != null, 150) {
+            StartAnimatedContainer(visible = appTheme != null, delayMillis = 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncomeState,
                     dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
@@ -158,7 +150,7 @@ private fun CompactLayout(
             }
         }
         item {
-            StartAnimatedContainer(appTheme != null, 200) {
+            StartAnimatedContainer(visible = appTheme != null, delayMillis = 200) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -169,18 +161,28 @@ private fun CompactLayout(
                         appTheme = appTheme,
                         isCustomDateRange =
                             dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
-                        onRecordClick = onRecordClick,
-                        onTransferClick = onTransferClick
+                        onRecordClick = { recordNum: Int ->
+                            onNavigateToScreenMovingTowardsLeft(
+                                MainScreens.MakeRecord(MakeRecordStatus.Edit.name, recordNum)
+                            )
+                        },
+                        onTransferClick = { recordNum: Int ->
+                            onNavigateToScreenMovingTowardsLeft(
+                                MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
+                            )
+                        }
                     )
                     NavigationTextArrowButton(
                         text = stringResource(R.string.view_all),
-                        onClick = onNavigateToRecordsScreen
+                        onClick = {
+                            onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
+                        }
                     )
                 }
             }
         }
         item {
-            StartAnimatedContainer(appTheme != null, 250) {
+            StartAnimatedContainer(visible = appTheme != null, delayMillis = 250) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -188,13 +190,15 @@ private fun CompactLayout(
                     CategoriesStatisticsWidget(
                         categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
                         appTheme = appTheme,
-                        onNavigateToCategoriesStatisticsScreen =
-                            onNavigateToCategoriesStatisticsScreen
+                        onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
+                            onNavigateToScreenMovingTowardsLeft(
+                                MainScreens.CategoryStatistics(parentCategoryId)
+                            )
+                        }
                     )
-                    NavigationTextArrowButton(
-                        text = stringResource(R.string.view_all),
-                        onClick = { onNavigateToCategoriesStatisticsScreen(0) }
-                    )
+                    NavigationTextArrowButton(text = stringResource(R.string.view_all)) {
+                        onNavigateToScreenMovingTowardsLeft(MainScreens.CategoryStatistics(0))
+                    }
                 }
             }
         }
@@ -380,10 +384,7 @@ fun HomeScreenPreview(
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},
             onTopBarAccountClick = {},
-            onNavigateToRecordsScreen = {},
-            onNavigateToCategoriesStatisticsScreen = {},
-            onRecordClick = {},
-            onTransferClick = {}
+            onNavigateToScreenMovingTowardsLeft = {}
         )
     }
 }

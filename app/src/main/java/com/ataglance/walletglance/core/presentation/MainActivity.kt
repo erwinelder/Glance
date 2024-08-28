@@ -11,29 +11,41 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.WalletGlanceApplication
 import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var app: WalletGlanceApplication
     private lateinit var appViewModel: AppViewModel
+    private lateinit var navViewModel: NavigationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        app = application as WalletGlanceApplication
         initializeAppViewModel()
+        initializeNavViewModel()
 
         setupSplashScreen()
 
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
-                WalletGlanceAppComponent(appViewModel = appViewModel)
+                WalletGlanceAppComponent(
+                    appViewModel = appViewModel,
+                    navViewModel = navViewModel
+                )
             }
         }
     }
 
     private fun initializeAppViewModel() {
-        val app: WalletGlanceApplication = application as WalletGlanceApplication
         appViewModel = app.appViewModel
         appViewModel.fetchDataOnStart()
+    }
+
+    private fun initializeNavViewModel() {
+        navViewModel = app.navViewModel
+        navViewModel.fetchBottomBarNavigationButtons()
     }
 
     private fun setupSplashScreen() {

@@ -26,9 +26,13 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.NoRippleTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
 @Composable
-fun WalletGlanceAppComponent(appViewModel: AppViewModel) {
+fun WalletGlanceAppComponent(
+    appViewModel: AppViewModel,
+    navViewModel: NavigationViewModel
+) {
     val context = LocalContext.current as ComponentActivity
     val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()
     val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
@@ -54,7 +58,8 @@ fun WalletGlanceAppComponent(appViewModel: AppViewModel) {
                         MainAppContent(
                             appViewModel = appViewModel,
                             appUiSettings = appUiSettings,
-                            themeUiState = safeThemeUiState
+                            themeUiState = safeThemeUiState,
+                            navViewModel = navViewModel
                         )
                     }
                 }

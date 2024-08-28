@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.navigation
+package com.ataglance.walletglance.navigation.presentation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Text
@@ -50,6 +50,8 @@ import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecord
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModelFactory
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModel
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModelFactory
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
@@ -63,10 +65,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavHost(
-    moveScreenTowardsLeft: Boolean,
-    changeMoveScreenTowardsLeft: (Boolean) -> Unit,
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
+    navViewModel: NavigationViewModel,
+    moveScreenTowardsLeft: Boolean,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
@@ -102,37 +104,10 @@ fun AppNavHost(
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                onTopBarAccountClick = { orderNum ->
-                    appViewModel.applyActiveAccountByOrderNum(orderNum)
-                },
+                onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
-                onNavigateToRecordsScreen = {
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(MainScreens.Records) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCategoriesStatisticsScreen = { parentCategoryId: Int ->
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(MainScreens.CategoryStatistics(parentCategoryId)) {
-                        launchSingleTop = true
-                    }
-                },
-                onRecordClick = { recordNum: Int ->
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        MainScreens.MakeRecord(MakeRecordStatus.Edit.name, recordNum)
-                    ) {
-                        launchSingleTop = true
-                    }
-                },
-                onTransferClick = { recordNum: Int ->
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
-                    ) {
-                        launchSingleTop = true
-                    }
+                onNavigateToScreenMovingTowardsLeft = { screen ->
+                    navViewModel.navigateToScreenMovingTowardsLeft(navController, screen)
                 }
             )
         }
@@ -168,9 +143,7 @@ fun AppNavHost(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
-                onAccountClick = { orderNum ->
-                    appViewModel.applyActiveAccountByOrderNum(orderNum)
-                },
+                onAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
@@ -181,29 +154,8 @@ fun AppNavHost(
                 selectedCollection = selectedCollection,
                 onCollectionSelect = viewModel::selectCollection,
                 onToggleCollectionType = viewModel::toggleCollectionType,
-                onRecordClick = { recordNum: Int ->
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        MainScreens.MakeRecord(MakeRecordStatus.Edit.name, recordNum)
-                    ) {
-                        launchSingleTop = true
-                    }
-                },
-                onTransferClick = { recordNum: Int ->
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
-                    ) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToEditCollectionsScreen = {
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        CategoryCollectionsSettingsScreens.EditCategoryCollections
-                    ) {
-                        launchSingleTop = true
-                    }
+                onNavigateToScreenMovingTowardsLeft = { screen ->
+                    navViewModel.navigateToScreenMovingTowardsLeft(navController, screen)
                 },
                 onDimBackgroundChange = onDimBackgroundChange
             )
@@ -252,34 +204,31 @@ fun AppNavHost(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
-                onAccountClick = { orderNum ->
-                    appViewModel.applyActiveAccountByOrderNum(orderNum)
-                },
+                onAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 viewModel = viewModel,
                 onNavigateToEditCollectionsScreen = {
-                    changeMoveScreenTowardsLeft(true)
-                    navController.navigate(
-                        CategoryCollectionsSettingsScreens.EditCategoryCollections
-                    ) {
-                        launchSingleTop = true
-                    }
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = CategoryCollectionsSettingsScreens.EditCategoryCollections
+                    )
                 },
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
         composable<MainScreens.Budgets> {
             BudgetsScreen(
-                scaffoldPadding = scaffoldPadding,
+                screenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 budgetsByType = budgetsByType,
                 onBudgetClick = { budget ->
-                    navController.navigate(MainScreens.BudgetStatistics(budget.id)) {
-                        launchSingleTop = true
-                    }
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = MainScreens.BudgetStatistics(budget.id)
+                    )
                 }
             )
         }
@@ -302,16 +251,18 @@ fun AppNavHost(
                 )
             )
 
-            val budgetsTotalAmountsByRanges by budgetStatisticsViewModel
-                .budgetsTotalAmountsByRanges.collectAsState()
-            val columnChartDataUiState by derivedStateOf {
-                budget?.let {
-                    ColumnChartUiState.createAsBudgetStatistics(
-                        totalAmountsByRanges = budgetsTotalAmountsByRanges,
-                        rowsCount = 5,
-                        repeatingPeriod = it.repeatingPeriod,
-                        context = context
-                    )
+            val budgetsTotalAmountsByRanges by budgetStatisticsViewModel.budgetsTotalAmountsByRanges
+                .collectAsState()
+            val columnChartDataUiState by remember {
+                derivedStateOf {
+                    budget?.let {
+                        ColumnChartUiState.createAsBudgetStatistics(
+                            totalAmountsByRanges = budgetsTotalAmountsByRanges,
+                            rowsCount = 5,
+                            repeatingPeriod = it.repeatingPeriod,
+                            context = context
+                        )
+                    }
                 }
             }
             val budgetAccounts by remember {
@@ -324,9 +275,7 @@ fun AppNavHost(
                     budget = budget,
                     columnChartUiState = chartUiState,
                     budgetAccounts = budgetAccounts,
-                    onBackButtonClick = {
-                        navController.popBackStack()
-                    }
+                    onBackButtonClick = navController::popBackStack
                 )
             } ?: Text(text = "Budget not found")
         }
@@ -341,25 +290,26 @@ fun AppNavHost(
             )
             val recordNum = backStack.toRoute<MainScreens.MakeRecord>().recordNum
 
-            val makeRecordUiStateAndUnitList = recordStackList.getMakeRecordStateAndUnitList(
-                makeRecordStatus = makeRecordStatus,
-                recordNum = recordNum,
-                accountList = accountsUiState.accountList
-            ) ?: (MakeRecordUiState(
-                recordStatus = MakeRecordStatus.Create,
-                recordNum = appUiSettings.nextRecordNum(),
-                account = accountsUiState.activeAccount
-            ) to null)
+            val (makeRecordUiState, makeRecordUnitList) = recordStackList
+                .getMakeRecordStateAndUnitList(
+                    makeRecordStatus = makeRecordStatus,
+                    recordNum = recordNum,
+                    accountList = accountsUiState.accountList
+                ) ?: (MakeRecordUiState(
+                    recordStatus = MakeRecordStatus.Create,
+                    recordNum = appUiSettings.nextRecordNum(),
+                    account = accountsUiState.activeAccount
+                ) to null)
             val categoryWithSubcategory = if (
-                makeRecordUiStateAndUnitList.second == null && accountsUiState.activeAccount != null
+                makeRecordUnitList == null && accountsUiState.activeAccount != null
             ) {
                 appViewModel.getLastRecordCategory(accountId = accountsUiState.activeAccount.id)
             } else null
             val viewModel = viewModel<MakeRecordViewModel>(
                 factory = MakeRecordViewModelFactory(
                     categoryWithSubcategory = categoryWithSubcategory,
-                    makeRecordUiState = makeRecordUiStateAndUnitList.first,
-                    makeRecordUnitList = makeRecordUiStateAndUnitList.second
+                    makeRecordUiState = makeRecordUiState,
+                    makeRecordUnitList = makeRecordUnitList
                 )
             )
             val coroutineScope = rememberCoroutineScope()
@@ -371,14 +321,13 @@ fun AppNavHost(
                 accountList = accountsUiState.accountList,
                 categoriesWithSubcategories = categoriesWithSubcategories,
                 onMakeTransferButtonClick = {
-                    navController.navigate(
-                        MainScreens.MakeTransfer(
+                    navViewModel.navigateToScreen(
+                        navController = navController,
+                        screen = MainScreens.MakeTransfer(
                             status = MakeRecordStatus.Create.name,
                             recordNum = appUiSettings.nextRecordNum()
                         )
-                    ) {
-                        launchSingleTop = true
-                    }
+                    )
                 },
                 onSaveButton = { state, unitList ->
                     coroutineScope.launch {
@@ -458,6 +407,7 @@ fun AppNavHost(
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()
+
             SetupFinishScreen(
                 onFinishSetupButton = {
                     coroutineScope.launch {

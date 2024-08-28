@@ -27,7 +27,7 @@ import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 
 @Composable
 fun BudgetsScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues,
     appTheme: AppTheme?,
     budgetsByType: BudgetsByType,
     onBudgetClick: (Budget) -> Unit
@@ -36,7 +36,7 @@ fun BudgetsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp, bottom = 16.dp + scaffoldPadding.calculateBottomPadding())
+            .padding(top = 16.dp, bottom = 16.dp + screenPadding.calculateBottomPadding())
     ) {
         GlassSurface(
             modifier = Modifier.weight(1f),
@@ -123,7 +123,7 @@ fun BudgetsScreenPreview() {
 
     PreviewContainer {
         BudgetsScreen(
-            scaffoldPadding = PaddingValues(),
+            screenPadding = PaddingValues(),
             appTheme = appTheme,
             budgetsByType = budgetsByType,
             onBudgetClick = {}
