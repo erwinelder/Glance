@@ -187,7 +187,7 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
 @Composable
 fun BudgetStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetup: Boolean = true,
+    isAppSetUp: Boolean = true,
     isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(

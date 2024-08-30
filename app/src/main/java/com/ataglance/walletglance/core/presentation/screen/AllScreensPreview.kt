@@ -18,6 +18,7 @@ import com.ataglance.walletglance.category.presentation.screen.CategoryStatistic
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
+import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
@@ -27,9 +28,15 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.record.utils.asChar
+import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.screen.AppearanceScreenPreview
+import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
+import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreenPreview
+import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
+import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
 
 private val appTheme: AppTheme = AppTheme.DarkDefault
-private const val isAppSetup: Boolean = true
+private const val isAppSetUp: Boolean = true
 private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true
 private val accountsUiState: AccountsUiState = AccountsUiState(
@@ -163,7 +170,7 @@ private val budgetAccountAssociationList = listOf(
 fun MainAppContentHomeScreenPreview() {
     HomeScreenPreview(
         appTheme = appTheme,
-        isAppSetup = isAppSetup,
+        isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountsUiState = accountsUiState,
@@ -189,7 +196,7 @@ fun MainAppContentRecordsScreenPreview() {
 
     RecordsScreenPreview(
         appTheme = appTheme,
-        isAppSetup = isAppSetup,
+        isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountList = accountsUiState.accountList,
@@ -217,7 +224,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
 
     CategoryStatisticsScreenPreview(
         appTheme = appTheme,
-        isAppSetup = isAppSetup,
+        isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountList = accountsUiState.accountList,
@@ -240,7 +247,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
 fun MainAppContentBudgetsScreenPreview() {
     BudgetsScreenPreview(
         appTheme = appTheme,
-        isAppSetup = isAppSetup,
+        isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         budgetEntityList = budgetEntityList,
@@ -260,7 +267,7 @@ fun MainAppContentBudgetsScreenPreview() {
 fun MainAppContentBudgetStatisticsScreenPreview() {
     BudgetStatisticsScreenPreview(
         appTheme = appTheme,
-        isAppSetup = isAppSetup,
+        isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountList = accountsUiState.accountList
@@ -277,7 +284,94 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
 fun MainAppContentFinishSetupScreenPreview() {
     SetupFinishScreenPreview(
         appTheme = appTheme,
-        isAppSetup = isAppSetup,
+        isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "StartSetupScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentStartSetupScreenPreview() {
+    StartSetupScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "SettingsHomeScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentSettingHomeScreenPreview() {
+    SettingsHomeScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+    )
+}
+
+@Preview(
+    name = "LanguageScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentLanguageScreenPreview() {
+    LanguageScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        appLanguage = AppLanguage.English.languageCode,
+        selectedLanguage = AppLanguage.German.languageCode
+    )
+}
+
+@Preview(
+    name = "AppearanceScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentAppearanceScreenPreview() {
+    AppearanceScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        themeUiState = ThemeUiState(
+            useDeviceTheme = true,
+            chosenLightTheme = AppTheme.LightDefault.name,
+            chosenDarkTheme = AppTheme.DarkDefault.name,
+            lastChosenTheme = appTheme.name
+        )
+    )
+}
+
+@Preview(
+    name = "SettingsDataScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentSettingsDataScreenPreview() {
+    SettingsDataScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
     )
 }

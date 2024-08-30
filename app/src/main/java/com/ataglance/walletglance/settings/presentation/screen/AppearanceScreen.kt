@@ -9,13 +9,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.settings.presentation.components.ThemePicker
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.components.ThemePicker
 
 @Composable
-fun SetupAppearanceScreen(
+fun AppearanceScreen(
     isAppSetUp: Boolean,
     themeUiState: ThemeUiState,
     onContinueSetupButton: () -> Unit,
@@ -43,5 +47,37 @@ fun SetupAppearanceScreen(
                 text = stringResource(R.string._continue)
             )
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun AppearanceScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = true,
+    themeUiState: ThemeUiState = ThemeUiState(
+        useDeviceTheme = false,
+        chosenLightTheme = AppTheme.LightDefault.name,
+        chosenDarkTheme = AppTheme.DarkDefault.name,
+        lastChosenTheme = AppTheme.LightDefault.name
+    )
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible
+    ) {
+        AppearanceScreen(
+            isAppSetUp = isAppSetUp,
+            themeUiState = themeUiState,
+            onContinueSetupButton = {},
+            onSetUseDeviceTheme = {},
+            onChooseLightTheme = {},
+            onChooseDarkTheme = {}
+        )
     }
 }

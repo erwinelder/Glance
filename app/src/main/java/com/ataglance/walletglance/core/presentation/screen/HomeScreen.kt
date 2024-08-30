@@ -322,7 +322,7 @@ private fun ExpandedLayout(
 @Composable
 fun HomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetup: Boolean = true,
+    isAppSetUp: Boolean = true,
     isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(

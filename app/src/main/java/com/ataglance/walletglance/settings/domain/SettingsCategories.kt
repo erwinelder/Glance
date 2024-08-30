@@ -4,12 +4,18 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
-data class SettingsCategory(@StringRes val stringRes: Int, @DrawableRes val iconRes: Int)
+data class SettingsCategory(
+    val screen: SettingsScreens,
+    @StringRes val stringRes: Int,
+    @DrawableRes val iconRes: Int
+)
 
 class SettingsCategories(appTheme: AppTheme?) {
 
     val accounts = SettingsCategory(
+        SettingsScreens.Accounts,
         R.string.accounts,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.accounts_light_default_icon
@@ -19,6 +25,7 @@ class SettingsCategories(appTheme: AppTheme?) {
     )
 
     val budgets = SettingsCategory(
+        SettingsScreens.Budgets,
         R.string.budgets,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.budgets_light_default_icon
@@ -28,6 +35,7 @@ class SettingsCategories(appTheme: AppTheme?) {
     )
 
     val categories = SettingsCategory(
+        SettingsScreens.Categories,
         R.string.categories,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.categories_light_default_icon
@@ -37,6 +45,7 @@ class SettingsCategories(appTheme: AppTheme?) {
     )
 
     val categoryCollections = SettingsCategory(
+        SettingsScreens.CategoryCollections,
         R.string.category_collections,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.category_collections_light_default_icon_
@@ -46,6 +55,7 @@ class SettingsCategories(appTheme: AppTheme?) {
     )
 
     val appearance = SettingsCategory(
+        SettingsScreens.Appearance,
         R.string.appearance,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
@@ -55,6 +65,7 @@ class SettingsCategories(appTheme: AppTheme?) {
     )
 
     val language = SettingsCategory(
+        SettingsScreens.Language,
         R.string.language,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.language_light_default_icon
@@ -64,6 +75,7 @@ class SettingsCategories(appTheme: AppTheme?) {
     )
 
     val resetData = SettingsCategory(
+        SettingsScreens.ResetData,
         R.string.reset_data,
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.reset_light_default_icon

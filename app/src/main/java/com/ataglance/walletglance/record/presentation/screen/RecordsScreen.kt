@@ -151,7 +151,7 @@ fun RecordsScreen(
 @Composable
 fun RecordsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetup: Boolean = true,
+    isAppSetUp: Boolean = true,
     isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(

@@ -124,7 +124,7 @@ fun CategoryStatisticsScreen(
 @Composable
 fun CategoryStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetup: Boolean = true,
+    isAppSetUp: Boolean = true,
     isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(

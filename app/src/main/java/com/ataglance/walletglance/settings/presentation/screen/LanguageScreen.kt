@@ -11,19 +11,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppLanguage
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
 
 @Composable
-fun SetupLanguageScreen(
+fun LanguageScreen(
     scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
     appLanguage: String,
     chosenLanguage: String?,
-    chooseNewLanguage: (String) -> Unit,
+    onSelectNewLanguage: (String) -> Unit,
     onApplyLanguageButton: (String) -> Unit,
     onContinueButton: () -> Unit
 ) {
@@ -40,7 +45,7 @@ fun SetupLanguageScreen(
         LanguagePicker(
             currentLangCode = chosenLanguage,
             onRadioButton = { langCode ->
-                chooseNewLanguage(langCode)
+                onSelectNewLanguage(langCode)
             }
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
@@ -57,5 +62,34 @@ fun SetupLanguageScreen(
                 text = stringResource(R.string._continue)
             )
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun LanguageScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = true,
+    appLanguage: String = AppLanguage.English.languageCode,
+    selectedLanguage: String? = AppLanguage.German.languageCode,
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible
+    ) { scaffoldPadding ->
+        LanguageScreen(
+            scaffoldPadding = scaffoldPadding,
+            isAppSetUp = isAppSetUp,
+            appLanguage = appLanguage,
+            chosenLanguage = selectedLanguage,
+            onSelectNewLanguage = {},
+            onApplyLanguageButton = {},
+            onContinueButton = {}
+        )
     }
 }

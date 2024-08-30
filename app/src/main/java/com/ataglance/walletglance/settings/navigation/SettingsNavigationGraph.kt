@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.settings.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,12 +23,13 @@ import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.screen.AppearanceScreen
+import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
-import com.ataglance.walletglance.settings.presentation.screen.SetupAppearanceScreen
-import com.ataglance.walletglance.settings.presentation.screen.SetupLanguageScreen
-import com.ataglance.walletglance.settings.presentation.screen.SetupStartScreen
+import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreen
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
+import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModelFactory
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.settingsGraph(
@@ -46,7 +46,7 @@ fun NavGraphBuilder.settingsGraph(
 ) {
     navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
         composable<SettingsScreens.Start> {
-            SetupStartScreen(
+            StartSetupScreen(
                 appTheme = appUiSettings.appTheme,
                 onManualSetupButton = {
                     navViewModel.navigateToScreen(navController, SettingsScreens.Language)
@@ -60,48 +60,6 @@ fun NavGraphBuilder.settingsGraph(
                 onNavigateToScreen = { screen ->
                     navViewModel.navigateToScreen(navController, screen)
                 }
-            )
-        }
-        composable<SettingsScreens.Language> {
-            val viewModel = viewModel<LanguageViewModel>()
-            val chosenLanguage by viewModel.langCode.collectAsState()
-            val context = LocalContext.current
-
-            LaunchedEffect(true) {
-                if (chosenLanguage == null) {
-                    viewModel.chooseNewLanguage(appUiSettings.langCode)
-                }
-            }
-
-            SetupLanguageScreen(
-                scaffoldPadding = scaffoldPadding,
-                isAppSetUp = appUiSettings.isSetUp,
-                appLanguage = appUiSettings.langCode,
-                chosenLanguage = chosenLanguage,
-                chooseNewLanguage = viewModel::chooseNewLanguage,
-                onApplyLanguageButton = { langCode: String ->
-                    appViewModel.translateAndSaveCategoriesWithDefaultNames(
-                        currentLangCode = appUiSettings.langCode,
-                        newLangCode = langCode,
-                        context = context
-                    )
-                    appViewModel.setLanguage(langCode)
-                },
-                onContinueButton = {
-                    navViewModel.navigateToScreen(navController, SettingsScreens.Appearance)
-                }
-            )
-        }
-        composable<SettingsScreens.Appearance> {
-            SetupAppearanceScreen(
-                isAppSetUp = appUiSettings.isSetUp,
-                themeUiState = themeUiState,
-                onContinueSetupButton = {
-                    navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
-                },
-                onChooseLightTheme = appViewModel::chooseLightTheme,
-                onChooseDarkTheme = appViewModel::chooseDarkTheme,
-                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme
             )
         }
         accountsGraph(
@@ -134,6 +92,45 @@ fun NavGraphBuilder.settingsGraph(
             categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsWithIdsByType = categoryCollectionsUiState
         )
+        composable<SettingsScreens.Appearance> {
+            AppearanceScreen(
+                isAppSetUp = appUiSettings.isSetUp,
+                themeUiState = themeUiState,
+                onContinueSetupButton = {
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
+                },
+                onChooseLightTheme = appViewModel::chooseLightTheme,
+                onChooseDarkTheme = appViewModel::chooseDarkTheme,
+                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme
+            )
+        }
+        composable<SettingsScreens.Language> {
+            val viewModel = viewModel<LanguageViewModel>(
+                factory = LanguageViewModelFactory(appUiSettings.langCode)
+            )
+
+            val chosenLanguage by viewModel.langCode.collectAsState()
+            val context = LocalContext.current
+
+            LanguageScreen(
+                scaffoldPadding = scaffoldPadding,
+                isAppSetUp = appUiSettings.isSetUp,
+                appLanguage = appUiSettings.langCode,
+                chosenLanguage = chosenLanguage,
+                onSelectNewLanguage = viewModel::selectNewLanguage,
+                onApplyLanguageButton = { langCode: String ->
+                    appViewModel.translateAndSaveCategoriesWithDefaultNames(
+                        currentLangCode = appUiSettings.langCode,
+                        newLangCode = langCode,
+                        context = context
+                    )
+                    appViewModel.setLanguage(langCode)
+                },
+                onContinueButton = {
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Appearance)
+                }
+            )
+        }
         composable<SettingsScreens.ResetData> {
             val coroutineScope = rememberCoroutineScope()
 
