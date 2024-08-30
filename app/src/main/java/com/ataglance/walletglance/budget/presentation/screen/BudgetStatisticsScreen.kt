@@ -88,6 +88,7 @@ fun BudgetStatisticsScreen(
                     }
                     Text(
                         text = budget.name,
+                        color = GlanceTheme.onSurface,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
@@ -97,6 +98,7 @@ fun BudgetStatisticsScreen(
                             R.string.amount_currency_spending_limit,
                             budget.amountLimit.formatWithSpaces(), budget.currency
                         ),
+                        color = GlanceTheme.onSurface,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,

@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.Category
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
@@ -49,11 +49,11 @@ fun RecordCategory(
                     .shadow(
                         elevation = 6.dp,
                         shape = RoundedCornerShape(30),
-                        spotColor = category.colorWithName.color.getByTheme(appTheme).darker
+                        spotColor = category.getIconSolidColorByTheme(appTheme)
                     )
                     .clip(RoundedCornerShape(30))
                     .size(iconSize)
-                    .background(category.colorWithName.color.getByTheme(appTheme).darker)
+                    .background(category.getIconSolidColorByTheme(appTheme))
                     .padding(5.dp)
             )
             Text(

@@ -14,18 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
 fun BudgetComponent(
@@ -58,6 +59,7 @@ fun BudgetComponent(
                 Icon(
                     painter = painterResource(R.drawable.short_arrow_right_icon),
                     contentDescription = "right arrow icon",
+                    tint = GlanceTheme.onSurface,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -98,9 +100,9 @@ fun BudgetComponent(
                 }
                 GlanceLineChart(
                     percentage = budget.usedPercentage / 100,
-                    brushColors = budget.category?.getColorByTheme(appTheme)
-                        ?.asListDarkToLight() ?: listOf(Color.Black),
-                    shadowColor = budget.category?.getColorByTheme(appTheme)?.darker ?: Color.Black
+                    brushColors = budget.category?.getLineChartColorsByTheme(appTheme)
+                        ?: listOf(Color.Black),
+                    shadowColor = budget.category?.getIconSolidColorByTheme(appTheme) ?: Color.Black
                 )
             }
         }
@@ -108,8 +110,8 @@ fun BudgetComponent(
 }
 
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun Preview() {
-    BudgetsScreenPreview()
+    BudgetsScreenPreview(appTheme = AppTheme.LightDefault)
 }

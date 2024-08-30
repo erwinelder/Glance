@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.category.domain
 
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
@@ -26,6 +27,14 @@ data class Category(
 
     fun getColorByTheme(theme: AppTheme?): LighterDarkerColors {
         return colorWithName.getColorByTheme(theme)
+    }
+
+    fun getIconSolidColorByTheme(appTheme: AppTheme?): Color {
+        return colorWithName.color.getCategoryIconSolidColorByTheme(appTheme)
+    }
+
+    fun getLineChartColorsByTheme(appTheme: AppTheme?): List<Color> {
+        return colorWithName.color.getCategoryLineChartColorsByTheme(appTheme)
     }
 
     fun canBeDeleted(): Boolean {

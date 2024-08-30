@@ -28,7 +28,7 @@ import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.record.utils.asChar
 
-private val appTheme: AppTheme = AppTheme.LightDefault
+private val appTheme: AppTheme = AppTheme.DarkDefault
 private const val isAppSetup: Boolean = true
 private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true

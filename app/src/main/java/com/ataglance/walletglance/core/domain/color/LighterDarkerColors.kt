@@ -9,6 +9,10 @@ data class LighterDarkerColors(
     val darker: Color = Color.Gray
 ) {
 
+    fun asListLightToDark(): List<Color> {
+        return listOf(lighter, darker)
+    }
+
     fun asListDarkToLight(): List<Color> {
         return listOf(darker, lighter)
     }

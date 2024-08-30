@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.category.domain.Category
@@ -29,11 +30,11 @@ fun CategoryIconComponent(
         modifier = Modifier
             .shadow(
                 elevation = 8.dp,
-                spotColor = category.getColorByTheme(appTheme).darker,
+                spotColor = category.getIconSolidColorByTheme(appTheme),
                 shape = RoundedCornerShape(30)
             )
             .clip(RoundedCornerShape(30))
-            .background(category.getColorByTheme(appTheme).darker)
+            .background(category.getIconSolidColorByTheme(appTheme))
             .size(32.dp)
             .padding(5.dp)
     )
@@ -41,8 +42,8 @@ fun CategoryIconComponent(
 
 
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun CategoryIconComponentPreview() {
-    RecordsScreenPreview()
+    RecordsScreenPreview(appTheme = AppTheme.LightDefault)
 }

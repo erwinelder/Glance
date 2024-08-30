@@ -5,13 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
+import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
-import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
 
 sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {
 
@@ -22,7 +22,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(185, 207, 147), Color(163, 182, 129)
             ),
             darkDefault = LighterDarkerColors(
-                Color(109, 120, 92), Color(132, 145, 111)
+                Color(132, 145, 111), Color(109, 120, 92)
             )
         )
     )
@@ -34,7 +34,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(232, 195, 144), Color(207, 175, 129)
             ),
             darkDefault = LighterDarkerColors(
-                Color(150, 123, 83), Color(175, 144, 96)
+                Color(175, 144, 96), Color(150, 123, 83)
             )
         )
     )
@@ -46,7 +46,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(250, 167, 211), Color(224, 150, 190)
             ),
             darkDefault = LighterDarkerColors(
-                Color(161, 100, 133), Color(185, 114, 153)
+                Color(185, 114, 153), Color(161, 100, 133)
             )
         )
     )
@@ -58,7 +58,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(157, 227, 164), Color(138, 201, 144)
             ),
             darkDefault = LighterDarkerColors(
-                Color(99, 130, 101), Color(118, 156, 121)
+                Color(118, 156, 121), Color(99, 130, 101)
             )
         )
     )
@@ -70,7 +70,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(255, 148, 148), Color(230, 133, 133)
             ),
             darkDefault = LighterDarkerColors(
-                Color(168, 88, 88), Color(194, 100, 100)
+                Color(194, 100, 100), Color(168, 88, 88)
             )
         )
     )
@@ -82,7 +82,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(150, 197, 250), Color(134, 176, 224)
             ),
             darkDefault = LighterDarkerColors(
-                Color(95, 126, 161), Color(109, 144, 185)
+                Color(109, 144, 185), Color(95, 126, 161)
             )
         )
     )
@@ -94,7 +94,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(218, 162, 250), Color(195, 146, 224)
             ),
             darkDefault = LighterDarkerColors(
-                Color(139, 104, 161), Color(162, 121, 187)
+                Color(162, 121, 187), Color(139, 104, 161)
             )
         )
     )
@@ -106,7 +106,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(154, 157, 245), Color(138, 141, 219)
             ),
             darkDefault = LighterDarkerColors(
-                Color(104, 107, 166), Color(119, 122, 190)
+                Color(119, 122, 190), Color(104, 107, 166)
             )
         )
     )
@@ -118,7 +118,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(135, 232, 196), Color(120, 206, 174)
             ),
             darkDefault = LighterDarkerColors(
-                Color(95, 148, 128), Color(110, 173, 150)
+                Color(110, 173, 150), Color(95, 148, 128)
             )
         )
     )
@@ -130,7 +130,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(255, 186, 145), Color(230, 167, 131)
             ),
             darkDefault = LighterDarkerColors(
-                Color(168, 114, 82), Color(194, 132, 96)
+                Color(194, 132, 96), Color(168, 114, 82)
             )
         )
     )
@@ -142,7 +142,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(247, 226, 116), Color(223, 203, 104)
             ),
             darkDefault = LighterDarkerColors(
-                Color(158, 133, 65), Color(184, 156, 76)
+                Color(184, 156, 76), Color(158, 133, 65)
             )
         )
     )
@@ -154,7 +154,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
                 Color(186, 186, 186), Color(160, 160, 160)
             ),
             darkDefault = LighterDarkerColors(
-                Color(105, 105, 105), Color(130, 130, 130)
+                Color(130, 130, 130), Color(105, 105, 105)
             )
         )
     )

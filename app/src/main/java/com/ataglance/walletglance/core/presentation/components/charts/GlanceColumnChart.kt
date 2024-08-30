@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -72,8 +73,10 @@ fun GlanceColumnChart(
             title?.let {
                 Text(
                     text = it,
-                    fontSize = 19.sp,
-                    textAlign = TextAlign.Center
+                    color = GlanceTheme.onSurface,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
             Row(
@@ -100,7 +103,8 @@ fun GlanceColumnChart(
             bottomNote?.let {
                 Text(
                     text = it,
-                    fontSize = 17.sp,
+                    color = GlanceTheme.onSurface,
+                    fontSize = 18.sp,
                     textAlign = TextAlign.Center
                 )
             }
@@ -325,7 +329,9 @@ private fun ChartColumn(
 }
 
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_7_PRO
+)
 @Composable
 private fun GlanceColumnChartPreview() {
     BudgetStatisticsScreenPreview()
