@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.category.domain
 
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 
 @Stable
 data class CategoryWithSubcategory(
@@ -13,10 +12,8 @@ data class CategoryWithSubcategory(
         return subcategory ?: category
     }
 
-    fun matchCollection(collection: CategoryCollectionWithIds): Boolean {
-        return (subcategory?.id ?: category.id).let {
-            collection.categoriesIds?.contains(it)
-        } ?: false
+    fun matchCategoriesIds(categoriesIds: List<Int>): Boolean {
+        return categoriesIds.contains(subcategory?.id ?: category.id)
     }
 
     fun groupParentAndSubcategoryOrderNums(): Double {

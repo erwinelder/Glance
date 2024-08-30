@@ -56,6 +56,10 @@ data class CategoryWithSubcategories(
         return CategoryWithSubcategory(category, subcategoryList.lastOrNull())
     }
 
+    fun getWithoutSubcategory(): CategoryWithSubcategory {
+        return CategoryWithSubcategory(category)
+    }
+
     fun asSingleList(): List<Category> {
         return listOf(category) + subcategoryList
     }

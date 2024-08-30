@@ -4,7 +4,7 @@ import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.categoryCollection.utils.toCollectionsWithCategories
 
-data class CategoryCollectionsWithIds(
+data class CategoryCollectionsWithIdsByType(
     val expense: List<CategoryCollectionWithIds> = listOf(),
     val income: List<CategoryCollectionWithIds> = listOf(),
     val mixed: List<CategoryCollectionWithIds> = listOf()
@@ -29,8 +29,8 @@ data class CategoryCollectionsWithIds(
         }
     }
 
-    fun appendDefaultCollection(name: String): CategoryCollectionsWithIds {
-        return CategoryCollectionsWithIds(
+    fun appendDefaultCollection(name: String): CategoryCollectionsWithIdsByType {
+        return CategoryCollectionsWithIdsByType(
             expense = listOf(
                 CategoryCollectionWithIds(type = CategoryCollectionType.Expense, name = name)
             ) + expense,

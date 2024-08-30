@@ -13,6 +13,16 @@ fun <A, B> Pair<A?, B?>.takeIfNoneIsNull(): Pair<A, B>? {
 }
 
 
+inline fun <A, B, R> Pair<A?, B?>.letIfNoneIsNull(block: (Pair<A, B>) -> R): R? {
+    val (first, second) = this
+    return if (first != null && second != null) {
+        block(first to second)
+    } else {
+        null
+    }
+}
+
+
 inline fun <T> List<T>.deleteItemAndMoveOrderNum(
     predicate: (T) -> Boolean,
     transform: (T) -> T

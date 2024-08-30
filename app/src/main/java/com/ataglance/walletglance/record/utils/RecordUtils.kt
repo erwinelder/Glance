@@ -104,9 +104,17 @@ fun List<RecordStack>.filterByCollectionType(type: CategoryCollectionType): List
 
 
 fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds): List<RecordStack> {
+    return this.filterByCollectionType(collection.type).let { recordStacksFilteredByType ->
+        recordStacksFilteredByType.takeUnless { collection.hasLinkedCategories() }
+            ?: recordStacksFilteredByType.filterByCategoriesIds(collection.categoriesIds!!)
+    }
+}
+
+
+fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<RecordStack> {
     return this.mapNotNull { recordStack ->
         recordStack.stack
-            .filter { it.categoryWithSubcategory?.matchCollection(collection) == true }
+            .filter { it.categoryWithSubcategory?.matchCategoriesIds(categoriesIds) == true }
             .takeIf { it.isNotEmpty() }
             ?.let { recordStack.copy(stack = it) }
     }

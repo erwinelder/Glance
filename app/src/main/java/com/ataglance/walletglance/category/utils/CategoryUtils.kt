@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.category.utils
 
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.mapper.toCategoryList
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
@@ -11,9 +12,8 @@ import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
 import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.category.data.mapper.toCategoryList
 
 
 fun CategoryType.asChar(): Char {

@@ -26,10 +26,10 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModelFactory
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.screen.CategoriesStatisticsScreen
+import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -41,7 +41,7 @@ import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
-import com.ataglance.walletglance.core.utils.takeIfNoneIsNull
+import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
 import com.ataglance.walletglance.makingRecord.presentation.screen.MakeRecordScreen
@@ -74,7 +74,7 @@ fun AppNavHost(
     themeUiState: ThemeUiState,
     accountsUiState: AccountsUiState,
     categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsUiState: CategoryCollectionsWithIds,
+    categoryCollectionsUiState: CategoryCollectionsWithIdsByType,
     dateRangeMenuUiState: DateRangeMenuUiState,
     recordStackList: List<RecordStack>,
     budgetsByType: BudgetsByType,
@@ -177,11 +177,11 @@ fun AppNavHost(
                 )
             )
             LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
-                viewModel.setCategoryStatisticsLists(widgetsUiState.categoryStatisticsLists)
+                viewModel.setCategoryStatisticsByAccountAndDate(widgetsUiState.categoryStatisticsLists)
             }
             LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
                 viewModel.setRecordsFilteredByDateAndAccount(
-                    widgetsUiState.recordsFilteredByDateAndAccount
+                    recordList = widgetsUiState.recordsFilteredByDateAndAccount
                 )
             }
             LaunchedEffect(categoryCollectionsUiState) {
@@ -193,14 +193,21 @@ fun AppNavHost(
                 dateRangeMenuUiState.dateRangeWithEnum.enum,
                 accountsUiState.accountList
             ) {
-                viewModel.clearParentCategory()
+                viewModel.clearParentCategoryStatistics()
             }
             LaunchedEffect(true) {
-                viewModel.setParentCategory()
+                viewModel.setParentCategoryStatistics()
                 viewModel.clearParentCategoryId()
             }
 
-            CategoriesStatisticsScreen(
+            val parentCategory by viewModel.parentCategoryStatistics.collectAsStateWithLifecycle()
+            val categoryStatisticsList by viewModel.categoryStatisticsList
+                .collectAsStateWithLifecycle()
+            val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
+            val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
+            val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
+
+            CategoryStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
@@ -209,13 +216,21 @@ fun AppNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                viewModel = viewModel,
+                parentCategory = parentCategory,
+                categoryStatisticsList = categoryStatisticsList,
+                currentCategoryType = categoryType,
+                collectionList = collectionList,
+                selectedCollection = selectedCollection,
+                onCollectionSelect = viewModel::selectCollection,
                 onNavigateToEditCollectionsScreen = {
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
                         screen = CategoryCollectionsSettingsScreens.EditCategoryCollections
                     )
                 },
+                onSetCategoryType = viewModel::setCategoryType,
+                onSetParentCategory = viewModel::setParentCategoryStatistics,
+                onClearParentCategory = viewModel::clearParentCategoryStatistics,
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
@@ -269,7 +284,7 @@ fun AppNavHost(
                 derivedStateOf { accountsUiState.filterByBudget(budget) }
             }
 
-            (budget to columnChartDataUiState).takeIfNoneIsNull()?.let { (budget, chartUiState) ->
+            (budget to columnChartDataUiState).letIfNoneIsNull { (budget, chartUiState) ->
                 BudgetStatisticsScreen(
                     appTheme = appUiSettings.appTheme,
                     budget = budget,
@@ -397,6 +412,7 @@ fun AppNavHost(
         settingsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
+            navViewModel = navViewModel,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,

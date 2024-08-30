@@ -17,11 +17,12 @@ import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.budget.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.navigation.categoriesGraph
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
@@ -34,12 +35,13 @@ import kotlinx.coroutines.launch
 fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
+    navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsUiState: CategoryCollectionsWithIds,
+    categoryCollectionsUiState: CategoryCollectionsWithIdsByType,
     budgetsByType: BudgetsByType
 ) {
     navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
@@ -47,7 +49,7 @@ fun NavGraphBuilder.settingsGraph(
             SetupStartScreen(
                 appTheme = appUiSettings.appTheme,
                 onManualSetupButton = {
-                    navController.navigate(SettingsScreens.Language)
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Language)
                 }
             )
         }
@@ -55,10 +57,8 @@ fun NavGraphBuilder.settingsGraph(
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
-                onNavigateToScreen = { screen: SettingsScreens ->
-                    navController.navigate(screen) {
-                        launchSingleTop = true
-                    }
+                onNavigateToScreen = { screen ->
+                    navViewModel.navigateToScreen(navController, screen)
                 }
             )
         }
@@ -88,7 +88,7 @@ fun NavGraphBuilder.settingsGraph(
                     appViewModel.setLanguage(langCode)
                 },
                 onContinueButton = {
-                    navController.navigate(SettingsScreens.Appearance)
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Appearance)
                 }
             )
         }
@@ -97,7 +97,7 @@ fun NavGraphBuilder.settingsGraph(
                 isAppSetUp = appUiSettings.isSetUp,
                 themeUiState = themeUiState,
                 onContinueSetupButton = {
-                    navController.navigate(SettingsScreens.Accounts)
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
                 },
                 onChooseLightTheme = appViewModel::chooseLightTheme,
                 onChooseDarkTheme = appViewModel::chooseDarkTheme,
@@ -132,7 +132,7 @@ fun NavGraphBuilder.settingsGraph(
             appViewModel = appViewModel,
             appTheme = appUiSettings.appTheme,
             categoriesWithSubcategories = categoriesWithSubcategories,
-            categoryCollectionsWithIds = categoryCollectionsUiState
+            categoryCollectionsWithIdsByType = categoryCollectionsUiState
         )
         composable<SettingsScreens.ResetData> {
             val coroutineScope = rememberCoroutineScope()

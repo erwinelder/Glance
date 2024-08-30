@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.utils.toCollectionsWithIds
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
@@ -27,7 +27,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
     appViewModel: AppViewModel,
     appTheme: AppTheme?,
     categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsWithIds: CategoryCollectionsWithIds
+    categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType
 ) {
     navigation<SettingsScreens.CategoryCollections>(
         startDestination = CategoryCollectionsSettingsScreens.EditCategoryCollections
@@ -38,7 +38,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 navController = navController,
                 factory = CategoryCollectionsViewModelFactory(
                     categoryList = categoriesWithSubcategories.concatenateAsCategoryList(),
-                    collectionsWithIds = categoryCollectionsWithIds
+                    collectionsWithIds = categoryCollectionsWithIdsByType
                 )
             )
             val editCollectionViewModel = backStack

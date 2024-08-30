@@ -7,7 +7,7 @@ import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithCategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,14 +18,14 @@ import kotlinx.coroutines.flow.update
 
 class CategoryCollectionsViewModel(
     categoryList: List<Category>,
-    categoryCollectionsWithIds: CategoryCollectionsWithIds
+    categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType
 ) : ViewModel() {
 
     private val _collectionType: MutableStateFlow<CategoryCollectionType> =
         MutableStateFlow(
-            if (categoryCollectionsWithIds.expense.isNotEmpty()) {
+            if (categoryCollectionsWithIdsByType.expense.isNotEmpty()) {
                 CategoryCollectionType.Expense
-            } else if (categoryCollectionsWithIds.income.isNotEmpty()) {
+            } else if (categoryCollectionsWithIdsByType.income.isNotEmpty()) {
                 CategoryCollectionType.Income
             } else {
                 CategoryCollectionType.Mixed
@@ -34,7 +34,7 @@ class CategoryCollectionsViewModel(
     val collectionType: StateFlow<CategoryCollectionType> = _collectionType.asStateFlow()
 
     private val _collectionsWithCategories: MutableStateFlow<CategoryCollectionsWithCategories> =
-        MutableStateFlow(categoryCollectionsWithIds.toCollectionsWithCategories(categoryList))
+        MutableStateFlow(categoryCollectionsWithIdsByType.toCollectionsWithCategories(categoryList))
     private val collectionsWithCategories: StateFlow<CategoryCollectionsWithCategories> =
         _collectionsWithCategories.asStateFlow()
 
@@ -86,7 +86,7 @@ class CategoryCollectionsViewModel(
 
 data class CategoryCollectionsViewModelFactory(
     private val categoryList: List<Category>,
-    private val collectionsWithIds: CategoryCollectionsWithIds
+    private val collectionsWithIds: CategoryCollectionsWithIdsByType
 ) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

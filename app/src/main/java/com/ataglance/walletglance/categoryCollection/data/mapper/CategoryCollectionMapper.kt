@@ -2,7 +2,7 @@ package com.ataglance.walletglance.categoryCollection.data.mapper
 
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.categoryCollection.utils.asChar
@@ -12,7 +12,7 @@ import com.ataglance.walletglance.categoryCollection.utils.asChar
 fun transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
     collectionList: List<CategoryCollectionEntity>,
     collectionCategoryAssociationList: List<CategoryCollectionCategoryAssociation>
-): CategoryCollectionsWithIds {
+): CategoryCollectionsWithIdsByType {
     return collectionList
         .map { collection ->
             CategoryCollectionWithIds(
@@ -30,7 +30,7 @@ fun transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
             expenseAndOtherCollections.second
                 .partition { it.type == CategoryCollectionType.Income }
                 .let { incomeAndMixedCollections ->
-                    CategoryCollectionsWithIds(
+                    CategoryCollectionsWithIdsByType(
                         expense = expenseAndOtherCollections.first,
                         income = incomeAndMixedCollections.first,
                         mixed = incomeAndMixedCollections.second

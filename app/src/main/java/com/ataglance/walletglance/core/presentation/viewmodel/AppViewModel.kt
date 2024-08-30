@@ -42,7 +42,7 @@ import com.ataglance.walletglance.categoryCollection.data.mapper.divideIntoColle
 import com.ataglance.walletglance.categoryCollection.data.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.categoryCollection.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
@@ -56,7 +56,6 @@ import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
@@ -71,6 +70,7 @@ import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
 import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferUiState
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordList
 import com.ataglance.walletglance.record.data.mapper.toRecordListWithOldIds
@@ -443,9 +443,9 @@ class AppViewModel(
     }
 
 
-    private val _categoryCollectionsUiState: MutableStateFlow<CategoryCollectionsWithIds> =
-        MutableStateFlow(CategoryCollectionsWithIds())
-    val categoryCollectionsUiState: StateFlow<CategoryCollectionsWithIds> =
+    private val _categoryCollectionsUiState: MutableStateFlow<CategoryCollectionsWithIdsByType> =
+        MutableStateFlow(CategoryCollectionsWithIdsByType())
+    val categoryCollectionsUiState: StateFlow<CategoryCollectionsWithIdsByType> =
         _categoryCollectionsUiState.asStateFlow()
 
     private fun fetchCategoryCollectionsFromDb() {
@@ -980,7 +980,7 @@ class AppViewModel(
             recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
             greetings = GreetingsWidgetUiState(
                 titleRes = greetingsWidgetTitleRes,
-                expensesTotal = todayRecordList
+                todayExpensesByActiveAccount = todayRecordList
                     .filter { it.accountId == accountsUiState.activeAccount?.id }
                     .getTotalAmountByType(CategoryType.Expense)
             ),

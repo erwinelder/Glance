@@ -27,15 +27,13 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.account.presentation.components.AccountCard
-import com.ataglance.walletglance.category.domain.CategoryStatisticsLists
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
-import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
@@ -48,9 +46,13 @@ import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.isScreen
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit
 import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
 
 @Composable
 fun HomeScreen(
@@ -135,7 +137,7 @@ private fun CompactLayout(
                 AccountCard(
                     account = accountsUiState.activeAccount!!,
                     appTheme = appTheme,
-                    todayExpenses = widgetsUiState.greetings.expensesTotal,
+                    todayExpenses = widgetsUiState.greetings.todayExpensesByActiveAccount,
                     onHideBalanceButton = onChangeHideActiveAccountBalance
                 )
             }
@@ -254,7 +256,7 @@ private fun ExpandedLayout(
                     AccountCard(
                         account = accountsUiState.activeAccount!!,
                         appTheme = appTheme,
-                        todayExpenses = widgetsUiState.greetings.expensesTotal,
+                        todayExpenses = widgetsUiState.greetings.todayExpensesByActiveAccount,
                         onHideBalanceButton = onChangeHideActiveAccountBalance
                     )
                 }
@@ -325,6 +327,9 @@ fun HomeScreenPreview(
     isAppSetup: Boolean = true,
     isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
     accountsUiState: AccountsUiState = AccountsUiState(
         accountList = listOf(
             Account(id = 1, orderNum = 1, isActive = true),
@@ -333,40 +338,42 @@ fun HomeScreenPreview(
         activeAccount = Account(id = 1, orderNum = 1, isActive = true)
     ),
     dateRangeMenuUiState: DateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState(),
-    widgetsUiState: WidgetsUiState = WidgetsUiState(
-        recordsFilteredByDateAndAccount = listOf(
-            RecordStack(
-                recordNum = 1,
-                date = getTodayDateLong(),
-                type = RecordType.Expense,
-                account = Account().toRecordAccount(),
-                totalAmount = 42.43,
-                stack = listOf(
-                    RecordStackUnit(
-                        id = 1,
-                        amount = 46.47,
-                        quantity = null,
-                        categoryWithSubcategory = DefaultCategoriesPackage(LocalContext.current)
-                            .getDefaultCategories().expense[0].getWithFirstSubcategory(),
-                        note = null,
-                        includeInBudgets = true
-                    )
+    isCustomDateRangeWindowOpened: Boolean = false,
+    recordList: List<RecordEntity>? = null,
+    recordStackList: List<RecordStack> = recordList?.toRecordStackList(
+        accountList = accountsUiState.accountList,
+        categoriesWithSubcategories = categoriesWithSubcategories
+    ) ?: listOf(
+        RecordStack(
+            recordNum = 1,
+            date = getTodayDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackUnit(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSubcategory = categoriesWithSubcategories
+                        .expense[0].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
                 )
             )
-        ),
-        greetings = GreetingsWidgetUiState(),
-        expensesIncomeState = ExpensesIncomeWidgetUiState(
-            expensesTotal = 26.27,
-            incomeTotal = 28.29,
-            expensesPercentage = 30.31,
-            incomePercentage = 32.33,
-            expensesPercentageFloat = .25f,
-            incomePercentageFloat = .75f
-        ),
-        categoryStatisticsLists = CategoryStatisticsLists()
-    ),
-    isCustomDateRangeWindowOpened: Boolean = false
+        )
+    )
 ) {
+    val widgetUiState = WidgetsUiState(
+        recordsFilteredByDateAndAccount = recordStackList,
+        greetings = GreetingsWidgetUiState(
+            titleRes = R.string.greetings_title_afternoon,
+            todayExpensesByActiveAccount = 0.0
+        ),
+        expensesIncomeState = recordStackList.getExpensesIncomeWidgetUiState(),
+        categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStackList)
+    )
+
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
@@ -378,7 +385,7 @@ fun HomeScreenPreview(
             appTheme = appTheme,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
-            widgetsUiState = widgetsUiState,
+            widgetsUiState = widgetUiState,
             onChangeHideActiveAccountBalance = {},
             onDateRangeChange = {},
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,

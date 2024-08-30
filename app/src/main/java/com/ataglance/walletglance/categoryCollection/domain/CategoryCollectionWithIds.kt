@@ -10,6 +10,14 @@ data class CategoryCollectionWithIds(
     val categoriesIds: List<Int>? = null
 ) {
 
+    fun hasLinkedCategories(): Boolean {
+        return !categoriesIds.isNullOrEmpty()
+    }
+
+    fun doesNotHaveLinkedCategories(): Boolean {
+        return categoriesIds.isNullOrEmpty()
+    }
+
     fun toCategoryCollectionWithCategories(
         allCategories: List<Category>
     ): CategoryCollectionWithCategories {

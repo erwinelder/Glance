@@ -8,11 +8,12 @@ import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiSta
 import com.ataglance.walletglance.category.domain.CategoryStatisticsLists
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.utils.filterByCollection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.update
 
 class CategoryStatisticsViewModel(
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
-    passedCategoryCollections: CategoryCollectionsWithIds,
+    passedCategoryCollections: CategoryCollectionsWithIdsByType,
     recordsFilteredByDateAndAccount: List<RecordStack>,
     categoryStatisticsLists: CategoryStatisticsLists,
     passedParentCategoryId: Int
@@ -33,11 +34,10 @@ class CategoryStatisticsViewModel(
         _parentCategoryId.update { null }
     }
 
-    private val _categoryCollections = MutableStateFlow(passedCategoryCollections)
-    val categoryCollections = _categoryCollections.asStateFlow()
+    private val _categoryCollectionsByType = MutableStateFlow(passedCategoryCollections)
 
-    fun setCategoryCollections(collections: CategoryCollectionsWithIds) {
-        _categoryCollections.update { collections }
+    fun setCategoryCollections(collections: CategoryCollectionsWithIdsByType) {
+        _categoryCollectionsByType.update { collections }
     }
 
 
@@ -48,11 +48,12 @@ class CategoryStatisticsViewModel(
     }
 
 
-    private val _defaultCategoryStatisticsLists = MutableStateFlow(categoryStatisticsLists)
-    private val defaultCategoryStatisticsLists = _defaultCategoryStatisticsLists.asStateFlow()
+    private val _categoryStatisticsByAccountAndDate = MutableStateFlow(categoryStatisticsLists)
+    private val categoryStatisticsByAccountAndDate = _categoryStatisticsByAccountAndDate
+        .asStateFlow()
 
-    fun setCategoryStatisticsLists(newCategoryStatisticsLists: CategoryStatisticsLists) {
-        _defaultCategoryStatisticsLists.update { newCategoryStatisticsLists }
+    fun setCategoryStatisticsByAccountAndDate(statistics: CategoryStatisticsLists) {
+        _categoryStatisticsByAccountAndDate.update { statistics }
     }
 
 
@@ -60,22 +61,22 @@ class CategoryStatisticsViewModel(
         MutableStateFlow<CategoryStatisticsElementUiState?>(null)
     val parentCategoryStatistics = _parentCategoryStatistics.asStateFlow()
 
-    fun setParentCategory() {
+    fun setParentCategoryStatistics() {
         parentCategoryId.value
-            ?.let { defaultCategoryStatisticsLists.value.getItemByParentCategoryId(it) }
+            ?.let { categoryStatisticsByAccountAndDate.value.getItemByParentCategoryId(it) }
             ?.takeIf { it.subcategoriesStatisticsUiState != null }
             ?.let { parentCategory ->
                 _parentCategoryStatistics.update { parentCategory }
             }
     }
 
-    fun setParentCategory(category: CategoryStatisticsElementUiState) {
+    fun setParentCategoryStatistics(category: CategoryStatisticsElementUiState) {
         if (category.subcategoriesStatisticsUiState != null) {
             _parentCategoryStatistics.update { category }
         }
     }
 
-    fun clearParentCategory() {
+    fun clearParentCategoryStatistics() {
         _parentCategoryStatistics.update { null }
     }
 
@@ -86,14 +87,14 @@ class CategoryStatisticsViewModel(
     fun setCategoryType(newCategoryType: CategoryType) {
         if (newCategoryType == categoryType.value) return
 
-        if (parentCategoryStatistics.value != null) clearParentCategory()
+        if (parentCategoryStatistics.value != null) clearParentCategoryStatistics()
         _categoryType.update { newCategoryType }
         resetSelectedCollection()
     }
 
 
     val currentCollectionList = combine(
-        _categoryCollections,
+        _categoryCollectionsByType,
         _categoryType
     ) { collections, categoryType ->
         collections.getByCategoryType(categoryType)
@@ -110,35 +111,36 @@ class CategoryStatisticsViewModel(
     val selectedCollection = _selectedCollection.asStateFlow()
 
     fun selectCollection(collection: CategoryCollectionWithIds) {
-        if (parentCategoryStatistics.value != null) clearParentCategory()
+        if (parentCategoryStatistics.value != null) {
+            clearParentCategoryStatistics()
+        }
         _selectedCollection.update { collection }
     }
 
     private fun resetSelectedCollection() {
         _selectedCollection.update {
-            categoryCollections.value.getByCategoryType(categoryType.value).firstOrNull()
+            _categoryCollectionsByType.value.getByCategoryType(categoryType.value).firstOrNull()
                 ?: CategoryCollectionWithIds()
         }
     }
 
 
-    val categoryStatisticsList = combine(
-        _categoryType,
-        _parentCategoryStatistics,
+    val categoryStatisticsList: StateFlow<List<CategoryStatisticsElementUiState>> = combine(
         _recordsFilteredByDateAndAccount,
-        _defaultCategoryStatisticsLists,
-        _selectedCollection
-    ) { categoryType, parentCategory, recordsFilteredByDateAndAccount,
-        defaultCategoryStatisticsLists, selectedCollection ->
+        _categoryStatisticsByAccountAndDate,
+        _categoryType,
+        _selectedCollection,
+        _parentCategoryStatistics
+    ) { recordsFilteredByDateAndAccount, categoryStatisticsByAccountAndDate, categoryType,
+        selectedCollection, parentCategory ->
+
         parentCategory?.subcategoriesStatisticsUiState
-            ?: selectedCollection
-                .takeIf { it.categoriesIds?.isNotEmpty() == true }
-                ?.let {
-                    categoriesWithSubcategories.getStatistics(
-                        recordStackList = recordsFilteredByDateAndAccount.filterByCollection(it)
-                    ).getByType(categoryType)
-                }
-            ?: defaultCategoryStatisticsLists.getByType(categoryType)
+            ?: selectedCollection.takeIf { it.hasLinkedCategories() }?.let {
+                categoriesWithSubcategories.getStatistics(
+                    recordStackList = recordsFilteredByDateAndAccount.filterByCollection(it)
+                ).getByType(categoryType)
+            }
+            ?: categoryStatisticsByAccountAndDate.getByType(categoryType)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
@@ -149,7 +151,7 @@ class CategoryStatisticsViewModel(
 
 class CategoryStatisticsViewModelFactory(
     private val categoriesWithSubcategories: CategoriesWithSubcategories,
-    private val categoryCollections: CategoryCollectionsWithIds,
+    private val categoryCollections: CategoryCollectionsWithIdsByType,
     private val recordsFilteredByDateAndAccount: List<RecordStack>,
     private val categoryStatisticsLists: CategoryStatisticsLists,
     private val parentCategoryId: Int

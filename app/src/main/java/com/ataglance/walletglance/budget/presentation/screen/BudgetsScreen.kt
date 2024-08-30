@@ -12,18 +12,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.mapper.toBudgetList
 import com.ataglance.walletglance.budget.domain.Budget
 import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.components.BudgetComponent
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
+import com.ataglance.walletglance.budget.utils.groupByType
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 @Composable
 fun BudgetsScreen(
@@ -56,74 +66,99 @@ fun BudgetsScreen(
 
 @Preview
 @Composable
-fun BudgetsScreenPreview() {
-    val context = LocalContext.current
-    val appTheme = AppTheme.LightDefault
-    val defaultCategories = DefaultCategoriesPackage(context).getDefaultCategories()
-    val budgetsByType = BudgetsByType(
-        daily = listOf(
-            Budget(
-                id = 1,
-                priorityNum = 1.0,
-                amountLimit = 4000.0,
-                usedAmount = 2500.0,
-                usedPercentage = 62.5F,
-                category = defaultCategories.expense[0].category,
-                name = "Food & drinks",
-                repeatingPeriod = RepeatingPeriod.Daily,
-                dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
-                currency = "USD",
-                linkedAccountsIds = listOf(1, 2)
+fun BudgetsScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetup: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = true,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
+    budgetEntityList: List<BudgetEntity>? = null,
+    budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
+    accountList: List<Account> = listOf(
+        Account(id = 1, orderNum = 1, isActive = true),
+        Account(id = 2, orderNum = 2, isActive = false)
+    ),
+    recordList: List<RecordEntity> = emptyList()
+) {
+    val budgetsByType = (budgetEntityList to budgetAccountAssociationList)
+        .letIfNoneIsNull { (budgets, associations) ->
+            budgets.toBudgetList(
+                categoryWithSubcategoriesList = categoriesWithSubcategories.expense,
+                associationList = associations,
+                accountList = accountList
             )
-        ),
-        weekly = listOf(
-            Budget(
-                id = 2,
-                priorityNum = 2.0,
-                amountLimit = 4000.0,
-                usedAmount = 1000.0,
-                usedPercentage = 25F,
-                category = defaultCategories.expense[1].category,
-                name = "Housing",
-                repeatingPeriod = RepeatingPeriod.Weekly,
-                dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
-                currency = "CZK",
-                linkedAccountsIds = listOf(3, 4)
-            )
-        ),
-        monthly = listOf(
-            Budget(
-                id = 1,
-                priorityNum = 1.0,
-                amountLimit = 4000.0,
-                usedAmount = 2500.0,
-                usedPercentage = 62.5F,
-                category = defaultCategories.expense[0].category,
-                name = "Food & drinks",
-                repeatingPeriod = RepeatingPeriod.Monthly,
-                dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
-                currency = "USD",
-                linkedAccountsIds = listOf(1, 2)
+        }?.groupByType()?.fillUsedAmountsByRecords(recordList)
+        ?: BudgetsByType(
+            daily = listOf(
+                Budget(
+                    id = 1,
+                    priorityNum = 1.0,
+                    amountLimit = 4000.0,
+                    usedAmount = 2500.0,
+                    usedPercentage = 62.5F,
+                    category = categoriesWithSubcategories.expense[0].category,
+                    name = "Food & drinks",
+                    repeatingPeriod = RepeatingPeriod.Daily,
+                    dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
+                    currency = "USD",
+                    linkedAccountsIds = listOf(1, 2)
+                )
             ),
-            Budget(
-                id = 3,
-                priorityNum = 3.0,
-                amountLimit = 4000.0,
-                usedAmount = 1000.0,
-                usedPercentage = 25F,
-                category = defaultCategories.expense[2].category,
-                name = "Shopping",
-                repeatingPeriod = RepeatingPeriod.Monthly,
-                dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
-                currency = "CZK",
-                linkedAccountsIds = listOf(3, 4)
+            weekly = listOf(
+                Budget(
+                    id = 2,
+                    priorityNum = 2.0,
+                    amountLimit = 4000.0,
+                    usedAmount = 1000.0,
+                    usedPercentage = 25F,
+                    category = categoriesWithSubcategories.expense[1].category,
+                    name = "Housing",
+                    repeatingPeriod = RepeatingPeriod.Weekly,
+                    dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
+                    currency = "CZK",
+                    linkedAccountsIds = listOf(3, 4)
+                )
+            ),
+            monthly = listOf(
+                Budget(
+                    id = 1,
+                    priorityNum = 1.0,
+                    amountLimit = 4000.0,
+                    usedAmount = 2500.0,
+                    usedPercentage = 62.5F,
+                    category = categoriesWithSubcategories.expense[0].category,
+                    name = "Food & drinks",
+                    repeatingPeriod = RepeatingPeriod.Monthly,
+                    dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                    currency = "USD",
+                    linkedAccountsIds = listOf(1, 2)
+                ),
+                Budget(
+                    id = 3,
+                    priorityNum = 3.0,
+                    amountLimit = 4000.0,
+                    usedAmount = 1000.0,
+                    usedPercentage = 25F,
+                    category = categoriesWithSubcategories.expense[2].category,
+                    name = "Shopping",
+                    repeatingPeriod = RepeatingPeriod.Monthly,
+                    dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                    currency = "CZK",
+                    linkedAccountsIds = listOf(3, 4)
+                )
             )
         )
-    )
 
-    PreviewContainer {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Budgets) }
+    ) { scaffoldPadding ->
         BudgetsScreen(
-            screenPadding = PaddingValues(),
+            screenPadding = scaffoldPadding,
             appTheme = appTheme,
             budgetsByType = budgetsByType,
             onBudgetClick = {}

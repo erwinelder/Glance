@@ -1,19 +1,17 @@
 package com.ataglance.walletglance.record.data.mapper
 
 import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.utils.findById
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
 import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.account.utils.findById
 import com.ataglance.walletglance.record.utils.getRecordTypeByChar
 import com.ataglance.walletglance.record.utils.toCategoryType
 import java.util.Locale
-
 
 
 fun RecordEntity.toRecordStack(
@@ -40,7 +38,7 @@ fun RecordEntity.toRecordStackUnit(
     val recordType = getRecordTypeByChar(type) ?: return null
 
     val categoryWithSubcategories = recordType.toCategoryType()?.let {
-        categoriesWithSubcategories.findById(categoryId, it)
+        categoriesWithSubcategories.findById(id = categoryId, type = it)
     }
 
     return RecordStackUnit(
@@ -49,7 +47,7 @@ fun RecordEntity.toRecordStackUnit(
         quantity = quantity,
         categoryWithSubcategory = subcategoryId?.let {
             categoryWithSubcategories?.getWithSubcategoryWithId(it)
-        } ?: categoryWithSubcategories?.category?.let { CategoryWithSubcategory(it) },
+        } ?: categoryWithSubcategories?.getWithoutSubcategory(),
         note = note,
         includeInBudgets = includeInBudgets
     )
