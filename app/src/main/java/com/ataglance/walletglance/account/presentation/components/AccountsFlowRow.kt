@@ -9,19 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
+import com.ataglance.walletglance.core.domain.app.AppTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AccountsFlowRow(
     accountList: List<Account>,
     appTheme: AppTheme?,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    fontSize: TextUnit = 18.sp
 ) {
     val nestedScrollInterop = rememberNestedScrollInteropConnection()
 
@@ -35,7 +38,7 @@ fun AccountsFlowRow(
             SmallAccount(
                 account = account,
                 appTheme = appTheme,
-                fontSize = 16.sp,
+                fontSize = fontSize,
                 roundedCornerSize = 12.dp,
                 outerPadding = PaddingValues(2.dp),
                 showBalance = false
@@ -45,7 +48,7 @@ fun AccountsFlowRow(
 }
 
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun GlanceColumnChartPreview() {
     BudgetStatisticsScreenPreview()

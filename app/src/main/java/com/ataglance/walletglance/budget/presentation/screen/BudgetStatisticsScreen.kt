@@ -24,6 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +35,7 @@ import com.ataglance.walletglance.account.presentation.components.AccountsFlowRo
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.domain.Budget
 import com.ataglance.walletglance.budget.domain.TotalAmountByRange
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -176,13 +178,42 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
 }
 
 
-@Preview(locale = "en")
+@Preview(
+    locale = "en",
+    device = Devices.PIXEL_7_PRO,
+)
 @Composable
-fun BudgetStatisticsScreenPreview() {
+fun BudgetStatisticsScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetup: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = true,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
+    accountList: List<Account> = listOf(
+        Account(
+            id = 1,
+            orderNum = 1,
+            name = "Main USD",
+            currency = "USD",
+            balance = 112.13,
+            color = AccountPossibleColors().default.toAccountColorWithName(),
+            isActive = false
+        ),
+        Account(
+            id = 2,
+            orderNum = 2,
+            name = "Local Card CZK",
+            currency = "CZK",
+            balance = 1412.13,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = false
+        ),
+    ),
+) {
     val context = LocalContext.current
-    val appTheme = AppTheme.LightDefault
-    val category = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-        .expense[0].category
+    val category = categoriesWithSubcategories.expense[0].category
     val budget = Budget(
         id = 1,
         priorityNum = 1.0,
@@ -210,26 +241,6 @@ fun BudgetStatisticsScreenPreview() {
         rowsCount = 5,
         repeatingPeriod = budget.repeatingPeriod,
         context = context
-    )
-    val accountList = listOf(
-        Account(
-            id = 1,
-            orderNum = 1,
-            name = "Main USD",
-            currency = "USD",
-            balance = 112.13,
-            color = AccountPossibleColors().default.toAccountColorWithName(),
-            isActive = false
-        ),
-        Account(
-            id = 2,
-            orderNum = 2,
-            name = "Local Card CZK",
-            currency = "CZK",
-            balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
-            isActive = false
-        ),
     )
 
     PreviewContainer(appTheme) {

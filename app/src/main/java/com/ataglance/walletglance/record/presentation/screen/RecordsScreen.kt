@@ -145,8 +145,6 @@ fun RecordsScreen(
 
 
 @Preview(
-    name = "HomeScreen",
-    group = "MainScreens",
     apiLevel = 34,
     device = Devices.PIXEL_7_PRO
 )

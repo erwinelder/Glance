@@ -11,6 +11,7 @@ import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
@@ -246,5 +247,37 @@ fun MainAppContentBudgetsScreenPreview() {
         budgetAccountAssociationList = budgetAccountAssociationList,
         accountList = accountsUiState.accountList,
         recordList = recordEntityList
+    )
+}
+
+@Preview(
+    name = "BudgetStatisticsScreen",
+    group = "MainScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentBudgetStatisticsScreenPreview() {
+    BudgetStatisticsScreenPreview(
+        appTheme = appTheme,
+        isAppSetup = isAppSetup,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        accountList = accountsUiState.accountList
+    )
+}
+
+@Preview(
+    name = "FinishSetupScreen",
+    group = "MainScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentFinishSetupScreenPreview() {
+    SetupFinishScreenPreview(
+        appTheme = appTheme,
+        isAppSetup = isAppSetup,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     )
 }

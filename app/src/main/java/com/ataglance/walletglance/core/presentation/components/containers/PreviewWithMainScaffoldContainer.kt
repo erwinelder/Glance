@@ -13,8 +13,8 @@ import androidx.compose.ui.res.painterResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
 
 @Composable
 fun PreviewWithMainScaffoldContainer(

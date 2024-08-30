@@ -315,8 +315,6 @@ private fun ExpandedLayout(
 
 
 @Preview(
-    name = "HomeScreen",
-    group = "MainScreens",
     apiLevel = 34,
     heightDp = 1900,
     device = Devices.PIXEL_7_PRO

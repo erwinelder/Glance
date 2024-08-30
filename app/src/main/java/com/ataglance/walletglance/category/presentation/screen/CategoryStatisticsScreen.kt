@@ -118,8 +118,6 @@ fun CategoryStatisticsScreen(
 
 
 @Preview(
-    name = "CategoryStatisticsScreen",
-    group = "MainScreens",
     apiLevel = 34,
     device = Devices.PIXEL_7_PRO
 )
@@ -189,7 +187,7 @@ fun CategoryStatisticsScreenPreview(
         appTheme = appTheme,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Records) }
+        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.CategoryStatistics(0)) }
     ) { scaffoldPadding ->
         CategoryStatisticsScreen(
             scaffoldAppScreenPadding = scaffoldPadding,
