@@ -124,10 +124,10 @@ fun BudgetStatisticsScreen(
 
 @Composable
 private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Double) {
-    val usedPercentage by remember {
+    val usedPercentage by remember(budget, totalAmount) {
         derivedStateOf { 100 / budget.amountLimit * totalAmount }
     }
-    val pieChartPercentage by remember {
+    val pieChartPercentage by remember(usedPercentage) {
         derivedStateOf { (3.6 * usedPercentage).toFloat() }
     }
     val pieChartBrush = if (usedPercentage < 50.0) {

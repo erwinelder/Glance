@@ -23,10 +23,10 @@ fun BottomNavBar(
     onMakeRecordButtonClick: () -> Unit,
     barButtons: List<BottomBarNavigationButtons>
 ) {
-    val bottomBarButtons by remember {
+    val bottomBarButtons by remember(barButtons) {
         derivedStateOf { barButtons.take(3) }
     }
-    val popupListBarButtons by remember {
+    val popupListBarButtons by remember(barButtons) {
         derivedStateOf {
             barButtons.subList(3, barButtons.size).reversed()
         }

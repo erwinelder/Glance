@@ -29,7 +29,7 @@ fun AppMainTopBar(
     onCustomDateRangeButtonClick: () -> Unit,
     onAccountClick: (Int) -> Unit
 ) {
-    val visibleAccounts by remember {
+    val visibleAccounts by remember(accountList) {
         derivedStateOf { accountList.filterNot { it.hide } }
     }
 

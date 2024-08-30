@@ -53,7 +53,9 @@ fun BudgetsScreen(
             filledWidths = FilledWidthByScreenType(expanded = .86f)
         ) {
             if (budgetsByType.areEmpty()) {
-                MessageContainer(message = stringResource(R.string.you_have_no_budgets_yet))
+                MessageContainer(
+                    message = stringResource(R.string.you_have_no_budgets_yet)
+                )
             } else {
                 BudgetListsByPeriodComponent(budgetsByType) { budget ->
                     BudgetComponent(appTheme = appTheme, budget = budget, onClick = onBudgetClick)

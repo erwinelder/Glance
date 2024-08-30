@@ -50,13 +50,13 @@ import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -180,14 +180,14 @@ private fun BottomBarButtonsRow(
     onButtonClick: (MainScreens) -> Unit,
     barButtons: List<BottomBarNavigationButtons>
 ) {
-    val buttonList by remember {
+    val buttonList by remember(barButtons) {
         derivedStateOf {
             val list: MutableList<BottomBarNavigationButtons?> = barButtons.toMutableList()
             list.add(2, null)
             list
         }
     }
-    val buttonListSize by remember {
+    val buttonListSize by remember(barButtons) {
         derivedStateOf { buttonList.size }
     }
 
