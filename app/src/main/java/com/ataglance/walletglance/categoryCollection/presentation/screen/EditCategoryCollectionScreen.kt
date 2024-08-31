@@ -51,7 +51,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.Previe
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
 
 @Composable
 fun EditCategoryCollectionScreen(
@@ -67,7 +67,7 @@ fun EditCategoryCollectionScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
-    SetupDataScreenContainer(
+    GlassSurfaceContainer(
         topButton = if (allowDeleting) {
             {
                 SecondaryButton(

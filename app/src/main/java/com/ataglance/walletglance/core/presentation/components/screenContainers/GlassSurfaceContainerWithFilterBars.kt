@@ -35,8 +35,8 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 
 @Composable
-fun <S> DataPresentationScreenContainer(
-    scaffoldAppScreenPadding: PaddingValues,
+fun <S> GlassSurfaceContainerWithFilterBars(
+    screenPadding: PaddingValues,
     appTheme: AppTheme?,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
@@ -48,7 +48,7 @@ fun <S> DataPresentationScreenContainer(
     selectedCollection: CategoryCollectionWithIds,
     onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
     typeToggleButton: @Composable () -> Unit,
-    animationContentLabel: String,
+    animatedContentLabel: String,
     animatedContentTargetState: S,
     visibleNoDataMessage: Boolean,
     noDataMessageRes: Int,
@@ -56,7 +56,7 @@ fun <S> DataPresentationScreenContainer(
     onDimBackgroundChange: (Boolean) -> Unit = {},
     animatedContent: @Composable (S) -> Unit
 ) {
-    val visibleAccounts by remember {
+    val visibleAccounts by remember(accountList) {
         derivedStateOf { accountList.filterNot { it.hide } }
     }
 
@@ -66,9 +66,9 @@ fun <S> DataPresentationScreenContainer(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = scaffoldAppScreenPadding.calculateTopPadding() +
+                top = screenPadding.calculateTopPadding() +
                         dimensionResource(R.dimen.button_bar_to_widget_gap),
-                bottom = scaffoldAppScreenPadding.calculateBottomPadding() +
+                bottom = screenPadding.calculateBottomPadding() +
                         dimensionResource(R.dimen.screen_vertical_padding)
             )
     ) {
@@ -108,7 +108,7 @@ fun <S> DataPresentationScreenContainer(
             ) {
                 AnimatedContent(
                     targetState = animatedContentTargetState,
-                    label = animationContentLabel
+                    label = animatedContentLabel
                 ) {
                     animatedContent(it)
                 }

@@ -30,10 +30,9 @@ import com.ataglance.walletglance.categoryCollection.presentation.components.Cat
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.DataPresentationScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.isScreen
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
@@ -43,6 +42,7 @@ import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
 import com.ataglance.walletglance.record.presentation.components.TransferComponent
 import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
 
 @Composable
 fun RecordsScreen(
@@ -68,8 +68,8 @@ fun RecordsScreen(
     }
     val lazyListState = rememberLazyListState()
 
-    DataPresentationScreenContainer(
-        scaffoldAppScreenPadding = scaffoldAppScreenPadding,
+    GlassSurfaceContainerWithFilterBars(
+        screenPadding = scaffoldAppScreenPadding,
         accountList = accountList,
         appTheme = appTheme,
         onAccountClick = onAccountClick,
@@ -80,7 +80,7 @@ fun RecordsScreen(
         collectionList = collectionList,
         selectedCollection = selectedCollection,
         onCollectionSelect = onCollectionSelect,
-        animationContentLabel = "records history widget content",
+        animatedContentLabel = "records history widget content",
         animatedContentTargetState = Pair(filteredRecords, collectionType),
         visibleNoDataMessage = filteredRecords.isEmpty(),
         noDataMessageRes = when(collectionType) {
@@ -122,7 +122,7 @@ fun RecordsScreen(
                             }
                         ) { recordNum ->
                             onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.MakeTransfer(MakeRecordStatus.Edit.name, recordNum)
+                                MainScreens.TransferCreation(isNew = false, recordNum = recordNum)
                             )
                         }
                     } else {

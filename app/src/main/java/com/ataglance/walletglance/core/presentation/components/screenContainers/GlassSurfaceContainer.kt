@@ -20,7 +20,7 @@ import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 
 @Composable
-fun SetupDataScreenContainer(
+fun GlassSurfaceContainer(
     topPadding: Dp? = null,
     fillGlassSurface: Boolean = true,
     topButton: @Composable (() -> Unit)? = null,

@@ -118,7 +118,7 @@ fun BoxScope.GlanceDateRangeAssetsPicker(
                     DateRangeAssetComponent(DateRangeAssets.December, currentDateRangeEnum, onDateRangeSelect)
                 }
                 DateField(
-                    dateFormatted = formatDateRangeForCustomDateRangeField(
+                    formattedDate = formatDateRangeForCustomDateRangeField(
                         dateRangePickerState.selectedStartDateMillis,
                         dateRangePickerState.selectedEndDateMillis
                     ),

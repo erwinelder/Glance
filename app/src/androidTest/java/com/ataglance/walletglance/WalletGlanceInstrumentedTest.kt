@@ -25,12 +25,11 @@ import com.ataglance.walletglance.core.presentation.components.widgets.RecordHis
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
 import com.ataglance.walletglance.core.utils.toLongWithTime
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModel
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferUiState
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModel
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModel
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordType
@@ -454,7 +453,7 @@ class WalletGlanceInstrumentedTest {
             recordIdFrom = 0,
             recordIdTo = 0
         )
-        val viewModel = MakeTransferViewModel(
+        val viewModel = TransferCreationViewModel(
             accountList = accountsUiState.accountList,
             makeTransferUiState = uiState
         )
@@ -496,7 +495,7 @@ class WalletGlanceInstrumentedTest {
             }
         )
 
-        appViewModel.saveTransfer(viewModel.uiState.value)
+        appViewModel.saveTransfer(viewModel.transferDraft.value)
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
@@ -555,7 +554,7 @@ class WalletGlanceInstrumentedTest {
             recordIdFrom = 0,
             recordIdTo = 0
         )
-        val viewModel = MakeTransferViewModel(
+        val viewModel = TransferCreationViewModel(
             accountList = accountsUiState.accountList,
             makeTransferUiState = uiState
         )
@@ -597,7 +596,7 @@ class WalletGlanceInstrumentedTest {
             }
         )
 
-        appViewModel.saveTransfer(viewModel.uiState.value)
+        appViewModel.saveTransfer(viewModel.transferDraft.value)
 
         coVerify {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
@@ -650,12 +649,12 @@ class WalletGlanceInstrumentedTest {
             recordIdFrom = 0,
             recordIdTo = 0
         )
-        val viewModel = MakeTransferViewModel(
+        val viewModel = TransferCreationViewModel(
             accountList = accountsUiState.accountList,
             makeTransferUiState = uiState
         )
 
-        appViewModel.saveTransfer(viewModel.uiState.value)
+        appViewModel.saveTransfer(viewModel.transferDraft.value)
 
         coVerify(exactly = 0) {
             mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())

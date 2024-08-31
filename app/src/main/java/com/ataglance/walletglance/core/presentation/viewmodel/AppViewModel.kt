@@ -64,12 +64,6 @@ import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
-import com.ataglance.walletglance.makingRecord.domain.DataAfterRecordOperation
-import com.ataglance.walletglance.makingRecord.domain.MadeTransferState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferUiState
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordList
@@ -79,13 +73,22 @@ import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordsInDateRange
 import com.ataglance.walletglance.record.utils.filterByDateAndAccount
-import com.ataglance.walletglance.record.utils.findByOrderNum
+import com.ataglance.walletglance.record.utils.findByRecordNum
 import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.record.utils.getOutAndInTransfersByRecordNum
+import com.ataglance.walletglance.record.utils.getOutAndInTransfersByRecordNums
 import com.ataglance.walletglance.record.utils.getTotalAmount
 import com.ataglance.walletglance.record.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.utils.inverse
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.DataAfterRecordOperation
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
+import com.ataglance.walletglance.recordCreation.domain.mapper.toCreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordsPair
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.Flow
@@ -645,7 +648,7 @@ class AppViewModel(
     ): DataAfterRecordOperation? {
         uiState.account ?: return null
 
-        val currentRecordStack = recordStackList.value.findByOrderNum(uiState.recordNum)
+        val currentRecordStack = recordStackList.value.findByRecordNum(uiState.recordNum)
             ?: return null
         val currentRecordList = currentRecordStack.toRecordList()
         val updatedAccounts = getUpdatedAccountsAfterRecordEditing(
@@ -717,7 +720,7 @@ class AppViewModel(
     }
 
     suspend fun deleteRecord(recordNum: Int) {
-        val recordStack = recordStackList.value.findByOrderNum(recordNum) ?: return
+        val recordStack = recordStackList.value.findByRecordNum(recordNum) ?: return
 
         val updatedAccount = accountsUiState.value.accountList
             .findById(recordStack.account.id)
@@ -742,17 +745,13 @@ class AppViewModel(
         }
     }
 
-    suspend fun saveTransfer(uiState: MakeTransferUiState) {
-        if (uiState.fromAccount == uiState.toAccount) return
-        val madeTransferState = uiState.toMadeTransferState(appUiSettings.value.nextRecordNum())
-            ?: return
+    suspend fun saveTransfer(transferDraft: TransferDraft) {
+        val createdTransfer = transferDraft.toCreatedTransfer() ?: return
 
-        val dataAfterRecordOperation = if (
-            madeTransferState.recordStatus == MakeRecordStatus.Create
-        ) {
-            getDataForDatabaseAfterNewTransfer(madeTransferState)
+        val dataAfterRecordOperation = if (createdTransfer.isNew) {
+            getDataForDatabaseAfterNewTransfer(createdTransfer)
         } else {
-            getDataForDatabaseAfterEditedTransfer(madeTransferState)
+            getDataForDatabaseAfterEditedTransfer(createdTransfer)
         } ?: return
 
         _budgetsByType.update { dataAfterRecordOperation.updatedBudgetsByType }
@@ -766,12 +765,12 @@ class AppViewModel(
     }
 
     private fun getDataForDatabaseAfterNewTransfer(
-        state: MadeTransferState
+        state: CreatedTransfer
     ): DataAfterRecordOperation {
         val recordList = state.toRecordsPair().toList()
         val updatedAccountList = listOf(
-            state.fromAccount.cloneAndSubtractFromBalance(state.startAmount),
-            state.toAccount.cloneAndAddToBalance(state.finalAmount)
+            state.sender.account.cloneAndSubtractFromBalance(state.sender.amount),
+            state.receiver.account.cloneAndAddToBalance(state.receiver.amount)
         )
             .mergeWith(accountsUiState.value.accountList)
             .toAccountEntityList()
@@ -785,16 +784,12 @@ class AppViewModel(
     }
 
     private fun getDataForDatabaseAfterEditedTransfer(
-        state: MadeTransferState
+        state: CreatedTransfer
     ): DataAfterRecordOperation? {
         val (currRecordStackFrom, currRecordStackTo) = recordStackList.value
-            .getOutAndInTransfersByRecordNum(state.recordNum) ?: return null
+            .getOutAndInTransfersByRecordNums(state.getSenderReceiverRecordNums()) ?: return null
 
-        val recordList = state
-            .copy(recordNum = state.recordNum -
-                    (if (state.recordNum == currRecordStackFrom.recordNum) 0 else 1))
-            .toRecordsPair()
-            .toList()
+        val recordList = state.toRecordsPair().toList()
         val updatedAccounts = getUpdatedAccountsAfterEditedTransfer(
             uiState = state,
             currRecordStackFrom = currRecordStackFrom,
@@ -817,7 +812,7 @@ class AppViewModel(
     }
 
     fun getUpdatedAccountsAfterEditedTransfer(
-        uiState: MadeTransferState,
+        uiState: CreatedTransfer,
         currRecordStackFrom: RecordStack,
         currRecordStackTo: RecordStack
     ): List<Account>? {
@@ -839,43 +834,49 @@ class AppViewModel(
     }
 
     private fun applyAmountsToAccountsAfterTransfer(
-        state: MadeTransferState,
+        state: CreatedTransfer,
         prevAccounts: List<Account>
     ): List<Account>? {
         val updatedAccounts = mutableListOf<Account>()
 
-        prevAccounts.findById(state.fromAccount.id)?.let {
-            updatedAccounts.add(it.cloneAndSubtractFromBalance(state.startAmount))
-        } ?: accountsUiState.value.accountList.findById(state.fromAccount.id)?.let {
-            updatedAccounts.add(it.cloneAndSubtractFromBalance(state.startAmount))
+        prevAccounts.findById(state.sender.account.id)?.let {
+            updatedAccounts.add(it.cloneAndSubtractFromBalance(state.sender.amount))
+        } ?: accountsUiState.value.accountList.findById(state.sender.account.id)?.let {
+            updatedAccounts.add(it.cloneAndSubtractFromBalance(state.sender.amount))
         } ?: return null
 
-        prevAccounts.findById(state.toAccount.id)?.let {
-            updatedAccounts.add(it.cloneAndAddToBalance(state.finalAmount))
-        } ?: accountsUiState.value.accountList.findById(state.toAccount.id)?.let {
-            updatedAccounts.add(it.cloneAndAddToBalance(state.finalAmount))
+        prevAccounts.findById(state.receiver.account.id)?.let {
+            updatedAccounts.add(it.cloneAndAddToBalance(state.receiver.amount))
+        } ?: accountsUiState.value.accountList.findById(state.receiver.account.id)?.let {
+            updatedAccounts.add(it.cloneAndAddToBalance(state.receiver.amount))
         } ?: return null
 
         return updatedAccounts
     }
 
-    suspend fun repeatTransfer(uiState: MakeTransferUiState) {
-        if (uiState.fromAccount == uiState.toAccount) return
+    suspend fun repeatTransfer(state: TransferDraft) {
+        if (!state.savingIsAllowed()) return
 
-        val newMakeTransferState = uiState
-            .copy(
-                recordIdFrom = 0,
-                recordIdTo = 0,
-                recordNum = null,
-                dateTimeState = DateTimeState()
-            )
+        val nextRecordNum = appUiSettings.value.nextRecordNum()
+
+        val newMakeTransferState = state.copy(
+            sender = state.sender.copy(
+                recordNum = nextRecordNum,
+                recordId = 0
+            ),
+            receiver = state.receiver.copy(
+                recordNum = nextRecordNum + 1,
+                recordId = 0
+            ),
+            dateTimeState = DateTimeState()
+        )
 
         saveTransfer(newMakeTransferState)
     }
 
-    suspend fun deleteTransfer(recordNum: Int) {
+    suspend fun deleteTransfer(senderReceiverRecordNums: TransferSenderReceiverRecordNums) {
         val (outTransfer, inTransfer) = recordStackList.value
-            .getOutAndInTransfersByRecordNum(recordNum) ?: return
+            .getOutAndInTransfersByRecordNums(senderReceiverRecordNums) ?: return
         val prevAccounts = Pair(
             accountsUiState.value.accountList.findById(outTransfer.account.id) ?: return,
             accountsUiState.value.accountList.findById(inTransfer.account.id) ?: return

@@ -11,8 +11,7 @@ import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCol
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.makingRecord.domain.MadeTransferState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit

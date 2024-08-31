@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.makingRecord.presentation.components
+package com.ataglance.walletglance.recordCreation.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

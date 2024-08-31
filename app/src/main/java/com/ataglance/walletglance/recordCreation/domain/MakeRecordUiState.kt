@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.makingRecord.domain
+package com.ataglance.walletglance.recordCreation.domain
 
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.core.domain.date.DateTimeState

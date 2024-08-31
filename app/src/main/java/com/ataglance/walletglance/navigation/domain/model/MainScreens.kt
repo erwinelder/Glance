@@ -23,7 +23,7 @@ sealed interface MainScreens {
     data class MakeRecord(val status: String, val recordNum: Int) : MainScreens
 
     @Serializable
-    data class MakeTransfer(val status: String, val recordNum: Int) : MainScreens
+    data class TransferCreation(val isNew: Boolean, val recordNum: Int) : MainScreens
 
     @Serializable
     data object Settings : MainScreens

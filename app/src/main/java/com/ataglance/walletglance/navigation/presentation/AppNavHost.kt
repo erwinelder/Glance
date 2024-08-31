@@ -42,14 +42,6 @@ import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.presentation.screen.MakeRecordScreen
-import com.ataglance.walletglance.makingRecord.presentation.screen.MakeTransferScreen
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModel
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModelFactory
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModel
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeTransferViewModelFactory
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -57,7 +49,15 @@ import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
 import com.ataglance.walletglance.record.utils.getMakeRecordStateAndUnitList
-import com.ataglance.walletglance.record.utils.getMakeTransferState
+import com.ataglance.walletglance.record.utils.getTransferDraft
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
+import com.ataglance.walletglance.recordCreation.presentation.screen.MakeRecordScreen
+import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModel
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModelFactory
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModelFactory
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow
@@ -338,8 +338,8 @@ fun AppNavHost(
                 onMakeTransferButtonClick = {
                     navViewModel.navigateToScreen(
                         navController = navController,
-                        screen = MainScreens.MakeTransfer(
-                            status = MakeRecordStatus.Create.name,
+                        screen = MainScreens.TransferCreation(
+                            isNew = true,
                             recordNum = appUiSettings.nextRecordNum()
                         )
                     )
@@ -365,30 +365,40 @@ fun AppNavHost(
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
-        composable<MainScreens.MakeTransfer>(
+        composable<MainScreens.TransferCreation>(
             enterTransition = { screenEnterTransition() },
             popExitTransition = { screenExitTransition(false) }
         ) { backStack ->
-            val makeRecordStatus = MakeRecordStatus.valueOf(
-                backStack.toRoute<MainScreens.MakeTransfer>().status
-            )
-            val recordNum = backStack.toRoute<MainScreens.MakeTransfer>().recordNum
+            val isNew = backStack.toRoute<MainScreens.TransferCreation>().isNew
+            val recordNum = backStack.toRoute<MainScreens.TransferCreation>().recordNum
 
-            val viewModel = viewModel<MakeTransferViewModel>(
-                factory = MakeTransferViewModelFactory(
+            val viewModel = viewModel<TransferCreationViewModel>(
+                factory = TransferCreationViewModelFactory(
                     accountList = accountsUiState.accountList,
-                    makeTransferUiState = recordStackList
-                        .getMakeTransferState(makeRecordStatus, recordNum, accountsUiState)
+                    transferDraft = recordStackList
+                        .getTransferDraft(
+                            isNew = isNew,
+                            recordNum = recordNum.takeUnless { it == 0 }
+                                ?: appUiSettings.nextRecordNum(),
+                            accountsUiState = accountsUiState
+                        )
                 )
             )
+
+            val transferDraft by viewModel.transferDraft.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
-            MakeTransferScreen(
+            TransferCreationScreen(
                 appTheme = appUiSettings.appTheme,
-                viewModel = viewModel,
-                makeRecordStatus = makeRecordStatus,
+                transferDraft = transferDraft,
                 accountList = accountsUiState.accountList,
                 onNavigateBack = navController::popBackStack,
+                onSelectNewDate = viewModel::selectNewDate,
+                onSelectNewTime = viewModel::selectNewTime,
+                onSelectAnotherAccount = viewModel::selectAnotherAccount,
+                onSelectAccount = viewModel::selectAccount,
+                onRateChange = viewModel::changeRate,
+                onAmountChange = viewModel::changeAmount,
                 onSaveButton = { state ->
                     coroutineScope.launch {
                         appViewModel.saveTransfer(state)
@@ -401,9 +411,9 @@ fun AppNavHost(
                     }
                     navController.popBackStack(MainScreens.Home, false)
                 },
-                onDeleteButton = { recordNumToDelete ->
+                onDeleteButton = { recordNumsToDelete ->
                     coroutineScope.launch {
-                        appViewModel.deleteTransfer(recordNumToDelete)
+                        appViewModel.deleteTransfer(recordNumsToDelete)
                     }
                     navController.popBackStack(MainScreens.Home, false)
                 }

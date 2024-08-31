@@ -3,8 +3,8 @@ package com.ataglance.walletglance.record.data.mapper
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.utils.findById
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackUnit

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.makingRecord.presentation.screen
+package com.ataglance.walletglance.recordCreation.presentation.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
@@ -68,13 +68,13 @@ import com.ataglance.walletglance.core.presentation.components.fields.GlanceText
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordStatus
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordBottomButtonBlock
-import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordFieldContainer
-import com.ataglance.walletglance.makingRecord.presentation.components.MakeRecordTypeBar
-import com.ataglance.walletglance.makingRecord.presentation.viewmodel.MakeRecordViewModel
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordBottomButtonBlock
+import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordFieldContainer
+import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordTypeBar
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModel
 import com.ataglance.walletglance.record.domain.RecordType
 import java.util.Calendar
 
@@ -154,12 +154,12 @@ fun MakeRecordScreen(
             }
 
             MakeRecordBottomButtonBlock(
-                showSingleButton = makeRecordStatus == MakeRecordStatus.Create,
+                showOnlySaveButton = makeRecordStatus == MakeRecordStatus.Create,
                 singlePrimaryButtonStringRes = R.string.save_record,
                 onSaveButton = { onSaveButton(uiState, recordUnitList) },
                 onRepeatButton = { onRepeatButton(uiState, recordUnitList) },
                 onDeleteButton = { onDeleteButton(uiState.recordNum) },
-                buttonsAreEnabled = savingIsAllowed
+                savingAndRepeatingAreAllowed = savingIsAllowed
             )
 
         }
@@ -221,7 +221,7 @@ private fun GlassSurfaceContent(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 DateField(
-                    dateFormatted = uiState.dateTimeState.dateFormatted,
+                    formattedDate = uiState.dateTimeState.dateFormatted,
                     cornerSize = fieldsCornerSize,
                     onClick = {
                         onShowDateDialogChange(true)

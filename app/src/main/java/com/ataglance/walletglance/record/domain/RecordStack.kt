@@ -3,9 +3,9 @@ package com.ataglance.walletglance.record.domain
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.RecordAccount
 import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.utils.asChar
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
 import java.util.Locale
 
 @Stable
@@ -72,17 +72,6 @@ data class RecordStack(
 
     fun getFormattedAmountWithSpaces(): String {
         return "%c %s %s".format(getSign(), totalAmount.formatWithSpaces(), account.currency)
-    }
-
-    fun getTotalAmountByCategory(categoryId: Int): Double {
-        return this.stack
-            .filter {
-                it.categoryWithSubcategory?.subcategory?.id == categoryId ||
-                        it.categoryWithSubcategory?.category?.id == categoryId
-            }
-            .fold(0.0) { total, stackUnit ->
-                total + stackUnit.amount
-            }
     }
 
 }

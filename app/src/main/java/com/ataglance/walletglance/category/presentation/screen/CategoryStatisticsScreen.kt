@@ -29,7 +29,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.components.screenContainers.DataPresentationScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.isScreen
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
@@ -62,8 +62,8 @@ fun CategoryStatisticsScreen(
     onClearParentCategory: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    DataPresentationScreenContainer(
-        scaffoldAppScreenPadding = scaffoldAppScreenPadding,
+    GlassSurfaceContainerWithFilterBars(
+        screenPadding = scaffoldAppScreenPadding,
         appTheme = appTheme,
         accountList = accountList,
         onAccountClick = onAccountClick,
@@ -77,7 +77,7 @@ fun CategoryStatisticsScreen(
         typeToggleButton = {
             CategoryTypeToggleButton(currentType = currentCategoryType, onClick = onSetCategoryType)
         },
-        animationContentLabel = "all categories statistics",
+        animatedContentLabel = "all categories statistics",
         animatedContentTargetState = Pair(categoryStatisticsList, parentCategory),
         visibleNoDataMessage = categoryStatisticsList.isEmpty(),
         noDataMessageRes = R.string.no_data_for_the_selected_filter,

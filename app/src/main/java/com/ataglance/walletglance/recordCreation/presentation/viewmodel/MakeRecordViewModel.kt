@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.makingRecord.presentation.viewmodel
+package com.ataglance.walletglance.recordCreation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUiState
-import com.ataglance.walletglance.makingRecord.domain.MakeRecordUnitUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
+import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.core.utils.addZeroIfDotIsAtTheBeginning
 import com.ataglance.walletglance.record.utils.copyWithCategoryWithSubcategory

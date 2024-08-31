@@ -38,6 +38,9 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.record.utils.asChar
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
+import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
@@ -302,6 +305,37 @@ fun MainAppContentFinishSetupScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "TransferCreationScreen",
+    group = "MainScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentTransferCreationScreenPreview() {
+    val accountList = accountsUiState.accountList
+    val transferDraft = TransferDraft(
+        isNew = true,
+        sender = TransferDraftSenderReceiver(
+            account = accountList[0],
+            recordNum = 0,
+            amount = "300.0",
+        ),
+        receiver = TransferDraftSenderReceiver(
+            account = accountList[1],
+            recordNum = 0,
+            amount = "100.0",
+        ),
+        savingIsAllowed = true
+    )
+
+    TransferCreationScreenPreview(
+        appTheme = appTheme,
+        accountList = accountList,
+        transferDraft = transferDraft
     )
 }
 

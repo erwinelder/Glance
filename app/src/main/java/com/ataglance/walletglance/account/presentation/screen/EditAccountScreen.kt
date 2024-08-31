@@ -49,7 +49,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.Previe
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
@@ -76,7 +76,7 @@ fun EditAccountScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        SetupDataScreenContainer(
+        GlassSurfaceContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             fillGlassSurface = false,
             topButton = if (allowDeleting) {

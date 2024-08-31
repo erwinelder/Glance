@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.makingRecord.domain
+package com.ataglance.walletglance.recordCreation.domain
 
 import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.account.data.local.model.AccountEntity

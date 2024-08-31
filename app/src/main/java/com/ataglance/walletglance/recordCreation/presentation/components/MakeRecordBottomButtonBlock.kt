@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.makingRecord.presentation.components
+package com.ataglance.walletglance.recordCreation.presentation.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.horizontalScroll
@@ -20,18 +20,18 @@ import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrim
 
 @Composable
 fun MakeRecordBottomButtonBlock(
-    showSingleButton: Boolean,
+    showOnlySaveButton: Boolean,
     @StringRes singlePrimaryButtonStringRes: Int,
     onSaveButton: () -> Unit,
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit,
-    buttonsAreEnabled: Boolean = true
+    savingAndRepeatingAreAllowed: Boolean = true
 ) {
-    if (showSingleButton) {
+    if (showOnlySaveButton) {
         PrimaryButton(
             onClick = onSaveButton,
             text = stringResource(singlePrimaryButtonStringRes),
-            enabled = buttonsAreEnabled
+            enabled = savingAndRepeatingAreAllowed
         )
     } else {
         val buttonBlockScrollState = rememberScrollState()
@@ -48,19 +48,18 @@ fun MakeRecordBottomButtonBlock(
                 SmallPrimaryButton(
                     onClick = onSaveButton,
                     text = stringResource(R.string.save),
-                    enabled = buttonsAreEnabled,
+                    enabled = savingAndRepeatingAreAllowed,
                     fontSize = 18.sp
                 )
                 SmallPrimaryButton(
                     onClick = onRepeatButton,
                     text = stringResource(R.string.repeat),
-                    enabled = buttonsAreEnabled,
+                    enabled = savingAndRepeatingAreAllowed,
                     fontSize = 18.sp
                 )
                 SmallPrimaryButton(
                     onClick = onDeleteButton,
                     text = stringResource(R.string.delete),
-                    enabled = buttonsAreEnabled,
                     fontSize = 18.sp
                 )
             }

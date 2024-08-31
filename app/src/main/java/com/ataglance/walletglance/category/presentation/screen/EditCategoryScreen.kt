@@ -46,7 +46,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.Secondary
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -71,7 +71,7 @@ fun EditCategoryScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        SetupDataScreenContainer(
+        GlassSurfaceContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             topButton = if (allowDeleting) {
                 {

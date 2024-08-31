@@ -36,7 +36,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryBu
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
 
 @Composable
 fun EditCategoryCollectionsScreen(
@@ -47,7 +47,7 @@ fun EditCategoryCollectionsScreen(
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories?) -> Unit,
     onSaveCollectionsButton: () -> Unit,
 ) {
-    SetupDataScreenContainer(
+    GlassSurfaceContainer(
         topBar = {
             CategoryCollectionTypeBar(
                 currentType = collectionType,
