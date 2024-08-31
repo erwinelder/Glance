@@ -7,23 +7,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
-import com.ataglance.walletglance.categoryCollection.utils.toCollectionsWithIds
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionsScreen
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.CategoryCollectionsViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.CategoryCollectionsViewModelFactory
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModelFactory
+import com.ataglance.walletglance.categoryCollection.utils.toCollectionsWithIds
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.categoryCollectionsGraph(
     navController: NavHostController,
+    navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
     appTheme: AppTheme?,
     categoriesWithSubcategories: CategoriesWithSubcategories,
@@ -33,7 +35,6 @@ fun NavGraphBuilder.categoryCollectionsGraph(
         startDestination = CategoryCollectionsSettingsScreens.EditCategoryCollections
     ) {
         composable<CategoryCollectionsSettingsScreens.EditCategoryCollections> { backStack ->
-
             val collectionsViewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
                 navController = navController,
                 factory = CategoryCollectionsViewModelFactory(
@@ -49,24 +50,24 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                     )
                 )
 
-            val collectionListByType by collectionsViewModel
-                .collectionsWithCategoriesByType.collectAsStateWithLifecycle()
-            val categoryCollectionType by collectionsViewModel
-                .collectionType.collectAsStateWithLifecycle()
-
+            val collectionListByType by collectionsViewModel.collectionsWithCategoriesByType
+                .collectAsStateWithLifecycle()
+            val categoryCollectionType by collectionsViewModel.collectionType
+                .collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditCategoryCollectionsScreen(
                 appTheme = appTheme,
-                collectionsWithCategories = collectionListByType,
+                collectionWithCategoriesList = collectionListByType,
                 collectionType = categoryCollectionType,
                 onCategoryTypeChange = collectionsViewModel::changeCategoryType,
                 onNavigateToEditCollectionScreen = { collectionOrNull ->
                     editCollectionViewModel.applyCollection(
                         collection = collectionOrNull ?: collectionsViewModel.getNewCollection()
                     )
-                    navController.navigate(
-                        CategoryCollectionsSettingsScreens.EditCategoryCollection
+                    navViewModel.navigateToScreen(
+                        navController = navController,
+                        screen = CategoryCollectionsSettingsScreens.EditCategoryCollection
                     )
                 },
                 onSaveCollectionsButton = {
@@ -81,10 +82,8 @@ fun NavGraphBuilder.categoryCollectionsGraph(
             )
         }
         composable<CategoryCollectionsSettingsScreens.EditCategoryCollection> { backStack ->
-
-            val collectionsViewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
-                navController = navController
-            )
+            val collectionsViewModel = backStack
+                .sharedViewModel<CategoryCollectionsViewModel>(navController = navController)
             val editCollectionViewModel = backStack
                 .sharedViewModel<EditCategoryCollectionViewModel>(navController = navController)
 

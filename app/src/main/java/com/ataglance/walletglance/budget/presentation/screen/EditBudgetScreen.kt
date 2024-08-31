@@ -24,33 +24,38 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.mapper.toBudget
 import com.ataglance.walletglance.budget.domain.EditingBudgetUiState
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.components.CategoryField
+import com.ataglance.walletglance.category.presentation.components.CategoryPicker
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.utils.asStringRes
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
-import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.TwoStateCheckbox
-import com.ataglance.walletglance.category.presentation.components.CategoryField
-import com.ataglance.walletglance.category.presentation.components.CategoryPicker
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.PopupFloatingPicker
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.utils.asStringRes
+import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 
 @Composable
 fun EditBudgetScreen(
@@ -239,28 +244,47 @@ private fun AccountCheckedList(
 }
 
 
-@Preview(locale = "en")
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-private fun EditBudgetScreenPreview() {
-    val appTheme = AppTheme.LightDefault
-    val accountList = listOf(
+fun EditBudgetScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
+    accountList: List<Account> = listOf(
         Account(id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(), name = "Main account"),
         Account(id = 2, color = AccountPossibleColors().blue.toAccountColorWithName()),
         Account(id = 3, color = AccountPossibleColors().default.toAccountColorWithName(), currency = "CZK"),
-    )
-    val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-    val budget = EditingBudgetUiState(
-        isNew = true,
-        amountLimit = "4000",
-        category = categoriesWithSubcategories.expense[0].category,
-        linkedAccounts = accountList.subList(0, 1)
-    )
-
-    PreviewContainer(appTheme = appTheme) {
+    ),
+    budgetEntity: BudgetEntity? = null,
+    budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
+    budgetUiState: EditingBudgetUiState = (budgetEntity to budgetAccountAssociationList)
+        .letIfNoneIsNull { (entity, associations) ->
+            entity.toBudget(
+                categoryWithSubcategory = categoriesWithSubcategories.expense[0].getWithFirstSubcategory(),
+                linkedAccountsIds = associations
+                    .filter { it.budgetId == entity.id }
+                    .map { it.accountId },
+                accountList = accountList
+            )?.toBudgetUiState(accountList)
+        } ?: EditingBudgetUiState(
+            isNew = true,
+            amountLimit = "4000",
+            category = categoriesWithSubcategories.expense[0].category,
+            name = "Food & drinks",
+            linkedAccounts = accountList.subList(0, 1)
+        )
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) { scaffoldPadding ->
         EditBudgetScreen(
-            scaffoldPadding = PaddingValues(0.dp),
+            scaffoldPadding = scaffoldPadding,
             appTheme = appTheme,
-            budget = budget,
+            budget = budgetUiState,
             accountList = accountList,
             categoriesWithSubcategories = categoriesWithSubcategories,
             onNameChange = {},

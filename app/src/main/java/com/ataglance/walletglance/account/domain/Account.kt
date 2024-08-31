@@ -3,9 +3,9 @@ package com.ataglance.walletglance.account.domain
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
 import com.ataglance.walletglance.account.domain.color.AccountColors
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.core.utils.formatWithSpaces
+import com.ataglance.walletglance.record.domain.RecordType
 import java.util.Locale
 
 @Stable
@@ -21,15 +21,6 @@ data class Account(
     val withoutBalance: Boolean = false,
     val isActive: Boolean = true
 ) {
-
-    fun toRecordAccount(): RecordAccount {
-        return RecordAccount(
-            id = id,
-            name = name,
-            currency = currency,
-            color = color
-        )
-    }
 
     private fun getHiddenBalance(): String? {
         return if (hideBalance) {
@@ -95,6 +86,30 @@ data class Account(
                         (if (recordType == RecordType.Expense) prevAmount else -prevAmount) +
                         if (recordType == RecordType.Expense) -newAmount else newAmount
             ).toDouble()
+        )
+    }
+
+    fun toRecordAccount(): RecordAccount {
+        return RecordAccount(
+            id = id,
+            name = name,
+            currency = currency,
+            color = color
+        )
+    }
+
+    fun toEditAccountUiState(): EditAccountUiState {
+        return EditAccountUiState(
+            id = id,
+            orderNum = orderNum,
+            name = name,
+            currency = currency,
+            balance = "%.2f".format(Locale.US, balance),
+            color = color,
+            hide = hide,
+            hideBalance = hideBalance,
+            withoutBalance = withoutBalance,
+            isActive = isActive
         )
     }
 

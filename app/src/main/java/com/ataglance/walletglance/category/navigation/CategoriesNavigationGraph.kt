@@ -10,24 +10,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
-import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreen
-import com.ataglance.walletglance.category.presentation.screen.EditSubcategoryListScreen
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreen
+import com.ataglance.walletglance.category.presentation.screen.EditSubcategoriesScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesViewModelFactory
+import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.categoriesGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
+    navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     categoriesWithSubcategories: CategoriesWithSubcategories
@@ -36,7 +37,6 @@ fun NavGraphBuilder.categoriesGraph(
         startDestination = CategoriesSettingsScreens.EditCategories
     ) {
         composable<CategoriesSettingsScreens.EditCategories> { backStack ->
-
             val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
                 navController = navController,
                 factory = SetupCategoriesViewModelFactory(
@@ -60,19 +60,23 @@ fun NavGraphBuilder.categoriesGraph(
 
             EditCategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
-                isAppSetUp = appUiSettings.isSetUp,
                 appTheme = appUiSettings.appTheme,
+                isAppSetUp = appUiSettings.isSetUp,
                 uiState = categoriesUiState,
                 onShowCategoriesByType = categoriesViewModel::changeCategoryTypeToShow,
                 onNavigateToEditSubcategoriesScreen = { categoryWithSubcategories ->
                     categoriesViewModel.applySubcategoryListToEdit(categoryWithSubcategories)
-                    navController.navigate(CategoriesSettingsScreens.EditSubcategories)
+                    navViewModel.navigateToScreen(
+                        navController, CategoriesSettingsScreens.EditSubcategories
+                    )
                 },
                 onNavigateToEditCategoryScreen = { categoryOrNull ->
                     editCategoryViewModel.applyCategory(
                         category = categoryOrNull ?: categoriesViewModel.getNewParentCategory()
                     )
-                    navController.navigate(CategoriesSettingsScreens.EditCategory)
+                    navViewModel.navigateToScreen(
+                        navController, CategoriesSettingsScreens.EditCategory
+                    )
                 },
                 onSwapCategories = categoriesViewModel::swapParentCategories,
                 onResetButton = categoriesViewModel::reapplyCategoryLists,
@@ -88,7 +92,6 @@ fun NavGraphBuilder.categoriesGraph(
             )
         }
         composable<CategoriesSettingsScreens.EditSubcategories> { backStack ->
-
             val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
                 navController = navController
             )
@@ -98,7 +101,7 @@ fun NavGraphBuilder.categoriesGraph(
 
             val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
-            EditSubcategoryListScreen(
+            EditSubcategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
                 categoryWithSubcategories = categoriesUiState.categoryWithSubcategories,
@@ -110,13 +113,14 @@ fun NavGraphBuilder.categoriesGraph(
                     editCategoryViewModel.applyCategory(
                         category = categoryOrNull ?: categoriesViewModel.getNewSubcategory()
                     )
-                    navController.navigate(CategoriesSettingsScreens.EditCategory)
+                    navViewModel.navigateToScreen(
+                        navController, CategoriesSettingsScreens.EditCategory
+                    )
                 },
                 onSwapCategories = categoriesViewModel::swapSubcategories
             )
         }
         composable<CategoriesSettingsScreens.EditCategory> { backStack ->
-
             val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
                 navController = navController
             )
@@ -124,8 +128,8 @@ fun NavGraphBuilder.categoriesGraph(
                 navController = navController
             )
 
-            val categoryUiState by editCategoryViewModel
-                .categoryUiState.collectAsStateWithLifecycle()
+            val categoryUiState by editCategoryViewModel.categoryUiState
+                .collectAsStateWithLifecycle()
             val allowDeleting by editCategoryViewModel.allowDeleting.collectAsStateWithLifecycle()
             val allowSaving by editCategoryViewModel.allowSaving.collectAsStateWithLifecycle()
 
@@ -145,8 +149,7 @@ fun NavGraphBuilder.categoriesGraph(
                 onSaveButton = {
                     categoriesViewModel.saveEditedCategory(editCategoryViewModel.getCategory())
                     navController.popBackStack()
-                },
-                categoryIconList = CategoryPossibleIcons().asList()
+                }
             )
         }
     }

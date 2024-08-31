@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.account.utils.toSortedCurrencyItemList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,9 +20,7 @@ class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
     val searchedPrompt: StateFlow<String> = _searchedPrompt.asStateFlow()
 
     private val _currencyList: MutableStateFlow<List<CurrencyItem>> = MutableStateFlow(
-        Currency.getAvailableCurrencies()
-            .map { CurrencyItem(it) }
-            .sortedWith(compareBy { it.currencyCode })
+        Currency.getAvailableCurrencies().toSortedCurrencyItemList()
     )
     val currencyList: StateFlow<List<CurrencyItem>> = searchedPrompt
         .combine(_currencyList) { prompt, list ->

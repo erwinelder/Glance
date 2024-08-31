@@ -18,22 +18,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.presentation.components.MediumAccountSetup
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
-import com.ataglance.walletglance.account.presentation.components.MediumAccountSetup
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 
 @Composable
 fun EditAccountsScreen(
     scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
     appTheme: AppTheme?,
-    accountsList: List<Account>,
+    accountList: List<Account>,
     onNavigateToEditAccountScreen: (Account?) -> Unit,
     onSwapAccounts: (Int, Int) -> Unit,
     onSaveButton: () -> Unit
@@ -42,7 +47,7 @@ fun EditAccountsScreen(
         topPadding = if (!isAppSetUp) scaffoldPadding.calculateTopPadding() else null,
         glassSurfaceContent = {
             GlassSurfaceContent(
-                accountsList = accountsList,
+                accountsList = accountList,
                 appTheme = appTheme,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onSwapAccounts = onSwapAccounts
@@ -156,5 +161,50 @@ private fun ExpandedLayout(
                 )
             }
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun EditAccountsScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    accountList: List<Account> = listOf(
+        Account(
+            id = 1,
+            orderNum = 1,
+            name = "Main USD",
+            currency = "USD",
+            balance = 112.13,
+            color = AccountPossibleColors().default.toAccountColorWithName(),
+            isActive = false
+        ),
+        Account(
+            id = 2,
+            orderNum = 2,
+            name = "Local Card CZK",
+            currency = "CZK",
+            balance = 1412.13,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = false
+        ),
+    ),
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) { scaffoldPadding ->
+        EditAccountsScreen(
+            scaffoldPadding = scaffoldPadding,
+            isAppSetUp = isAppSetUp,
+            appTheme = appTheme,
+            accountList = accountList,
+            onNavigateToEditAccountScreen = {},
+            onSwapAccounts = { _, _ -> },
+            onSaveButton = {}
+        )
     }
 }

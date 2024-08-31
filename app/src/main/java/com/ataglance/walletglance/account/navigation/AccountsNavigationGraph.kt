@@ -22,12 +22,14 @@ import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsVie
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.accountsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
+    navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     accountList: List<Account>
@@ -50,12 +52,14 @@ fun NavGraphBuilder.accountsGraph(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
                 appTheme = appUiSettings.appTheme,
-                accountsList = accountsList,
+                accountList = accountsList,
                 onNavigateToEditAccountScreen = { account ->
                     editAccountViewModel.applyAccountData(
                         account = account ?: accountsViewModel.getNewAccount()
                     )
-                    navController.navigate(AccountsSettingsScreens.EditAccount)
+                    navViewModel.navigateToScreen(
+                        navController = navController, screen = AccountsSettingsScreens.EditAccount
+                    )
                 },
                 onSwapAccounts = accountsViewModel::swapAccounts,
                 onSaveButton = {
@@ -64,7 +68,7 @@ fun NavGraphBuilder.accountsGraph(
                         if (appUiSettings.isSetUp) {
                             navController.popBackStack()
                         } else {
-                            navController.navigate(SettingsScreens.Categories)
+                            navViewModel.navigateToScreen(navController, SettingsScreens.Categories)
                         }
                     }
                 }
@@ -79,8 +83,8 @@ fun NavGraphBuilder.accountsGraph(
                 navController = navController
             )
 
-            val accountUiState by editAccountViewModel
-                .editAccountUiState.collectAsStateWithLifecycle()
+            val accountUiState by editAccountViewModel.editAccountUiState
+                .collectAsStateWithLifecycle()
             val allowDeleting by accountsViewModel.allowDeleting.collectAsStateWithLifecycle()
             val allowSaving by editAccountViewModel.allowSaving.collectAsStateWithLifecycle()
 
@@ -93,8 +97,11 @@ fun NavGraphBuilder.accountsGraph(
                 onColorChange = editAccountViewModel::changeColor,
                 onNameChange = editAccountViewModel::changeName,
                 onNavigateToEditAccountCurrencyScreen = {
-                    navController.navigate(
-                        AccountsSettingsScreens.EditAccountCurrency(accountUiState.currency)
+                    navViewModel.navigateToScreen(
+                        navController = navController,
+                        screen = AccountsSettingsScreens.EditAccountCurrency(
+                            currency = accountUiState.currency
+                        )
                     )
                 },
                 onBalanceChange = editAccountViewModel::changeBalance,
@@ -125,12 +132,12 @@ fun NavGraphBuilder.accountsGraph(
 
             val uiState by currencyPickerViewModel.uiState.collectAsStateWithLifecycle()
             val currencyList by currencyPickerViewModel.currencyList.collectAsStateWithLifecycle()
-            val searchedPrompt by currencyPickerViewModel
-                .searchedPrompt.collectAsStateWithLifecycle()
+            val searchedPrompt by currencyPickerViewModel.searchedPrompt
+                .collectAsStateWithLifecycle()
 
             CurrencyPickerScreen(
                 scaffoldPadding = scaffoldPadding,
-                uiState = uiState,
+                currencyPickerUiState = uiState,
                 currencyList = currencyList,
                 searchedPrompt = searchedPrompt,
                 onSearchPromptChange = currencyPickerViewModel::changeSearchPrompt,

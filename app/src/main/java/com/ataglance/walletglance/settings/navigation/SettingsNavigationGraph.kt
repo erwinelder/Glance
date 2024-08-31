@@ -65,6 +65,7 @@ fun NavGraphBuilder.settingsGraph(
         accountsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
+            navViewModel = navViewModel,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             accountList = accountList
@@ -72,6 +73,7 @@ fun NavGraphBuilder.settingsGraph(
         budgetsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
+            navViewModel = navViewModel,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             budgetsByType = budgetsByType,
@@ -81,12 +83,14 @@ fun NavGraphBuilder.settingsGraph(
         categoriesGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
+            navViewModel = navViewModel,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             categoriesWithSubcategories = categoriesWithSubcategories
         )
         categoryCollectionsGraph(
             navController = navController,
+            navViewModel = navViewModel,
             appViewModel = appViewModel,
             appTheme = appUiSettings.appTheme,
             categoriesWithSubcategories = categoriesWithSubcategories,

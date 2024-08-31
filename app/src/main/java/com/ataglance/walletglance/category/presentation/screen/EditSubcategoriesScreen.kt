@@ -16,21 +16,27 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.components.SubcategorySetupElement
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.category.presentation.components.SubcategorySetupElement
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 
 @Composable
-fun EditSubcategoryListScreen(
+fun EditSubcategoriesScreen(
     scaffoldPadding: PaddingValues,
     appTheme: AppTheme?,
     categoryWithSubcategories: CategoryWithSubcategories?,
@@ -42,8 +48,8 @@ fun EditSubcategoryListScreen(
         topPadding = scaffoldPadding.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                subcategoryList = categoryWithSubcategories?.subcategoryList ?: emptyList(),
                 appTheme = appTheme,
+                subcategoryList = categoryWithSubcategories?.subcategoryList ?: emptyList(),
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )
@@ -64,8 +70,8 @@ fun EditSubcategoryListScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    subcategoryList: List<Category>,
     appTheme: AppTheme?,
+    subcategoryList: List<Category>,
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
@@ -93,8 +99,8 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun CompactLayout(
-    subcategoryList: List<Category>,
     appTheme: AppTheme?,
+    subcategoryList: List<Category>,
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
@@ -131,8 +137,8 @@ private fun CompactLayout(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExpandedLayout(
-    subcategoryList: List<Category>,
     appTheme: AppTheme?,
+    subcategoryList: List<Category>,
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
@@ -163,5 +169,32 @@ private fun ExpandedLayout(
                 )
             }
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun EditSubcategoriesScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) { scaffoldPadding ->
+        EditSubcategoriesScreen(
+            scaffoldPadding = scaffoldPadding,
+            appTheme = appTheme,
+            categoryWithSubcategories = categoriesWithSubcategories.expense[2],
+            onSaveButton = {},
+            onNavigateToEditCategoryScreen = {},
+            onSwapCategories = { _, _ -> }
+        )
     }
 }

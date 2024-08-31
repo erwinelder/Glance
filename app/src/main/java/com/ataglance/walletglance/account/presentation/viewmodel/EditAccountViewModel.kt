@@ -3,10 +3,8 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountColorWithName
-import com.ataglance.walletglance.account.domain.color.AccountColors
+import com.ataglance.walletglance.account.domain.EditAccountUiState
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,44 +12,25 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import java.util.Locale
 
 class EditAccountViewModel : ViewModel() {
 
-    private val _editAccountUiState: MutableStateFlow<EditAccountUiState> =
-        MutableStateFlow(EditAccountUiState())
-    val editAccountUiState: StateFlow<EditAccountUiState> = _editAccountUiState.asStateFlow()
+    private val _editAccountUiState: MutableStateFlow<EditAccountUiState> = MutableStateFlow(
+        EditAccountUiState()
+    )
+    val editAccountUiState = _editAccountUiState.asStateFlow()
 
-    val allowSaving: StateFlow<Boolean> =
-        combine(_editAccountUiState) { editAccountUiStateArray ->
-            editAccountUiStateArray[0].let {
-                it.name.isNotBlank() &&
-                        it.currency.isNotBlank() &&
-                        it.balance.isNotBlank() &&
-                        it.balance.last() != '.'
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false
-        )
+    val allowSaving: StateFlow<Boolean> = combine(_editAccountUiState) { editAccountUiStateArray ->
+        editAccountUiStateArray[0].allowSaving()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
 
 
     fun applyAccountData(account: Account) {
-        _editAccountUiState.update {
-            it.copy(
-                id = account.id,
-                orderNum = account.orderNum,
-                name = account.name,
-                currency = account.currency,
-                balance = "%.2f".format(Locale.US, account.balance),
-                color = account.color,
-                hide = account.hide,
-                hideBalance = account.hideBalance,
-                withoutBalance = account.withoutBalance,
-                isActive = account.isActive
-            )
-        }
+        _editAccountUiState.update { account.toEditAccountUiState() }
     }
 
     fun changeColor(colorName: String) {
@@ -102,36 +81,6 @@ class EditAccountViewModel : ViewModel() {
 
     fun getAccount(): Account {
         return editAccountUiState.value.toAccount()
-    }
-
-}
-
-data class EditAccountUiState(
-    val id: Int = 0,
-    val orderNum: Int = 0,
-    val name: String = "",
-    val currency: String = "",
-    val balance: String = "0.00",
-    val color: AccountColorWithName = AccountColors.Default.toAccountColorWithName(),
-    val hide: Boolean = false,
-    val hideBalance: Boolean = false,
-    val withoutBalance: Boolean = false,
-    val isActive: Boolean = false
-) {
-
-    fun toAccount(): Account {
-        return Account(
-            id = id,
-            orderNum = orderNum,
-            name = name,
-            currency = currency,
-            balance = balance.toDouble(),
-            color = color,
-            hide = hide,
-            hideBalance = hideBalance,
-            withoutBalance = withoutBalance,
-            isActive = isActive
-        )
     }
 
 }

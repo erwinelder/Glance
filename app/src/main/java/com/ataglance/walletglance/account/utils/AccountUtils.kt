@@ -1,15 +1,24 @@
 package com.ataglance.walletglance.account.utils
 
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.mapper.toAccountList
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
 import com.ataglance.walletglance.account.domain.color.AccountColors
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.account.data.mapper.toAccountList
 import com.ataglance.walletglance.record.domain.RecordType
+import java.util.Currency
 import java.util.Locale
+
+
+fun Set<Currency>.toSortedCurrencyItemList(): List<CurrencyItem> {
+    return this
+        .map { CurrencyItem(it) }
+        .sortedBy { it.currencyCode }
+}
 
 
 fun AccountColors.toAccountColorWithName(): AccountColorWithName {

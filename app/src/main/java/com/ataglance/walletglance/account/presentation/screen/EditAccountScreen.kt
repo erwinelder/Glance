@@ -31,22 +31,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.EditAccountUiState
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
-import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountUiState
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun EditAccountScreen(
@@ -197,13 +202,10 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
-                    .bounceClickEffect(
-                        .97f,
-                        onClick = onNavigateToCurrencyPickerWindow
-                    )
+                    .bounceClickEffect(onClick = onNavigateToCurrencyPickerWindow)
                     .clip(RoundedCornerShape(15.dp))
                     .background(GlanceTheme.surface)
-                    .padding(12.dp, 6.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             )
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
@@ -212,5 +214,49 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
                 modifier = Modifier.size(20.dp)
             )
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun EditAccountScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    account: Account = Account(
+        id = 1,
+        orderNum = 1,
+        name = "Main USD",
+        currency = "USD",
+        balance = 112.13,
+        color = AccountPossibleColors().default.toAccountColorWithName(),
+        isActive = false
+    ),
+    allowDeleting: Boolean = false,
+) {
+    val editAccountUiState = account.toEditAccountUiState()
+
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) { scaffoldPadding ->
+        EditAccountScreen(
+            scaffoldPadding = scaffoldPadding,
+            appTheme = appTheme,
+            editAccountUiState = editAccountUiState,
+            allowDeleting = allowDeleting,
+            allowSaving = editAccountUiState.allowSaving(),
+            onColorChange = {},
+            onNameChange = {},
+            onNavigateToEditAccountCurrencyScreen = {},
+            onBalanceChange = {},
+            onHideChange = {},
+            onHideBalanceChange = {},
+            onWithoutBalanceChange = {},
+            onSaveButton = {},
+            onDeleteButton = {}
+        )
     }
 }

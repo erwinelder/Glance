@@ -17,29 +17,37 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
+import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun EditCategoryScreen(
@@ -53,9 +61,11 @@ fun EditCategoryScreen(
     onIconChange: (CategoryIcon) -> Unit,
     onSaveButton: () -> Unit,
     onDeleteButton: () -> Unit,
-    categoryIconList: List<CategoryIcon>
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
+    val categoryIconList by remember {
+        derivedStateOf { CategoryPossibleIcons().asList() }
+    }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -173,5 +183,38 @@ private fun CategoryIconsGrid(
                     }
             )
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun EditCategoryScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
+) {
+    val category = categoriesWithSubcategories.expense[0].category
+
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) { scaffoldPadding ->
+        EditCategoryScreen(
+            scaffoldPadding = scaffoldPadding,
+            appTheme = appTheme,
+            category = category,
+            allowDeleting = false,
+            allowSaving = category.allowSaving(),
+            onNameChange = {},
+            onCategoryColorChange = {},
+            onIconChange = {},
+            onSaveButton = {},
+            onDeleteButton = {}
+        )
     }
 }

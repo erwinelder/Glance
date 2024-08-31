@@ -31,28 +31,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CheckedCategory
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.EditingCategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.EditingCategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
+import com.ataglance.walletglance.category.presentation.components.RecordCategory
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
-import com.ataglance.walletglance.category.utils.toCategoryColorWithName
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.buttons.ThreeStateCheckbox
-import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
 
 @Composable
 fun EditCategoryCollectionScreen(
@@ -108,9 +107,6 @@ private fun GlassSurfaceContent(
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
-    val categoriesListState = rememberLazyListState()
-    val subcategoriesListState = rememberLazyListState()
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -122,91 +118,127 @@ private fun GlassSurfaceContent(
                 top = dimensionResource(R.dimen.field_gap)
             )
     ) {
-            TextFieldWithLabel(
-                text = collection.name,
-                placeholderText = stringResource(R.string.collection_name),
-                onValueChange = onNameChange,
-                labelText = stringResource(R.string.name)
+        TextFieldWithLabel(
+            text = collection.name,
+            placeholderText = stringResource(R.string.collection_name),
+            onValueChange = onNameChange,
+            labelText = stringResource(R.string.name)
+        )
+        ParentCategoriesLists(
+            appTheme = appTheme,
+            editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+            expandedCategory = expandedCategory,
+            onCheckedChange = onCheckedChange,
+            onExpandedChange = onExpandedChange
+        )
+        SubcategoriesList(
+            appTheme = appTheme,
+            expandedCategory = expandedCategory,
+            onCheckedChange = onCheckedChange,
+            onExpandedChange = onExpandedChange
+        )
+    }
+}
+
+@Composable
+private fun ParentCategoriesLists(
+    appTheme: AppTheme?,
+    editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
+    expandedCategory: EditingCategoryWithSubcategories?,
+    onCheckedChange: (Category) -> Unit,
+    onExpandedChange: (Category) -> Unit
+) {
+    val categoriesListState = rememberLazyListState()
+
+    AnimatedVisibility(
+        visible = expandedCategory == null,
+        enter = fadeIn(tween(220, 90)) +
+                scaleIn(tween(220, 90), .95f),
+        exit = fadeOut(tween(90))
+    ) {
+        LazyColumn(
+            state = categoriesListState,
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = PaddingValues(
+                bottom = dimensionResource(R.dimen.field_gap)
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            categoryListItems(
+                appTheme = appTheme,
+                list = editingCategoriesWithSubcategories.expense,
+                listType = CategoryType.Expense,
+                onCheckedChange = onCheckedChange,
+                onExpandedChange = onExpandedChange
             )
-            AnimatedVisibility(
-                visible = expandedCategory == null,
-                enter = fadeIn(tween(220, 90)) +
-                        scaleIn(tween(220, 90), .95f),
-                exit = fadeOut(tween(90))
+            categoryListItems(
+                appTheme = appTheme,
+                list = editingCategoriesWithSubcategories.income,
+                listType = CategoryType.Income,
+                onCheckedChange = onCheckedChange,
+                onExpandedChange = onExpandedChange
+            )
+        }
+    }
+}
+
+@Composable
+private fun SubcategoriesList(
+    appTheme: AppTheme?,
+    expandedCategory: EditingCategoryWithSubcategories?,
+    onCheckedChange: (Category) -> Unit,
+    onExpandedChange: (Category) -> Unit
+) {
+    val subcategoriesListState = rememberLazyListState()
+
+    AnimatedVisibility(
+        visible = expandedCategory != null,
+        enter = fadeIn(tween(220, 90)) +
+                scaleIn(tween(220, 90), .95f),
+        exit = fadeOut(tween(90))
+    ) {
+        if (expandedCategory != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                CollectionCategoryItem(
+                    appTheme = appTheme,
+                    category = expandedCategory.category,
+                    checked = expandedCategory.checked,
+                    expanded = expandedCategory.expanded,
+                    onCheckedChange = {
+                        onCheckedChange(expandedCategory.category)
+                    },
+                    onExpandedChange = {
+                        onExpandedChange(expandedCategory.category)
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                BigDivider()
                 LazyColumn(
-                    state = categoriesListState,
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    contentPadding = PaddingValues(
-                        bottom = dimensionResource(R.dimen.field_gap)
-                    ),
+                    state = subcategoriesListState,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    categoryListItems(
-                        appTheme = appTheme,
-                        list = editingCategoriesWithSubcategories.expense,
-                        listType = CategoryType.Expense,
-                        onCheckedChange = onCheckedChange,
-                        onExpandedChange = onExpandedChange
-                    )
-                    categoryListItems(
-                        appTheme = appTheme,
-                        list = editingCategoriesWithSubcategories.income,
-                        listType = CategoryType.Income,
-                        onCheckedChange = onCheckedChange,
-                        onExpandedChange = onExpandedChange
-                    )
-                }
-            }
-            AnimatedVisibility(
-                visible = expandedCategory != null,
-                enter = fadeIn(tween(220, 90)) +
-                        scaleIn(tween(220, 90), .95f),
-                exit = fadeOut(tween(90))
-            ) {
-                if (expandedCategory != null) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CollectionCategoryItem(
+                    item {
+                        Spacer(modifier = Modifier)
+                    }
+                    items(
+                        items = expandedCategory.subcategoryList,
+                        key = { it.category.id }
+                    ) { item ->
+                        CollectionSubcategoryItem(
                             appTheme = appTheme,
-                            category = expandedCategory.category,
-                            checked = expandedCategory.checked,
-                            expanded = expandedCategory.expanded,
+                            checkedCategory = item,
                             onCheckedChange = {
-                                onCheckedChange(expandedCategory.category)
-                            },
-                            onExpandedChange = {
-                                onExpandedChange(expandedCategory.category)
+                                onCheckedChange(item.category)
                             }
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        BigDivider()
-                        LazyColumn(
-                            state = subcategoriesListState,
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            item {
-                                Spacer(modifier = Modifier)
-                            }
-                            items(
-                                items = expandedCategory.subcategoryList,
-                                key = { it.category.id }
-                            ) { item ->
-                                CollectionSubcategoryItem(
-                                    appTheme = appTheme,
-                                    checkedCategory = item,
-                                    onCheckedChange = {
-                                        onCheckedChange(item.category)
-                                    }
-                                )
-                            }
-                        }
                     }
                 }
             }
         }
+    }
 }
 
 private fun LazyListScope.categoryListItems(
@@ -310,63 +342,39 @@ private fun CollectionSubcategoryItem(
 
 @Preview
 @Composable
-private fun EditCategoryCollectionScreenPreview() {
-    val categoryList = listOf(
-        Category(
-            id = 13,
-            type = CategoryType.Expense,
-            orderNum = 1,
-            parentCategoryId = 1,
-            name = "Groceries",
-            icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
-        ),
-        Category(
-            id = 14,
-            type = CategoryType.Expense,
-            orderNum = 2,
-            parentCategoryId = null,
-            name = "Category 2",
-            icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
-        ),
-        Category(
-            id = 25,
-            type = CategoryType.Expense,
-            orderNum = 3,
-            parentCategoryId = null,
-            name = "Category 3",
-            icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
-        ),
-        Category(
-            id = 30,
-            type = CategoryType.Expense,
-            orderNum = 3,
-            parentCategoryId = null,
-            name = "Category 3",
-            icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
-        )
-    )
-    val collection = CategoryCollectionWithCategories(
+fun EditCategoryCollectionScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+        LocalContext.current
+    ).getDefaultCategories(),
+    collectionWithIds: CategoryCollectionWithIds = CategoryCollectionWithIds(
         id = 1,
         orderNum = 1,
         type = CategoryCollectionType.Expense,
         name = "Collection",
-        categoryList = categoryList
+        categoriesIds = listOf(13, 14, 25, 30)
+    ),
+) {
+    val collection = collectionWithIds.toCategoryCollectionWithCategories(
+        allCategories = categoriesWithSubcategories.concatenateAsCategoryList()
     )
+    val editingCategoriesWithSubcategories = categoriesWithSubcategories
+        .toEditingCategoriesWithSubcategories(collection)
 
-    PreviewContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) {
         EditCategoryCollectionScreen(
-            appTheme = AppTheme.LightDefault,
+            appTheme = appTheme,
             collection = collection,
-            editingCategoriesWithSubcategories =
-            DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-                .toEditingCategoriesWithSubcategories(collection),
+            editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
             expandedCategory = null,
             allowDeleting = true,
-            allowSaving = true,
+            allowSaving = collection.allowSaving() &&
+                    editingCategoriesWithSubcategories.hasCheckedCategory(),
             onNameChange = {},
             onCheckedChange = {},
             onExpandedChange = {},

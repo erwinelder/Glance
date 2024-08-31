@@ -10,6 +10,10 @@ data class CategoryCollectionWithCategories(
     val categoryList: List<Category>? = null
 ) {
 
+    fun allowSaving(): Boolean {
+        return name.isNotBlank()
+    }
+
     fun toCollectionWithIds(): CategoryCollectionWithIds {
         return CategoryCollectionWithIds(
             id = id,

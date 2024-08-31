@@ -41,6 +41,10 @@ data class Category(
         return (isExpense() && id != 12 && id != 66) || (isIncome() && id != 77)
     }
 
+    fun allowSaving(): Boolean {
+        return name.isNotBlank()
+    }
+
     fun toCheckedCategory(checkedCategoryList: List<Category>): CheckedCategory {
         return CheckedCategory(
             category = this,

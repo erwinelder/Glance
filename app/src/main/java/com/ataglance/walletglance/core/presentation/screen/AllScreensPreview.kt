@@ -8,16 +8,26 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
+import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
+import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
+import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
+import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
+import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreenPreview
+import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreenPreview
+import com.ataglance.walletglance.category.presentation.screen.EditSubcategoriesScreenPreview
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
+import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreenPreview
+import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionsScreenPreview
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -35,7 +45,7 @@ import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScree
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
 
-private val appTheme: AppTheme = AppTheme.DarkDefault
+private val appTheme: AppTheme = AppTheme.LightDefault
 private const val isAppSetUp: Boolean = true
 private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true
@@ -58,7 +68,16 @@ private val accountsUiState: AccountsUiState = AccountsUiState(
             balance = 43551.63,
             color = AccountPossibleColors().blue.toAccountColorWithName(),
             isActive = false
-        )
+        ),
+        Account(
+            id = 3,
+            orderNum = 3,
+            name = "Work Card",
+            currency = "USD",
+            balance = 412.0,
+            color = AccountPossibleColors().camel.toAccountColorWithName(),
+            isActive = false
+        ),
     ),
     activeAccount = Account(
         id = 1,
@@ -101,31 +120,27 @@ private val recordEntityList = listOf(
     ),
 )
 private val categoryCollectionsWithIdsByType = CategoryCollectionsWithIdsByType(
-    expense = listOf(
-        CategoryCollectionWithIds(
-            id = 1,
-            orderNum = 1,
-            type = CategoryCollectionType.Expense,
-            name = "Essentials",
-            categoriesIds = listOf(1, 2)
-        )
-    ),
-    income = listOf(
-        CategoryCollectionWithIds(
-            id = 1,
-            orderNum = 1,
-            type = CategoryCollectionType.Income,
-            name = "Essentials",
-            categoriesIds = listOf(1, 2)
-        )
-    ),
     mixed = listOf(
         CategoryCollectionWithIds(
             id = 1,
             orderNum = 1,
             type = CategoryCollectionType.Mixed,
             name = "Essentials",
-            categoriesIds = listOf(1, 2)
+            categoriesIds = listOf(13, 14, 25, 30)
+        ),
+        CategoryCollectionWithIds(
+            id = 2,
+            orderNum = 2,
+            type = CategoryCollectionType.Mixed,
+            name = "Other",
+            categoriesIds = listOf(15, 16, 21, 30)
+        ),
+        CategoryCollectionWithIds(
+            id = 3,
+            orderNum = 3,
+            type = CategoryCollectionType.Mixed,
+            name = "All stuff",
+            categoriesIds = (13..34).toList()
         )
     ),
 )
@@ -154,11 +169,12 @@ private val budgetEntityList = listOf(
 )
 private val budgetAccountAssociationList = listOf(
     BudgetAccountAssociation(budgetId = 1, accountId = 1),
-    BudgetAccountAssociation(budgetId = 1, accountId = 2),
-    BudgetAccountAssociation(budgetId = 2, accountId = 1),
+    BudgetAccountAssociation(budgetId = 1, accountId = 3),
     BudgetAccountAssociation(budgetId = 2, accountId = 2),
     BudgetAccountAssociation(budgetId = 3, accountId = 1),
 )
+
+
 
 @Preview(
     name = "HomeScreen",
@@ -373,5 +389,167 @@ fun MainAppContentSettingsDataScreenPreview() {
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
+    )
+}
+
+@Preview(
+    name = "EditAccountsScreen",
+    group = "AccountsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditAccountsScreenPreview() {
+    EditAccountsScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        accountList = accountsUiState.accountList
+    )
+}
+
+@Preview(
+    name = "EditAccountScreen",
+    group = "AccountsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditAccountScreenPreview() {
+    EditAccountScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        account = accountsUiState.accountList.first()
+    )
+}
+
+@Preview(
+    name = "CurrencyPickerScreen",
+    group = "AccountsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentCurrencyPickerScreenPreview() {
+    CurrencyPickerScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible
+    )
+}
+
+@Preview(
+    name = "EditBudgetsScreen",
+    group = "BudgetsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditBudgetsScreenPreview() {
+    EditBudgetsScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        budgetEntityList = budgetEntityList,
+        budgetAccountAssociationList = budgetAccountAssociationList,
+        accountList = accountsUiState.accountList
+    )
+}
+
+@Preview(
+    name = "EditBudgetScreen",
+    group = "BudgetsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditBudgetScreenPreview() {
+    EditBudgetScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        accountList = accountsUiState.accountList,
+        budgetEntity = budgetEntityList.first(),
+        budgetAccountAssociationList = budgetAccountAssociationList
+    )
+}
+
+@Preview(
+    name = "EditCategoriesScreen",
+    group = "CategoriesSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoriesScreenPreview() {
+    EditCategoriesScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        categoryType = CategoryType.Expense
+    )
+}
+
+@Preview(
+    name = "EditSubcategoriesScreen",
+    group = "CategoriesSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditSubcategoriesScreenPreview() {
+    EditSubcategoriesScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "EditCategoryScreen",
+    group = "CategoriesSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoryScreenPreview() {
+    EditCategoryScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "EditCategoryCollectionsScreen",
+    group = "CollectionsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoryCollectionsScreenPreview() {
+    EditCategoryCollectionsScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        collectionType = CategoryCollectionType.Mixed,
+        categoryCollectionsWithIdsByType = categoryCollectionsWithIdsByType,
+    )
+}
+
+@Preview(
+    name = "EditCategoryCollectionScreen",
+    group = "CollectionsSettingsScreens",
+    apiLevel = 34,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoryCollectionScreenPreview() {
+    EditCategoryCollectionScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        collectionWithIds = categoryCollectionsWithIdsByType.mixed.first()
     )
 }

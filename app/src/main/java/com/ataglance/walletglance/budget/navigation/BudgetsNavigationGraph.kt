@@ -9,23 +9,25 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.budget.domain.Budget
 import com.ataglance.walletglance.budget.domain.BudgetsByType
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreen
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreen
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModelFactory
+import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
+import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.budgetsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
+    navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     budgetsByType: BudgetsByType,
@@ -58,7 +60,7 @@ fun NavGraphBuilder.budgetsGraph(
                         categoryWithSubcategory = categoriesWithSubcategories.expense.getOrNull(0)
                             ?.getWithFirstSubcategory()
                     )
-                    navController.navigate(BudgetsSettingsScreens.EditBudget)
+                    navViewModel.navigateToScreen(navController, BudgetsSettingsScreens.EditBudget)
                 },
                 onSaveBudgetsButton = {
                     coroutineScope.launch {
@@ -79,12 +81,12 @@ fun NavGraphBuilder.budgetsGraph(
                 navController = navController
             )
 
-            val budgetState by editBudgetViewModel.budget.collectAsStateWithLifecycle()
+            val budgetUiState by editBudgetViewModel.budget.collectAsStateWithLifecycle()
 
             EditBudgetScreen(
                 scaffoldPadding = scaffoldPadding,
                 appTheme = appUiSettings.appTheme,
-                budget = budgetState,
+                budget = budgetUiState,
                 accountList = accountList,
                 categoriesWithSubcategories = categoriesWithSubcategories,
                 onNameChange = editBudgetViewModel::changeName,
@@ -95,8 +97,8 @@ fun NavGraphBuilder.budgetsGraph(
                 onUnlinkAccount = editBudgetViewModel::unlinkWithAccount,
                 onDeleteButton = {
                     editBudgetsViewModel.deleteBudget(
-                        id = budgetState.id,
-                        repeatingPeriod = budgetState.currRepeatingPeriod
+                        id = budgetUiState.id,
+                        repeatingPeriod = budgetUiState.currRepeatingPeriod
                     )
                     navController.popBackStack()
                 },

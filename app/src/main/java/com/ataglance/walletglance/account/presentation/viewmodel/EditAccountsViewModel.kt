@@ -2,11 +2,11 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
-import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
+import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.utils.findByOrderNum
+import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,8 +20,9 @@ class EditAccountsViewModel(
         MutableStateFlow(passedAccountList.takeIf { it.isNotEmpty() } ?: getNewAccountList())
     val accountsUiState: StateFlow<List<Account>> = _accountsUiState.asStateFlow()
 
-    private val _allowDeleting: MutableStateFlow<Boolean> =
-        MutableStateFlow(accountsUiState.value.size > 1)
+    private val _allowDeleting: MutableStateFlow<Boolean> = MutableStateFlow(
+        accountsUiState.value.size > 1
+    )
     val allowDeleting: StateFlow<Boolean> = _allowDeleting.asStateFlow()
 
     fun getNewAccount(): Account {

@@ -16,23 +16,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerUiState
+import com.ataglance.walletglance.account.utils.toSortedCurrencyItemList
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.LocalWindowType
+import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
+import com.ataglance.walletglance.core.presentation.components.screenContainers.SetupDataScreenContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import java.util.Currency
 
 @Composable
 fun CurrencyPickerScreen(
     scaffoldPadding: PaddingValues,
-    uiState: CurrencyPickerUiState,
+    currencyPickerUiState: CurrencyPickerUiState,
     currencyList: List<CurrencyItem>,
     searchedPrompt: String,
     onSearchPromptChange: (String) -> Unit,
@@ -44,21 +50,17 @@ fun CurrencyPickerScreen(
         topPadding = scaffoldPadding.calculateTopPadding(),
         topButton = {
             AnimatedContent(
-                targetState = uiState.selectedCurrency?.currencyCode,
+                targetState = currencyPickerUiState.selectedCurrency?.currencyCode,
                 label = "selected currency code"
             ) { targetCurrencyCode ->
                 GlanceTextField(
                     text = searchedPrompt,
                     onValueChange = onSearchPromptChange,
                     placeholderText = "\"${targetCurrencyCode}\"",
-                    modifier = Modifier
-                        .fillMaxWidth(
-                            when {
-                                WindowTypeIsCompact -> .88f
-                                WindowTypeIsMedium -> .66f
-                                else -> .44f
-                            }
-                        ),
+                    modifier = Modifier.fillMaxWidth(
+                        FilledWidthByScreenType(compact = .86f)
+                            .getByScreenType(LocalWindowType.current)
+                    ),
                     fontSize = 20.sp,
                     cornerSize = 17.dp
                 )
@@ -67,16 +69,16 @@ fun CurrencyPickerScreen(
         glassSurfaceContent = {
             GlassSurfaceContent(
                 currencyList = currencyList,
-                uiState = uiState,
+                uiState = currencyPickerUiState,
                 onSelectCurrency = onSelectCurrency
             )
         },
         primaryBottomButton = {
             PrimaryButton(
                 text = stringResource(R.string.save),
-                enabled = uiState.selectedCurrency != null
+                enabled = currencyPickerUiState.selectedCurrency != null
             ) {
-                uiState.selectedCurrency?.currencyCode?.let {
+                currencyPickerUiState.selectedCurrency?.currencyCode?.let {
                     onSaveButtonClick(it)
                 }
             }
@@ -122,5 +124,33 @@ private fun GlassSurfaceContent(
                 )
             }
         }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun CurrencyPickerScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    isAppSetUp: Boolean = true,
+    isSetupProgressTopBarVisible: Boolean = false,
+) {
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    ) { scaffoldPadding ->
+        CurrencyPickerScreen(
+            scaffoldPadding = scaffoldPadding,
+            currencyPickerUiState = CurrencyPickerUiState(
+                isSearching = false,
+                selectedCurrency = CurrencyItem("USD", "US Dollar")
+            ),
+            currencyList = Currency.getAvailableCurrencies().toSortedCurrencyItemList(),
+            searchedPrompt = "",
+            onSearchPromptChange = {},
+            onSelectCurrency = {},
+            onSaveButtonClick = {}
+        )
     }
 }

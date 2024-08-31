@@ -19,8 +19,8 @@ class EditCategoryViewModel : ViewModel() {
         MutableStateFlow(Category())
     val categoryUiState: StateFlow<Category> = _categoryUiState.asStateFlow()
 
-    val allowSaving: StateFlow<Boolean> = combine(_categoryUiState) { categoryUiStateArray ->
-        categoryUiStateArray[0].name.isNotBlank()
+    val allowSaving: StateFlow<Boolean> = combine(_categoryUiState) { categoryArray ->
+        categoryArray[0].allowSaving()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

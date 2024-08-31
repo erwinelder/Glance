@@ -45,7 +45,7 @@ class EditCategoryCollectionViewModel(
         _collectionUiState,
         _editingCategoriesWithSubcategories
     ) { collection, editingCategoriesWithSubcategories ->
-        collection.name.isNotBlank() && editingCategoriesWithSubcategories.hasCheckedCategory()
+        collection.allowSaving() && editingCategoriesWithSubcategories.hasCheckedCategory()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
