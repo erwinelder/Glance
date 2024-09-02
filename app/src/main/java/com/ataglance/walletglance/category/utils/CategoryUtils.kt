@@ -78,15 +78,6 @@ fun List<CategoryWithSubcategories>.toEditingCategoryWithSubcategoriesList(
 }
 
 
-fun List<CategoryWithSubcategories>.findCategoryById(id: Int): Category? {
-    this.forEach { categoryWithSubcategories ->
-        categoryWithSubcategories.category.takeIf { it.id == id }?.let { return it }
-            ?: categoryWithSubcategories.subcategoryList.findById(id)?.let { return it }
-    }
-    return null
-}
-
-
 fun List<CategoryWithSubcategories>.getCategoryWithSubcategoryById(
     id: Int
 ): CategoryWithSubcategory? {
