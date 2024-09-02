@@ -5,8 +5,6 @@ import com.ataglance.walletglance.account.domain.RecordAccount
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.utils.asChar
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
-import java.util.Locale
 
 @Stable
 data class RecordStack(
@@ -15,7 +13,7 @@ data class RecordStack(
     val type: RecordType,
     val account: RecordAccount,
     val totalAmount: Double,
-    val stack: List<RecordStackUnit>
+    val stack: List<RecordStackItem>
 ) {
 
     private fun isExpense() = type == RecordType.Expense
@@ -45,23 +43,6 @@ data class RecordStack(
                 subcategoryId = unit.categoryWithSubcategory?.subcategory?.id,
                 note = unit.note,
                 includeInBudgets = unit.includeInBudgets
-            )
-        }
-    }
-
-    fun toMakeRecordUnitList(): List<MakeRecordUnitUiState> {
-        return stack.mapIndexed { index, unit ->
-            MakeRecordUnitUiState(
-                lazyListKey = index,
-                index = index,
-                categoryWithSubcategory = unit.categoryWithSubcategory,
-                note = unit.note ?: "",
-                amount = "%.2f".format(
-                    Locale.US,
-                    unit.amount / (unit.quantity.takeUnless { it == 0 } ?: 1)
-                ),
-                quantity = unit.quantity?.toString() ?: "",
-                collapsed = stack.size != 1
             )
         }
     }

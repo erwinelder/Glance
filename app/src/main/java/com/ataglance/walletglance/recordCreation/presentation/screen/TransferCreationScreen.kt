@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,15 +38,14 @@ import com.ataglance.walletglance.core.presentation.components.buttons.BackButto
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
+import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
 import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordBottomButtonBlock
-import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordFieldContainer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,9 +60,9 @@ fun TransferCreationScreen(
     onSelectAccount: (Account, Boolean) -> Unit,
     onRateChange: (String, Boolean) -> Unit,
     onAmountChange: (String, Boolean) -> Unit,
-    onSaveButton: (TransferDraft) -> Unit,
-    onRepeatButton: (TransferDraft) -> Unit,
-    onDeleteButton: (TransferSenderReceiverRecordNums) -> Unit
+    onSaveButton: () -> Unit,
+    onRepeatButton: () -> Unit,
+    onDeleteButton: () -> Unit
 ) {
 
     var showDatePicker by remember { mutableStateOf(false) }
@@ -109,9 +109,9 @@ fun TransferCreationScreen(
                 MakeRecordBottomButtonBlock(
                     showOnlySaveButton = transferDraft.isNew,
                     singlePrimaryButtonStringRes = R.string.make_transfer,
-                    onSaveButton = { onSaveButton(transferDraft) },
-                    onRepeatButton = { onRepeatButton(transferDraft) },
-                    onDeleteButton = { onDeleteButton(transferDraft.getSenderReceiverRecordNums()) },
+                    onSaveButton = onSaveButton,
+                    onRepeatButton = onRepeatButton,
+                    onDeleteButton = onDeleteButton,
                     savingAndRepeatingAreAllowed = transferDraft.savingIsAllowed
                 )
             }
@@ -182,7 +182,7 @@ private fun GlassSurfaceContent(
             formattedDate = transferDraft.dateTimeState.dateFormatted,
             onClick = onDateFieldClick
         )
-        MakeRecordFieldContainer(R.string.from_account) {
+        FieldWithLabel(labelText = stringResource(R.string.from_account)) {
             AnimatedContent(
                 targetState = transferDraft.sender.account,
                 label = "sender account field at the transfer creation screen"
@@ -192,7 +192,7 @@ private fun GlassSurfaceContent(
                 }
             }
         }
-        MakeRecordFieldContainer(R.string.to_account) {
+        FieldWithLabel(labelText = stringResource(R.string.to_account)) {
             AnimatedContent(
                 targetState = transferDraft.receiver.account,
                 label = "receiver account field at the transfer creation screen"
@@ -203,37 +203,37 @@ private fun GlassSurfaceContent(
             }
         }
         SmallDivider(Modifier.padding(top = 4.dp))
-        MakeRecordFieldContainer(R.string.rate) {
+        FieldWithLabel(labelText = stringResource(R.string.rate)) {
             GlanceTextField(
                 text = transferDraft.sender.rate,
-                placeholderText = "1.0",
+                placeholderText = "1.00",
                 fontSize = 18.sp,
                 onValueChange = { onChangeRate(it, true) },
                 keyboardType = KeyboardType.Number
             )
         }
-        MakeRecordFieldContainer(R.string.start_amount) {
+        FieldWithLabel(labelText = stringResource(R.string.start_amount)) {
             GlanceTextField(
                 text = transferDraft.sender.amount,
-                placeholderText = "0.0",
+                placeholderText = "0.00",
                 fontSize = 22.sp,
                 onValueChange = { onChangeAmount(it, true) },
                 keyboardType = KeyboardType.Number
             )
         }
-        MakeRecordFieldContainer(R.string.final_amount) {
+        FieldWithLabel(labelText = stringResource(R.string.final_amount)) {
             GlanceTextField(
                 text = transferDraft.receiver.amount,
-                placeholderText = "0.0",
+                placeholderText = "0.00",
                 fontSize = 22.sp,
                 onValueChange = { onChangeAmount(it, false) },
                 keyboardType = KeyboardType.Number
             )
         }
-        MakeRecordFieldContainer(R.string.rate) {
+        FieldWithLabel(labelText = stringResource(R.string.rate)) {
             GlanceTextField(
                 text = transferDraft.receiver.rate,
-                placeholderText = "1.0",
+                placeholderText = "1.00",
                 fontSize = 18.sp,
                 onValueChange = { onChangeRate(it, false) },
                 keyboardType = KeyboardType.Number

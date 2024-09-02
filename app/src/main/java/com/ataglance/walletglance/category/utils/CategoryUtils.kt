@@ -14,10 +14,19 @@ import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
 import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
+import com.ataglance.walletglance.record.domain.RecordType
 
 
 fun CategoryType.asChar(): Char {
     return if (this == CategoryType.Expense) '-' else '+'
+}
+
+
+fun CategoryType.toRecordType(): RecordType {
+    return when (this) {
+        CategoryType.Expense -> RecordType.Expense
+        CategoryType.Income -> RecordType.Income
+    }
 }
 
 

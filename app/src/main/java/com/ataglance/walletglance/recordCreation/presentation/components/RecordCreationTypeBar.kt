@@ -13,21 +13,19 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.core.presentation.components.buttons.BarButton
 
 @Composable
-fun MakeRecordTypeBar(
+fun RecordCreationTypeBar(
     isTransferButtonVisible: Boolean,
-    onMakeTransferButtonClick: () -> Unit,
-    currentRecordType: RecordType,
-    onRecordTypeChange: (RecordType) -> Unit,
+    onTransferButtonClick: () -> Unit,
+    currentCategoryType: CategoryType,
+    onButtonClick: (CategoryType) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
@@ -36,28 +34,22 @@ fun MakeRecordTypeBar(
         ) {
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             if (isTransferButtonVisible) {
-                BarButton(
-                    onClick = onMakeTransferButtonClick,
-                    active = false,
-                    text = stringResource(R.string.transfer)
-                )
+                BarButton(text = stringResource(R.string.transfer), onClick = onTransferButtonClick)
                 Spacer(modifier = Modifier.width(8.dp))
             }
             BarButton(
-                onClick = {
-                    onRecordTypeChange(RecordType.Expense)
-                },
-                active = currentRecordType == RecordType.Expense,
-                text = stringResource(R.string.expense)
-            )
+                text = stringResource(R.string.expense),
+                active = currentCategoryType == CategoryType.Expense
+            ) {
+                onButtonClick(CategoryType.Expense)
+            }
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                onClick = {
-                    onRecordTypeChange(RecordType.Income)
-                },
-                active = currentRecordType == RecordType.Income,
-                text = stringResource(R.string.income_singular)
-            )
+                text = stringResource(R.string.income_singular),
+                active = currentCategoryType == CategoryType.Income
+            ) {
+                onButtonClick(CategoryType.Income)
+            }
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }
     }

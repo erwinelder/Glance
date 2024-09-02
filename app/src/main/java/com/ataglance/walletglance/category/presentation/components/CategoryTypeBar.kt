@@ -19,13 +19,11 @@ import com.ataglance.walletglance.core.presentation.components.buttons.BarButton
 @Composable
 fun CategoryTypeBar(
     currentCategoryType: CategoryType,
-    onClick: (CategoryType) -> Unit
+    onButtonClick: (CategoryType) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
@@ -34,15 +32,15 @@ fun CategoryTypeBar(
         ) {
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
-                active = currentCategoryType == CategoryType.Expense,
                 text = stringResource(R.string.expenses),
-                onClick = { onClick(CategoryType.Expense) }
+                active = currentCategoryType == CategoryType.Expense,
+                onClick = { onButtonClick(CategoryType.Expense) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                active = currentCategoryType == CategoryType.Income,
                 text = stringResource(R.string.income_plural),
-                onClick = { onClick(CategoryType.Income) }
+                active = currentCategoryType == CategoryType.Income,
+                onClick = { onButtonClick(CategoryType.Income) }
             )
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }

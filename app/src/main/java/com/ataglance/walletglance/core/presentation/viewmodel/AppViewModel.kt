@@ -38,6 +38,7 @@ import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.utils.getIdsThatAreNotInList
+import com.ataglance.walletglance.category.utils.toRecordType
 import com.ataglance.walletglance.categoryCollection.data.mapper.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.categoryCollection.data.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -66,8 +67,6 @@ import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.data.mapper.toRecordList
-import com.ataglance.walletglance.record.data.mapper.toRecordListWithOldIds
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -76,19 +75,20 @@ import com.ataglance.walletglance.record.utils.filterByDateAndAccount
 import com.ataglance.walletglance.record.utils.findByRecordNum
 import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.utils.getOutAndInTransfersByRecordNums
-import com.ataglance.walletglance.record.utils.getTotalAmount
 import com.ataglance.walletglance.record.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.utils.inverse
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
-import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
 import com.ataglance.walletglance.recordCreation.domain.DataAfterRecordOperation
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
 import com.ataglance.walletglance.recordCreation.domain.mapper.toCreatedTransfer
 import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordsPair
+import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecord
+import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
+import com.ataglance.walletglance.recordCreation.utils.toCreatedRecord
+import com.ataglance.walletglance.recordCreation.utils.toRecordEntityList
+import com.ataglance.walletglance.recordCreation.utils.toRecordEntityListWithOldIds
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.Flow
@@ -595,11 +595,13 @@ class AppViewModel(
     }
 
 
-    suspend fun saveRecord(uiState: MakeRecordUiState, unitList: List<MakeRecordUnitUiState>) {
-        val dataAfterRecordOperation = if (uiState.recordStatus == MakeRecordStatus.Create) {
-            getDataForDatabaseAfterNewRecord(uiState = uiState, unitList = unitList)
+    suspend fun saveRecord(recordDraft: RecordDraft) {
+        val createdRecord = recordDraft.toCreatedRecord() ?: return
+
+        val dataAfterRecordOperation = if (recordDraft.general.isNew) {
+            getDataForDatabaseAfterNewRecord(createdRecord)
         } else {
-            getDataForDatabaseAfterEditedRecord(uiState = uiState, unitList = unitList)
+            getDataForDatabaseAfterEditedRecord(createdRecord)
         } ?: return
 
         _budgetsByType.update {
@@ -612,7 +614,7 @@ class AppViewModel(
                 recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
                 accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
             )
-            if (uiState.dateTimeState.dateLong.isInRange(getTodayLongDateRange())) {
+            if (recordDraft.general.dateTimeState.dateLong.isInRange(getTodayLongDateRange())) {
                 fetchRecordsFromDbForToday()
             }
             fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
@@ -620,15 +622,13 @@ class AppViewModel(
     }
 
     private fun getDataForDatabaseAfterNewRecord(
-        uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>
-    ): DataAfterRecordOperation? {
-        uiState.account ?: return null
-
-        val recordList = uiState.toRecordList(unitList)
+        createdRecord: CreatedRecord
+    ): DataAfterRecordOperation {
+        val recordList = createdRecord.toRecordEntityList()
         val updatedAccounts = listOf(
-            uiState.account.cloneAndAddToOrSubtractFromBalance(
-                amount = unitList.getTotalAmount(), recordType = uiState.type
+            createdRecord.account.cloneAndAddToOrSubtractFromBalance(
+                amount = createdRecord.totalAmount,
+                recordType = createdRecord.type.toRecordType()
             )
         )
             .mergeWith(accountsUiState.value.accountList)
@@ -643,33 +643,30 @@ class AppViewModel(
     }
 
     private fun getDataForDatabaseAfterEditedRecord(
-        uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>
+        createdRecord: CreatedRecord
     ): DataAfterRecordOperation? {
-        uiState.account ?: return null
-
-        val currentRecordStack = recordStackList.value.findByRecordNum(uiState.recordNum)
+        val currentRecordStack = recordStackList.value.findByRecordNum(createdRecord.recordNum)
             ?: return null
         val currentRecordList = currentRecordStack.toRecordList()
         val updatedAccounts = getUpdatedAccountsAfterRecordEditing(
-            uiState = uiState,
+            createdRecord = createdRecord,
             recordStack = currentRecordStack,
-            newTotalAmount = unitList.getTotalAmount()
+            newTotalAmount = createdRecord.totalAmount
         )
             ?.mergeWith(accountsUiState.value.accountList)
             ?.toAccountEntityList()
             ?: return null
         val budgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(currentRecordList)
 
-        return if (unitList.size == currentRecordStack.stack.size) {
-            val recordListToUpsert = uiState.toRecordListWithOldIds(unitList, currentRecordStack)
+        return if (createdRecord.items.size == currentRecordStack.stack.size) {
+            val recordListToUpsert = createdRecord.toRecordEntityListWithOldIds(currentRecordStack)
             DataAfterRecordOperation(
                 recordListToUpsert = recordListToUpsert,
                 accountListToUpsert = updatedAccounts,
                 updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert)
             )
         } else {
-            val recordListToUpsert = uiState.toRecordList(unitList)
+            val recordListToUpsert = createdRecord.toRecordEntityList()
             DataAfterRecordOperation(
                 recordListToDelete = currentRecordList,
                 recordListToUpsert = recordListToUpsert,
@@ -680,42 +677,38 @@ class AppViewModel(
     }
 
     private fun getUpdatedAccountsAfterRecordEditing(
-        uiState: MakeRecordUiState,
+        createdRecord: CreatedRecord,
         recordStack: RecordStack,
         newTotalAmount: Double
     ): List<Account>? {
-        uiState.account ?: return null
-
-        return if (uiState.account.id == recordStack.account.id) {
+        return if (createdRecord.account.id == recordStack.account.id) {
             listOf(
-                uiState.account.cloneAndReapplyAmountToBalance(
+                createdRecord.account.cloneAndReapplyAmountToBalance(
                     prevAmount = recordStack.totalAmount,
                     newAmount = newTotalAmount,
-                    recordType = uiState.type
+                    recordType = createdRecord.type.toRecordType()
                 )
             )
         } else {
-            accountsUiState.value.getAccountById(recordStack.account.id)?.let { prevAccount ->
-                (prevAccount to uiState.account).returnAmountToFirstBalanceAndUpdateSecondBalance(
-                    prevAmount = recordStack.totalAmount,
-                    newAmount = newTotalAmount,
-                    recordType = uiState.type
-                ).toList()
-            }
+            val prevAccount = accountsUiState.value.getAccountById(recordStack.account.id)
+                ?: return null
+            (prevAccount to createdRecord.account).returnAmountToFirstBalanceAndUpdateSecondBalance(
+                prevAmount = recordStack.totalAmount,
+                newAmount = newTotalAmount,
+                recordType = createdRecord.type.toRecordType()
+            ).toList()
         }
     }
 
-    suspend fun repeatRecord(
-        uiState: MakeRecordUiState,
-        unitList: List<MakeRecordUnitUiState>
-    ) {
+    suspend fun repeatRecord(recordDraft: RecordDraft) {
         saveRecord(
-            uiState = uiState.copy(
-                recordStatus = MakeRecordStatus.Create,
-                recordNum = appUiSettings.value.nextRecordNum(),
-                dateTimeState = DateTimeState()
-            ),
-            unitList = unitList
+            recordDraft = recordDraft.copy(
+                general = recordDraft.general.copy(
+                    isNew = true,
+                    recordNum = appUiSettings.value.nextRecordNum(),
+                    dateTimeState = DateTimeState()
+                )
+            )
         )
     }
 

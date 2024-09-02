@@ -3,7 +3,7 @@ package com.ataglance.walletglance.category.domain
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
 import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackUnit
+import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 import com.ataglance.walletglance.category.utils.toEditingCategoryWithSubcategoriesList
@@ -133,7 +133,7 @@ data class CategoriesWithSubcategories(
 
     private fun increaseTotalAmountOrAddNewOneInCategoryStatsMap(
         categoryStatsMap: MutableMap<Int, CategoriesStatsMapItem>,
-        stackUnit: RecordStackUnit
+        stackUnit: RecordStackItem
     ) {
         stackUnit.categoryWithSubcategory ?: return
         val category = stackUnit.categoryWithSubcategory.category
@@ -150,7 +150,7 @@ data class CategoriesWithSubcategories(
 
     private fun increaseTotalAmountOrAddNewOneInSubcategoriesStatsMap(
         subcategoriesStatsMap: MutableMap<Int, MutableMap<Int, CategoriesStatsMapItem>>,
-        stackUnit: RecordStackUnit
+        stackUnit: RecordStackItem
     ) {
         stackUnit.categoryWithSubcategory?.subcategory ?: return
         val category = stackUnit.categoryWithSubcategory.category

@@ -22,10 +22,11 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 @Composable
 fun GlassSurfaceContainer(
     topPadding: Dp? = null,
-    fillGlassSurface: Boolean = true,
     topButton: @Composable (() -> Unit)? = null,
     topBar: @Composable (() -> Unit)? = null,
     glassSurfaceContent: @Composable BoxScope.() -> Unit,
+    fillGlassSurface: Boolean = true,
+    glassSurfaceFilledWidths: FilledWidthByScreenType = FilledWidthByScreenType(compact = .86f),
     smallPrimaryButton: @Composable (() -> Unit)? = null,
     secondaryBottomButton: @Composable (() -> Unit)? = null,
     primaryBottomButton: @Composable () -> Unit
@@ -57,7 +58,7 @@ fun GlassSurfaceContainer(
                 topBar?.let { it() }
                 GlassSurface(
                     modifier = Modifier.weight(1f, fill = fillGlassSurface),
-                    filledWidths = FilledWidthByScreenType(expanded = .86f)
+                    filledWidths = glassSurfaceFilledWidths
                 ) {
                     glassSurfaceContent()
                 }

@@ -23,9 +23,7 @@ fun CategoryCollectionTypeBar(
 ) {
     val scrollState = rememberScrollState()
 
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
@@ -34,21 +32,21 @@ fun CategoryCollectionTypeBar(
         ) {
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
-                onClick = { onClick(CategoryCollectionType.Expense) },
+                text = stringResource(R.string.expenses),
                 active = currentType == CategoryCollectionType.Expense,
-                text = stringResource(R.string.expenses)
+                onClick = { onClick(CategoryCollectionType.Expense) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                onClick = { onClick(CategoryCollectionType.Income) },
+                text = stringResource(R.string.income_plural),
                 active = currentType == CategoryCollectionType.Income,
-                text = stringResource(R.string.income_plural)
+                onClick = { onClick(CategoryCollectionType.Income) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                onClick = { onClick(CategoryCollectionType.Mixed) },
+                text = stringResource(R.string.mixed),
                 active = currentType == CategoryCollectionType.Mixed,
-                text = stringResource(R.string.mixed)
+                onClick = { onClick(CategoryCollectionType.Mixed) }
             )
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }

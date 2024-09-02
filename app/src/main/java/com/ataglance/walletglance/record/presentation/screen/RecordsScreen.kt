@@ -37,12 +37,11 @@ import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackUnit
+import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
 import com.ataglance.walletglance.record.presentation.components.TransferComponent
 import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
 
 @Composable
 fun RecordsScreen(
@@ -132,7 +131,7 @@ fun RecordsScreen(
                             includeYearToDate = includeYearToRecordDate
                         ) { recordNum ->
                             onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.MakeRecord(MakeRecordStatus.Edit.name, recordNum)
+                                MainScreens.RecordCreation(isNew = false, recordNum = recordNum)
                             )
                         }
                     }
@@ -180,7 +179,7 @@ fun RecordsScreenPreview(
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
             stack = listOf(
-                RecordStackUnit(
+                RecordStackItem(
                     id = 1,
                     amount = 46.47,
                     quantity = null,

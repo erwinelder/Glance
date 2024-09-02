@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -14,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordFieldContainer
 
 @Composable
 fun DateField(
@@ -22,7 +22,7 @@ fun DateField(
     cornerSize: Dp = 15.dp,
     onClick: () -> Unit = {}
 ) {
-    MakeRecordFieldContainer(R.string.date) {
+    FieldWithLabel(labelText = stringResource(R.string.date)) {
         Text(
             text = formattedDate,
             color = GlanceTheme.onSurface,

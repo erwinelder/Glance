@@ -57,7 +57,7 @@ fun EditCategoriesScreen(
         topBar = {
             CategoryTypeBar(
                 currentCategoryType = uiState.categoryType,
-                onClick = onShowCategoriesByType
+                onButtonClick = onShowCategoriesByType
             )
         },
         glassSurfaceContent = {

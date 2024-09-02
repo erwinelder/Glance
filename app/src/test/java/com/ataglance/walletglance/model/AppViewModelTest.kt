@@ -11,10 +11,9 @@ import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCol
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackUnit
+import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import org.junit.jupiter.api.Assertions
@@ -91,7 +90,7 @@ class AppViewModelTest {
                 account = fromAccount.toRecordAccount(),
                 totalAmount = startAmount,
                 stack = listOf(
-                    RecordStackUnit(
+                    RecordStackItem(
                         id = 1,
                         amount = startAmount,
                         quantity = null,
@@ -108,7 +107,7 @@ class AppViewModelTest {
                 account = toAccount.toRecordAccount(),
                 totalAmount = finalAmount,
                 stack = listOf(
-                    RecordStackUnit(
+                    RecordStackItem(
                         id = 2,
                         amount = finalAmount,
                         quantity = null,

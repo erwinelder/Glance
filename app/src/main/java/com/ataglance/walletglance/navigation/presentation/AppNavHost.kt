@@ -48,16 +48,14 @@ import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
-import com.ataglance.walletglance.record.utils.getMakeRecordStateAndUnitList
 import com.ataglance.walletglance.record.utils.getTransferDraft
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
-import com.ataglance.walletglance.recordCreation.presentation.screen.MakeRecordScreen
+import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
-import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModel
-import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModelFactory
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModelFactory
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModelFactory
+import com.ataglance.walletglance.recordCreation.utils.getRecordDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow
@@ -294,75 +292,83 @@ fun AppNavHost(
                 )
             } ?: Text(text = "Budget not found")
         }
-        composable<MainScreens.MakeRecord>(
+        composable<MainScreens.RecordCreation>(
             enterTransition = { screenEnterTransition() },
             popEnterTransition = { screenEnterTransition(!moveScreenTowardsLeft) },
             exitTransition = { screenExitTransition(moveScreenTowardsLeft) },
             popExitTransition = { screenExitTransition(false) }
         ) { backStack ->
-            val makeRecordStatus = MakeRecordStatus.valueOf(
-                backStack.toRoute<MainScreens.MakeRecord>().status
-            )
-            val recordNum = backStack.toRoute<MainScreens.MakeRecord>().recordNum
+            val isNew = backStack.toRoute<MainScreens.RecordCreation>().isNew
+            val recordNum = backStack.toRoute<MainScreens.RecordCreation>().recordNum
 
-            val (makeRecordUiState, makeRecordUnitList) = recordStackList
-                .getMakeRecordStateAndUnitList(
-                    makeRecordStatus = makeRecordStatus,
-                    recordNum = recordNum,
-                    accountList = accountsUiState.accountList
-                ) ?: (MakeRecordUiState(
-                    recordStatus = MakeRecordStatus.Create,
-                    recordNum = appUiSettings.nextRecordNum(),
-                    account = accountsUiState.activeAccount
-                ) to null)
-            val categoryWithSubcategory = if (
-                makeRecordUnitList == null && accountsUiState.activeAccount != null
-            ) {
-                appViewModel.getLastRecordCategory(accountId = accountsUiState.activeAccount.id)
-            } else null
-            val viewModel = viewModel<MakeRecordViewModel>(
-                factory = MakeRecordViewModelFactory(
-                    categoryWithSubcategory = categoryWithSubcategory,
-                    makeRecordUiState = makeRecordUiState,
-                    makeRecordUnitList = makeRecordUnitList
-                )
+            val initialCategoryWithSubcategory = accountsUiState.activeAccount?.id
+                ?.takeIf { isNew }
+                ?.let { appViewModel.getLastRecordCategory(accountId = it) }
+            val recordDraft = recordStackList.getRecordDraft(
+                isNew = isNew,
+                recordNum = recordNum,
+                accountsUiState = accountsUiState,
+                initialCategoryWithSubcategory = initialCategoryWithSubcategory
             )
+
+            val viewModel = viewModel<RecordCreationViewModel>(
+                factory = RecordCreationViewModelFactory(recordDraft = recordDraft)
+            )
+
+            val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
+            val recordDraftItems by viewModel.recordDraftItems.collectAsStateWithLifecycle()
+            val savingIsAllowed by viewModel.savingIsAllowed.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
-            MakeRecordScreen(
+            RecordCreationScreen(
                 appTheme = appUiSettings.appTheme,
-                viewModel = viewModel,
-                makeRecordStatus = makeRecordStatus,
+                recordDraftGeneral = recordDraftGeneral,
+                recordDraftItems = recordDraftItems,
+                savingIsAllowed = savingIsAllowed,
                 accountList = accountsUiState.accountList,
                 categoriesWithSubcategories = categoriesWithSubcategories,
-                onMakeTransferButtonClick = {
+                onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(
                         navController = navController,
                         screen = MainScreens.TransferCreation(
-                            isNew = true,
-                            recordNum = appUiSettings.nextRecordNum()
+                            isNew = true, recordNum = appUiSettings.nextRecordNum()
                         )
                     )
                 },
-                onSaveButton = { state, unitList ->
+                onSelectCategoryType = { type ->
+                    viewModel.selectCategoryType(type, categoriesWithSubcategories)
+                },
+                onSelectDate = viewModel::selectDate,
+                onSelectTime = viewModel::selectTime,
+                onToggleAccounts = viewModel::toggleSelectedAccount,
+                onSelectAccount = viewModel::selectAccount,
+                onDimBackgroundChange = onDimBackgroundChange,
+                onAmountChange = viewModel::changeAmount,
+                onSelectCategory = viewModel::selectCategory,
+                onNoteChange = viewModel::changeNote,
+                onQuantityChange = viewModel::changeQuantity,
+                onSwapItems = viewModel::swapDraftItems,
+                onDeleteItem = viewModel::deleteDraftItem,
+                onCollapsedChange = viewModel::changeCollapsed,
+                onAddDraftItemButton = viewModel::addNewDraftItem,
+                onSaveButton = {
                     coroutineScope.launch {
-                        appViewModel.saveRecord(state, unitList)
+                        appViewModel.saveRecord(viewModel.getRecordDraft())
                     }
                     navController.popBackStack()
                 },
-                onRepeatButton = { state, unitList ->
+                onRepeatButton = {
                     coroutineScope.launch {
-                        appViewModel.repeatRecord(state, unitList)
+                        appViewModel.repeatRecord(viewModel.getRecordDraft())
                     }
                     navController.popBackStack()
                 },
-                onDeleteButton = { recordNumToDelete ->
+                onDeleteButton = {
                     coroutineScope.launch {
-                        appViewModel.deleteRecord(recordNumToDelete)
+                        appViewModel.deleteRecord(recordNum)
                     }
                     navController.popBackStack()
-                },
-                onDimBackgroundChange = onDimBackgroundChange
+                }
             )
         }
         composable<MainScreens.TransferCreation>(
@@ -399,21 +405,21 @@ fun AppNavHost(
                 onSelectAccount = viewModel::selectAccount,
                 onRateChange = viewModel::changeRate,
                 onAmountChange = viewModel::changeAmount,
-                onSaveButton = { state ->
+                onSaveButton = {
                     coroutineScope.launch {
-                        appViewModel.saveTransfer(state)
+                        appViewModel.saveTransfer(viewModel.getTransferDraft())
                     }
                     navController.popBackStack(MainScreens.Home, false)
                 },
-                onRepeatButton = { state ->
+                onRepeatButton = {
                     coroutineScope.launch {
-                        appViewModel.repeatTransfer(state)
+                        appViewModel.repeatTransfer(viewModel.getTransferDraft())
                     }
                     navController.popBackStack(MainScreens.Home, false)
                 },
-                onDeleteButton = { recordNumsToDelete ->
+                onDeleteButton = {
                     coroutineScope.launch {
-                        appViewModel.deleteTransfer(recordNumsToDelete)
+                        appViewModel.deleteTransfer(viewModel.getSenderReceiverRecordNums())
                     }
                     navController.popBackStack(MainScreens.Home, false)
                 }

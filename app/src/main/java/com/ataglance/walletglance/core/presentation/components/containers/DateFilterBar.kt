@@ -37,35 +37,33 @@ fun DateFilterBar(
         ) {
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
             BarButton(
-                onClick = {
-                    onDateRangeChange(DateRangeAssets.ThisMonth.enum)
-                    if (isCustomDateRangeWindowOpened) {
-                        onCustomDateRangeButtonClick()
-                    }
-                },
+                text = stringResource(DateRangeAssets.ThisMonth.nameRes),
                 active = currentDateRangeEnum == DateRangeEnum.ThisMonth &&
-                        !isCustomDateRangeWindowOpened,
-                text = stringResource(DateRangeAssets.ThisMonth.nameRes)
-            )
+                        !isCustomDateRangeWindowOpened
+            ) {
+                onDateRangeChange(DateRangeAssets.ThisMonth.enum)
+                if (isCustomDateRangeWindowOpened) {
+                    onCustomDateRangeButtonClick()
+                }
+            }
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                onClick = {
-                    onDateRangeChange(DateRangeAssets.LastMonth.enum)
-                    if (isCustomDateRangeWindowOpened) {
-                        onCustomDateRangeButtonClick()
-                    }
-                },
+                text = stringResource(DateRangeAssets.LastMonth.nameRes),
                 active = currentDateRangeEnum == DateRangeEnum.LastMonth &&
-                        !isCustomDateRangeWindowOpened,
-                text = stringResource(DateRangeAssets.LastMonth.nameRes)
-            )
+                        !isCustomDateRangeWindowOpened
+            ) {
+                onDateRangeChange(DateRangeAssets.LastMonth.enum)
+                if (isCustomDateRangeWindowOpened) {
+                    onCustomDateRangeButtonClick()
+                }
+            }
             Spacer(modifier = Modifier.width(8.dp))
             BarButton(
-                onClick = onCustomDateRangeButtonClick,
+                text = stringResource(R.string.other),
                 active = isCustomDateRangeWindowOpened ||
                         (currentDateRangeEnum != DateRangeEnum.ThisMonth &&
                                 currentDateRangeEnum != DateRangeEnum.LastMonth),
-                text = stringResource(R.string.other)
+                onClick = onCustomDateRangeButtonClick
             )
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.screen_horizontal_padding)))
         }

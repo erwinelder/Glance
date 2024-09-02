@@ -7,7 +7,6 @@ import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.account.utils.findById
 import com.ataglance.walletglance.account.utils.getOtherFrom
 import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.date.LongDateRange
@@ -16,9 +15,6 @@ import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.domain.RecordsTypeFilter
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
@@ -34,7 +30,6 @@ fun RecordType.inverse(): RecordType {
     }
 }
 
-
 fun RecordType.toCategoryType(): CategoryType? {
     return when (this) {
         RecordType.Expense -> CategoryType.Expense
@@ -42,7 +37,6 @@ fun RecordType.toCategoryType(): CategoryType? {
         else -> null
     }
 }
-
 
 fun RecordType.asChar(): Char {
     return when (this) {
@@ -52,7 +46,6 @@ fun RecordType.asChar(): Char {
         RecordType.InTransfer -> '<'
     }
 }
-
 
 fun getRecordTypeByChar(char: Char): RecordType? {
     return when (char) {
@@ -65,6 +58,7 @@ fun getRecordTypeByChar(char: Char): RecordType? {
 }
 
 
+
 @StringRes fun RecordsTypeFilter.getNoRecordsMessageRes(): Int {
     return when (this) {
         RecordsTypeFilter.All -> R.string.you_have_no_records_in_date_range
@@ -74,15 +68,18 @@ fun getRecordTypeByChar(char: Char): RecordType? {
 }
 
 
+
 fun List<RecordStack>.findByRecordNum(recordNum: Int): RecordStack? {
     return this.find { it.recordNum == recordNum }
 }
+
 
 
 fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
     return this.isNotEmpty() &&
             this.first().date / 100000000 != this.last().date / 100000000
 }
+
 
 
 fun List<RecordStack>.filterByDateAndAccount(
@@ -96,6 +93,7 @@ fun List<RecordStack>.filterByDateAndAccount(
 }
 
 
+
 fun List<RecordStack>.filterByCollectionType(type: CategoryCollectionType): List<RecordStack> {
     return when (type) {
         CategoryCollectionType.Mixed -> this
@@ -105,12 +103,14 @@ fun List<RecordStack>.filterByCollectionType(type: CategoryCollectionType): List
 }
 
 
+
 fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds): List<RecordStack> {
     return this.filterByCollectionType(collection.type).let { recordStacksFilteredByType ->
         recordStacksFilteredByType.takeUnless { collection.hasLinkedCategories() }
             ?: recordStacksFilteredByType.filterByCategoriesIds(collection.categoriesIds!!)
     }
 }
+
 
 
 fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<RecordStack> {
@@ -123,7 +123,7 @@ fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<Reco
 }
 
 
-fun List<RecordStack>.getStackTotalAmountByType(type: CategoryType): Double {
+fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
     return this
         .filter {
             type == CategoryType.Expense && it.isExpenseOrOutTransfer() ||
@@ -145,8 +145,8 @@ fun getTotalPercentages(expensesTotal: Double, incomeTotal: Double): Pair<Double
 
 
 fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiState {
-    val expensesTotal = this.getStackTotalAmountByType(CategoryType.Expense)
-    val incomeTotal = this.getStackTotalAmountByType(CategoryType.Income)
+    val expensesTotal = this.getTotalAmountByType(CategoryType.Expense)
+    val incomeTotal = this.getTotalAmountByType(CategoryType.Income)
     val (expensesPercentage, incomePercentage) = getTotalPercentages(expensesTotal, incomeTotal)
 
     return ExpensesIncomeWidgetUiState(
@@ -169,28 +169,6 @@ private fun getStartAndFinalRateByAmounts(
     } else {
         startAmount / finalAmount to 1.0
     }
-}
-
-
-fun List<RecordStack>.getMakeRecordStateAndUnitList(
-    makeRecordStatus: MakeRecordStatus,
-    recordNum: Int,
-    accountList: List<Account>
-): Pair<MakeRecordUiState, List<MakeRecordUnitUiState>>? {
-
-    if (makeRecordStatus == MakeRecordStatus.Edit) {
-        this.findByRecordNum(recordNum)?.takeIf { it.isExpenseOrIncome() }?.let { recordStack ->
-            return MakeRecordUiState(
-                recordStatus = MakeRecordStatus.Edit,
-                recordNum = recordStack.recordNum,
-                account = accountList.findById(recordStack.account.id),
-                type = recordStack.type,
-                dateTimeState = getNewDateByRecordLongDate(recordStack.date)
-            ) to recordStack.toMakeRecordUnitList()
-        }
-    }
-
-    return null
 }
 
 
@@ -269,18 +247,4 @@ private fun Pair<RecordStack, RecordStack>.toTransferDraft(
         includeInBudgets = this.first.stack.firstOrNull()?.includeInBudgets ?: true,
         savingIsAllowed = sender.savingIsAllowed() && receiver.savingIsAllowed()
     )
-}
-
-
-fun List<MakeRecordUnitUiState>.copyWithCategoryWithSubcategory(
-    categoryWithSubcategory: CategoryWithSubcategory?
-): List<MakeRecordUnitUiState> {
-    return this.map { it.copy(categoryWithSubcategory = categoryWithSubcategory) }
-}
-
-
-fun List<MakeRecordUnitUiState>.getTotalAmount(): Double {
-    return this.fold(0.0) { total, recordUnit ->
-        total + (recordUnit.amount.toDouble() * recordUnit.quantity.ifBlank { "1" }.toInt())
-    }
 }

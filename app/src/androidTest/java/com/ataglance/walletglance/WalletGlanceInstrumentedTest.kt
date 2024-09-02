@@ -25,10 +25,6 @@ import com.ataglance.walletglance.core.presentation.components.widgets.RecordHis
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
 import com.ataglance.walletglance.core.utils.toLongWithTime
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUiState
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordUnitUiState
-import com.ataglance.walletglance.recordCreation.presentation.viewmodel.MakeRecordViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.repository.RecordRepository

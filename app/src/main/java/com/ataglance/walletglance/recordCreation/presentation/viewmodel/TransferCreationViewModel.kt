@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.utils.getOtherFrom
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,17 +24,13 @@ class TransferCreationViewModel(
 
     fun selectNewDate(selectedDateMillis: Long) {
         _transferDraft.update {
-            it.copy(
-                dateTimeState = transferDraft.value.dateTimeState.getNewDate(selectedDateMillis)
-            )
+            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
         }
     }
 
     fun selectNewTime(hour: Int, minute: Int) {
         _transferDraft.update {
-            it.copy(
-                dateTimeState = transferDraft.value.dateTimeState.getNewTime(hour, minute),
-            )
+            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
         }
     }
 
@@ -107,6 +104,14 @@ class TransferCreationViewModel(
         _transferDraft.update {
             it.applyAmount(newAmount, isSender)
         }
+    }
+
+    fun getTransferDraft(): TransferDraft {
+        return transferDraft.value
+    }
+
+    fun getSenderReceiverRecordNums(): TransferSenderReceiverRecordNums {
+        return transferDraft.value.getSenderReceiverRecordNums()
     }
 
 }

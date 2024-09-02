@@ -24,8 +24,8 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun BarButton(
-    active: Boolean,
     text: String,
+    active: Boolean = false,
     fontSize: TextUnit = 16.sp,
     onClick: () -> Unit
 ) {
@@ -74,7 +74,7 @@ fun BarButton(
         ),
         shape = RoundedCornerShape(50),
         modifier = Modifier
-            .bounceClickEffect(.97f)
+            .bounceClickEffect()
             .clip(RoundedCornerShape(50))
             .background(
                 brush = Brush.linearGradient(

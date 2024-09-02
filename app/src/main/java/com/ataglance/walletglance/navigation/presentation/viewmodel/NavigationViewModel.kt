@@ -96,7 +96,7 @@ class NavigationViewModel(
         listOf(
             MainScreens.Home::class.simpleName(),
             MainScreens.Records::class.simpleName(),
-            MainScreens.MakeRecord::class.simpleName(),
+            MainScreens.RecordCreation::class.simpleName(),
             MainScreens.CategoryStatistics(0)::class.simpleName(),
             MainScreens.Budgets::class.simpleName(),
             MainScreens.Settings::class.simpleName()

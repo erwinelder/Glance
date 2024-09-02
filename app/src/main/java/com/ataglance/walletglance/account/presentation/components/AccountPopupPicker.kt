@@ -38,8 +38,8 @@ fun AccountPopupPicker(
     appTheme: AppTheme?,
     accountList: List<Account>,
     selectedAccount: Account?,
-    onToggleAccounts: () -> Unit,
-    onAccountSelect: (Account) -> Unit,
+    onToggleAccounts: (List<Account>) -> Unit,
+    onSelectAccount: (Account) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val expandedState = remember { MutableTransitionState(false) }
@@ -49,7 +49,7 @@ fun AccountPopupPicker(
     ) {
         PickerButton(appTheme = appTheme, selectedAccount = selectedAccount) {
             if (accountList.size == 2) {
-                onToggleAccounts()
+                onToggleAccounts(accountList)
             } else if (accountList.size > 1) {
                 onDimBackgroundChange(it)
                 expandedState.targetState = it
@@ -70,7 +70,7 @@ fun AccountPopupPicker(
                     PopupContent(
                         appTheme = appTheme,
                         accountList = accountList,
-                        onAccountSelect = onAccountSelect,
+                        onAccountSelect = onSelectAccount,
                         expandedState = expandedState,
                         onExpandedChange = {
                             onDimBackgroundChange(it)

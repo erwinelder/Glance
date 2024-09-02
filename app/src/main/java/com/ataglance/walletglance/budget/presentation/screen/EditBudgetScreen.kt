@@ -164,10 +164,8 @@ private fun GlassSurfaceContent(
                     label = "category field at the edit budget screen"
                 ) { targetCategory ->
                     CategoryField(
-                        category = targetCategory,
-                        fontSize = 20.sp,
-                        cornerSize = 15.dp,
                         appTheme = appTheme,
+                        category = targetCategory,
                         onClick = onCategoryFieldClick
                     )
                 }
@@ -184,7 +182,7 @@ private fun GlassSurfaceContent(
             onValueChange = onAmountLimitChange,
             keyboardType = KeyboardType.Number,
             labelText = stringResource(R.string.budget_limit),
-            placeholderText = "0.0"
+            placeholderText = "0.00"
         )
         AccountCheckedList(
             budget = budget,

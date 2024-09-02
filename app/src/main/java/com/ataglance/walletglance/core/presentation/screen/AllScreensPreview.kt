@@ -19,6 +19,7 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPrevie
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
 import com.ataglance.walletglance.category.domain.CategoryType
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreenPreview
 import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreenPreview
@@ -31,6 +32,7 @@ import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCat
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
@@ -38,8 +40,12 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.record.utils.asChar
+import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
+import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.AppearanceScreenPreview
@@ -49,6 +55,7 @@ import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScree
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
 
 private val appTheme: AppTheme = AppTheme.LightDefault
+private const val langCode: String = "en"
 private const val isAppSetUp: Boolean = true
 private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true
@@ -183,6 +190,7 @@ private val budgetAccountAssociationList = listOf(
     name = "HomeScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -203,6 +211,7 @@ fun MainAppContentHomeScreenPreview() {
     name = "RecordsScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -231,6 +240,7 @@ fun MainAppContentRecordsScreenPreview() {
     name = "CategoryStatisticsScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -260,6 +270,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
     name = "BudgetsScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -280,6 +291,7 @@ fun MainAppContentBudgetsScreenPreview() {
     name = "BudgetStatisticsScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -297,6 +309,7 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
     name = "FinishSetupScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -309,9 +322,51 @@ fun MainAppContentFinishSetupScreenPreview() {
 }
 
 @Preview(
+    name = "RecordCreationScreen",
+    group = "MainScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentRecordCreationScreenPreview() {
+    val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
+        .getDefaultCategories()
+    val recordDraft = RecordDraft(
+        general = RecordDraftGeneral(
+            isNew = true,
+            recordNum = 1,
+            account = accountsUiState.activeAccount,
+            type = CategoryType.Expense,
+            dateTimeState = DateTimeState()
+        ),
+        items = listOf(
+            RecordDraftItem(
+                lazyListKey = 0,
+                index = 0,
+                categoryWithSubcategory = categoriesWithSubcategories.expense[0]
+                    .getWithFirstSubcategory(),
+                note = "",
+                amount = "42.43",
+                quantity = "2",
+                collapsed = false
+            )
+        )
+    )
+
+    RecordCreationScreenPreview(
+        appTheme = appTheme,
+        accountsUiState = accountsUiState,
+        categoriesWithSubcategories = categoriesWithSubcategories,
+        recordDraft = recordDraft
+    )
+}
+
+@Preview(
     name = "TransferCreationScreen",
     group = "MainScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -339,10 +394,13 @@ fun MainAppContentTransferCreationScreenPreview() {
     )
 }
 
+
+
 @Preview(
     name = "StartSetupScreen",
     group = "SettingsScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -358,6 +416,7 @@ fun MainAppContentStartSetupScreenPreview() {
     name = "SettingsHomeScreen",
     group = "SettingsScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -371,20 +430,174 @@ fun MainAppContentSettingHomeScreenPreview() {
 }
 
 @Preview(
-    name = "LanguageScreen",
-    group = "SettingsScreens",
+    name = "EditAccountsScreen",
+    group = "AccountsSettingsScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
-fun MainAppContentLanguageScreenPreview() {
-    LanguageScreenPreview(
+fun MainAppContentEditAccountsScreenPreview() {
+    EditAccountsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        isBottomBarVisible = isBottomBarVisible,
-        appLanguage = AppLanguage.English.languageCode,
-        selectedLanguage = AppLanguage.German.languageCode
+        accountList = accountsUiState.accountList
+    )
+}
+
+@Preview(
+    name = "EditAccountScreen",
+    group = "AccountsSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditAccountScreenPreview() {
+    EditAccountScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        account = accountsUiState.accountList.first()
+    )
+}
+
+@Preview(
+    name = "CurrencyPickerScreen",
+    group = "AccountsSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentCurrencyPickerScreenPreview() {
+    CurrencyPickerScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible
+    )
+}
+
+@Preview(
+    name = "EditBudgetsScreen",
+    group = "BudgetsSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditBudgetsScreenPreview() {
+    EditBudgetsScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        budgetEntityList = budgetEntityList,
+        budgetAccountAssociationList = budgetAccountAssociationList,
+        accountList = accountsUiState.accountList
+    )
+}
+
+@Preview(
+    name = "EditBudgetScreen",
+    group = "BudgetsSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditBudgetScreenPreview() {
+    EditBudgetScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        accountList = accountsUiState.accountList,
+        budgetEntity = budgetEntityList.first(),
+        budgetAccountAssociationList = budgetAccountAssociationList
+    )
+}
+
+@Preview(
+    name = "EditCategoriesScreen",
+    group = "CategoriesSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoriesScreenPreview() {
+    EditCategoriesScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        categoryType = CategoryType.Expense
+    )
+}
+
+@Preview(
+    name = "EditSubcategoriesScreen",
+    group = "CategoriesSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditSubcategoriesScreenPreview() {
+    EditSubcategoriesScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "EditCategoryScreen",
+    group = "CategoriesSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoryScreenPreview() {
+    EditCategoryScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+    )
+}
+
+@Preview(
+    name = "EditCategoryCollectionsScreen",
+    group = "CollectionsSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoryCollectionsScreenPreview() {
+    EditCategoryCollectionsScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        collectionType = CategoryCollectionType.Mixed,
+        categoryCollectionsWithIdsByType = categoryCollectionsWithIdsByType,
+    )
+}
+
+@Preview(
+    name = "EditCategoryCollectionScreen",
+    group = "CollectionsSettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentEditCategoryCollectionScreenPreview() {
+    EditCategoryCollectionScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        collectionWithIds = categoryCollectionsWithIdsByType.mixed.first()
     )
 }
 
@@ -392,6 +605,7 @@ fun MainAppContentLanguageScreenPreview() {
     name = "AppearanceScreen",
     group = "SettingsScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -411,9 +625,29 @@ fun MainAppContentAppearanceScreenPreview() {
 }
 
 @Preview(
+    name = "LanguageScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = Devices.PIXEL_7_PRO
+)
+@Composable
+fun MainAppContentLanguageScreenPreview() {
+    LanguageScreenPreview(
+        appTheme = appTheme,
+        isAppSetUp = isAppSetUp,
+        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
+        isBottomBarVisible = isBottomBarVisible,
+        appLanguage = AppLanguage.English.languageCode,
+        selectedLanguage = AppLanguage.German.languageCode
+    )
+}
+
+@Preview(
     name = "SettingsDataScreen",
     group = "SettingsScreens",
     apiLevel = 34,
+    locale = langCode,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -423,167 +657,5 @@ fun MainAppContentSettingsDataScreenPreview() {
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-    )
-}
-
-@Preview(
-    name = "EditAccountsScreen",
-    group = "AccountsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditAccountsScreenPreview() {
-    EditAccountsScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        accountList = accountsUiState.accountList
-    )
-}
-
-@Preview(
-    name = "EditAccountScreen",
-    group = "AccountsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditAccountScreenPreview() {
-    EditAccountScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        account = accountsUiState.accountList.first()
-    )
-}
-
-@Preview(
-    name = "CurrencyPickerScreen",
-    group = "AccountsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentCurrencyPickerScreenPreview() {
-    CurrencyPickerScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible
-    )
-}
-
-@Preview(
-    name = "EditBudgetsScreen",
-    group = "BudgetsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditBudgetsScreenPreview() {
-    EditBudgetsScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        budgetEntityList = budgetEntityList,
-        budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsUiState.accountList
-    )
-}
-
-@Preview(
-    name = "EditBudgetScreen",
-    group = "BudgetsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditBudgetScreenPreview() {
-    EditBudgetScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        accountList = accountsUiState.accountList,
-        budgetEntity = budgetEntityList.first(),
-        budgetAccountAssociationList = budgetAccountAssociationList
-    )
-}
-
-@Preview(
-    name = "EditCategoriesScreen",
-    group = "CategoriesSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditCategoriesScreenPreview() {
-    EditCategoriesScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        categoryType = CategoryType.Expense
-    )
-}
-
-@Preview(
-    name = "EditSubcategoriesScreen",
-    group = "CategoriesSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditSubcategoriesScreenPreview() {
-    EditSubcategoriesScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    )
-}
-
-@Preview(
-    name = "EditCategoryScreen",
-    group = "CategoriesSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditCategoryScreenPreview() {
-    EditCategoryScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    )
-}
-
-@Preview(
-    name = "EditCategoryCollectionsScreen",
-    group = "CollectionsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditCategoryCollectionsScreenPreview() {
-    EditCategoryCollectionsScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        collectionType = CategoryCollectionType.Mixed,
-        categoryCollectionsWithIdsByType = categoryCollectionsWithIdsByType,
-    )
-}
-
-@Preview(
-    name = "EditCategoryCollectionScreen",
-    group = "CollectionsSettingsScreens",
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
-@Composable
-fun MainAppContentEditCategoryCollectionScreenPreview() {
-    EditCategoryCollectionScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        collectionWithIds = categoryCollectionsWithIdsByType.mixed.first()
     )
 }

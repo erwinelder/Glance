@@ -21,7 +21,6 @@ import com.ataglance.walletglance.core.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.core.utils.currentScreenIs
 import com.ataglance.walletglance.core.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.core.utils.getSetupProgressTopBarTitleRes
-import com.ataglance.walletglance.recordCreation.domain.MakeRecordStatus
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -91,9 +90,8 @@ fun MainAppContent(
             onMakeRecordButtonClick = {
                 navViewModel.navigateToScreenMovingTowardsLeft(
                     navController = navController,
-                    screen = MainScreens.MakeRecord(
-                        status = MakeRecordStatus.Create.name,
-                        recordNum = appUiSettings.nextRecordNum()
+                    screen = MainScreens.RecordCreation(
+                        isNew = true, recordNum = appUiSettings.nextRecordNum()
                     )
                 )
             },

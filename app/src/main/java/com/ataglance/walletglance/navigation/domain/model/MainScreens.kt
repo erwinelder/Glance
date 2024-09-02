@@ -20,7 +20,7 @@ sealed interface MainScreens {
     data class BudgetStatistics(val id: Int) : MainScreens
 
     @Serializable
-    data class MakeRecord(val status: String, val recordNum: Int) : MainScreens
+    data class RecordCreation(val isNew: Boolean, val recordNum: Int) : MainScreens
 
     @Serializable
     data class TransferCreation(val isNew: Boolean, val recordNum: Int) : MainScreens

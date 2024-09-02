@@ -19,17 +19,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.domain.Category
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun CategoryField(
-    category: Category?,
-    fontSize: TextUnit,
-    cornerSize: Dp,
     appTheme: AppTheme?,
+    category: Category?,
+    fontSize: TextUnit = 20.sp,
+    cornerSize: Dp = 15.dp,
     onClick: () -> Unit
 ) {
     Row(
