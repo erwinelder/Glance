@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class WalletGlanceApplication : Application() {
+class QuartzApplication : Application() {
 
     private lateinit var db: AppDatabase
     private lateinit var settingsRepository: SettingsRepository

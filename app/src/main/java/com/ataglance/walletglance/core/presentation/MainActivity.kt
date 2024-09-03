@@ -8,21 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.ataglance.walletglance.WalletGlanceApplication
+import com.ataglance.walletglance.QuartzApplication
 import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var app: WalletGlanceApplication
+    private lateinit var app: QuartzApplication
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        app = application as WalletGlanceApplication
+        app = application as QuartzApplication
         initializeAppViewModel()
         initializeNavViewModel()
 

@@ -44,7 +44,7 @@ import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.SettingsCategory
@@ -87,7 +87,7 @@ fun SettingsHomeScreen(
                 fontFamily = Manrope
             )
             Text(
-                text = stringResource(R.string.version) + " 2.1",
+                text = stringResource(R.string.version) + " 3.0",
                 color = GlanceTheme.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,

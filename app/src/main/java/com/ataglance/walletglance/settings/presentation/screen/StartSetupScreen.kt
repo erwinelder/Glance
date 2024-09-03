@@ -53,7 +53,7 @@ fun StartSetupScreen(
     ) {
         StartAnimatedContainer(appTheme != null, 200) {
             Text(
-                text = "WalletGlance",
+                text = stringResource(R.string.app_name),
                 color = GlanceTheme.onBackground,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.ExtraBold,

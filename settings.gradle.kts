@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WalletGlance"
+rootProject.name = "Quartz"
 include(":app")
  

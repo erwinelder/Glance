@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.utils
+package com.ataglance.walletglance.navigation.utils
 
 import androidx.annotation.StringRes
 import androidx.navigation.NavBackStackEntry

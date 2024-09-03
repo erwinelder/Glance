@@ -31,7 +31,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.Previe
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
 import com.ataglance.walletglance.core.utils.getTodayDateLong
-import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList

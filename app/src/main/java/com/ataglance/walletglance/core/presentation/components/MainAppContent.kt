@@ -17,10 +17,10 @@ import com.ataglance.walletglance.core.presentation.components.containers.Dimmed
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.utils.anyScreenInHierarchyIs
-import com.ataglance.walletglance.core.utils.currentScreenIs
-import com.ataglance.walletglance.core.utils.currentScreenIsOneOf
-import com.ataglance.walletglance.core.utils.getSetupProgressTopBarTitleRes
+import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
+import com.ataglance.walletglance.navigation.utils.currentScreenIs
+import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
+import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRes
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel

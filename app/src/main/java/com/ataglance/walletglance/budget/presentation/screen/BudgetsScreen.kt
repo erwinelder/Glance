@@ -31,7 +31,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.utils.isScreen
+import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.domain.model.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity

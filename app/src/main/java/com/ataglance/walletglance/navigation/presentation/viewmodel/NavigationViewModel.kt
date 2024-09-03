@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.ataglance.walletglance.core.utils.currentScreenIsNoneOf
-import com.ataglance.walletglance.core.utils.fromMainScreen
-import com.ataglance.walletglance.core.utils.simpleName
+import com.ataglance.walletglance.navigation.utils.currentScreenIsNoneOf
+import com.ataglance.walletglance.navigation.utils.fromMainScreen
+import com.ataglance.walletglance.navigation.utils.simpleName
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.domain.mapper.toBottomBarNavigationButtonList
