@@ -13,7 +13,7 @@ import com.ataglance.walletglance.navigation.data.repository.NavigationRepositor
 import com.ataglance.walletglance.navigation.domain.mapper.toBottomBarNavigationButtonList
 import com.ataglance.walletglance.navigation.domain.mapper.toDefaultNavigationButtonEntityList
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

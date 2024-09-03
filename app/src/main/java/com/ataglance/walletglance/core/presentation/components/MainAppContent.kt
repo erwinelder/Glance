@@ -21,7 +21,7 @@ import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.navigation.utils.currentScreenIs
 import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRes
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState

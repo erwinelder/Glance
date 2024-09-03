@@ -20,8 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepnames class com.ataglance.walletglance.presentation.ui.navigation.screens.MainScreens$*
--keepnames class com.ataglance.walletglance.presentation.ui.navigation.screens.SettingsScreens$*
--keepnames class com.ataglance.walletglance.presentation.ui.navigation.screens.AccountsSettingsScreens$*
--keepnames class com.ataglance.walletglance.presentation.ui.navigation.screens.CategoriesSettingsScreens$*
--keepnames class com.ataglance.walletglance.presentation.ui.navigation.screens.CategoryCollectionsSettingsScreens$*
+-keepnames class com.ataglance.walletglance.core.navigation.MainScreens$*
+-keepnames class com.ataglance.walletglance.settings.navigation.SettingsScreens$*
+-keepnames class com.ataglance.walletglance.account.navigation.AccountsSettingsScreens$*
+-keepnames class com.ataglance.walletglance.budget.navigation.BudgetsSettingsScreens$*
+-keepnames class com.ataglance.walletglance.category.navigation.CategoriesSettingsScreens$*
+-keepnames class com.ataglance.walletglance.categoryCollection.navigation.CategoryCollectionsSettingsScreens$*

@@ -65,7 +65,7 @@ import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.data.repository.RecordRepository

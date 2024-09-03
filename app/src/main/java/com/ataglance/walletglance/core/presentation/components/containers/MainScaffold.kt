@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.settings.presentation.components.SetupProgressTopBar
 
 @Composable

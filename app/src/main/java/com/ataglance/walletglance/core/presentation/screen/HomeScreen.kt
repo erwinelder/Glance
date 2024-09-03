@@ -45,7 +45,7 @@ import com.ataglance.walletglance.core.presentation.components.widgets.RecordHis
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack

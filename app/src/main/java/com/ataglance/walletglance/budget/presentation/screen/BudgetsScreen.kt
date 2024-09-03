@@ -33,7 +33,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.Previe
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 @Composable

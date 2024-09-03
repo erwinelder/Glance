@@ -45,7 +45,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.navigation.domain.model.MainScreens
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
