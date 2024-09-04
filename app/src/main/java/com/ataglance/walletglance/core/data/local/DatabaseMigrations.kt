@@ -118,11 +118,11 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Budget (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                amountLimit INTEGER NOT NULL,
+                amountLimit REAL NOT NULL,
                 categoryId INTEGER NOT NULL,
                 name TEXT NOT NULL,
                 repeatingPeriod TEXT NOT NULL,
-                nextResetDate INTEGER NOT NULL
+                FOREIGN KEY (categoryId) REFERENCES Category(id) ON DELETE CASCADE
             )
         """.trimIndent())
 
