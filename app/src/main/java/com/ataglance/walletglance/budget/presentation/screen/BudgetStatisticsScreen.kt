@@ -168,10 +168,13 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                Text(text = stringResource(R.string.of_limit_used))
+                Text(
+                    text = stringResource(R.string.of_limit_used),
+                    color = GlanceTheme.onSurface,
+                )
                 Text(
                     text = "(${totalAmount.formatWithSpaces(budget.currency)})",
-                    color = GlanceTheme.primary,
+                    color = GlanceTheme.onSurface,
                     fontSize = 18.sp,
                 )
             }

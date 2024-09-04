@@ -50,13 +50,13 @@ import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
-import com.ataglance.walletglance.core.navigation.MainScreens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -268,10 +268,10 @@ private fun PopupButtonsList(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 16.dp)
-                        .innerVolumeShadow(shape = RoundedCornerShape(26.dp))
-                        .clip(RoundedCornerShape(26.dp))
+                        .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
+                        .clip(RoundedCornerShape(24.dp))
                         .background(GlanceTheme.surface)
-                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                        .padding(horizontal = 20.dp, vertical = 16.dp)
                 ) {
                     barButtons.forEach { button ->
                         ListBarButton(
