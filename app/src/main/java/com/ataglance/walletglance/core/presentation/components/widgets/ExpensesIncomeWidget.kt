@@ -61,7 +61,7 @@ fun ExpensesIncomeWidget(
     )
 
     GlassSurface(
-        filledWidths = FilledWidthByScreenType(.86f, .63f, .4f)
+        filledWidths = FilledWidthByScreenType(.84f, .63f, .4f)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,7 +155,7 @@ private fun StatisticBlock(
             percentage = percentageFloat,
             brushColors = gradientColorsPair.toList(),
             shadowColor = gradientColorsPair.first,
-            height = 18.dp
+            height = 16.dp
         )
     }
 }
