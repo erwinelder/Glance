@@ -19,7 +19,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryBu
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 
 @Composable
-fun MakeRecordBottomButtonBlock(
+fun RecordCreationBottomButtonsBlock(
     showOnlySaveButton: Boolean,
     @StringRes singlePrimaryButtonStringRes: Int,
     onSaveButton: () -> Unit,

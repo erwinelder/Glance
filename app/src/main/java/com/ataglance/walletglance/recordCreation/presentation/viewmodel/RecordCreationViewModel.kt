@@ -27,18 +27,6 @@ class RecordCreationViewModel(
     )
     val recordDraftGeneral = _recordDraftGeneral.asStateFlow()
 
-    fun selectDate(selectedDateMillis: Long) {
-        _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
-        }
-    }
-
-    fun selectTime(hour: Int, minute: Int) {
-        _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
-        }
-    }
-
     fun selectCategoryType(
         type: CategoryType,
         categoriesWithSubcategories: CategoriesWithSubcategories
@@ -50,6 +38,26 @@ class RecordCreationViewModel(
             it.copyWithCategoryWithSubcategory(
                 categoriesWithSubcategories.getLastCategoryWithSubcategoryByType(type)
             )
+        }
+    }
+
+    fun changeIncludeInBudgets(value: Boolean) {
+        _recordDraftGeneral.update {
+            it.copy(
+                preferences = it.preferences.copy(includeInBudgets = value)
+            )
+        }
+    }
+
+    fun selectDate(selectedDateMillis: Long) {
+        _recordDraftGeneral.update {
+            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
+        }
+    }
+
+    fun selectTime(hour: Int, minute: Int) {
+        _recordDraftGeneral.update {
+            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
         }
     }
 

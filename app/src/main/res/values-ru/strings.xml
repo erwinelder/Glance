@@ -37,6 +37,8 @@
     <string name="recent">Недавние</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="preferences">Настройки</string>
+    <string name="include_in_budgets">Включить в бюджеты</string>
 
     <!-- Settings categories -->
     <string name="accounts">Счета</string>

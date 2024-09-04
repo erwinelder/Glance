@@ -47,6 +47,7 @@ import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimat
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
+import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
@@ -280,6 +281,7 @@ private fun ChartColumnPopupDetails(
                 Box(
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
                         .clip(RoundedCornerShape(24.dp))
                         .background(GlanceTheme.surface)
                         .padding(16.dp)

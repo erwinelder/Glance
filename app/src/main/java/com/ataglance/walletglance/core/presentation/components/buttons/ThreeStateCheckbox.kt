@@ -26,25 +26,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
+import com.ataglance.walletglance.category.utils.toCategoryColorWithName
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
+import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
-import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
-import com.ataglance.walletglance.category.utils.toCategoryColorWithName
 
 @Composable
 fun ThreeStateCheckbox(
     state: Boolean?,
+    size: Dp = 28.dp,
     onClick: (Boolean?) -> Unit
 ) {
     val iconRes = when (state) {
@@ -73,7 +75,7 @@ fun ThreeStateCheckbox(
         ),
         modifier = Modifier
             .border(1.5.dp, checkboxBorderColor, RoundedCornerShape(15))
-            .size(28.dp)
+            .size(size)
     ) {
         AnimatedContent(
             targetState = iconRes,

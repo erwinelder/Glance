@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -27,6 +28,7 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 fun TwoStateCheckbox(
     checked: Boolean,
     enabled: Boolean = true,
+    size: Dp = 28.dp,
     onClick: (Boolean) -> Unit
 ) {
     val iconRes = when (checked) {
@@ -58,7 +60,7 @@ fun TwoStateCheckbox(
         ),
         modifier = Modifier
             .border(1.5.dp, borderColor, RoundedCornerShape(15))
-            .size(28.dp)
+            .size(size)
     ) {
         AnimatedContent(
             targetState = iconRes,

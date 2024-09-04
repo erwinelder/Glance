@@ -37,6 +37,8 @@
     <string name="recent">Letzte</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="preferences">Einstellungen</string>
+    <string name="include_in_budgets">In Budgets aufnehmen</string>
 
     <!-- Settings categories -->
     <string name="accounts">Konten</string>

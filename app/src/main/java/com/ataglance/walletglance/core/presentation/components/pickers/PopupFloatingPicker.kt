@@ -49,9 +49,7 @@ fun <T>PopupFloatingPicker(
     itemToString: (T) -> String,
     onItemSelect: (T) -> Unit,
 ) {
-    val isExpandedState = remember {
-        MutableTransitionState(false)
-    }
+    val isExpandedState = remember { MutableTransitionState(false) }
     val selectedColor by animateColorAsState(
         targetValue = if (isExpandedState.targetState)
             GlanceTheme.primary else GlanceTheme.onSurface,

@@ -38,6 +38,8 @@
     <string name="recent">Recent</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="preferences">Preferences</string>
+    <string name="include_in_budgets">Include in budgets</string>
 
     <!-- Settings categories -->
     <string name="accounts">Accounts</string>

@@ -46,8 +46,8 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
-import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordBottomButtonBlock
-import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationTypeBar
+import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
+import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationTopBar
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordItemCreationComponent
 
 @Composable
@@ -59,8 +59,9 @@ fun RecordCreationScreen(
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
 
-    onNavigateToTransferCreationScreen: () -> Unit,
     onSelectCategoryType: (CategoryType) -> Unit,
+    onNavigateToTransferCreationScreen: () -> Unit,
+    onIncludeInBudgetsChange: (Boolean) -> Unit,
     onSelectDate: (Long) -> Unit,
     onSelectTime: (Int, Int) -> Unit,
 
@@ -91,14 +92,17 @@ fun RecordCreationScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         GlassSurfaceContainer(
-            topBar = if (recordDraftGeneral.isNew) { {
-                RecordCreationTypeBar(
-                    isTransferButtonVisible = accountList.size > 1,
-                    onTransferButtonClick = onNavigateToTransferCreationScreen,
+            topBar = {
+                RecordCreationTopBar(
+                    showCategoryTypeButton = recordDraftGeneral.isNew,
                     currentCategoryType = recordDraftGeneral.type,
-                    onButtonClick = onSelectCategoryType
+                    onSelectCategoryType = onSelectCategoryType,
+                    showTransferButton = recordDraftGeneral.isNew && accountList.size > 1,
+                    onNavigateToTransferCreationScreen = onNavigateToTransferCreationScreen,
+                    preferences = recordDraftGeneral.preferences,
+                    onIncludeInBudgetsChange = onIncludeInBudgetsChange
                 )
-            } } else null,
+            },
             glassSurfaceContent = {
                 GlassSurfaceContent(
                     appTheme = appTheme,
@@ -126,7 +130,7 @@ fun RecordCreationScreen(
             },
             glassSurfaceFilledWidths = FilledWidthByScreenType(compact = .96f),
             primaryBottomButton = {
-                MakeRecordBottomButtonBlock(
+                RecordCreationBottomButtonsBlock(
                     showOnlySaveButton = recordDraftGeneral.isNew,
                     singlePrimaryButtonStringRes = R.string.save_record,
                     onSaveButton = onSaveButton,
@@ -252,7 +256,10 @@ private fun GlassSurfaceContent(
 
 
 
-@Preview(device = Devices.PIXEL_7_PRO)
+@Preview(
+    device = Devices.PIXEL_7_PRO,
+    locale = "en"
+)
 @Composable
 fun RecordCreationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
@@ -309,8 +316,9 @@ fun RecordCreationScreenPreview(
             savingIsAllowed = true,
             accountList = accountsUiState.accountList,
             categoriesWithSubcategories = categoriesWithSubcategories,
-            onNavigateToTransferCreationScreen = {},
             onSelectCategoryType = {},
+            onNavigateToTransferCreationScreen = {},
+            onIncludeInBudgetsChange = {},
             onSelectDate = {},
             onSelectTime = { _, _ -> },
             onToggleAccounts = {},

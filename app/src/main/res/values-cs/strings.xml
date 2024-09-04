@@ -37,6 +37,8 @@
     <string name="recent">Nedávné</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="preferences">Předvolby</string>
+    <string name="include_in_budgets">Zahrnout do rozpočtů</string>
 
     <!-- Settings categories -->
     <string name="accounts">Účty</string>

@@ -42,7 +42,7 @@ import com.ataglance.walletglance.core.presentation.components.pickers.CustomTim
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
-import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordBottomButtonBlock
+import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
 
 @Composable
 fun TransferCreationScreen(
@@ -92,7 +92,7 @@ fun TransferCreationScreen(
                 )
             },
             primaryBottomButton = {
-                MakeRecordBottomButtonBlock(
+                RecordCreationBottomButtonsBlock(
                     showOnlySaveButton = transferDraft.isNew,
                     singlePrimaryButtonStringRes = R.string.make_transfer,
                     onSaveButton = onSaveButton,

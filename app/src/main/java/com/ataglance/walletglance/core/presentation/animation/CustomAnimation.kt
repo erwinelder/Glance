@@ -65,7 +65,7 @@ fun scaleFadeInAnimation(
     scaleTransformOrigin: TransformOrigin = TransformOrigin(0.5f, 1.0f)
 ): EnterTransition {
     return scaleIn(
-        initialScale = .5f,
+        initialScale = .7f,
         animationSpec = spring(stiffness = 700f),
         transformOrigin = scaleTransformOrigin
     ) + fadeIn(
@@ -76,7 +76,7 @@ fun scaleFadeOutAnimation(
     scaleTransformOrigin: TransformOrigin = TransformOrigin(0.5f, 1.0f)
 ): ExitTransition {
     return scaleOut(
-        targetScale = .2f,
+        targetScale = .5f,
         transformOrigin = scaleTransformOrigin
     ) + fadeOut(
         animationSpec = spring(stiffness = 700f)

@@ -35,6 +35,7 @@ import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
@@ -42,7 +43,6 @@ import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
@@ -327,6 +327,9 @@ fun AppNavHost(
                 savingIsAllowed = savingIsAllowed,
                 accountList = accountsUiState.accountList,
                 categoriesWithSubcategories = categoriesWithSubcategories,
+                onSelectCategoryType = { type ->
+                    viewModel.selectCategoryType(type, categoriesWithSubcategories)
+                },
                 onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(
                         navController = navController,
@@ -335,9 +338,7 @@ fun AppNavHost(
                         )
                     )
                 },
-                onSelectCategoryType = { type ->
-                    viewModel.selectCategoryType(type, categoriesWithSubcategories)
-                },
+                onIncludeInBudgetsChange = viewModel::changeIncludeInBudgets,
                 onSelectDate = viewModel::selectDate,
                 onSelectTime = viewModel::selectTime,
                 onToggleAccounts = viewModel::toggleSelectedAccount,
