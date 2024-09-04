@@ -43,9 +43,9 @@ data class BudgetsByType(
     private fun replaceListByType(list: List<Budget>, type: RepeatingPeriod): BudgetsByType {
         return when (type) {
             RepeatingPeriod.Daily -> this.copy(daily = list)
-            RepeatingPeriod.Weekly -> this.copy(daily = list)
-            RepeatingPeriod.Monthly -> this.copy(daily = list)
-            RepeatingPeriod.Yearly -> this.copy(daily = list)
+            RepeatingPeriod.Weekly -> this.copy(weekly = list)
+            RepeatingPeriod.Monthly -> this.copy(monthly = list)
+            RepeatingPeriod.Yearly -> this.copy(yearly = list)
         }
     }
 
