@@ -5,15 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.ataglance.walletglance.navigation.utils.currentScreenIsNoneOf
-import com.ataglance.walletglance.navigation.utils.fromMainScreen
-import com.ataglance.walletglance.navigation.utils.simpleName
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.domain.mapper.toBottomBarNavigationButtonList
 import com.ataglance.walletglance.navigation.domain.mapper.toDefaultNavigationButtonEntityList
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.navigation.utils.currentScreenIsNoneOf
+import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
+import com.ataglance.walletglance.navigation.utils.fromMainScreen
+import com.ataglance.walletglance.navigation.utils.simpleName
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -112,11 +113,22 @@ class NavigationViewModel(
 
 
     fun shouldDisplaySetupProgressTopBar(
-        mainStartDestination: MainScreens,
+        isSetUp: Boolean,
         navBackStackEntry: NavBackStackEntry?
     ): Boolean {
-        return mainStartDestination != MainScreens.Home && navBackStackEntry.currentScreenIsNoneOf(
-            SettingsScreens.SettingsHome, MainScreens.FinishSetup
+        return !isSetUp && navBackStackEntry.currentScreenIsNoneOf(
+            SettingsScreens.Start, MainScreens.FinishSetup
+        )
+    }
+
+
+    fun shouldDisplayBottomNavigationBar(
+        isSetUp: Boolean,
+        navBackStackEntry: NavBackStackEntry?
+    ): Boolean {
+        return isSetUp && navBackStackEntry.currentScreenIsOneOf(
+            MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
+            MainScreens.Budgets, SettingsScreens.SettingsHome, SettingsScreens.Language
         )
     }
 

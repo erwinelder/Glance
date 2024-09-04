@@ -54,6 +54,8 @@ fun NavBackStackEntry?.currentScreenIs(screen: Any): Boolean {
 
 
 fun NavBackStackEntry?.currentScreenIsOneOf(vararg screens: Any): Boolean {
+    this ?: return false
+
     screens.forEach { screen ->
         if (this.currentScreenIs(screen)) {
             return true
@@ -64,6 +66,8 @@ fun NavBackStackEntry?.currentScreenIsOneOf(vararg screens: Any): Boolean {
 
 
 fun NavBackStackEntry?.currentScreenIsNoneOf(vararg screens: Any): Boolean {
+    this ?: return false
+
     screens.forEach { screen ->
         if (this.currentScreenIs(screen)) {
             return false

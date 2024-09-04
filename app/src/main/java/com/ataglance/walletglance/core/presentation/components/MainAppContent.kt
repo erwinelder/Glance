@@ -13,19 +13,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
-import com.ataglance.walletglance.navigation.utils.currentScreenIs
-import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
-import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRes
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
+import com.ataglance.walletglance.navigation.utils.currentScreenIs
+import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRes
 import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
 @Composable
 fun MainAppContent(
@@ -40,22 +38,19 @@ fun MainAppContent(
     val bottomBarNavigationButtons by navViewModel.bottomBarNavigationButtons
         .collectAsStateWithLifecycle()
 
-    val setupProgressTopBarUiState by remember {
+    val setupProgressTopBarUiState by remember(appUiSettings.isSetUp, navBackStackEntry) {
         derivedStateOf {
             SetupProgressTopBarUiState(
                 isVisible = navViewModel.shouldDisplaySetupProgressTopBar(
-                    appUiSettings.mainStartDestination, navBackStackEntry
+                    appUiSettings.isSetUp, navBackStackEntry
                 ),
                 titleRes = navBackStackEntry.getSetupProgressTopBarTitleRes()
             )
         }
     }
-    val isBottomBarVisible by remember {
+    val isBottomBarVisible by remember(appUiSettings.isSetUp, navBackStackEntry) {
         derivedStateOf {
-            appUiSettings.isSetUp && navBackStackEntry.currentScreenIsOneOf(
-                MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
-                MainScreens.Budgets, SettingsScreens.SettingsHome, SettingsScreens.Language
-            )
+            navViewModel.shouldDisplayBottomNavigationBar(appUiSettings.isSetUp, navBackStackEntry)
         }
     }
 
