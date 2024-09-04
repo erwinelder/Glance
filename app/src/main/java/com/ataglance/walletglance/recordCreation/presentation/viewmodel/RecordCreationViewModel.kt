@@ -7,6 +7,7 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalDot
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
@@ -88,9 +89,7 @@ class RecordCreationViewModel(
         val newList = recordDraftItems.value.toMutableList()
         if (index > newList.lastIndex) { return }
 
-        val finalValue = value.takeIf {
-            Regex("^,?(?:\\d{1,10}(?:\\.\\d{0,2})?|\\.(?:\\d{1,2})?)?\$").matches(it)
-        } ?: return
+        val finalValue = value.takeIf { it.isNumberWithDecimalOptionalDot() } ?: return
 
         newList[index] = newList[index].copy(amount = finalValue)
         _recordDraftItems.update { newList }

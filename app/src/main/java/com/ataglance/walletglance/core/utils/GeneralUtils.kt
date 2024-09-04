@@ -34,11 +34,6 @@ inline fun <T> List<T>.deleteItemAndMoveOrderNum(
 }
 
 
-fun String.addZeroIfDotIsAtTheBeginning(): String {
-    return this.let { it.takeUnless { it.firstOrNull() == '.' } ?: ("0$it") }
-}
-
-
 fun Int.formatWithSpaces(): String {
     val numberString = this.toString()
     var formattedNumber = ""
@@ -73,4 +68,20 @@ fun Double.formatWithSpaces(additionToEnd: String? = null): String {
     }
 
     return formattedNumber + (additionToEnd?.let { " $it" } ?: "")
+}
+
+
+fun String.addZeroIfDotIsAtTheBeginning(): String {
+    return this.takeUnless { it.firstOrNull() == '.' } ?: "0$this"
+}
+
+
+fun String.isNumberWithDecimalOptionalNegative(): Boolean {
+    return Regex("^-?(?:\\d{1,10}(?:\\.\\d{0,2})?)?\$").matches(this)
+}
+fun String.isPositiveNumberWithDecimal(): Boolean {
+    return Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(this)
+}
+fun String.isNumberWithDecimalOptionalDot(): Boolean {
+    return Regex("^(?:\\d{1,10}(?:\\.\\d{0,2})?|\\.(?:\\d{1,2})?)?\$").matches(this)
 }

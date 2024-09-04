@@ -5,6 +5,7 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.budget.domain.EditingBudgetUiState
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,8 +54,10 @@ class EditBudgetViewModel : ViewModel() {
     }
 
     fun changeAmountLimit(value: String) {
+        val finalValue = value.takeIf { it.isPositiveNumberWithDecimal() } ?: return
+
         _budget.update {
-            it.copy(amountLimit = value)
+            it.copy(amountLimit = finalValue)
         }
     }
 

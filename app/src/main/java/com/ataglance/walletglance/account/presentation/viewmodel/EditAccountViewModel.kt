@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.EditAccountUiState
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalNegative
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -52,9 +53,7 @@ class EditAccountViewModel : ViewModel() {
     fun changeBalance(value: String) {
         _editAccountUiState.update {
             it.copy(
-                balance = value.takeIf {
-                    Regex("^-?(?:\\d{1,10}(?:\\.\\d{0,2})?)?\$").matches(value)
-                } ?: return
+                balance = value.takeIf { value.isNumberWithDecimalOptionalNegative() } ?: return
             )
         }
     }
@@ -79,7 +78,7 @@ class EditAccountViewModel : ViewModel() {
         }
     }
 
-    fun getAccount(): Account {
+    fun getAccount(): Account? {
         return editAccountUiState.value.toAccount()
     }
 

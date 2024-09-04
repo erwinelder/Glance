@@ -21,16 +21,19 @@ data class EditAccountUiState(
         return name.isNotBlank() &&
                 currency.isNotBlank() &&
                 balance.isNotBlank() &&
-                balance.last() != '.'
+                balance.last() != '.' &&
+                balance.last() != '-'
     }
 
-    fun toAccount(): Account {
+    fun toAccount(): Account? {
+        val balance = balance.toDoubleOrNull() ?: return null
+
         return Account(
             id = id,
             orderNum = orderNum,
             name = name,
             currency = currency,
-            balance = balance.toDouble(),
+            balance = balance,
             color = color,
             hide = hide,
             hideBalance = hideBalance,

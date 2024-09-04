@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.utils.getOtherFrom
+import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,9 +88,7 @@ class TransferCreationViewModel(
 
 
     fun changeRate(rate: String, isSender: Boolean) {
-        val newRate = rate.takeIf {
-            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
-        } ?: return
+        val newRate = rate.takeIf { it.isPositiveNumberWithDecimal() } ?: return
 
         _transferDraft.update {
             it.applyRate(newRate, isSender)
@@ -97,9 +96,7 @@ class TransferCreationViewModel(
     }
 
     fun changeAmount(amount: String, isSender: Boolean) {
-        val newAmount = amount.takeIf {
-            Regex("^(?:[0-9]\\d{0,9}(?:[.]\\d{0,2})?)?\$").matches(it)
-        } ?: return
+        val newAmount = amount.takeIf { it.isPositiveNumberWithDecimal() } ?: return
 
         _transferDraft.update {
             it.applyAmount(newAmount, isSender)

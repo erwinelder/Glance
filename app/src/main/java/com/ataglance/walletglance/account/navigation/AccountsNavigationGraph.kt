@@ -113,7 +113,9 @@ fun NavGraphBuilder.accountsGraph(
                     accountsViewModel.deleteAccountById(accountId)
                 },
                 onSaveButton = {
-                    accountsViewModel.saveAccount(editAccountViewModel.getAccount())
+                    editAccountViewModel.getAccount()?.let {
+                        accountsViewModel.saveAccount(it)
+                    }
                     navController.popBackStack()
                 }
             )
