@@ -10,7 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
-import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,21 +22,31 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 @Composable
 fun CustomTimePicker(
     openDialog: Boolean,
-    onOpenTimeDialogChange: (Boolean) -> Unit,
-    onConfirmButton: () -> Unit,
-    state: TimePickerState
+    initialHourAndMinute: Pair<Int, Int>,
+    onOpenDialogChange: (Boolean) -> Unit,
+    onConfirmButton: (Int, Int) -> Unit
 ) {
+    val state = rememberTimePickerState(
+        initialHour = initialHourAndMinute.first,
+        initialMinute = initialHourAndMinute.second,
+        is24Hour = true
+    )
+
     AnimatedVisibility(visible = openDialog) {
         DatePickerDialog(
-            onDismissRequest = { onOpenTimeDialogChange(false) },
+            onDismissRequest = { onOpenDialogChange(false) },
             confirmButton = {
-                TextButton(onClick = onConfirmButton) {
+                TextButton(
+                    onClick = {
+                        onConfirmButton(state.hour, state.minute)
+                    }
+                ) {
                     Text(text = stringResource(R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { onOpenTimeDialogChange(false) }
+                    onClick = { onOpenDialogChange(false) }
                 ) {
                     Text(text = stringResource(R.string.cancel))
                 }

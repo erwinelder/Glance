@@ -15,8 +15,7 @@ data class DateTimeState(
     val dateFormatted: String = Calendar.getInstance().getFormattedDateWithTime()
 ) {
 
-    fun getHour(): Int = calendar.hour
-    fun getMinute(): Int = calendar.minute
+    fun getHourAndMinute(): Pair<Int, Int> = calendar.hour to calendar.minute
 
     fun getNewDate(selectedDateMillis: Long): DateTimeState {
         val calendar = Calendar.getInstance().apply { timeInMillis = selectedDateMillis }

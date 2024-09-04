@@ -10,9 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +50,6 @@ import com.ataglance.walletglance.recordCreation.presentation.components.MakeRec
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationTypeBar
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordItemCreationComponent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecordCreationScreen(
     appTheme: AppTheme?,
@@ -88,14 +84,6 @@ fun RecordCreationScreen(
     var showTimePicker by remember { mutableStateOf(false) }
     var showCategoryPicker by remember { mutableStateOf(false) }
 
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = recordDraftGeneral.dateTimeState.calendar.timeInMillis
-    )
-    val timePickerState = rememberTimePickerState(
-        initialHour = recordDraftGeneral.dateTimeState.getHour(),
-        initialMinute = recordDraftGeneral.dateTimeState.getMinute(),
-        is24Hour = true
-    )
     var selectedItemIndex by remember { mutableStateOf<Int?>(null) }
 
     Box(
@@ -150,22 +138,22 @@ fun RecordCreationScreen(
         )
         CustomDatePicker(
             openDialog = showDatePicker,
+            initialTimeInMillis = recordDraftGeneral.dateTimeState.calendar.timeInMillis,
             onOpenDateDialogChange = { showDatePicker = it },
-            onConfirmButton = {
-                datePickerState.selectedDateMillis?.let { onSelectDate(it) }
+            onConfirmButton = { timeInMillis ->
+                onSelectDate(timeInMillis)
                 showDatePicker = false
                 showTimePicker = true
-            },
-            state = datePickerState
+            }
         )
         CustomTimePicker(
             openDialog = showTimePicker,
-            onOpenTimeDialogChange = { showTimePicker = it },
-            onConfirmButton = {
-                onSelectTime(timePickerState.hour, timePickerState.minute)
+            initialHourAndMinute = recordDraftGeneral.dateTimeState.getHourAndMinute(),
+            onOpenDialogChange = { showTimePicker = it },
+            onConfirmButton = { hour, minute ->
+                onSelectTime(hour, minute)
                 showTimePicker = false
-            },
-            state = timePickerState
+            }
         )
         CategoryPicker(
             visible = showCategoryPicker,

@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,15 +22,21 @@ import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 @Composable
 fun CustomDatePicker(
     openDialog: Boolean,
+    initialTimeInMillis: Long,
     onOpenDateDialogChange: (Boolean) -> Unit,
-    onConfirmButton: () -> Unit,
-    state: DatePickerState
+    onConfirmButton: (Long) -> Unit
 ) {
+    val state = rememberDatePickerState(initialSelectedDateMillis = initialTimeInMillis)
+
     AnimatedVisibility(visible = openDialog) {
         DatePickerDialog(
             onDismissRequest = { onOpenDateDialogChange(false) },
             confirmButton = {
-                TextButton(onClick = onConfirmButton) {
+                TextButton(
+                    onClick = {
+                        state.selectedDateMillis?.let { onConfirmButton(it) }
+                    }
+                ) {
                     Text(text = stringResource(R.string.confirm))
                 }
             },
@@ -86,7 +90,6 @@ fun CustomDatePicker(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun CustomDatePickerPreview() {
@@ -94,15 +97,11 @@ private fun CustomDatePickerPreview() {
         WalletGlanceTheme(
             boxWithConstraintsScope = this
         ) {
-            val datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = System.currentTimeMillis(),
-                initialDisplayMode = DisplayMode.Picker
-            )
             CustomDatePicker(
                 openDialog = true,
+                initialTimeInMillis = System.currentTimeMillis(),
                 onOpenDateDialogChange = {},
-                onConfirmButton = {},
-                state = datePickerState
+                onConfirmButton = {}
             )
         }
     }

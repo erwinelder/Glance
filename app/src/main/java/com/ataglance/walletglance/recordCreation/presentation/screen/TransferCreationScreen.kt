@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +44,6 @@ import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
 import com.ataglance.walletglance.recordCreation.presentation.components.MakeRecordBottomButtonBlock
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferCreationScreen(
     appTheme: AppTheme?,
@@ -64,20 +60,10 @@ fun TransferCreationScreen(
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit
 ) {
-
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showSenderAccountPicker by remember { mutableStateOf(false) }
     var showReceiverAccountPicker by remember { mutableStateOf(false) }
-
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = transferDraft.dateTimeState.calendar.timeInMillis
-    )
-    val timePickerState = rememberTimePickerState(
-        initialHour = transferDraft.dateTimeState.getHour(),
-        initialMinute = transferDraft.dateTimeState.getMinute(),
-        is24Hour = true
-    )
 
     Box(
         contentAlignment = Alignment.BottomCenter,
@@ -118,26 +104,26 @@ fun TransferCreationScreen(
         )
         CustomDatePicker(
             openDialog = showDatePicker,
+            initialTimeInMillis = transferDraft.dateTimeState.calendar.timeInMillis,
             onOpenDateDialogChange = {
                 showDatePicker = it
             },
-            onConfirmButton = {
-                datePickerState.selectedDateMillis?.let { onSelectNewDate(it) }
+            onConfirmButton = { timeInMillis ->
+                onSelectNewDate(timeInMillis)
                 showDatePicker = false
                 showTimePicker = true
-            },
-            state = datePickerState
+            }
         )
         CustomTimePicker(
             openDialog = showTimePicker,
-            onOpenTimeDialogChange = {
+            initialHourAndMinute = transferDraft.dateTimeState.getHourAndMinute(),
+            onOpenDialogChange = {
                 showTimePicker = it
             },
-            onConfirmButton = {
-                onSelectNewTime(timePickerState.hour, timePickerState.minute)
+            onConfirmButton = { hour, minute ->
+                onSelectNewTime(hour, minute)
                 showTimePicker = false
-            },
-            state = timePickerState
+            }
         )
         AccountPicker(
             visible = showSenderAccountPicker || showReceiverAccountPicker,
