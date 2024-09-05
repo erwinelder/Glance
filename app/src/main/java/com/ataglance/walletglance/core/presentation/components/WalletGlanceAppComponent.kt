@@ -13,7 +13,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -26,11 +27,10 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.NoRippleTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WalletGlanceAppComponent(
     appViewModel: AppViewModel,
@@ -59,7 +59,7 @@ fun WalletGlanceAppComponent(
                             .background(GlanceTheme.background)
                     ) {
                         AppBackground(appTheme = appUiSettings.appTheme)
-                        CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+                        CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
                                 appViewModel = appViewModel,
                                 appUiSettings = appUiSettings,

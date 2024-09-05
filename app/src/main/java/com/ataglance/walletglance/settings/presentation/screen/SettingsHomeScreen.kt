@@ -217,8 +217,11 @@ fun SettingPlate(
 
 @Composable
 fun BottomSpacer(scaffoldBottomPadding: Dp) {
+    val bottomPadding by remember {
+        derivedStateOf { scaffoldBottomPadding }
+    }
     Spacer(
-        modifier = Modifier.height(scaffoldBottomPadding + 8.dp)
+        modifier = Modifier.height(bottomPadding + 8.dp)
     )
 }
 
