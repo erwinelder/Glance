@@ -166,15 +166,15 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
 @Preview(heightDp = 1520)
 @Composable
 private fun Preview() {
-    PreviewContainer(AppTheme.DarkDefault) {
-        val context = LocalContext.current
+    val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
+        .getDefaultCategories()
+
+    PreviewContainer(appTheme = AppTheme.DarkDefault) {
         EditCategoriesScreen(
             scaffoldPadding = PaddingValues(),
-            appTheme = AppTheme.DarkDefault,
             isAppSetUp = true,
             uiState = SetupCategoriesUiState(
-                categoriesWithSubcategories = DefaultCategoriesPackage(context)
-                    .getDefaultCategories()
+                categoriesWithSubcategories = categoriesWithSubcategories
             ),
             onResetButton = {},
             onSaveAndFinishSetupButton = {},

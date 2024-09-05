@@ -17,7 +17,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
@@ -27,7 +26,6 @@ import com.ataglance.walletglance.core.presentation.components.containers.Glance
 fun AccountPicker(
     visible: Boolean,
     accountList: List<Account>,
-    appTheme: AppTheme?,
     onDismissRequest: () -> Unit,
     onAccountChoose: (Account) -> Unit,
     lazyListState: LazyListState = rememberLazyListState()
@@ -56,7 +54,7 @@ fun AccountPicker(
                 items = accountList,
                 key = { it.orderNum }
             ) { account ->
-                SmallAccount(account = account, appTheme = appTheme) {
+                SmallAccount(account = account) {
                     onAccountChoose(account)
                     onDismissRequest()
                 }

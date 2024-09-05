@@ -29,7 +29,7 @@ import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryTypeBar
-import com.ataglance.walletglance.category.presentation.components.ParentCategorySetupElement
+import com.ataglance.walletglance.category.presentation.components.EditingParentCategoryComponent
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
@@ -42,7 +42,6 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 @Composable
 fun EditCategoriesScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     isAppSetUp: Boolean,
     uiState: SetupCategoriesUiState,
     onResetButton: () -> Unit,
@@ -62,7 +61,6 @@ fun EditCategoriesScreen(
         },
         glassSurfaceContent = {
             GlassSurfaceContent(
-                appTheme = appTheme,
                 uiState = uiState,
                 onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoriesScreen,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
@@ -90,7 +88,6 @@ fun EditCategoriesScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     uiState: SetupCategoriesUiState,
     onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
@@ -104,7 +101,6 @@ private fun GlassSurfaceContent(
     ) { categoryList ->
         if (!WindowTypeIsExpanded) {
             CompactLayout(
-                appTheme = appTheme,
                 categoryList = categoryList,
                 onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoryListScreen,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
@@ -112,7 +108,6 @@ private fun GlassSurfaceContent(
             )
         } else {
             ExpandedLayout(
-                appTheme = appTheme,
                 categoryList = categoryList,
                 onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoryListScreen,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
@@ -124,7 +119,6 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun CompactLayout(
-    appTheme: AppTheme?,
     categoryList: List<CategoryWithSubcategories>,
     onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
@@ -145,9 +139,8 @@ private fun CompactLayout(
             items = categoryList,
             key = { it.category.id }
         ) { item ->
-            ParentCategorySetupElement(
+            EditingParentCategoryComponent(
                 category = item.category,
-                appTheme = appTheme,
                 onNavigateToEditSubcategoryListScreen = {
                     onNavigateToEditSubcategoryListScreen(item)
                 },
@@ -174,7 +167,6 @@ private fun CompactLayout(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExpandedLayout(
-    appTheme: AppTheme?,
     categoryList: List<CategoryWithSubcategories>,
     onNavigateToEditSubcategoryListScreen: (CategoryWithSubcategories) -> Unit,
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
@@ -191,9 +183,8 @@ private fun ExpandedLayout(
     ) {
         categoryList.forEach { item ->
             Box(modifier = Modifier.padding(9.dp)) {
-                ParentCategorySetupElement(
+                EditingParentCategoryComponent(
                     category = item.category,
-                    appTheme = appTheme,
                     onNavigateToEditSubcategoryListScreen = {
                         onNavigateToEditSubcategoryListScreen(item)
                     },
@@ -237,7 +228,6 @@ fun EditCategoriesScreenPreview(
     ) { scaffoldPadding ->
         EditCategoriesScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             isAppSetUp = isAppSetUp,
             uiState = SetupCategoriesUiState(
                 categoryType = categoryType,

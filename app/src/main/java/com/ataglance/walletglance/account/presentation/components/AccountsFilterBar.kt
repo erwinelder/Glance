@@ -13,12 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
 
 @Composable
 fun AccountsFilterBar(
     visibleAccounts: List<Account>,
-    appTheme: AppTheme?,
     onAccountClick: (Int) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
@@ -34,7 +32,6 @@ fun AccountsFilterBar(
         items(items = visibleAccounts) { account ->
             SmallAccount(
                 account = account,
-                appTheme = appTheme,
                 fontSize = 20.sp,
                 roundedCornerSize = 16.dp,
                 horizontalPadding = 12.dp,

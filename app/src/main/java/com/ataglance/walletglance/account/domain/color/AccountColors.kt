@@ -1,23 +1,16 @@
 package com.ataglance.walletglance.account.domain.color
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorByTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.account.presentation.components.AccountCard
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 
 sealed class AccountColors(
     val name: AccountColorName,
@@ -126,19 +119,9 @@ sealed class AccountColors(
 @Preview(showSystemUi = true)
 @Composable
 private fun AccountCardPreview() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(R.drawable.main_background_light),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
         AccountCard(
             account = Account(color = AccountColors.Red.toAccountColorWithName()),
-            appTheme = AppTheme.LightDefault,
             todayExpenses = 0.0
         )
     }

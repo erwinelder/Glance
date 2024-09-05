@@ -19,8 +19,8 @@ import com.ataglance.walletglance.category.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.AppearanceScreen
@@ -47,7 +47,7 @@ fun NavGraphBuilder.settingsGraph(
     navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
         composable<SettingsScreens.Start> {
             StartSetupScreen(
-                appTheme = appUiSettings.appTheme,
+                isAppThemeSetUp = appUiSettings.appTheme != null,
                 onManualSetupButton = {
                     navViewModel.navigateToScreen(navController, SettingsScreens.Language)
                 }
@@ -56,7 +56,6 @@ fun NavGraphBuilder.settingsGraph(
         composable<SettingsScreens.SettingsHome> {
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 onNavigateToScreen = { screen ->
                     navViewModel.navigateToScreen(navController, screen)
                 }
@@ -75,7 +74,6 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings,
             budgetsByType = budgetsByType,
             accountList = accountList,
             categoriesWithSubcategories = categoriesWithSubcategories
@@ -85,14 +83,13 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings,
+            isAppSetUp = appUiSettings.isSetUp,
             categoriesWithSubcategories = categoriesWithSubcategories
         )
         categoryCollectionsGraph(
             navController = navController,
             navViewModel = navViewModel,
             appViewModel = appViewModel,
-            appTheme = appUiSettings.appTheme,
             categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsWithIdsByType = categoryCollectionsUiState
         )

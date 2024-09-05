@@ -23,6 +23,7 @@ import com.ataglance.walletglance.budget.domain.Budget
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
@@ -30,7 +31,6 @@ import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
 fun BudgetComponent(
-    appTheme: AppTheme?,
     budget: Budget,
     onClick: (Budget) -> Unit
 ) {
@@ -47,7 +47,7 @@ fun BudgetComponent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 budget.category?.let {
-                    CategoryIconComponent(category = it, appTheme = appTheme)
+                    CategoryIconComponent(category = it)
                 }
                 Text(
                     text = budget.name,
@@ -100,9 +100,10 @@ fun BudgetComponent(
                 }
                 GlanceLineChart(
                     percentage = budget.usedPercentage / 100,
-                    brushColors = budget.category?.getLineChartColorsByTheme(appTheme)
+                    brushColors = budget.category?.getLineChartColorsByTheme(CurrAppTheme)
                         ?: listOf(Color.Black),
-                    shadowColor = budget.category?.getIconSolidColorByTheme(appTheme) ?: Color.Black
+                    shadowColor = budget.category?.getIconSolidColorByTheme(CurrAppTheme)
+                        ?: Color.Black
                 )
             }
         }

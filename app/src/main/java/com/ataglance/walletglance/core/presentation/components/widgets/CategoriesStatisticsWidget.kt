@@ -1,20 +1,15 @@
 package com.ataglance.walletglance.core.presentation.components.widgets
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,17 +20,16 @@ import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiSta
 import com.ataglance.walletglance.category.domain.CategoryStatisticsLists
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
+import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
-import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 
 @Composable
 fun CategoriesStatisticsWidget(
     categoryStatisticsLists: CategoryStatisticsLists,
-    appTheme: AppTheme?,
     onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
 ) {
     GlassSurface {
@@ -68,13 +62,13 @@ fun CategoriesStatisticsWidget(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CategoryStatisticsItemComponent(firstCategory, appTheme, enableClick = true) {
+                        CategoryStatisticsItemComponent(firstCategory, enableClick = true) {
                             firstCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
                         }
-                        CategoryStatisticsItemComponent(secondCategory, appTheme, enableClick = true) {
+                        CategoryStatisticsItemComponent(secondCategory, enableClick = true) {
                             secondCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
                         }
-                        CategoryStatisticsItemComponent(thirdCategory, appTheme, enableClick = true) {
+                        CategoryStatisticsItemComponent(thirdCategory, enableClick = true) {
                             thirdCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
                         }
                     }
@@ -92,46 +86,32 @@ fun CategoriesStatisticsWidget(
 @Preview
 @Composable
 private fun CategoriesStatisticsWidgetPreview() {
-    BoxWithConstraints {
-        WalletGlanceTheme(boxWithConstraintsScope = this) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_light),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                CategoriesStatisticsWidget(
-                    categoryStatisticsLists = CategoryStatisticsLists(
-                        expense = listOf(
-                            CategoryStatisticsElementUiState(
-                                categoryId = 1,
-                                categoryName = "Food & Drinks",
-                                categoryIconRes = CategoryIcon.FoodAndDrinks.res,
-                                categoryColor = CategoryColors.Olive.color,
-                                totalAmount = "1000.00",
-                                percentage = 50f,
-                                currency = "USD"
-                            ),
-                            CategoryStatisticsElementUiState(
-                                categoryId = 2,
-                                categoryName = "Housing",
-                                categoryIconRes = CategoryIcon.Housing.res,
-                                categoryColor = CategoryColors.Camel.color,
-                                totalAmount = "500.00",
-                                percentage = 25f,
-                                currency = "USD"
-                            )
-                        ),
-                        income = emptyList()
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        CategoriesStatisticsWidget(
+            categoryStatisticsLists = CategoryStatisticsLists(
+                expense = listOf(
+                    CategoryStatisticsElementUiState(
+                        categoryId = 1,
+                        categoryName = "Food & Drinks",
+                        categoryIconRes = CategoryIcon.FoodAndDrinks.res,
+                        categoryColor = CategoryColors.Olive.color,
+                        totalAmount = "1000.00",
+                        percentage = 50f,
+                        currency = "USD"
                     ),
-                    appTheme = AppTheme.LightDefault,
-                    onNavigateToCategoriesStatisticsScreen = {}
-                )
-            }
-        }
+                    CategoryStatisticsElementUiState(
+                        categoryId = 2,
+                        categoryName = "Housing",
+                        categoryIconRes = CategoryIcon.Housing.res,
+                        categoryColor = CategoryColors.Camel.color,
+                        totalAmount = "500.00",
+                        percentage = 25f,
+                        currency = "USD"
+                    )
+                ),
+                income = emptyList()
+            ),
+            onNavigateToCategoriesStatisticsScreen = {}
+        )
     }
 }

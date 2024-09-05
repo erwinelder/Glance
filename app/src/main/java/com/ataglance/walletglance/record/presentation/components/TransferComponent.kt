@@ -18,18 +18,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.RecordAccount
-import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
+import com.ataglance.walletglance.record.domain.RecordStack
 
 @Composable
 fun TransferComponent(
     recordStack: RecordStack,
     secondAccount: RecordAccount?,
     includeYearToDate: Boolean,
-    appTheme: AppTheme?,
     onTransferClick: (Int) -> Unit
 ) {
     GlassSurfaceOnGlassSurface(onClick = { onTransferClick(recordStack.recordNum) }) {
@@ -69,13 +68,14 @@ fun TransferComponent(
             )
             Text(
                 text = secondAccount?.name ?: "---",
-                color = secondAccount?.color?.colorOn?.getByTheme(appTheme) ?: Color.Transparent,
+                color = secondAccount?.color?.colorOn?.getByTheme(CurrAppTheme)
+                    ?: Color.Transparent,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .clip(RoundedCornerShape(42))
                     .background(
-                        secondAccount?.color?.color?.getByTheme(appTheme)?.lighter
+                        secondAccount?.color?.color?.getByTheme(CurrAppTheme)?.lighter
                             ?: Color.Transparent
                     )
                     .padding(7.dp, 3.dp)

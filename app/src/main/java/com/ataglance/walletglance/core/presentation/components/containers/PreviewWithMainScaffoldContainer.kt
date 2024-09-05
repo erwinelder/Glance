@@ -47,7 +47,6 @@ fun PreviewWithMainScaffoldContainer(
                     modifier = Modifier.fillMaxSize()
                 )
                 MainScaffold(
-                    appTheme = appTheme,
                     setupProgressTopBarUiState = SetupProgressTopBarUiState(
                         isVisible = isSetupProgressTopBarVisible
                     ),

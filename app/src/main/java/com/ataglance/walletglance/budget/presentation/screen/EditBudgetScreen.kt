@@ -60,7 +60,6 @@ import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 @Composable
 fun EditBudgetScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     budget: EditingBudgetUiState,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
@@ -90,7 +89,6 @@ fun EditBudgetScreen(
             } } else null,
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    appTheme = appTheme,
                     budget = budget,
                     accountList = accountList,
                     onNameChange = onNameChange,
@@ -113,7 +111,6 @@ fun EditBudgetScreen(
             visible = showCategoryPicker,
             categoriesWithSubcategories = categoriesWithSubcategories,
             type = CategoryType.Expense,
-            appTheme = appTheme,
             allowChoosingParentCategory = true,
             onDismissRequest = { showCategoryPicker = false },
             onCategoryChoose = { onCategoryChange(it) }
@@ -123,7 +120,6 @@ fun EditBudgetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     budget: EditingBudgetUiState,
     accountList: List<Account>,
     onNameChange: (String) -> Unit,
@@ -164,7 +160,6 @@ private fun GlassSurfaceContent(
                     label = "category field at the edit budget screen"
                 ) { targetCategory ->
                     CategoryField(
-                        appTheme = appTheme,
                         category = targetCategory,
                         onClick = onCategoryFieldClick
                     )
@@ -187,7 +182,6 @@ private fun GlassSurfaceContent(
         AccountCheckedList(
             budget = budget,
             accountList = accountList,
-            appTheme = appTheme,
             onAccountCheck = onLinkAccount,
             onAccountUncheck = onUnlinkAccount
         )
@@ -198,7 +192,6 @@ private fun GlassSurfaceContent(
 private fun AccountCheckedList(
     budget: EditingBudgetUiState,
     accountList: List<Account>,
-    appTheme: AppTheme?,
     onAccountCheck: (Account) -> Unit,
     onAccountUncheck: (Account) -> Unit,
 ) {
@@ -231,7 +224,6 @@ private fun AccountCheckedList(
                     )
                     AccountNameWithCurrencyComposable(
                         account = account,
-                        appTheme = appTheme,
                         fontSize = 19.sp,
                         enabled = enabled
                     )
@@ -281,7 +273,6 @@ fun EditBudgetScreenPreview(
     ) { scaffoldPadding ->
         EditBudgetScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             budget = budgetUiState,
             accountList = accountList,
             categoriesWithSubcategories = categoriesWithSubcategories,

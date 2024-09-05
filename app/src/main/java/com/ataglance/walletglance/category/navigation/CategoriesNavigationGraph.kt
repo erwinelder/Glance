@@ -18,7 +18,6 @@ import com.ataglance.walletglance.category.presentation.screen.EditSubcategories
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesViewModelFactory
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -30,7 +29,7 @@ fun NavGraphBuilder.categoriesGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings,
+    isAppSetUp: Boolean,
     categoriesWithSubcategories: CategoriesWithSubcategories
 ) {
     navigation<SettingsScreens.Categories>(
@@ -60,8 +59,7 @@ fun NavGraphBuilder.categoriesGraph(
 
             EditCategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
-                isAppSetUp = appUiSettings.isSetUp,
+                isAppSetUp = isAppSetUp,
                 uiState = categoriesUiState,
                 onShowCategoriesByType = categoriesViewModel::changeCategoryTypeToShow,
                 onNavigateToEditSubcategoriesScreen = { categoryWithSubcategories ->
@@ -85,7 +83,7 @@ fun NavGraphBuilder.categoriesGraph(
                         appViewModel.saveCategoriesToDb(
                             categoriesViewModel.getAllCategoryEntities()
                         )
-                        if (appUiSettings.isSetUp) navController.popBackStack()
+                        if (isAppSetUp) navController.popBackStack()
                         else appViewModel.preFinishSetup()
                     }
                 }
@@ -103,7 +101,6 @@ fun NavGraphBuilder.categoriesGraph(
 
             EditSubcategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 categoryWithSubcategories = categoriesUiState.categoryWithSubcategories,
                 onSaveButton = {
                     categoriesViewModel.saveSubcategoryList()
@@ -135,7 +132,6 @@ fun NavGraphBuilder.categoriesGraph(
 
             EditCategoryScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 category = categoryUiState,
                 allowDeleting = allowDeleting,
                 allowSaving = allowSaving,

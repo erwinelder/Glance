@@ -28,14 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 
 @Composable
 fun CategoryStatisticsItemComponent(
     uiState: CategoryStatisticsElementUiState?,
-    appTheme: AppTheme?,
     showLeftArrow: Boolean = false,
     enableClick: Boolean? = null,
     onClick: () -> Unit = {}
@@ -75,12 +74,12 @@ fun CategoryStatisticsItemComponent(
                             .shadow(
                                 elevation = 8.dp,
                                 spotColor = uiState.categoryColor
-                                    .getCategoryIconSolidColorByTheme(appTheme),
+                                    .getCategoryIconSolidColorByTheme(CurrAppTheme),
                                 shape = RoundedCornerShape(30)
                             )
                             .clip(RoundedCornerShape(30))
                             .background(
-                                uiState.categoryColor.getCategoryIconSolidColorByTheme(appTheme)
+                                uiState.categoryColor.getCategoryIconSolidColorByTheme(CurrAppTheme)
                             )
                             .size(32.dp)
                             .padding(5.dp)
@@ -147,14 +146,14 @@ fun CategoryStatisticsItemComponent(
                             .shadow(
                                 elevation = 8.dp,
                                 spotColor = uiState.categoryColor
-                                    .getCategoryIconSolidColorByTheme(appTheme),
+                                    .getCategoryIconSolidColorByTheme(CurrAppTheme),
                                 shape = RoundedCornerShape(50)
                             )
                             .clip(RoundedCornerShape(50))
                             .background(
                                 brush = Brush.linearGradient(
                                     uiState.categoryColor
-                                        .getCategoryLineChartColorsByTheme(appTheme)
+                                        .getCategoryLineChartColorsByTheme(CurrAppTheme)
                                 )
                             )
                             .fillMaxWidth(uiState.percentage / 100f)

@@ -16,7 +16,6 @@ import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.Cate
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModelFactory
 import com.ataglance.walletglance.categoryCollection.utils.toCollectionsWithIds
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -27,7 +26,6 @@ fun NavGraphBuilder.categoryCollectionsGraph(
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
-    appTheme: AppTheme?,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType
 ) {
@@ -57,7 +55,6 @@ fun NavGraphBuilder.categoryCollectionsGraph(
             val coroutineScope = rememberCoroutineScope()
 
             EditCategoryCollectionsScreen(
-                appTheme = appTheme,
                 collectionWithCategoriesList = collectionListByType,
                 collectionType = categoryCollectionType,
                 onCategoryTypeChange = collectionsViewModel::changeCategoryType,
@@ -97,7 +94,6 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 .allowSaving.collectAsStateWithLifecycle()
 
             EditCategoryCollectionScreen(
-                appTheme = appTheme,
                 collection = collectionUiState,
                 editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,

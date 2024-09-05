@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -37,16 +36,16 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColors
-import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
-fun MediumAccountSetup(
+fun EditingAccountComponent(
     account: Account,
-    appTheme: AppTheme?,
     modifier: Modifier = Modifier,
     fontSize: Int = 20,
     roundedCornerSize: Dp = 18.dp,
@@ -56,7 +55,7 @@ fun MediumAccountSetup(
     onDownButtonClick: () -> Unit = {},
     downButtonEnabled: Boolean = false
 ) {
-    val accountBackgroundAndColor = account.color.getColorAndColorOnByTheme(appTheme)
+    val accountBackgroundAndColor = account.color.getColorAndColorOnByTheme(CurrAppTheme)
     val accountColor = accountBackgroundAndColor.first
     val onAccountColor = accountBackgroundAndColor.second
 
@@ -169,20 +168,13 @@ fun MediumAccountSetup(
 @Preview(showSystemUi = true)
 @Composable
 private fun MediumAccountSetupPreview() {
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = AppTheme.LightDefault.name,
-            boxWithConstraintsScope = this
-        ) {
-            MediumAccountSetup(
-                account = Account(
-                    balance = 516.41,
-                    name = "Main USD",
-                    color = AccountColors.Default.toAccountColorWithName()
-                ),
-                appTheme = AppTheme.LightDefault
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        EditingAccountComponent(
+            account = Account(
+                balance = 516.41,
+                name = "Main USD",
+                color = AccountColors.Default.toAccountColorWithName()
             )
-        }
+        )
     }
 }

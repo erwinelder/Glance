@@ -39,29 +39,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.core.presentation.components.buttons.CloseButton
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun CategoryPicker(
     visible: Boolean,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     type: CategoryType,
-    appTheme: AppTheme?,
     allowChoosingParentCategory: Boolean = false,
     onDismissRequest: () -> Unit,
     onCategoryChoose: (CategoryWithSubcategory) -> Unit
@@ -124,7 +123,7 @@ fun CategoryPicker(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CategoryListItem(categoryWithSubcategories.category, appTheme) {
+                    CategoryListItem(categoryWithSubcategories.category) {
                         if (
                             categoryWithSubcategories.subcategoryList.isNotEmpty() &&
                                 !allowChoosingParentCategory
@@ -212,7 +211,7 @@ fun CategoryPicker(
                         SmallDivider(color = GlanceTheme.outline.copy(.5f))
                     }
                     Row {
-                        CategoryListItem(category, appTheme) { subcategory ->
+                        CategoryListItem(category) { subcategory ->
                             chosenCategoryWithSubcategories?.category?.let { parentCategory ->
                                 onCategoryChoose(
                                     CategoryWithSubcategory(parentCategory, subcategory)
@@ -235,7 +234,6 @@ fun CategoryPicker(
 @Composable
 private fun RowScope.CategoryListItem(
     category: Category,
-    appTheme: AppTheme?,
     onClick: (Category) -> Unit
 ) {
     Box(
@@ -245,7 +243,6 @@ private fun RowScope.CategoryListItem(
     ) {
         RecordCategory(
             category = category,
-            appTheme = appTheme,
             iconSize = 30.dp,
             onClick = onClick
         )
@@ -256,16 +253,14 @@ private fun RowScope.CategoryListItem(
 @Preview
 @Composable
 private fun CategoryPickerPreview() {
-    val appTheme = AppTheme.LightDefault
     val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
         .getDefaultCategories()
 
-    PreviewContainer(appTheme = appTheme) {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
         CategoryPicker(
             visible = true,
             categoriesWithSubcategories = categoriesWithSubcategories,
             type = CategoryType.Expense,
-            appTheme = appTheme,
             allowChoosingParentCategory = true,
             onDismissRequest = {},
             onCategoryChoose = {}

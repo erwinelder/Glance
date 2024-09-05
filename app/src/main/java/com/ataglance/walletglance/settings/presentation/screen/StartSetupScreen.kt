@@ -42,7 +42,7 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun StartSetupScreen(
-    appTheme: AppTheme?,
+    isAppThemeSetUp: Boolean,
     onManualSetupButton: () -> Unit
 ) {
     Column(
@@ -51,7 +51,7 @@ fun StartSetupScreen(
             .fillMaxSize()
             .padding(top = 12.dp, bottom = 50.dp)
     ) {
-        StartAnimatedContainer(appTheme != null, 200) {
+        StartAnimatedContainer(isAppThemeSetUp, 200) {
             Text(
                 text = stringResource(R.string.app_name),
                 color = GlanceTheme.onBackground,
@@ -61,7 +61,7 @@ fun StartSetupScreen(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        StartAnimatedContainer(appTheme != null) {
+        StartAnimatedContainer(isAppThemeSetUp) {
             Text(
                 text = stringResource(R.string.hello) + "!",
                 color = GlanceTheme.onBackground,
@@ -74,12 +74,8 @@ fun StartSetupScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            StartAnimatedContainer(appTheme != null, 100) {
+            StartAnimatedContainer(isAppThemeSetUp, 100) {
                 StartButton(onManualSetupButton)
-                /*PrimaryButton(
-                    onClick = onManualSetupButton,
-                    text = stringResource(R.string.start_setup)
-                )*/
             }
         }
     }
@@ -152,7 +148,7 @@ fun StartSetupScreenPreview(
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     ) {
         StartSetupScreen(
-            appTheme = AppTheme.LightDefault,
+            isAppThemeSetUp = true,
             onManualSetupButton = {}
         )
     }

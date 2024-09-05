@@ -55,7 +55,6 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 
 @Composable
 fun EditCategoryCollectionScreen(
-    appTheme: AppTheme?,
     collection: CategoryCollectionWithCategories,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
@@ -78,7 +77,6 @@ fun EditCategoryCollectionScreen(
         } else null,
         glassSurfaceContent = {
             GlassSurfaceContent(
-                appTheme = appTheme,
                 collection = collection,
                 editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,
@@ -99,7 +97,6 @@ fun EditCategoryCollectionScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     collection: CategoryCollectionWithCategories,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
@@ -125,14 +122,12 @@ private fun GlassSurfaceContent(
             labelText = stringResource(R.string.name)
         )
         ParentCategoriesLists(
-            appTheme = appTheme,
             editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
             expandedCategory = expandedCategory,
             onCheckedChange = onCheckedChange,
             onExpandedChange = onExpandedChange
         )
         SubcategoriesList(
-            appTheme = appTheme,
             expandedCategory = expandedCategory,
             onCheckedChange = onCheckedChange,
             onExpandedChange = onExpandedChange
@@ -142,7 +137,6 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun ParentCategoriesLists(
-    appTheme: AppTheme?,
     editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
     expandedCategory: EditingCategoryWithSubcategories?,
     onCheckedChange: (Category) -> Unit,
@@ -165,14 +159,12 @@ private fun ParentCategoriesLists(
             modifier = Modifier.fillMaxWidth()
         ) {
             categoryListItems(
-                appTheme = appTheme,
                 list = editingCategoriesWithSubcategories.expense,
                 listType = CategoryType.Expense,
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
             )
             categoryListItems(
-                appTheme = appTheme,
                 list = editingCategoriesWithSubcategories.income,
                 listType = CategoryType.Income,
                 onCheckedChange = onCheckedChange,
@@ -184,7 +176,6 @@ private fun ParentCategoriesLists(
 
 @Composable
 private fun SubcategoriesList(
-    appTheme: AppTheme?,
     expandedCategory: EditingCategoryWithSubcategories?,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
@@ -202,7 +193,6 @@ private fun SubcategoriesList(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CollectionCategoryItem(
-                    appTheme = appTheme,
                     category = expandedCategory.category,
                     checked = expandedCategory.checked,
                     expanded = expandedCategory.expanded,
@@ -228,7 +218,6 @@ private fun SubcategoriesList(
                         key = { it.category.id }
                     ) { item ->
                         CollectionSubcategoryItem(
-                            appTheme = appTheme,
                             checkedCategory = item,
                             onCheckedChange = {
                                 onCheckedChange(item.category)
@@ -242,7 +231,6 @@ private fun SubcategoriesList(
 }
 
 private fun LazyListScope.categoryListItems(
-    appTheme: AppTheme?,
     list: List<EditingCategoryWithSubcategories>,
     listType: CategoryType,
     onCheckedChange: (Category) -> Unit,
@@ -262,7 +250,6 @@ private fun LazyListScope.categoryListItems(
         key = { it.category.id }
     ) { item ->
         CollectionCategoryItem(
-            appTheme = appTheme,
             category = item.category,
             checked = item.checked,
             expanded = item.expanded.takeIf { item.subcategoryList.isNotEmpty() },
@@ -278,7 +265,6 @@ private fun LazyListScope.categoryListItems(
 
 @Composable
 private fun CollectionCategoryItem(
-    appTheme: AppTheme?,
     category: Category,
     checked: Boolean?,
     expanded: Boolean?,
@@ -295,7 +281,6 @@ private fun CollectionCategoryItem(
         Spacer(modifier = Modifier.size(10.dp, 48.dp))
         RecordCategory(
             category = category,
-            appTheme = appTheme,
             iconSize = 32.dp,
             fontSize = 20.sp
         )
@@ -317,7 +302,6 @@ private fun CollectionCategoryItem(
 
 @Composable
 private fun CollectionSubcategoryItem(
-    appTheme: AppTheme?,
     checkedCategory: CheckedCategory,
     onCheckedChange: () -> Unit
 ) {
@@ -331,7 +315,6 @@ private fun CollectionSubcategoryItem(
         Spacer(modifier = Modifier.width(8.dp))
         RecordCategory(
             category = checkedCategory.category,
-            appTheme = appTheme,
             iconSize = 28.dp,
             fontSize = 21.sp
         )
@@ -368,7 +351,6 @@ fun EditCategoryCollectionScreenPreview(
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     ) {
         EditCategoryCollectionScreen(
-            appTheme = appTheme,
             collection = collection,
             editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
             expandedCategory = null,

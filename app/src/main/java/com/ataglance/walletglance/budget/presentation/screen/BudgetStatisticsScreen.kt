@@ -41,6 +41,7 @@ import com.ataglance.walletglance.category.presentation.components.CategoryBigIc
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
@@ -53,7 +54,6 @@ import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
 
 @Composable
 fun BudgetStatisticsScreen(
-    appTheme: AppTheme?,
     budget: Budget,
     columnChartUiState: ColumnChartUiState,
     budgetAccounts: List<Account>,
@@ -84,7 +84,7 @@ fun BudgetStatisticsScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     budget.category?.let {
-                        CategoryBigIconComponent(category = it, appTheme = appTheme)
+                        CategoryBigIconComponent(category = it)
                     }
                     Text(
                         text = budget.name,
@@ -104,14 +104,14 @@ fun BudgetStatisticsScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
-                    AccountsFlowRow(accountList = budgetAccounts, appTheme = appTheme, maxLines = 5)
+                    AccountsFlowRow(accountList = budgetAccounts, maxLines = 5)
                 }
             }
             item { Spacer(modifier = Modifier.height(verticalGap)) }
             item {
                 GlanceColumnChart(
                     uiState = columnChartUiState,
-                    columnsColor = budget.category?.getColorByTheme(appTheme)?.lighter,
+                    columnsColor = budget.category?.getColorByTheme(CurrAppTheme)?.lighter,
                     title = stringResource(
                         id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
                     ),
@@ -248,9 +248,8 @@ fun BudgetStatisticsScreenPreview(
         context = context
     )
 
-    PreviewContainer(appTheme) {
+    PreviewContainer(appTheme = appTheme) {
         BudgetStatisticsScreen(
-            appTheme = appTheme,
             budget = budget,
             columnChartUiState = columnChartUiState,
             budgetAccounts = accountList,

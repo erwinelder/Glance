@@ -17,7 +17,6 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewMo
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModelFactory
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -29,7 +28,6 @@ fun NavGraphBuilder.budgetsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings,
     budgetsByType: BudgetsByType,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories
@@ -52,7 +50,6 @@ fun NavGraphBuilder.budgetsGraph(
 
             EditBudgetsScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 budgetsByType = budgetsByTypeState,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
                     editBudgetViewModel.applyBudget(
@@ -85,7 +82,6 @@ fun NavGraphBuilder.budgetsGraph(
 
             EditBudgetScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 budget = budgetUiState,
                 accountList = accountList,
                 categoriesWithSubcategories = categoriesWithSubcategories,

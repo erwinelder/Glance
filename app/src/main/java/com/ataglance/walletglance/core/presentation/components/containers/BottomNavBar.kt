@@ -10,12 +10,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
 import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
 
 @Composable
 fun BottomNavBar(
-    appTheme: AppTheme?,
     isVisible: Boolean,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     currentScreenIsScreenProvider: (Any) -> Boolean,
@@ -33,7 +32,6 @@ fun BottomNavBar(
     }
 
     GlanceBottomNavBar(
-        appTheme = appTheme,
         isVisible = isVisible,
         anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
         currentScreenIsScreenProvider = currentScreenIsScreenProvider,
@@ -49,7 +47,6 @@ fun BottomNavBar(
 @Preview
 @Composable
 private fun BottomNavBarPreview() {
-    val appTheme = AppTheme.LightDefault
     val barButtons = listOf(
         BottomBarNavigationButtons.Home,
         BottomBarNavigationButtons.Records,
@@ -58,13 +55,12 @@ private fun BottomNavBarPreview() {
         BottomBarNavigationButtons.Settings
     )
 
-    PreviewContainer(appTheme = appTheme) {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
         Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier.fillMaxSize()
         ) {
             BottomNavBar(
-                appTheme = appTheme,
                 isVisible = true,
                 anyScreenInHierarchyIsScreenProvider = { false },
                 currentScreenIsScreenProvider = { false },

@@ -2,14 +2,11 @@ package com.ataglance.walletglance.account.presentation.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -24,9 +21,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,21 +31,22 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColors
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import java.util.Locale
 
 @Composable
 fun AccountCard(
     account: Account,
-    appTheme: AppTheme?,
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
 ) {
-    val accountAndOnAccountColor = account.color.getColorAndColorOnByTheme(appTheme)
+    val accountAndOnAccountColor = account.color.getColorAndColorOnByTheme(CurrAppTheme)
     val accountColorLighter by animateColorAsState(
         targetValue = accountAndOnAccountColor.first.lighter,
         label = "account background lighter"
@@ -223,22 +219,12 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
 @Preview(showSystemUi = true)
 @Composable
 private fun AccountCardPreview() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(R.drawable.main_background_dark),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
+    PreviewContainer(appTheme = AppTheme.DarkDefault) {
         AccountCard(
             account = Account(
                 color = AccountColors.Blue.toAccountColorWithName(),
                 withoutBalance = true
             ),
-            appTheme = AppTheme.DarkDefault,
             todayExpenses = 0.0
         )
     }

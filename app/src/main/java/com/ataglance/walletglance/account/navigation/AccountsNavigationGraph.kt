@@ -51,7 +51,6 @@ fun NavGraphBuilder.accountsGraph(
             EditAccountsScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
-                appTheme = appUiSettings.appTheme,
                 accountList = accountsList,
                 onNavigateToEditAccountScreen = { account ->
                     editAccountViewModel.applyAccountData(
@@ -90,7 +89,6 @@ fun NavGraphBuilder.accountsGraph(
 
             EditAccountScreen(
                 scaffoldPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 editAccountUiState = accountUiState,
                 allowDeleting = allowDeleting,
                 allowSaving = allowSaving,

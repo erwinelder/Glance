@@ -23,15 +23,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
-fun ParentCategorySetupElement(
+fun EditingParentCategoryComponent(
     category: Category,
-    appTheme: AppTheme?,
     onNavigateToEditSubcategoryListScreen: (Int) -> Unit,
     onEditButton: (Int) -> Unit,
     onUpButtonClick: () -> Unit,
@@ -66,7 +64,7 @@ fun ParentCategorySetupElement(
                 onNavigateToEditSubcategoryListScreen(category.orderNum)
             }
         ) {
-            CategoryIconComponent(category, appTheme)
+            CategoryIconComponent(category)
             Text(
                 text = category.name,
                 color = GlanceTheme.onSurface,

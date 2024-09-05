@@ -48,9 +48,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
@@ -62,7 +62,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GlanceBottomNavBar(
-    appTheme: AppTheme?,
     isVisible: Boolean,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     currentScreenIsScreenProvider: (Any) -> Boolean,
@@ -101,7 +100,6 @@ fun GlanceBottomNavBar(
     ) {
         Column(horizontalAlignment = Alignment.End) {
             PopupButtonsList(
-                appTheme = appTheme,
                 isExpanded = isExpanded,
                 onIsExpandedToggle = { isExpanded = !isExpanded },
                 anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
@@ -109,7 +107,6 @@ fun GlanceBottomNavBar(
                 barButtons = popupListBarButtons
             )
             BottomBarButtonsRow(
-                appTheme = appTheme,
                 onIsExpandedToggle = { isExpanded = !isExpanded },
                 anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
                 onButtonClick = onButtonClick,
@@ -157,11 +154,11 @@ private fun BottomBarContainer(
 }
 
 @Composable
-private fun ExpandBottomBarButton(appTheme: AppTheme?, onClick: () -> Unit) {
+private fun ExpandBottomBarButton(onClick: () -> Unit) {
     val iconRes = DrawableResByTheme(
         lightDefault = R.drawable.show_other_light,
         darkDefault = R.drawable.show_other_dark
-    ).getByTheme(appTheme)
+    ).getByTheme(CurrAppTheme)
 
     Image(
         painter = painterResource(iconRes),
@@ -174,7 +171,6 @@ private fun ExpandBottomBarButton(appTheme: AppTheme?, onClick: () -> Unit) {
 
 @Composable
 private fun BottomBarButtonsRow(
-    appTheme: AppTheme?,
     onIsExpandedToggle: () -> Unit,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onButtonClick: (MainScreens) -> Unit,
@@ -213,7 +209,6 @@ private fun BottomBarButtonsRow(
             ButtonsSpacerGap()
             if (button != null) {
                 BottomBarButton(
-                    appTheme = appTheme,
                     button = button,
                     anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
                     onClick = onButtonClick
@@ -226,7 +221,7 @@ private fun BottomBarButtonsRow(
             }
         }
         if (buttonListSize == 4) {
-            ExpandBottomBarButton(appTheme = appTheme, onIsExpandedToggle)
+            ExpandBottomBarButton(onIsExpandedToggle)
             ButtonsSpacerGap()
         }
     }
@@ -234,7 +229,6 @@ private fun BottomBarButtonsRow(
 
 @Composable
 private fun PopupButtonsList(
-    appTheme: AppTheme?,
     isExpanded: Boolean,
     onIsExpandedToggle: () -> Unit,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
@@ -275,7 +269,6 @@ private fun PopupButtonsList(
                 ) {
                     barButtons.forEach { button ->
                         ListBarButton(
-                            appTheme = appTheme,
                             button = button,
                             anyScreenInHierarchyIsScreenProvider =
                             anyScreenInHierarchyIsScreenProvider,
@@ -299,7 +292,6 @@ private fun RowScope.ButtonsSpacerGap() {
 
 @Composable
 private fun BottomBarButton(
-    appTheme: AppTheme?,
     button: BottomBarNavigationButtons,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onClick: (MainScreens) -> Unit
@@ -311,7 +303,7 @@ private fun BottomBarButton(
         label = "bottom bar ${button.screen} icon"
     ) { buttonIconRes ->
         Image(
-            painter = painterResource(buttonIconRes.getByTheme(appTheme)),
+            painter = painterResource(buttonIconRes.getByTheme(CurrAppTheme)),
             contentDescription = "bottom bar ${button.screen} icon",
             modifier = Modifier
                 .bounceClickEffect {
@@ -324,7 +316,6 @@ private fun BottomBarButton(
 
 @Composable
 private fun ListBarButton(
-    appTheme: AppTheme?,
     button: BottomBarNavigationButtons,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onClick: (MainScreens) -> Unit
@@ -351,7 +342,7 @@ private fun ListBarButton(
                 }
         ) {
             Image(
-                painter = painterResource(buttonIconRes.getByTheme(appTheme)),
+                painter = painterResource(buttonIconRes.getByTheme(CurrAppTheme)),
                 contentDescription = "bottom bar ${button.screen} icon",
                 modifier = Modifier.size(36.dp)
             )

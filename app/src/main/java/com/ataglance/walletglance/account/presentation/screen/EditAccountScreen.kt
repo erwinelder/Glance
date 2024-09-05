@@ -41,6 +41,7 @@ import com.ataglance.walletglance.account.domain.EditAccountUiState
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
@@ -56,7 +57,6 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 @Composable
 fun EditAccountScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     editAccountUiState: EditAccountUiState,
     allowDeleting: Boolean,
     allowSaving: Boolean,
@@ -89,7 +89,6 @@ fun EditAccountScreen(
             glassSurfaceContent = {
                 GlassSurfaceContent(
                     uiState = editAccountUiState,
-                    appTheme = appTheme,
                     onColorButtonClick = { showColorPicker = true },
                     onNameChange = onNameChange,
                     onNavigateToEditAccountCurrencyScreen = onNavigateToEditAccountCurrencyScreen,
@@ -109,7 +108,7 @@ fun EditAccountScreen(
         )
         ColorPicker(
             visible = showColorPicker,
-            colorList = AccountPossibleColors().asColorWithNameList(appTheme),
+            colorList = AccountPossibleColors().asColorWithNameList(CurrAppTheme),
             onColorClick = onColorChange,
             onPickerClose = {
                 showColorPicker = false
@@ -121,7 +120,6 @@ fun EditAccountScreen(
 @Composable
 private fun GlassSurfaceContent(
     uiState: EditAccountUiState,
-    appTheme: AppTheme?,
     onColorButtonClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onNavigateToEditAccountCurrencyScreen: () -> Unit,
@@ -141,7 +139,7 @@ private fun GlassSurfaceContent(
             .padding(horizontal = 12.dp, vertical = 24.dp)
     ) {
         ColorButton(
-            color = uiState.color.getColorAndColorOnByTheme(appTheme).first.lighter,
+            color = uiState.color.getColorAndColorOnByTheme(CurrAppTheme).first.lighter,
             onClick = onColorButtonClick
         )
         Spacer(modifier = Modifier.height(verticalGap))
@@ -244,7 +242,6 @@ fun EditAccountScreenPreview(
     ) { scaffoldPadding ->
         EditAccountScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             editAccountUiState = editAccountUiState,
             allowDeleting = allowDeleting,
             allowSaving = editAccountUiState.allowSaving(),

@@ -31,7 +31,6 @@ import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 @Composable
 fun EditBudgetsScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     budgetsByType: BudgetsByType,
     onNavigateToEditBudgetScreen: (Budget?) -> Unit,
     onSaveBudgetsButton: () -> Unit,
@@ -40,7 +39,6 @@ fun EditBudgetsScreen(
         topPadding = scaffoldPadding.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                appTheme = appTheme,
                 budgetsByType = budgetsByType,
                 onBudgetClick = onNavigateToEditBudgetScreen,
             )
@@ -64,7 +62,6 @@ fun EditBudgetsScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     budgetsByType: BudgetsByType,
     onBudgetClick: (Budget?) -> Unit,
 ) {
@@ -73,7 +70,6 @@ private fun GlassSurfaceContent(
     } else {
         BudgetListsByPeriodComponent(budgetsByType) { budget ->
             EditingBudgetComponent(
-                appTheme = appTheme,
                 budget = budget,
                 onClick = onBudgetClick
             )
@@ -173,7 +169,6 @@ fun EditBudgetsScreenPreview(
     ) { scaffoldPadding ->
         EditBudgetsScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             budgetsByType = budgetsByType,
             onNavigateToEditBudgetScreen = {},
             onSaveBudgetsButton = {}

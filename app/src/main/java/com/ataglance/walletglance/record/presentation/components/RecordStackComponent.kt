@@ -12,7 +12,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
@@ -20,7 +19,6 @@ import com.ataglance.walletglance.record.domain.RecordStack
 
 @Composable
 fun RecordStackComponent(
-    appTheme: AppTheme?,
     recordStack: RecordStack,
     includeYearToDate: Boolean,
     onRecordClick: (Int) -> Unit
@@ -59,8 +57,7 @@ fun RecordStackComponent(
                     RecordCategory(
                         category = recordStackUnit.let {
                             it.categoryWithSubcategory?.getSubcategoryOrCategory()
-                        },
-                        appTheme = appTheme
+                        }
                     )
                 }
             }

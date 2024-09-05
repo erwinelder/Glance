@@ -21,13 +21,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun CategoryField(
-    appTheme: AppTheme?,
     category: Category?,
     fontSize: TextUnit = 20.sp,
     cornerSize: Dp = 15.dp,
@@ -53,7 +52,7 @@ fun CategoryField(
                         shape = RoundedCornerShape(
                             (cornerSize - 2.dp).takeIf { it >= 0.dp } ?: 0.dp
                         ),
-                        spotColor = category.colorWithName.color.getByTheme(appTheme).darker
+                        spotColor = category.colorWithName.color.getByTheme(CurrAppTheme).darker
                     )
                     .clip(
                         RoundedCornerShape(
@@ -61,7 +60,7 @@ fun CategoryField(
                         )
                     )
                     .size(38.dp)
-                    .background(category.colorWithName.color.getByTheme(appTheme).darker)
+                    .background(category.colorWithName.color.getByTheme(CurrAppTheme).darker)
                     .padding(6.dp)
             )
         }

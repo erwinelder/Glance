@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
@@ -45,7 +47,6 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
@@ -53,10 +54,10 @@ import com.ataglance.walletglance.settings.navigation.SettingsScreens
 @Composable
 fun SettingsHomeScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     onNavigateToScreen: (SettingsScreens) -> Unit
 ) {
-    val settingsCategories = remember {
+    val appTheme = CurrAppTheme
+    val settingsCategories = remember(appTheme) {
         SettingsCategories(appTheme).let {
             listOf(
                 it.accounts,
@@ -239,7 +240,6 @@ fun SettingsHomeScreenPreview(
     ) { scaffoldPadding ->
         SettingsHomeScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             onNavigateToScreen = {}
         )
     }

@@ -69,7 +69,6 @@ fun MainAppContent(
 
     Box {
         MainScaffold(
-            appTheme = appUiSettings.appTheme,
             setupProgressTopBarUiState = setupProgressTopBarUiState,
             isBottomBarVisible = isBottomBarVisible,
             anyScreenInHierarchyIsScreenProvider = navBackStackEntry::anyScreenInHierarchyIs,
@@ -126,6 +125,6 @@ fun MainAppContent(
                 onCustomDateRangeSelect = appViewModel::selectCustomDateRange
             )
         }
-        DimmedBackgroundOverlay(visible = dimBackground, appTheme = appUiSettings.appTheme)
+        DimmedBackgroundOverlay(visible = dimBackground)
     }
 }

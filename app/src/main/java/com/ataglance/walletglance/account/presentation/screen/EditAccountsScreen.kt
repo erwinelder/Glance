@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.presentation.components.MediumAccountSetup
+import com.ataglance.walletglance.account.presentation.components.EditingAccountComponent
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
@@ -37,7 +37,6 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 fun EditAccountsScreen(
     scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
-    appTheme: AppTheme?,
     accountList: List<Account>,
     onNavigateToEditAccountScreen: (Account?) -> Unit,
     onSwapAccounts: (Int, Int) -> Unit,
@@ -48,7 +47,6 @@ fun EditAccountsScreen(
         glassSurfaceContent = {
             GlassSurfaceContent(
                 accountsList = accountList,
-                appTheme = appTheme,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onSwapAccounts = onSwapAccounts
             )
@@ -72,7 +70,6 @@ fun EditAccountsScreen(
 @Composable
 private fun GlassSurfaceContent(
     accountsList: List<Account>,
-    appTheme: AppTheme?,
     onNavigateToEditAccountScreen: (Account) -> Unit,
     onSwapAccounts: (Int, Int) -> Unit
 ) {
@@ -83,14 +80,12 @@ private fun GlassSurfaceContent(
         if (!WindowTypeIsExpanded) {
             CompactLayout(
                 accountsList = targetList,
-                appTheme = appTheme,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onSwapAccounts = onSwapAccounts
             )
         } else {
             ExpandedLayout(
                 accountsList = targetList,
-                appTheme = appTheme,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onSwapAccounts = onSwapAccounts
             )
@@ -101,7 +96,6 @@ private fun GlassSurfaceContent(
 @Composable
 private fun CompactLayout(
     accountsList: List<Account>,
-    appTheme: AppTheme?,
     onNavigateToEditAccountScreen: (Account) -> Unit,
     onSwapAccounts: (Int, Int) -> Unit
 ) {
@@ -119,9 +113,8 @@ private fun CompactLayout(
             items = accountsList,
             key = { it.orderNum }
         ) { account ->
-            MediumAccountSetup(
+            EditingAccountComponent(
                 account = account,
-                appTheme = appTheme,
                 onAccountClick = onNavigateToEditAccountScreen,
                 upButtonEnabled = account.orderNum > 1,
                 onUpButtonClick = { onSwapAccounts(account.orderNum, account.orderNum - 1) },
@@ -136,11 +129,11 @@ private fun CompactLayout(
 @Composable
 private fun ExpandedLayout(
     accountsList: List<Account>,
-    appTheme: AppTheme?,
     onNavigateToEditAccountScreen: (Account) -> Unit,
     onSwapAccounts: (Int, Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
+
     FlowRow(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -150,9 +143,8 @@ private fun ExpandedLayout(
     ) {
         accountsList.forEach { account ->
             Box(modifier = Modifier.padding(9.dp)) {
-                MediumAccountSetup(
+                EditingAccountComponent(
                     account = account,
-                    appTheme = appTheme,
                     onAccountClick = onNavigateToEditAccountScreen,
                     upButtonEnabled = account.orderNum > 1,
                     onUpButtonClick = { onSwapAccounts(account.orderNum, account.orderNum - 1) },
@@ -200,7 +192,6 @@ fun EditAccountsScreenPreview(
         EditAccountsScreen(
             scaffoldPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,
-            appTheme = appTheme,
             accountList = accountList,
             onNavigateToEditAccountScreen = {},
             onSwapAccounts = { _, _ -> },

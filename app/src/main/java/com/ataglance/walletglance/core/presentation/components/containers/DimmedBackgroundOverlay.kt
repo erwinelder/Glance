@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 
 @Composable
-fun DimmedBackgroundOverlay(visible: Boolean, appTheme: AppTheme?) {
+fun DimmedBackgroundOverlay(visible: Boolean) {
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(tween(300)),
@@ -24,10 +25,9 @@ fun DimmedBackgroundOverlay(visible: Boolean, appTheme: AppTheme?) {
                 .fillMaxSize()
                 .background(
                     Color.Black.copy(
-                        when (appTheme) {
+                        when (CurrAppTheme) {
                             AppTheme.LightDefault -> .2f
                             AppTheme.DarkDefault -> .4f
-                            else -> .0f
                         }
                     )
                 )

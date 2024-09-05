@@ -27,7 +27,6 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.components.AccountsFilterBar
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionPickerContainer
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.components.containers.DateFilterBar
@@ -37,7 +36,6 @@ import com.ataglance.walletglance.core.presentation.components.containers.Messag
 @Composable
 fun <S> GlassSurfaceContainerWithFilterBars(
     screenPadding: PaddingValues,
-    appTheme: AppTheme?,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
@@ -75,7 +73,6 @@ fun <S> GlassSurfaceContainerWithFilterBars(
         if (visibleAccounts.size > 1) {
             AccountsFilterBar(
                 visibleAccounts = visibleAccounts,
-                appTheme = appTheme,
                 onAccountClick = onAccountClick
             )
         }

@@ -29,14 +29,14 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun AccountNameWithCurrencyComposable(
     account: Account?,
-    appTheme: AppTheme?,
     fontSize: TextUnit = 21.sp,
     roundedCornerSize: Dp = 14.dp,
     horizontalPadding: Dp = 9.dp,
@@ -46,7 +46,7 @@ fun AccountNameWithCurrencyComposable(
     onClick: (() -> Unit)? = null
 ) {
     val accountAndOnAccountColor = account?.let {
-        account.color.getColorAndColorOnByTheme(appTheme)
+        account.color.getColorAndColorOnByTheme(CurrAppTheme)
     } ?: Pair(LighterDarkerColors(), Color.White)
     val transparency by animateFloatAsState(
         targetValue = if (!enabled && account != null) 0.5f else 1f,
@@ -110,10 +110,7 @@ fun AccountNameWithCurrencyComposable(
                     modifier = Modifier
                         .clip(RoundedCornerShape(roundedCornerSize))
                         .background(
-                            if (
-                                appTheme != null &&
-                                account?.color?.name == AccountColors.Default.name
-                            ) {
+                            if (account?.color?.name == AccountColors.Default.name) {
                                 GlanceTheme.background.copy(.07f)
                             } else {
                                 Color.White.copy(.09f)
@@ -132,9 +129,7 @@ fun AccountNameWithCurrencyComposable(
 @Preview(showSystemUi = false)
 @Composable
 private fun AccountNameWithCurrencyComposablePreview() {
-    val appTheme = AppTheme.LightDefault
-
-    PreviewContainer {
-        AccountNameWithCurrencyComposable(Account(balance = 516.41), appTheme = appTheme)
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        AccountNameWithCurrencyComposable(Account(balance = 516.41))
     }
 }

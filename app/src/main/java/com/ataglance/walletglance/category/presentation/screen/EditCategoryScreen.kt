@@ -39,6 +39,7 @@ import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
 import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
@@ -52,7 +53,6 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 @Composable
 fun EditCategoryScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     category: Category,
     allowDeleting: Boolean,
     allowSaving: Boolean,
@@ -83,7 +83,6 @@ fun EditCategoryScreen(
             } else null,
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    appTheme = appTheme,
                     category = category,
                     onNameChange = onNameChange,
                     onIconChange = onIconChange,
@@ -101,7 +100,7 @@ fun EditCategoryScreen(
         )
         ColorPicker(
             visible = showColorPicker,
-            colorList = CategoryPossibleColors().asColorWithNameList(appTheme),
+            colorList = CategoryPossibleColors().asColorWithNameList(CurrAppTheme),
             onColorClick = onCategoryColorChange,
             onPickerClose = {
                 showColorPicker = false
@@ -112,7 +111,6 @@ fun EditCategoryScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     category: Category,
     onNameChange: (String) -> Unit,
     onIconChange: (CategoryIcon) -> Unit,
@@ -135,7 +133,7 @@ private fun GlassSurfaceContent(
         )
         if (category.isParentCategory()) {
             ColorButton(
-                color = category.getColorByTheme(appTheme).darker,
+                color = category.getColorByTheme(CurrAppTheme).darker,
                 onClick = onColorButtonClick
             )
         }
@@ -206,7 +204,6 @@ fun EditCategoryScreenPreview(
     ) { scaffoldPadding ->
         EditCategoryScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             category = category,
             allowDeleting = false,
             allowSaving = category.allowSaving(),

@@ -16,13 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
-import com.ataglance.walletglance.core.domain.app.AppTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AccountsFlowRow(
     accountList: List<Account>,
-    appTheme: AppTheme?,
     maxLines: Int = Int.MAX_VALUE,
     fontSize: TextUnit = 18.sp
 ) {
@@ -37,7 +35,6 @@ fun AccountsFlowRow(
         accountList.forEach { account ->
             SmallAccount(
                 account = account,
-                appTheme = appTheme,
                 fontSize = fontSize,
                 roundedCornerSize = 12.dp,
                 outerPadding = PaddingValues(2.dp),

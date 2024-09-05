@@ -46,7 +46,6 @@ import com.ataglance.walletglance.recordCreation.presentation.components.RecordC
 
 @Composable
 fun TransferCreationScreen(
-    appTheme: AppTheme?,
     transferDraft: TransferDraft,
     accountList: List<Account>,
     onNavigateBack: () -> Unit,
@@ -76,7 +75,6 @@ fun TransferCreationScreen(
             },
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    appTheme = appTheme,
                     transferDraft = transferDraft,
                     onDateFieldClick = { showDatePicker = true },
                     onAccountFieldClick = { isSender: Boolean ->
@@ -128,7 +126,6 @@ fun TransferCreationScreen(
         AccountPicker(
             visible = showSenderAccountPicker || showReceiverAccountPicker,
             accountList = accountList,
-            appTheme = appTheme,
             onDismissRequest = {
                 if (showSenderAccountPicker) {
                     showSenderAccountPicker = false
@@ -146,7 +143,6 @@ fun TransferCreationScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     transferDraft: TransferDraft,
     onDateFieldClick: () -> Unit,
     onAccountFieldClick: (Boolean) -> Unit,
@@ -173,7 +169,7 @@ private fun GlassSurfaceContent(
                 targetState = transferDraft.sender.account,
                 label = "sender account field at the transfer creation screen"
             ) { targetAccount ->
-                SmallAccount(account = targetAccount, appTheme = appTheme) {
+                SmallAccount(account = targetAccount) {
                     onAccountFieldClick(true)
                 }
             }
@@ -183,7 +179,7 @@ private fun GlassSurfaceContent(
                 targetState = transferDraft.receiver.account,
                 label = "receiver account field at the transfer creation screen"
             ) { targetAccount ->
-                SmallAccount(account = targetAccount, appTheme = appTheme) {
+                SmallAccount(account = targetAccount) {
                     onAccountFieldClick(false)
                 }
             }
@@ -262,7 +258,6 @@ fun TransferCreationScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         TransferCreationScreen(
-            appTheme = appTheme,
             transferDraft = transferDraft,
             accountList = accountList,
             onNavigateBack = {},

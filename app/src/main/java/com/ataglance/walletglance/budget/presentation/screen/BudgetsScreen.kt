@@ -27,19 +27,18 @@ import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 @Composable
 fun BudgetsScreen(
     screenPadding: PaddingValues,
-    appTheme: AppTheme?,
     budgetsByType: BudgetsByType,
     onBudgetClick: (Budget) -> Unit
 ) {
@@ -59,7 +58,7 @@ fun BudgetsScreen(
                 )
             } else {
                 BudgetListsByPeriodComponent(budgetsByType) { budget ->
-                    BudgetComponent(appTheme = appTheme, budget = budget, onClick = onBudgetClick)
+                    BudgetComponent(budget = budget, onClick = onBudgetClick)
                 }
             }
         }
@@ -164,7 +163,6 @@ fun BudgetsScreenPreview(
     ) { scaffoldPadding ->
         BudgetsScreen(
             screenPadding = scaffoldPadding,
-            appTheme = appTheme,
             budgetsByType = budgetsByType,
             onBudgetClick = {}
         )

@@ -34,6 +34,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
@@ -45,7 +46,6 @@ import com.ataglance.walletglance.core.presentation.components.widgets.RecordHis
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -56,7 +56,7 @@ import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
 @Composable
 fun HomeScreen(
     scaffoldAppScreenPadding: PaddingValues,
-    appTheme: AppTheme?,
+    isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
     widgetsUiState: WidgetsUiState,
@@ -69,13 +69,12 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            StartAnimatedContainer(appTheme != null) {
+            StartAnimatedContainer(visible = isAppThemeSetUp) {
                 AppMainTopBar(
                     accountList = accountsUiState.accountList,
                     currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
-                    appTheme = appTheme,
                     onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                     onAccountClick = onTopBarAccountClick
                 )
@@ -86,7 +85,7 @@ fun HomeScreen(
         CompactLayout(
             scaffoldAppScreenPadding = scaffoldAppScreenPadding,
             scaffoldHomeScreenPadding = scaffoldHomeScreenPadding,
-            appTheme = appTheme,
+            isAppThemeSetUp = isAppThemeSetUp,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
             widgetsUiState = widgetsUiState,
@@ -100,7 +99,7 @@ fun HomeScreen(
 private fun CompactLayout(
     scaffoldAppScreenPadding: PaddingValues,
     scaffoldHomeScreenPadding: PaddingValues,
-    appTheme: AppTheme?,
+    isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
     widgetsUiState: WidgetsUiState,
@@ -124,25 +123,24 @@ private fun CompactLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            StartAnimatedContainer(visible = appTheme != null, delayMillis = 50) {
+            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 50) {
                 GreetingsMessage(widgetsUiState.greetings.titleRes)
             }
         }
         item {
             StartAnimatedContainer(
-                visible = appTheme != null && accountsUiState.activeAccount != null,
+                visible = isAppThemeSetUp && accountsUiState.activeAccount != null,
                 delayMillis = 100
             ) {
                 AccountCard(
                     account = accountsUiState.activeAccount!!,
-                    appTheme = appTheme,
                     todayExpenses = widgetsUiState.greetings.todayExpensesByActiveAccount,
                     onHideBalanceButton = onChangeHideActiveAccountBalance
                 )
             }
         }
         item {
-            StartAnimatedContainer(visible = appTheme != null, delayMillis = 150) {
+            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncomeState,
                     dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
@@ -151,7 +149,7 @@ private fun CompactLayout(
             }
         }
         item {
-            StartAnimatedContainer(visible = appTheme != null, delayMillis = 200) {
+            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 200) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -159,7 +157,6 @@ private fun CompactLayout(
                     RecordHistoryWidget(
                         recordStackList = widgetsUiState.recordsFilteredByDateAndAccount.take(3),
                         accountList = accountsUiState.accountList,
-                        appTheme = appTheme,
                         isCustomDateRange =
                             dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
                         onRecordClick = { recordNum: Int ->
@@ -183,14 +180,13 @@ private fun CompactLayout(
             }
         }
         item {
-            StartAnimatedContainer(visible = appTheme != null, delayMillis = 250) {
+            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 250) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     CategoriesStatisticsWidget(
                         categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
-                        appTheme = appTheme,
                         onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
                             onNavigateToScreenMovingTowardsLeft(
                                 MainScreens.CategoryStatistics(parentCategoryId)
@@ -210,7 +206,7 @@ private fun CompactLayout(
 private fun ExpandedLayout(
     scaffoldAppScreenPadding: PaddingValues,
     scaffoldHomeScreenPadding: PaddingValues,
-    appTheme: AppTheme?,
+    isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
     filteredRecordStackList: List<RecordStack>,
@@ -245,22 +241,21 @@ private fun ExpandedLayout(
             Column(
                 modifier = Modifier.fillMaxWidth(.42f)
             ) {
-                StartAnimatedContainer(appTheme != null, 50) {
+                StartAnimatedContainer(isAppThemeSetUp, 50) {
                     GreetingsMessage(widgetsUiState.greetings.titleRes)
                 }
                 StartAnimatedContainer(
-                    appTheme != null && accountsUiState.activeAccount != null,
+                    isAppThemeSetUp && accountsUiState.activeAccount != null,
                     delayMillis = 100
                 ) {
                     AccountCard(
                         account = accountsUiState.activeAccount!!,
-                        appTheme = appTheme,
                         todayExpenses = widgetsUiState.greetings.todayExpensesByActiveAccount,
                         onHideBalanceButton = onChangeHideActiveAccountBalance
                     )
                 }
             }
-            StartAnimatedContainer(appTheme != null, 150) {
+            StartAnimatedContainer(isAppThemeSetUp, 150) {
                 ExpensesIncomeWidget(
                     uiState = widgetsUiState.expensesIncomeState,
                     dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
@@ -269,7 +264,7 @@ private fun ExpandedLayout(
             }
         }
 
-        StartAnimatedContainer(appTheme != null, 200) {
+        StartAnimatedContainer(isAppThemeSetUp, 200) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -277,7 +272,6 @@ private fun ExpandedLayout(
                 RecordHistoryWidget(
                     recordStackList = filteredRecordStackList.take(3),
                     accountList = accountsUiState.accountList,
-                    appTheme = appTheme,
                     isCustomDateRange =
                         dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
                     onRecordClick = onRecordClick,
@@ -290,14 +284,13 @@ private fun ExpandedLayout(
             }
         }
 
-        StartAnimatedContainer(appTheme != null, 250) {
+        StartAnimatedContainer(isAppThemeSetUp, 250) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CategoriesStatisticsWidget(
                     categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
-                    appTheme = appTheme,
                     onNavigateToCategoriesStatisticsScreen =
                         onNavigateToCategoriesStatisticsScreen
                 )
@@ -379,7 +372,7 @@ fun HomeScreenPreview(
     ) { scaffoldPadding ->
         HomeScreen(
             scaffoldAppScreenPadding = scaffoldPadding,
-            appTheme = appTheme,
+            isAppThemeSetUp = true,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
             widgetsUiState = widgetUiState,

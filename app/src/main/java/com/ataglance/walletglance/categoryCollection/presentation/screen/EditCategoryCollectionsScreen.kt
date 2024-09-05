@@ -40,7 +40,6 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 
 @Composable
 fun EditCategoryCollectionsScreen(
-    appTheme: AppTheme?,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories>,
     collectionType: CategoryCollectionType,
     onCategoryTypeChange: (CategoryCollectionType) -> Unit,
@@ -56,7 +55,6 @@ fun EditCategoryCollectionsScreen(
         },
         glassSurfaceContent = {
             GlassSurfaceContent(
-                appTheme = appTheme,
                 collectionWithCategoriesList = collectionWithCategoriesList,
                 onNavigateToEditCollectionScreen = onNavigateToEditCollectionScreen
             )
@@ -80,7 +78,6 @@ fun EditCategoryCollectionsScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories>,
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories) -> Unit,
 ) {
@@ -91,13 +88,11 @@ private fun GlassSurfaceContent(
         if (targetCollectionWithCategoriesList.isNotEmpty()) {
             if (!WindowTypeIsExpanded) {
                 CompactLayoutContent(
-                    appTheme = appTheme,
                     collectionWithCategoriesList = targetCollectionWithCategoriesList,
                     onNavigateToEditCollectionScreen = onNavigateToEditCollectionScreen
                 )
             } else {
                 ExpandedLayoutContent(
-                    appTheme = appTheme,
                     collectionWithCategoriesList = targetCollectionWithCategoriesList,
                     onNavigateToEditCollectionScreen = onNavigateToEditCollectionScreen
                 )
@@ -110,7 +105,6 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun CompactLayoutContent(
-    appTheme: AppTheme?,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories>,
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories) -> Unit
 ) {
@@ -131,7 +125,7 @@ private fun CompactLayoutContent(
             items = collectionWithCategoriesList,
             key = { it.id }
         ) { collection ->
-            EditingCategoryCollectionComponent(appTheme = appTheme, collection = collection) {
+            EditingCategoryCollectionComponent(collection = collection) {
                 onNavigateToEditCollectionScreen(collection)
             }
         }
@@ -141,7 +135,6 @@ private fun CompactLayoutContent(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExpandedLayoutContent(
-    appTheme: AppTheme?,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories>,
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories) -> Unit
 ) {
@@ -156,7 +149,7 @@ private fun ExpandedLayoutContent(
     ) {
         collectionWithCategoriesList.forEach { collection ->
             Box(modifier = Modifier.padding(9.dp)) {
-                EditingCategoryCollectionComponent(appTheme, collection) {
+                EditingCategoryCollectionComponent(collection) {
                     onNavigateToEditCollectionScreen(collection)
                 }
             }
@@ -215,7 +208,6 @@ fun EditCategoryCollectionsScreenPreview(
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     ) {
         EditCategoryCollectionsScreen(
-            appTheme = AppTheme.LightDefault,
             collectionWithCategoriesList = collectionWithCategoriesList,
             collectionType = CategoryCollectionType.Mixed,
             onCategoryTypeChange = {},

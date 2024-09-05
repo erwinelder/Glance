@@ -31,11 +31,9 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.core.domain.app.AppTheme
 
 @Composable
 fun AccountPopupPicker(
-    appTheme: AppTheme?,
     accountList: List<Account>,
     selectedAccount: Account?,
     onToggleAccounts: (List<Account>) -> Unit,
@@ -47,7 +45,7 @@ fun AccountPopupPicker(
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        PickerButton(appTheme = appTheme, selectedAccount = selectedAccount) {
+        PickerButton(selectedAccount = selectedAccount) {
             if (accountList.size == 2) {
                 onToggleAccounts(accountList)
             } else if (accountList.size > 1) {
@@ -68,7 +66,6 @@ fun AccountPopupPicker(
                     }
                 ) {
                     PopupContent(
-                        appTheme = appTheme,
                         accountList = accountList,
                         onAccountSelect = onSelectAccount,
                         expandedState = expandedState,
@@ -86,7 +83,6 @@ fun AccountPopupPicker(
 
 @Composable
 private fun PickerButton(
-    appTheme: AppTheme?,
     selectedAccount: Account?,
     onExpandedChange: (Boolean) -> Unit
 ) {
@@ -96,7 +92,6 @@ private fun PickerButton(
     ) { account ->
         SmallAccount(
             account = account,
-            appTheme = appTheme,
             onClick = {
                 onExpandedChange(true)
             }
@@ -106,7 +101,6 @@ private fun PickerButton(
 
 @Composable
 private fun PopupContent(
-    appTheme: AppTheme?,
     accountList: List<Account>,
     onAccountSelect: (Account) -> Unit,
     expandedState: MutableTransitionState<Boolean>,
@@ -155,7 +149,6 @@ private fun PopupContent(
             ) {
                 SmallAccount(
                     account = account,
-                    appTheme = appTheme,
                     outerPadding = PaddingValues(
                         horizontal = dimensionResource(R.dimen.screen_horizontal_padding)
                     )

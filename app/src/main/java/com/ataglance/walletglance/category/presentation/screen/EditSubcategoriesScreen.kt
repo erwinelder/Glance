@@ -27,7 +27,7 @@ import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.presentation.components.SubcategorySetupElement
+import com.ataglance.walletglance.category.presentation.components.EditingSubcategoryComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
@@ -38,7 +38,6 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 @Composable
 fun EditSubcategoriesScreen(
     scaffoldPadding: PaddingValues,
-    appTheme: AppTheme?,
     categoryWithSubcategories: CategoryWithSubcategories?,
     onSaveButton: () -> Unit,
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
@@ -48,7 +47,6 @@ fun EditSubcategoriesScreen(
         topPadding = scaffoldPadding.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                appTheme = appTheme,
                 subcategoryList = categoryWithSubcategories?.subcategoryList ?: emptyList(),
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
@@ -70,7 +68,6 @@ fun EditSubcategoriesScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     subcategoryList: List<Category>,
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
@@ -82,14 +79,12 @@ private fun GlassSurfaceContent(
         if (!WindowTypeIsExpanded) {
             CompactLayout(
                 subcategoryList = targetSubcategoryList,
-                appTheme = appTheme,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )
         } else {
             ExpandedLayout(
                 subcategoryList = targetSubcategoryList,
-                appTheme = appTheme,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )
@@ -99,12 +94,12 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun CompactLayout(
-    appTheme: AppTheme?,
     subcategoryList: List<Category>,
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
+
     LazyColumn(
         state = lazyListState,
         contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
@@ -115,9 +110,8 @@ private fun CompactLayout(
             .padding(2.dp)
     ) {
         items(items = subcategoryList, key = { it.id }) { category ->
-            SubcategorySetupElement(
+            EditingSubcategoryComponent(
                 category = category,
-                appTheme = appTheme,
                 onEditButton = {
                     onNavigateToEditCategoryScreen(category)
                 },
@@ -137,12 +131,12 @@ private fun CompactLayout(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExpandedLayout(
-    appTheme: AppTheme?,
     subcategoryList: List<Category>,
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
+
     FlowRow(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -152,9 +146,8 @@ private fun ExpandedLayout(
     ) {
         subcategoryList.forEach { category ->
             Box(modifier = Modifier.padding(9.dp)) {
-                SubcategorySetupElement(
+                EditingSubcategoryComponent(
                     category = category,
-                    appTheme = appTheme,
                     onEditButton = {
                         onNavigateToEditCategoryScreen(category)
                     },
@@ -190,7 +183,6 @@ fun EditSubcategoriesScreenPreview(
     ) { scaffoldPadding ->
         EditSubcategoriesScreen(
             scaffoldPadding = scaffoldPadding,
-            appTheme = appTheme,
             categoryWithSubcategories = categoriesWithSubcategories.expense[2],
             onSaveButton = {},
             onNavigateToEditCategoryScreen = {},

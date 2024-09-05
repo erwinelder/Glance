@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.components.CategoryField
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
@@ -35,7 +34,6 @@ import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
 
 @Composable
 fun LazyItemScope.RecordItemCreationComponent(
-    appTheme: AppTheme?,
     recordDraftItem: RecordDraftItem,
     accountCurrency: String?,
     onAmountChange: (String) -> Unit,
@@ -59,7 +57,6 @@ fun LazyItemScope.RecordItemCreationComponent(
         ) { targetCollapsed ->
             if (targetCollapsed) {
                 RecordItemCreationComponentCollapsed(
-                    appTheme = appTheme,
                     recordDraftItem = recordDraftItem,
                     accountCurrency = accountCurrency,
                     draftLastItemIndex = draftLastItemIndex,
@@ -69,7 +66,6 @@ fun LazyItemScope.RecordItemCreationComponent(
                 )
             } else {
                 RecordItemCreationComponentExpanded(
-                    appTheme = appTheme,
                     recordDraftItem = recordDraftItem,
                     onAmountChange = onAmountChange,
                     onCategoryFieldClick = onCategoryFieldClick,
@@ -87,7 +83,6 @@ fun LazyItemScope.RecordItemCreationComponent(
 
 @Composable
 private fun RecordItemCreationComponentCollapsed(
-    appTheme: AppTheme?,
     recordDraftItem: RecordDraftItem,
     accountCurrency: String?,
     draftLastItemIndex: Int,
@@ -148,7 +143,6 @@ private fun RecordItemCreationComponentCollapsed(
         ) { targetCategory ->
             RecordCategory(
                 category = targetCategory,
-                appTheme = appTheme,
                 iconSize = 32.dp,
                 fontSize = 20.sp
             )
@@ -174,7 +168,6 @@ private fun RecordItemCreationComponentCollapsed(
 
 @Composable
 private fun RecordItemCreationComponentExpanded(
-    appTheme: AppTheme?,
     recordDraftItem: RecordDraftItem,
     onAmountChange: (String) -> Unit,
     onCategoryFieldClick: () -> Unit,
@@ -207,7 +200,6 @@ private fun RecordItemCreationComponentExpanded(
                 label = "category field at the make record screen"
             ) { targetCategory ->
                 CategoryField(
-                    appTheme = appTheme,
                     category = targetCategory,
                     onClick = onCategoryFieldClick
                 )

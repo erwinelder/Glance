@@ -29,11 +29,11 @@ import com.ataglance.walletglance.categoryCollection.navigation.CategoryCollecti
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeToggleButton
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -46,7 +46,6 @@ import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
 @Composable
 fun RecordsScreen(
     scaffoldAppScreenPadding: PaddingValues,
-    appTheme: AppTheme?,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
@@ -70,7 +69,6 @@ fun RecordsScreen(
     GlassSurfaceContainerWithFilterBars(
         screenPadding = scaffoldAppScreenPadding,
         accountList = accountList,
-        appTheme = appTheme,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -115,7 +113,6 @@ fun RecordsScreen(
                         TransferComponent(
                             recordStack = recordStack,
                             includeYearToDate = includeYearToRecordDate,
-                            appTheme = appTheme,
                             secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
                                 accountList.findById(it)?.toRecordAccount()
                             }
@@ -126,7 +123,6 @@ fun RecordsScreen(
                         }
                     } else {
                         RecordStackComponent(
-                            appTheme = appTheme,
                             recordStack = recordStack,
                             includeYearToDate = includeYearToRecordDate
                         ) { recordNum ->
@@ -200,7 +196,6 @@ fun RecordsScreenPreview(
     ) { scaffoldPadding ->
         RecordsScreen(
             scaffoldAppScreenPadding = scaffoldPadding,
-            appTheme = appTheme,
             accountList = accountList,
             onAccountClick = {},
             currentDateRangeEnum = currentDateRangeEnum,

@@ -180,7 +180,6 @@ private fun EditCategoryCollectionScreenPreview() {
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         EditCategoryCollectionScreen(
-            appTheme = AppTheme.LightDefault,
             collection = collection,
             editingCategoriesWithSubcategories =
             DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()

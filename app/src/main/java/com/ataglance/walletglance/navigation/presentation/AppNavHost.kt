@@ -95,7 +95,7 @@ fun AppNavHost(
         ) {
             HomeScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
+                isAppThemeSetUp = appUiSettings.appTheme != null,
                 accountsUiState = accountsUiState,
                 dateRangeMenuUiState = dateRangeMenuUiState,
                 widgetsUiState = widgetsUiState,
@@ -139,7 +139,6 @@ fun AppNavHost(
 
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
                 onAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
@@ -207,7 +206,6 @@ fun AppNavHost(
 
             CategoryStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 accountList = accountsUiState.accountList,
                 onAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
@@ -235,7 +233,6 @@ fun AppNavHost(
         composable<MainScreens.Budgets> {
             BudgetsScreen(
                 screenPadding = scaffoldPadding,
-                appTheme = appUiSettings.appTheme,
                 budgetsByType = budgetsByType,
                 onBudgetClick = { budget ->
                     navViewModel.navigateToScreenMovingTowardsLeft(
@@ -284,7 +281,6 @@ fun AppNavHost(
 
             (budget to columnChartDataUiState).letIfNoneIsNull { (budget, chartUiState) ->
                 BudgetStatisticsScreen(
-                    appTheme = appUiSettings.appTheme,
                     budget = budget,
                     columnChartUiState = chartUiState,
                     budgetAccounts = budgetAccounts,
@@ -321,7 +317,6 @@ fun AppNavHost(
             val coroutineScope = rememberCoroutineScope()
 
             RecordCreationScreen(
-                appTheme = appUiSettings.appTheme,
                 recordDraftGeneral = recordDraftGeneral,
                 recordDraftItems = recordDraftItems,
                 savingIsAllowed = savingIsAllowed,
@@ -396,7 +391,6 @@ fun AppNavHost(
             val coroutineScope = rememberCoroutineScope()
 
             TransferCreationScreen(
-                appTheme = appUiSettings.appTheme,
                 transferDraft = transferDraft,
                 accountList = accountsUiState.accountList,
                 onNavigateBack = navController::popBackStack,

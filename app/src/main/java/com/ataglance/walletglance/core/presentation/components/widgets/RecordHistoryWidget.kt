@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.utils.findById
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
@@ -36,7 +35,6 @@ import com.ataglance.walletglance.record.utils.getNoRecordsMessageRes
 fun RecordHistoryWidget(
     recordStackList: List<RecordStack>,
     accountList: List<Account>,
-    appTheme: AppTheme?,
     isCustomDateRange: Boolean,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
@@ -70,7 +68,6 @@ fun RecordHistoryWidget(
                         recordStackList = targetRecordStackList,
                         accountList = accountList,
                         includeYearToRecordDate = includeYearToRecordDate,
-                        appTheme = appTheme,
                         onRecordClick = onRecordClick,
                         onTransferClick = onTransferClick
                     )
@@ -90,7 +87,6 @@ private fun RecordStackList(
     recordStackList: List<RecordStack>,
     accountList: List<Account>,
     includeYearToRecordDate: Boolean,
-    appTheme: AppTheme?,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
@@ -105,7 +101,6 @@ private fun RecordStackList(
         for (recordStack in recordStackList) {
             if (recordStack.isExpenseOrIncome()) {
                 RecordStackComponent(
-                    appTheme = appTheme,
                     recordStack = recordStack,
                     includeYearToDate = includeYearToRecordDate,
                     onRecordClick = onRecordClick
@@ -114,7 +109,6 @@ private fun RecordStackList(
                 TransferComponent(
                     recordStack = recordStack,
                     includeYearToDate = includeYearToRecordDate,
-                    appTheme = appTheme,
                     secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
                         accountList.findById(it)?.toRecordAccount()
                     },

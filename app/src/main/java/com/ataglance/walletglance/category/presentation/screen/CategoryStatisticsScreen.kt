@@ -27,12 +27,12 @@ import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionTy
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -43,7 +43,6 @@ import com.ataglance.walletglance.record.utils.filterByCollection
 @Composable
 fun CategoryStatisticsScreen(
     scaffoldAppScreenPadding: PaddingValues,
-    appTheme: AppTheme?,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
@@ -64,7 +63,6 @@ fun CategoryStatisticsScreen(
 ) {
     GlassSurfaceContainerWithFilterBars(
         screenPadding = scaffoldAppScreenPadding,
-        appTheme = appTheme,
         accountList = accountList,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
@@ -92,7 +90,6 @@ fun CategoryStatisticsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 CategoryStatisticsItemComponent(
                     uiState = it,
-                    appTheme = appTheme,
                     showLeftArrow = true,
                     onClick = onClearParentCategory
                 )
@@ -106,7 +103,7 @@ fun CategoryStatisticsScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(items = categoryList, key = { it.categoryId }) { category ->
-                    CategoryStatisticsItemComponent(uiState = category, appTheme = appTheme) {
+                    CategoryStatisticsItemComponent(uiState = category) {
                         onSetParentCategory(category)
                     }
                 }
@@ -191,7 +188,6 @@ fun CategoryStatisticsScreenPreview(
     ) { scaffoldPadding ->
         CategoryStatisticsScreen(
             scaffoldAppScreenPadding = scaffoldPadding,
-            appTheme = appTheme,
             accountList = accountList,
             onAccountClick = {},
             currentDateRangeEnum = currentDateRangeEnum,

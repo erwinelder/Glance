@@ -52,7 +52,6 @@ import com.ataglance.walletglance.recordCreation.presentation.components.RecordI
 
 @Composable
 fun RecordCreationScreen(
-    appTheme: AppTheme?,
     recordDraftGeneral: RecordDraftGeneral,
     recordDraftItems: List<RecordDraftItem>,
     savingIsAllowed: Boolean,
@@ -105,7 +104,6 @@ fun RecordCreationScreen(
             },
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    appTheme = appTheme,
                     recordDraftGeneral = recordDraftGeneral,
                     recordDraftItems = recordDraftItems,
                     accountList = accountList,
@@ -163,7 +161,6 @@ fun RecordCreationScreen(
             visible = showCategoryPicker,
             categoriesWithSubcategories = categoriesWithSubcategories,
             type = recordDraftGeneral.type,
-            appTheme = appTheme,
             onDismissRequest = { showCategoryPicker = false },
             onCategoryChoose = {
                 selectedItemIndex?.let { index ->
@@ -176,7 +173,6 @@ fun RecordCreationScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    appTheme: AppTheme?,
     recordDraftGeneral: RecordDraftGeneral,
     recordDraftItems: List<RecordDraftItem>,
     accountList: List<Account>,
@@ -213,7 +209,6 @@ private fun GlassSurfaceContent(
                 )
                 FieldWithLabel(labelText = stringResource(R.string.account)) {
                     AccountPopupPicker(
-                        appTheme = appTheme,
                         accountList = accountList,
                         selectedAccount = recordDraftGeneral.account,
                         onToggleAccounts = onToggleAccounts,
@@ -225,7 +220,6 @@ private fun GlassSurfaceContent(
         }
         items(items = recordDraftItems, key = { it.lazyListKey }) { item ->
             RecordItemCreationComponent(
-                appTheme = appTheme,
                 recordDraftItem = item,
                 accountCurrency = recordDraftGeneral.account?.currency,
                 onAmountChange = {
@@ -310,7 +304,6 @@ fun RecordCreationScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RecordCreationScreen(
-            appTheme = appTheme,
             recordDraftGeneral = recordDraft.general,
             recordDraftItems = recordDraft.items,
             savingIsAllowed = true,

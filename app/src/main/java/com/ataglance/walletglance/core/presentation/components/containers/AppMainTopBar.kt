@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.components.AccountsFilterBar
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 
@@ -24,7 +23,6 @@ fun AppMainTopBar(
     accountList: List<Account>,
     currentDateRangeEnum: DateRangeEnum,
     isCustomDateRangeWindowOpened: Boolean,
-    appTheme: AppTheme?,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
     onAccountClick: (Int) -> Unit
@@ -46,7 +44,6 @@ fun AppMainTopBar(
         if (visibleAccounts.size > 1) {
             AccountsFilterBar(
                 visibleAccounts = visibleAccounts,
-                appTheme = appTheme,
                 onAccountClick = onAccountClick
             )
         }

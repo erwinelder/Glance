@@ -27,13 +27,11 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun EditingCategoryCollectionComponent(
-    appTheme: AppTheme?,
     collection: CategoryCollectionWithCategories,
     onClick: () -> Unit
 ) {
@@ -90,7 +88,7 @@ fun EditingCategoryCollectionComponent(
             userScrollEnabled = false
         ) {
             items(items = categoriesWithUniqueIcons, key = { it.id }) { category ->
-                CategoryIconComponent(category, appTheme)
+                CategoryIconComponent(category)
             }
         }
     }

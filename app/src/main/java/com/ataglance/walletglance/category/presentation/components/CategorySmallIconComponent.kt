@@ -15,14 +15,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 
 @Composable
-fun CategoryIconComponent(
-    category: Category,
-    appTheme: AppTheme?
-) {
+fun CategoryIconComponent(category: Category) {
     Icon(
         painter = painterResource(category.icon.res),
         contentDescription = "category ${category.name} icon",
@@ -30,11 +28,11 @@ fun CategoryIconComponent(
         modifier = Modifier
             .shadow(
                 elevation = 8.dp,
-                spotColor = category.getIconSolidColorByTheme(appTheme),
+                spotColor = category.getIconSolidColorByTheme(CurrAppTheme),
                 shape = RoundedCornerShape(30)
             )
             .clip(RoundedCornerShape(30))
-            .background(category.getIconSolidColorByTheme(appTheme))
+            .background(category.getIconSolidColorByTheme(CurrAppTheme))
             .size(32.dp)
             .padding(5.dp)
     )
