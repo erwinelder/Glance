@@ -2,6 +2,8 @@ package com.ataglance.walletglance.core.presentation.components
 
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -28,6 +30,7 @@ import com.ataglance.walletglance.core.presentation.modifiers.NoRippleTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun WalletGlanceAppComponent(
     appViewModel: AppViewModel,
@@ -38,29 +41,32 @@ fun WalletGlanceAppComponent(
     val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
-        themeUiState?.let { safeThemeUiState ->
-            WalletGlanceTheme(
-                context = context,
-                useDeviceTheme = safeThemeUiState.useDeviceTheme,
-                chosenLightTheme = safeThemeUiState.chosenLightTheme,
-                chosenDarkTheme = safeThemeUiState.chosenDarkTheme,
-                lastChosenTheme = safeThemeUiState.lastChosenTheme,
-                setIsDarkTheme = appViewModel::updateAppThemeState,
-                boxWithConstraintsScope = this
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(GlanceTheme.background)
+        SharedTransitionLayout {
+            themeUiState?.let { safeThemeUiState ->
+                WalletGlanceTheme(
+                    context = context,
+                    useDeviceTheme = safeThemeUiState.useDeviceTheme,
+                    chosenLightTheme = safeThemeUiState.chosenLightTheme,
+                    chosenDarkTheme = safeThemeUiState.chosenDarkTheme,
+                    lastChosenTheme = safeThemeUiState.lastChosenTheme,
+                    setIsDarkTheme = appViewModel::updateAppThemeState,
+                    boxWithConstraintsScope = this@BoxWithConstraints,
+                    sharedTransitionScope = this@SharedTransitionLayout
                 ) {
-                    AppBackground(appTheme = appUiSettings.appTheme)
-                    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-                        MainAppContent(
-                            appViewModel = appViewModel,
-                            appUiSettings = appUiSettings,
-                            themeUiState = safeThemeUiState,
-                            navViewModel = navViewModel
-                        )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(GlanceTheme.background)
+                    ) {
+                        AppBackground(appTheme = appUiSettings.appTheme)
+                        CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+                            MainAppContent(
+                                appViewModel = appViewModel,
+                                appUiSettings = appUiSettings,
+                                themeUiState = safeThemeUiState,
+                                navViewModel = navViewModel
+                            )
+                        }
                     }
                 }
             }

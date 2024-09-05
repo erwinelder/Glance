@@ -1,10 +1,7 @@
 package com.ataglance.walletglance.core.presentation.components.buttons
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +9,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -22,10 +18,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -73,14 +70,7 @@ fun SecondaryButton(
 @Preview(showSystemUi = true)
 @Composable
 private fun PreviewSecondaryButton() {
-    BoxWithConstraints {
-        WalletGlanceTheme(boxWithConstraintsScope = this) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                SecondaryButton(onClick = {}, text = "Apply")
-            }
-        }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        SecondaryButton(onClick = {}, text = "Apply")
     }
 }

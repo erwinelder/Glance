@@ -4,12 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,9 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,9 +30,9 @@ import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import java.util.Locale
 
@@ -163,38 +157,21 @@ private fun StatisticBlock(
 @Preview
 @Composable
 private fun ExpensesIncomeWidgetPreview() {
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            boxWithConstraintsScope = this,
-            useDeviceTheme = false,
-            lastChosenTheme = AppTheme.DarkDefault.name
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_dark),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                ExpensesIncomeWidget(
-                    uiState = ExpensesIncomeWidgetUiState(
-                        incomeTotal = 1000.0,
-                        expensesTotal = 500.0,
-                        expensesPercentage = 33.33,
-                        incomePercentage = 66.67,
-                        expensesPercentageFloat = 0.8f,
-                        incomePercentageFloat = 0.67f
-                    ),
-                    dateRangeWithEnum = DateRangeWithEnum(
-                        enum = DateRangeEnum.ThisMonth,
-                        dateRange = LongDateRange(0, 0)
-                    ),
-                    accountCurrency = "USD"
-                )
-            }
-        }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        ExpensesIncomeWidget(
+            uiState = ExpensesIncomeWidgetUiState(
+                incomeTotal = 1000.0,
+                expensesTotal = 500.0,
+                expensesPercentage = 33.33,
+                incomePercentage = 66.67,
+                expensesPercentageFloat = 0.8f,
+                incomePercentageFloat = 0.67f
+            ),
+            dateRangeWithEnum = DateRangeWithEnum(
+                enum = DateRangeEnum.ThisMonth,
+                dateRange = LongDateRange(0, 0)
+            ),
+            accountCurrency = "USD"
+        )
     }
 }

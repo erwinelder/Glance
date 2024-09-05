@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.core.presentation.components.pickers
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -15,8 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,16 +93,12 @@ fun CustomDatePicker(
 @Preview
 @Composable
 private fun CustomDatePickerPreview() {
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            boxWithConstraintsScope = this
-        ) {
-            CustomDatePicker(
-                openDialog = true,
-                initialTimeInMillis = System.currentTimeMillis(),
-                onOpenDateDialogChange = {},
-                onConfirmButton = {}
-            )
-        }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        CustomDatePicker(
+            openDialog = true,
+            initialTimeInMillis = System.currentTimeMillis(),
+            onOpenDateDialogChange = {},
+            onConfirmButton = {}
+        )
     }
 }

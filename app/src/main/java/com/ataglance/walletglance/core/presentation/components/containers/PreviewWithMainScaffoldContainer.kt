@@ -1,5 +1,7 @@
 package com.ataglance.walletglance.core.presentation.components.containers
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -16,6 +18,7 @@ import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBar
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PreviewWithMainScaffoldContainer(
     appTheme: AppTheme = AppTheme.LightDefault,
@@ -26,45 +29,48 @@ fun PreviewWithMainScaffoldContainer(
     content: @Composable (PaddingValues) -> Unit
 ) {
     BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = appTheme.name,
-            boxWithConstraintsScope = this
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
+        SharedTransitionLayout {
+            WalletGlanceTheme(
+                useDeviceTheme = false,
+                lastChosenTheme = appTheme.name,
+                boxWithConstraintsScope = this@BoxWithConstraints,
+                sharedTransitionScope = this@SharedTransitionLayout
             ) {
-                Image(
-                    painter = painterResource(
-                        when (appTheme) {
-                            AppTheme.LightDefault -> R.drawable.main_background_light
-                            AppTheme.DarkDefault -> R.drawable.main_background_dark
-                        }
-                    ),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize()
-                )
-                MainScaffold(
-                    setupProgressTopBarUiState = SetupProgressTopBarUiState(
-                        isVisible = isSetupProgressTopBarVisible
-                    ),
-                    isBottomBarVisible = isBottomBarVisible,
-                    onNavigateBack = {},
-                    onNavigateToScreenAndPopUp = {},
-                    onMakeRecordButtonClick = {},
-                    anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
-                    currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-                    bottomBarButtons = listOf(
-                        BottomBarNavigationButtons.Home,
-                        BottomBarNavigationButtons.Records,
-                        BottomBarNavigationButtons.CategoryStatistics,
-                        BottomBarNavigationButtons.Budgets,
-                        BottomBarNavigationButtons.Settings
-                    ),
-                    content = content
-                )
+                ) {
+                    Image(
+                        painter = painterResource(
+                            when (appTheme) {
+                                AppTheme.LightDefault -> R.drawable.main_background_light
+                                AppTheme.DarkDefault -> R.drawable.main_background_dark
+                            }
+                        ),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    MainScaffold(
+                        setupProgressTopBarUiState = SetupProgressTopBarUiState(
+                            isVisible = isSetupProgressTopBarVisible
+                        ),
+                        isBottomBarVisible = isBottomBarVisible,
+                        onNavigateBack = {},
+                        onNavigateToScreenAndPopUp = {},
+                        onMakeRecordButtonClick = {},
+                        anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                        currentScreenIsScreenProvider = currentScreenIsScreenProvider,
+                        bottomBarButtons = listOf(
+                            BottomBarNavigationButtons.Home,
+                            BottomBarNavigationButtons.Records,
+                            BottomBarNavigationButtons.CategoryStatistics,
+                            BottomBarNavigationButtons.Budgets,
+                            BottomBarNavigationButtons.Settings
+                        ),
+                        content = content
+                    )
+                }
             }
         }
     }

@@ -3,6 +3,8 @@ package com.ataglance.walletglance.core.presentation
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.material3.MaterialTheme
@@ -170,7 +172,10 @@ private val DarkBluePalette = GlanceColors(
 private val LocalColors = staticCompositionLocalOf { LightDefaultPalette }
 val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
 private val LocalAppTheme = compositionLocalOf { AppTheme.LightDefault }
+@OptIn(ExperimentalSharedTransitionApi::class)
+private val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun WalletGlanceTheme(
     context: ComponentActivity? = null,
@@ -181,6 +186,7 @@ fun WalletGlanceTheme(
     isDeviceIsDarkTheme: Boolean = isSystemInDarkTheme(),
     setIsDarkTheme: (AppTheme) -> Unit = {},
     boxWithConstraintsScope: BoxWithConstraintsScope,
+    sharedTransitionScope: SharedTransitionScope,
     content: @Composable () -> Unit
 ) {
     val appThemeString = if (useDeviceTheme) {
@@ -218,7 +224,8 @@ fun WalletGlanceTheme(
     CompositionLocalProvider(
         LocalColors provides colorScheme,
         LocalWindowType provides windowType,
-        LocalAppTheme provides appTheme
+        LocalAppTheme provides appTheme,
+        LocalSharedTransitionScope provides sharedTransitionScope
     ) {
         MaterialTheme(
             colorScheme = colorScheme.material,
@@ -278,3 +285,9 @@ val WindowTypeIsExpanded: Boolean
     @Composable
     @ReadOnlyComposable
     get() = LocalWindowType.current == WindowType.Expanded
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val CurrSharedTransitionScope: SharedTransitionScope
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalSharedTransitionScope.current!!

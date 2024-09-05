@@ -1,5 +1,7 @@
 package com.ataglance.walletglance.core.presentation.components.containers
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,33 +15,37 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PreviewContainer(
     appTheme: AppTheme = AppTheme.LightDefault,
     content: @Composable () -> Unit
 ) {
     BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = appTheme.name,
-            boxWithConstraintsScope = this
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
+        SharedTransitionLayout {
+            WalletGlanceTheme(
+                useDeviceTheme = false,
+                lastChosenTheme = appTheme.name,
+                boxWithConstraintsScope = this@BoxWithConstraints,
+                sharedTransitionScope = this@SharedTransitionLayout
             ) {
-                Image(
-                    painter = painterResource(
-                        when (appTheme) {
-                            AppTheme.LightDefault -> R.drawable.main_background_light
-                            AppTheme.DarkDefault -> R.drawable.main_background_dark
-                        }
-                    ),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize()
-                )
-                content()
+                ) {
+                    Image(
+                        painter = painterResource(
+                            when (appTheme) {
+                                AppTheme.LightDefault -> R.drawable.main_background_light
+                                AppTheme.DarkDefault -> R.drawable.main_background_dark
+                            }
+                        ),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    content()
+                }
             }
         }
     }

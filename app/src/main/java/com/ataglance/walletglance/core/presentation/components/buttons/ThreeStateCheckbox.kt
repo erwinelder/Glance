@@ -7,11 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +35,6 @@ import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWi
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 
 @Composable
@@ -104,29 +98,11 @@ fun ThreeStateCheckbox(
 @Preview
 @Composable
 private fun ThreeStateCheckboxPreview() {
-    BoxWithConstraints {
-        WalletGlanceTheme(
-            useDeviceTheme = false,
-            lastChosenTheme = AppTheme.LightDefault.name,
-            boxWithConstraintsScope = this
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.main_background_light),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                ThreeStateCheckbox(
-                    state = true,
-                    onClick = {}
-                )
-            }
-        }
-    }
+    PreviewContainer(appTheme = AppTheme.LightDefault) {  }
+    ThreeStateCheckbox(
+        state = true,
+        onClick = {}
+    )
 }
 
 @Preview
