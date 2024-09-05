@@ -57,6 +57,7 @@ import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
@@ -65,7 +66,6 @@ import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.data.repository.RecordRepository
@@ -264,12 +264,11 @@ class AppViewModel(
         }
     }
 
-    fun updateAppThemeState(theme: String) {
+    fun updateAppThemeState(appTheme: AppTheme) {
         _appTheme.update {
-            when (theme) {
-                AppTheme.LightDefault.name -> AppTheme.LightDefault
-                AppTheme.DarkDefault.name -> AppTheme.DarkDefault
-                else -> AppTheme.LightDefault
+            when (appTheme) {
+                AppTheme.LightDefault -> AppTheme.LightDefault
+                AppTheme.DarkDefault -> AppTheme.DarkDefault
             }
         }
     }

@@ -67,7 +67,6 @@ fun ThemePicker(
                 onCheckedChange = onSetUseDeviceTheme,
                 labelText = stringResource(R.string.use_device_theme)
             )
-//            CustomSwitch()
         }
     }
 }

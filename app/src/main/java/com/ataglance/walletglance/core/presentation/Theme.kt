@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
@@ -168,6 +169,7 @@ private val DarkBluePalette = GlanceColors(
 
 private val LocalColors = staticCompositionLocalOf { LightDefaultPalette }
 val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
+private val LocalAppTheme = compositionLocalOf { AppTheme.LightDefault }
 
 @Composable
 fun WalletGlanceTheme(
@@ -177,11 +179,11 @@ fun WalletGlanceTheme(
     chosenDarkTheme: String = AppTheme.DarkDefault.name,
     lastChosenTheme: String = AppTheme.LightDefault.name,
     isDeviceIsDarkTheme: Boolean = isSystemInDarkTheme(),
-    setIsDarkTheme: (String) -> Unit = {},
+    setIsDarkTheme: (AppTheme) -> Unit = {},
     boxWithConstraintsScope: BoxWithConstraintsScope,
     content: @Composable () -> Unit
 ) {
-    val appTheme = if (useDeviceTheme) {
+    val appThemeString = if (useDeviceTheme) {
         if (!isDeviceIsDarkTheme) {
             chosenLightTheme
         } else {
@@ -190,13 +192,16 @@ fun WalletGlanceTheme(
     } else {
         lastChosenTheme
     }
+    val appTheme = when (appThemeString) {
+        AppTheme.DarkDefault.name -> AppTheme.DarkDefault
+        else -> AppTheme.LightDefault
+    }
 
     setIsDarkTheme(appTheme)
 
     val colorScheme = when (appTheme) {
-        AppTheme.LightDefault.name -> LightDefaultPalette
-        AppTheme.DarkDefault.name -> DarkDefaultPalette
-        else -> DarkBluePalette
+        AppTheme.LightDefault -> LightDefaultPalette
+        AppTheme.DarkDefault -> DarkDefaultPalette
     }
     val windowType = when {
         boxWithConstraintsScope.maxWidth < 600.dp -> WindowType.Compact
@@ -212,7 +217,8 @@ fun WalletGlanceTheme(
 
     CompositionLocalProvider(
         LocalColors provides colorScheme,
-        LocalWindowType provides windowType
+        LocalWindowType provides windowType,
+        LocalAppTheme provides appTheme
     ) {
         MaterialTheme(
             colorScheme = colorScheme.material,
@@ -225,28 +231,25 @@ fun WalletGlanceTheme(
 private fun setSystemBarsColors(
     context: ComponentActivity,
     colorScheme: GlanceColors,
-    appTheme: String
+    appTheme: AppTheme
 ) {
     context.enableEdgeToEdge(
         statusBarStyle = when (appTheme) {
-            AppTheme.LightDefault.name ->
+            AppTheme.LightDefault ->
                 SystemBarStyle.light(
                     colorScheme.material.surface.toArgb(),
                     colorScheme.material.background.toArgb()
                 )
-            AppTheme.DarkDefault.name ->
+            AppTheme.DarkDefault ->
                 SystemBarStyle.dark(colorScheme.material.surface.toArgb())
-            else -> SystemBarStyle.dark(colorScheme.material.surface.toArgb())
         },
         navigationBarStyle = when (appTheme) {
-            AppTheme.LightDefault.name ->
+            AppTheme.LightDefault ->
                 SystemBarStyle.light(
                     colorScheme.material.surface.toArgb(),
                     colorScheme.material.background.toArgb()
                 )
-            AppTheme.DarkDefault.name ->
-                SystemBarStyle.dark(colorScheme.material.surface.toArgb())
-            else -> SystemBarStyle.dark(colorScheme.material.surface.toArgb())
+            AppTheme.DarkDefault -> SystemBarStyle.dark(colorScheme.material.surface.toArgb())
         }
     )
 }
@@ -255,6 +258,11 @@ val GlanceTheme: GlanceColors
     @Composable
     @ReadOnlyComposable
     get() = LocalColors.current
+
+val CurrAppTheme: AppTheme
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalAppTheme.current
 
 val WindowTypeIsCompact: Boolean
     @Composable
