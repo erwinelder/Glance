@@ -10,26 +10,26 @@ data class LighterDarkerColorsByTheme(
     val darkDefault: LighterDarkerColors = LighterDarkerColors()
 ) {
 
-    fun getByTheme(theme: AppTheme?): LighterDarkerColors {
+    fun getByTheme(theme: AppTheme): LighterDarkerColors {
         return when (theme) {
+            AppTheme.LightDefault -> lightDefault
             AppTheme.DarkDefault -> darkDefault
-            else -> lightDefault
         }
     }
 
-    fun getCategoryIconSolidColorByTheme(appTheme: AppTheme?): Color {
+    fun getCategoryIconSolidColorByTheme(appTheme: AppTheme): Color {
         val lighterDarkerColors = getByTheme(appTheme)
         return when (appTheme) {
+            AppTheme.LightDefault -> lighterDarkerColors.darker
             AppTheme.DarkDefault -> lighterDarkerColors.lighter
-            else -> lighterDarkerColors.darker
         }
     }
 
-    fun getCategoryLineChartColorsByTheme(appTheme: AppTheme?): List<Color> {
+    fun getCategoryLineChartColorsByTheme(appTheme: AppTheme): List<Color> {
         val lighterDarkerColors = getByTheme(appTheme)
         return when (appTheme) {
+            AppTheme.LightDefault -> lighterDarkerColors.asListDarkToLight()
             AppTheme.DarkDefault -> lighterDarkerColors.asListLightToDark()
-            else -> lighterDarkerColors.asListDarkToLight()
         }
     }
 

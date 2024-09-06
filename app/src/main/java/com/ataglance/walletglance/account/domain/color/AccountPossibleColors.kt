@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.account.domain.color
 
+import com.ataglance.walletglance.account.utils.toColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
-import com.ataglance.walletglance.account.utils.toColorWithName
 
 data class AccountPossibleColors(
     val default: AccountColors = AccountColors.Default,
@@ -36,7 +36,7 @@ data class AccountPossibleColors(
         }
     }
 
-    fun asColorWithNameList(theme: AppTheme?): List<ColorWithName> {
+    fun asColorWithNameList(theme: AppTheme): List<ColorWithName> {
         return asList().map { it.toColorWithName(theme) }
     }
 

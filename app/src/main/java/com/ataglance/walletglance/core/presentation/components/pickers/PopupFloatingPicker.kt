@@ -166,10 +166,7 @@ private fun <T>PopupContent(
             val itemText = itemToString(item)
 
             if (index != 0) {
-                SmallDivider(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    color = GlanceTheme.outline.copy(.5f)
-                )
+                SmallDivider(modifier = Modifier.padding(bottom = 8.dp))
             }
             Text(
                 text = itemText,

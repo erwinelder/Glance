@@ -3,22 +3,16 @@ package com.ataglance.walletglance.record.utils
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsUiState
-import com.ataglance.walletglance.account.utils.findById
-import com.ataglance.walletglance.account.utils.getOtherFrom
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
+import com.ataglance.walletglance.core.utils.extractYear
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.domain.RecordsTypeFilter
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
-import java.util.Locale
 
 
 fun RecordType.inverse(): RecordType {
@@ -30,7 +24,7 @@ fun RecordType.inverse(): RecordType {
     }
 }
 
-fun RecordType.toCategoryType(): CategoryType? {
+fun RecordType.toCategoryTypeOrNullIfTransfer(): CategoryType? {
     return when (this) {
         RecordType.Expense -> CategoryType.Expense
         RecordType.Income -> CategoryType.Income
@@ -47,8 +41,8 @@ fun RecordType.asChar(): Char {
     }
 }
 
-fun getRecordTypeByChar(char: Char): RecordType? {
-    return when (char) {
+fun Char.asRecordType(): RecordType? {
+    return when (this) {
         '-' -> RecordType.Expense
         '+' -> RecordType.Income
         '>' -> RecordType.OutTransfer
@@ -77,7 +71,7 @@ fun List<RecordStack>.findByRecordNum(recordNum: Int): RecordStack? {
 
 fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
     return this.isNotEmpty() &&
-            this.first().date / 100000000 != this.last().date / 100000000
+            this.first().date.extractYear() != this.last().date.extractYear()
 }
 
 
@@ -123,25 +117,14 @@ fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<Reco
 }
 
 
-fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
-    return this
-        .filter {
-            type == CategoryType.Expense && it.isExpenseOrOutTransfer() ||
-                    type == CategoryType.Income && it.isIncomeOrInTransfer()
-        }
-        .fold(0.0) { total, recordStack ->
-            total + recordStack.totalAmount
-        }
+fun List<RecordStack>.getFirstByTypeAndAccountIdOrJustType(
+    type: CategoryType,
+    accountId: Int
+): RecordStack? {
+    return find { it.isExplicitlyOfType(type) && it.account.id == accountId }
+        ?: find { it.isExplicitlyOfType(type) }
 }
 
-
-fun getTotalPercentages(expensesTotal: Double, incomeTotal: Double): Pair<Double, Double> {
-    return (expensesTotal + incomeTotal)
-        .let { if (it == 0.0) null else it }
-        ?.let {
-            (100 / it) * expensesTotal to (100 / it) * incomeTotal
-        } ?: (0.0 to 0.0)
-}
 
 
 fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiState {
@@ -159,8 +142,28 @@ fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiSt
     )
 }
 
+private fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
+    val typeChecker = when (type) {
+        CategoryType.Expense -> RecordStack::isExpenseOrOutTransfer
+        CategoryType.Income -> RecordStack::isIncomeOrInTransfer
+    }
 
-private fun getStartAndFinalRateByAmounts(
+    return this
+        .filter { typeChecker(it) }
+        .fold(0.0) { total, recordStack ->
+            total + recordStack.totalAmount
+        }
+}
+
+private fun getTotalPercentages(expensesTotal: Double, incomeTotal: Double): Pair<Double, Double> {
+    return (expensesTotal + incomeTotal)
+        .takeUnless { it == 0.0 }
+        ?.let { (100 / it) * expensesTotal to (100 / it) * incomeTotal }
+        ?: (0.0 to 0.0)
+}
+
+
+fun getStartAndFinalRateByAmounts(
     startAmount: Double,
     finalAmount: Double
 ): Pair<Double, Double> {
@@ -169,33 +172,6 @@ private fun getStartAndFinalRateByAmounts(
     } else {
         startAmount / finalAmount to 1.0
     }
-}
-
-
-fun List<RecordStack>.getTransferDraft(
-    isNew: Boolean,
-    recordNum: Int,
-    accountsUiState: AccountsUiState
-): TransferDraft {
-    if (!isNew) {
-        getOutAndInTransfersByRecordNum(recordNum)?.let {
-            return it.toTransferDraft(accountList = accountsUiState.accountList)
-        }
-    }
-
-    return TransferDraft(
-        isNew = isNew,
-        sender = TransferDraftSenderReceiver(
-            account = accountsUiState.activeAccount,
-            recordNum = recordNum
-        ),
-        receiver = TransferDraftSenderReceiver(
-            account = accountsUiState.activeAccount?.let {
-                accountsUiState.accountList.getOtherFrom(it)
-            },
-            recordNum = recordNum + 1
-        )
-    )
 }
 
 
@@ -211,40 +187,9 @@ fun List<RecordStack>.getOutAndInTransfersByRecordNum(
 
 
 fun List<RecordStack>.getOutAndInTransfersByRecordNums(
-    senderReceiverRecordNums: TransferSenderReceiverRecordNums
+    recordNums: TransferSenderReceiverRecordNums
 ): Pair<RecordStack, RecordStack>? {
-    val first = this.findByRecordNum(senderReceiverRecordNums.sender) ?: return null
-    val second = this.findByRecordNum(senderReceiverRecordNums.receiver) ?: return null
-    return first to second
-}
-
-
-private fun Pair<RecordStack, RecordStack>.toTransferDraft(
-    accountList: List<Account>
-): TransferDraft {
-    val startAndFinalRate = getStartAndFinalRateByAmounts(
-        this.first.totalAmount, this.second.totalAmount
-    )
-    val sender = TransferDraftSenderReceiver(
-        account = accountList.findById(this.first.account.id),
-        recordNum = this.first.recordNum,
-        recordId = this.first.stack.firstOrNull()?.id ?: 0,
-        amount = "%.2f".format(Locale.US, this.first.totalAmount),
-        rate = "%.2f".format(Locale.US, startAndFinalRate.first)
-    )
-    val receiver = TransferDraftSenderReceiver(
-        account = accountList.findById(this.second.account.id),
-        recordNum = this.second.recordNum,
-        recordId = this.second.stack.firstOrNull()?.id ?: 0,
-        amount = "%.2f".format(Locale.US, this.second.totalAmount),
-        rate = "%.2f".format(Locale.US, startAndFinalRate.second)
-    )
-    return TransferDraft(
-        isNew = false,
-        sender = sender,
-        receiver = receiver,
-        dateTimeState = getNewDateByRecordLongDate(this.first.date),
-        includeInBudgets = this.first.stack.firstOrNull()?.includeInBudgets ?: true,
-        savingIsAllowed = sender.savingIsAllowed() && receiver.savingIsAllowed()
-    )
+    val outTransfer = this.findByRecordNum(recordNums.sender) ?: return null
+    val inTransfer = this.findByRecordNum(recordNums.receiver) ?: return null
+    return outTransfer to inTransfer
 }

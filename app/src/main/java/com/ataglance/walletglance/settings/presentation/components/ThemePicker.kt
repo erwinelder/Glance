@@ -21,10 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.settings.domain.ThemeUiState
 
 @Composable
 fun ThemePicker(
@@ -33,41 +32,38 @@ fun ThemePicker(
     onChooseDarkTheme: (String) -> Unit,
     themeUiState: ThemeUiState
 ) {
-    GlassSurface {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 18.dp)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp, vertical = 18.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                ThemeReprElement(
-                    onClick = { onChooseLightTheme(AppTheme.LightDefault.name) },
-                    firstAccountColor = Color(8, 8, 8),
-                    primaryColor = Color(177, 100, 145),
-                    backgroundColor = Color(240, 240, 240),
-                    surfaceColor = Color(247, 247, 247),
-                    borderColor = Color(195, 195, 195)
-                )
-                ThemeReprElement(
-                    onClick = { onChooseDarkTheme(AppTheme.DarkDefault.name) },
-                    firstAccountColor = Color(235, 235, 235),
-                    primaryColor = Color(177, 94, 139),
-                    backgroundColor = Color(25, 25, 25),
-                    surfaceColor = Color(31, 31, 31),
-                    borderColor = Color(40, 40, 40)
-                )
-            }
-            SwitchWithLabel(
-                checked = themeUiState.useDeviceTheme,
-                onCheckedChange = onSetUseDeviceTheme,
-                labelText = stringResource(R.string.use_device_theme)
+            ThemeReprElement(
+                onClick = { onChooseLightTheme(AppTheme.LightDefault.name) },
+                firstAccountColor = Color(8, 8, 8),
+                primaryColor = Color(177, 100, 145),
+                backgroundColor = Color(240, 240, 240),
+                surfaceColor = Color(247, 247, 247),
+                borderColor = Color(195, 195, 195)
+            )
+            ThemeReprElement(
+                onClick = { onChooseDarkTheme(AppTheme.DarkDefault.name) },
+                firstAccountColor = Color(235, 235, 235),
+                primaryColor = Color(177, 94, 139),
+                backgroundColor = Color(25, 25, 25),
+                surfaceColor = Color(31, 31, 31),
+                borderColor = Color(40, 40, 40)
             )
         }
+        SwitchWithLabel(
+            checked = themeUiState.useDeviceTheme,
+            onCheckedChange = onSetUseDeviceTheme,
+            labelText = stringResource(R.string.use_device_theme)
+        )
     }
 }
 

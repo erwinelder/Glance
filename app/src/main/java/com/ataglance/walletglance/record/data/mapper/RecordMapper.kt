@@ -6,15 +6,15 @@ import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.utils.getRecordTypeByChar
-import com.ataglance.walletglance.record.utils.toCategoryType
+import com.ataglance.walletglance.record.utils.asRecordType
+import com.ataglance.walletglance.record.utils.toCategoryTypeOrNullIfTransfer
 
 
 fun RecordEntity.toRecordStack(
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories
 ): RecordStack? {
-    val recordType = getRecordTypeByChar(type) ?: return null
+    val recordType = type.asRecordType() ?: return null
     val recordAccount = accountList.findById(accountId)?.toRecordAccount() ?: return null
     val recordStackUnit = toRecordStackUnit(categoriesWithSubcategories) ?: return null
 
@@ -31,9 +31,9 @@ fun RecordEntity.toRecordStack(
 fun RecordEntity.toRecordStackUnit(
     categoriesWithSubcategories: CategoriesWithSubcategories
 ): RecordStackItem? {
-    val recordType = getRecordTypeByChar(type) ?: return null
+    val recordType = type.asRecordType() ?: return null
 
-    val categoryWithSubcategories = recordType.toCategoryType()?.let {
+    val categoryWithSubcategories = recordType.toCategoryTypeOrNullIfTransfer()?.let {
         categoriesWithSubcategories.findById(id = categoryId, type = it)
     }
 

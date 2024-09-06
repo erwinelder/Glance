@@ -25,15 +25,15 @@ data class Category(
 
     fun isParentCategory() = parentCategoryId == null
 
-    fun getColorByTheme(theme: AppTheme?): LighterDarkerColors {
+    fun getColorByTheme(theme: AppTheme): LighterDarkerColors {
         return colorWithName.getColorByTheme(theme)
     }
 
-    fun getIconSolidColorByTheme(appTheme: AppTheme?): Color {
+    fun getIconSolidColorByTheme(appTheme: AppTheme): Color {
         return colorWithName.color.getCategoryIconSolidColorByTheme(appTheme)
     }
 
-    fun getLineChartColorsByTheme(appTheme: AppTheme?): List<Color> {
+    fun getLineChartColorsByTheme(appTheme: AppTheme): List<Color> {
         return colorWithName.color.getCategoryLineChartColorsByTheme(appTheme)
     }
 

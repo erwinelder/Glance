@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,30 +16,46 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
 
 @Composable
 fun LanguageScreen(
-    scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
+    onNavigateBack: () -> Unit,
     appLanguage: String,
     chosenLanguage: String?,
     onSelectNewLanguage: (String) -> Unit,
     onApplyLanguageButton: (String) -> Unit,
     onContinueButton: () -> Unit
 ) {
+    val settingsCategory = SettingsCategories(CurrAppTheme).language
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                bottom = (if (isAppSetUp) scaffoldPadding.calculateBottomPadding() else 0.dp) +
-                        dimensionResource(R.dimen.screen_vertical_padding)
+                top = 8.dp,
+                bottom = dimensionResource(R.dimen.screen_vertical_padding)
             )
     ) {
+        if (isAppSetUp && WindowTypeIsCompact) {
+            GlassSurfaceNavigationButton(
+                textRes = settingsCategory.stringRes,
+                imageRes = settingsCategory.iconRes,
+                showRightIconInsteadOfLeft = false,
+                filledWidths = FilledWidthByScreenType(.96f),
+                onClick = onNavigateBack
+            )
+        }
         Spacer(modifier = Modifier.weight(1f))
         LanguagePicker(
             currentLangCode = chosenLanguage,
@@ -73,7 +88,7 @@ fun LanguageScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
     isSetupProgressTopBarVisible: Boolean = false,
-    isBottomBarVisible: Boolean = true,
+    isBottomBarVisible: Boolean = false,
     appLanguage: String = AppLanguage.English.languageCode,
     selectedLanguage: String? = AppLanguage.German.languageCode,
 ) {
@@ -81,10 +96,10 @@ fun LanguageScreenPreview(
         appTheme = appTheme,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible
-    ) { scaffoldPadding ->
+    ) {
         LanguageScreen(
-            scaffoldPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,
+            onNavigateBack = {},
             appLanguage = appLanguage,
             chosenLanguage = selectedLanguage,
             onSelectNewLanguage = {},

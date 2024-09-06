@@ -12,7 +12,7 @@ data class SettingsCategory(
     @DrawableRes val iconRes: Int
 )
 
-class SettingsCategories(appTheme: AppTheme?) {
+class SettingsCategories(appTheme: AppTheme) {
 
     val accounts = SettingsCategory(
         SettingsScreens.Accounts,
@@ -20,7 +20,6 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.accounts_light_default_icon
             AppTheme.DarkDefault -> R.drawable.accounts_dark_default_icon
-            null -> R.drawable.accounts_light_default_icon
         }
     )
 
@@ -30,7 +29,6 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.budgets_light_default_icon
             AppTheme.DarkDefault -> R.drawable.budgets_dark_default_icon
-            null -> R.drawable.budgets_light_default_icon
         }
     )
 
@@ -40,7 +38,6 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.categories_light_default_icon
             AppTheme.DarkDefault -> R.drawable.categories_dark_default_icon
-            null -> R.drawable.categories_light_default_icon
         }
     )
 
@@ -50,7 +47,6 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.category_collections_light_default_icon_
             AppTheme.DarkDefault -> R.drawable.category_collections_dark_default_icon_
-            null -> R.drawable.category_collections_light_default_icon_
         }
     )
 
@@ -60,7 +56,15 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
             AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
-            null -> R.drawable.appearance_light_default_icon
+        }
+    )
+
+    val colorTheme = SettingsCategory(
+        SettingsScreens.Appearance,
+        R.string.color_theme,
+        when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
         }
     )
 
@@ -70,7 +74,6 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.language_light_default_icon
             AppTheme.DarkDefault -> R.drawable.language_dark_default_icon
-            null -> R.drawable.language_light_default_icon
         }
     )
 
@@ -80,7 +83,6 @@ class SettingsCategories(appTheme: AppTheme?) {
         when (appTheme) {
             AppTheme.LightDefault -> R.drawable.reset_light_default_icon
             AppTheme.DarkDefault -> R.drawable.reset_dark_default_icon
-            null -> R.drawable.reset_light_default_icon
         }
     )
 

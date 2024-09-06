@@ -117,7 +117,7 @@ fun CategoryPicker(
                 key = { it.category.id }
             ) { categoryWithSubcategories ->
                 if (categoryWithSubcategories.category.orderNum != 1) {
-                    SmallDivider(color = GlanceTheme.outline.copy(.5f))
+                    SmallDivider()
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -208,7 +208,7 @@ fun CategoryPicker(
                     key = { it.id }
                 ) { category ->
                     if (category.orderNum != 1) {
-                        SmallDivider(color = GlanceTheme.outline.copy(.5f))
+                        SmallDivider()
                     }
                     Row {
                         CategoryListItem(category) { subcategory ->

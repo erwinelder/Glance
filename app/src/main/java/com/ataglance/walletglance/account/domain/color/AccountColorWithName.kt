@@ -18,7 +18,7 @@ data class AccountColorWithName(
         return name.name
     }
 
-    fun getColorAndColorOnByTheme(theme: AppTheme?): Pair<LighterDarkerColors, Color> {
+    fun getColorAndColorOnByTheme(theme: AppTheme): Pair<LighterDarkerColors, Color> {
         return color.getByTheme(theme) to colorOn.getByTheme(theme)
     }
 

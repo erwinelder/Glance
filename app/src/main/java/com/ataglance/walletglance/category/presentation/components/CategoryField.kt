@@ -33,7 +33,7 @@ fun CategoryField(
     onClick: () -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .bounceClickEffect(.97f, onClick = onClick)
@@ -66,9 +66,7 @@ fun CategoryField(
         }
         Text(
             text = category?.name ?: "???",
-            color = category?.let {
-                GlanceTheme.onSurface
-            } ?: GlanceTheme.surface,
+            color = if (category != null) GlanceTheme.onSurface else GlanceTheme.surface,
             fontSize = fontSize,
             fontWeight = FontWeight.Light,
             maxLines = 1,

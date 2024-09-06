@@ -4,6 +4,7 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import java.util.Locale
 
 data class Budget(
     val id: Int,
@@ -26,7 +27,10 @@ data class Budget(
     fun applyUsedAmount(amount: Double): Budget {
         return this.copy(
             usedAmount = amount,
-            usedPercentage = "%.2f".format(100 / amountLimit * amount).toFloat()
+            usedPercentage = "%.2f".format(
+                Locale.US,
+                100 / amountLimit * amount
+            ).toFloat()
         )
     }
 

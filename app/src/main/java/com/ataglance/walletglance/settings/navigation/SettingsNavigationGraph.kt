@@ -97,6 +97,7 @@ fun NavGraphBuilder.settingsGraph(
             AppearanceScreen(
                 isAppSetUp = appUiSettings.isSetUp,
                 themeUiState = themeUiState,
+                onNavigateBack = navController::popBackStack,
                 onContinueSetupButton = {
                     navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
                 },
@@ -114,8 +115,8 @@ fun NavGraphBuilder.settingsGraph(
             val context = LocalContext.current
 
             LanguageScreen(
-                scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appUiSettings.isSetUp,
+                onNavigateBack = navController::popBackStack,
                 appLanguage = appUiSettings.langCode,
                 chosenLanguage = chosenLanguage,
                 onSelectNewLanguage = viewModel::selectNewLanguage,

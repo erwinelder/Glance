@@ -43,7 +43,7 @@ fun CategoryColors.toCategoryColorWithName(): CategoryColorWithName {
 }
 
 
-fun CategoryColors.toColorWithName(theme: AppTheme?): ColorWithName {
+fun CategoryColors.toColorWithName(theme: AppTheme): ColorWithName {
     return ColorWithName(this.name.name, this.color.getByTheme(theme).darker)
 }
 

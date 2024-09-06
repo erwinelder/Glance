@@ -15,7 +15,7 @@ data class CategoryColorWithName(
         return name.name
     }
 
-    fun getColorByTheme(theme: AppTheme?): LighterDarkerColors {
+    fun getColorByTheme(theme: AppTheme): LighterDarkerColors {
         return color.getByTheme(theme)
     }
 

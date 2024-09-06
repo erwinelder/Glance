@@ -26,7 +26,7 @@ fun AccountColors.toAccountColorWithName(): AccountColorWithName {
 }
 
 
-fun AccountColors.toColorWithName(theme: AppTheme?): ColorWithName {
+fun AccountColors.toColorWithName(theme: AppTheme): ColorWithName {
     return ColorWithName(this.name.name, this.color.getByTheme(theme).lighter)
 }
 

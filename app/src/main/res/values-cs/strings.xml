@@ -46,6 +46,7 @@
     <string name="categories">Kategorie</string>
     <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
+    <string name="color_theme">Barevný motiv</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
 

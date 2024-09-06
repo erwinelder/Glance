@@ -36,6 +36,7 @@ import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.CategoryWithSubcategoryByType
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.category.utils.toRecordType
@@ -74,21 +75,22 @@ import com.ataglance.walletglance.record.domain.RecordsInDateRange
 import com.ataglance.walletglance.record.utils.filterByDateAndAccount
 import com.ataglance.walletglance.record.utils.findByRecordNum
 import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.record.utils.getFirstByTypeAndAccountIdOrJustType
 import com.ataglance.walletglance.record.utils.getOutAndInTransfersByRecordNums
 import com.ataglance.walletglance.record.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.utils.inverse
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import com.ataglance.walletglance.recordCreation.domain.DataAfterRecordOperation
+import com.ataglance.walletglance.recordCreation.domain.mapper.toCreatedRecord
 import com.ataglance.walletglance.recordCreation.domain.mapper.toCreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordEntityList
+import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordEntityListWithOldIds
 import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordsPair
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecord
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
-import com.ataglance.walletglance.recordCreation.utils.toCreatedRecord
-import com.ataglance.walletglance.recordCreation.utils.toRecordEntityList
-import com.ataglance.walletglance.recordCreation.utils.toRecordEntityListWithOldIds
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.Flow
@@ -429,19 +431,18 @@ class AppViewModel(
         }
     }
 
-    fun getLastRecordCategory(
-        accountId: Int,
-        type: CategoryType = CategoryType.Expense
-    ): CategoryWithSubcategory? {
+    fun getLastUsedRecordCategories(): CategoryWithSubcategoryByType {
+        return CategoryWithSubcategoryByType(
+            expense = getLastUsedRecordCategoryByType(CategoryType.Expense),
+            income = getLastUsedRecordCategoryByType(CategoryType.Income),
+        )
+    }
 
-        recordStackList.value.let { list ->
-            list.find { it.account.id == accountId && it.isExpenseOrIncome() } ?: list.firstOrNull()
-        }
-        ?.stack?.firstOrNull()
-        ?.let { return it.categoryWithSubcategory }
-
-        return categoriesWithSubcategories.value.getByTypeOrAll(type)
-            .lastOrNull()?.getWithLastSubcategory()
+    private fun getLastUsedRecordCategoryByType(type: CategoryType): CategoryWithSubcategory? {
+        return accountsUiState.value.activeAccount?.id
+            ?.let { recordStackList.value.getFirstByTypeAndAccountIdOrJustType(type, it) }
+            ?.stack?.firstOrNull()?.categoryWithSubcategory
+            ?: categoriesWithSubcategories.value.getLastCategoryWithSubcategoryByType(type)
     }
 
 

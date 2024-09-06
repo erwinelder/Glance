@@ -26,6 +26,7 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModelFactory
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
@@ -48,7 +49,6 @@ import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
-import com.ataglance.walletglance.record.utils.getTransferDraft
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
@@ -56,6 +56,7 @@ import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCr
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModelFactory
 import com.ataglance.walletglance.recordCreation.utils.getRecordDraft
+import com.ataglance.walletglance.recordCreation.utils.getTransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow
@@ -297,18 +298,19 @@ fun AppNavHost(
             val isNew = backStack.toRoute<MainScreens.RecordCreation>().isNew
             val recordNum = backStack.toRoute<MainScreens.RecordCreation>().recordNum
 
-            val initialCategoryWithSubcategory = accountsUiState.activeAccount?.id
-                ?.takeIf { isNew }
-                ?.let { appViewModel.getLastRecordCategory(accountId = it) }
-            val recordDraft = recordStackList.getRecordDraft(
-                isNew = isNew,
-                recordNum = recordNum,
-                accountsUiState = accountsUiState,
-                initialCategoryWithSubcategory = initialCategoryWithSubcategory
-            )
+            val initialCategoryWithSubcategoryByType = appViewModel.getLastUsedRecordCategories()
 
             val viewModel = viewModel<RecordCreationViewModel>(
-                factory = RecordCreationViewModelFactory(recordDraft = recordDraft)
+                factory = RecordCreationViewModelFactory(
+                    initialCategoryWithSubcategoryByType = initialCategoryWithSubcategoryByType,
+                    recordDraft = recordStackList.getRecordDraft(
+                        isNew = isNew,
+                        recordNum = recordNum,
+                        accountsUiState = accountsUiState,
+                        initialCategoryWithSubcategory = initialCategoryWithSubcategoryByType
+                            .getByType(CategoryType.Expense)
+                    )
+                )
             )
 
             val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
@@ -322,9 +324,7 @@ fun AppNavHost(
                 savingIsAllowed = savingIsAllowed,
                 accountList = accountsUiState.accountList,
                 categoriesWithSubcategories = categoriesWithSubcategories,
-                onSelectCategoryType = { type ->
-                    viewModel.selectCategoryType(type, categoriesWithSubcategories)
-                },
+                onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(
                         navController = navController,
@@ -377,13 +377,11 @@ fun AppNavHost(
             val viewModel = viewModel<TransferCreationViewModel>(
                 factory = TransferCreationViewModelFactory(
                     accountList = accountsUiState.accountList,
-                    transferDraft = recordStackList
-                        .getTransferDraft(
-                            isNew = isNew,
-                            recordNum = recordNum.takeUnless { it == 0 }
-                                ?: appUiSettings.nextRecordNum(),
-                            accountsUiState = accountsUiState
-                        )
+                    transferDraft = recordStackList.getTransferDraft(
+                        isNew = isNew,
+                        recordNum = recordNum,
+                        accountsUiState = accountsUiState
+                    )
                 )
             )
 

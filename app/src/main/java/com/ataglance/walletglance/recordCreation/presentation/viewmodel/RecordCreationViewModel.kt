@@ -4,14 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.CategoryWithSubcategoryByType
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalDot
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
-import com.ataglance.walletglance.recordCreation.utils.copyWithCategoryWithSubcategory
+import com.ataglance.walletglance.recordCreation.utils.copyWithCategoryAndSubcategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class RecordCreationViewModel(
+    private val initialCategoryWithSubcategoryByType: CategoryWithSubcategoryByType,
     recordDraft: RecordDraft
 ) : ViewModel() {
 
@@ -28,17 +29,12 @@ class RecordCreationViewModel(
     )
     val recordDraftGeneral = _recordDraftGeneral.asStateFlow()
 
-    fun selectCategoryType(
-        type: CategoryType,
-        categoriesWithSubcategories: CategoriesWithSubcategories
-    ) {
+    fun selectCategoryType(type: CategoryType) {
         _recordDraftGeneral.update {
             it.copy(type = type)
         }
         _recordDraftItems.update {
-            it.copyWithCategoryWithSubcategory(
-                categoriesWithSubcategories.getLastCategoryWithSubcategoryByType(type)
-            )
+            it.copyWithCategoryAndSubcategory(initialCategoryWithSubcategoryByType.getByType(type))
         }
     }
 
@@ -219,10 +215,11 @@ class RecordCreationViewModel(
 }
 
 class RecordCreationViewModelFactory(
+    private val initialCategoryWithSubcategoryByType: CategoryWithSubcategoryByType,
     private val recordDraft: RecordDraft
 ) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return RecordCreationViewModel(recordDraft) as T
+        return RecordCreationViewModel(initialCategoryWithSubcategoryByType, recordDraft) as T
     }
 }

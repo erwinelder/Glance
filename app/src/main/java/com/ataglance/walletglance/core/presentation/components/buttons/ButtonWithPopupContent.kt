@@ -3,6 +3,7 @@ package com.ataglance.walletglance.core.presentation.components.buttons
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -62,6 +63,11 @@ fun ButtonWithPopupContent(
                         start = Offset(75f, 210f),
                         end = Offset(95f, -10f)
                     )
+                )
+                .border(
+                    width = 1.dp,
+                    color = GlanceTheme.onGlassSurfaceBorder,
+                    shape = RoundedCornerShape(36)
                 ),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,

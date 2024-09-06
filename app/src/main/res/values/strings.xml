@@ -47,6 +47,7 @@
     <string name="categories">Categories</string>
     <string name="category_collections">Category collections</string>
     <string name="appearance">Appearance</string>
+    <string name="color_theme">Color theme</string>
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
 

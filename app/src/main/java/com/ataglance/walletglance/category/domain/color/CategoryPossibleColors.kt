@@ -54,7 +54,7 @@ data class CategoryPossibleColors(
         }
     }
 
-    fun asColorWithNameList(theme: AppTheme?): List<ColorWithName> {
+    fun asColorWithNameList(theme: AppTheme): List<ColorWithName> {
         return asList().map { it.toColorWithName(theme) }
     }
 
