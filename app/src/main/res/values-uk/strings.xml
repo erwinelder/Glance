@@ -47,6 +47,8 @@
     <string name="category_collections">Колекції категорій</string>
     <string name="appearance">Зовнішній вигляд</string>
     <string name="color_theme">Кольорова тема</string>
+    <string name="navigation_buttons">Кнопки навігації</string>
+    <string name="widgets">Віджети</string>
     <string name="language">Мова</string>
     <string name="reset_data">Скинути дані</string>
 

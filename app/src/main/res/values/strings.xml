@@ -48,6 +48,8 @@
     <string name="category_collections">Category collections</string>
     <string name="appearance">Appearance</string>
     <string name="color_theme">Color theme</string>
+    <string name="navigation_buttons">Navigation buttons</string>
+    <string name="widgets">Widgets</string>
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
 

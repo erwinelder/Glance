@@ -2,34 +2,34 @@ package com.ataglance.walletglance.navigation.domain.mapper
 
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.domain.model.AppScreenEnum
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 
 
-fun NavigationButtonEntity.toBottomBarNavigationButton(): BottomBarNavigationButtons? {
+fun NavigationButtonEntity.toBottomBarNavigationButton(): BottomBarNavigationButton? {
     return this.screenName.getAppScreenEnum()?.toBottomBarNavigationButton()
 }
 
 fun List<NavigationButtonEntity>.toBottomBarNavigationButtonList():
-        List<BottomBarNavigationButtons>
+        List<BottomBarNavigationButton>
 {
     return this.mapNotNull { it.toBottomBarNavigationButton() }
 }
 
 
 
-fun BottomBarNavigationButtons.toDefaultNavigationButtonEntity(): NavigationButtonEntity {
+fun BottomBarNavigationButton.toDefaultNavigationButtonEntity(): NavigationButtonEntity {
     return when (this) {
-        BottomBarNavigationButtons.Home -> NavigationButtonEntity(AppScreenEnum.Home.name, 0)
-        BottomBarNavigationButtons.Records -> NavigationButtonEntity(AppScreenEnum.Records.name, 1)
-        BottomBarNavigationButtons.CategoryStatistics ->
+        BottomBarNavigationButton.Home -> NavigationButtonEntity(AppScreenEnum.Home.name, 0)
+        BottomBarNavigationButton.Records -> NavigationButtonEntity(AppScreenEnum.Records.name, 1)
+        BottomBarNavigationButton.CategoryStatistics ->
             NavigationButtonEntity(AppScreenEnum.CategoryStatistics.name, 2)
-        BottomBarNavigationButtons.Budgets -> NavigationButtonEntity(AppScreenEnum.Budgets.name, 3)
-        BottomBarNavigationButtons.Settings -> NavigationButtonEntity(AppScreenEnum.Settings.name, 4)
+        BottomBarNavigationButton.Budgets -> NavigationButtonEntity(AppScreenEnum.Budgets.name, 3)
+        BottomBarNavigationButton.Settings -> NavigationButtonEntity(AppScreenEnum.Settings.name, 4)
     }
 }
 
-fun List<BottomBarNavigationButtons>.toDefaultNavigationButtonEntityList():
+fun List<BottomBarNavigationButton>.toDefaultNavigationButtonEntityList():
         List<NavigationButtonEntity>
 {
     return this.map { it.toDefaultNavigationButtonEntity() }
@@ -48,12 +48,12 @@ fun String.getAppScreenEnum(): AppScreenEnum? {
     }
 }
 
-fun AppScreenEnum.toBottomBarNavigationButton(): BottomBarNavigationButtons {
+fun AppScreenEnum.toBottomBarNavigationButton(): BottomBarNavigationButton {
     return when (this) {
-        AppScreenEnum.Home -> BottomBarNavigationButtons.Home
-        AppScreenEnum.Records -> BottomBarNavigationButtons.Records
-        AppScreenEnum.CategoryStatistics -> BottomBarNavigationButtons.CategoryStatistics
-        AppScreenEnum.Budgets -> BottomBarNavigationButtons.Budgets
-        AppScreenEnum.Settings -> BottomBarNavigationButtons.Settings
+        AppScreenEnum.Home -> BottomBarNavigationButton.Home
+        AppScreenEnum.Records -> BottomBarNavigationButton.Records
+        AppScreenEnum.CategoryStatistics -> BottomBarNavigationButton.CategoryStatistics
+        AppScreenEnum.Budgets -> BottomBarNavigationButton.Budgets
+        AppScreenEnum.Settings -> BottomBarNavigationButton.Settings
     }
 }

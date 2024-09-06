@@ -68,6 +68,24 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
+    val navigationButtons = SettingsCategory(
+        SettingsScreens.Appearance,
+        R.string.navigation_buttons,
+        when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
+        }
+    )
+
+    val widgets = SettingsCategory(
+        SettingsScreens.Appearance,
+        R.string.widgets,
+        when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
+        }
+    )
+
     val language = SettingsCategory(
         SettingsScreens.Language,
         R.string.language,

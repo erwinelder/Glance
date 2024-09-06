@@ -5,14 +5,14 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.navigation.MainScreens
 
-sealed class BottomBarNavigationButtons(
+sealed class BottomBarNavigationButton(
     val screen: MainScreens,
     @StringRes val screenNameRes: Int,
     val inactiveIconRes: DrawableResByTheme,
     val activeIconRes: DrawableResByTheme,
 ) {
 
-    data object Home : BottomBarNavigationButtons(
+    data object Home : BottomBarNavigationButton(
         screen = MainScreens.Home,
         screenNameRes = R.string.home,
         inactiveIconRes = DrawableResByTheme(
@@ -25,7 +25,7 @@ sealed class BottomBarNavigationButtons(
         )
     )
 
-    data object Records : BottomBarNavigationButtons(
+    data object Records : BottomBarNavigationButton(
         screen = MainScreens.Records,
         screenNameRes = R.string.records,
         inactiveIconRes = DrawableResByTheme(
@@ -38,7 +38,7 @@ sealed class BottomBarNavigationButtons(
         )
     )
 
-    data object CategoryStatistics : BottomBarNavigationButtons(
+    data object CategoryStatistics : BottomBarNavigationButton(
         screen = MainScreens.CategoryStatistics(0),
         screenNameRes = R.string.statistics,
         inactiveIconRes = DrawableResByTheme(
@@ -51,7 +51,7 @@ sealed class BottomBarNavigationButtons(
         )
     )
 
-    data object Budgets : BottomBarNavigationButtons(
+    data object Budgets : BottomBarNavigationButton(
         screen = MainScreens.Budgets,
         screenNameRes = R.string.budgets,
         inactiveIconRes = DrawableResByTheme(
@@ -64,7 +64,7 @@ sealed class BottomBarNavigationButtons(
         )
     )
 
-    data object Settings : BottomBarNavigationButtons(
+    data object Settings : BottomBarNavigationButton(
         screen = MainScreens.Settings,
         screenNameRes = R.string.settings,
         inactiveIconRes = DrawableResByTheme(

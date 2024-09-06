@@ -47,6 +47,8 @@
     <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
     <string name="color_theme">Barevný motiv</string>
+    <string name="navigation_buttons">Navigační tlačítka</string>
+    <string name="widgets">Widgety</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
 

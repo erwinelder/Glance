@@ -48,6 +48,8 @@
     <string name="category_collections">Colecciones de categorías</string>
     <string name="appearance">Apariencia</string>
     <string name="color_theme">Tema de color</string>
+    <string name="navigation_buttons">Botones de navegación</string>
+    <string name="widgets">Widgets</string>
     <string name="language">Idioma</string>
     <string name="reset_data">Restablecer datos</string>
 

@@ -10,7 +10,7 @@ import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEn
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.domain.mapper.toBottomBarNavigationButtonList
 import com.ataglance.walletglance.navigation.domain.mapper.toDefaultNavigationButtonEntityList
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.utils.currentScreenIsNoneOf
 import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.utils.fromMainScreen
@@ -26,14 +26,14 @@ class NavigationViewModel(
     private val navigationRepository: NavigationRepository
 ) : ViewModel() {
 
-    private val _bottomBarNavigationButtons: MutableStateFlow<List<BottomBarNavigationButtons>> =
+    private val _bottomBarNavigationButtons: MutableStateFlow<List<BottomBarNavigationButton>> =
         MutableStateFlow(
             listOf(
-                BottomBarNavigationButtons.Home,
-                BottomBarNavigationButtons.Records,
-                BottomBarNavigationButtons.CategoryStatistics,
-                BottomBarNavigationButtons.Budgets,
-                BottomBarNavigationButtons.Settings
+                BottomBarNavigationButton.Home,
+                BottomBarNavigationButton.Records,
+                BottomBarNavigationButton.CategoryStatistics,
+                BottomBarNavigationButton.Budgets,
+                BottomBarNavigationButton.Settings
             )
         )
     val bottomBarNavigationButtons = _bottomBarNavigationButtons.asStateFlow()
@@ -59,11 +59,11 @@ class NavigationViewModel(
 
     private fun getDefaultNavigationButtonList(): List<NavigationButtonEntity> {
         return listOf(
-            BottomBarNavigationButtons.Home,
-            BottomBarNavigationButtons.Records,
-            BottomBarNavigationButtons.CategoryStatistics,
-            BottomBarNavigationButtons.Budgets,
-            BottomBarNavigationButtons.Settings
+            BottomBarNavigationButton.Home,
+            BottomBarNavigationButton.Records,
+            BottomBarNavigationButton.CategoryStatistics,
+            BottomBarNavigationButton.Budgets,
+            BottomBarNavigationButton.Settings
         ).toDefaultNavigationButtonEntityList()
     }
 

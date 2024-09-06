@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 @Composable
 fun BottomNavBar(
@@ -20,7 +20,7 @@ fun BottomNavBar(
     currentScreenIsScreenProvider: (Any) -> Boolean,
     onNavigateToScreen: (MainScreens) -> Unit,
     onMakeRecordButtonClick: () -> Unit,
-    barButtons: List<BottomBarNavigationButtons>
+    barButtons: List<BottomBarNavigationButton>
 ) {
     val bottomBarButtons by remember(barButtons) {
         derivedStateOf { barButtons.take(3) }
@@ -48,11 +48,11 @@ fun BottomNavBar(
 @Composable
 private fun BottomNavBarPreview() {
     val barButtons = listOf(
-        BottomBarNavigationButtons.Home,
-        BottomBarNavigationButtons.Records,
-        BottomBarNavigationButtons.CategoryStatistics,
-        BottomBarNavigationButtons.Budgets,
-        BottomBarNavigationButtons.Settings
+        BottomBarNavigationButton.Home,
+        BottomBarNavigationButton.Records,
+        BottomBarNavigationButton.CategoryStatistics,
+        BottomBarNavigationButton.Budgets,
+        BottomBarNavigationButton.Settings
     )
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {

@@ -26,7 +26,7 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 
 @Composable
-fun ThemePicker(
+fun ThemePickerContent(
     onSetUseDeviceTheme: (Boolean) -> Unit,
     onChooseLightTheme: (String) -> Unit,
     onChooseDarkTheme: (String) -> Unit,

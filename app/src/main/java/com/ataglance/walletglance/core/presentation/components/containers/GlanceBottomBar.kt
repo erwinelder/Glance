@@ -56,7 +56,7 @@ import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeI
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -67,8 +67,8 @@ fun GlanceBottomNavBar(
     currentScreenIsScreenProvider: (Any) -> Boolean,
     onNavigateToScreen: (MainScreens) -> Unit,
     onFloatingButtonClick: () -> Unit,
-    bottomBarButtons: List<BottomBarNavigationButtons>,
-    popupListBarButtons: List<BottomBarNavigationButtons>
+    bottomBarButtons: List<BottomBarNavigationButton>,
+    popupListBarButtons: List<BottomBarNavigationButton>
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var timerIsUp by remember { mutableStateOf(true) }
@@ -174,11 +174,11 @@ private fun BottomBarButtonsRow(
     onIsExpandedToggle: () -> Unit,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onButtonClick: (MainScreens) -> Unit,
-    barButtons: List<BottomBarNavigationButtons>
+    barButtons: List<BottomBarNavigationButton>
 ) {
     val buttonList by remember(barButtons) {
         derivedStateOf {
-            val list: MutableList<BottomBarNavigationButtons?> = barButtons.toMutableList()
+            val list: MutableList<BottomBarNavigationButton?> = barButtons.toMutableList()
             list.add(2, null)
             list
         }
@@ -233,7 +233,7 @@ private fun PopupButtonsList(
     onIsExpandedToggle: () -> Unit,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onButtonClick: (MainScreens) -> Unit,
-    barButtons: List<BottomBarNavigationButtons>
+    barButtons: List<BottomBarNavigationButton>
 ) {
     val expandedState = remember { MutableTransitionState(isExpanded) }
     LaunchedEffect(isExpanded) {
@@ -292,7 +292,7 @@ private fun RowScope.ButtonsSpacerGap() {
 
 @Composable
 private fun BottomBarButton(
-    button: BottomBarNavigationButtons,
+    button: BottomBarNavigationButton,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onClick: (MainScreens) -> Unit
 ) {
@@ -316,7 +316,7 @@ private fun BottomBarButton(
 
 @Composable
 private fun ListBarButton(
-    button: BottomBarNavigationButtons,
+    button: BottomBarNavigationButton,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     onClick: (MainScreens) -> Unit
 ) {

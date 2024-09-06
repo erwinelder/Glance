@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.settings.presentation.components.SetupProgressTopBar
 
 @Composable
@@ -18,7 +18,7 @@ fun MainScaffold(
     onMakeRecordButtonClick: () -> Unit,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     currentScreenIsScreenProvider: (Any) -> Boolean,
-    bottomBarButtons: List<BottomBarNavigationButtons>,
+    bottomBarButtons: List<BottomBarNavigationButton>,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(

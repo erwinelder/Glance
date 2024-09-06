@@ -16,7 +16,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButtons
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -62,11 +62,11 @@ fun PreviewWithMainScaffoldContainer(
                         anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
                         currentScreenIsScreenProvider = currentScreenIsScreenProvider,
                         bottomBarButtons = listOf(
-                            BottomBarNavigationButtons.Home,
-                            BottomBarNavigationButtons.Records,
-                            BottomBarNavigationButtons.CategoryStatistics,
-                            BottomBarNavigationButtons.Budgets,
-                            BottomBarNavigationButtons.Settings
+                            BottomBarNavigationButton.Home,
+                            BottomBarNavigationButton.Records,
+                            BottomBarNavigationButton.CategoryStatistics,
+                            BottomBarNavigationButton.Budgets,
+                            BottomBarNavigationButton.Settings
                         ),
                         content = content
                     )

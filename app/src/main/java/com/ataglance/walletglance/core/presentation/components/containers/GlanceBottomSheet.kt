@@ -34,6 +34,7 @@ fun GlanceBottomSheet(
             dragHandle = {
                 SmallDivider(
                     modifier = Modifier.padding(vertical = 16.dp),
+                    filledWidth = .2f,
                     thickness = 3.dp
                 )
             }

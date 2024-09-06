@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +32,8 @@ import com.ataglance.walletglance.core.presentation.components.containers.Glance
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.settings.presentation.components.ThemePicker
+import com.ataglance.walletglance.settings.presentation.components.ReorderableNavigationButtonList
+import com.ataglance.walletglance.settings.presentation.components.ThemePickerContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +48,9 @@ fun AppearanceScreen(
 ) {
     val settingsCategories = SettingsCategories(CurrAppTheme)
     val appearanceSettingsCategories = listOf(
-        settingsCategories.colorTheme
+        settingsCategories.colorTheme,
+        settingsCategories.navigationButtons,
+        settingsCategories.widgets
     )
     val sheetState = rememberModalBottomSheetState()
     var showSettingsCategory by remember { mutableStateOf<Int?>(null) }
@@ -58,12 +62,10 @@ fun AppearanceScreen(
     Box {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = 8.dp,
-                    bottom = 8.dp
-                )
+                .padding(top = 8.dp, bottom = 8.dp)
         ) {
             if (isAppSetUp && WindowTypeIsCompact) {
                 GlassSurfaceNavigationButton(
@@ -102,13 +104,16 @@ fun AppearanceScreen(
             onDismissRequest = { showSettingsCategory = null },
             backgroundColor = backgroundColor
         ) {
-            if (showSettingsCategory == settingsCategories.colorTheme.stringRes) {
-                ThemePicker(
+            when (showSettingsCategory) {
+                settingsCategories.colorTheme.stringRes -> { ThemePickerContent(
                     onChooseLightTheme = onChooseLightTheme,
                     onChooseDarkTheme = onChooseDarkTheme,
                     onSetUseDeviceTheme = onSetUseDeviceTheme,
                     themeUiState = themeUiState
-                )
+                ) }
+                settingsCategories.navigationButtons.stringRes -> { ReorderableNavigationButtonList(
+                ) }
+                settingsCategories.widgets.stringRes -> {  }
             }
         }
     }

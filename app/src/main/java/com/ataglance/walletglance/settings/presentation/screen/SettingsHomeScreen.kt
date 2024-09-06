@@ -1,7 +1,5 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,7 +41,7 @@ import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
 @Composable
-fun AnimatedVisibilityScope.SettingsHomeScreen(
+fun SettingsHomeScreen(
     scaffoldPadding: PaddingValues,
     onNavigateToScreen: (SettingsScreens) -> Unit
 ) {
@@ -104,7 +102,7 @@ fun AnimatedVisibilityScope.SettingsHomeScreen(
 }
 
 @Composable
-private fun AnimatedVisibilityScope.CompactLayout(
+private fun CompactLayout(
     scaffoldPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
     onNavigateToScreen: (SettingsScreens) -> Unit
@@ -139,7 +137,7 @@ private fun AnimatedVisibilityScope.CompactLayout(
 }
 
 @Composable
-private fun AnimatedVisibilityScope.ExpandedLayout(
+private fun ExpandedLayout(
     scaffoldPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
     onNavigateToScreen: (SettingsScreens) -> Unit
@@ -197,11 +195,9 @@ fun SettingsHomeScreenPreview(
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Settings) },
         currentScreenIsScreenProvider = { false }
     ) { scaffoldPadding ->
-        AnimatedVisibility(true) {
-            SettingsHomeScreen(
-                scaffoldPadding = scaffoldPadding,
-                onNavigateToScreen = {}
-            )
-        }
+        SettingsHomeScreen(
+            scaffoldPadding = scaffoldPadding,
+            onNavigateToScreen = {}
+        )
     }
 }
