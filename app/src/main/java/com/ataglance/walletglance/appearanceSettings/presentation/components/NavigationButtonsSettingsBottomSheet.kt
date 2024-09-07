@@ -28,8 +28,7 @@ fun NavigationButtonsSettingsBottomSheet(
     GlanceBottomSheet(
         visible = visible,
         sheetState = sheetState,
-        onDismissRequest = onDismissRequest,
-        backgroundColor = GlanceTheme.background
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
