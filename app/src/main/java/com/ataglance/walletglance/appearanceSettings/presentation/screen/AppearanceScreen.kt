@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,11 +52,16 @@ fun AppearanceScreen(
     val settingsCategories = SettingsCategories(CurrAppTheme)
     val appearanceSettingsCategories = listOf(
         settingsCategories.colorTheme,
-        settingsCategories.navigationButtons,
-        settingsCategories.widgets
+        settingsCategories.widgets,
+        settingsCategories.navigationButtons
     )
+    val scrollState = rememberScrollState()
 
     var showThemeSettingsBottomSheet by remember { mutableStateOf(false) }
+
+    var showWidgetsSettingsBottomSheet by remember { mutableStateOf(false) }
+
+    var showNavigationButtonsSettingsBottomSheet by remember { mutableStateOf(false) }
     val editNavigationButtonsViewModel = viewModel<EditNavigationButtonsViewModel>(
         factory = EditNavigationButtonsViewModelFactory(
             initialNavigationButtonList = initialNavigationButtonList
@@ -63,9 +70,6 @@ fun AppearanceScreen(
     val navigationButtonList by editNavigationButtonsViewModel.navigationButtonList
         .collectAsStateWithLifecycle()
 
-    var showNavigationButtonsSettingsBottomSheet by remember { mutableStateOf(false) }
-
-    var showWidgetsSettingsBottomSheet by remember { mutableStateOf(false) }
 
     Box {
         Column(
@@ -86,22 +90,28 @@ fun AppearanceScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
 
-            appearanceSettingsCategories.forEach { category ->
-                GlassSurfaceNavigationButton(
-                    textRes = category.stringRes,
-                    imageRes = category.iconRes,
-                    showRightIconInsteadOfLeft = true,
-                    rightIconRes = R.drawable.short_arrow_up_icon,
-                    filledWidths = FilledWidthByScreenType(),
-                    onClick = {
-                        when (category) {
-                            settingsCategories.colorTheme -> showThemeSettingsBottomSheet = true
-                            settingsCategories.navigationButtons ->
-                                showNavigationButtonsSettingsBottomSheet = true
-                            settingsCategories.widgets -> showWidgetsSettingsBottomSheet = true
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.verticalScroll(scrollState)
+            ) {
+                appearanceSettingsCategories.forEach { category ->
+                    GlassSurfaceNavigationButton(
+                        textRes = category.stringRes,
+                        imageRes = category.iconRes,
+                        showRightIconInsteadOfLeft = true,
+                        rightIconRes = R.drawable.short_arrow_up_icon,
+                        filledWidths = FilledWidthByScreenType(),
+                        onClick = {
+                            when (category) {
+                                settingsCategories.colorTheme -> showThemeSettingsBottomSheet = true
+                                settingsCategories.widgets -> showWidgetsSettingsBottomSheet = true
+                                settingsCategories.navigationButtons ->
+                                    showNavigationButtonsSettingsBottomSheet = true
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

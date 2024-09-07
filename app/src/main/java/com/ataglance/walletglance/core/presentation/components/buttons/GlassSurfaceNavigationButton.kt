@@ -61,8 +61,7 @@ fun GlassSurfaceNavigationButton(
                     painter = painterResource(R.drawable.short_arrow_left_icon),
                     contentDescription = "left arrow icon",
                     tint = GlanceTheme.onSurface,
-                    modifier = Modifier
-                        .size(26.dp)
+                    modifier = Modifier.size(26.dp)
                 )
             }
             Image(

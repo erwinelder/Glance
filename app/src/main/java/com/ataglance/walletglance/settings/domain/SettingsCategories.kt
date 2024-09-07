@@ -63,17 +63,8 @@ class SettingsCategories(appTheme: AppTheme) {
         SettingsScreens.Appearance,
         R.string.color_theme,
         when (appTheme) {
-            AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
-            AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
-        }
-    )
-
-    val navigationButtons = SettingsCategory(
-        SettingsScreens.Appearance,
-        R.string.navigation_buttons,
-        when (appTheme) {
-            AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
-            AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
+            AppTheme.LightDefault -> R.drawable.color_theme_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.color_theme_dark_default_icon
         }
     )
 
@@ -81,8 +72,17 @@ class SettingsCategories(appTheme: AppTheme) {
         SettingsScreens.Appearance,
         R.string.widgets,
         when (appTheme) {
-            AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
-            AppTheme.DarkDefault -> R.drawable.appearance_dark_default_icon
+            AppTheme.LightDefault -> R.drawable.widgets_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.widgets_dark_default_icon
+        }
+    )
+
+    val navigationButtons = SettingsCategory(
+        SettingsScreens.Appearance,
+        R.string.navigation_buttons,
+        when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.navigation_buttons_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.navigation_buttons_dark_default_icon
         }
     )
 
