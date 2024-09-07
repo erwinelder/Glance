@@ -45,8 +45,8 @@ class SettingsCategories(appTheme: AppTheme) {
         SettingsScreens.CategoryCollections,
         R.string.category_collections,
         when (appTheme) {
-            AppTheme.LightDefault -> R.drawable.category_collections_light_default_icon_
-            AppTheme.DarkDefault -> R.drawable.category_collections_dark_default_icon_
+            AppTheme.LightDefault -> R.drawable.category_collections_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.category_collections_dark_default_icon
         }
     )
 
