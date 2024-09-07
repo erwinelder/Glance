@@ -10,6 +10,7 @@ import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEn
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.domain.mapper.toBottomBarNavigationButtonList
 import com.ataglance.walletglance.navigation.domain.mapper.toDefaultNavigationButtonEntityList
+import com.ataglance.walletglance.navigation.domain.mapper.toNavigationButtonEntityList
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.utils.currentScreenIsNoneOf
 import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
@@ -26,7 +27,7 @@ class NavigationViewModel(
     private val navigationRepository: NavigationRepository
 ) : ViewModel() {
 
-    private val _bottomBarNavigationButtons: MutableStateFlow<List<BottomBarNavigationButton>> =
+    private val _navigationButtonList: MutableStateFlow<List<BottomBarNavigationButton>> =
         MutableStateFlow(
             listOf(
                 BottomBarNavigationButton.Home,
@@ -36,20 +37,20 @@ class NavigationViewModel(
                 BottomBarNavigationButton.Settings
             )
         )
-    val bottomBarNavigationButtons = _bottomBarNavigationButtons.asStateFlow()
+    val navigationButtonList = _navigationButtonList.asStateFlow()
 
     fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
             navigationRepository.getNavigationButtonsSorted().collect { buttons ->
                 if (buttons.isNotEmpty()) {
-                    _bottomBarNavigationButtons.update {
+                    _navigationButtonList.update {
                         buttons.toBottomBarNavigationButtonList()
                     }
                 } else {
                     val defaultNavigationButtonList = getDefaultNavigationButtonList()
 
                     navigationRepository.upsertNavigationButtons(defaultNavigationButtonList)
-                    _bottomBarNavigationButtons.update {
+                    _navigationButtonList.update {
                         defaultNavigationButtonList.toBottomBarNavigationButtonList()
                     }
                 }
@@ -67,10 +68,12 @@ class NavigationViewModel(
         ).toDefaultNavigationButtonEntityList()
     }
 
-    fun saveBottomBarNavigationButtons(navigationButtonEntityList: List<NavigationButtonEntity>) {
+    fun saveBottomBarNavigationButtons(navigationButtonList: List<BottomBarNavigationButton>) {
+        val navigationButtonEntityList = navigationButtonList.toNavigationButtonEntityList()
+
         viewModelScope.launch {
             navigationRepository.upsertNavigationButtons(navigationButtonEntityList)
-            _bottomBarNavigationButtons.update {
+            _navigationButtonList.update {
                 navigationButtonEntityList.toBottomBarNavigationButtonList()
             }
         }
@@ -94,20 +97,15 @@ class NavigationViewModel(
     ): Boolean {
         val currentRoute = currentScreen::class.simpleName()
         val nextRoute = nextScreen::class.simpleName()
-        listOf(
-            MainScreens.Home::class.simpleName(),
-            MainScreens.Records::class.simpleName(),
-            MainScreens.RecordCreation::class.simpleName(),
-            MainScreens.CategoryStatistics(0)::class.simpleName(),
-            MainScreens.Budgets::class.simpleName(),
-            MainScreens.Settings::class.simpleName()
-        ).forEach { screenRoute ->
-            if (currentRoute == screenRoute) {
-                return true
-            } else if (nextRoute == screenRoute) {
-                return false
+        navigationButtonList.value
+            .map { it::class.simpleName() }
+            .forEach { screenRoute ->
+                if (currentRoute == screenRoute) {
+                    return true
+                } else if (nextRoute == screenRoute) {
+                    return false
+                }
             }
-        }
         return true
     }
 

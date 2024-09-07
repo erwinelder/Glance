@@ -1,14 +1,11 @@
-package com.ataglance.walletglance.settings.presentation.screen
+package com.ataglance.walletglance.appearanceSettings.presentation.screen
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,31 +17,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.appearanceSettings.presentation.components.NavigationButtonsSettingsBottomSheet
+import com.ataglance.walletglance.appearanceSettings.presentation.components.ThemeSettingsBottomSheet
+import com.ataglance.walletglance.appearanceSettings.presentation.viewmodel.EditNavigationButtonsViewModel
+import com.ataglance.walletglance.appearanceSettings.presentation.viewmodel.EditNavigationButtonsViewModelFactory
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.settings.presentation.components.ReorderableNavigationButtonList
-import com.ataglance.walletglance.settings.presentation.components.ThemePickerContent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppearanceScreen(
     isAppSetUp: Boolean,
     themeUiState: ThemeUiState,
     onNavigateBack: () -> Unit,
-    onContinueSetupButton: () -> Unit,
     onSetUseDeviceTheme: (Boolean) -> Unit,
     onChooseLightTheme: (String) -> Unit,
-    onChooseDarkTheme: (String) -> Unit
+    onChooseDarkTheme: (String) -> Unit,
+    initialNavigationButtonList: List<BottomBarNavigationButton>,
+    onSaveNavigationButtons: (List<BottomBarNavigationButton>) -> Unit,
+    onContinueSetupButton: () -> Unit
 ) {
     val settingsCategories = SettingsCategories(CurrAppTheme)
     val appearanceSettingsCategories = listOf(
@@ -52,12 +53,19 @@ fun AppearanceScreen(
         settingsCategories.navigationButtons,
         settingsCategories.widgets
     )
-    val sheetState = rememberModalBottomSheetState()
-    var showSettingsCategory by remember { mutableStateOf<Int?>(null) }
-    val backgroundColor by animateColorAsState(
-        targetValue = GlanceTheme.background,
-        label = "background color"
+
+    var showThemeSettingsBottomSheet by remember { mutableStateOf(false) }
+    val editNavigationButtonsViewModel = viewModel<EditNavigationButtonsViewModel>(
+        factory = EditNavigationButtonsViewModelFactory(
+            initialNavigationButtonList = initialNavigationButtonList
+        )
     )
+    val navigationButtonList by editNavigationButtonsViewModel.navigationButtonList
+        .collectAsStateWithLifecycle()
+
+    var showNavigationButtonsSettingsBottomSheet by remember { mutableStateOf(false) }
+
+    var showWidgetsSettingsBottomSheet by remember { mutableStateOf(false) }
 
     Box {
         Column(
@@ -85,7 +93,12 @@ fun AppearanceScreen(
                     showRightIconInsteadOfLeft = true,
                     filledWidths = FilledWidthByScreenType(),
                     onClick = {
-                        showSettingsCategory = category.stringRes
+                        when (category) {
+                            settingsCategories.colorTheme -> showThemeSettingsBottomSheet = true
+                            settingsCategories.navigationButtons ->
+                                showNavigationButtonsSettingsBottomSheet = true
+                            settingsCategories.widgets -> showWidgetsSettingsBottomSheet = true
+                        }
                     }
                 )
             }
@@ -98,24 +111,23 @@ fun AppearanceScreen(
                 )
             }
         }
-        GlanceBottomSheet(
-            visible = showSettingsCategory != null,
-            sheetState = sheetState,
-            onDismissRequest = { showSettingsCategory = null },
-            backgroundColor = backgroundColor
-        ) {
-            when (showSettingsCategory) {
-                settingsCategories.colorTheme.stringRes -> { ThemePickerContent(
-                    onChooseLightTheme = onChooseLightTheme,
-                    onChooseDarkTheme = onChooseDarkTheme,
-                    onSetUseDeviceTheme = onSetUseDeviceTheme,
-                    themeUiState = themeUiState
-                ) }
-                settingsCategories.navigationButtons.stringRes -> { ReorderableNavigationButtonList(
-                ) }
-                settingsCategories.widgets.stringRes -> {  }
-            }
-        }
+        ThemeSettingsBottomSheet(
+            visible = showThemeSettingsBottomSheet,
+            onDismissRequest = { showThemeSettingsBottomSheet = false },
+            themeUiState = themeUiState,
+            onSetUseDeviceTheme = onSetUseDeviceTheme,
+            onChooseLightTheme = onChooseLightTheme,
+            onChooseDarkTheme = onChooseDarkTheme
+        )
+        NavigationButtonsSettingsBottomSheet(
+            visible = showNavigationButtonsSettingsBottomSheet,
+            onDismissRequest = {
+                onSaveNavigationButtons(editNavigationButtonsViewModel.getNavigationButtonList())
+                showNavigationButtonsSettingsBottomSheet = false
+            },
+            navigationButtonList = navigationButtonList,
+            onMoveButtons = editNavigationButtonsViewModel::moveButtons
+        )
     }
 }
 
@@ -143,10 +155,18 @@ fun AppearanceScreenPreview(
             isAppSetUp = isAppSetUp,
             themeUiState = themeUiState,
             onNavigateBack = {},
-            onContinueSetupButton = {},
             onSetUseDeviceTheme = {},
             onChooseLightTheme = {},
-            onChooseDarkTheme = {}
+            onChooseDarkTheme = {},
+            initialNavigationButtonList = listOf(
+                BottomBarNavigationButton.Home,
+                BottomBarNavigationButton.Records,
+                BottomBarNavigationButton.CategoryStatistics,
+                BottomBarNavigationButton.Budgets,
+                BottomBarNavigationButton.Settings
+            ),
+            onSaveNavigationButtons = {},
+            onContinueSetupButton = {}
         )
     }
 }

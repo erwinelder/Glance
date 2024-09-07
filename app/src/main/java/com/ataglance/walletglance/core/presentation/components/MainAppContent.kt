@@ -35,8 +35,7 @@ fun MainAppContent(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
-    val bottomBarNavigationButtons by navViewModel.bottomBarNavigationButtons
-        .collectAsStateWithLifecycle()
+    val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
     val setupProgressTopBarUiState by remember(appUiSettings.isSetUp, navBackStackEntry) {
         derivedStateOf {
@@ -89,12 +88,13 @@ fun MainAppContent(
                     )
                 )
             },
-            bottomBarButtons = bottomBarNavigationButtons
+            bottomBarButtons = navigationButtonList
         ) { scaffoldPadding ->
             AppNavHost(
                 navController = navController,
                 scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
+                navigationButtonList = navigationButtonList,
                 moveScreenTowardsLeft = moveScreenTowardsLeft,
                 appViewModel = appViewModel,
                 appUiSettings = appUiSettings,

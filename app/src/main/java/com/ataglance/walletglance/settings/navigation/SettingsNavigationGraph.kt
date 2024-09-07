@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.navigation.accountsGraph
+import com.ataglance.walletglance.appearanceSettings.presentation.screen.AppearanceScreen
 import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.budget.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
@@ -21,9 +22,9 @@ import com.ataglance.walletglance.categoryCollection.navigation.categoryCollecti
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.settings.presentation.screen.AppearanceScreen
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
@@ -36,6 +37,7 @@ fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
+    navigationButtonList: List<BottomBarNavigationButton>,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
@@ -98,12 +100,14 @@ fun NavGraphBuilder.settingsGraph(
                 isAppSetUp = appUiSettings.isSetUp,
                 themeUiState = themeUiState,
                 onNavigateBack = navController::popBackStack,
-                onContinueSetupButton = {
-                    navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
-                },
                 onChooseLightTheme = appViewModel::chooseLightTheme,
                 onChooseDarkTheme = appViewModel::chooseDarkTheme,
-                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme
+                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme,
+                initialNavigationButtonList = navigationButtonList,
+                onSaveNavigationButtons = navViewModel::saveBottomBarNavigationButtons,
+                onContinueSetupButton = {
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
+                }
             )
         }
         composable<SettingsScreens.Language> {

@@ -30,6 +30,7 @@ fun NavBackStackEntry?.fromMainScreen(): MainScreens {
             MainScreens.Records::class.simpleName() -> return MainScreens.Records
             MainScreens.CategoryStatistics::class.simpleName() ->
                 return MainScreens.CategoryStatistics(0)
+            MainScreens.Budgets::class.simpleName() -> return MainScreens.Budgets
             else -> return MainScreens.Settings
         }
     }

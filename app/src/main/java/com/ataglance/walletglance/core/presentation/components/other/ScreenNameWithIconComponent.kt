@@ -19,7 +19,8 @@ import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationBut
 @Composable
 fun ScreenNameWithIconComponent(
     navigationButton: BottomBarNavigationButton,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showAsActive: Boolean = false
 ) {
     val screenName = stringResource(navigationButton.screenNameRes)
 
@@ -29,14 +30,17 @@ fun ScreenNameWithIconComponent(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(navigationButton.inactiveIconRes.getByTheme(CurrAppTheme)),
+            painter = painterResource(
+                if (showAsActive) navigationButton.activeIconRes.getByTheme(CurrAppTheme)
+                else navigationButton.inactiveIconRes.getByTheme(CurrAppTheme)
+            ),
             contentDescription = "$screenName screen icon",
             modifier = Modifier.size(36.dp)
         )
         Text(
             text = screenName,
             fontSize = 18.sp,
-            color = GlanceTheme.onSurface
+            color = if (showAsActive) GlanceTheme.primary else GlanceTheme.onSurface
         )
     }
 }

@@ -29,9 +29,9 @@ import kotlinx.coroutines.channels.Channel
 @Composable
 fun <T> ReorderableList(
     list: List<T>,
-    onSwapItems: (Int, Int) -> Unit,
-    verticalContentPadding: Dp = 16.dp,
+    onMoveItems: (Int, Int) -> Unit,
     horizontalContentPadding: Dp = 0.dp,
+    verticalContentPadding: Dp = 16.dp,
     verticalGap: Dp = 8.dp,
     itemComponent: @Composable (T, Modifier) -> Unit
 ) {
@@ -97,7 +97,7 @@ fun <T> ReorderableList(
 
                         if (targetItem != null) {
                             val targetIndex = (targetItem.contentType as DraggableItem).index
-                            onSwapItems(currentDraggingIndex, targetIndex)
+                            onMoveItems(currentDraggingIndex, targetIndex)
                             draggingItemIndex = targetIndex
                             draggingItem = targetItem
                             delta += currentDraggingItem.offset - targetItem.offset

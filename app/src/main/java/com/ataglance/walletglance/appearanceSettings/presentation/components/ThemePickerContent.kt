@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.settings.presentation.components
+package com.ataglance.walletglance.appearanceSettings.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -44,6 +44,7 @@ import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
@@ -67,6 +68,7 @@ fun AppNavHost(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
+    navigationButtonList: List<BottomBarNavigationButton>,
     moveScreenTowardsLeft: Boolean,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
@@ -422,6 +424,7 @@ fun AppNavHost(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
+            navigationButtonList = navigationButtonList,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,

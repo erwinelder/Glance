@@ -36,6 +36,27 @@ fun List<BottomBarNavigationButton>.toDefaultNavigationButtonEntityList():
 }
 
 
+fun List<BottomBarNavigationButton>.toNavigationButtonEntityList():
+        List<NavigationButtonEntity>
+{
+    return this.mapIndexed { index, button -> button.toNavigationButtonEntity(index) }
+}
+
+fun BottomBarNavigationButton.toNavigationButtonEntity(index: Int): NavigationButtonEntity {
+    return when (this) {
+        BottomBarNavigationButton.Home -> NavigationButtonEntity(AppScreenEnum.Home.name, index)
+        BottomBarNavigationButton.Records ->
+            NavigationButtonEntity(AppScreenEnum.Records.name, index)
+        BottomBarNavigationButton.CategoryStatistics ->
+            NavigationButtonEntity(AppScreenEnum.CategoryStatistics.name, index)
+        BottomBarNavigationButton.Budgets ->
+            NavigationButtonEntity(AppScreenEnum.Budgets.name, index)
+        BottomBarNavigationButton.Settings ->
+            NavigationButtonEntity(AppScreenEnum.Settings.name, index)
+    }
+}
+
+
 
 fun String.getAppScreenEnum(): AppScreenEnum? {
     return when (this) {
