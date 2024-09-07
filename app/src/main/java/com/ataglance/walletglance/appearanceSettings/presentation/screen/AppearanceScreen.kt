@@ -91,6 +91,7 @@ fun AppearanceScreen(
                     textRes = category.stringRes,
                     imageRes = category.iconRes,
                     showRightIconInsteadOfLeft = true,
+                    rightIconRes = R.drawable.short_arrow_up_icon,
                     filledWidths = FilledWidthByScreenType(),
                     onClick = {
                         when (category) {

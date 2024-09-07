@@ -35,6 +35,7 @@ fun GlassSurfaceNavigationButton(
     @StringRes textRes: Int,
     @DrawableRes imageRes: Int,
     showRightIconInsteadOfLeft: Boolean = true,
+    @DrawableRes rightIconRes: Int = R.drawable.short_arrow_right_icon,
     filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(1f, .75f, .75f),
     onClick: () -> Unit
 ) {
@@ -80,7 +81,7 @@ fun GlassSurfaceNavigationButton(
             if (showRightIconInsteadOfLeft) {
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    painter = painterResource(R.drawable.short_arrow_right_icon),
+                    painter = painterResource(rightIconRes),
                     contentDescription = "right arrow icon",
                     tint = GlanceTheme.onSurface,
                     modifier = Modifier.size(26.dp)
