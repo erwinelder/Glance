@@ -161,3 +161,16 @@ val MIGRATION_7_8 = object : Migration(7, 8) {
 
     }
 }
+
+val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS Widget (
+                name TEXT PRIMARY KEY NOT NULL,
+                orderNum INTEGER NOT NULL
+            )
+        """.trimIndent())
+
+    }
+}

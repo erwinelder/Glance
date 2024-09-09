@@ -8,6 +8,12 @@
     <string name="settings">Einstellungen</string>
     <string name="setup">Einrichten</string>
 
+    <!-- Widget names -->
+    <string name="total_for_period">Gesamtbetrag für den ausgewählten Zeitraum</string>
+    <string name="recent_records">Letzte Einträge</string>
+    <string name="top_expense_categories">Top-Ausgabenkategorien</string>
+    <string name="chosen_budgets">Ausgewählte Budgets</string>
+
     <!-- Buttons -->
     <string name="create">Erstellen</string>
     <string name="save">Speichern</string>

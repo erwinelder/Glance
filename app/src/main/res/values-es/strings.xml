@@ -9,6 +9,12 @@
     <string name="settings">Ajustes</string>
     <string name="setup">Configuración</string>
 
+    <!-- Widget names -->
+    <string name="total_for_period">Monto total para el período seleccionado</string>
+    <string name="recent_records">Registros recientes</string>
+    <string name="top_expense_categories">Categorías de gastos más altos</string>
+    <string name="chosen_budgets">Presupuestos elegidos</string>
+
     <!-- Buttons -->
     <string name="create">Crear</string>
     <string name="save">Guardar</string>

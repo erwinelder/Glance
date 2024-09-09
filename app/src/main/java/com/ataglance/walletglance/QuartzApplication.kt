@@ -2,13 +2,13 @@ package com.ataglance.walletglance
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.account.data.repository.AccountRepository
+import com.ataglance.walletglance.appearanceSettings.data.repository.WidgetRepository
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -17,6 +17,7 @@ import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.data.repository.RecordRepository
@@ -35,15 +36,16 @@ class QuartzApplication : Application() {
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
     lateinit var navViewModel: NavigationViewModel
+    lateinit var personalizationViewModel: PersonalizationViewModel
 
     override fun onCreate() {
         super.onCreate()
-        Log.d("Custom message onCreate", "----------------------------")
 
         db = AppDatabase.getDatabase(this)
         initializeSettingsRepository()
         initializeAppViewModel()
         initializeNavViewModel()
+        initializePersonalizationViewModel()
 
         applyAppLanguage()
         updateSetupStageIfNeeded()
@@ -102,6 +104,12 @@ class QuartzApplication : Application() {
         val navigationRepository = NavigationRepository(db.navigationButtonDao)
 
         navViewModel = NavigationViewModel(navigationRepository)
+    }
+
+    private fun initializePersonalizationViewModel() {
+        val widgetRepository = WidgetRepository(db.widgetDao)
+
+        personalizationViewModel = PersonalizationViewModel(widgetRepository = widgetRepository)
     }
 
 

@@ -22,10 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.appearanceSettings.presentation.components.NavigationButtonsSettingsBottomSheet
 import com.ataglance.walletglance.appearanceSettings.presentation.components.ThemeSettingsBottomSheet
+import com.ataglance.walletglance.appearanceSettings.presentation.components.WidgetsSettingsBottomSheet
 import com.ataglance.walletglance.appearanceSettings.presentation.viewmodel.EditNavigationButtonsViewModel
 import com.ataglance.walletglance.appearanceSettings.presentation.viewmodel.EditNavigationButtonsViewModelFactory
+import com.ataglance.walletglance.appearanceSettings.presentation.viewmodel.EditWidgetsViewModel
+import com.ataglance.walletglance.appearanceSettings.presentation.viewmodel.EditWidgetsViewModelFactory
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
@@ -47,6 +51,8 @@ fun AppearanceScreen(
     onChooseDarkTheme: (String) -> Unit,
     initialNavigationButtonList: List<BottomBarNavigationButton>,
     onSaveNavigationButtons: (List<BottomBarNavigationButton>) -> Unit,
+    initialWidgetNamesList: List<WidgetName>,
+    onSaveWidgetNames: (List<WidgetName>) -> Unit,
     onContinueSetupButton: () -> Unit
 ) {
     val settingsCategories = SettingsCategories(CurrAppTheme)
@@ -60,6 +66,10 @@ fun AppearanceScreen(
     var showThemeSettingsBottomSheet by remember { mutableStateOf(false) }
 
     var showWidgetsSettingsBottomSheet by remember { mutableStateOf(false) }
+    val editWidgetsViewModel = viewModel<EditWidgetsViewModel>(
+        factory = EditWidgetsViewModelFactory(widgetList = initialWidgetNamesList)
+    )
+    val widgetNamesList by editWidgetsViewModel.widgetNamesList.collectAsStateWithLifecycle()
 
     var showNavigationButtonsSettingsBottomSheet by remember { mutableStateOf(false) }
     val editNavigationButtonsViewModel = viewModel<EditNavigationButtonsViewModel>(
@@ -139,6 +149,15 @@ fun AppearanceScreen(
             navigationButtonList = navigationButtonList,
             onMoveButtons = editNavigationButtonsViewModel::moveButtons
         )
+        WidgetsSettingsBottomSheet(
+            visible = showWidgetsSettingsBottomSheet,
+            onDismissRequest = {
+                onSaveWidgetNames(editWidgetsViewModel.getWidgetNamesList())
+                showWidgetsSettingsBottomSheet = false
+            },
+            widgetNamesList = widgetNamesList,
+            onMoveWidgets = editWidgetsViewModel::moveWidgets
+        )
     }
 }
 
@@ -155,6 +174,12 @@ fun AppearanceScreenPreview(
         chosenLightTheme = AppTheme.LightDefault.name,
         chosenDarkTheme = AppTheme.DarkDefault.name,
         lastChosenTheme = AppTheme.LightDefault.name
+    ),
+    widgetNamesList: List<WidgetName> = listOf(
+        WidgetName.ChosenBudgets,
+        WidgetName.TotalForPeriod,
+        WidgetName.TopExpenseCategories,
+        WidgetName.RecentRecords
     )
 ) {
     PreviewWithMainScaffoldContainer(
@@ -177,6 +202,8 @@ fun AppearanceScreenPreview(
                 BottomBarNavigationButton.Settings
             ),
             onSaveNavigationButtons = {},
+            initialWidgetNamesList = widgetNamesList,
+            onSaveWidgetNames = {},
             onContinueSetupButton = {}
         )
     }

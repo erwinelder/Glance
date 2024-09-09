@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.QuartzApplication
 import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var app: QuartzApplication
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
+    private lateinit var personalizationViewModel: PersonalizationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         app = application as QuartzApplication
         initializeAppViewModel()
         initializeNavViewModel()
+        initializePersonalizationViewModel()
 
         setupSplashScreen()
 
@@ -32,7 +35,8 @@ class MainActivity : AppCompatActivity() {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 WalletGlanceAppComponent(
                     appViewModel = appViewModel,
-                    navViewModel = navViewModel
+                    navViewModel = navViewModel,
+                    personalizationViewModel = personalizationViewModel
                 )
             }
         }
@@ -46,6 +50,11 @@ class MainActivity : AppCompatActivity() {
     private fun initializeNavViewModel() {
         navViewModel = app.navViewModel
         navViewModel.fetchBottomBarNavigationButtons()
+    }
+
+    private fun initializePersonalizationViewModel() {
+        personalizationViewModel = app.personalizationViewModel
+        personalizationViewModel.fetchWidgetListFromDb()
     }
 
     private fun setupSplashScreen() {

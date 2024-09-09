@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.core.utils
 
 import java.util.Locale
+import kotlin.enums.enumEntries
 
 
 fun <A, B> Pair<A?, B?>.takeIfNoneIsNull(): Pair<A, B>? {
@@ -31,6 +32,13 @@ inline fun <T> List<T>.deleteItemAndMoveOrderNum(
     if (index == -1) return this
 
     return this.take(index) + this.drop(index + 1).map(transform)
+}
+
+
+fun <T> List<T>.moveItems(fromIndex: Int, toIndex: Int): List<T> {
+    if (fromIndex == toIndex) return this
+
+    return this.toMutableList().apply { add(toIndex, removeAt(fromIndex)) }
 }
 
 
@@ -84,4 +92,9 @@ fun String.isPositiveNumberWithDecimal(): Boolean {
 }
 fun String.isNumberWithDecimalOptionalDot(): Boolean {
     return Regex("^(?:\\d{1,10}(?:\\.\\d{0,2})?|\\.(?:\\d{1,2})?)?\$").matches(this)
+}
+
+
+inline fun <reified T : Enum<T>> enumValueOrNull(name: String): T? {
+    return enumEntries<T>().find { it.name == name }
 }

@@ -8,6 +8,12 @@
     <string name="settings">Настройки</string>
     <string name="setup">Настройка</string>
 
+    <!-- Widget names -->
+    <string name="total_for_period">Итоговая сумма за выбранный период</string>
+    <string name="recent_records">Последние записи</string>
+    <string name="top_expense_categories">Топ категорий расходов</string>
+    <string name="chosen_budgets">Выбранные бюджеты</string>
+
     <!-- Buttons -->
     <string name="create">Создать</string>
     <string name="save">Сохранить</string>

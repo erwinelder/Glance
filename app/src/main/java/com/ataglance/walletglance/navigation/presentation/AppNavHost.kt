@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
@@ -42,6 +43,7 @@ import com.ataglance.walletglance.core.presentation.animation.screenExitTransiti
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
@@ -80,6 +82,8 @@ fun AppNavHost(
     recordStackList: List<RecordStack>,
     budgetsByType: BudgetsByType,
     widgetsUiState: WidgetsUiState,
+    personalizationViewModel: PersonalizationViewModel,
+    widgetNamesList: List<WidgetName>,
     openCustomDateRangeWindow: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
@@ -101,6 +105,7 @@ fun AppNavHost(
                 isAppThemeSetUp = appUiSettings.appTheme != null,
                 accountsUiState = accountsUiState,
                 dateRangeMenuUiState = dateRangeMenuUiState,
+                widgetNamesList = widgetNamesList,
                 widgetsUiState = widgetsUiState,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
                 onDateRangeChange = appViewModel::selectDateRange,
@@ -431,7 +436,9 @@ fun AppNavHost(
             accountList = accountsUiState.accountList,
             categoriesWithSubcategories = categoriesWithSubcategories,
             categoryCollectionsUiState = categoryCollectionsUiState,
-            budgetsByType = budgetsByType
+            budgetsByType = budgetsByType,
+            personalizationViewModel = personalizationViewModel,
+            widgetNamesList = widgetNamesList,
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()

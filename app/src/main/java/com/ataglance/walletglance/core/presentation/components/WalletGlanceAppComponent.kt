@@ -28,13 +28,15 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WalletGlanceAppComponent(
     appViewModel: AppViewModel,
-    navViewModel: NavigationViewModel
+    navViewModel: NavigationViewModel,
+    personalizationViewModel: PersonalizationViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
     val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()
@@ -64,7 +66,8 @@ fun WalletGlanceAppComponent(
                                 appViewModel = appViewModel,
                                 appUiSettings = appUiSettings,
                                 themeUiState = safeThemeUiState,
-                                navViewModel = navViewModel
+                                navViewModel = navViewModel,
+                                personalizationViewModel = personalizationViewModel
                             )
                         }
                     }

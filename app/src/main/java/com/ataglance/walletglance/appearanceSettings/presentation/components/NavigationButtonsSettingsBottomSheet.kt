@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
 import com.ataglance.walletglance.core.presentation.components.containers.ReorderableList
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider

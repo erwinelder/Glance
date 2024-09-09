@@ -2,6 +2,7 @@ package com.ataglance.walletglance.appearanceSettings.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.core.utils.moveItems
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +20,7 @@ class EditNavigationButtonsViewModel(
 
     fun moveButtons(fromIndex: Int, toIndex: Int) {
         _navigationButtonList.update {
-            it.toMutableList().apply { add(toIndex, removeAt(fromIndex)) }
+            it.moveItems(fromIndex, toIndex)
         }
     }
 

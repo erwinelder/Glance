@@ -67,7 +67,8 @@ fun <T> ReorderableList(
                 detectDragGesturesAfterLongPress(
                     onDragStart = { offset ->
                         lazyListState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
-                            offset.y.toInt() in item.offset..(item.offset + item.size)
+                            (offset.y.toInt() - lazyListState.layoutInfo.afterContentPadding) in
+                                    item.offset..(item.offset + item.size)
                         }?.also {
                             (it.contentType as? DraggableItem)?.let { draggableItem ->
                                 draggingItem = it

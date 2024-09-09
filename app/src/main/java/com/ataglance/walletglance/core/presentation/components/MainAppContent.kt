@@ -18,6 +18,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.Dimmed
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
@@ -31,8 +32,9 @@ fun MainAppContent(
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
     navViewModel: NavigationViewModel,
-    navController: NavHostController = rememberNavController()
+    personalizationViewModel: PersonalizationViewModel
 ) {
+    val navController: NavHostController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
     val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
@@ -65,6 +67,8 @@ fun MainAppContent(
     val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
     val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
     val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
+
+    val widgetNamesList by personalizationViewModel.widgetNamesList.collectAsStateWithLifecycle()
 
     Box {
         MainScaffold(
@@ -106,6 +110,8 @@ fun MainAppContent(
                 recordStackList = recordStackList,
                 budgetsByType = budgetsByType,
                 widgetsUiState = widgetsUiState,
+                personalizationViewModel = personalizationViewModel,
+                widgetNamesList = widgetNamesList,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
                 onCustomDateRangeButtonClick = {
                     openCustomDateRangeWindow = !openCustomDateRangeWindow

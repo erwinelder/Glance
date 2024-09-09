@@ -8,6 +8,12 @@
     <string name="settings">Nastavení</string>
     <string name="setup">Nastavování</string>
 
+    <!-- Widget names -->
+    <string name="total_for_period">Celková částka za vybrané období</string>
+    <string name="recent_records">Nedávné záznamy</string>
+    <string name="top_expense_categories">Nejvyšší výdaje podle kategorií</string>
+    <string name="chosen_budgets">Vybrané rozpočty</string>
+
     <!-- Buttons -->
     <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
