@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.appearanceSettings.domain.model.CheckedWidget
 import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.appearanceSettings.presentation.components.NavigationButtonsSettingsBottomSheet
 import com.ataglance.walletglance.appearanceSettings.presentation.components.ThemeSettingsBottomSheet
@@ -52,7 +53,7 @@ fun AppearanceScreen(
     initialNavigationButtonList: List<BottomBarNavigationButton>,
     onSaveNavigationButtons: (List<BottomBarNavigationButton>) -> Unit,
     initialWidgetNamesList: List<WidgetName>,
-    onSaveWidgetNames: (List<WidgetName>) -> Unit,
+    onSaveWidgetNames: (List<CheckedWidget>) -> Unit,
     onContinueSetupButton: () -> Unit
 ) {
     val settingsCategories = SettingsCategories(CurrAppTheme)
@@ -69,7 +70,7 @@ fun AppearanceScreen(
     val editWidgetsViewModel = viewModel<EditWidgetsViewModel>(
         factory = EditWidgetsViewModelFactory(widgetList = initialWidgetNamesList)
     )
-    val widgetNamesList by editWidgetsViewModel.widgetNamesList.collectAsStateWithLifecycle()
+    val widgetList by editWidgetsViewModel.widgetList.collectAsStateWithLifecycle()
 
     var showNavigationButtonsSettingsBottomSheet by remember { mutableStateOf(false) }
     val editNavigationButtonsViewModel = viewModel<EditNavigationButtonsViewModel>(
@@ -152,10 +153,11 @@ fun AppearanceScreen(
         WidgetsSettingsBottomSheet(
             visible = showWidgetsSettingsBottomSheet,
             onDismissRequest = {
-                onSaveWidgetNames(editWidgetsViewModel.getWidgetNamesList())
+                onSaveWidgetNames(editWidgetsViewModel.getWidgetList())
                 showWidgetsSettingsBottomSheet = false
             },
-            widgetNamesList = widgetNamesList,
+            widgetList = widgetList,
+            onWidgetCheckedStateChange = editWidgetsViewModel::changeWidgetCheckState,
             onMoveWidgets = editWidgetsViewModel::moveWidgets
         )
     }

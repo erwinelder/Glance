@@ -106,7 +106,7 @@ private fun PreferencesButton(
                 TwoStateCheckboxWithText(
                     text = stringResource(R.string.include_in_budgets),
                     checked = preferences.includeInBudgets,
-                    size = 24.dp,
+                    checkboxSize = 24.dp,
                     onClick = onIncludeInBudgetsChange
                 )
             }

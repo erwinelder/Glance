@@ -1,13 +1,11 @@
 package com.ataglance.walletglance.core.presentation.components.buttons
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -17,24 +15,27 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 fun TwoStateCheckboxWithText(
     text: String,
     checked: Boolean,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: Dp = 28.dp,
+    checkboxSize: Dp = 28.dp,
+    fontSize: TextUnit = 16.sp,
     onClick: (Boolean) -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+    TwoStateCheckboxContainer(
+        checked = checked,
+        modifier = modifier,
+        enabled = enabled,
+        checkboxSize = checkboxSize,
+        onClick = onClick
     ) {
-        TwoStateCheckbox(checked = checked, enabled = enabled, size = size, onClick = onClick)
         Text(
             text = text,
             color = GlanceTheme.onSurface,
-            fontSize = 16.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Normal,
-            modifier = Modifier
-                .bounceClickEffect {
-                    onClick(!checked)
-                }
+            modifier = Modifier.bounceClickEffect {
+                onClick(!checked)
+            }
         )
     }
 }

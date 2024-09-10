@@ -438,7 +438,7 @@ fun AppNavHost(
             categoryCollectionsUiState = categoryCollectionsUiState,
             budgetsByType = budgetsByType,
             personalizationViewModel = personalizationViewModel,
-            widgetNamesList = widgetNamesList,
+            widgetNamesList = widgetNamesList
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()

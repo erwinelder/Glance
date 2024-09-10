@@ -2,6 +2,7 @@ package com.ataglance.walletglance.appearanceSettings.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.appearanceSettings.domain.model.CheckedWidget
 import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,19 +14,29 @@ class EditWidgetsViewModel(
     initialWidgetNamesList: List<WidgetName>
 ) : ViewModel() {
 
-    private val _widgetNamesList: MutableStateFlow<List<WidgetName>> = MutableStateFlow(
-        initialWidgetNamesList
+    private val _widgetList: MutableStateFlow<List<CheckedWidget>> = MutableStateFlow(
+        WidgetName.entries.map { widgetName ->
+            CheckedWidget(widgetName, widgetName in initialWidgetNamesList)
+        }
     )
-    val widgetNamesList: StateFlow<List<WidgetName>> = _widgetNamesList.asStateFlow()
+    val widgetList: StateFlow<List<CheckedWidget>> = _widgetList.asStateFlow()
+
+    fun changeWidgetCheckState(widgetName: WidgetName, isChecked: Boolean) {
+        _widgetList.update { widgetList ->
+            widgetList.map { widget ->
+                widget.takeIf { it.name != widgetName } ?: widget.copy(isChecked = isChecked)
+            }
+        }
+    }
 
     fun moveWidgets(fromIndex: Int, toIndex: Int) {
-        _widgetNamesList.update {
+        _widgetList.update {
             it.moveItems(fromIndex, toIndex)
         }
     }
 
-    fun getWidgetNamesList(): List<WidgetName> {
-        return widgetNamesList.value
+    fun getWidgetList(): List<CheckedWidget> {
+        return widgetList.value
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.appearanceSettings.data.repository.WidgetRepository
 import com.ataglance.walletglance.appearanceSettings.domain.mapper.toEntityList
 import com.ataglance.walletglance.appearanceSettings.domain.mapper.toWidgetNamesList
+import com.ataglance.walletglance.appearanceSettings.domain.model.CheckedWidget
 import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.appearanceSettings.domain.utils.getItemsThatAreNotInList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,9 +27,7 @@ class PersonalizationViewModel(
                 if (widgetList.isEmpty()) {
 
                     val defaultWidgetNamesList = getDefaultWidgetNamesList()
-                    val widgetListToUpsert = defaultWidgetNamesList.toEntityList()
-                    
-                    widgetRepository.upsertWidgets(widgetListToUpsert)
+                    widgetRepository.upsertWidgets(defaultWidgetNamesList.toEntityList())
                     _widgetNamesList.update { defaultWidgetNamesList }
 
                 } else {
@@ -51,7 +50,9 @@ class PersonalizationViewModel(
         )
     }
 
-    fun saveWidgetList(newWidgetNamesList: List<WidgetName>) {
+    fun saveWidgetList(checkedWidgetList: List<CheckedWidget>) {
+        val newWidgetNamesList = checkedWidgetList.filter { it.isChecked }.map { it.name }
+
         val widgetsToUpsert = newWidgetNamesList.toEntityList()
         val widgetsToDelete = widgetNamesList.value
             .getItemsThatAreNotInList(newWidgetNamesList)
