@@ -37,9 +37,7 @@ fun NavigationButtonsSettingsBottomSheet(
             SmallDivider(modifier = Modifier.padding(top = 16.dp))
             ReorderableList(
                 list = navigationButtonList,
-                onMoveItems = onMoveButtons,
-                verticalContentPadding = 16.dp,
-                verticalGap = 16.dp
+                onMoveItems = onMoveButtons
             ) { item ->
                 ScreenNameWithIconComponent(
                     navigationButton = item,

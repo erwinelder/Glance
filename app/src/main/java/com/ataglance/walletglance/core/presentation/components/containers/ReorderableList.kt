@@ -47,7 +47,7 @@ fun <T> ReorderableList(
     useOnlyWithLongPress: Boolean = true,
     horizontalContentPadding: Dp = 24.dp,
     verticalContentPadding: Dp = 16.dp,
-    verticalGap: Dp = 8.dp,
+    verticalGap: Dp = 16.dp,
     itemComponent: @Composable RowScope.(T) -> Unit
 ) {
     val lazyListState = rememberLazyListState()

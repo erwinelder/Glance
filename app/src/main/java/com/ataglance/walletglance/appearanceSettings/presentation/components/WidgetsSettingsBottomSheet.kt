@@ -3,7 +3,6 @@ package com.ataglance.walletglance.appearanceSettings.presentation.components
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.appearanceSettings.domain.model.CheckedWidget
 import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
@@ -27,8 +26,7 @@ fun WidgetsSettingsBottomSheet(
     ) {
         ReorderableList(
             list = widgetList,
-            onMoveItems = onMoveWidgets,
-            verticalGap = 16.dp
+            onMoveItems = onMoveWidgets
         ) { item ->
             CheckedWidgetComponent(
                 widget = item,
