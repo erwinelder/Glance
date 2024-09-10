@@ -40,9 +40,11 @@ fun NavigationButtonsSettingsBottomSheet(
                 onMoveItems = onMoveButtons,
                 verticalContentPadding = 16.dp,
                 verticalGap = 16.dp
-            ) { item, modifier ->
+            ) { item ->
                 ScreenNameWithIconComponent(
-                    navigationButton = item, modifier = modifier, showAsActive = true
+                    navigationButton = item,
+                    modifier = Modifier.weight(1f, fill = false),
+                    showAsActive = true
                 )
             }
             SmallDivider(modifier = Modifier.padding(bottom = 16.dp))

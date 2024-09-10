@@ -29,10 +29,9 @@ fun WidgetsSettingsBottomSheet(
             list = widgetList,
             onMoveItems = onMoveWidgets,
             verticalGap = 16.dp
-        ) { item, modifier ->
+        ) { item ->
             CheckedWidgetComponent(
                 widget = item,
-                modifier = modifier,
                 onCheckedStateChange = onWidgetCheckedStateChange
             )
         }

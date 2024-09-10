@@ -2,6 +2,7 @@ package com.ataglance.walletglance.core.presentation.components.buttons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +16,7 @@ fun TwoStateCheckboxContainer(
     enabled: Boolean = true,
     checkboxSize: Dp = 28.dp,
     onClick: (Boolean) -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
