@@ -4,7 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,14 +19,13 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
-fun LazyItemScope.AddNewItemButton(onClick: () -> Unit) {
+fun AddNewItemButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     IconButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.Transparent
         ),
-        modifier = Modifier
-            .animateItem(placementSpec = null)
+        modifier = modifier
             .width(250.dp)
             .bounceClickEffect(.97f)
             .clip(RoundedCornerShape(22.dp))

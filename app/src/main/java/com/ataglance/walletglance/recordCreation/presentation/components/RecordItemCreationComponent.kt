@@ -46,7 +46,7 @@ fun LazyItemScope.RecordItemCreationComponent(
     onCollapsedChange: (Boolean) -> Unit
 ) {
     GlassSurfaceOnGlassSurface(
-        modifier = Modifier.animateItem(placementSpec = null),
+        modifier = Modifier.animateItem(),
         paddingValues = PaddingValues(0.dp),
         enableClick = recordDraftItem.collapsed,
         onClick = { onCollapsedChange(false) }

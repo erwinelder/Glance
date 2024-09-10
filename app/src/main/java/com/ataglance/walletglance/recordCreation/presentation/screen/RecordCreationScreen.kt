@@ -243,7 +243,10 @@ private fun GlassSurfaceContent(
             )
         }
         item {
-            AddNewItemButton(onAddDraftItemButton)
+            AddNewItemButton(
+                modifier = Modifier.animateItem(),
+                onClick = onAddDraftItemButton
+            )
         }
     }
 }

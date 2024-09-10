@@ -31,7 +31,7 @@ fun GlassSurfaceOnGlassSurface(
     content: @Composable () -> Unit
 ) {
     var localModifier = modifier
-        .bounceClickEffect(shrinkScale, enabled = enableClick, onClick = onClick)
+        .bounceClickEffect(shrinkScale = shrinkScale, enabled = enableClick, onClick = onClick)
     localModifier = localModifier.clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
     if (filledWidth != null) {
         localModifier = localModifier.fillMaxWidth(filledWidth)

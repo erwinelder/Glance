@@ -167,16 +167,6 @@ class RecordCreationViewModel(
         newList[firstIndex] = secondItem.copy(index = firstIndex)
         newList[secondIndex] = firstItem.copy(index = secondIndex)
 
-        /*recordDraftItems.value.forEach { item ->
-            if (item.index != firstItem.index && item.index != secondItem.index) {
-                newList.add(item)
-            } else if (item.index == firstItem.index) {
-                newList.add(secondItem.copy(index = item.index))
-            } else {
-                newList.add(firstItem.copy(index = item.index))
-            }
-        }*/
-
         _recordDraftItems.update { newList }
     }
 
@@ -190,7 +180,7 @@ class RecordCreationViewModel(
             newItemList.add(itemList[i].copy(index = i - 1))
         }
 
-        _recordDraftItems.update { itemList }
+        _recordDraftItems.update { newItemList }
     }
 
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.domain.Category
@@ -39,7 +40,7 @@ fun CategoryField(
             .bounceClickEffect(.97f, onClick = onClick)
             .clip(RoundedCornerShape(cornerSize))
             .background(GlanceTheme.surface)
-            .padding(top = 2.dp, bottom = 2.dp, start = 2.dp, end = 6.dp)
+            .padding(top = 2.dp, bottom = 2.dp, start = 2.dp, end = 8.dp)
     ) {
         category?.let {
             Icon(
@@ -49,18 +50,12 @@ fun CategoryField(
                 modifier = Modifier
                     .shadow(
                         elevation = 6.dp,
-                        shape = RoundedCornerShape(
-                            (cornerSize - 2.dp).takeIf { it >= 0.dp } ?: 0.dp
-                        ),
-                        spotColor = category.colorWithName.color.getByTheme(CurrAppTheme).darker
+                        shape = RoundedCornerShape((cornerSize - 2.dp).coerceAtLeast(0.dp)),
+                        spotColor = category.getIconSolidColorByTheme(CurrAppTheme)
                     )
-                    .clip(
-                        RoundedCornerShape(
-                            (cornerSize - 2.dp).takeIf { it >= 0.dp } ?: 0.dp
-                        )
-                    )
+                    .clip(RoundedCornerShape((cornerSize - 2.dp).coerceAtLeast(0.dp)))
                     .size(38.dp)
-                    .background(category.colorWithName.color.getByTheme(CurrAppTheme).darker)
+                    .background(category.getIconSolidColorByTheme(CurrAppTheme))
                     .padding(6.dp)
             )
         }
