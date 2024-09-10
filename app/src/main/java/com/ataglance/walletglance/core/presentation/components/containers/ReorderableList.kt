@@ -146,7 +146,7 @@ fun <T> ReorderableList(
                     .zIndex(1f)
                     .graphicsLayer { translationY = delta }
             } else {
-                Modifier.animateItem()
+                Modifier
             }
 
             Row(
@@ -161,7 +161,7 @@ fun <T> ReorderableList(
                     contentDescription = "reorder",
                     tint = GlanceTheme.outline,
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(32.dp)
                         .padding(start = 8.dp)
                 )
             }
