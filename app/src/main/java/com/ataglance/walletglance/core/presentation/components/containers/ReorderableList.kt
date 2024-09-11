@@ -5,17 +5,13 @@ import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -30,14 +26,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.componentState.DragGesturesFunctions
 import com.ataglance.walletglance.core.domain.componentState.DraggableItem
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import kotlinx.coroutines.channels.Channel
 
 @Composable
@@ -48,7 +41,8 @@ fun <T> ReorderableList(
     horizontalContentPadding: Dp = 24.dp,
     verticalContentPadding: Dp = 16.dp,
     verticalGap: Dp = 16.dp,
-    itemComponent: @Composable RowScope.(T) -> Unit
+    itemKey: ((index: Int, item: T) -> Any)? = null,
+    itemComponent: @Composable LazyItemScope.(T, Modifier) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -139,7 +133,8 @@ fun <T> ReorderableList(
     ) {
         itemsIndexed(
             items = list,
-            contentType = { index, _ -> DraggableItem(index = index) }
+            contentType = { index, _ -> DraggableItem(index = index) },
+            key = itemKey
         ) { index, item ->
             val modifier = if (draggingItemIndex == index) {
                 Modifier
@@ -149,22 +144,7 @@ fun <T> ReorderableList(
                 Modifier
             }
 
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .fillParentMaxWidth(),
-            ) {
-                itemComponent(item)
-                Icon(
-                    painter = painterResource(R.drawable.reorder_icon),
-                    contentDescription = "reorder",
-                    tint = GlanceTheme.outline,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(start = 8.dp)
-                )
-            }
+            itemComponent(item, modifier)
         }
     }
 }

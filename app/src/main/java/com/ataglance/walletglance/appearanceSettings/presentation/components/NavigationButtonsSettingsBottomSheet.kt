@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.components.containers.ReorderableList
+import com.ataglance.walletglance.core.presentation.components.containers.ReorderableListStyled
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.other.ScreenNameWithIconComponent
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
@@ -35,7 +35,7 @@ fun NavigationButtonsSettingsBottomSheet(
         ) {
             ScreenNameWithIconComponent(navigationButton = BottomBarNavigationButton.Home)
             SmallDivider(modifier = Modifier.padding(top = 16.dp))
-            ReorderableList(
+            ReorderableListStyled(
                 list = navigationButtonList,
                 onMoveItems = onMoveButtons
             ) { item ->
