@@ -2,7 +2,6 @@ package com.ataglance.walletglance.category.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,8 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,6 +27,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 
 @Composable
@@ -116,7 +114,7 @@ fun CategoryStatisticsItemComponent(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = uiState?.getFormattedPercentage() ?: "---",
+                    text = uiState?.percentageFormatted ?: "---",
                     color = GlanceTheme.onSurface,
                     fontSize = 18.sp,
                     maxLines = 1,
@@ -124,42 +122,15 @@ fun CategoryStatisticsItemComponent(
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Box(
-                contentAlignment = Alignment.CenterStart,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(16.dp)
-            ) {
-                Spacer(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(
-                            uiState?.let { GlanceTheme.glassGradientLightToDark.first }
-                                ?: Color.Transparent
-                        )
-                        .fillMaxWidth()
-                        .height(16.dp)
+            uiState?.let {
+                GlanceLineChart(
+                    percentage = uiState.percentageFloat,
+                    brushColors = uiState.categoryColor
+                        .getCategoryLineChartColorsByTheme(CurrAppTheme),
+                    shadowColor = uiState.categoryColor
+                        .getCategoryIconSolidColorByTheme(CurrAppTheme),
+                    height = 16.dp
                 )
-                uiState?.let {
-                    Spacer(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 8.dp,
-                                spotColor = uiState.categoryColor
-                                    .getCategoryIconSolidColorByTheme(CurrAppTheme),
-                                shape = RoundedCornerShape(50)
-                            )
-                            .clip(RoundedCornerShape(50))
-                            .background(
-                                brush = Brush.linearGradient(
-                                    uiState.categoryColor
-                                        .getCategoryLineChartColorsByTheme(CurrAppTheme)
-                                )
-                            )
-                            .fillMaxWidth(uiState.percentage / 100f)
-                            .height(16.dp)
-                    )
-                }
             }
         }
     }

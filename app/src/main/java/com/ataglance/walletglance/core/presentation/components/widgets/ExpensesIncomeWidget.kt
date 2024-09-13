@@ -31,7 +31,6 @@ import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import java.util.Locale
@@ -54,8 +53,8 @@ fun ExpensesIncomeWidget(
         label = "income visualizer width"
     )
 
-    GlassSurface(
-        filledWidths = FilledWidthByScreenType(.84f, .63f, .4f)
+    WidgetComponent(
+        filledWidthByScreenType = FilledWidthByScreenType(.84f, .63f, .4f)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,14 +62,11 @@ fun ExpensesIncomeWidget(
                 .fillMaxWidth()
                 .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
         ) {
-            AnimatedContent(
-                targetState = period,
-                label = "period"
-            ) { targetPeriod ->
+            AnimatedContent(targetState = period, label = "period") { targetPeriod ->
                 Text(
                     text = targetPeriod,
                     color = GlanceTheme.onSurface,
-                    fontSize = 25.sp,
+                    fontSize = 24.sp,
                     lineHeight = 30.sp,
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Center,

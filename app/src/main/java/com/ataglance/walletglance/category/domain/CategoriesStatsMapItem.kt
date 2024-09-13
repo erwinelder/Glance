@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.category.domain
 
 import com.ataglance.walletglance.core.utils.formatWithSpaces
+import java.util.Locale
 
 data class CategoriesStatsMapItem(
     val category: Category,
@@ -12,6 +13,8 @@ data class CategoriesStatsMapItem(
         allCategoriesTotalAmount: Double,
         subcategoriesStatistics: MutableMap<Int, CategoriesStatsMapItem>? = null
     ): CategoryStatisticsElementUiState {
+        val percentage = getPercentage(allCategoriesTotalAmount)
+
         return CategoryStatisticsElementUiState(
             categoryId = category.id,
             categoryName = category.name,
@@ -19,7 +22,8 @@ data class CategoriesStatsMapItem(
             categoryColor = category.colorWithName.color,
             totalAmount = totalAmount.formatWithSpaces(),
             currency = accountCurrency,
-            percentage = getPercentage(allCategoriesTotalAmount),
+            percentageFloat = percentage / 100,
+            percentageFormatted = "%.2f".format(Locale.US, percentage) + "%",
             subcategoriesStatisticsUiState = subcategoriesStatistics?.values
                 ?.sortedByDescending { it.totalAmount }
                 ?.map {
