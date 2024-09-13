@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -58,10 +59,11 @@ fun GlassSurface(
                 spread = 3.dp
             )
             .border(
-                2.dp,
-                GlanceTheme.glassSurfaceBorder,
-                RoundedCornerShape(cornerSize)
+                width = 2.dp,
+                color = GlanceTheme.glassSurfaceBorder,
+                shape = RoundedCornerShape(cornerSize)
             )
+            .padding(2.dp)
     ) {
         content()
     }

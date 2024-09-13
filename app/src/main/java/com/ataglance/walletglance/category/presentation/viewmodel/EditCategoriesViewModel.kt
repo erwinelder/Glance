@@ -2,15 +2,16 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.mapper.toCategoryEntityList
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.category.data.mapper.toCategoryEntityList
 import com.ataglance.walletglance.category.utils.toCategoryColorWithName
+import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,51 +49,31 @@ class EditCategoriesViewModel(
         }
     }
 
-    fun swapParentCategories(firstOrderNum: Int, secondOrderNum: Int) {
+    fun moveParentCategories(firstIndex: Int, secondIndex: Int) {
         val categoryWithSubcategoriesList = uiState.value.categoriesWithSubcategories
             .getByType(uiState.value.categoryType)
-        val twoCategoriesWithSubcategories = categoryWithSubcategoriesList.let {
-                (it.getOrNull(firstOrderNum - 1) ?: return) to
-                        (it.getOrNull(secondOrderNum - 1) ?: return)
-            }
-
-        val newCategoryWithSubcategoriesList = categoryWithSubcategoriesList.toMutableList()
-        newCategoryWithSubcategoriesList[firstOrderNum - 1] =
-            twoCategoriesWithSubcategories.second.copy(
-                category = twoCategoriesWithSubcategories.second
-                    .category.copy(orderNum = firstOrderNum)
-            )
-        newCategoryWithSubcategoriesList[secondOrderNum - 1] =
-            twoCategoriesWithSubcategories.first.copy(
-                category = twoCategoriesWithSubcategories.first
-                    .category.copy(orderNum = secondOrderNum)
-            )
+            .moveItems(firstIndex, secondIndex)
 
         _uiState.update {
             it.copy(
                 categoriesWithSubcategories = it.categoriesWithSubcategories.replaceListByType(
-                    list = newCategoryWithSubcategoriesList,
+                    list = categoryWithSubcategoriesList,
                     type = uiState.value.categoryType
                 )
             )
         }
     }
 
-    fun swapSubcategories(firstOrderNum: Int, secondOrderNum: Int) {
+    fun moveSubcategories(firstIndex: Int, secondIndex: Int) {
         val categoryWithSubcategories = uiState.value.categoryWithSubcategories ?: return
-        val twoCategories = categoryWithSubcategories.subcategoryList.let {
-            (it.getOrNull(firstOrderNum - 1) ?: return) to
-                    (it.getOrNull(secondOrderNum - 1) ?: return)
-        }
-
-        val subcategoryList = categoryWithSubcategories.subcategoryList.toMutableList()
-        subcategoryList[firstOrderNum - 1] = twoCategories.second.copy(orderNum = firstOrderNum)
-        subcategoryList[secondOrderNum - 1] = twoCategories.first.copy(orderNum = secondOrderNum)
+        val subcategoryList = categoryWithSubcategories.subcategoryList
+            .moveItems(firstIndex, secondIndex)
 
         _uiState.update {
             it.copy(
-                categoryWithSubcategories = categoryWithSubcategories
-                    .copy(subcategoryList = subcategoryList)
+                categoryWithSubcategories = categoryWithSubcategories.copy(
+                    subcategoryList = subcategoryList
+                )
             )
         }
     }
@@ -124,22 +105,21 @@ class EditCategoriesViewModel(
         state.categoryWithSubcategories ?: return
 
         val categoryWithSubcategoriesList = state.categoriesWithSubcategories
-            .getByType(state.categoryType).map { item ->
-                item.takeIf {
-                    it.category.id != state.categoryWithSubcategories.category.id
-                } ?: state.categoryWithSubcategories
+            .getByType(state.categoryType)
+            .map { item ->
+                item.takeIf { it.category.id != state.categoryWithSubcategories.category.id }
+                    ?: state.categoryWithSubcategories.fixSubcategoriesOrderNumbers()
             }
 
-        state.categoriesWithSubcategories.replaceListByType(
+        val newCategoriesWithSubcategories = state.categoriesWithSubcategories.replaceListByType(
             list = categoryWithSubcategoriesList,
             type = state.categoryType
-        ).let { newCategoriesWithSubcategories ->
-            _uiState.update {
-                it.copy(
-                    categoryWithSubcategories = null,
-                    categoriesWithSubcategories = newCategoriesWithSubcategories
-                )
-            }
+        )
+        _uiState.update {
+            it.copy(
+                categoryWithSubcategories = null,
+                categoriesWithSubcategories = newCategoriesWithSubcategories
+            )
         }
     }
 
@@ -178,7 +158,9 @@ class EditCategoriesViewModel(
 
     fun getAllCategoryEntities(): List<CategoryEntity> {
         return uiState.value.categoriesWithSubcategories
-            .concatenateAsCategoryList().toCategoryEntityList()
+            .fixParentCategoriesOrderNums()
+            .concatenateAsCategoryList()
+            .toCategoryEntityList()
     }
 
 }
@@ -198,10 +180,6 @@ data class SetupCategoriesUiState(
     val categoryWithSubcategories: CategoryWithSubcategories? = null,
     val categoriesWithSubcategories: CategoriesWithSubcategories = CategoriesWithSubcategories()
 ) {
-
-    fun getCategoriesWithSubcategoriesListByType(): List<CategoryWithSubcategories> {
-        return categoriesWithSubcategories.getByType(categoryType)
-    }
 
     private fun getNewCategoryId(): Int {
         return ((categoriesWithSubcategories.concatenateAsCategoryList() +

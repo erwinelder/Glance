@@ -37,7 +37,7 @@ fun NavGraphBuilder.accountsGraph(
     navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
         composable<AccountsSettingsScreens.EditAccounts> { backStack ->
 
-            val accountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(
+            val editAccountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(
                 navController = navController,
                 factory = EditAccountsViewModelFactory(accountList)
             )
@@ -45,7 +45,7 @@ fun NavGraphBuilder.accountsGraph(
                 navController = navController
             )
 
-            val accountsList by accountsViewModel.accountsUiState.collectAsStateWithLifecycle()
+            val accountsList by editAccountsViewModel.accountList.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditAccountsScreen(
@@ -54,16 +54,18 @@ fun NavGraphBuilder.accountsGraph(
                 accountList = accountsList,
                 onNavigateToEditAccountScreen = { account ->
                     editAccountViewModel.applyAccountData(
-                        account = account ?: accountsViewModel.getNewAccount()
+                        account = account ?: editAccountsViewModel.getNewAccount()
                     )
                     navViewModel.navigateToScreen(
                         navController = navController, screen = AccountsSettingsScreens.EditAccount
                     )
                 },
-                onSwapAccounts = accountsViewModel::swapAccounts,
+                onMoveAccounts = editAccountsViewModel::moveAccounts,
                 onSaveButton = {
                     coroutineScope.launch {
-                        appViewModel.saveAccountsToDb(accountsViewModel.getAccountEntities())
+                        editAccountsViewModel.getAccountEntities()?.let {
+                            appViewModel.saveAccountsToDb(it)
+                        }
                         if (appUiSettings.isSetUp) {
                             navController.popBackStack()
                         } else {

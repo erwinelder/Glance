@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.account.presentation.screen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -9,14 +8,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +25,7 @@ import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.components.EditingAccountComponent
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
@@ -39,18 +38,19 @@ fun EditAccountsScreen(
     isAppSetUp: Boolean,
     accountList: List<Account>,
     onNavigateToEditAccountScreen: (Account?) -> Unit,
-    onSwapAccounts: (Int, Int) -> Unit,
+    onMoveAccounts: (Int, Int) -> Unit,
     onSaveButton: () -> Unit
 ) {
     GlassSurfaceContainer(
-        topPadding = if (!isAppSetUp) scaffoldPadding.calculateTopPadding() else null,
+        topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
                 accountsList = accountList,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
-                onSwapAccounts = onSwapAccounts
+                onMoveAccounts = onMoveAccounts
             )
         },
+        glassSurfaceFilledWidths = FilledWidthByScreenType(.86f, .86f, .86f),
         smallPrimaryButton = {
             SmallPrimaryButton(text = stringResource(R.string.add_account)) {
                 onNavigateToEditAccountScreen(null)
@@ -71,25 +71,20 @@ fun EditAccountsScreen(
 private fun GlassSurfaceContent(
     accountsList: List<Account>,
     onNavigateToEditAccountScreen: (Account) -> Unit,
-    onSwapAccounts: (Int, Int) -> Unit
+    onMoveAccounts: (Int, Int) -> Unit
 ) {
-    AnimatedContent(
-        targetState = accountsList,
-        label = "accounts list uploading"
-    ) { targetList ->
-        if (!WindowTypeIsExpanded) {
-            CompactLayout(
-                accountsList = targetList,
-                onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
-                onSwapAccounts = onSwapAccounts
-            )
-        } else {
-            ExpandedLayout(
-                accountsList = targetList,
-                onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
-                onSwapAccounts = onSwapAccounts
-            )
-        }
+    if (!WindowTypeIsExpanded) {
+        CompactLayout(
+            accountsList = accountsList,
+            onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
+            onMoveAccounts = onMoveAccounts
+        )
+    } else {
+        ExpandedLayout(
+            accountsList = accountsList,
+            onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
+            onMoveAccounts = onMoveAccounts
+        )
     }
 }
 
@@ -97,29 +92,31 @@ private fun GlassSurfaceContent(
 private fun CompactLayout(
     accountsList: List<Account>,
     onNavigateToEditAccountScreen: (Account) -> Unit,
-    onSwapAccounts: (Int, Int) -> Unit
+    onMoveAccounts: (Int, Int) -> Unit
 ) {
     val lazyColumnState = rememberLazyListState()
+
     LazyColumn(
         state = lazyColumnState,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.widget_content_padding)),
-        contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(2.dp)
     ) {
-        items(
+        itemsIndexed(
             items = accountsList,
-            key = { it.orderNum }
-        ) { account ->
+            key = { _, item -> item.id }
+        ) { index, account ->
             EditingAccountComponent(
                 account = account,
                 onAccountClick = onNavigateToEditAccountScreen,
-                upButtonEnabled = account.orderNum > 1,
-                onUpButtonClick = { onSwapAccounts(account.orderNum, account.orderNum - 1) },
-                downButtonEnabled = account.orderNum < accountsList.size,
-                onDownButtonClick = { onSwapAccounts(account.orderNum, account.orderNum + 1) }
+                upButtonEnabled = index > 0,
+                onUpButtonClick = { onMoveAccounts(index, index - 1) },
+                downButtonEnabled = index < accountsList.lastIndex,
+                onDownButtonClick = { onMoveAccounts(index, index + 1) },
+                modifier = Modifier.animateItem()
             )
         }
     }
@@ -130,7 +127,7 @@ private fun CompactLayout(
 private fun ExpandedLayout(
     accountsList: List<Account>,
     onNavigateToEditAccountScreen: (Account) -> Unit,
-    onSwapAccounts: (Int, Int) -> Unit
+    onMoveAccounts: (Int, Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -139,17 +136,17 @@ private fun ExpandedLayout(
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxWidth()
-            .padding(9.dp)
+            .padding(8.dp)
     ) {
-        accountsList.forEach { account ->
-            Box(modifier = Modifier.padding(9.dp)) {
+        accountsList.forEachIndexed { index, account ->
+            Box(modifier = Modifier.padding(8.dp)) {
                 EditingAccountComponent(
                     account = account,
                     onAccountClick = onNavigateToEditAccountScreen,
-                    upButtonEnabled = account.orderNum > 1,
-                    onUpButtonClick = { onSwapAccounts(account.orderNum, account.orderNum - 1) },
-                    downButtonEnabled = account.orderNum < accountsList.size,
-                    onDownButtonClick = { onSwapAccounts(account.orderNum, account.orderNum + 1) }
+                    upButtonEnabled = index > 0,
+                    onUpButtonClick = { onMoveAccounts(index, index - 1) },
+                    downButtonEnabled = index < accountsList.lastIndex,
+                    onDownButtonClick = { onMoveAccounts(index, index + 1) }
                 )
             }
         }
@@ -194,7 +191,7 @@ fun EditAccountsScreenPreview(
             isAppSetUp = isAppSetUp,
             accountList = accountList,
             onNavigateToEditAccountScreen = {},
-            onSwapAccounts = { _, _ -> },
+            onMoveAccounts = { _, _ -> },
             onSaveButton = {}
         )
     }

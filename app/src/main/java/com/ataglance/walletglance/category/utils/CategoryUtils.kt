@@ -98,11 +98,10 @@ fun List<CategoryWithSubcategories>.getCategoryWithSubcategoryById(
 }
 
 
-private fun List<Category>.checkCategoriesOrderNumbers(): Boolean {
-    this.sortedBy { it.orderNum }.forEachIndexed { index, category ->
-        if (category.orderNum != index + 1) {
-            return false
-        }
+fun List<CategoryWithSubcategories>.fixParentOrderNums(): List<CategoryWithSubcategories> {
+    return this.mapIndexed { index, categoryWithSubcategories ->
+        categoryWithSubcategories.copy(
+            category = categoryWithSubcategories.category.copy(orderNum = index + 1)
+        )
     }
-    return true
 }

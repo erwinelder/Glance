@@ -5,23 +5,27 @@ import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.utils.findByOrderNum
+import com.ataglance.walletglance.account.utils.fixOrderNums
+import com.ataglance.walletglance.account.utils.makeSureActiveAccountIsVisibleOne
+import com.ataglance.walletglance.account.utils.makeSureThereIsOnlyOneActiveAccount
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
+import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class EditAccountsViewModel(
-    passedAccountList: List<Account>
+    initialAccountList: List<Account>
 ) : ViewModel() {
 
-    private val _accountsUiState: MutableStateFlow<List<Account>> =
-        MutableStateFlow(passedAccountList.takeIf { it.isNotEmpty() } ?: getNewAccountList())
-    val accountsUiState: StateFlow<List<Account>> = _accountsUiState.asStateFlow()
+    private val _accountList: MutableStateFlow<List<Account>> = MutableStateFlow(
+        initialAccountList.takeIf { it.isNotEmpty() } ?: listOf(Account(id = 1, orderNum = 1))
+    )
+    val accountList: StateFlow<List<Account>> = _accountList.asStateFlow()
 
     private val _allowDeleting: MutableStateFlow<Boolean> = MutableStateFlow(
-        accountsUiState.value.size > 1
+        accountList.value.size > 1
     )
     val allowDeleting: StateFlow<Boolean> = _allowDeleting.asStateFlow()
 
@@ -32,97 +36,53 @@ class EditAccountsViewModel(
         )
     }
 
-    private fun getNewAccountList(): List<Account> {
-        return listOf(
-            Account(
-                id = 1,
-                orderNum = 1
-            )
-        )
-    }
-
     fun deleteAccountById(id: Int): List<Account>? {
-        if (accountsUiState.value.size < 2) return null
+        if (accountList.value.size < 2) return null
 
-        val newList = accountsUiState.value.deleteItemAndMoveOrderNum(
+        val newList = accountList.value.deleteItemAndMoveOrderNum(
             { it.id == id }, { it.copy(orderNum = it.orderNum - 1) }
         ).toMutableList()
 
-        if (newList.find { it.isActive } == null) {
+        if (newList.none { it.isActive }) {
             newList[0] = newList[0].copy(isActive = true)
         }
 
-        _accountsUiState.update { newList }
+        _accountList.update { newList }
         _allowDeleting.update { newList.size > 1 }
 
         return newList
     }
 
-    fun swapAccounts(thisOrderNum: Int, otherOrderNum: Int) {
-        _accountsUiState.update {
-            it.swapAccounts(thisOrderNum, otherOrderNum) ?: it
-        }
-    }
-
-    private fun List<Account>.swapAccounts(
-        firstOrderNum: Int,
-        secondOrderNum: Int
-    ): List<Account>? {
-        val (firstAccountToSwap, secondAccountToSwap) = accountsUiState.value.let {
-            (it.findByOrderNum(firstOrderNum) ?: return null) to
-                    (it.findByOrderNum(secondOrderNum) ?: return null)
-        }
-
-        return this.map { account ->
-            if (
-                account.orderNum != firstAccountToSwap.orderNum &&
-                account.orderNum != secondAccountToSwap.orderNum
-            ) {
-                account
-            } else if (account.orderNum == firstAccountToSwap.orderNum) {
-                secondAccountToSwap.copy(orderNum = account.orderNum)
-            } else {
-                firstAccountToSwap.copy(orderNum = account.orderNum)
-            }
+    fun moveAccounts(firstIndex: Int, secondIndex: Int) {
+        _accountList.update {
+            it.moveItems(firstIndex, secondIndex)
         }
     }
 
     fun saveAccount(accountToSave: Account) {
         if (accountToSave.id == 0) {
-            _accountsUiState.update {
-                it + listOf(
+            _accountList.update { uiState ->
+                uiState + listOf(
                     accountToSave.copy(
-                        id = (it.maxOfOrNull { acc -> acc.id } ?: 0) + 1,
-                        orderNum = (it.maxOfOrNull { acc -> acc.orderNum } ?: 0) + 1,
+                        id = (uiState.maxOfOrNull { it.id } ?: 0) + 1,
+                        orderNum = (uiState.maxOfOrNull { it.orderNum } ?: 0) + 1,
                     )
                 )
             }
         } else {
-            _accountsUiState.update { state ->
+            _accountList.update { state ->
                 state.map { it.takeIf { it.orderNum != accountToSave.orderNum } ?: accountToSave }
             }
         }
     }
 
-    fun getAccountEntities(): List<AccountEntity> {
-        var accountList = accountsUiState.value
-
-        if (accountList.filter { it.isActive }.size != 1) {
-            accountList = accountList.mapIndexed { index, account ->
-                account.copy(isActive = index == 0)
-            }
-        }
-
-        if (accountList.find { it.isActive && it.hide } != null) {
-            accountList.find { !it.hide }?.let { visibleAccount ->
-                accountList = accountList.map { account ->
-                    account.takeIf { it.id != visibleAccount.id }
-                        ?: visibleAccount.copy(isActive = true)
-                }
-            }
-        }
-
-        return accountList.toAccountEntityList()
+    fun getAccountEntities(): List<AccountEntity>? {
+        return accountList.value
+            .takeIf { it.isNotEmpty() }
+            ?.fixOrderNums()
+            ?.makeSureThereIsOnlyOneActiveAccount()
+            ?.makeSureActiveAccountIsVisibleOne()
+            ?.toAccountEntityList()
     }
 
 }

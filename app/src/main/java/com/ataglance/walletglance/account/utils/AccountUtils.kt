@@ -54,6 +54,39 @@ fun List<Account>.findByOrderNum(orderNum: Int): Account? {
 }
 
 
+fun List<Account>.makeSureThereIsOnlyOneActiveAccount(): List<Account> {
+    return this.takeIf { list ->
+        list.filter { it.isActive }.size == 1
+    }
+    ?: this.mapIndexed { index, account ->
+        account.copy(isActive = index == 0)
+    }
+}
+
+
+fun List<Account>.makeSureActiveAccountIsVisibleOne(): List<Account> {
+    return this
+        .takeIf { list -> list.none { it.isActive && it.hide } }
+        ?: this.makeFirstVisibleAccountActive()
+        ?: this
+            .takeIf { it.isNotEmpty() }
+            ?.toMutableList()
+            ?.apply { this[0] = this[0].copy(isActive = true, hide = false) }
+        ?: this
+}
+
+fun List<Account>.makeFirstVisibleAccountActive(): List<Account>? {
+    return this
+        .find { !it.hide }
+        ?.let { visibleAccount ->
+            this.map { account ->
+                account.takeIf { it.id != visibleAccount.id }
+                    ?: visibleAccount.copy(isActive = true)
+            }
+        }
+}
+
+
 fun List<Account>.getOtherFrom(account: Account): Account {
     for (i in this.indices) {
         if (this[i].id == account.id) {
@@ -80,6 +113,13 @@ fun List<Account>.mergeWith(list: List<Account>): List<Account> {
     }
 
     return mergedList
+}
+
+
+fun List<Account>.fixOrderNums(): List<Account> {
+    return this.mapIndexed { index, account ->
+        account.copy(orderNum = index + 1)
+    }
 }
 
 

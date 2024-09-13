@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +31,7 @@ import com.ataglance.walletglance.category.presentation.components.CategoryTypeB
 import com.ataglance.walletglance.category.presentation.components.EditingParentCategoryComponent
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
@@ -67,16 +67,15 @@ fun EditCategoriesScreen(
                 onSwapCategories = onSwapCategories
             )
         },
+        glassSurfaceFilledWidths = FilledWidthByScreenType(.86f, .86f, .86f),
         smallPrimaryButton = {
             SmallPrimaryButton(text = stringResource(R.string.add_category)) {
                 onNavigateToEditCategoryScreen(null)
             }
         },
-        secondaryBottomButton = if (!isAppSetUp) {
-            {
-                SecondaryButton(text = stringResource(R.string.reset), onClick = onResetButton)
-            }
-        } else null,
+        secondaryBottomButton = if (!isAppSetUp) { {
+            SecondaryButton(text = stringResource(R.string.reset), onClick = onResetButton)
+        } } else null,
         primaryBottomButton = {
             PrimaryButton(
                 text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_finish),
@@ -93,22 +92,23 @@ private fun GlassSurfaceContent(
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
-    val categoryWithSubcategoriesList = uiState.getCategoriesWithSubcategoriesListByType()
-
     AnimatedContent(
-        targetState = categoryWithSubcategoriesList,
-        label = "category list uploading"
-    ) { categoryList ->
+        targetState = uiState.categoryType,
+        label = "category type"
+    ) { categoryType ->
+        val categoryWithSubcategoriesList = uiState.categoriesWithSubcategories
+            .getByType(categoryType)
+
         if (!WindowTypeIsExpanded) {
             CompactLayout(
-                categoryList = categoryList,
+                categoryList = categoryWithSubcategoriesList,
                 onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoryListScreen,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )
         } else {
             ExpandedLayout(
-                categoryList = categoryList,
+                categoryList = categoryWithSubcategoriesList,
                 onNavigateToEditSubcategoryListScreen = onNavigateToEditSubcategoryListScreen,
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
@@ -128,37 +128,28 @@ private fun CompactLayout(
 
     LazyColumn(
         state = lazyListState,
-        contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
+        contentPadding = PaddingValues(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(2.dp)
     ) {
-        items(
+        itemsIndexed(
             items = categoryList,
-            key = { it.category.id }
-        ) { item ->
+            key = { _, item -> item.category.id }
+        ) { index, item ->
             EditingParentCategoryComponent(
                 category = item.category,
                 onNavigateToEditSubcategoryListScreen = {
                     onNavigateToEditSubcategoryListScreen(item)
                 },
-                onEditButton = {
-                    onNavigateToEditCategoryScreen(item.category)
-                },
-                onUpButtonClick = {
-                    onSwapCategories(
-                        item.category.orderNum, item.category.orderNum - 1
-                    )
-                },
-                upButtonEnabled = item.category.orderNum > 1,
-                onDownButtonClick = {
-                    onSwapCategories(
-                        item.category.orderNum, item.category.orderNum + 1
-                    )
-                },
-                downButtonEnabled = item.category.orderNum < categoryList.size,
+                onEditButton = { onNavigateToEditCategoryScreen(item.category) },
+                onUpButtonClick = { onSwapCategories(index, index - 1) },
+                upButtonEnabled = index > 0,
+                onDownButtonClick = { onSwapCategories(index, index + 1) },
+                downButtonEnabled = index < categoryList.lastIndex,
+                modifier = Modifier.animateItem()
             )
         }
     }
@@ -179,30 +170,20 @@ private fun ExpandedLayout(
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxWidth()
-            .padding(9.dp)
+            .padding(8.dp)
     ) {
-        categoryList.forEach { item ->
-            Box(modifier = Modifier.padding(9.dp)) {
+        categoryList.forEachIndexed { index, item ->
+            Box(modifier = Modifier.padding(8.dp)) {
                 EditingParentCategoryComponent(
                     category = item.category,
                     onNavigateToEditSubcategoryListScreen = {
                         onNavigateToEditSubcategoryListScreen(item)
                     },
-                    onEditButton = {
-                        onNavigateToEditCategoryScreen(item.category)
-                    },
-                    onUpButtonClick = {
-                        onSwapCategories(
-                            item.category.orderNum, item.category.orderNum - 1
-                        )
-                    },
-                    upButtonEnabled = item.category.orderNum > 1,
-                    onDownButtonClick = {
-                        onSwapCategories(
-                            item.category.orderNum, item.category.orderNum + 1
-                        )
-                    },
-                    downButtonEnabled = item.category.orderNum < categoryList.size,
+                    onEditButton = { onNavigateToEditCategoryScreen(item.category) },
+                    onUpButtonClick = { onSwapCategories(index, index - 1) },
+                    upButtonEnabled = index > 0,
+                    onDownButtonClick = { onSwapCategories(index, index + 1) },
+                    downButtonEnabled = index < categoryList.lastIndex
                 )
             }
         }

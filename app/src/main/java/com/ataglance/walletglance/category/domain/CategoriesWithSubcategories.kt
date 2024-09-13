@@ -1,12 +1,13 @@
 package com.ataglance.walletglance.category.domain
 
+import com.ataglance.walletglance.category.utils.fixParentOrderNums
+import com.ataglance.walletglance.category.utils.toEditingCategoryWithSubcategoriesList
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
+import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
-import com.ataglance.walletglance.category.utils.toEditingCategoryWithSubcategoriesList
 
 data class CategoriesWithSubcategories(
     val expense: List<CategoryWithSubcategories> = emptyList(),
@@ -19,7 +20,7 @@ data class CategoriesWithSubcategories(
         }
     }
 
-    fun getByTypeOrAll(type: CategoryType?): List<CategoryWithSubcategories> {
+    private fun getByTypeOrAll(type: CategoryType?): List<CategoryWithSubcategories> {
         return when (type) {
             CategoryType.Expense -> expense
             CategoryType.Income -> income
@@ -82,6 +83,13 @@ data class CategoriesWithSubcategories(
             { it.copy(category = it.category.copy(orderNum = it.category.orderNum - 1)) }
         )
         return replaceListByType(newList, category.type)
+    }
+
+    fun fixParentCategoriesOrderNums(): CategoriesWithSubcategories {
+        return this.copy(
+            expense = expense.fixParentOrderNums(),
+            income = income.fixParentOrderNums()
+        )
     }
 
     fun getStatistics(recordStackList: List<RecordStack>): CategoryStatisticsLists {

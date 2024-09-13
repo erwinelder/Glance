@@ -1,19 +1,15 @@
 package com.ataglance.walletglance.account.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,13 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
@@ -46,14 +43,12 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 @Composable
 fun EditingAccountComponent(
     account: Account,
-    modifier: Modifier = Modifier,
-    fontSize: Int = 20,
-    roundedCornerSize: Dp = 18.dp,
-    onAccountClick: (Account) -> Unit = {},
-    onUpButtonClick: () -> Unit = {},
-    upButtonEnabled: Boolean = false,
-    onDownButtonClick: () -> Unit = {},
-    downButtonEnabled: Boolean = false
+    onAccountClick: (Account) -> Unit,
+    onUpButtonClick: () -> Unit,
+    upButtonEnabled: Boolean,
+    onDownButtonClick: () -> Unit,
+    downButtonEnabled: Boolean,
+    modifier: Modifier = Modifier
 ) {
     val accountBackgroundAndColor = account.color.getColorAndColorOnByTheme(CurrAppTheme)
     val accountColor = accountBackgroundAndColor.first
@@ -61,74 +56,54 @@ fun EditingAccountComponent(
 
     Box(
         modifier = modifier
-            .bounceClickEffect(shrinkScale = .98f)
-            .clip(RoundedCornerShape(roundedCornerSize + 5.dp))
+            .bounceClickEffect(shrinkScale = .98f) {
+                onAccountClick(account)
+            }
+            .clip(RoundedCornerShape(26.dp))
             .background(GlanceTheme.onSurface.copy(alpha = .2f))
             .padding(2.dp)
     ) {
         Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clip(RoundedCornerShape(roundedCornerSize + 4.dp))
+                .clip(RoundedCornerShape(24.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(accountColor.darker, accountColor.lighter),
+                        colors = accountColor.asListDarkToLight(),
                         start = Offset(0f, 200f),
                         end = Offset(100f, 0f)
                     )
                 )
-                .width(IntrinsicSize.Min)
                 .height(IntrinsicSize.Min)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 18.dp, vertical = 12.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
-                    .clickable { onAccountClick(account) }
-                    .width(IntrinsicSize.Max)
-                    .weight(1f)
-                    .padding(vertical = if (account.withoutBalance) 6.dp else 0.dp)
+                    .weight(1f, fill = false)
             ) {
-                Text(
-                    text = stringResource(R.string.name),
-                    fontWeight = FontWeight.Light,
-                    textAlign = TextAlign.Center,
-                    fontSize = (fontSize - 6).sp,
-                    color = onAccountColor.copy(.65f)
-                )
-                Text(
+                TextWithLabel(
+                    labelText = stringResource(R.string.name),
                     text = account.name,
-                    fontSize = fontSize.sp,
-                    fontWeight = FontWeight.Light,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
                     color = onAccountColor,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    labelFontSize = if (account.withoutBalance) 18.sp else 16.sp,
+                    textFontSize = if (account.withoutBalance) 22.sp else 20.sp
                 )
                 if (!account.withoutBalance) {
-                    Text(
-                        text = stringResource(R.string.balance),
-                        fontSize = (fontSize - 6).sp,
-                        fontWeight = FontWeight.Light,
-                        textAlign = TextAlign.Center,
-                        color = onAccountColor.copy(.65f)
-                    )
-                    Text(
+                    TextWithLabel(
+                        labelText = stringResource(R.string.balance),
                         text = account.getFormattedBalanceWithCurrency(),
-                        fontSize = (fontSize + 4).sp,
-                        fontWeight = FontWeight.Light,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = onAccountColor
+                        color = onAccountColor,
+                        labelFontSize = 18.sp,
+                        textFontSize = 22.sp
                     )
                 }
             }
-            Spacer(modifier = Modifier.requiredWidth(12.dp))
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .requiredWidth(30.dp)
-                    .fillMaxHeight(.85f)
+                modifier = Modifier.fillMaxHeight(.85f)
             ) {
                 IconButton(
                     onClick = onUpButtonClick,
@@ -137,7 +112,7 @@ fun EditingAccountComponent(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_up_icon),
-                        contentDescription = "arrow up",
+                        contentDescription = "move account up",
                         tint = if (upButtonEnabled) {
                             onAccountColor
                         } else {
@@ -152,7 +127,7 @@ fun EditingAccountComponent(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_down_icon),
-                        contentDescription = "arrow down",
+                        contentDescription = "move account down",
                         tint = if (downButtonEnabled) {
                             onAccountColor
                         } else {
@@ -165,6 +140,33 @@ fun EditingAccountComponent(
     }
 }
 
+@Composable
+private fun TextWithLabel(
+    labelText: String,
+    text: String,
+    color: Color = GlanceTheme.onSurface,
+    labelFontSize: TextUnit = 16.sp,
+    textFontSize: TextUnit = 20.sp,
+) {
+    Column {
+        Text(
+            text = labelText,
+            fontSize = labelFontSize,
+            fontWeight = FontWeight.Light,
+            textAlign = TextAlign.Center,
+            color = color.copy(.6f)
+        )
+        Text(
+            text = text,
+            fontSize = textFontSize,
+            fontWeight = FontWeight.Light,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = color
+        )
+    }
+}
+
 @Preview(showSystemUi = true)
 @Composable
 private fun MediumAccountSetupPreview() {
@@ -173,8 +175,14 @@ private fun MediumAccountSetupPreview() {
             account = Account(
                 balance = 516.41,
                 name = "Main USD",
-                color = AccountColors.Default.toAccountColorWithName()
-            )
+                color = AccountColors.Default.toAccountColorWithName(),
+                withoutBalance = false
+            ),
+            onAccountClick = {},
+            onUpButtonClick = {},
+            upButtonEnabled = true,
+            onDownButtonClick = {},
+            downButtonEnabled = true
         )
     }
 }

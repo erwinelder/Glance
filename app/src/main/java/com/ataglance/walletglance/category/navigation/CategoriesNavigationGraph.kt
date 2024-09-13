@@ -76,7 +76,7 @@ fun NavGraphBuilder.categoriesGraph(
                         navController, CategoriesSettingsScreens.EditCategory
                     )
                 },
-                onSwapCategories = categoriesViewModel::swapParentCategories,
+                onSwapCategories = categoriesViewModel::moveParentCategories,
                 onResetButton = categoriesViewModel::reapplyCategoryLists,
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
@@ -114,7 +114,7 @@ fun NavGraphBuilder.categoriesGraph(
                         navController, CategoriesSettingsScreens.EditCategory
                     )
                 },
-                onSwapCategories = categoriesViewModel::swapSubcategories
+                onSwapCategories = categoriesViewModel::moveSubcategories
             )
         }
         composable<CategoriesSettingsScreens.EditCategory> { backStack ->

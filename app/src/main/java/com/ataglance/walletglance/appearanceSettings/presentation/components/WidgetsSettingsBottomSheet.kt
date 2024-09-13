@@ -26,6 +26,7 @@ fun WidgetsSettingsBottomSheet(
     ) {
         ReorderableListStyled(
             list = widgetList,
+            itemKey = { _, item -> item.name },
             onMoveItems = onMoveWidgets
         ) { item ->
             CheckedWidgetComponent(
