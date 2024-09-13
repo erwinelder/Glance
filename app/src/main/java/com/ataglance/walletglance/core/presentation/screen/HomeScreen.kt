@@ -38,6 +38,7 @@ import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
+import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
@@ -149,10 +150,7 @@ private fun CompactLayout(
                 WidgetName.ChosenBudgets -> {
                 }
                 WidgetName.TotalForPeriod -> {
-                    StartAnimatedContainer(
-                        visible = isAppThemeSetUp,
-                        delayMillis = (index + 3) * 50
-                    ) {
+                    WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                         ExpensesIncomeWidget(
                             uiState = widgetsUiState.expensesIncomeState,
                             dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
@@ -161,10 +159,7 @@ private fun CompactLayout(
                     }
                 }
                 WidgetName.RecentRecords -> {
-                    StartAnimatedContainer(
-                        visible = isAppThemeSetUp,
-                        delayMillis = (index + 3) * 50
-                    ) {
+                    WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
@@ -195,10 +190,7 @@ private fun CompactLayout(
                     }
                 }
                 WidgetName.TopExpenseCategories -> {
-                    StartAnimatedContainer(
-                        visible = isAppThemeSetUp,
-                        delayMillis = (index + 3) * 50
-                    ) {
+                    WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
@@ -219,66 +211,6 @@ private fun CompactLayout(
                 }
             }
         }
-        /*item {
-            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 150) {
-                ExpensesIncomeWidget(
-                    uiState = widgetsUiState.expensesIncomeState,
-                    dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
-                    accountCurrency = accountsUiState.activeAccount?.currency ?: ""
-                )
-            }
-        }*/
-        /*item {
-            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 200) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    RecordHistoryWidget(
-                        recordStackList = widgetsUiState.recordsFilteredByDateAndAccount.take(3),
-                        accountList = accountsUiState.accountList,
-                        isCustomDateRange =
-                            dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
-                        onRecordClick = { recordNum: Int ->
-                            onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.RecordCreation(isNew = false, recordNum = recordNum)
-                            )
-                        },
-                        onTransferClick = { recordNum: Int ->
-                            onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.TransferCreation(isNew = false, recordNum = recordNum)
-                            )
-                        }
-                    )
-                    NavigationTextArrowButton(
-                        text = stringResource(R.string.view_all),
-                        onClick = {
-                            onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
-                        }
-                    )
-                }
-            }
-        }*/
-        /*item {
-            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 250) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    CategoriesStatisticsWidget(
-                        categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
-                        onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
-                            onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.CategoryStatistics(parentCategoryId)
-                            )
-                        }
-                    )
-                    NavigationTextArrowButton(text = stringResource(R.string.view_all)) {
-                        onNavigateToScreenMovingTowardsLeft(MainScreens.CategoryStatistics(0))
-                    }
-                }
-            }
-        }*/
     }
 }
 
