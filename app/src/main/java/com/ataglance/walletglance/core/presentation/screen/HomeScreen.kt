@@ -38,8 +38,11 @@ import com.ataglance.walletglance.core.presentation.components.widgets.ChosenWid
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
 import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
+import com.ataglance.walletglance.core.utils.plus
+import com.ataglance.walletglance.core.utils.top
 import com.ataglance.walletglance.navigation.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
@@ -50,17 +53,17 @@ import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
 
 @Composable
 fun HomeScreen(
-    scaffoldAppScreenPadding: PaddingValues,
+    scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
-    widgetNamesList: List<WidgetName>,
-    widgetsUiState: WidgetsUiState,
-    onChangeHideActiveAccountBalance: () -> Unit,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     onTopBarAccountClick: (Int) -> Unit,
+    onChangeHideActiveAccountBalance: () -> Unit,
+    widgetNamesList: List<WidgetName>,
+    widgetsUiState: WidgetsUiState,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
 ) {
     Scaffold(
@@ -79,8 +82,7 @@ fun HomeScreen(
         containerColor = Color.Transparent
     ) { scaffoldHomeScreenPadding ->
         CompactLayout(
-            scaffoldAppScreenPadding = scaffoldAppScreenPadding,
-            scaffoldHomeScreenPadding = scaffoldHomeScreenPadding,
+            scaffoldPadding = scaffoldPadding + scaffoldHomeScreenPadding,
             isAppThemeSetUp = isAppThemeSetUp,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
@@ -94,8 +96,7 @@ fun HomeScreen(
 
 @Composable
 private fun CompactLayout(
-    scaffoldAppScreenPadding: PaddingValues,
-    scaffoldHomeScreenPadding: PaddingValues,
+    scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
     dateRangeMenuUiState: DateRangeMenuUiState,
@@ -109,12 +110,8 @@ private fun CompactLayout(
     LazyColumn(
         state = listState,
         contentPadding = PaddingValues(
-            top = scaffoldAppScreenPadding.calculateTopPadding() +
-                    scaffoldHomeScreenPadding.calculateTopPadding() +
-                    dimensionResource(R.dimen.screen_vertical_padding),
-            bottom = scaffoldAppScreenPadding.calculateBottomPadding() +
-                    scaffoldHomeScreenPadding.calculateBottomPadding() +
-                    dimensionResource(R.dimen.screen_vertical_padding)
+            top = scaffoldPadding.top + dimensionResource(R.dimen.screen_vertical_padding),
+            bottom = scaffoldPadding.bottom + dimensionResource(R.dimen.screen_vertical_padding)
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(32.dp),
@@ -268,7 +265,7 @@ fun HomeScreenPreview(
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Home) }
     ) { scaffoldPadding ->
         HomeScreen(
-            scaffoldAppScreenPadding = scaffoldPadding,
+            scaffoldPadding = scaffoldPadding,
             isAppThemeSetUp = true,
             accountsUiState = accountsUiState,
             dateRangeMenuUiState = dateRangeMenuUiState,
