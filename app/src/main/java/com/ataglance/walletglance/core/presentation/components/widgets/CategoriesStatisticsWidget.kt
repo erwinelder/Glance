@@ -12,11 +12,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.category.domain.CategoryStatisticsLists
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.domain.icons.CategoryIcon
 import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
+import com.ataglance.walletglance.category.utils.toCategoryColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
@@ -49,13 +51,13 @@ fun CategoriesStatisticsWidget(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     CategoryStatisticsItemComponent(firstCategory, enableClick = true) {
-                        firstCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
+                        firstCategory?.category?.id?.let(onNavigateToCategoriesStatisticsScreen)
                     }
                     CategoryStatisticsItemComponent(secondCategory, enableClick = true) {
-                        secondCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
+                        secondCategory?.category?.id?.let(onNavigateToCategoriesStatisticsScreen)
                     }
                     CategoryStatisticsItemComponent(thirdCategory, enableClick = true) {
-                        thirdCategory?.categoryId?.let(onNavigateToCategoriesStatisticsScreen)
+                        thirdCategory?.category?.id?.let(onNavigateToCategoriesStatisticsScreen)
                     }
                 }
                 if (firstCategory == null) {
@@ -76,20 +78,24 @@ private fun CategoriesStatisticsWidgetPreview() {
             categoryStatisticsLists = CategoryStatisticsLists(
                 expense = listOf(
                     CategoryStatisticsElementUiState(
-                        categoryId = 1,
-                        categoryName = "Food & Drinks",
-                        categoryIconRes = CategoryIcon.FoodAndDrinks.res,
-                        categoryColor = CategoryColors.Olive.color,
+                        category = Category(
+                            id = 1,
+                            name = "Food & Drinks",
+                            icon = CategoryIcon.FoodAndDrinks,
+                            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+                        ),
                         totalAmount = "1000.00",
                         percentageFloat = 50f,
                         percentageFormatted = "50%",
                         currency = "USD"
                     ),
                     CategoryStatisticsElementUiState(
-                        categoryId = 2,
-                        categoryName = "Housing",
-                        categoryIconRes = CategoryIcon.Housing.res,
-                        categoryColor = CategoryColors.Camel.color,
+                        category = Category(
+                            id = 2,
+                            name = "Housing",
+                            icon = CategoryIcon.Housing,
+                            colorWithName = CategoryColors.Camel.toCategoryColorWithName()
+                        ),
                         totalAmount = "500.00",
                         percentageFloat = 25f,
                         percentageFormatted = "25%",

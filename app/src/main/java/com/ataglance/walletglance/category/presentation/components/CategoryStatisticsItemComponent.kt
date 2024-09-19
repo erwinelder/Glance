@@ -1,24 +1,20 @@
 package com.ataglance.walletglance.category.presentation.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,28 +58,11 @@ fun CategoryStatisticsItemComponent(
                         modifier = Modifier.size(20.dp)
                     )
                 }
-                uiState?.categoryIconRes?.let {
-                    Icon(
-                        painter = painterResource(it),
-                        contentDescription = "category ${uiState.categoryName} icon",
-                        tint = GlanceTheme.surface,
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 8.dp,
-                                spotColor = uiState.categoryColor
-                                    .getCategoryIconSolidColorByTheme(CurrAppTheme),
-                                shape = RoundedCornerShape(30)
-                            )
-                            .clip(RoundedCornerShape(30))
-                            .background(
-                                uiState.categoryColor.getCategoryIconSolidColorByTheme(CurrAppTheme)
-                            )
-                            .size(32.dp)
-                            .padding(5.dp)
-                    )
+                uiState?.category?.let {
+                    CategoryIconComponent(category = it)
                 }
                 Text(
-                    text = uiState?.categoryName ?: "---",
+                    text = uiState?.category?.name ?: "---",
                     color = GlanceTheme.onSurface,
                     fontSize = 19.sp,
                     maxLines = 1,
@@ -93,7 +72,7 @@ fun CategoryStatisticsItemComponent(
                 if (uiState?.subcategoriesStatisticsUiState != null && !showLeftArrow) {
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_right_icon),
-                        contentDescription = "go to ${uiState.categoryName} subcategories",
+                        contentDescription = "go to ${uiState.category.name} subcategories",
                         tint = GlanceTheme.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
@@ -135,10 +114,8 @@ fun CategoryStatisticsItemComponent(
                 uiState?.let {
                     GlanceLineChart(
                         percentage = uiState.percentageFloat,
-                        brushColors = uiState.categoryColor
-                            .getCategoryLineChartColorsByTheme(CurrAppTheme),
-                        shadowColor = uiState.categoryColor
-                            .getCategoryIconSolidColorByTheme(CurrAppTheme)
+                        brushColors = uiState.category.getLineChartColorsByTheme(CurrAppTheme),
+                        shadowColor = uiState.category.getIconSolidColorByTheme(CurrAppTheme)
                     )
                 }
             }
@@ -148,7 +125,7 @@ fun CategoryStatisticsItemComponent(
 
 
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun CategoryStatisticsItemComponentPreview() {
     CategoryStatisticsScreenPreview()

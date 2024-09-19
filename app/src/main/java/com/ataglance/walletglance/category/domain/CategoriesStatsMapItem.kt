@@ -16,10 +16,7 @@ data class CategoriesStatsMapItem(
         val percentage = getPercentage(allCategoriesTotalAmount)
 
         return CategoryStatisticsElementUiState(
-            categoryId = category.id,
-            categoryName = category.name,
-            categoryIconRes = category.icon.res,
-            categoryColor = category.colorWithName.color,
+            category = category,
             totalAmount = totalAmount.formatWithSpaces(),
             currency = accountCurrency,
             percentageFloat = percentage / 100,

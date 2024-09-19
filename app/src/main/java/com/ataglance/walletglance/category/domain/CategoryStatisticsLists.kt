@@ -13,7 +13,7 @@ data class CategoryStatisticsLists(
     }
 
     fun getItemByParentCategoryId(id: Int): CategoryStatisticsElementUiState? {
-        return (expense + income).find { it.categoryId == id }
+        return (expense + income).find { it.category.id == id }
     }
 
 }

@@ -102,7 +102,7 @@ fun CategoryStatisticsScreen(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(items = categoryList, key = { it.categoryId }) { category ->
+                items(items = categoryList, key = { it.category.id }) { category ->
                     CategoryStatisticsItemComponent(uiState = category) {
                         onSetParentCategory(category)
                     }
