@@ -35,8 +35,8 @@ import com.ataglance.walletglance.account.presentation.components.AccountNameWit
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.budget.data.mapper.toBudget
-import com.ataglance.walletglance.budget.domain.EditingBudgetUiState
+import com.ataglance.walletglance.budget.domain.mapper.toBudget
+import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
@@ -47,7 +47,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.TwoStateCheckbox
+import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckbox
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel

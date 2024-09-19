@@ -9,8 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.budget.domain.BudgetsByType
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreen
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel

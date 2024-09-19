@@ -24,14 +24,14 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 fun GlassSurfaceOnGlassSurface(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    enableClick: Boolean = true,
+    clickEnabled: Boolean = true,
     filledWidth: Float? = null,
     paddingValues: PaddingValues = PaddingValues(16.dp, 8.dp),
     shrinkScale: Float = .98f,
     content: @Composable () -> Unit
 ) {
     var localModifier = modifier
-        .bounceClickEffect(shrinkScale = shrinkScale, enabled = enableClick, onClick = onClick)
+        .bounceClickEffect(shrinkScale = shrinkScale, enabled = clickEnabled, onClick = onClick)
     localModifier = localModifier.clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
     if (filledWidth != null) {
         localModifier = localModifier.fillMaxWidth(filledWidth)

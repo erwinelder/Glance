@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.recordCreation.domain
 
-import com.ataglance.walletglance.budget.domain.BudgetsByType
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.data.repository
 
-import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.budget.domain.TotalAmountByRange
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.local.dao.RecordDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity

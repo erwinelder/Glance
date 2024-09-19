@@ -8,7 +8,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.appearanceSettings.data.repository.WidgetRepository
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -17,9 +16,11 @@ import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
+import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
+import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import kotlinx.coroutines.CoroutineScope
@@ -108,8 +109,12 @@ class QuartzApplication : Application() {
 
     private fun initializePersonalizationViewModel() {
         val widgetRepository = WidgetRepository(db.widgetDao)
+        val budgetOnWidgetRepository = BudgetOnWidgetRepository(db.budgetOnWidgetDao)
 
-        personalizationViewModel = PersonalizationViewModel(widgetRepository = widgetRepository)
+        personalizationViewModel = PersonalizationViewModel(
+            widgetRepository = widgetRepository,
+            budgetOnWidgetRepository = budgetOnWidgetRepository
+        )
     }
 
 

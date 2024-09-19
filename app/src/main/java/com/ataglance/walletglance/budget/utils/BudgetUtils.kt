@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.budget.utils
 
-import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.budget.domain.BudgetsByType
-import com.ataglance.walletglance.budget.domain.EditingBudgetUiState
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.utils.getTotalAmountCorrespondingToBudget

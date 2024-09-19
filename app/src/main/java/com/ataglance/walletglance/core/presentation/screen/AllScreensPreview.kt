@@ -48,7 +48,7 @@ import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSe
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
 import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.appearanceSettings.presentation.screen.AppearanceScreenPreview
+import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview

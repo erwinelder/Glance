@@ -174,3 +174,21 @@ val MIGRATION_8_9 = object : Migration(8, 9) {
 
     }
 }
+
+val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS BudgetOnWidget (
+                budgetId INTEGER PRIMARY KEY NOT NULL,
+                FOREIGN KEY (budgetId) REFERENCES Budget(id) ON DELETE CASCADE
+            )
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_BudgetOnWidget_budgetId
+            ON BudgetOnWidget(budgetId)
+        """.trimIndent())
+
+    }
+}

@@ -33,7 +33,11 @@ fun Modifier.bounceClickEffect(
         .clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
-            onClick = onClick
+            onClick = {
+                if (enabled) {
+                    onClick()
+                }
+            }
         )
         .pointerInput(isPressed) {
             awaitPointerEventScope {

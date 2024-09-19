@@ -6,8 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ataglance.walletglance.account.data.local.dao.AccountDao
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.appearanceSettings.data.local.dao.WidgetDao
-import com.ataglance.walletglance.appearanceSettings.data.local.model.WidgetEntity
 import com.ataglance.walletglance.budget.data.local.dao.BudgetAccountAssociationDao
 import com.ataglance.walletglance.budget.data.local.dao.BudgetDao
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
@@ -20,6 +18,10 @@ import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCo
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonDao
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
+import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetDao
+import com.ataglance.walletglance.personalization.data.local.dao.WidgetDao
+import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
 import com.ataglance.walletglance.record.data.local.dao.RecordDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
@@ -33,9 +35,10 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
         BudgetEntity::class,
         BudgetAccountAssociation::class,
         NavigationButtonEntity::class,
-        WidgetEntity::class
+        WidgetEntity::class,
+        BudgetOnWidgetEntity::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -49,6 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val budgetAccountAssociationDao: BudgetAccountAssociationDao
     abstract val navigationButtonDao: NavigationButtonDao
     abstract val widgetDao: WidgetDao
+    abstract val budgetOnWidgetDao: BudgetOnWidgetDao
 
     companion object {
         @Volatile
@@ -62,7 +66,7 @@ abstract class AppDatabase : RoomDatabase() {
 
                     .addMigrations(
                         MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
-                        MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9
+                        MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10
                     )
 
                     /*.addCallback(object : Callback() {

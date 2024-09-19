@@ -2,7 +2,7 @@ package com.ataglance.walletglance.budget.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.budget.domain.EditingBudgetUiState
+import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal

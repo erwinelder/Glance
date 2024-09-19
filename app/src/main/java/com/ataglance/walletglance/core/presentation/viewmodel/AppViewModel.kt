@@ -19,12 +19,12 @@ import com.ataglance.walletglance.account.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.account.utils.mergeWith
 import com.ataglance.walletglance.account.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.account.utils.toAccountList
-import com.ataglance.walletglance.budget.data.mapper.divideIntoBudgetsAndAssociations
-import com.ataglance.walletglance.budget.data.mapper.toBudgetList
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.budget.domain.BudgetsByType
-import com.ataglance.walletglance.budget.domain.TotalAmountByRange
+import com.ataglance.walletglance.budget.domain.mapper.divideIntoBudgetsAndAssociations
+import com.ataglance.walletglance.budget.domain.mapper.toBudgetList
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.budget.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.budget.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.budget.utils.groupByType
@@ -56,14 +56,11 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
-import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
-import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
@@ -72,9 +69,8 @@ import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordsInDateRange
-import com.ataglance.walletglance.record.utils.filterByDateAndAccount
+import com.ataglance.walletglance.record.utils.filterByAccountId
 import com.ataglance.walletglance.record.utils.findByRecordNum
-import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.utils.getFirstByTypeAndAccountIdOrJustType
 import com.ataglance.walletglance.record.utils.getOutAndInTransfersByRecordNums
 import com.ataglance.walletglance.record.utils.getTotalAmountByType
@@ -103,7 +99,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.util.Locale
 
 class AppViewModel(
@@ -440,7 +435,7 @@ class AppViewModel(
 
     private fun getLastUsedRecordCategoryByType(type: CategoryType): CategoryWithSubcategory? {
         return accountsUiState.value.activeAccount?.id
-            ?.let { recordStackList.value.getFirstByTypeAndAccountIdOrJustType(type, it) }
+            ?.let { recordStackListFilteredByDate.value.getFirstByTypeAndAccountIdOrJustType(type, it) }
             ?.stack?.firstOrNull()?.categoryWithSubcategory
             ?: categoriesWithSubcategories.value.getLastCategoryWithSubcategoryByType(type)
     }
@@ -492,7 +487,9 @@ class AppViewModel(
     }
 
 
-    private val _todayRecordList: MutableStateFlow<List<RecordEntity>> = MutableStateFlow(emptyList())
+    private val _todayRecordList: MutableStateFlow<List<RecordEntity>> = MutableStateFlow(
+        emptyList()
+    )
 
     private fun fetchRecordsFromDbForToday() {
         viewModelScope.launch {
@@ -500,6 +497,16 @@ class AppViewModel(
                 _todayRecordList.update { recordList }
             }
         }
+    }
+
+    fun getActiveAccountExpensesForToday(): Double {
+        return accountsUiState.value.activeAccount?.id
+            ?.let {
+                _todayRecordList.value
+                    .filterByAccountId(it)
+                    .getTotalAmountByType(CategoryType.Expense)
+            }
+            ?: 0.0
     }
 
 
@@ -520,7 +527,7 @@ class AppViewModel(
         }
     }
 
-    val recordStackList: StateFlow<List<RecordStack>> = combine(
+    val recordStackListFilteredByDate: StateFlow<List<RecordStack>> = combine(
         _recordListInDateRange,
         _accountsUiState,
         _categoriesWithSubcategories
@@ -645,7 +652,7 @@ class AppViewModel(
     private fun getDataForDatabaseAfterEditedRecord(
         createdRecord: CreatedRecord
     ): DataAfterRecordOperation? {
-        val currentRecordStack = recordStackList.value.findByRecordNum(createdRecord.recordNum)
+        val currentRecordStack = recordStackListFilteredByDate.value.findByRecordNum(createdRecord.recordNum)
             ?: return null
         val currentRecordList = currentRecordStack.toRecordList()
         val updatedAccounts = getUpdatedAccountsAfterRecordEditing(
@@ -713,7 +720,7 @@ class AppViewModel(
     }
 
     suspend fun deleteRecord(recordNum: Int) {
-        val recordStack = recordStackList.value.findByRecordNum(recordNum) ?: return
+        val recordStack = recordStackListFilteredByDate.value.findByRecordNum(recordNum) ?: return
 
         val updatedAccount = accountsUiState.value.accountList
             .findById(recordStack.account.id)
@@ -779,7 +786,7 @@ class AppViewModel(
     private fun getDataForDatabaseAfterEditedTransfer(
         state: CreatedTransfer
     ): DataAfterRecordOperation? {
-        val (currRecordStackFrom, currRecordStackTo) = recordStackList.value
+        val (currRecordStackFrom, currRecordStackTo) = recordStackListFilteredByDate.value
             .getOutAndInTransfersByRecordNums(state.getSenderReceiverRecordNums()) ?: return null
 
         val recordList = state.toRecordsPair().toList()
@@ -868,7 +875,7 @@ class AppViewModel(
     }
 
     suspend fun deleteTransfer(senderReceiverRecordNums: TransferSenderReceiverRecordNums) {
-        val (outTransfer, inTransfer) = recordStackList.value
+        val (outTransfer, inTransfer) = recordStackListFilteredByDate.value
             .getOutAndInTransfersByRecordNums(senderReceiverRecordNums) ?: return
         val prevAccounts = Pair(
             accountsUiState.value.accountList.findById(outTransfer.account.id) ?: return,
@@ -935,58 +942,6 @@ class AppViewModel(
         }
         fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
-
-
-    private val _greetingsWidgetTitleRes: MutableStateFlow<Int> = MutableStateFlow(
-        getGreetingsWidgetTitleRes()
-    )
-
-    fun updateGreetingsWidgetTitle() {
-        _greetingsWidgetTitleRes.update { getGreetingsWidgetTitleRes() }
-    }
-
-    private fun getGreetingsWidgetTitleRes(): Int {
-        return LocalDateTime.now().hour.getGreetingsWidgetTitleRes()
-    }
-
-
-    val widgetsUiState = combine(
-        _dateRangeMenuUiState,
-        _accountsUiState,
-        _todayRecordList,
-        recordStackList,
-        _categoriesWithSubcategories,
-        _greetingsWidgetTitleRes
-    ) { array ->
-        val dateRangeMenuUiState = array[0] as DateRangeMenuUiState
-        val accountsUiState = array[1] as AccountsUiState
-        val todayRecordList = array[2] as List<RecordEntity>
-        val recordStackList = array[3] as List<RecordStack>
-        val categoriesWithSubcategories = array[4] as CategoriesWithSubcategories
-        val greetingsWidgetTitleRes = array[5] as Int
-
-        val recordsFilteredByDateAndAccount = recordStackList.filterByDateAndAccount(
-            dateRange = dateRangeMenuUiState.getLongDateRange(),
-            activeAccount = accountsUiState.activeAccount
-        )
-
-        WidgetsUiState(
-            recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
-            greetings = GreetingsWidgetUiState(
-                titleRes = greetingsWidgetTitleRes,
-                todayExpensesByActiveAccount = todayRecordList
-                    .filter { it.accountId == accountsUiState.activeAccount?.id }
-                    .getTotalAmountByType(CategoryType.Expense)
-            ),
-            expensesIncomeState = recordsFilteredByDateAndAccount.getExpensesIncomeWidgetUiState(),
-            categoryStatisticsLists = categoriesWithSubcategories
-                .getStatistics(recordsFilteredByDateAndAccount)
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = WidgetsUiState()
-    )
 
 
     fun fetchDataOnStart() {

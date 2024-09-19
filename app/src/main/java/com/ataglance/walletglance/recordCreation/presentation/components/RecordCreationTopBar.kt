@@ -16,13 +16,12 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.presentation.components.CategoryTypeToggleButton
 import com.ataglance.walletglance.core.presentation.components.buttons.ButtonWithPopupContent
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
-import com.ataglance.walletglance.core.presentation.components.buttons.TwoStateCheckboxWithText
+import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckboxWithText
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences
 
 @Composable
@@ -93,7 +92,6 @@ private fun PreferencesButton(
             if (showTransferButton) {
                 NavigationTextArrowButton(
                     text = stringResource(R.string.make_transfer),
-                    fontSize = 18.sp,
                     onClick = {
                         onDismissRequest()
                         onNavigateToTransferCreationScreen()

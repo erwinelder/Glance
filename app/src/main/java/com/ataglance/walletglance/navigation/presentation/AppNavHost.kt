@@ -19,22 +19,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.AccountsUiState
-import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
-import com.ataglance.walletglance.budget.domain.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModelFactory
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
+import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
@@ -43,12 +38,11 @@ import com.ataglance.walletglance.core.presentation.animation.screenExitTransiti
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.personalization.presentation.containers.WidgetsSettingsBottomSheetContainer
+import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
@@ -70,20 +64,13 @@ fun AppNavHost(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    navigationButtonList: List<BottomBarNavigationButton>,
     moveScreenTowardsLeft: Boolean,
     appViewModel: AppViewModel,
+    personalizationViewModel: PersonalizationViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
-    accountsUiState: AccountsUiState,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsUiState: CategoryCollectionsWithIdsByType,
-    dateRangeMenuUiState: DateRangeMenuUiState,
-    recordStackList: List<RecordStack>,
-    budgetsByType: BudgetsByType,
+    appUiState: AppUiState,
     widgetsUiState: WidgetsUiState,
-    personalizationViewModel: PersonalizationViewModel,
-    widgetNamesList: List<WidgetName>,
     openCustomDateRangeWindow: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
@@ -101,19 +88,27 @@ fun AppNavHost(
             popEnterTransition = { screenEnterTransition(false) }
         ) {
             HomeScreen(
-                scaffoldAppScreenPadding = scaffoldPadding,
+                scaffoldPadding = scaffoldPadding,
                 isAppThemeSetUp = appUiSettings.appTheme != null,
-                accountsUiState = accountsUiState,
-                dateRangeMenuUiState = dateRangeMenuUiState,
-                widgetNamesList = widgetNamesList,
+                accountsUiState = appUiState.accountsUiState,
+                dateRangeWithEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum,
+                widgetNamesList = widgetsUiState.widgetNamesList,
                 widgetsUiState = widgetsUiState,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
+                onWidgetSettingsButtonClick = personalizationViewModel::openWidgetSettings,
                 onNavigateToScreenMovingTowardsLeft = { screen ->
                     navViewModel.navigateToScreenMovingTowardsLeft(navController, screen)
+                },
+                widgetSettingsBottomSheets = {
+                    WidgetsSettingsBottomSheetContainer(
+                        personalizationViewModel = personalizationViewModel,
+                        budgetsByType = appUiState.budgetsByType,
+                        budgetsOnWidget = widgetsUiState.budgetsOnWidget
+                    )
                 }
             )
         }
@@ -122,9 +117,8 @@ fun AppNavHost(
 
             val viewModel = viewModel<RecordsViewModel>(
                 factory = RecordsViewModelFactory(
-                    categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
-                        name = defaultCollectionName
-                    ),
+                    categoryCollections = appUiState.categoryCollectionsUiState
+                        .appendDefaultCollection(name = defaultCollectionName),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount
                 )
             )
@@ -133,9 +127,10 @@ fun AppNavHost(
                     widgetsUiState.recordsFilteredByDateAndAccount
                 )
             }
-            LaunchedEffect(categoryCollectionsUiState) {
+            LaunchedEffect(appUiState.categoryCollectionsUiState) {
                 viewModel.setCategoryCollections(
-                    categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
+                    appUiState.categoryCollectionsUiState
+                        .appendDefaultCollection(name = defaultCollectionName)
                 )
             }
 
@@ -147,9 +142,9 @@ fun AppNavHost(
 
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                accountList = accountsUiState.accountList,
+                accountList = appUiState.accountsUiState.accountList,
                 onAccountClick = appViewModel::applyActiveAccountByOrderNum,
-                currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+                currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
@@ -172,10 +167,9 @@ fun AppNavHost(
 
             val viewModel = viewModel<CategoryStatisticsViewModel>(
                 factory = CategoryStatisticsViewModelFactory(
-                    categoriesWithSubcategories = categoriesWithSubcategories,
-                    categoryCollections = categoryCollectionsUiState.appendDefaultCollection(
-                        name = defaultCollectionName
-                    ),
+                    categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
+                    categoryCollections = appUiState.categoryCollectionsUiState
+                        .appendDefaultCollection(name = defaultCollectionName),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount,
                     categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
                     parentCategoryId = parentCategoryId
@@ -189,14 +183,15 @@ fun AppNavHost(
                     recordList = widgetsUiState.recordsFilteredByDateAndAccount
                 )
             }
-            LaunchedEffect(categoryCollectionsUiState) {
+            LaunchedEffect(appUiState.categoryCollectionsUiState) {
                 viewModel.setCategoryCollections(
-                    categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
+                    appUiState.categoryCollectionsUiState
+                        .appendDefaultCollection(name = defaultCollectionName)
                 )
             }
             LaunchedEffect(
-                dateRangeMenuUiState.dateRangeWithEnum.enum,
-                accountsUiState.accountList
+                key1 = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
+                key2 = appUiState.accountsUiState.accountList
             ) {
                 viewModel.clearParentCategoryStatistics()
             }
@@ -214,9 +209,9 @@ fun AppNavHost(
 
             CategoryStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                accountList = accountsUiState.accountList,
+                accountList = appUiState.accountsUiState.accountList,
                 onAccountClick = appViewModel::applyActiveAccountByOrderNum,
-                currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+                currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
@@ -241,7 +236,7 @@ fun AppNavHost(
         composable<MainScreens.Budgets> {
             BudgetsScreen(
                 screenPadding = scaffoldPadding,
-                budgetsByType = budgetsByType,
+                budgetsByType = appUiState.budgetsByType,
                 onBudgetClick = { budget ->
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
@@ -253,7 +248,7 @@ fun AppNavHost(
         composable<MainScreens.BudgetStatistics> { backStack ->
             val budgetId = backStack.toRoute<MainScreens.BudgetStatistics>().id
             val budget by remember {
-                derivedStateOf { budgetsByType.findById(budgetId) }
+                derivedStateOf { appUiState.budgetsByType.findById(budgetId) }
             }
             val context = LocalContext.current
 
@@ -284,7 +279,7 @@ fun AppNavHost(
                 }
             }
             val budgetAccounts by remember {
-                derivedStateOf { accountsUiState.filterByBudget(budget) }
+                derivedStateOf { appUiState.accountsUiState.filterByBudget(budget) }
             }
 
             (budget to columnChartDataUiState).letIfNoneIsNull { (budget, chartUiState) ->
@@ -310,10 +305,10 @@ fun AppNavHost(
             val viewModel = viewModel<RecordCreationViewModel>(
                 factory = RecordCreationViewModelFactory(
                     initialCategoryWithSubcategoryByType = initialCategoryWithSubcategoryByType,
-                    recordDraft = recordStackList.getRecordDraft(
+                    recordDraft = appUiState.recordStackListByDate.getRecordDraft(
                         isNew = isNew,
                         recordNum = recordNum,
-                        accountsUiState = accountsUiState,
+                        accountsUiState = appUiState.accountsUiState,
                         initialCategoryWithSubcategory = initialCategoryWithSubcategoryByType
                             .getByType(CategoryType.Expense)
                     )
@@ -329,8 +324,8 @@ fun AppNavHost(
                 recordDraftGeneral = recordDraftGeneral,
                 recordDraftItems = recordDraftItems,
                 savingIsAllowed = savingIsAllowed,
-                accountList = accountsUiState.accountList,
-                categoriesWithSubcategories = categoriesWithSubcategories,
+                accountList = appUiState.accountsUiState.accountList,
+                categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
                 onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(
@@ -383,11 +378,11 @@ fun AppNavHost(
 
             val viewModel = viewModel<TransferCreationViewModel>(
                 factory = TransferCreationViewModelFactory(
-                    accountList = accountsUiState.accountList,
-                    transferDraft = recordStackList.getTransferDraft(
+                    accountList = appUiState.accountsUiState.accountList,
+                    transferDraft = appUiState.recordStackListByDate.getTransferDraft(
                         isNew = isNew,
                         recordNum = recordNum,
-                        accountsUiState = accountsUiState
+                        accountsUiState = appUiState.accountsUiState
                     )
                 )
             )
@@ -397,7 +392,7 @@ fun AppNavHost(
 
             TransferCreationScreen(
                 transferDraft = transferDraft,
-                accountList = accountsUiState.accountList,
+                accountList = appUiState.accountsUiState.accountList,
                 onNavigateBack = navController::popBackStack,
                 onSelectNewDate = viewModel::selectNewDate,
                 onSelectNewTime = viewModel::selectNewTime,
@@ -429,16 +424,16 @@ fun AppNavHost(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            navigationButtonList = navigationButtonList,
+            navigationButtonList = appUiState.navigationButtonList,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,
-            accountList = accountsUiState.accountList,
-            categoriesWithSubcategories = categoriesWithSubcategories,
-            categoryCollectionsUiState = categoryCollectionsUiState,
-            budgetsByType = budgetsByType,
+            accountList = appUiState.accountsUiState.accountList,
+            categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
+            categoryCollectionsUiState = appUiState.categoryCollectionsUiState,
+            budgetsByType = appUiState.budgetsByType,
             personalizationViewModel = personalizationViewModel,
-            widgetNamesList = widgetNamesList
+            widgetNamesList = widgetsUiState.widgetNamesList
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()

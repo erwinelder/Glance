@@ -12,9 +12,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.navigation.accountsGraph
-import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
-import com.ataglance.walletglance.appearanceSettings.presentation.screen.AppearanceScreen
-import com.ataglance.walletglance.budget.domain.BudgetsByType
+import com.ataglance.walletglance.personalization.domain.model.WidgetName
+import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreen
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.navigation.categoriesGraph
@@ -23,7 +23,7 @@ import com.ataglance.walletglance.categoryCollection.navigation.categoryCollecti
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
+import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState

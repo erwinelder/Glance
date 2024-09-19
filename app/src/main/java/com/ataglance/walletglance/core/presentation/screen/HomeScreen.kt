@@ -1,6 +1,8 @@
 package com.ataglance.walletglance.core.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,13 +22,12 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.account.presentation.components.AccountCard
-import com.ataglance.walletglance.appearanceSettings.domain.model.WidgetName
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
-import com.ataglance.walletglance.core.domain.widgets.GreetingsWidgetUiState
+import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
@@ -44,6 +45,7 @@ import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.plus
 import com.ataglance.walletglance.core.utils.top
 import com.ataglance.walletglance.navigation.utils.isScreen
+import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -56,7 +58,7 @@ fun HomeScreen(
     scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
-    dateRangeMenuUiState: DateRangeMenuUiState,
+    dateRangeWithEnum: DateRangeWithEnum,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
@@ -64,14 +66,16 @@ fun HomeScreen(
     onChangeHideActiveAccountBalance: () -> Unit,
     widgetNamesList: List<WidgetName>,
     widgetsUiState: WidgetsUiState,
-    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
+    onWidgetSettingsButtonClick: (WidgetName) -> Unit,
+    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
+    widgetSettingsBottomSheets: @Composable BoxScope.() -> Unit
 ) {
     Scaffold(
         topBar = {
             StartAnimatedContainer(visible = isAppThemeSetUp) {
                 AppMainTopBar(
                     accountList = accountsUiState.accountList,
-                    currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+                    currentDateRangeEnum = dateRangeWithEnum.enum,
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
                     onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
@@ -85,11 +89,13 @@ fun HomeScreen(
             scaffoldPadding = scaffoldPadding + scaffoldHomeScreenPadding,
             isAppThemeSetUp = isAppThemeSetUp,
             accountsUiState = accountsUiState,
-            dateRangeMenuUiState = dateRangeMenuUiState,
+            dateRangeWithEnum = dateRangeWithEnum,
+            onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
             widgetNamesList = widgetNamesList,
             widgetsUiState = widgetsUiState,
-            onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
-            onNavigateToScreenMovingTowardsLeft = onNavigateToScreenMovingTowardsLeft
+            onWidgetSettingsButtonClick = onWidgetSettingsButtonClick,
+            onNavigateToScreenMovingTowardsLeft = onNavigateToScreenMovingTowardsLeft,
+            widgetSettingsBottomSheets = widgetSettingsBottomSheets
         )
     }
 }
@@ -99,102 +105,110 @@ private fun CompactLayout(
     scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
-    dateRangeMenuUiState: DateRangeMenuUiState,
+    dateRangeWithEnum: DateRangeWithEnum,
+    onChangeHideActiveAccountBalance: () -> Unit,
     widgetNamesList: List<WidgetName>,
     widgetsUiState: WidgetsUiState,
-    onChangeHideActiveAccountBalance: () -> Unit,
-    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
+    onWidgetSettingsButtonClick: (WidgetName) -> Unit,
+    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
+    widgetSettingsBottomSheets: @Composable BoxScope.() -> Unit
 ) {
     val listState = rememberLazyListState()
 
-    LazyColumn(
-        state = listState,
-        contentPadding = PaddingValues(
-            top = scaffoldPadding.top + dimensionResource(R.dimen.screen_vertical_padding),
-            bottom = scaffoldPadding.bottom + dimensionResource(R.dimen.screen_vertical_padding)
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(32.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 50) {
-                GreetingsMessage(widgetsUiState.greetings.titleRes)
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = listState,
+            contentPadding = PaddingValues(
+                top = scaffoldPadding.top + dimensionResource(R.dimen.screen_vertical_padding),
+                bottom = scaffoldPadding.bottom + dimensionResource(R.dimen.screen_vertical_padding)
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            item {
+                StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 50) {
+                    GreetingsMessage(widgetsUiState.greetingsTitleRes)
+                }
             }
-        }
-        item {
-            StartAnimatedContainer(
-                visible = isAppThemeSetUp && accountsUiState.activeAccount != null,
-                delayMillis = 100
-            ) {
-                AccountCard(
-                    account = accountsUiState.activeAccount!!,
-                    todayExpenses = widgetsUiState.greetings.todayExpensesByActiveAccount,
-                    onHideBalanceButton = onChangeHideActiveAccountBalance
-                )
+            item {
+                StartAnimatedContainer(
+                    visible = isAppThemeSetUp && accountsUiState.activeAccount != null,
+                    delayMillis = 100
+                ) {
+                    AccountCard(
+                        account = accountsUiState.activeAccount!!,
+                        todayExpenses = widgetsUiState.activeAccountExpensesForToday,
+                        onHideBalanceButton = onChangeHideActiveAccountBalance
+                    )
+                }
             }
-        }
-        itemsIndexed(items = widgetNamesList) { index, widgetName ->
-            WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
-                when (widgetName) {
-                    WidgetName.ChosenBudgets -> {
-                        ChosenWidgetsWidget(
-                            budgetList = emptyList(),
-                            onNavigateToBudgetsScreen = {
-                                onNavigateToScreenMovingTowardsLeft(MainScreens.Budgets)
-                            },
-                            onNavigateToBudgetStatisticsScreen = { id ->
-                                onNavigateToScreenMovingTowardsLeft(
-                                    MainScreens.BudgetStatistics(id)
-                                )
-                            }
-                        )
-                    }
-                    WidgetName.TotalForPeriod -> {
-                        ExpensesIncomeWidget(
-                            uiState = widgetsUiState.expensesIncomeState,
-                            dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
-                            accountCurrency = accountsUiState.activeAccount?.currency ?: ""
-                        )
-                    }
-                    WidgetName.RecentRecords -> {
-                        RecordHistoryWidget(
-                            recordStackList = widgetsUiState.recordsFilteredByDateAndAccount.take(3),
-                            accountList = accountsUiState.accountList,
-                            isCustomDateRange =
-                            dateRangeMenuUiState.dateRangeWithEnum.enum == DateRangeEnum.Custom,
-                            onRecordClick = { recordNum: Int ->
-                                onNavigateToScreenMovingTowardsLeft(
-                                    MainScreens.RecordCreation(
-                                        isNew = false, recordNum = recordNum
+            itemsIndexed(items = widgetNamesList) { index, widgetName ->
+                WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
+                    when (widgetName) {
+                        WidgetName.ChosenBudgets -> {
+                            ChosenWidgetsWidget(
+                                budgetList = widgetsUiState.budgetsOnWidget,
+                                onSettingsButtonClick = {
+                                    onWidgetSettingsButtonClick(WidgetName.ChosenBudgets)
+                                },
+                                onNavigateToBudgetsScreen = {
+                                    onNavigateToScreenMovingTowardsLeft(MainScreens.Budgets)
+                                },
+                                onNavigateToBudgetStatisticsScreen = { id ->
+                                    onNavigateToScreenMovingTowardsLeft(
+                                        MainScreens.BudgetStatistics(id)
                                     )
-                                )
-                            },
-                            onTransferClick = { recordNum: Int ->
-                                onNavigateToScreenMovingTowardsLeft(
-                                    MainScreens.TransferCreation(
-                                        isNew = false, recordNum = recordNum
+                                }
+                            )
+                        }
+                        WidgetName.TotalForPeriod -> {
+                            ExpensesIncomeWidget(
+                                uiState = widgetsUiState.expensesIncomeWidgetUiState,
+                                dateRangeWithEnum = dateRangeWithEnum,
+                                accountCurrency = accountsUiState.activeAccount?.currency ?: ""
+                            )
+                        }
+                        WidgetName.RecentRecords -> {
+                            RecordHistoryWidget(
+                                recordStackList = widgetsUiState.recordsFilteredByDateAndAccount.take(3),
+                                accountList = accountsUiState.accountList,
+                                isCustomDateRange =
+                                dateRangeWithEnum.enum == DateRangeEnum.Custom,
+                                onRecordClick = { recordNum: Int ->
+                                    onNavigateToScreenMovingTowardsLeft(
+                                        MainScreens.RecordCreation(
+                                            isNew = false, recordNum = recordNum
+                                        )
                                     )
-                                )
-                            },
-                            onNavigateToRecordsScreen = {
-                                onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
-                            }
-                        )
-                    }
-                    WidgetName.TopExpenseCategories -> {
-                        CategoriesStatisticsWidget(
-                            categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
-                            onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
-                                onNavigateToScreenMovingTowardsLeft(
-                                    MainScreens.CategoryStatistics(parentCategoryId)
-                                )
-                            }
-                        )
+                                },
+                                onTransferClick = { recordNum: Int ->
+                                    onNavigateToScreenMovingTowardsLeft(
+                                        MainScreens.TransferCreation(
+                                            isNew = false, recordNum = recordNum
+                                        )
+                                    )
+                                },
+                                onNavigateToRecordsScreen = {
+                                    onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
+                                }
+                            )
+                        }
+                        WidgetName.TopExpenseCategories -> {
+                            CategoriesStatisticsWidget(
+                                categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
+                                onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
+                                    onNavigateToScreenMovingTowardsLeft(
+                                        MainScreens.CategoryStatistics(parentCategoryId)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
+        widgetSettingsBottomSheets()
     }
 }
 
@@ -223,6 +237,12 @@ fun HomeScreenPreview(
     ),
     dateRangeMenuUiState: DateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState(),
     isCustomDateRangeWindowOpened: Boolean = false,
+    widgetNamesList: List<WidgetName> = listOf(
+        WidgetName.ChosenBudgets,
+        WidgetName.TopExpenseCategories,
+        WidgetName.RecentRecords,
+        WidgetName.TotalForPeriod,
+    ),
     recordList: List<RecordEntity>? = null,
     recordStackList: List<RecordStack> = recordList?.toRecordStackList(
         accountList = accountsUiState.accountList,
@@ -249,12 +269,12 @@ fun HomeScreenPreview(
     )
 ) {
     val widgetUiState = WidgetsUiState(
+        greetingsTitleRes = R.string.greetings_title_afternoon,
+        activeAccountExpensesForToday = 0.0,
+        widgetNamesList = widgetNamesList,
+        budgetsOnWidget = emptyList(),
+        expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
         recordsFilteredByDateAndAccount = recordStackList,
-        greetings = GreetingsWidgetUiState(
-            titleRes = R.string.greetings_title_afternoon,
-            todayExpensesByActiveAccount = 0.0
-        ),
-        expensesIncomeState = recordStackList.getExpensesIncomeWidgetUiState(),
         categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStackList)
     )
 
@@ -268,20 +288,17 @@ fun HomeScreenPreview(
             scaffoldPadding = scaffoldPadding,
             isAppThemeSetUp = true,
             accountsUiState = accountsUiState,
-            dateRangeMenuUiState = dateRangeMenuUiState,
-            widgetNamesList = listOf(
-                WidgetName.ChosenBudgets,
-                WidgetName.TopExpenseCategories,
-                WidgetName.RecentRecords,
-                WidgetName.TotalForPeriod,
-            ),
-            widgetsUiState = widgetUiState,
+            dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
             onChangeHideActiveAccountBalance = {},
             onDateRangeChange = {},
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},
             onTopBarAccountClick = {},
-            onNavigateToScreenMovingTowardsLeft = {}
+            widgetNamesList = widgetNamesList,
+            widgetsUiState = widgetUiState,
+            onWidgetSettingsButtonClick = {},
+            onNavigateToScreenMovingTowardsLeft = {},
+            widgetSettingsBottomSheets = {}
         )
     }
 }

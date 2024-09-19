@@ -2,7 +2,7 @@ package com.ataglance.walletglance.core.domain.statistics
 
 import android.content.Context
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.budget.domain.TotalAmountByRange
+import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getColumnNameForColumnChart

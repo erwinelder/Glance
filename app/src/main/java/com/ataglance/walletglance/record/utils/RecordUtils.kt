@@ -2,11 +2,9 @@ package com.ataglance.walletglance.record.utils
 
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
-import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.utils.extractYear
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -76,13 +74,9 @@ fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
 
 
 
-fun List<RecordStack>.filterByDateAndAccount(
-    dateRange: LongDateRange,
-    activeAccount: Account?
-): List<RecordStack> {
+fun List<RecordStack>.filterAccountId(accountId: Int): List<RecordStack> {
     return this.filter {
-        it.date in dateRange.from..dateRange.to &&
-                it.account.id == activeAccount?.id
+        it.account.id == accountId
     }
 }
 

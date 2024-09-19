@@ -12,19 +12,25 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
+import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.PersonalizationViewModel
+import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.navigation.utils.currentScreenIs
 import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRes
+import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
+import com.ataglance.walletglance.record.utils.filterAccountId
+import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.settings.domain.ThemeUiState
+import java.time.LocalDateTime
 
 @Composable
 fun MainAppContent(
@@ -34,11 +40,11 @@ fun MainAppContent(
     navViewModel: NavigationViewModel,
     personalizationViewModel: PersonalizationViewModel
 ) {
+    var dimBackground by remember { mutableStateOf(false) }
+    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
+
     val navController: NavHostController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
-    val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
-
     val setupProgressTopBarUiState by remember(appUiSettings.isSetUp, navBackStackEntry) {
         derivedStateOf {
             SetupProgressTopBarUiState(
@@ -54,21 +60,71 @@ fun MainAppContent(
             navViewModel.shouldDisplayBottomNavigationBar(appUiSettings.isSetUp, navBackStackEntry)
         }
     }
+    val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
+    val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
-    var dimBackground by remember { mutableStateOf(false) }
-    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
+    val widgetNamesList by personalizationViewModel.widgetNamesList.collectAsStateWithLifecycle()
+    val budgetsOnWidget by personalizationViewModel.budgetsOnWidget.collectAsStateWithLifecycle()
 
-    val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
+    val currentLocalDateTime = LocalDateTime.now()
+    val greetingsTitleRes by remember(key1 = currentLocalDateTime.hour) {
+        derivedStateOf {
+            currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
+        }
+    }
+    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories
         .collectAsStateWithLifecycle()
     val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState
         .collectAsStateWithLifecycle()
-    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
-    val recordStackList by appViewModel.recordStackList.collectAsStateWithLifecycle()
+    val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
+    val recordStackListByDate by appViewModel.recordStackListFilteredByDate
+        .collectAsStateWithLifecycle()
     val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
-    val widgetsUiState by appViewModel.widgetsUiState.collectAsStateWithLifecycle()
 
-    val widgetNamesList by personalizationViewModel.widgetNamesList.collectAsStateWithLifecycle()
+
+    val appUiState by remember {
+        derivedStateOf {
+            AppUiState(
+                navigationButtonList = navigationButtonList,
+                dateRangeMenuUiState = dateRangeMenuUiState,
+                categoriesWithSubcategories = categoriesWithSubcategories,
+                categoryCollectionsUiState = categoryCollectionsUiState,
+                accountsUiState = accountsUiState,
+                recordStackListByDate = recordStackListByDate,
+                budgetsByType = budgetsByType
+            )
+        }
+    }
+    val widgetsUiState by remember(
+        widgetNamesList,
+        budgetsOnWidget,
+        greetingsTitleRes,
+        categoriesWithSubcategories,
+        accountsUiState,
+        recordStackListByDate
+    ) {
+        derivedStateOf {
+            val recordsFilteredByDateAndAccount = accountsUiState.activeAccount?.id
+                ?.let { recordStackListByDate.filterAccountId(it) }
+                ?: emptyList()
+
+            WidgetsUiState(
+                greetingsTitleRes = greetingsTitleRes,
+                activeAccountExpensesForToday = appViewModel.getActiveAccountExpensesForToday(),
+
+                widgetNamesList = widgetNamesList,
+                budgetsOnWidget = budgetsByType
+                    .concatenate()
+                    .filter { it.id in budgetsOnWidget },
+                expensesIncomeWidgetUiState = recordsFilteredByDateAndAccount
+                    .getExpensesIncomeWidgetUiState(),
+                recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
+                categoryStatisticsLists = categoriesWithSubcategories
+                    .getStatistics(recordsFilteredByDateAndAccount)
+            )
+        }
+    }
 
     Box {
         MainScaffold(
@@ -98,20 +154,13 @@ fun MainAppContent(
                 navController = navController,
                 scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
-                navigationButtonList = navigationButtonList,
                 moveScreenTowardsLeft = moveScreenTowardsLeft,
                 appViewModel = appViewModel,
+                personalizationViewModel = personalizationViewModel,
                 appUiSettings = appUiSettings,
                 themeUiState = themeUiState,
-                accountsUiState = accountsUiState,
-                categoriesWithSubcategories = categoriesWithSubcategories,
-                categoryCollectionsUiState = categoryCollectionsUiState,
-                dateRangeMenuUiState = dateRangeMenuUiState,
-                recordStackList = recordStackList,
-                budgetsByType = budgetsByType,
+                appUiState = appUiState,
                 widgetsUiState = widgetsUiState,
-                personalizationViewModel = personalizationViewModel,
-                widgetNamesList = widgetNamesList,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
                 onCustomDateRangeButtonClick = {
                     openCustomDateRangeWindow = !openCustomDateRangeWindow

@@ -40,7 +40,7 @@ fun CategoryStatisticsItemComponent(
     GlassSurfaceOnGlassSurface(
         modifier = Modifier.alpha(if (uiState == null) 0f else 1f),
         onClick = onClick,
-        enableClick = enableClick == null &&
+        clickEnabled = enableClick == null &&
                 uiState != null && (
                     uiState.subcategoriesStatisticsUiState != null || showLeftArrow
                 ) || enableClick == true,

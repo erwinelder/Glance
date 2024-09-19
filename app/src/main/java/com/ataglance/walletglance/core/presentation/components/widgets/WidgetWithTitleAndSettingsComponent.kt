@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun WidgetWithTitleAndSettingsComponent(
@@ -33,19 +34,20 @@ fun WidgetWithTitleAndSettingsComponent(
                 .fillMaxWidth()
                 .padding(contentPadding)
         ) {
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.bounceClickEffect(onClick = onSettingsButtonClick)
+            ) {
                 WidgetTitleComponent(
                     title = title,
                     modifier = Modifier.weight(1f, fill = false)
                 )
-                IconButton(
-                    onClick = onSettingsButtonClick
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.settings_icon),
-                        contentDescription = "widget settings",
-                    )
-                }
+                Icon(
+                    painter = painterResource(R.drawable.settings_icon),
+                    contentDescription = "widget settings",
+                    modifier = Modifier.size(28.dp)
+                )
             }
             content()
         }

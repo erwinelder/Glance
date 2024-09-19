@@ -16,11 +16,11 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.budget.data.mapper.toBudgetList
-import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.budget.domain.BudgetsByType
-import com.ataglance.walletglance.budget.presentation.components.BudgetComponent
+import com.ataglance.walletglance.budget.domain.mapper.toBudgetList
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
+import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
 import com.ataglance.walletglance.budget.utils.groupByType
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
@@ -58,7 +58,7 @@ fun BudgetsScreen(
                 )
             } else {
                 BudgetListsByPeriodComponent(budgetsByType) { budget ->
-                    BudgetComponent(budget = budget, onClick = onBudgetClick)
+                    BudgetWithStatsComponent(budget = budget, onClick = onBudgetClick)
                 }
             }
         }

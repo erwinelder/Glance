@@ -2,9 +2,9 @@ package com.ataglance.walletglance.budget.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.budget.domain.Budget
-import com.ataglance.walletglance.budget.domain.BudgetsByType
-import com.ataglance.walletglance.budget.domain.EditingBudgetUiState
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.budget.utils.groupByType
 import com.ataglance.walletglance.budget.utils.replaceById
