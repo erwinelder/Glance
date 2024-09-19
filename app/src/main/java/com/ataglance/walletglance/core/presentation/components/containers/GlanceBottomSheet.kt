@@ -28,7 +28,10 @@ fun GlanceBottomSheet(
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState,
-            shape = RoundedCornerShape(dimensionResource(R.dimen.widget_corner_size)),
+            shape = RoundedCornerShape(
+                topStart = dimensionResource(R.dimen.widget_corner_size),
+                topEnd = dimensionResource(R.dimen.widget_corner_size)
+            ),
             containerColor = backgroundColor,
             contentColor = contentColor,
             dragHandle = dragHandle
