@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,7 +29,7 @@ fun GlassSurfaceOnGlassSurface(
     filledWidth: Float? = null,
     paddingValues: PaddingValues = PaddingValues(16.dp, 8.dp),
     shrinkScale: Float = .98f,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     var localModifier = modifier
         .bounceClickEffect(shrinkScale = shrinkScale, enabled = clickEnabled, onClick = onClick)

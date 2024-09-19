@@ -9,13 +9,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
+import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.RecordStackItem
+import com.ataglance.walletglance.record.domain.RecordType
 
 @Composable
 fun RecordStackComponent(
@@ -39,14 +46,14 @@ fun RecordStackComponent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            recordStack.stack.take(3).forEach { recordStackUnit ->
+            recordStack.stack.forEach { recordStackItem ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (!recordStackUnit.note.isNullOrEmpty()) {
+                    if (!recordStackItem.note.isNullOrEmpty()) {
                         Text(
-                            text = recordStackUnit.note,
-                            color = GlanceTheme.onSurface,
+                            text = recordStackItem.note,
+                            color = GlanceTheme.onSurface.copy(.8f),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Light,
                             fontStyle = FontStyle.Italic,
@@ -55,9 +62,8 @@ fun RecordStackComponent(
                         )
                     }
                     RecordCategory(
-                        category = recordStackUnit.let {
-                            it.categoryWithSubcategory?.getSubcategoryOrCategory()
-                        }
+                        category = recordStackItem.categoryWithSubcategory
+                            ?.getSubcategoryOrCategory()
                     )
                 }
             }
@@ -68,6 +74,45 @@ fun RecordStackComponent(
             color = GlanceTheme.onSurface,
             fontSize = 20.sp,
             fontWeight = FontWeight.Light
+        )
+    }
+}
+
+
+
+@Preview
+@Composable
+private fun RecordStackComponentPreview() {
+    val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+    val recordStack = RecordStack(
+        recordNum = 1,
+        date = getTodayDateLong(),
+        type = RecordType.Expense,
+        account = Account().toRecordAccount(),
+        totalAmount = 516.41,
+        stack = listOf(
+            RecordStackItem(
+                amount = 0.0,
+                quantity = null,
+                categoryWithSubcategory = defaultCategories.expense[0].getWithSubcategoryWithId(13),
+                note = "some note note note",
+                includeInBudgets = true
+            ),
+            RecordStackItem(
+                amount = 0.0,
+                quantity = null,
+                categoryWithSubcategory = defaultCategories.expense[1].getWithSubcategoryWithId(16),
+                note = "some note note note",
+                includeInBudgets = true
+            ),
+        )
+    )
+
+    PreviewContainer {
+        RecordStackComponent(
+            recordStack = recordStack,
+            includeYearToDate = false,
+            onRecordClick = {}
         )
     }
 }
