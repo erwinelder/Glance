@@ -40,7 +40,7 @@ fun BudgetWithStatsComponent(
         paddingValues = PaddingValues(20.dp, 16.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -60,7 +60,7 @@ fun BudgetWithStatsComponent(
                     painter = painterResource(R.drawable.short_arrow_right_icon),
                     contentDescription = "right arrow icon",
                     tint = GlanceTheme.onSurface,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
             Column(

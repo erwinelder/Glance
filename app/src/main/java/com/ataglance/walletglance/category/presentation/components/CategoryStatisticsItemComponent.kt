@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,10 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
@@ -47,13 +47,12 @@ fun CategoryStatisticsItemComponent(
         filledWidth = 1f,
         paddingValues = PaddingValues(24.dp, 16.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(32.dp)
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 if (showLeftArrow) {
                     Icon(
@@ -100,38 +99,57 @@ fun CategoryStatisticsItemComponent(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
-                    text = uiState?.getTotalAmountWithCurrency() ?: "---",
-                    color = GlanceTheme.onSurface,
-                    fontSize = 18.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = uiState?.percentageFormatted ?: "---",
-                    color = GlanceTheme.onSurface,
-                    fontSize = 18.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            uiState?.let {
-                GlanceLineChart(
-                    percentage = uiState.percentageFloat,
-                    brushColors = uiState.categoryColor
-                        .getCategoryLineChartColorsByTheme(CurrAppTheme),
-                    shadowColor = uiState.categoryColor
-                        .getCategoryIconSolidColorByTheme(CurrAppTheme),
-                    height = 16.dp
-                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = uiState?.totalAmount ?: "---",
+                            color = GlanceTheme.onSurface,
+                            fontSize = 18.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        Text(
+                            text = uiState?.currency ?: "",
+                            color = GlanceTheme.onSurface.copy(.6f),
+                            fontSize = 17.sp
+                        )
+                    }
+                    Text(
+                        text = uiState?.percentageFormatted ?: "---",
+                        color = GlanceTheme.onSurface,
+                        fontSize = 18.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                uiState?.let {
+                    GlanceLineChart(
+                        percentage = uiState.percentageFloat,
+                        brushColors = uiState.categoryColor
+                            .getCategoryLineChartColorsByTheme(CurrAppTheme),
+                        shadowColor = uiState.categoryColor
+                            .getCategoryIconSolidColorByTheme(CurrAppTheme)
+                    )
+                }
             }
         }
     }
+}
+
+
+
+@Preview
+@Composable
+private fun CategoryStatisticsItemComponentPreview() {
+    CategoryStatisticsScreenPreview()
 }

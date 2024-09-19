@@ -13,10 +13,4 @@ data class CategoryStatisticsElementUiState(
     val percentageFloat: Float,
     val percentageFormatted: String,
     val subcategoriesStatisticsUiState: List<CategoryStatisticsElementUiState>? = null
-) {
-
-    fun getTotalAmountWithCurrency(): String {
-        return "$totalAmount $currency"
-    }
-
-}
+)
