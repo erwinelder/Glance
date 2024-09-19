@@ -126,7 +126,7 @@ class NavigationViewModel(
     ): Boolean {
         return isSetUp && navBackStackEntry.currentScreenIsOneOf(
             MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
-            MainScreens.Budgets, SettingsScreens.SettingsHome, SettingsScreens.Language
+            MainScreens.Budgets, SettingsScreens.SettingsHome
         )
     }
 

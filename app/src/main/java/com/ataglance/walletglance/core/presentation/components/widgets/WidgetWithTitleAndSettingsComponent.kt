@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -46,6 +47,7 @@ fun WidgetWithTitleAndSettingsComponent(
                 Icon(
                     painter = painterResource(R.drawable.settings_icon),
                     contentDescription = "widget settings",
+                    tint = GlanceTheme.onSurface,
                     modifier = Modifier.size(24.dp)
                 )
             }
