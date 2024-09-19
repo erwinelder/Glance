@@ -91,14 +91,13 @@ fun AppNavHost(
                 scaffoldPadding = scaffoldPadding,
                 isAppThemeSetUp = appUiSettings.appTheme != null,
                 accountsUiState = appUiState.accountsUiState,
+                onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 dateRangeWithEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum,
-                widgetNamesList = widgetsUiState.widgetNamesList,
+                onDateRangeChange = appViewModel::selectDateRange,
+                isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
+                onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 widgetsUiState = widgetsUiState,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
-                onDateRangeChange = appViewModel::selectDateRange,
-                onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
-                isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onWidgetSettingsButtonClick = personalizationViewModel::openWidgetSettings,
                 onNavigateToScreenMovingTowardsLeft = { screen ->
                     navViewModel.navigateToScreenMovingTowardsLeft(navController, screen)

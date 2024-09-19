@@ -22,12 +22,14 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsUiState
 import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
+import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
@@ -41,6 +43,7 @@ import com.ataglance.walletglance.core.presentation.components.widgets.Greetings
 import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
+import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.plus
 import com.ataglance.walletglance.core.utils.top
@@ -52,20 +55,20 @@ import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.record.utils.shrinkForCompactView
 
 @Composable
 fun HomeScreen(
     scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsUiState: AccountsUiState,
+    onTopBarAccountClick: (Int) -> Unit,
     dateRangeWithEnum: DateRangeWithEnum,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
-    onTopBarAccountClick: (Int) -> Unit,
-    onChangeHideActiveAccountBalance: () -> Unit,
-    widgetNamesList: List<WidgetName>,
     widgetsUiState: WidgetsUiState,
+    onChangeHideActiveAccountBalance: () -> Unit,
     onWidgetSettingsButtonClick: (WidgetName) -> Unit,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
     widgetSettingsBottomSheets: @Composable BoxScope.() -> Unit
@@ -91,7 +94,6 @@ fun HomeScreen(
             accountsUiState = accountsUiState,
             dateRangeWithEnum = dateRangeWithEnum,
             onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
-            widgetNamesList = widgetNamesList,
             widgetsUiState = widgetsUiState,
             onWidgetSettingsButtonClick = onWidgetSettingsButtonClick,
             onNavigateToScreenMovingTowardsLeft = onNavigateToScreenMovingTowardsLeft,
@@ -107,7 +109,6 @@ private fun CompactLayout(
     accountsUiState: AccountsUiState,
     dateRangeWithEnum: DateRangeWithEnum,
     onChangeHideActiveAccountBalance: () -> Unit,
-    widgetNamesList: List<WidgetName>,
     widgetsUiState: WidgetsUiState,
     onWidgetSettingsButtonClick: (WidgetName) -> Unit,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
@@ -143,7 +144,7 @@ private fun CompactLayout(
                     )
                 }
             }
-            itemsIndexed(items = widgetNamesList) { index, widgetName ->
+            itemsIndexed(items = widgetsUiState.widgetNamesList) { index, widgetName ->
                 WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                     when (widgetName) {
                         WidgetName.ChosenBudgets -> {
@@ -216,7 +217,7 @@ private fun CompactLayout(
 
 @Preview(
     apiLevel = 34,
-    heightDp = 1900,
+    heightDp = 2000,
     device = Devices.PIXEL_7_PRO
 )
 @Composable
@@ -266,15 +267,32 @@ fun HomeScreenPreview(
                 )
             )
         )
+    ),
+    budgetsOnWidget: List<Budget> = listOf(
+        Budget(
+            id = 1,
+            priorityNum = 1.0,
+            amountLimit = 2000.0,
+            usedAmount = 1250.0,
+            usedPercentage = 62.5f,
+            category = categoriesWithSubcategories.expense[0].category,
+            name = categoriesWithSubcategories.expense[0].category.name,
+            repeatingPeriod = RepeatingPeriod.Monthly,
+            dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+            currency = accountsUiState.activeAccount?.currency ?: "",
+            linkedAccountsIds = listOf(1)
+        )
     )
 ) {
     val widgetUiState = WidgetsUiState(
         greetingsTitleRes = R.string.greetings_title_afternoon,
         activeAccountExpensesForToday = 0.0,
-        widgetNamesList = widgetNamesList,
-        budgetsOnWidget = emptyList(),
-        expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
         recordStacksByDateAndAccount = recordStackList,
+
+        widgetNamesList = widgetNamesList,
+        budgetsOnWidget = budgetsOnWidget,
+        expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
+        compactRecordStacksByDateAndAccount = recordStackList.shrinkForCompactView(),
         categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStackList)
     )
 
@@ -288,14 +306,13 @@ fun HomeScreenPreview(
             scaffoldPadding = scaffoldPadding,
             isAppThemeSetUp = true,
             accountsUiState = accountsUiState,
+            onTopBarAccountClick = {},
             dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
-            onChangeHideActiveAccountBalance = {},
             onDateRangeChange = {},
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},
-            onTopBarAccountClick = {},
-            widgetNamesList = widgetNamesList,
             widgetsUiState = widgetUiState,
+            onChangeHideActiveAccountBalance = {},
             onWidgetSettingsButtonClick = {},
             onNavigateToScreenMovingTowardsLeft = {},
             widgetSettingsBottomSheets = {}

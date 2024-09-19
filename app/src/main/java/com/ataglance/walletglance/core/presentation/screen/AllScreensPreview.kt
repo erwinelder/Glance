@@ -14,6 +14,7 @@ import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreen
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.domain.mapper.toBudgetList
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
@@ -36,6 +37,8 @@ import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
+import com.ataglance.walletglance.personalization.domain.model.WidgetName
+import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
@@ -48,7 +51,6 @@ import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSe
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
 import com.ataglance.walletglance.settings.domain.ThemeUiState
-import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
@@ -165,15 +167,15 @@ private val budgetEntityList = listOf(
     BudgetEntity(
         id = 2,
         amountLimit = 250.0,
-        categoryId = 1,
-        name = "Food & drinks",
+        categoryId = 3,
+        name = "Shopping",
         repeatingPeriod = RepeatingPeriod.Weekly.name,
     ),
     BudgetEntity(
         id = 3,
         amountLimit = 2000.0,
-        categoryId = 3,
-        name = "Shopping",
+        categoryId = 2,
+        name = "Housing",
         repeatingPeriod = RepeatingPeriod.Yearly.name,
     ),
 )
@@ -195,6 +197,8 @@ private val budgetAccountAssociationList = listOf(
 )
 @Composable
 fun MainAppContentHomeScreenPreview() {
+    val defaultCategoriesPackage = DefaultCategoriesPackage(LocalContext.current)
+        .getDefaultCategories()
     HomeScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -203,7 +207,16 @@ fun MainAppContentHomeScreenPreview() {
         accountsUiState = accountsUiState,
         dateRangeMenuUiState = dateRangeMenuUiState,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
-        recordList = recordEntityList
+        recordList = recordEntityList,
+        budgetsOnWidget = budgetEntityList.toBudgetList(
+            categoryWithSubcategoriesList = defaultCategoriesPackage.expense,
+            associationList = budgetAccountAssociationList,
+            accountList = accountsUiState.accountList
+        ).take(2),
+        widgetNamesList = listOf(
+            WidgetName.TotalForPeriod,
+            WidgetName.ChosenBudgets,
+        )
     )
 }
 

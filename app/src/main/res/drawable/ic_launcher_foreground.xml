@@ -9,20 +9,6 @@
       android:translateX="17.82"
       android:translateY="17.82">
     <path
-        android:pathData="M0,0h108v108h-108z">
-      <aapt:attr name="android:fillColor">
-        <gradient 
-            android:startX="108"
-            android:startY="10.13"
-            android:endX="-8.61"
-            android:endY="25.33"
-            android:type="linear">
-          <item android:offset="0" android:color="#FFB86395"/>
-          <item android:offset="1" android:color="#FF934372"/>
-        </gradient>
-      </aapt:attr>
-    </path>
-    <path
         android:pathData="M12.5,0L95.4,0A12.5,12.5 0,0 1,107.9 12.5L107.9,38.64A12.5,12.5 0,0 1,95.4 51.14L12.5,51.14A12.5,12.5 0,0 1,0 38.64L0,12.5A12.5,12.5 0,0 1,12.5 0z">
       <aapt:attr name="android:fillColor">
         <gradient 
