@@ -38,7 +38,7 @@ import com.ataglance.walletglance.core.presentation.components.widgets.Categorie
 import com.ataglance.walletglance.core.presentation.components.widgets.ChosenWidgetsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
-import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getTodayDateLong
@@ -170,8 +170,8 @@ private fun CompactLayout(
                             )
                         }
                         WidgetName.RecentRecords -> {
-                            RecordHistoryWidget(
-                                recordStackList = widgetsUiState.recordsFilteredByDateAndAccount.take(3),
+                            RecentRecordsWidget(
+                                recordStackList = widgetsUiState.compactRecordStacksByDateAndAccount,
                                 accountList = accountsUiState.accountList,
                                 isCustomDateRange =
                                 dateRangeWithEnum.enum == DateRangeEnum.Custom,
@@ -274,7 +274,7 @@ fun HomeScreenPreview(
         widgetNamesList = widgetNamesList,
         budgetsOnWidget = emptyList(),
         expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
-        recordsFilteredByDateAndAccount = recordStackList,
+        recordStacksByDateAndAccount = recordStackList,
         categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStackList)
     )
 

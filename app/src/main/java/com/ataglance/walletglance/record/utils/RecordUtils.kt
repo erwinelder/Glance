@@ -3,11 +3,13 @@ package com.ataglance.walletglance.record.utils
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.CategoryType
+import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.utils.extractYear
 import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.domain.RecordsTypeFilter
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
@@ -104,7 +106,7 @@ fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds):
 fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<RecordStack> {
     return this.mapNotNull { recordStack ->
         recordStack.stack
-            .filter { it.categoryWithSubcategory?.matchCategoriesIds(categoriesIds) == true }
+            .filter { it.categoryWithSubcategory?.matchIds(categoriesIds) == true }
             .takeIf { it.isNotEmpty() }
             ?.let { recordStack.copy(stack = it) }
     }
@@ -117,6 +119,52 @@ fun List<RecordStack>.getFirstByTypeAndAccountIdOrJustType(
 ): RecordStack? {
     return find { it.isExplicitlyOfType(type) && it.account.id == accountId }
         ?: find { it.isExplicitlyOfType(type) }
+}
+
+
+
+fun List<RecordStack>.shrinkForCompactView(): List<RecordStack> {
+    return this.map { it.shrinkForCompactView() }
+}
+
+fun RecordStack.shrinkForCompactView(): RecordStack {
+    val distinctStack = this.stack.distinctByCategories(3)
+
+    val stack = distinctStack.map { item ->
+        item.copy(note = item.categoryWithSubcategory?.let { this.stack.foldNotesByCategory(it) })
+    }
+
+    return this.copy(stack = stack)
+}
+
+fun List<RecordStackItem>.distinctByCategories(maxCount: Int): List<RecordStackItem> {
+    val distinctItems = mutableListOf<RecordStackItem>()
+
+    for (i in this.indices) {
+        if (distinctItems.size >= maxCount) { break }
+
+        this[i]
+            .takeIf { item ->
+                distinctItems.none { it.matchesCategory(item.categoryWithSubcategory) }
+            }
+            ?.let { distinctItems.add(it) }
+    }
+
+    return distinctItems
+}
+
+fun List<RecordStackItem>.foldNotesByCategory(
+    categoryWithSubcategory: CategoryWithSubcategory
+): String? {
+    return this
+        .filter {
+            it.categoryWithSubcategory?.match(categoryWithSubcategory) == true &&
+                    it.note?.isNotBlank() == true
+        }
+        .fold("") { notes, item ->
+            notes + if (notes.isNotBlank()) { ", " } else { "" } + item.note
+        }
+        .takeIf { it.isNotBlank() }
 }
 
 

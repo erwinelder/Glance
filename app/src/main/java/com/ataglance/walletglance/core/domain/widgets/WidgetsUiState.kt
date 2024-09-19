@@ -9,10 +9,11 @@ import com.ataglance.walletglance.record.domain.RecordStack
 data class WidgetsUiState(
     @StringRes val greetingsTitleRes: Int,
     val activeAccountExpensesForToday: Double = 0.0,
+    val recordStacksByDateAndAccount: List<RecordStack> = emptyList(),
 
     val widgetNamesList: List<WidgetName> = emptyList(),
     val budgetsOnWidget: List<Budget> = emptyList(),
     val expensesIncomeWidgetUiState: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
-    val recordsFilteredByDateAndAccount: List<RecordStack> = emptyList(),
+    val compactRecordStacksByDateAndAccount: List<RecordStack> = emptyList(),
     val categoryStatisticsLists: CategoryStatisticsLists = CategoryStatisticsLists()
 )

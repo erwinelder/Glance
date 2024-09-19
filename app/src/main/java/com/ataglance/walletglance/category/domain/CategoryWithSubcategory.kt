@@ -12,7 +12,12 @@ data class CategoryWithSubcategory(
         return subcategory ?: category
     }
 
-    fun matchCategoriesIds(categoriesIds: List<Int>): Boolean {
+    fun match(categoryWithSubcategory: CategoryWithSubcategory): Boolean {
+        return category.id == categoryWithSubcategory.category.id &&
+                subcategory?.id == categoryWithSubcategory.subcategory?.id
+    }
+
+    fun matchIds(categoriesIds: List<Int>): Boolean {
         return categoriesIds.contains(subcategory?.id ?: category.id)
     }
 

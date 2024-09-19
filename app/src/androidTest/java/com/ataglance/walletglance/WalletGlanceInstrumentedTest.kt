@@ -21,7 +21,7 @@ import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateTimeState
-import com.ataglance.walletglance.core.presentation.components.widgets.RecordHistoryWidget
+import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
 import com.ataglance.walletglance.core.utils.toLongWithTime
@@ -279,7 +279,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
+            RecentRecordsWidget(
                 recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
@@ -372,7 +372,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
+            RecentRecordsWidget(
                 recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
@@ -508,7 +508,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
+            RecentRecordsWidget(
                 recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
@@ -609,7 +609,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
+            RecentRecordsWidget(
                 recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount

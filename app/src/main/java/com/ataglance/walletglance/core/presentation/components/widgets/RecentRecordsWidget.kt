@@ -29,7 +29,7 @@ import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.record.utils.getNoRecordsMessageRes
 
 @Composable
-fun RecordHistoryWidget(
+fun RecentRecordsWidget(
     recordStackList: List<RecordStack>,
     accountList: List<Account>,
     isCustomDateRange: Boolean,
@@ -117,7 +117,7 @@ private fun RecordStackList(
 private fun RecordHistoryWidgetPreview() {
     PreviewContainer {
         Column {
-            RecordHistoryWidget(
+            RecentRecordsWidget(
                 recordStackList = listOf(),
                 accountList = listOf(),
                 isCustomDateRange = false,

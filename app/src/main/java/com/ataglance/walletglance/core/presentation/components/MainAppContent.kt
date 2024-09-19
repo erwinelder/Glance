@@ -29,6 +29,7 @@ import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRe
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.utils.filterAccountId
 import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.record.utils.shrinkForCompactView
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import java.time.LocalDateTime
 
@@ -105,23 +106,25 @@ fun MainAppContent(
         recordStackListByDate
     ) {
         derivedStateOf {
-            val recordsFilteredByDateAndAccount = accountsUiState.activeAccount?.id
+            val recordStacksByDateAndAccount = accountsUiState.activeAccount?.id
                 ?.let { recordStackListByDate.filterAccountId(it) }
                 ?: emptyList()
 
             WidgetsUiState(
                 greetingsTitleRes = greetingsTitleRes,
                 activeAccountExpensesForToday = appViewModel.getActiveAccountExpensesForToday(),
+                recordStacksByDateAndAccount = recordStacksByDateAndAccount,
 
                 widgetNamesList = widgetNamesList,
                 budgetsOnWidget = budgetsByType
                     .concatenate()
                     .filter { it.id in budgetsOnWidget },
-                expensesIncomeWidgetUiState = recordsFilteredByDateAndAccount
+                expensesIncomeWidgetUiState = recordStacksByDateAndAccount
                     .getExpensesIncomeWidgetUiState(),
-                recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
+                compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount
+                    .shrinkForCompactView(),
                 categoryStatisticsLists = categoriesWithSubcategories
-                    .getStatistics(recordsFilteredByDateAndAccount)
+                    .getStatistics(recordStacksByDateAndAccount)
             )
         }
     }

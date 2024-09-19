@@ -39,7 +39,7 @@ class RecordsViewModel(
 
     private val _recordsFilteredByDateAndAccount = MutableStateFlow(recordsFilteredByDateAndAccount)
 
-    fun setRecordsFilteredByDateAndAccount(recordList: List<RecordStack>) {
+    fun setRecordsByDateAndAccount(recordList: List<RecordStack>) {
         _recordsFilteredByDateAndAccount.update { recordList }
     }
 
@@ -73,7 +73,7 @@ class RecordsViewModel(
     }
 
 
-    val recordsFilteredByDateAccountAndCollection = combine(
+    val recordsByDateAccountAndCollection = combine(
         _recordsFilteredByDateAndAccount,
         _selectedCollection
     ) { recordsFilteredByDateAndAccount, selectedCollection ->

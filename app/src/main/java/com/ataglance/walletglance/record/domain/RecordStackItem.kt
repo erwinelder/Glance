@@ -11,4 +11,10 @@ data class RecordStackItem(
     val categoryWithSubcategory: CategoryWithSubcategory?,
     val note: String?,
     val includeInBudgets: Boolean
-)
+) {
+
+    fun matchesCategory(categoryWithSubcategory: CategoryWithSubcategory?): Boolean {
+        return categoryWithSubcategory?.let { this.categoryWithSubcategory?.match(it) } ?: false
+    }
+
+}

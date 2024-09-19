@@ -119,12 +119,12 @@ fun AppNavHost(
                 factory = RecordsViewModelFactory(
                     categoryCollections = appUiState.categoryCollectionsUiState
                         .appendDefaultCollection(name = defaultCollectionName),
-                    recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount
+                    recordsFilteredByDateAndAccount = widgetsUiState.recordStacksByDateAndAccount
                 )
             )
-            LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
-                viewModel.setRecordsFilteredByDateAndAccount(
-                    widgetsUiState.recordsFilteredByDateAndAccount
+            LaunchedEffect(widgetsUiState.compactRecordStacksByDateAndAccount) {
+                viewModel.setRecordsByDateAndAccount(
+                    widgetsUiState.compactRecordStacksByDateAndAccount
                 )
             }
             LaunchedEffect(appUiState.categoryCollectionsUiState) {
@@ -135,8 +135,8 @@ fun AppNavHost(
             }
 
             val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
-            val filteredRecords by viewModel
-                .recordsFilteredByDateAccountAndCollection.collectAsStateWithLifecycle()
+            val filteredRecords by viewModel.recordsByDateAccountAndCollection
+                .collectAsStateWithLifecycle()
             val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
             val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
 
@@ -170,7 +170,7 @@ fun AppNavHost(
                     categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
                     categoryCollections = appUiState.categoryCollectionsUiState
                         .appendDefaultCollection(name = defaultCollectionName),
-                    recordsFilteredByDateAndAccount = widgetsUiState.recordsFilteredByDateAndAccount,
+                    recordsFilteredByDateAndAccount = widgetsUiState.recordStacksByDateAndAccount,
                     categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
                     parentCategoryId = parentCategoryId
                 )
@@ -178,9 +178,9 @@ fun AppNavHost(
             LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
                 viewModel.setCategoryStatisticsByAccountAndDate(widgetsUiState.categoryStatisticsLists)
             }
-            LaunchedEffect(widgetsUiState.recordsFilteredByDateAndAccount) {
+            LaunchedEffect(widgetsUiState.recordStacksByDateAndAccount) {
                 viewModel.setRecordsFilteredByDateAndAccount(
-                    recordList = widgetsUiState.recordsFilteredByDateAndAccount
+                    recordList = widgetsUiState.recordStacksByDateAndAccount
                 )
             }
             LaunchedEffect(appUiState.categoryCollectionsUiState) {
