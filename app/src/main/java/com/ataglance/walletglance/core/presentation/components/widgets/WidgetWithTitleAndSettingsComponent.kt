@@ -46,7 +46,7 @@ fun WidgetWithTitleAndSettingsComponent(
                 Icon(
                     painter = painterResource(R.drawable.settings_icon),
                     contentDescription = "widget settings",
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
             content()

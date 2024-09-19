@@ -114,6 +114,7 @@
     <string name="spending_in_recent_years_with_currency">Spending in recent years (%s)</string>
     <string name="amount_currency_spending_limit">%s %s spending limit</string>
     <string name="of_limit_used">of limit used</string>
+    <string name="you_have_not_chosen_any_budgets">You have not chosen any budgets to display</string>
 
     <!-- Date ranges -->
     <string name="this_week">This week</string>

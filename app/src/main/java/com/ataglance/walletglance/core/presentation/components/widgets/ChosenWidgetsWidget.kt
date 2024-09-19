@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
+import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 
 @Composable
 fun ChosenWidgetsWidget(
@@ -31,12 +32,18 @@ fun ChosenWidgetsWidget(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                chosenBudgets.forEach { budget ->
-                    BudgetWithStatsComponent(
-                        budget = budget,
-                        onClick = {
-                            onNavigateToBudgetStatisticsScreen(it.id)
-                        }
+                if (chosenBudgets.isNotEmpty()) {
+                    chosenBudgets.forEach { budget ->
+                        BudgetWithStatsComponent(
+                            budget = budget,
+                            onClick = {
+                                onNavigateToBudgetStatisticsScreen(it.id)
+                            }
+                        )
+                    }
+                } else {
+                    MessageContainer(
+                        message = stringResource(R.string.you_have_not_chosen_any_budgets)
                     )
                 }
             }

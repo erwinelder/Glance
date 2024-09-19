@@ -113,6 +113,7 @@
     <string name="spending_in_recent_years_with_currency">Витрати за останні кілька років (%s)</string>
     <string name="amount_currency_spending_limit">Ліміт витрат %s %s</string>
     <string name="of_limit_used">ліміту використано</string>
+    <string name="you_have_not_chosen_any_budgets">Ви не обрали жодного бюджету для відображення</string>
 
     <!-- Date ranges -->
     <string name="this_week">Цей тиждень</string>

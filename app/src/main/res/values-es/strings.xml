@@ -114,6 +114,7 @@
     <string name="spending_in_recent_years_with_currency">Gastos en los últimos años (%s)</string>
     <string name="amount_currency_spending_limit">Límite de gasto de %s %s</string>
     <string name="of_limit_used">del límite utilizado</string>
+    <string name="you_have_not_chosen_any_budgets">No has seleccionado ningún presupuesto para mostrar</string>
 
     <!-- Date ranges -->
     <string name="this_week">Esta semana</string>

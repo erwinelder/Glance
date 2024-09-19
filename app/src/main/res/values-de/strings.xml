@@ -113,6 +113,7 @@
     <string name="spending_in_recent_years_with_currency">Ausgaben der letzten Jahre (%s)</string>
     <string name="amount_currency_spending_limit">Ausgabelimit von %s %s</string>
     <string name="of_limit_used">des Limits genutzt</string>
+    <string name="you_have_not_chosen_any_budgets">Sie haben keine Budgets zum Anzeigen ausgewählt</string>
 
     <!-- Date ranges -->
     <string name="this_week">Diese Woche</string>
