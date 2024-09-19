@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.ataglance.walletglance.QuartzApplication
+import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -16,7 +16,7 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var app: QuartzApplication
+    private lateinit var app: GlanceApplication
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
     private lateinit var personalizationViewModel: PersonalizationViewModel
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        app = application as QuartzApplication
+        app = application as GlanceApplication
         initializeAppViewModel()
         initializeNavViewModel()
         initializePersonalizationViewModel()

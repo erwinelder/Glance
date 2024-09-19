@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quartz</string>
+    <string name="app_name">Glance</string>
 
     <!-- navigation bar buttons -->
     <string name="home">Главная</string>

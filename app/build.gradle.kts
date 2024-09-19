@@ -15,7 +15,7 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = 28
         targetSdk = 34
-        versionCode = 51
+        versionCode = 52
         versionName = "3.0"
         resourceConfigurations += arrayOf("en", "cs", "de", "ru", "es", "uk")
 
