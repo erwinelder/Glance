@@ -28,6 +28,7 @@ fun NavGraphBuilder.budgetsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
+    isAppSetUp: Boolean,
     budgetsByType: BudgetsByType,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories
@@ -50,6 +51,7 @@ fun NavGraphBuilder.budgetsGraph(
 
             EditBudgetsScreen(
                 scaffoldPadding = scaffoldPadding,
+                isAppSetUp = isAppSetUp,
                 budgetsByType = budgetsByTypeState,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
                     editBudgetViewModel.applyBudget(
@@ -64,8 +66,12 @@ fun NavGraphBuilder.budgetsGraph(
                         appViewModel.saveBudgetsToDb(
                             budgetList = editBudgetsViewModel.getBudgetList()
                         )
+                        if (isAppSetUp) {
+                            navController.popBackStack()
+                        } else {
+                            appViewModel.preFinishSetup()
+                        }
                     }
-                    navController.popBackStack()
                 }
             )
         }

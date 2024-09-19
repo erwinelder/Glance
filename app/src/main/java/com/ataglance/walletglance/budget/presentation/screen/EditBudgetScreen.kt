@@ -3,15 +3,15 @@ package com.ataglance.walletglance.budget.presentation.screen
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
@@ -130,56 +128,73 @@ private fun GlassSurfaceContent(
     onUnlinkAccount: (Account) -> Unit
 ) {
     val context = LocalContext.current
-    val scrollStateConnection = rememberNestedScrollInteropConnection()
 
-    Column(
+    LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .nestedScroll(scrollStateConnection)
-            .fillMaxWidth()
-            .padding(24.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        FieldWithLabel(stringResource(R.string.repeating_period)) {
-            PopupFloatingPicker(
-                selectedItemText = stringResource(budget.newRepeatingPeriod.asStringRes()),
-                itemList = listOf(
-                    RepeatingPeriod.Daily,
-                    RepeatingPeriod.Weekly,
-                    RepeatingPeriod.Monthly,
-                    RepeatingPeriod.Yearly,
-                ),
-                itemToString = { context.getString(it.asStringRes()) },
-                onItemSelect = onRepeatingPeriodChange
-            )
+        item {
+            FieldWithLabel(stringResource(R.string.repeating_period)) {
+                PopupFloatingPicker(
+                    selectedItemText = stringResource(budget.newRepeatingPeriod.asStringRes()),
+                    itemList = listOf(
+                        RepeatingPeriod.Daily,
+                        RepeatingPeriod.Weekly,
+                        RepeatingPeriod.Monthly,
+                        RepeatingPeriod.Yearly,
+                    ),
+                    itemToString = { context.getString(it.asStringRes()) },
+                    onItemSelect = onRepeatingPeriodChange
+                )
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
         }
         budget.category?.let { category ->
-            FieldWithLabel(stringResource(R.string.category)) {
-                AnimatedContent(
-                    targetState = category,
-                    label = "category field at the edit budget screen"
-                ) { targetCategory ->
-                    CategoryField(
-                        category = targetCategory,
-                        onClick = onCategoryFieldClick
-                    )
+            item {
+                FieldWithLabel(stringResource(R.string.category)) {
+                    AnimatedContent(
+                        targetState = category,
+                        label = "category field at the edit budget screen"
+                    ) { targetCategory ->
+                        CategoryField(
+                            category = targetCategory,
+                            onClick = onCategoryFieldClick
+                        )
+                    }
                 }
             }
         }
-        TextFieldWithLabel(
-            text = budget.name,
-            onValueChange = onNameChange,
-            labelText = stringResource(R.string.budget_name),
-            placeholderText = stringResource(R.string.name)
-        )
-        TextFieldWithLabel(
-            text = budget.amountLimit,
-            onValueChange = onAmountLimitChange,
-            keyboardType = KeyboardType.Number,
-            labelText = stringResource(R.string.budget_limit),
-            placeholderText = "0.00"
-        )
-        AccountCheckedList(
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+        item {
+            TextFieldWithLabel(
+                text = budget.name,
+                onValueChange = onNameChange,
+                labelText = stringResource(R.string.budget_name),
+                placeholderText = stringResource(R.string.name)
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+        item {
+            TextFieldWithLabel(
+                text = budget.amountLimit,
+                onValueChange = onAmountLimitChange,
+                keyboardType = KeyboardType.Number,
+                labelText = stringResource(R.string.budget_limit),
+                placeholderText = "0.00"
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+        accountCheckedList(
             budget = budget,
             accountList = accountList,
             onAccountCheck = onLinkAccount,
@@ -188,47 +203,35 @@ private fun GlassSurfaceContent(
     }
 }
 
-@Composable
-private fun AccountCheckedList(
+private fun LazyListScope.accountCheckedList(
     budget: EditingBudgetUiState,
     accountList: List<Account>,
     onAccountCheck: (Account) -> Unit,
     onAccountUncheck: (Account) -> Unit,
 ) {
-    val lazyListState = rememberLazyListState()
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
+    item {
         FieldLabel(text = stringResource(R.string.accounts))
-        LazyColumn(
-            state = lazyListState,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            userScrollEnabled = false
-        ) {
-            items(items = accountList, key = { it.id }) { account ->
-                val enabled = budget.linkedAccounts.isEmpty() ||
-                        account.currency == budget.linkedAccounts[0].currency
+    }
+    items(items = accountList, key = { it.id }) { account ->
+        val enabled = budget.linkedAccounts.isEmpty() ||
+                account.currency == budget.linkedAccounts[0].currency
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TwoStateCheckbox(
-                        checked = budget.linkedAccounts.find { it.id == account.id } != null,
-                        enabled = enabled,
-                        onClick = { isChecked ->
-                            if (isChecked) onAccountCheck(account) else onAccountUncheck(account)
-                        }
-                    )
-                    AccountNameWithCurrencyComposable(
-                        account = account,
-                        fontSize = 19.sp,
-                        enabled = enabled
-                    )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TwoStateCheckbox(
+                checked = budget.linkedAccounts.find { it.id == account.id } != null,
+                enabled = enabled,
+                onClick = { isChecked ->
+                    if (isChecked) onAccountCheck(account) else onAccountUncheck(account)
                 }
-            }
+            )
+            AccountNameWithCurrencyComposable(
+                account = account,
+                fontSize = 19.sp,
+                enabled = enabled
+            )
         }
     }
 }

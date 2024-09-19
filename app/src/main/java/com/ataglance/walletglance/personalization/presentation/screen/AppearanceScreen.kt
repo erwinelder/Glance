@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
+import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.components.NavigationButtonsSettingsBottomSheet
@@ -31,14 +40,6 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.EditNav
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditNavigationButtonsViewModelFactory
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditWidgetsViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditWidgetsViewModelFactory
-import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 
@@ -88,7 +89,11 @@ fun AppearanceScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 8.dp, bottom = 8.dp)
+                .padding(
+                    top = 8.dp,
+                    bottom = if (isAppSetUp) 8.dp else
+                        dimensionResource(R.dimen.screen_vertical_padding)
+                )
         ) {
             if (isAppSetUp && WindowTypeIsCompact) {
                 GlassSurfaceNavigationButton(

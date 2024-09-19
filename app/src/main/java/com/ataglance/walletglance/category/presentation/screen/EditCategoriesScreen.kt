@@ -78,7 +78,7 @@ fun EditCategoriesScreen(
         } } else null,
         primaryBottomButton = {
             PrimaryButton(
-                text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_finish),
+                text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_continue),
                 onClick = onSaveAndFinishSetupButton
             )
         }

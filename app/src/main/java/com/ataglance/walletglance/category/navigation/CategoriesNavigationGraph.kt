@@ -81,10 +81,13 @@ fun NavGraphBuilder.categoriesGraph(
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
                         appViewModel.saveCategoriesToDb(
-                            categoriesViewModel.getAllCategoryEntities()
+                            categoryList = categoriesViewModel.getAllCategoryEntities()
                         )
-                        if (isAppSetUp) navController.popBackStack()
-                        else appViewModel.preFinishSetup()
+                        if (isAppSetUp) {
+                            navController.popBackStack()
+                        } else {
+                            navViewModel.navigateToScreen(navController, SettingsScreens.Budgets)
+                        }
                     }
                 }
             )
