@@ -37,7 +37,7 @@ fun BudgetWithStatsComponent(
     GlassSurfaceOnGlassSurface(
         onClick = { onClick(budget) },
         filledWidth = 1f,
-        paddingValues = PaddingValues(20.dp, 16.dp)
+        paddingValues = PaddingValues(24.dp, 16.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)

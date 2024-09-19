@@ -36,7 +36,7 @@ fun BasicDefaultBudgetComponent(
         modifier = modifier
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -64,19 +64,24 @@ fun BasicDefaultBudgetComponent(
                     color = GlanceTheme.outline,
                     fontSize = 18.sp
                 )
-                Text(
-                    text = budget.amountLimit.formatWithSpaces(),
-                    color = GlanceTheme.onSurface,
-                    fontSize = 20.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
-                )
-                Text(
-                    text = budget.currency,
-                    color = GlanceTheme.onSurface,
-                    fontSize = 19.sp
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = budget.amountLimit.formatWithSpaces(),
+                        color = GlanceTheme.onSurface,
+                        fontSize = 20.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    Text(
+                        text = budget.currency,
+                        color = GlanceTheme.onSurface.copy(.6f),
+                        fontSize = 19.sp
+                    )
+                }
             }
         }
     }
