@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -154,19 +154,27 @@ private fun BottomBarContainer(
 }
 
 @Composable
-private fun ExpandBottomBarButton(onClick: () -> Unit) {
-    val iconRes = DrawableResByTheme(
-        lightDefault = R.drawable.show_other_light,
-        darkDefault = R.drawable.show_other_dark
-    ).getByTheme(CurrAppTheme)
+private fun ExpandBottomBarButton(isActive: Boolean, onClick: () -> Unit) {
+    val iconRes = when (CurrAppTheme) {
+        AppTheme.LightDefault -> if (isActive) R.drawable.show_other_light_active else
+            R.drawable.show_other_light_inactive
+        AppTheme.DarkDefault -> if (isActive) R.drawable.show_other_dark_active else
+            R.drawable.show_other_dark_inactive
+    }
 
-    Image(
-        painter = painterResource(iconRes),
-        contentDescription = "expand top bar icon",
-        modifier = Modifier
-            .bounceClickEffect(onClick = onClick)
-            .size(36.dp)
-    )
+    AnimatedContent(
+        targetState = iconRes,
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        label = "show other screens bottom bar icon"
+    ) { targetIconRes ->
+        Image(
+            painter = painterResource(targetIconRes),
+            contentDescription = "expand top bar icon",
+            modifier = Modifier
+                .bounceClickEffect(onClick = onClick)
+                .size(36.dp)
+        )
+    }
 }
 
 @Composable
@@ -183,8 +191,11 @@ private fun BottomBarButtonsRow(
             list
         }
     }
-    val buttonListSize by remember(barButtons) {
+    val buttonListSize by remember(buttonList) {
         derivedStateOf { buttonList.size }
+    }
+    val showOtherButtonIsActive = barButtons.none {
+        anyScreenInHierarchyIsScreenProvider(it.screen)
     }
 
     Row(
@@ -221,7 +232,7 @@ private fun BottomBarButtonsRow(
             }
         }
         if (buttonListSize == 4) {
-            ExpandBottomBarButton(onIsExpandedToggle)
+            ExpandBottomBarButton(showOtherButtonIsActive, onIsExpandedToggle)
             ButtonsSpacerGap()
         }
     }
