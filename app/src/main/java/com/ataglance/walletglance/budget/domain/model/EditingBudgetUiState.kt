@@ -54,6 +54,7 @@ data class EditingBudgetUiState(
             category = category,
             name = name,
             repeatingPeriod = newRepeatingPeriod,
+            currency = linkedAccounts.firstOrNull()?.currency ?: "",
             linkedAccountsIds = linkedAccounts.map { it.id }
         )
     }

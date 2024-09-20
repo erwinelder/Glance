@@ -53,8 +53,9 @@ fun BudgetWithStatsComponent(
                     text = budget.name,
                     color = GlanceTheme.onSurface,
                     fontSize = 19.sp,
-                    modifier = Modifier.weight(1f),
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
                 Icon(
                     painter = painterResource(R.drawable.short_arrow_right_icon),
