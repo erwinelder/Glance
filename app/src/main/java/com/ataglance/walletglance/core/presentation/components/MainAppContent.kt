@@ -78,7 +78,7 @@ fun MainAppContent(
         .collectAsStateWithLifecycle()
     val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState
         .collectAsStateWithLifecycle()
-    val accountsUiState by appViewModel.accountsUiState.collectAsStateWithLifecycle()
+    val accountsUiState by appViewModel.accountsAndActiveOne.collectAsStateWithLifecycle()
     val recordStackListByDate by appViewModel.recordStackListFilteredByDate
         .collectAsStateWithLifecycle()
     val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
@@ -91,7 +91,7 @@ fun MainAppContent(
                 dateRangeMenuUiState = dateRangeMenuUiState,
                 categoriesWithSubcategories = categoriesWithSubcategories,
                 categoryCollectionsUiState = categoryCollectionsUiState,
-                accountsUiState = accountsUiState,
+                accountsAndActiveOne = accountsUiState,
                 recordStackListByDate = recordStackListByDate,
                 budgetsByType = budgetsByType
             )

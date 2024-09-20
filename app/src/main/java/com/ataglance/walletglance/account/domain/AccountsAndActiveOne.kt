@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.account.domain
 
-import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.account.utils.findById
+import com.ataglance.walletglance.budget.domain.model.Budget
 
-data class AccountsUiState(
+data class AccountsAndActiveOne(
     val accountList: List<Account> = emptyList(),
     val activeAccount: Account? = null
 ) {

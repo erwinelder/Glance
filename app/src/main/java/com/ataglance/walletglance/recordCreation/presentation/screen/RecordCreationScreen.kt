@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.components.AccountPopupPicker
 import com.ataglance.walletglance.account.utils.toAccountColorWithName
@@ -260,7 +260,7 @@ private fun GlassSurfaceContent(
 @Composable
 fun RecordCreationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    accountsUiState: AccountsUiState = AccountsUiState(
+    accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
         accountList = listOf(
             Account(
                 id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(),
@@ -286,7 +286,7 @@ fun RecordCreationScreenPreview(
         general = RecordDraftGeneral(
             isNew = true,
             recordNum = 1,
-            account = accountsUiState.activeAccount,
+            account = accountsAndActiveOne.activeAccount,
             type = CategoryType.Expense,
             dateTimeState = DateTimeState()
         ),
@@ -310,7 +310,7 @@ fun RecordCreationScreenPreview(
             recordDraftGeneral = recordDraft.general,
             recordDraftItems = recordDraft.items,
             savingIsAllowed = true,
-            accountList = accountsUiState.accountList,
+            accountList = accountsAndActiveOne.accountList,
             categoriesWithSubcategories = categoriesWithSubcategories,
             onSelectCategoryType = {},
             onNavigateToTransferCreationScreen = {},

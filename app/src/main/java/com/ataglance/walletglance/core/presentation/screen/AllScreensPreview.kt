@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
@@ -61,37 +61,8 @@ private const val langCode: String = "en"
 private const val isAppSetUp: Boolean = true
 private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true
-private val accountsUiState: AccountsUiState = AccountsUiState(
-    accountList = listOf(
-        Account(
-            id = 1,
-            orderNum = 1,
-            name = "Main USD Card",
-            currency = "USD",
-            balance = 1516.41,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
-            isActive = true
-        ),
-        Account(
-            id = 2,
-            orderNum = 2,
-            name = "Czech Local Card",
-            currency = "CZK",
-            balance = 43551.63,
-            color = AccountPossibleColors().blue.toAccountColorWithName(),
-            isActive = false
-        ),
-        Account(
-            id = 3,
-            orderNum = 3,
-            name = "Work Card",
-            currency = "USD",
-            balance = 412.0,
-            color = AccountPossibleColors().camel.toAccountColorWithName(),
-            isActive = false
-        ),
-    ),
-    activeAccount = Account(
+private val accountList = listOf(
+    Account(
         id = 1,
         orderNum = 1,
         name = "Main USD Card",
@@ -99,7 +70,29 @@ private val accountsUiState: AccountsUiState = AccountsUiState(
         balance = 1516.41,
         color = AccountPossibleColors().pink.toAccountColorWithName(),
         isActive = true
-    )
+    ),
+    Account(
+        id = 2,
+        orderNum = 2,
+        name = "Czech Local Card",
+        currency = "CZK",
+        balance = 43551.63,
+        color = AccountPossibleColors().blue.toAccountColorWithName(),
+        isActive = false
+    ),
+    Account(
+        id = 3,
+        orderNum = 3,
+        name = "Work Card",
+        currency = "USD",
+        balance = 412.0,
+        color = AccountPossibleColors().camel.toAccountColorWithName(),
+        isActive = false
+    ),
+)
+private val accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
+    accountList = accountList,
+    activeAccount = accountList.find { it.isActive }
 )
 private val dateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
 private const val isCustomDateRangeWindowOpened = false
@@ -204,14 +197,14 @@ fun MainAppContentHomeScreenPreview() {
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        accountsUiState = accountsUiState,
+        accountsAndActiveOne = accountsAndActiveOne,
         dateRangeMenuUiState = dateRangeMenuUiState,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         recordList = recordEntityList,
         budgetsOnWidget = budgetEntityList.toBudgetList(
             categoryWithSubcategoriesList = defaultCategoriesPackage.expense,
             associationList = budgetAccountAssociationList,
-            accountList = accountsUiState.accountList
+            accountList = accountsAndActiveOne.accountList
         ).take(2),
         widgetNamesList = listOf(
             WidgetName.TotalForPeriod,
@@ -240,7 +233,7 @@ fun MainAppContentRecordsScreenPreview() {
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsUiState.accountList,
+        accountList = accountsAndActiveOne.accountList,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         collectionType = collectionType,
@@ -269,7 +262,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsUiState.accountList,
+        accountList = accountsAndActiveOne.accountList,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
         currentCategoryType = currentCategoryType,
         parentCategory = null,
@@ -295,7 +288,7 @@ fun MainAppContentBudgetsScreenPreview() {
         isBottomBarVisible = isBottomBarVisible,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsUiState.accountList,
+        accountList = accountsAndActiveOne.accountList,
         recordList = recordEntityList
     )
 }
@@ -314,7 +307,7 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsUiState.accountList
+        accountList = accountsAndActiveOne.accountList
     )
 }
 
@@ -349,7 +342,7 @@ fun MainAppContentRecordCreationScreenPreview() {
         general = RecordDraftGeneral(
             isNew = true,
             recordNum = 1,
-            account = accountsUiState.activeAccount,
+            account = accountsAndActiveOne.activeAccount,
             type = CategoryType.Expense,
             dateTimeState = DateTimeState()
         ),
@@ -369,7 +362,7 @@ fun MainAppContentRecordCreationScreenPreview() {
 
     RecordCreationScreenPreview(
         appTheme = appTheme,
-        accountsUiState = accountsUiState,
+        accountsAndActiveOne = accountsAndActiveOne,
         categoriesWithSubcategories = categoriesWithSubcategories,
         recordDraft = recordDraft
     )
@@ -384,7 +377,7 @@ fun MainAppContentRecordCreationScreenPreview() {
 )
 @Composable
 fun MainAppContentTransferCreationScreenPreview() {
-    val accountList = accountsUiState.accountList
+    val accountList = accountsAndActiveOne.accountList
     val transferDraft = TransferDraft(
         isNew = true,
         sender = TransferDraftSenderReceiver(
@@ -455,7 +448,7 @@ fun MainAppContentEditAccountsScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        accountList = accountsUiState.accountList
+        accountList = accountsAndActiveOne.accountList
     )
 }
 
@@ -472,7 +465,7 @@ fun MainAppContentEditAccountScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        account = accountsUiState.accountList.first()
+        account = accountsAndActiveOne.accountList.first()
     )
 }
 
@@ -507,7 +500,7 @@ fun MainAppContentEditBudgetsScreenPreview() {
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsUiState.accountList
+        accountList = accountsAndActiveOne.accountList
     )
 }
 
@@ -524,7 +517,7 @@ fun MainAppContentEditBudgetScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        accountList = accountsUiState.accountList,
+        accountList = accountsAndActiveOne.accountList,
         budgetEntity = budgetEntityList.first(),
         budgetAccountAssociationList = budgetAccountAssociationList
     )

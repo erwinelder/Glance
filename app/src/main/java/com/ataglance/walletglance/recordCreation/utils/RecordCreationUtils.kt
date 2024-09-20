@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.recordCreation.utils
 
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.utils.getOtherFrom
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -20,16 +20,16 @@ import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSe
 fun List<RecordStack>.getRecordDraft(
     isNew: Boolean,
     recordNum: Int,
-    accountsUiState: AccountsUiState,
+    accountsAndActiveOne: AccountsAndActiveOne,
     initialCategoryWithSubcategory: CategoryWithSubcategory?
 ): RecordDraft {
     return this
         .takeUnless { isNew }
         ?.findByRecordNum(recordNum)
-        ?.toRecordDraft(accountsUiState.accountList)
+        ?.toRecordDraft(accountsAndActiveOne.accountList)
         ?: getClearRecordDraft(
             recordNum = recordNum,
-            account = accountsUiState.activeAccount,
+            account = accountsAndActiveOne.activeAccount,
             categoryWithSubcategory = initialCategoryWithSubcategory
         )
 }
@@ -60,28 +60,28 @@ private fun getClearRecordDraft(
 fun List<RecordStack>.getTransferDraft(
     isNew: Boolean,
     recordNum: Int,
-    accountsUiState: AccountsUiState
+    accountsAndActiveOne: AccountsAndActiveOne
 ): TransferDraft {
     return this
         .takeUnless { isNew }
         ?.getOutAndInTransfersByRecordNum(recordNum)
-        ?.toTransferDraft(accountList = accountsUiState.accountList)
-        ?: getClearTransferDraft(recordNum = recordNum, accountsUiState = accountsUiState)
+        ?.toTransferDraft(accountList = accountsAndActiveOne.accountList)
+        ?: getClearTransferDraft(recordNum = recordNum, accountsAndActiveOne = accountsAndActiveOne)
 }
 
 private fun getClearTransferDraft(
     recordNum: Int,
-    accountsUiState: AccountsUiState,
+    accountsAndActiveOne: AccountsAndActiveOne,
 ): TransferDraft {
     return TransferDraft(
         isNew = true,
         sender = TransferDraftSenderReceiver(
-            account = accountsUiState.activeAccount,
+            account = accountsAndActiveOne.activeAccount,
             recordNum = recordNum
         ),
         receiver = TransferDraftSenderReceiver(
-            account = accountsUiState.activeAccount?.let {
-                accountsUiState.accountList.getOtherFrom(it)
+            account = accountsAndActiveOne.activeAccount?.let {
+                accountsAndActiveOne.accountList.getOtherFrom(it)
             },
             recordNum = recordNum + 1
         )

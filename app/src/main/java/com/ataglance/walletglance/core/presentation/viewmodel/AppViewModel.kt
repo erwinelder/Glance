@@ -10,7 +10,7 @@ import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.utils.checkOrderNumbers
 import com.ataglance.walletglance.account.utils.findById
 import com.ataglance.walletglance.account.utils.findByOrderNum
@@ -322,9 +322,9 @@ class AppViewModel(
     }
 
 
-    private val _accountsUiState: MutableStateFlow<AccountsUiState> =
-        MutableStateFlow(AccountsUiState())
-    val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState.asStateFlow()
+    private val _accountsAndActiveOne: MutableStateFlow<AccountsAndActiveOne> =
+        MutableStateFlow(AccountsAndActiveOne())
+    val accountsAndActiveOne: StateFlow<AccountsAndActiveOne> = _accountsAndActiveOne.asStateFlow()
 
     private fun fetchAccountsFromDb() {
         viewModelScope.launch {
@@ -339,7 +339,7 @@ class AppViewModel(
     }
 
     fun applyAccountListToUiState(accountList: List<Account>) {
-        _accountsUiState.update { uiState ->
+        _accountsAndActiveOne.update { uiState ->
             uiState.copy(
                 accountList = accountList,
                 activeAccount = accountList.takeIf { it.isNotEmpty() }?.firstOrNull { it.isActive }
@@ -348,7 +348,7 @@ class AppViewModel(
     }
 
     fun onChangeHideActiveAccountBalance() {
-        _accountsUiState.update {
+        _accountsAndActiveOne.update {
             it.copy(
                 accountList = it.accountList.map { account ->
                     if (account.isActive) {
@@ -363,19 +363,19 @@ class AppViewModel(
     }
 
     fun applyActiveAccountByOrderNum(accountOrderNum: Int) {
-        _accountsUiState.update {
+        _accountsAndActiveOne.update {
             it.copy(
-                accountList = accountsUiState.value.accountList.map { account ->
+                accountList = accountsAndActiveOne.value.accountList.map { account ->
                     account.copy(isActive = account.orderNum == accountOrderNum)
                 },
-                activeAccount = accountsUiState.value.accountList
+                activeAccount = accountsAndActiveOne.value.accountList
                     .findByOrderNum(accountOrderNum)?.copy(isActive = true)
             )
         }
     }
 
     suspend fun saveAccountsToDb(accountsList: List<AccountEntity>) {
-        val listOfIdsToDelete = accountsUiState.value.accountList
+        val listOfIdsToDelete = accountsAndActiveOne.value.accountList
             .getIdsThatAreNotInList(accountsList)
 
         if (listOfIdsToDelete.isNotEmpty()) {
@@ -434,7 +434,7 @@ class AppViewModel(
     }
 
     private fun getLastUsedRecordCategoryByType(type: CategoryType): CategoryWithSubcategory? {
-        return accountsUiState.value.activeAccount?.id
+        return accountsAndActiveOne.value.activeAccount?.id
             ?.let { recordStackListFilteredByDate.value.getFirstByTypeAndAccountIdOrJustType(type, it) }
             ?.stack?.firstOrNull()?.categoryWithSubcategory
             ?: categoriesWithSubcategories.value.getLastCategoryWithSubcategoryByType(type)
@@ -500,7 +500,7 @@ class AppViewModel(
     }
 
     fun getActiveAccountExpensesForToday(): Double {
-        return accountsUiState.value.activeAccount?.id
+        return accountsAndActiveOne.value.activeAccount?.id
             ?.let {
                 _todayRecordList.value
                     .filterByAccountId(it)
@@ -529,7 +529,7 @@ class AppViewModel(
 
     val recordStackListFilteredByDate: StateFlow<List<RecordStack>> = combine(
         _recordListInDateRange,
-        _accountsUiState,
+        _accountsAndActiveOne,
         _categoriesWithSubcategories
     ) { recordListInDateRange, accountsUiState, categoriesWithSubcategories ->
         recordListInDateRange.recordList.toRecordStackList(
@@ -556,7 +556,7 @@ class AppViewModel(
                 .toBudgetList(
                     categoryWithSubcategoriesList = categoryWithSubcategoriesList,
                     associationList = associationList,
-                    accountList = accountsUiState.value.accountList
+                    accountList = accountsAndActiveOne.value.accountList
                 )
                 .groupByType()
             val budgetsMaxDateRange = budgetsByType.getMaxDateRange() ?: return@launch
@@ -638,7 +638,7 @@ class AppViewModel(
                 recordType = createdRecord.type.toRecordType()
             )
         )
-            .mergeWith(accountsUiState.value.accountList)
+            .mergeWith(accountsAndActiveOne.value.accountList)
             .toAccountEntityList()
         val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList)
 
@@ -660,7 +660,7 @@ class AppViewModel(
             recordStack = currentRecordStack,
             newTotalAmount = createdRecord.totalAmount
         )
-            ?.mergeWith(accountsUiState.value.accountList)
+            ?.mergeWith(accountsAndActiveOne.value.accountList)
             ?.toAccountEntityList()
             ?: return null
         val budgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(currentRecordList)
@@ -697,7 +697,7 @@ class AppViewModel(
                 )
             )
         } else {
-            val prevAccount = accountsUiState.value.getAccountById(recordStack.account.id)
+            val prevAccount = accountsAndActiveOne.value.getAccountById(recordStack.account.id)
                 ?: return null
             (prevAccount to createdRecord.account).returnAmountToFirstBalanceAndUpdateSecondBalance(
                 prevAmount = recordStack.totalAmount,
@@ -722,7 +722,7 @@ class AppViewModel(
     suspend fun deleteRecord(recordNum: Int) {
         val recordStack = recordStackListFilteredByDate.value.findByRecordNum(recordNum) ?: return
 
-        val updatedAccount = accountsUiState.value.accountList
+        val updatedAccount = accountsAndActiveOne.value.accountList
             .findById(recordStack.account.id)
             ?.cloneAndAddToOrSubtractFromBalance(
                 amount = recordStack.totalAmount,
@@ -731,7 +731,7 @@ class AppViewModel(
             ?: return
         val recordList = recordStack.toRecordList()
         val updatedAccounts = listOf(updatedAccount)
-            .mergeWith(accountsUiState.value.accountList)
+            .mergeWith(accountsAndActiveOne.value.accountList)
             .toAccountEntityList()
         val updatedBudgets = budgetsByType.value.subtractUsedAmountsByRecords(recordList)
 
@@ -772,7 +772,7 @@ class AppViewModel(
             state.sender.account.cloneAndSubtractFromBalance(state.sender.amount),
             state.receiver.account.cloneAndAddToBalance(state.receiver.amount)
         )
-            .mergeWith(accountsUiState.value.accountList)
+            .mergeWith(accountsAndActiveOne.value.accountList)
             .toAccountEntityList()
         val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList)
 
@@ -795,7 +795,7 @@ class AppViewModel(
             currRecordStackFrom = currRecordStackFrom,
             currRecordStackTo = currRecordStackTo
         )
-            ?.mergeWith(accountsUiState.value.accountList)
+            ?.mergeWith(accountsAndActiveOne.value.accountList)
             ?.toAccountEntityList()
             ?: return null
         val updatedBudgetsByType = budgetsByType.value
@@ -816,9 +816,9 @@ class AppViewModel(
         currRecordStackFrom: RecordStack,
         currRecordStackTo: RecordStack
     ): List<Account>? {
-        val prevFromAccount = accountsUiState.value.accountList
+        val prevFromAccount = accountsAndActiveOne.value.accountList
             .findById(currRecordStackFrom.account.id) ?: return null
-        val prevToAccount = accountsUiState.value.accountList
+        val prevToAccount = accountsAndActiveOne.value.accountList
             .findById(currRecordStackTo.account.id) ?: return null
 
         val updatedPreviousAccounts = listOf(
@@ -841,13 +841,13 @@ class AppViewModel(
 
         prevAccounts.findById(state.sender.account.id)?.let {
             updatedAccounts.add(it.cloneAndSubtractFromBalance(state.sender.amount))
-        } ?: accountsUiState.value.accountList.findById(state.sender.account.id)?.let {
+        } ?: accountsAndActiveOne.value.accountList.findById(state.sender.account.id)?.let {
             updatedAccounts.add(it.cloneAndSubtractFromBalance(state.sender.amount))
         } ?: return null
 
         prevAccounts.findById(state.receiver.account.id)?.let {
             updatedAccounts.add(it.cloneAndAddToBalance(state.receiver.amount))
-        } ?: accountsUiState.value.accountList.findById(state.receiver.account.id)?.let {
+        } ?: accountsAndActiveOne.value.accountList.findById(state.receiver.account.id)?.let {
             updatedAccounts.add(it.cloneAndAddToBalance(state.receiver.amount))
         } ?: return null
 
@@ -878,8 +878,8 @@ class AppViewModel(
         val (outTransfer, inTransfer) = recordStackListFilteredByDate.value
             .getOutAndInTransfersByRecordNums(senderReceiverRecordNums) ?: return
         val prevAccounts = Pair(
-            accountsUiState.value.accountList.findById(outTransfer.account.id) ?: return,
-            accountsUiState.value.accountList.findById(inTransfer.account.id) ?: return
+            accountsAndActiveOne.value.accountList.findById(outTransfer.account.id) ?: return,
+            accountsAndActiveOne.value.accountList.findById(inTransfer.account.id) ?: return
         )
 
         val recordList = outTransfer.toRecordList() + inTransfer.toRecordList()
@@ -887,7 +887,7 @@ class AppViewModel(
             prevAccounts.first.cloneAndAddToBalance(outTransfer.totalAmount),
             prevAccounts.second.cloneAndSubtractFromBalance(inTransfer.totalAmount)
         )
-            .mergeWith(accountsUiState.value.accountList)
+            .mergeWith(accountsAndActiveOne.value.accountList)
             .toAccountEntityList()
         val updatedBudgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(recordList)
 

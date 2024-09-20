@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsUiState
+import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
@@ -61,7 +61,7 @@ import com.ataglance.walletglance.record.utils.shrinkForCompactView
 fun HomeScreen(
     scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
-    accountsUiState: AccountsUiState,
+    accountsAndActiveOne: AccountsAndActiveOne,
     onTopBarAccountClick: (Int) -> Unit,
     dateRangeWithEnum: DateRangeWithEnum,
     onDateRangeChange: (DateRangeEnum) -> Unit,
@@ -77,7 +77,7 @@ fun HomeScreen(
         topBar = {
             StartAnimatedContainer(visible = isAppThemeSetUp) {
                 AppMainTopBar(
-                    accountList = accountsUiState.accountList,
+                    accountList = accountsAndActiveOne.accountList,
                     currentDateRangeEnum = dateRangeWithEnum.enum,
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -91,7 +91,7 @@ fun HomeScreen(
         CompactLayout(
             scaffoldPadding = scaffoldPadding + scaffoldHomeScreenPadding,
             isAppThemeSetUp = isAppThemeSetUp,
-            accountsUiState = accountsUiState,
+            accountsAndActiveOne = accountsAndActiveOne,
             dateRangeWithEnum = dateRangeWithEnum,
             onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
             widgetsUiState = widgetsUiState,
@@ -106,7 +106,7 @@ fun HomeScreen(
 private fun CompactLayout(
     scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
-    accountsUiState: AccountsUiState,
+    accountsAndActiveOne: AccountsAndActiveOne,
     dateRangeWithEnum: DateRangeWithEnum,
     onChangeHideActiveAccountBalance: () -> Unit,
     widgetsUiState: WidgetsUiState,
@@ -134,11 +134,11 @@ private fun CompactLayout(
             }
             item {
                 StartAnimatedContainer(
-                    visible = isAppThemeSetUp && accountsUiState.activeAccount != null,
+                    visible = isAppThemeSetUp && accountsAndActiveOne.activeAccount != null,
                     delayMillis = 100
                 ) {
                     AccountCard(
-                        account = accountsUiState.activeAccount!!,
+                        account = accountsAndActiveOne.activeAccount!!,
                         todayExpenses = widgetsUiState.activeAccountExpensesForToday,
                         onHideBalanceButton = onChangeHideActiveAccountBalance
                     )
@@ -167,13 +167,13 @@ private fun CompactLayout(
                             ExpensesIncomeWidget(
                                 uiState = widgetsUiState.expensesIncomeWidgetUiState,
                                 dateRangeWithEnum = dateRangeWithEnum,
-                                accountCurrency = accountsUiState.activeAccount?.currency ?: ""
+                                accountCurrency = accountsAndActiveOne.activeAccount?.currency ?: ""
                             )
                         }
                         WidgetName.RecentRecords -> {
                             RecentRecordsWidget(
                                 recordStackList = widgetsUiState.compactRecordStacksByDateAndAccount,
-                                accountList = accountsUiState.accountList,
+                                accountList = accountsAndActiveOne.accountList,
                                 isCustomDateRange =
                                 dateRangeWithEnum.enum == DateRangeEnum.Custom,
                                 onRecordClick = { recordNum: Int ->
@@ -229,7 +229,7 @@ fun HomeScreenPreview(
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
-    accountsUiState: AccountsUiState = AccountsUiState(
+    accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
         accountList = listOf(
             Account(id = 1, orderNum = 1, isActive = true),
             Account(id = 2, orderNum = 2, isActive = false)
@@ -246,7 +246,7 @@ fun HomeScreenPreview(
     ),
     recordList: List<RecordEntity>? = null,
     recordStackList: List<RecordStack> = recordList?.toRecordStackList(
-        accountList = accountsUiState.accountList,
+        accountList = accountsAndActiveOne.accountList,
         categoriesWithSubcategories = categoriesWithSubcategories
     ) ?: listOf(
         RecordStack(
@@ -280,7 +280,7 @@ fun HomeScreenPreview(
             repeatingPeriod = RepeatingPeriod.Monthly,
             dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
             currentTimeWithinRangeGraphPercentage = .5f,
-            currency = accountsUiState.activeAccount?.currency ?: "",
+            currency = accountsAndActiveOne.activeAccount?.currency ?: "",
             linkedAccountsIds = listOf(1)
         )
     )
@@ -306,7 +306,7 @@ fun HomeScreenPreview(
         HomeScreen(
             scaffoldPadding = scaffoldPadding,
             isAppThemeSetUp = true,
-            accountsUiState = accountsUiState,
+            accountsAndActiveOne = accountsAndActiveOne,
             onTopBarAccountClick = {},
             dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
             onDateRangeChange = {},

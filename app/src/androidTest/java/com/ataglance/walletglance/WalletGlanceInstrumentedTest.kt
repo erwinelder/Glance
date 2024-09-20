@@ -194,7 +194,7 @@ class WalletGlanceInstrumentedTest {
     fun accountBalance_Positive_DisplayedWithRightFormat() {
 
         composeTestRule.setContent {
-            appViewModel.accountsUiState.value.activeAccount?.let {
+            appViewModel.accountsAndActiveOne.value.activeAccount?.let {
                 AccountCard(account = it, appTheme = AppTheme.LightDefault, todayExpenses = 0.0)
             }
         }
@@ -214,7 +214,7 @@ class WalletGlanceInstrumentedTest {
             dateFormatted = calendar.getFormattedDateWithTime()
         )
 
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
         val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
@@ -284,7 +284,7 @@ class WalletGlanceInstrumentedTest {
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -307,7 +307,7 @@ class WalletGlanceInstrumentedTest {
             dateFormatted = calendar.getFormattedDateWithTime()
         )
 
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
         val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
@@ -377,7 +377,7 @@ class WalletGlanceInstrumentedTest {
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -436,7 +436,7 @@ class WalletGlanceInstrumentedTest {
             dateLong = calendar.toLongWithTime(),
             dateFormatted = calendar.getFormattedDateWithTime()
         )
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
 
         val uiState = MakeTransferUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -513,7 +513,7 @@ class WalletGlanceInstrumentedTest {
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -537,7 +537,7 @@ class WalletGlanceInstrumentedTest {
             dateLong = calendar.toLongWithTime(),
             dateFormatted = calendar.getFormattedDateWithTime()
         )
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
 
         val uiState = MakeTransferUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -614,7 +614,7 @@ class WalletGlanceInstrumentedTest {
                     dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -632,7 +632,7 @@ class WalletGlanceInstrumentedTest {
     fun makingTransferProcess_Negative_NotPerformed() = runTest {
 
         val dateTimeState = DateTimeState()
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
 
         val uiState = MakeTransferUiState(
             recordStatus = MakeRecordStatus.Create,

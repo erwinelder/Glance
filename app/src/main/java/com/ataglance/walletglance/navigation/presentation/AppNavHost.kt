@@ -90,7 +90,7 @@ fun AppNavHost(
             HomeScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppThemeSetUp = appUiSettings.appTheme != null,
-                accountsUiState = appUiState.accountsUiState,
+                accountsAndActiveOne = appUiState.accountsAndActiveOne,
                 onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 dateRangeWithEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum,
                 onDateRangeChange = appViewModel::selectDateRange,
@@ -141,7 +141,7 @@ fun AppNavHost(
 
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                accountList = appUiState.accountsUiState.accountList,
+                accountList = appUiState.accountsAndActiveOne.accountList,
                 onAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
@@ -190,7 +190,7 @@ fun AppNavHost(
             }
             LaunchedEffect(
                 key1 = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
-                key2 = appUiState.accountsUiState.accountList
+                key2 = appUiState.accountsAndActiveOne.accountList
             ) {
                 viewModel.clearParentCategoryStatistics()
             }
@@ -208,7 +208,7 @@ fun AppNavHost(
 
             CategoryStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                accountList = appUiState.accountsUiState.accountList,
+                accountList = appUiState.accountsAndActiveOne.accountList,
                 onAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
@@ -278,7 +278,7 @@ fun AppNavHost(
                 }
             }
             val budgetAccounts by remember {
-                derivedStateOf { appUiState.accountsUiState.filterByBudget(budget) }
+                derivedStateOf { appUiState.accountsAndActiveOne.filterByBudget(budget) }
             }
 
             (budget to columnChartDataUiState).letIfNoneIsNull { (budget, chartUiState) ->
@@ -307,7 +307,7 @@ fun AppNavHost(
                     recordDraft = appUiState.recordStackListByDate.getRecordDraft(
                         isNew = isNew,
                         recordNum = recordNum,
-                        accountsUiState = appUiState.accountsUiState,
+                        accountsAndActiveOne = appUiState.accountsAndActiveOne,
                         initialCategoryWithSubcategory = initialCategoryWithSubcategoryByType
                             .getByType(CategoryType.Expense)
                     )
@@ -323,7 +323,7 @@ fun AppNavHost(
                 recordDraftGeneral = recordDraftGeneral,
                 recordDraftItems = recordDraftItems,
                 savingIsAllowed = savingIsAllowed,
-                accountList = appUiState.accountsUiState.accountList,
+                accountList = appUiState.accountsAndActiveOne.accountList,
                 categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
                 onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
@@ -377,11 +377,11 @@ fun AppNavHost(
 
             val viewModel = viewModel<TransferCreationViewModel>(
                 factory = TransferCreationViewModelFactory(
-                    accountList = appUiState.accountsUiState.accountList,
+                    accountList = appUiState.accountsAndActiveOne.accountList,
                     transferDraft = appUiState.recordStackListByDate.getTransferDraft(
                         isNew = isNew,
                         recordNum = recordNum,
-                        accountsUiState = appUiState.accountsUiState
+                        accountsAndActiveOne = appUiState.accountsAndActiveOne
                     )
                 )
             )
@@ -391,7 +391,7 @@ fun AppNavHost(
 
             TransferCreationScreen(
                 transferDraft = transferDraft,
-                accountList = appUiState.accountsUiState.accountList,
+                accountList = appUiState.accountsAndActiveOne.accountList,
                 onNavigateBack = navController::popBackStack,
                 onSelectNewDate = viewModel::selectNewDate,
                 onSelectNewTime = viewModel::selectNewTime,
@@ -427,7 +427,7 @@ fun AppNavHost(
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,
             themeUiState = themeUiState,
-            accountList = appUiState.accountsUiState.accountList,
+            accountList = appUiState.accountsAndActiveOne.accountList,
             categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
             categoryCollectionsUiState = appUiState.categoryCollectionsUiState,
             budgetsByType = appUiState.budgetsByType,
