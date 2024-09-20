@@ -98,7 +98,7 @@ class NavigationViewModel(
         val currentRoute = currentScreen::class.simpleName()
         val nextRoute = nextScreen::class.simpleName()
         navigationButtonList.value
-            .map { it::class.simpleName() }
+            .map { it.screen::class.simpleName() }
             .forEach { screenRoute ->
                 if (currentRoute == screenRoute) {
                     return true
