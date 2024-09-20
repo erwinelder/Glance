@@ -216,30 +216,32 @@ fun BudgetStatisticsScreenPreview(
             isActive = false
         ),
     ),
-) {
-    val context = LocalContext.current
-    val category = categoriesWithSubcategories.expense[0].category
-    val budget = Budget(
+    budget: Budget = Budget(
         id = 1,
         priorityNum = 1.0,
         amountLimit = 4000.0,
         usedAmount = 2500.0,
         usedPercentage = 62.5F,
-        category = category,
-        name = category.name,
+        category = categoriesWithSubcategories.expense[0].category,
+        name = categoriesWithSubcategories.expense[0].category.name,
         repeatingPeriod = RepeatingPeriod.Monthly,
         dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
         currentTimeWithinRangeGraphPercentage = .5f,
         currency = "USD",
         linkedAccountsIds = listOf(1, 2)
-    )
+    ),
+    totalAmounts: List<Double> = (0..5).map { 5000.0 / (it + 1) }
+) {
+    val context = LocalContext.current
     val totalAmountsByRanges = budget.repeatingPeriod.getPrevDateRanges()
         .mapIndexed { index, dateRange ->
-            TotalAmountByRange(dateRange = dateRange, totalAmount = 5000.0 / (index + 1))
+            TotalAmountByRange(
+                dateRange = dateRange,
+                totalAmount = totalAmounts.getOrNull(index) ?: 0.0
+            )
         }
         .let { totalAmountsByRanges ->
-            budget.let { listOf(TotalAmountByRange(it.dateRange, it.usedAmount)) } +
-                    totalAmountsByRanges
+            listOf(TotalAmountByRange(budget.dateRange, budget.usedAmount)) + totalAmountsByRanges
         }
         .reversed()
     val columnChartUiState = ColumnChartUiState.createAsBudgetStatistics(

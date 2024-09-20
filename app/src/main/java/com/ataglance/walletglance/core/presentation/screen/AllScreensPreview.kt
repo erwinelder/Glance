@@ -19,6 +19,7 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScr
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
+import com.ataglance.walletglance.budget.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.category.domain.CategoryType
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
@@ -35,8 +36,8 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.date.YearMonthDay
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
-import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
@@ -65,18 +66,18 @@ private val accountList = listOf(
     Account(
         id = 1,
         orderNum = 1,
-        name = "Main USD Card",
-        currency = "USD",
-        balance = 1516.41,
+        name = "Czech Local Card",
+        currency = "CZK",
+        balance = 43551.63,
         color = AccountPossibleColors().pink.toAccountColorWithName(),
         isActive = true
     ),
     Account(
         id = 2,
         orderNum = 2,
-        name = "Czech Local Card",
-        currency = "CZK",
-        balance = 43551.63,
+        name = "Main USD Card",
+        currency = "USD",
+        balance = 1516.41,
         color = AccountPossibleColors().blue.toAccountColorWithName(),
         isActive = false
     ),
@@ -89,10 +90,19 @@ private val accountList = listOf(
         color = AccountPossibleColors().camel.toAccountColorWithName(),
         isActive = false
     ),
+    Account(
+        id = 4,
+        orderNum = 4,
+        name = "Secondary Card CZK",
+        currency = "CZK",
+        balance = 5000.0,
+        color = AccountPossibleColors().default.toAccountColorWithName(),
+        isActive = false
+    ),
 )
 private val accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
     accountList = accountList,
-    activeAccount = accountList.find { it.isActive }
+    activeAccount = accountList.find { it.isActive } ?: accountList.first()
 )
 private val dateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
 private const val isCustomDateRangeWindowOpened = false
@@ -100,10 +110,75 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 1,
         recordNum = 1,
-        date = getTodayDateLong(),
+        date = YearMonthDay(2024, 9, 24).concatenate(),
         type = RecordType.Expense.asChar(),
-        accountId = 1,
-        amount = 42.43,
+        accountId = accountsAndActiveOne.activeAccount!!.id,
+        amount = 68.43,
+        quantity = null,
+        categoryId = 1,
+        subcategoryId = 13,
+        note = "bread, milk",
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 2,
+        recordNum = 1,
+        date = YearMonthDay(2024, 9, 24).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 178.9,
+        quantity = null,
+        categoryId = 3,
+        subcategoryId = 24,
+        note = "shampoo",
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 3,
+        recordNum = 2,
+        date = YearMonthDay(2024, 9, 23).concatenate(),
+        type = RecordType.OutTransfer.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 3000.0,
+        quantity = null,
+        categoryId = 3,
+        subcategoryId = 24,
+        note = accountsAndActiveOne.accountList[1].id.toString(),
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 4,
+        recordNum = 3,
+        date = YearMonthDay(2024, 9, 18).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 120.9,
+        quantity = null,
+        categoryId = 6,
+        subcategoryId = 40,
+        note = "Music platform",
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 5,
+        recordNum = 4,
+        date = YearMonthDay(2024, 9, 15).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 799.9,
+        quantity = null,
+        categoryId = 3,
+        subcategoryId = 21,
+        note = null,
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 6,
+        recordNum = 5,
+        date = YearMonthDay(2024, 9, 12).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 3599.9,
         quantity = null,
         categoryId = 1,
         subcategoryId = 13,
@@ -111,15 +186,67 @@ private val recordEntityList = listOf(
         includeInBudgets = true
     ),
     RecordEntity(
-        id = 2,
-        recordNum = 2,
-        date = getTodayDateLong(),
+        id = 7,
+        recordNum = 6,
+        date = YearMonthDay(2024, 9, 4).concatenate(),
         type = RecordType.Expense.asChar(),
-        accountId = 1,
-        amount = 42.43,
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 8500.0,
         quantity = null,
-        categoryId = 1,
-        subcategoryId = 14,
+        categoryId = 2,
+        subcategoryId = 15,
+        note = null,
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 8,
+        recordNum = 7,
+        date = YearMonthDay(2024, 9, 4).concatenate(),
+        type = RecordType.Income.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 42600.0,
+        quantity = null,
+        categoryId = 72,
+        subcategoryId = null,
+        note = null,
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 9,
+        recordNum = 8,
+        date = YearMonthDay(2024, 9, 4).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 799.9,
+        quantity = null,
+        categoryId = 6,
+        subcategoryId = 38,
+        note = null,
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 10,
+        recordNum = 9,
+        date = YearMonthDay(2024, 6, 4).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.accountList[1].id,
+        amount = 450.41,
+        quantity = null,
+        categoryId = 9,
+        subcategoryId = 50,
+        note = null,
+        includeInBudgets = true
+    ),
+    RecordEntity(
+        id = 10,
+        recordNum = 9,
+        date = YearMonthDay(2024, 9, 4).concatenate(),
+        type = RecordType.Expense.asChar(),
+        accountId = accountsAndActiveOne.activeAccount.id,
+        amount = 690.56,
+        quantity = null,
+        categoryId = 10,
+        subcategoryId = 58,
         note = null,
         includeInBudgets = true
     ),
@@ -152,31 +279,39 @@ private val categoryCollectionsWithIdsByType = CategoryCollectionsWithIdsByType(
 private val budgetEntityList = listOf(
     BudgetEntity(
         id = 1,
-        amountLimit = 1000.0,
+        amountLimit = 5000.0,
         categoryId = 1,
         name = "Food & drinks",
         repeatingPeriod = RepeatingPeriod.Monthly.name,
     ),
     BudgetEntity(
         id = 2,
-        amountLimit = 250.0,
-        categoryId = 3,
-        name = "Shopping",
-        repeatingPeriod = RepeatingPeriod.Weekly.name,
+        amountLimit = 1000.0,
+        categoryId = 9,
+        name = "Travels",
+        repeatingPeriod = RepeatingPeriod.Yearly.name,
     ),
     BudgetEntity(
         id = 3,
-        amountLimit = 2000.0,
-        categoryId = 2,
-        name = "Housing",
-        repeatingPeriod = RepeatingPeriod.Yearly.name,
+        amountLimit = 1000.0,
+        categoryId = 6,
+        name = "Digital life",
+        repeatingPeriod = RepeatingPeriod.Monthly.name,
+    ),
+    BudgetEntity(
+        id = 4,
+        amountLimit = 1500.0,
+        categoryId = 10,
+        name = "Entertainment",
+        repeatingPeriod = RepeatingPeriod.Monthly.name,
     ),
 )
 private val budgetAccountAssociationList = listOf(
     BudgetAccountAssociation(budgetId = 1, accountId = 1),
-    BudgetAccountAssociation(budgetId = 1, accountId = 3),
+    BudgetAccountAssociation(budgetId = 1, accountId = 4),
     BudgetAccountAssociation(budgetId = 2, accountId = 2),
     BudgetAccountAssociation(budgetId = 3, accountId = 1),
+    BudgetAccountAssociation(budgetId = 4, accountId = 1),
 )
 
 
@@ -302,12 +437,24 @@ fun MainAppContentBudgetsScreenPreview() {
 )
 @Composable
 fun MainAppContentBudgetStatisticsScreenPreview() {
+    val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+    val budget = budgetEntityList
+        .toBudgetList(
+            categoryWithSubcategoriesList = defaultCategories.expense,
+            associationList = budgetAccountAssociationList,
+            accountList = accountList
+        )
+        .fillUsedAmountsByRecords(recordEntityList)[0]
+
     BudgetStatisticsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsAndActiveOne.accountList
+        categoriesWithSubcategories = defaultCategories,
+        accountList = accountsAndActiveOne.accountList.let { listOf(it[0], it[3]) },
+        budget = budget,
+        totalAmounts = listOf(4800.0, 5000.0, 4500.0, 5200.0, 4600.0),
     )
 }
 
@@ -352,11 +499,11 @@ fun MainAppContentRecordCreationScreenPreview() {
                 index = 0,
                 categoryWithSubcategory = categoriesWithSubcategories.expense[0]
                     .getWithFirstSubcategory(),
-                note = "",
+                note = "bread",
                 amount = "42.43",
                 quantity = "2",
                 collapsed = false
-            )
+            ),
         )
     )
 
@@ -383,12 +530,14 @@ fun MainAppContentTransferCreationScreenPreview() {
         sender = TransferDraftSenderReceiver(
             account = accountList[0],
             recordNum = 0,
-            amount = "300.0",
+            amount = "3000.0",
+            rate = "22.44"
         ),
         receiver = TransferDraftSenderReceiver(
             account = accountList[1],
             recordNum = 0,
-            amount = "100.0",
+            amount = "133.69",
+            rate = "1.00"
         ),
         savingIsAllowed = true
     )
@@ -643,7 +792,6 @@ fun MainAppContentLanguageScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-        isBottomBarVisible = isBottomBarVisible,
         appLanguage = AppLanguage.English.languageCode,
         selectedLanguage = AppLanguage.German.languageCode
     )
