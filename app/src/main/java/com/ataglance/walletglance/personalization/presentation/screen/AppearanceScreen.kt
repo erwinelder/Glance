@@ -146,15 +146,6 @@ fun AppearanceScreen(
             onChooseLightTheme = onChooseLightTheme,
             onChooseDarkTheme = onChooseDarkTheme
         )
-        NavigationButtonsSettingsBottomSheet(
-            visible = showNavigationButtonsSettingsBottomSheet,
-            onDismissRequest = {
-                onSaveNavigationButtons(editNavigationButtonsViewModel.getNavigationButtonList())
-                showNavigationButtonsSettingsBottomSheet = false
-            },
-            navigationButtonList = navigationButtonList,
-            onMoveButtons = editNavigationButtonsViewModel::moveButtons
-        )
         WidgetsSettingsBottomSheet(
             visible = showWidgetsSettingsBottomSheet,
             onDismissRequest = {
@@ -164,6 +155,15 @@ fun AppearanceScreen(
             widgetList = widgetList,
             onWidgetCheckedStateChange = editWidgetsViewModel::changeWidgetCheckState,
             onMoveWidgets = editWidgetsViewModel::moveWidgets
+        )
+        NavigationButtonsSettingsBottomSheet(
+            visible = showNavigationButtonsSettingsBottomSheet,
+            onDismissRequest = {
+                onSaveNavigationButtons(editNavigationButtonsViewModel.getNavigationButtonList())
+                showNavigationButtonsSettingsBottomSheet = false
+            },
+            navigationButtonList = navigationButtonList,
+            onMoveButtons = editNavigationButtonsViewModel::moveButtons
         )
     }
 }

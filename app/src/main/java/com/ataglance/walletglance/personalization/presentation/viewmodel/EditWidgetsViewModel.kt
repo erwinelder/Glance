@@ -2,11 +2,10 @@ package com.ataglance.walletglance.personalization.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.ataglance.walletglance.core.utils.moveItems
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -15,11 +14,11 @@ class EditWidgetsViewModel(
 ) : ViewModel() {
 
     private val _widgetList: MutableStateFlow<List<CheckedWidget>> = MutableStateFlow(
-        WidgetName.entries.map { widgetName ->
+        initialWidgetNamesList.map { widgetName ->
             CheckedWidget(widgetName, widgetName in initialWidgetNamesList)
         }
     )
-    val widgetList: StateFlow<List<CheckedWidget>> = _widgetList.asStateFlow()
+    val widgetList = _widgetList.asStateFlow()
 
     fun changeWidgetCheckState(widgetName: WidgetName, isChecked: Boolean) {
         _widgetList.update { widgetList ->
