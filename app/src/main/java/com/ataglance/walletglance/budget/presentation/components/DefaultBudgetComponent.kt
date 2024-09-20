@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
+import com.ataglance.walletglance.core.presentation.GlanceTheme
 
 @Composable
 fun DefaultBudgetComponent(
@@ -24,6 +25,7 @@ fun DefaultBudgetComponent(
         Icon(
             painter = painterResource(R.drawable.short_arrow_right_icon),
             contentDescription = "right arrow icon",
+            tint = GlanceTheme.onSurface,
             modifier = Modifier.size(24.dp)
         )
     }
