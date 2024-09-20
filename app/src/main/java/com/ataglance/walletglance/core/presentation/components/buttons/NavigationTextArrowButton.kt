@@ -25,7 +25,7 @@ fun NavigationTextArrowButton(
     text: String,
     showLeftArrow: Boolean = false,
     fontSize: TextUnit = 18.sp,
-    iconSize: Dp = 18.dp,
+    iconSize: Dp = 16.dp,
     onClick: () -> Unit
 ) {
     TextButton(
@@ -39,7 +39,7 @@ fun NavigationTextArrowButton(
                 contentDescription = "short left arrow",
                 modifier = Modifier.size(iconSize)
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
         }
         Text(
             text = text,
@@ -49,7 +49,7 @@ fun NavigationTextArrowButton(
             fontFamily = Manrope
         )
         if (!showLeftArrow) {
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "short right arrow",

@@ -341,10 +341,10 @@ fun MainAppContentHomeScreenPreview() {
             categoryWithSubcategoriesList = defaultCategoriesPackage.expense,
             associationList = budgetAccountAssociationList,
             accountList = accountsAndActiveOne.accountList
-        ).take(2),
+        ).fillUsedAmountsByRecords(recordEntityList).take(1),
         widgetNamesList = listOf(
-            WidgetName.TotalForPeriod,
             WidgetName.ChosenBudgets,
+            WidgetName.TotalForPeriod,
         )
     )
 }
