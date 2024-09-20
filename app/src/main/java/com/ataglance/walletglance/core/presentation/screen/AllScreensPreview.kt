@@ -62,6 +62,7 @@ private const val langCode: String = "en"
 private const val isAppSetUp: Boolean = true
 private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true
+
 private val accountList = listOf(
     Account(
         id = 1,
