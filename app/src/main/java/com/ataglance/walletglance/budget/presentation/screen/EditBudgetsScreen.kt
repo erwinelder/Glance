@@ -116,6 +116,7 @@ fun EditBudgetsScreenPreview(
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Daily,
                     dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
+                    currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
                     linkedAccountsIds = listOf(1, 2)
                 )
@@ -131,6 +132,7 @@ fun EditBudgetsScreenPreview(
                     name = "Housing",
                     repeatingPeriod = RepeatingPeriod.Weekly,
                     dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
+                    currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
                     linkedAccountsIds = listOf(3, 4)
                 )
@@ -146,6 +148,7 @@ fun EditBudgetsScreenPreview(
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Monthly,
                     dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                    currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
                     linkedAccountsIds = listOf(1, 2)
                 ),
@@ -159,6 +162,7 @@ fun EditBudgetsScreenPreview(
                     name = "Shopping",
                     repeatingPeriod = RepeatingPeriod.Monthly,
                     dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                    currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
                     linkedAccountsIds = listOf(3, 4)
                 )

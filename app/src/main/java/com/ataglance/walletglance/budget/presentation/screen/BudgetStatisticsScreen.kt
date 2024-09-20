@@ -229,6 +229,7 @@ fun BudgetStatisticsScreenPreview(
         name = category.name,
         repeatingPeriod = RepeatingPeriod.Monthly,
         dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+        currentTimeWithinRangeGraphPercentage = .5f,
         currency = "USD",
         linkedAccountsIds = listOf(1, 2)
     )

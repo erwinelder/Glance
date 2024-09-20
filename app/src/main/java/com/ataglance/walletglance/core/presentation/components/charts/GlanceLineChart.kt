@@ -43,7 +43,7 @@ fun GlanceLineChart(
         Spacer(
             modifier = Modifier
                 .shadow(
-                    elevation = 8.dp,
+                    elevation = height / 2,
                     spotColor = shadowColor,
                     shape = RoundedCornerShape(50)
                 )

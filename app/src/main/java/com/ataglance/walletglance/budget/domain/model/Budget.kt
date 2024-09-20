@@ -16,6 +16,7 @@ data class Budget(
     val name: String,
     val repeatingPeriod: RepeatingPeriod,
     val dateRange: LongDateRange,
+    val currentTimeWithinRangeGraphPercentage: Float,
     val currency: String,
     val linkedAccountsIds: List<Int>
 ) {

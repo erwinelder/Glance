@@ -279,6 +279,7 @@ fun HomeScreenPreview(
             name = categoriesWithSubcategories.expense[0].category.name,
             repeatingPeriod = RepeatingPeriod.Monthly,
             dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+            currentTimeWithinRangeGraphPercentage = .5f,
             currency = accountsUiState.activeAccount?.currency ?: "",
             linkedAccountsIds = listOf(1)
         )

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.category.domain.Category
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 
 @Stable
@@ -30,6 +31,7 @@ data class EditingBudgetUiState(
 
     fun toNewBudget(): Budget? {
         val newAmountLimit = amountLimit.toDoubleOrNull() ?: return null
+        val dateRange = newRepeatingPeriod.getLongDateRangeWithTime()
 
         return Budget(
             id = id,
@@ -40,7 +42,9 @@ data class EditingBudgetUiState(
             category = category,
             name = name,
             repeatingPeriod = newRepeatingPeriod,
-            dateRange = newRepeatingPeriod.getLongDateRangeWithTime(),
+            dateRange = dateRange,
+            currentTimeWithinRangeGraphPercentage = dateRange
+                .getCurrentTimeAsGraphPercentageInThisRange(),
             currency = linkedAccounts.firstOrNull()?.currency ?: "",
             linkedAccountsIds = linkedAccounts.map { it.id }
         )

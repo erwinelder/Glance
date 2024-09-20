@@ -38,7 +38,8 @@ fun ChosenWidgetsWidget(
                             budget = budget,
                             onClick = {
                                 onNavigateToBudgetStatisticsScreen(it.id)
-                            }
+                            },
+                            showDateRangeLabels = true
                         )
                     }
                 } else {

@@ -9,12 +9,15 @@ import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.date.StringDateRange
+import com.ataglance.walletglance.core.domain.date.TimeInMillisRange
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
 import com.ataglance.walletglance.core.domain.date.YearMonthDayHourMinute
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 
 
 val Calendar.year: Int
@@ -515,6 +518,40 @@ fun getFormattedDateFromAndToByFormatDayMonthYear(
             convertDateLongToDayMonthYear(fromPast, context) + "\n" +
             context.getString(R.string.to) + " " +
             convertDateLongToDayMonthYear(toFuture, context)
+}
+
+
+fun LongDateRange.toStringDateRange(period: RepeatingPeriod, context: Context): StringDateRange {
+    return StringDateRange(
+        from = from.extractYearMonthDayHourMinute().formatByRepeatingPeriod(period, context),
+        to = to.extractYearMonthDayHourMinute().formatByRepeatingPeriod(period, context)
+    )
+}
+
+fun YearMonthDayHourMinute.formatByRepeatingPeriod(
+    repeatingPeriod: RepeatingPeriod,
+    context: Context
+): String {
+    return when (repeatingPeriod) {
+        RepeatingPeriod.Daily -> "%2d:%2d".format(locale = Locale.US, hour, minute)
+        RepeatingPeriod.Weekly, RepeatingPeriod.Monthly -> "$day " + (month.getMonthShortNameRes()
+            ?.let { context.getString(it) } ?: "")
+        RepeatingPeriod.Yearly -> (month.getMonthShortNameRes()
+            ?.let { context.getString(it) } ?: "") + " $year"
+    }
+}
+
+
+fun LongDateRange.asTimeInMillisRange(): TimeInMillisRange {
+    return TimeInMillisRange(
+        from = from.extractYearMonthDayHourMinute().asTimeInMillis(),
+        to = to.extractYearMonthDayHourMinute().asTimeInMillis()
+    )
+}
+
+
+fun LongDateRange.getCurrentTimeAsGraphPercentageInThisRange(): Float {
+    return this.asTimeInMillisRange().getCurrentDateAsGraphPercentageInThisRange()
 }
 
 

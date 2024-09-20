@@ -11,6 +11,7 @@ import com.ataglance.walletglance.budget.utils.findById
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.category.utils.getCategoryWithSubcategoryById
+import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getRepeatingPeriodByString
 
@@ -22,6 +23,7 @@ fun BudgetEntity.toBudget(
 ): Budget? {
     val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
     val linkedAccounts = accountList.filter { linkedAccountsIds.contains(it.id) }
+    val dateRange = repeatingPeriodEnum.getLongDateRangeWithTime()
 
     return Budget(
         id = id,
@@ -32,7 +34,9 @@ fun BudgetEntity.toBudget(
         category = categoryWithSubcategory?.getSubcategoryOrCategory(),
         name = name,
         repeatingPeriod = repeatingPeriodEnum,
-        dateRange = repeatingPeriodEnum.getLongDateRangeWithTime(),
+        dateRange = dateRange,
+        currentTimeWithinRangeGraphPercentage = dateRange
+            .getCurrentTimeAsGraphPercentageInThisRange(),
         currency = linkedAccounts.firstOrNull()?.currency ?: "",
         linkedAccountsIds = linkedAccounts.map { it.id }
     )
