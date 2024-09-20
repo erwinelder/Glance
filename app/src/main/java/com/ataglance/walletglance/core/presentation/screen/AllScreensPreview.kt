@@ -2,7 +2,6 @@ package com.ataglance.walletglance.core.presentation.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
@@ -56,6 +55,11 @@ import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPre
 import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
+
+private const val device = "spec:width=1440px,height=3120px,dpi=560" // default
+//private const val device = "spec:width=1440px,height=2988px,dpi=560" // phone promo
+//private const val device = "spec:width=1840px,height=2150px,dpi=400" // tablet 7inch promo
+//private const val device = "spec:width=2560px,height=1561px,dpi=320" // tablet 10inch promo
 
 private val appTheme: AppTheme = AppTheme.LightDefault
 private const val langCode: String = "en"
@@ -322,7 +326,7 @@ private val budgetAccountAssociationList = listOf(
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentHomeScreenPreview() {
@@ -343,8 +347,8 @@ fun MainAppContentHomeScreenPreview() {
             accountList = accountsAndActiveOne.accountList
         ).fillUsedAmountsByRecords(recordEntityList).take(1),
         widgetNamesList = listOf(
-            WidgetName.ChosenBudgets,
             WidgetName.TotalForPeriod,
+            WidgetName.ChosenBudgets,
         )
     )
 }
@@ -354,7 +358,7 @@ fun MainAppContentHomeScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentRecordsScreenPreview() {
@@ -383,7 +387,7 @@ fun MainAppContentRecordsScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentCategoryStatisticsScreenPreview() {
@@ -413,7 +417,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentBudgetsScreenPreview() {
@@ -434,7 +438,7 @@ fun MainAppContentBudgetsScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentBudgetStatisticsScreenPreview() {
@@ -464,7 +468,7 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentFinishSetupScreenPreview() {
@@ -480,7 +484,7 @@ fun MainAppContentFinishSetupScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentRecordCreationScreenPreview() {
@@ -521,7 +525,7 @@ fun MainAppContentRecordCreationScreenPreview() {
     group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentTransferCreationScreenPreview() {
@@ -557,7 +561,7 @@ fun MainAppContentTransferCreationScreenPreview() {
     group = "SettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentStartSetupScreenPreview() {
@@ -573,7 +577,7 @@ fun MainAppContentStartSetupScreenPreview() {
     group = "SettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentSettingHomeScreenPreview() {
@@ -590,7 +594,7 @@ fun MainAppContentSettingHomeScreenPreview() {
     group = "AccountsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditAccountsScreenPreview() {
@@ -607,7 +611,7 @@ fun MainAppContentEditAccountsScreenPreview() {
     group = "AccountsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditAccountScreenPreview() {
@@ -624,7 +628,7 @@ fun MainAppContentEditAccountScreenPreview() {
     group = "AccountsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentCurrencyPickerScreenPreview() {
@@ -640,7 +644,7 @@ fun MainAppContentCurrencyPickerScreenPreview() {
     group = "BudgetsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditBudgetsScreenPreview() {
@@ -659,7 +663,7 @@ fun MainAppContentEditBudgetsScreenPreview() {
     group = "BudgetsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditBudgetScreenPreview() {
@@ -678,7 +682,7 @@ fun MainAppContentEditBudgetScreenPreview() {
     group = "CategoriesSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditCategoriesScreenPreview() {
@@ -695,7 +699,7 @@ fun MainAppContentEditCategoriesScreenPreview() {
     group = "CategoriesSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditSubcategoriesScreenPreview() {
@@ -711,7 +715,7 @@ fun MainAppContentEditSubcategoriesScreenPreview() {
     group = "CategoriesSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditCategoryScreenPreview() {
@@ -727,7 +731,7 @@ fun MainAppContentEditCategoryScreenPreview() {
     group = "CollectionsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditCategoryCollectionsScreenPreview() {
@@ -745,7 +749,7 @@ fun MainAppContentEditCategoryCollectionsScreenPreview() {
     group = "CollectionsSettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentEditCategoryCollectionScreenPreview() {
@@ -762,7 +766,7 @@ fun MainAppContentEditCategoryCollectionScreenPreview() {
     group = "SettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentAppearanceScreenPreview() {
@@ -785,7 +789,7 @@ fun MainAppContentAppearanceScreenPreview() {
     group = "SettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentLanguageScreenPreview() {
@@ -803,7 +807,7 @@ fun MainAppContentLanguageScreenPreview() {
     group = "SettingsScreens",
     apiLevel = 34,
     locale = langCode,
-    device = Devices.PIXEL_7_PRO
+    device = device
 )
 @Composable
 fun MainAppContentSettingsDataScreenPreview() {
