@@ -61,6 +61,7 @@ fun RecordCreationTopBar(
                 },
                 showTransferButton = showTransferButton,
                 onNavigateToTransferCreationScreen = onNavigateToTransferCreationScreen,
+                showIncludeInBudgetsButton = currentCategoryType == CategoryType.Expense,
                 preferences = preferences,
                 onIncludeInBudgetsChange = onIncludeInBudgetsChange
             )
@@ -74,6 +75,7 @@ private fun PreferencesButton(
     animationTransformOrigin: TransformOrigin,
     showTransferButton: Boolean,
     onNavigateToTransferCreationScreen: () -> Unit,
+    showIncludeInBudgetsButton: Boolean,
     preferences: RecordDraftPreferences,
     onIncludeInBudgetsChange: (Boolean) -> Unit,
 ) {
@@ -81,7 +83,8 @@ private fun PreferencesButton(
         buttonText = stringResource(R.string.preferences),
         contentPadding = PaddingValues(
             start = 24.dp, end = 24.dp,
-            top = if (showTransferButton) 4.dp else 20.dp, bottom = 20.dp
+            top = if (showTransferButton) 4.dp else 20.dp,
+            bottom = if (showIncludeInBudgetsButton) 20.dp else 4.dp
         ),
         animationTransformOrigin = animationTransformOrigin
     ) { onDismissRequest ->
@@ -98,15 +101,17 @@ private fun PreferencesButton(
                     }
                 )
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                TwoStateCheckboxWithText(
-                    text = stringResource(R.string.include_in_budgets),
-                    checked = preferences.includeInBudgets,
-                    checkboxSize = 24.dp,
-                    onClick = onIncludeInBudgetsChange
-                )
+            if (showIncludeInBudgetsButton) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TwoStateCheckboxWithText(
+                        text = stringResource(R.string.include_in_budgets),
+                        checked = preferences.includeInBudgets,
+                        checkboxSize = 24.dp,
+                        onClick = onIncludeInBudgetsChange
+                    )
+                }
             }
         }
     }
