@@ -46,11 +46,14 @@ fun BudgetsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp, bottom = 16.dp + screenPadding.calculateBottomPadding())
+            .padding(
+                top = 16.dp, bottom = 16.dp + screenPadding.calculateBottomPadding(),
+                start = 16.dp, end = 16.dp
+            )
     ) {
         GlassSurface(
             modifier = Modifier.weight(1f),
-            filledWidths = FilledWidthByScreenType(expanded = .86f)
+            filledWidths = FilledWidthByScreenType(compact = 1f)
         ) {
             if (budgetsByType.areEmpty()) {
                 MessageContainer(
