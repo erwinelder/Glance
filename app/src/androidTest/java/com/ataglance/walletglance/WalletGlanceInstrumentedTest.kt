@@ -5,36 +5,32 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.ataglance.walletglance.data.accounts.color.AccountColorName
-import com.ataglance.walletglance.data.app.AppLanguage
-import com.ataglance.walletglance.data.app.AppTheme
-import com.ataglance.walletglance.data.categories.CategoryWithSubcategory
-import com.ataglance.walletglance.data.categories.color.CategoryColorName
-import com.ataglance.walletglance.data.date.DateTimeState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUiState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordUnitUiState
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.domain.entities.AccountEntity
-import com.ataglance.walletglance.domain.entities.CategoryEntity
-import com.ataglance.walletglance.domain.entities.Record
-import com.ataglance.walletglance.domain.repositories.AccountRepository
-import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.domain.repositories.CategoryRepository
-import com.ataglance.walletglance.domain.repositories.GeneralRepository
-import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
-import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.ui.theme.uielements.accounts.AccountCard
-import com.ataglance.walletglance.ui.theme.widgets.RecordHistoryWidget
-import com.ataglance.walletglance.data.utils.filterByDateAndAccount
-import com.ataglance.walletglance.data.utils.getFormattedDateWithTime
-import com.ataglance.walletglance.data.utils.toAccountEntityList
-import com.ataglance.walletglance.data.utils.toLongWithTime
-import com.ataglance.walletglance.ui.viewmodels.AppViewModel
-import com.ataglance.walletglance.ui.viewmodels.records.MakeRecordViewModel
-import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferUiState
-import com.ataglance.walletglance.ui.viewmodels.records.MakeTransferViewModel
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
+import com.ataglance.walletglance.account.data.repository.AccountRepository
+import com.ataglance.walletglance.account.domain.color.AccountColorName
+import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.repository.CategoryRepository
+import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.color.CategoryColorName
+import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
+import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.domain.app.AppLanguage
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.date.DateTimeState
+import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
+import com.ataglance.walletglance.core.utils.toLongWithTime
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.repository.RecordRepository
+import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.utils.filterAccountId
+import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -60,12 +56,14 @@ class WalletGlanceInstrumentedTest {
             CategoryCollectionAndCollectionCategoryAssociationRepository
     private lateinit var mockRecordRepository: RecordRepository
     private lateinit var mockRecordAndAccountRepository: RecordAndAccountRepository
+    private lateinit var budgetAndBudgetAccountAssociationRepository:
+            BudgetAndBudgetAccountAssociationRepository
     private lateinit var mockGeneralRepository: GeneralRepository
 
     private lateinit var mockSettingsRepository: SettingsRepository
     private lateinit var appViewModel: AppViewModel
 
-    private val providedRecordList = mutableListOf<Record>()
+    private val providedRecordList = mutableListOf<RecordEntity>()
 
     @Before
     fun setUp() {
@@ -80,6 +78,7 @@ class WalletGlanceInstrumentedTest {
         setupRecordRepository()
         mockRecordAndAccountRepository = mockk()
         setupRecordAndAccountRepository()
+        budgetAndBudgetAccountAssociationRepository = mockk()
         mockGeneralRepository = mockk()
 
         appViewModel = AppViewModel(
@@ -89,6 +88,8 @@ class WalletGlanceInstrumentedTest {
                 categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = mockRecordRepository,
             recordAndAccountRepository = mockRecordAndAccountRepository,
+            budgetAndBudgetAccountAssociationRepository =
+                budgetAndBudgetAccountAssociationRepository,
             generalRepository = mockGeneralRepository,
             settingsRepository = mockSettingsRepository
         )
@@ -185,7 +186,7 @@ class WalletGlanceInstrumentedTest {
 
     private fun setupRecordAndAccountRepository() {
         coEvery {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(any(), any())
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())
         } returns Unit
     }
 
@@ -193,7 +194,7 @@ class WalletGlanceInstrumentedTest {
     fun accountBalance_Positive_DisplayedWithRightFormat() {
 
         composeTestRule.setContent {
-            appViewModel.accountsUiState.value.activeAccount?.let {
+            appViewModel.accountsAndActiveOne.value.activeAccount?.let {
                 AccountCard(account = it, appTheme = AppTheme.LightDefault, todayExpenses = 0.0)
             }
         }
@@ -213,7 +214,7 @@ class WalletGlanceInstrumentedTest {
             dateFormatted = calendar.getFormattedDateWithTime()
         )
 
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
         val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
@@ -240,7 +241,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -250,7 +251,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = categoriesWithSubcategories.expense.first().category.id,
                 subcategoryId = null,
-                note = null
+                note = null,
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -263,7 +265,7 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveRecord(viewModel.uiState.value, viewModel.recordUnitList.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
                 expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
@@ -273,17 +275,16 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
-                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
-                        .getRangePair(),
+            RecentRecordsWidget(
+                recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -306,7 +307,7 @@ class WalletGlanceInstrumentedTest {
             dateFormatted = calendar.getFormattedDateWithTime()
         )
 
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
         val categoriesWithSubcategories = appViewModel.categoriesWithSubcategories.value
 
         val uiState = MakeRecordUiState(
@@ -333,7 +334,7 @@ class WalletGlanceInstrumentedTest {
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -343,7 +344,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = categoriesWithSubcategories.expense.first().category.id,
                 subcategoryId = null,
-                note = null
+                note = null,
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -356,7 +358,7 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveRecord(viewModel.uiState.value, viewModel.recordUnitList.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
                 expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
@@ -366,17 +368,16 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
-                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
-                        .getRangePair(),
+            RecentRecordsWidget(
+                recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -420,7 +421,7 @@ class WalletGlanceInstrumentedTest {
         appViewModel.saveRecord(viewModel.uiState.value, viewModel.recordUnitList.value)
 
         coVerify(exactly = 0) {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(any(), any())
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())
         }
 
     }
@@ -435,7 +436,7 @@ class WalletGlanceInstrumentedTest {
             dateLong = calendar.toLongWithTime(),
             dateFormatted = calendar.getFormattedDateWithTime()
         )
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
 
         val uiState = MakeTransferUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -445,16 +446,16 @@ class WalletGlanceInstrumentedTest {
             toAccount = accountsUiState.accountList[1],
             startAmount = "100",
             finalAmount = "200",
-            idFrom = 0,
-            idTo = 0
+            recordIdFrom = 0,
+            recordIdTo = 0
         )
-        val viewModel = MakeTransferViewModel(
+        val viewModel = TransferCreationViewModel(
             accountList = accountsUiState.accountList,
             makeTransferUiState = uiState
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -464,9 +465,10 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[1].id.toString()
+                note = accountsUiState.accountList[1].id.toString(),
+                includeInBudgets = true
             ),
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 2,
                 date = dateTimeState.dateLong,
@@ -476,7 +478,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[0].id.toString()
+                note = accountsUiState.accountList[0].id.toString(),
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -488,10 +491,10 @@ class WalletGlanceInstrumentedTest {
             }
         )
 
-        appViewModel.saveTransfer(viewModel.uiState.value)
+        appViewModel.saveTransfer(viewModel.transferDraft.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
                 expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
@@ -501,17 +504,16 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
-                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
-                        .getRangePair(),
+            RecentRecordsWidget(
+                recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -535,7 +537,7 @@ class WalletGlanceInstrumentedTest {
             dateLong = calendar.toLongWithTime(),
             dateFormatted = calendar.getFormattedDateWithTime()
         )
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
 
         val uiState = MakeTransferUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -545,16 +547,16 @@ class WalletGlanceInstrumentedTest {
             toAccount = accountsUiState.accountList[1],
             startAmount = "100",
             finalAmount = "200",
-            idFrom = 0,
-            idTo = 0
+            recordIdFrom = 0,
+            recordIdTo = 0
         )
-        val viewModel = MakeTransferViewModel(
+        val viewModel = TransferCreationViewModel(
             accountList = accountsUiState.accountList,
             makeTransferUiState = uiState
         )
 
         val expectedRecordList = listOf(
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 1,
                 date = dateTimeState.dateLong,
@@ -564,9 +566,10 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[1].id.toString()
+                note = accountsUiState.accountList[1].id.toString(),
+                includeInBudgets = true
             ),
-            Record(
+            RecordEntity(
                 id = 0,
                 recordNum = 2,
                 date = dateTimeState.dateLong,
@@ -576,7 +579,8 @@ class WalletGlanceInstrumentedTest {
                 quantity = null,
                 categoryId = 0,
                 subcategoryId = null,
-                note = accountsUiState.accountList[0].id.toString()
+                note = accountsUiState.accountList[0].id.toString(),
+                includeInBudgets = true
             )
         )
         val expectedAccountList = listOf(
@@ -588,10 +592,10 @@ class WalletGlanceInstrumentedTest {
             }
         )
 
-        appViewModel.saveTransfer(viewModel.uiState.value)
+        appViewModel.saveTransfer(viewModel.transferDraft.value)
 
         coVerify {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(
                 expectedRecordList, expectedAccountList.toAccountEntityList()
             )
         }
@@ -601,17 +605,16 @@ class WalletGlanceInstrumentedTest {
         }
 
         appViewModel.fetchRecordsFromDbInDateRange(
-            appViewModel.dateRangeMenuUiState.value.dateRangeState
+            appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
         composeTestRule.setContent {
-            RecordHistoryWidget(
-                recordStackList = appViewModel.recordStackList.value.filterByDateAndAccount(
-                    dateRangeFromAndTo = appViewModel.dateRangeMenuUiState.value.dateRangeState
-                        .getRangePair(),
+            RecentRecordsWidget(
+                recordStackList = appViewModel.recordStackListFilteredByDate.value.filterAccountId(
+                    dateRange = appViewModel.dateRangeMenuUiState.value.getLongDateRange(),
                     activeAccount = accountsUiState.activeAccount
                 ),
-                accountList = appViewModel.accountsUiState.value.accountList,
+                accountList = appViewModel.accountsAndActiveOne.value.accountList,
                 appTheme = appViewModel.appUiSettings.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
@@ -629,7 +632,7 @@ class WalletGlanceInstrumentedTest {
     fun makingTransferProcess_Negative_NotPerformed() = runTest {
 
         val dateTimeState = DateTimeState()
-        val accountsUiState = appViewModel.accountsUiState.value
+        val accountsUiState = appViewModel.accountsAndActiveOne.value
 
         val uiState = MakeTransferUiState(
             recordStatus = MakeRecordStatus.Create,
@@ -639,18 +642,18 @@ class WalletGlanceInstrumentedTest {
             toAccount = null,
             startAmount = "100",
             finalAmount = "200",
-            idFrom = 0,
-            idTo = 0
+            recordIdFrom = 0,
+            recordIdTo = 0
         )
-        val viewModel = MakeTransferViewModel(
+        val viewModel = TransferCreationViewModel(
             accountList = accountsUiState.accountList,
             makeTransferUiState = uiState
         )
 
-        appViewModel.saveTransfer(viewModel.uiState.value)
+        appViewModel.saveTransfer(viewModel.transferDraft.value)
 
         coVerify(exactly = 0) {
-            mockRecordAndAccountRepository.upsertRecordsAndUpdateAccounts(any(), any())
+            mockRecordAndAccountRepository.upsertRecordsAndUpsertAccounts(any(), any())
         }
 
     }

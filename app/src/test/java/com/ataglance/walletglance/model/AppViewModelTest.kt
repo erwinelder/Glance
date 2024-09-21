@@ -1,22 +1,21 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.data.accounts.Account
-import com.ataglance.walletglance.data.categories.color.CategoryColors
-import com.ataglance.walletglance.data.makingRecord.MadeTransferState
-import com.ataglance.walletglance.data.makingRecord.MakeRecordStatus
-import com.ataglance.walletglance.data.records.RecordStack
-import com.ataglance.walletglance.data.records.RecordStackUnit
-import com.ataglance.walletglance.data.records.RecordType
-import com.ataglance.walletglance.data.utils.fixOrderNumbers
-import com.ataglance.walletglance.domain.entities.CategoryEntity
-import com.ataglance.walletglance.domain.repositories.AccountRepository
-import com.ataglance.walletglance.domain.repositories.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.domain.repositories.CategoryRepository
-import com.ataglance.walletglance.domain.repositories.GeneralRepository
-import com.ataglance.walletglance.domain.repositories.RecordAndAccountRepository
-import com.ataglance.walletglance.domain.repositories.RecordRepository
-import com.ataglance.walletglance.domain.repositories.SettingsRepository
-import com.ataglance.walletglance.ui.viewmodels.AppViewModel
+import com.ataglance.walletglance.account.data.repository.AccountRepository
+import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.repository.CategoryRepository
+import com.ataglance.walletglance.category.domain.color.CategoryColors
+import com.ataglance.walletglance.category.utils.fixOrderNumbers
+import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
+import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.record.data.repository.RecordRepository
+import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.RecordStackItem
+import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,12 +34,14 @@ class AppViewModelTest {
             settingsRepository = Mockito.mock(SettingsRepository::class.java),
             accountRepository = Mockito.mock(AccountRepository::class.java),
             categoryRepository = Mockito.mock(CategoryRepository::class.java),
-            categoryCollectionAndCollectionCategoryAssociationRepository =
-                Mockito.mock(
-                    CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
-                ),
+            categoryCollectionAndCollectionCategoryAssociationRepository = Mockito.mock(
+                CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
+            ),
             recordRepository = Mockito.mock(RecordRepository::class.java),
             recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
+            budgetAndBudgetAccountAssociationRepository = Mockito.mock(
+                BudgetAndBudgetAccountAssociationRepository::class.java
+            ),
             generalRepository = Mockito.mock(GeneralRepository::class.java)
         )
     }
@@ -64,8 +65,8 @@ class AppViewModelTest {
         finalAmount: Double,
     ): MadeTransferState {
         return MadeTransferState(
-            idFrom = fromAccount.id,
-            idTo = toAccount.id,
+            recordIdFrom = fromAccount.id,
+            recordIdTo = toAccount.id,
             recordStatus = MakeRecordStatus.Edit,
             fromAccount = fromAccount,
             toAccount = toAccount,
@@ -89,12 +90,13 @@ class AppViewModelTest {
                 account = fromAccount.toRecordAccount(),
                 totalAmount = startAmount,
                 stack = listOf(
-                    RecordStackUnit(
+                    RecordStackItem(
                         id = 1,
                         amount = startAmount,
                         quantity = null,
                         categoryWithSubcategory = null,
-                        note = null
+                        note = null,
+                        includeInBudgets = true
                     )
                 )
             ),
@@ -105,12 +107,13 @@ class AppViewModelTest {
                 account = toAccount.toRecordAccount(),
                 totalAmount = finalAmount,
                 stack = listOf(
-                    RecordStackUnit(
+                    RecordStackItem(
                         id = 2,
                         amount = finalAmount,
                         quantity = null,
                         categoryWithSubcategory = null,
-                        note = null
+                        note = null,
+                        includeInBudgets = true
                     )
                 )
             )
@@ -278,18 +281,18 @@ class AppViewModelTest {
     fun testFixCategoriesOrderNumbers() {
         val currentCategoryList = listOf(
             CategoryEntity(
-                id = 1, type = '-', orderNum = 1, parentCategoryId = 1,
+                id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 2, type = '-', orderNum = 1, parentCategoryId = 2,
+                id = 2, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 2", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
 
             CategoryEntity(
-                id = 13, type = '-', orderNum = 1, parentCategoryId = 1,
+                id = 13, type = '-', orderNum = 3, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
@@ -314,30 +317,32 @@ class AppViewModelTest {
                 name = "subcategory 23", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
+
             CategoryEntity(
-                id = 18, type = '-', orderNum = 4, parentCategoryId = 2,
-                name = "subcategory 24", iconName = "",
+                id = 3, type = '+', orderNum = 1, parentCategoryId = null,
+                name = "category 3", iconName = "",
+                colorName = CategoryColors.Camel.name.name
+            ),
+
+            CategoryEntity(
+                id = 31, type = '+', orderNum = 4, parentCategoryId = 3,
+                name = "category 31", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 19, type = '-', orderNum = 5, parentCategoryId = 2,
-                name = "subcategory 25", iconName = "",
+                id = 32, type = '+', orderNum = 4, parentCategoryId = 3,
+                name = "category 32", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
-            CategoryEntity(
-                id = 20, type = '-', orderNum = 6, parentCategoryId = 2,
-                name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel.name.name
-            )
         )
         val expectedCategoryList = listOf(
             CategoryEntity(
-                id = 1, type = '-', orderNum = 1, parentCategoryId = 1,
+                id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
                 colorName = CategoryColors.Olive.name.name
             ),
             CategoryEntity(
-                id = 2, type = '-', orderNum = 2, parentCategoryId = 2,
+                id = 2, type = '-', orderNum = 2, parentCategoryId = null,
                 name = "category 2", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
@@ -368,25 +373,29 @@ class AppViewModelTest {
                 name = "subcategory 23", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
+
             CategoryEntity(
-                id = 18, type = '-', orderNum = 4, parentCategoryId = 2,
-                name = "subcategory 24", iconName = "",
+                id = 3, type = '+', orderNum = 1, parentCategoryId = null,
+                name = "category 3", iconName = "",
+                colorName = CategoryColors.Camel.name.name
+            ),
+
+            CategoryEntity(
+                id = 31, type = '+', orderNum = 1, parentCategoryId = 3,
+                name = "category 31", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
             CategoryEntity(
-                id = 19, type = '-', orderNum = 5, parentCategoryId = 2,
-                name = "subcategory 25", iconName = "",
+                id = 32, type = '+', orderNum = 2, parentCategoryId = 3,
+                name = "category 32", iconName = "",
                 colorName = CategoryColors.Camel.name.name
             ),
-            CategoryEntity(
-                id = 20, type = '-', orderNum = 6, parentCategoryId = 2,
-                name = "subcategory 26", iconName = "",
-                colorName = CategoryColors.Camel.name.name
-            )
         )
+
+        val fixedCategoryList = currentCategoryList.fixOrderNumbers()
         Assertions.assertArrayEquals(
-            expectedCategoryList.toTypedArray(),
-            currentCategoryList.fixOrderNumbers().toTypedArray()
+            expectedCategoryList.sortedBy { it.id }.toTypedArray(),
+            fixedCategoryList.sortedBy { it.id }.toTypedArray()
         )
     }
 

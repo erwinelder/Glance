@@ -1,12 +1,21 @@
 <resources>
-    <string name="app_name">WalletGlance</string>
+    <string name="app_name">Glance</string>
 
     <!-- navigation bar buttons -->
     <string name="home">Domů</string>
+    <string name="records">Záznamy</string>
+    <string name="statistics">Statistiky</string>
     <string name="settings">Nastavení</string>
     <string name="setup">Nastavování</string>
 
+    <!-- Widget names -->
+    <string name="total_for_period">Celková částka za vybrané období</string>
+    <string name="recent_records">Nedávné záznamy</string>
+    <string name="top_expense_categories">Nejvyšší výdaje podle kategorií</string>
+    <string name="chosen_budgets">Vybrané rozpočty</string>
+
     <!-- Buttons -->
+    <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
     <string name="apply">Použít</string>
     <string name="confirm">Potvrdit</string>
@@ -23,6 +32,7 @@
     <string name="add_category">Přidat kategorii</string>
     <string name="add_subcategory">Přidat podkategorii</string>
     <string name="add_collection">Přidat kolekci</string>
+    <string name="add_budget">Přidat rozpočet</string>
     <string name="save_record">Uložit záznam</string>
     <string name="make_transfer">Udělat převod</string>
     <string name="repeat">Zopakovat</string>
@@ -33,12 +43,18 @@
     <string name="recent">Nedávné</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="preferences">Předvolby</string>
+    <string name="include_in_budgets">Zahrnout do rozpočtů</string>
 
     <!-- Settings categories -->
     <string name="accounts">Účty</string>
+    <string name="budgets">Rozpočty</string>
     <string name="categories">Kategorie</string>
     <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
+    <string name="color_theme">Barevný motiv</string>
+    <string name="navigation_buttons">Navigační tlačítka</string>
+    <string name="widgets">Widgety</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
 
@@ -47,13 +63,12 @@
     <string name="finish">Dokončit</string>
     <string name="_import">Import</string>
     <string name="import_data">Importovat data</string>
-    <string name="export_data">Exportovat data</string>
     <string name="start_setup">Začít nastavení</string>
 
     <!-- Fields -->
     <string name="use_device_theme">Použít téma zařízení</string>
     <string name="color">Barva</string>
-    <string name="name">Jméno</string>
+    <string name="name">Název</string>
     <string name="currency">Měna</string>
     <string name="balance">Zůstatek</string>
     <string name="hide_from_top_bar">Skrýt z horního panelu</string>
@@ -72,6 +87,13 @@
     <string name="rate">Kurz</string>
     <string name="quantity">Množství</string>
     <string name="quantity_placeholder">Bez množství</string>
+    <string name="account_name">Název účtu</string>
+    <string name="budget_name">Název rozpočtu</string>
+    <string name="category_name">Název kategorie</string>
+    <string name="collection_name">Název kolekce</string>
+    <string name="limit">Limit</string>
+    <string name="budget_limit">Rozpočtový limit</string>
+    <string name="repeating_period">Opakovaný interval</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
@@ -85,6 +107,13 @@
     <string name="from_account_meaning">z</string>
     <string name="to_account_meaning">na</string>
     <string name="total">Celkem:</string>
+    <string name="spending_in_recent_days_with_currency">Výdaje za posledních několik dní (%s)</string>
+    <string name="spending_in_recent_weeks_with_currency">Výdaje za posledních několik týdnů (%s)</string>
+    <string name="spending_in_recent_months_with_currency">Výdaje za posledních několik měsíců (%s)</string>
+    <string name="spending_in_recent_years_with_currency">Výdaje za posledních několik let (%s)</string>
+    <string name="amount_currency_spending_limit">Limit výdajů %s %s</string>
+    <string name="of_limit_used">limitu využito</string>
+    <string name="you_have_not_chosen_any_budgets">Nevybrali jste žádné rozpočty k zobrazení</string>
 
     <!-- Date ranges -->
     <string name="this_week">Tento týden</string>
@@ -115,6 +144,10 @@
     <string name="november_full">Listopad</string>
     <string name="december_short">Pros</string>
     <string name="december_full">Prosinec</string>
+    <string name="daily">Denně</string>
+    <string name="weekly">Týdně</string>
+    <string name="monthly">Měsíčně</string>
+    <string name="yearly">Ročně</string>
 
     <!-- Other -->
     <string name="hello">Ahoj</string>
@@ -126,18 +159,15 @@
     <string name="income_plural">Příjmy</string>
     <string name="mixed">Smíšené</string>
     <string name="transfer">Převod</string>
-    <string name="account_name">Název účtu</string>
-    <string name="category_name">Název kategorie</string>
-    <string name="collection_name">Název kolekce</string>
     <string name="all_categories">Všechny kategorie</string>
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
     <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
     <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>
-    <string name="export_data_description">Exportovat data aplikace do souboru.</string>
     <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období</string>
     <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>
     <string name="no_data_for_the_selected_filter">Žádná data pro vybraný filtr</string>
+    <string name="you_have_no_budgets_yet">Ještě nemáte žádné rozpočty</string>
 
 
 

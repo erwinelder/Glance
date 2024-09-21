@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".WalletGlanceApplication"
+        android:name=".GlanceApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,7 +16,7 @@
         android:windowSoftInputMode="adjustResize"
         tools:targetApi="34">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".core.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>

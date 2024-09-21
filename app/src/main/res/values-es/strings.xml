@@ -1,13 +1,22 @@
 <resources>
 
-    <string name="app_name">WalletGlance</string>
+    <string name="app_name">Glance</string>
 
     <!-- navigation bar buttons -->
     <string name="home">Inicio</string>
+    <string name="records">Registros</string>
+    <string name="statistics">Estadísticas</string>
     <string name="settings">Ajustes</string>
     <string name="setup">Configuración</string>
 
+    <!-- Widget names -->
+    <string name="total_for_period">Monto total para el período seleccionado</string>
+    <string name="recent_records">Registros recientes</string>
+    <string name="top_expense_categories">Categorías de gastos más altos</string>
+    <string name="chosen_budgets">Presupuestos elegidos</string>
+
     <!-- Buttons -->
+    <string name="create">Crear</string>
     <string name="save">Guardar</string>
     <string name="apply">Aplicar</string>
     <string name="confirm">Confirmar</string>
@@ -24,6 +33,7 @@
     <string name="add_category">Agregar categoría</string>
     <string name="add_subcategory">Agregar subcategoría</string>
     <string name="add_collection">Agregar colección</string>
+    <string name="add_budget">Agregar presupuesto</string>
     <string name="save_record">Guardar registro</string>
     <string name="make_transfer">Hacer transferencia</string>
     <string name="repeat">Repetir</string>
@@ -34,12 +44,18 @@
     <string name="recent">Recientes</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="preferences">Preferencias</string>
+    <string name="include_in_budgets">Incluir en presupuestos</string>
 
     <!-- Settings categories -->
     <string name="accounts">Cuentas</string>
+    <string name="budgets">Presupuestos</string>
     <string name="categories">Categorías</string>
     <string name="category_collections">Colecciones de categorías</string>
     <string name="appearance">Apariencia</string>
+    <string name="color_theme">Tema de color</string>
+    <string name="navigation_buttons">Botones de navegación</string>
+    <string name="widgets">Widgets</string>
     <string name="language">Idioma</string>
     <string name="reset_data">Restablecer datos</string>
 
@@ -48,7 +64,6 @@
     <string name="finish">Finalizar</string>
     <string name="_import">Importar</string>
     <string name="import_data">Importar datos</string>
-    <string name="export_data">Exportar datos</string>
     <string name="start_setup">Iniciar configuración</string>
 
     <!-- Fields -->
@@ -73,6 +88,13 @@
     <string name="rate">Tasa</string>
     <string name="quantity">Cantidad</string>
     <string name="quantity_placeholder">Sin cantidad</string>
+    <string name="account_name">Nombre de la cuenta</string>
+    <string name="budget_name">Nombre del presupuesto</string>
+    <string name="category_name">Nombre de la categoría</string>
+    <string name="collection_name">Nombre de la colección</string>
+    <string name="limit">Limite</string>
+    <string name="budget_limit">Límite del presupuesto</string>
+    <string name="repeating_period">Período repetitivo</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>
@@ -86,6 +108,13 @@
     <string name="from_account_meaning">de</string>
     <string name="to_account_meaning">a</string>
     <string name="total">Total:</string>
+    <string name="spending_in_recent_days_with_currency">Gastos en los últimos días (%s)</string>
+    <string name="spending_in_recent_weeks_with_currency">Gastos en las últimas semanas (%s)</string>
+    <string name="spending_in_recent_months_with_currency">Gastos en los últimos meses (%s)</string>
+    <string name="spending_in_recent_years_with_currency">Gastos en los últimos años (%s)</string>
+    <string name="amount_currency_spending_limit">Límite de gasto de %s %s</string>
+    <string name="of_limit_used">del límite utilizado</string>
+    <string name="you_have_not_chosen_any_budgets">No has seleccionado ningún presupuesto para mostrar</string>
 
     <!-- Date ranges -->
     <string name="this_week">Esta semana</string>
@@ -116,6 +145,10 @@
     <string name="november_full">noviembre</string>
     <string name="december_short">Dic</string>
     <string name="december_full">diciembre</string>
+    <string name="daily">Diario</string>
+    <string name="weekly">Semanal</string>
+    <string name="monthly">Mensual</string>
+    <string name="yearly">Anual</string>
 
     <!-- Other -->
     <string name="hello">Hola</string>
@@ -127,18 +160,15 @@
     <string name="income_plural">Ingresos</string>
     <string name="mixed">Mixto</string>
     <string name="transfer">Transferencia</string>
-    <string name="account_name">Nombre de la cuenta</string>
-    <string name="category_name">Nombre de la categoría</string>
-    <string name="collection_name">Nombre de la colección</string>
     <string name="all_categories">Todas las categorías</string>
     <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
     <string name="reset_data_description">Restablecer todos los datos de la aplicación, incluidas las cuentas, los registros, las categorías y la configuración.</string>
     <string name="reset_data_warning">¿Está seguro de que desea restablecer todos sus datos?</string>
-    <string name="export_data_description">Exportar datos de la aplicación a un archivo.</string>
     <string name="you_have_no_records_in_date_range">No hay registros en este período</string>
     <string name="you_have_no_expenses_in_date_range">No tienes gastos en este período</string>
     <string name="you_have_no_income_in_date_range">No tienes ingresos en este período</string>
     <string name="no_data_for_the_selected_filter">No hay datos para el filtro seleccionado</string>
+    <string name="you_have_no_budgets_yet">Aún no tienes presupuestos</string>
 
 
 

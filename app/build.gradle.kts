@@ -15,8 +15,8 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = 28
         targetSdk = 34
-        versionCode = 49
-        versionName = "2.1"
+        versionCode = 61
+        versionName = "3.0"
         resourceConfigurations += arrayOf("en", "cs", "de", "ru", "es", "uk")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.animation)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -105,8 +106,8 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.junit.ktx)
-    testImplementation(libs.jupiter.junit.jupiter)
-    androidTestImplementation(libs.jupiter.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.jupiter)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
