@@ -30,12 +30,13 @@ fun EditingSubcategoryComponent(
     onUpButtonClick: () -> Unit,
     upButtonEnabled: Boolean,
     onDownButtonClick: () -> Unit,
-    downButtonEnabled: Boolean
+    downButtonEnabled: Boolean,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(11.dp),
-        modifier = Modifier
+        modifier = modifier
             .bounceClickEffect(.98f)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
             .background(

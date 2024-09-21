@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.category.presentation.screen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -9,7 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -72,23 +71,18 @@ private fun GlassSurfaceContent(
     onNavigateToEditCategoryScreen: (Category) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
-    AnimatedContent(
-        targetState = subcategoryList,
-        label = "subcategory list uploading"
-    ) { targetSubcategoryList ->
-        if (!WindowTypeIsExpanded) {
-            CompactLayout(
-                subcategoryList = targetSubcategoryList,
-                onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
-                onSwapCategories = onSwapCategories
-            )
-        } else {
-            ExpandedLayout(
-                subcategoryList = targetSubcategoryList,
-                onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
-                onSwapCategories = onSwapCategories
-            )
-        }
+    if (!WindowTypeIsExpanded) {
+        CompactLayout(
+            subcategoryList = subcategoryList,
+            onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
+            onSwapCategories = onSwapCategories
+        )
+    } else {
+        ExpandedLayout(
+            subcategoryList = subcategoryList,
+            onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
+            onSwapCategories = onSwapCategories
+        )
     }
 }
 
@@ -109,20 +103,21 @@ private fun CompactLayout(
             .fillMaxWidth()
             .padding(2.dp)
     ) {
-        items(items = subcategoryList, key = { it.id }) { category ->
+        itemsIndexed(items = subcategoryList, key = { _, item -> item.id }) { index, category ->
             EditingSubcategoryComponent(
                 category = category,
                 onEditButton = {
                     onNavigateToEditCategoryScreen(category)
                 },
                 onUpButtonClick = {
-                    onSwapCategories(category.orderNum, category.orderNum - 1)
+                    onSwapCategories(index, index - 1)
                 },
-                upButtonEnabled = category.orderNum > 1,
+                upButtonEnabled = index > 0,
                 onDownButtonClick = {
-                    onSwapCategories(category.orderNum, category.orderNum + 1)
+                    onSwapCategories(index, index + 1)
                 },
-                downButtonEnabled = category.orderNum < subcategoryList.size,
+                downButtonEnabled = index < subcategoryList.lastIndex,
+                modifier = Modifier.animateItem()
             )
         }
     }
@@ -142,23 +137,23 @@ private fun ExpandedLayout(
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxWidth()
-            .padding(9.dp)
+            .padding(8.dp)
     ) {
-        subcategoryList.forEach { category ->
-            Box(modifier = Modifier.padding(9.dp)) {
+        subcategoryList.forEachIndexed { index, category ->
+            Box(modifier = Modifier.padding(8.dp)) {
                 EditingSubcategoryComponent(
                     category = category,
                     onEditButton = {
                         onNavigateToEditCategoryScreen(category)
                     },
                     onUpButtonClick = {
-                        onSwapCategories(category.orderNum, category.orderNum - 1)
+                        onSwapCategories(index, index - 1)
                     },
-                    upButtonEnabled = category.orderNum > 1,
+                    upButtonEnabled = index > 0,
                     onDownButtonClick = {
-                        onSwapCategories(category.orderNum, category.orderNum + 1)
+                        onSwapCategories(index, index + 1)
                     },
-                    downButtonEnabled = category.orderNum < subcategoryList.size,
+                    downButtonEnabled = index < subcategoryList.lastIndex,
                 )
             }
         }
