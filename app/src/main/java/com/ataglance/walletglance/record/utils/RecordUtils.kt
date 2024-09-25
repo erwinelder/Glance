@@ -124,7 +124,9 @@ fun List<RecordStack>.getFirstByTypeAndAccountIdOrJustType(
 
 
 fun List<RecordStack>.shrinkForCompactView(): List<RecordStack> {
-    return this.map { it.shrinkForCompactView() }
+    return this.map {
+        if (it.isExpenseOrIncome()) it.shrinkForCompactView() else it
+    }
 }
 
 fun RecordStack.shrinkForCompactView(): RecordStack {
