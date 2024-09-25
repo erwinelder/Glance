@@ -24,11 +24,11 @@ Create budgets for a specific period and a category and choose which accounts to
 • Personalization
 Choose which widgets to display and in what order on the app's home screen. Reorder navigation buttons in the app's bottom bar to match your preferences. Select static light or dark theme, or turn on automatic theme switching depending on your system.
 
-![App screenshot 1](https://play-lh.googleusercontent.com/mW0zqs2MyHx70eau-_46_z5UXFwz_CJH81RDEexRcXL_NNG92NYZvieN9-Wir96oyJE=w1052-h592)
-![App screenshot 2](https://play-lh.googleusercontent.com/Jhe5rYWInIYejoJD2pNQqRd4rsYBphjwCWmGGDGqYJ0eE_QvbFKK3HiYOMtUBGtfYGo=w1052-h592)
-![App screenshot 3](https://play-lh.googleusercontent.com/OT36msaOuT5iBdD8Rf7lLySsLQ3s8QhLMAXypmpNgDKFwYpLnhafgGyS3gFR5AKJjz0=w1052-h592)
-![App screenshot 4](https://play-lh.googleusercontent.com/EF76-bW-eDmxqwxBcaxLmBzdNkft8G_VnrtjU8NRX3YV5hdUksIipRIt-BvGJG7K-g=w1052-h592)
-![App screenshot 5](https://play-lh.googleusercontent.com/_N27nnfdEIqHZ9c-Wa5RK83fX-Njg0EtwFnFJPwVlU231RWsNuI9lNfp-kIyj3vJeho=w1052-h592)
-![App screenshot 6](https://play-lh.googleusercontent.com/uEHPdUNeD15QmrRtolBH4L7D_C6xbo4ZZJIUbeyw8dOoxGLttfk0fOGk2yNrrD5hRao=w1052-h592)
-![App screenshot 7](https://play-lh.googleusercontent.com/Wvkd_20heYwxEgK6WyvZs99L0Ag4RA9WQ6NZ1BLtryxERMWrSuRHCO_cAq8Ve5vn8w=w1052-h592)
-![App screenshot 8](https://play-lh.googleusercontent.com/EcF3NjnKnCz7CoV8uapwRv26sdy3voVJvNjL_6tiiPNuHXf2kz2r3ENTGx4_tshn1g=w1052-h592)
+![App screenshot 1](https://play-lh.googleusercontent.com/M56kduFqdULrHcc1Uwl0bZNFCtrimT98B1ZZvj9RzpJX5Ug5ESpx7hDf_LOhjodQMeI=w1052-h592)
+![App screenshot 2](https://play-lh.googleusercontent.com/kfZZxfabdeoAzcBY7tAXeX6njS6Nk5oCnOKK4aHF0W9OIPokOuUhGWdqzQvHf5MJ4tE=w1052-h592)
+![App screenshot 3](https://play-lh.googleusercontent.com/vGuohJUbqSb-ut8Jv6sqWJtMb3asCLGnFYqioHlj6mSdxXzZWg7EUv8nyVjCZ-9OAdo=w1052-h592)
+![App screenshot 4](https://play-lh.googleusercontent.com/B-2xv8AZGflhqvjw9O470ikd-vcor8M5K5FBgnqXt5_QdwxXC_z8DwnNgt1FBdzjyuI=w1052-h592)
+![App screenshot 5](https://play-lh.googleusercontent.com/jX1gaAoARYhuTctadFYvNl4NlgDsmDcSRy5cCLv22AlNItSbvzrxzWEQfXHHxXayvKc=w1052-h592)
+![App screenshot 6](https://play-lh.googleusercontent.com/7OkcaM3ec8LFXk9IMU9SMaf3gzmCQnJSpY0XRx7CRjqGTrjb3_j3ht5aro6vM9yBgiS8=w1052-h592)
+![App screenshot 7](https://play-lh.googleusercontent.com/YT326sfMPDt0MT0MOtLn4DTQkQSpls_FiFyHBpQsIHG7r4x-vZmlEpx08FK6frzm-lwB=w1052-h592)
+![App screenshot 8](https://play-lh.googleusercontent.com/417MLWOyEt6cK4SpwdvLmR0bwkEK_1NZIwrvATlXTTQbbiCq02MjqzNbdWuRjWjP1G8=w1052-h592)
