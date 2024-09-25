@@ -253,7 +253,7 @@ fun HomeScreenPreview(
             recordNum = 1,
             date = getTodayDateLong(),
             type = RecordType.Expense,
-            account = Account().toRecordAccount(),
+            account = accountsAndActiveOne.accountList[0].toRecordAccount(),
             totalAmount = 42.43,
             stack = listOf(
                 RecordStackItem(
@@ -266,7 +266,25 @@ fun HomeScreenPreview(
                     includeInBudgets = true
                 )
             )
-        )
+        ),
+        RecordStack(
+            recordNum = 2,
+            date = getTodayDateLong(),
+            type = RecordType.OutTransfer,
+            account = accountsAndActiveOne.accountList[0].toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSubcategory = categoriesWithSubcategories
+                        .expense[0].getWithFirstSubcategory(),
+                    note = accountsAndActiveOne.accountList[1].id.toString(),
+                    includeInBudgets = true
+                )
+            )
+        ),
     ),
     budgetsOnWidget: List<Budget> = listOf(
         Budget(
