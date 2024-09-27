@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
+import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
@@ -231,10 +233,34 @@ fun HomeScreenPreview(
     ).getDefaultCategories(),
     accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
         accountList = listOf(
-            Account(id = 1, orderNum = 1, isActive = true),
-            Account(id = 2, orderNum = 2, isActive = false)
+            Account(
+                id = 1,
+                orderNum = 1,
+                name = "Main Card CZK",
+                currency = "CZK",
+                balance = 43551.63,
+                color = AccountPossibleColors().pink.toAccountColorWithName(),
+                isActive = true
+            ),
+            Account(
+                id = 2,
+                orderNum = 2,
+                name = "USD Card",
+                currency = "USD",
+                balance = 1516.41,
+                color = AccountPossibleColors().blue.toAccountColorWithName(),
+                isActive = false
+            )
         ),
-        activeAccount = Account(id = 1, orderNum = 1, isActive = true)
+        activeAccount = Account(
+            id = 1,
+            orderNum = 1,
+            name = "Main Card CZK",
+            currency = "CZK",
+            balance = 43551.63,
+            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            isActive = true
+        )
     ),
     dateRangeMenuUiState: DateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState(),
     isCustomDateRangeWindowOpened: Boolean = false,
@@ -290,9 +316,9 @@ fun HomeScreenPreview(
         Budget(
             id = 1,
             priorityNum = 1.0,
-            amountLimit = 2000.0,
-            usedAmount = 1250.0,
-            usedPercentage = 62.5f,
+            amountLimit = 4000.0,
+            usedAmount = 2250.0,
+            usedPercentage = 56.25f,
             category = categoriesWithSubcategories.expense[0].category,
             name = categoriesWithSubcategories.expense[0].category.name,
             repeatingPeriod = RepeatingPeriod.Monthly,
