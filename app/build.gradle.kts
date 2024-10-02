@@ -117,6 +117,7 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
 
     // SplashScreen
     implementation(libs.androidx.core.splashscreen)
