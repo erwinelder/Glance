@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
     private lateinit var personalizationViewModel: PersonalizationViewModel
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         initializeAppViewModel()
         initializeNavViewModel()
         initializePersonalizationViewModel()
+        initializeAuthViewModel()
 
         setupSplashScreen()
 
@@ -36,7 +39,8 @@ class MainActivity : AppCompatActivity() {
                 WalletGlanceAppComponent(
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
-                    personalizationViewModel = personalizationViewModel
+                    personalizationViewModel = personalizationViewModel,
+                    authViewModel = authViewModel
                 )
             }
         }
@@ -55,6 +59,10 @@ class MainActivity : AppCompatActivity() {
     private fun initializePersonalizationViewModel() {
         personalizationViewModel = app.personalizationViewModel
         personalizationViewModel.fetchDataOnStart()
+    }
+
+    private fun initializeAuthViewModel() {
+        authViewModel = app.authViewModel
     }
 
     private fun setupSplashScreen() {

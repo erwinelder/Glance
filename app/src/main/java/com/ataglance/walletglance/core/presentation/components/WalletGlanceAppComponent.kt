@@ -28,15 +28,17 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WalletGlanceAppComponent(
     appViewModel: AppViewModel,
     navViewModel: NavigationViewModel,
-    personalizationViewModel: PersonalizationViewModel
+    personalizationViewModel: PersonalizationViewModel,
+    authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
     val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()

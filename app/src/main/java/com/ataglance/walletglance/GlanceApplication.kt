@@ -16,6 +16,7 @@ import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
@@ -23,6 +24,7 @@ import com.ataglance.walletglance.personalization.data.repository.WidgetReposito
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -38,6 +40,7 @@ class GlanceApplication : Application() {
     lateinit var appViewModel: AppViewModel
     lateinit var navViewModel: NavigationViewModel
     lateinit var personalizationViewModel: PersonalizationViewModel
+    lateinit var authViewModel: AuthViewModel
 
     override fun onCreate() {
         super.onCreate()
@@ -47,6 +50,7 @@ class GlanceApplication : Application() {
         initializeAppViewModel()
         initializeNavViewModel()
         initializePersonalizationViewModel()
+        initializeAuthViewModel()
 
         applyAppLanguage()
         updateSetupStageIfNeeded()
@@ -115,6 +119,11 @@ class GlanceApplication : Application() {
             widgetRepository = widgetRepository,
             budgetOnWidgetRepository = budgetOnWidgetRepository
         )
+    }
+
+    private fun initializeAuthViewModel() {
+        val auth: FirebaseAuth = FirebaseAuth.getInstance()
+        authViewModel = AuthViewModel(auth = auth)
     }
 
 
