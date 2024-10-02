@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.viewmodel
+package com.ataglance.walletglance.auth.presentation.viewmodel
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
