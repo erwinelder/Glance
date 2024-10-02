@@ -16,6 +16,8 @@
     <string name="chosen_budgets">Chosen budgets</string>
 
     <!-- Buttons -->
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>

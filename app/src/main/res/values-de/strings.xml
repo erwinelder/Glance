@@ -15,6 +15,8 @@
     <string name="chosen_budgets">Ausgewählte Budgets</string>
 
     <!-- Buttons -->
+    <string name="sign_in">Anmelden</string>
+    <string name="sign_up">Registrieren</string>
     <string name="create">Erstellen</string>
     <string name="save">Speichern</string>
     <string name="apply">Anwenden</string>

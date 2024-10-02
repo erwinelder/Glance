@@ -15,6 +15,8 @@
     <string name="chosen_budgets">Выбранные бюджеты</string>
 
     <!-- Buttons -->
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
     <string name="create">Создать</string>
     <string name="save">Сохранить</string>
     <string name="apply">Применить</string>
