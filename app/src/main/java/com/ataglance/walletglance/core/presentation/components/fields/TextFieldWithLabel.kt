@@ -10,8 +10,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TextFieldWithLabel(
     text: String,
-    placeholderText: String = "",
     onValueChange: (String) -> Unit,
+    placeholderText: String = "",
     isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     fontSize: TextUnit = 22.sp,
