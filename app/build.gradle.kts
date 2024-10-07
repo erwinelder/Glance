@@ -119,6 +119,9 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
 
+    // Billing
+    implementation(libs.google.billing)
+
     // SplashScreen
     implementation(libs.androidx.core.splashscreen)
 

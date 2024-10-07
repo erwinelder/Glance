@@ -7,6 +7,7 @@ androidxUi = "1.7.2"
 appcompat = "1.7.0"
 appUpdate = "2.1.0"
 assetDelivery = "2.2.2"
+billing = "7.1.1"
 composeBom = "2024.09.02"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
@@ -68,6 +69,7 @@ app-update = { module = "com.google.android.play:app-update", version.ref = "app
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdate" }
 asset-delivery = { module = "com.google.android.play:asset-delivery", version.ref = "assetDelivery" }
 asset-delivery-ktx = { module = "com.google.android.play:asset-delivery-ktx", version.ref = "assetDelivery" }
+google-billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 feature-delivery = { module = "com.google.android.play:feature-delivery", version.ref = "featureDelivery" }
 feature-delivery-ktx = { module = "com.google.android.play:feature-delivery-ktx", version.ref = "featureDelivery" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
