@@ -69,6 +69,8 @@
     <string name="start_setup">Start setup</string>
 
     <!-- Fields -->
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
     <string name="use_device_theme">Use device theme</string>
     <string name="color">Color</string>
     <string name="name">Name</string>

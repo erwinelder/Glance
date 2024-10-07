@@ -68,6 +68,8 @@
     <string name="start_setup">Setup starten</string>
 
     <!-- Fields -->
+    <string name="email">E-mail</string>
+    <string name="password">Passwort</string>
     <string name="use_device_theme">Gerät-Thema verwenden</string>
     <string name="color">Farbe</string>
     <string name="name">Name</string>

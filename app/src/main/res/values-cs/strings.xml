@@ -68,6 +68,8 @@
     <string name="start_setup">Začít nastavení</string>
 
     <!-- Fields -->
+    <string name="email">E-mail</string>
+    <string name="password">Heslo</string>
     <string name="use_device_theme">Použít téma zařízení</string>
     <string name="color">Barva</string>
     <string name="name">Název</string>

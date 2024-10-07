@@ -68,6 +68,8 @@
     <string name="start_setup">Почати налаштування</string>
 
     <!-- Fields -->
+    <string name="email">Електронна пошта</string>
+    <string name="password">Пароль</string>
     <string name="use_device_theme">Використовувати тему пристрою</string>
     <string name="color">Колір</string>
     <string name="name">Назва</string>

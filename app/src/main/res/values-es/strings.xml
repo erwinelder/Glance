@@ -69,6 +69,8 @@
     <string name="start_setup">Iniciar configuración</string>
 
     <!-- Fields -->
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
     <string name="use_device_theme">Usar tema del dispositivo</string>
     <string name="color">Color</string>
     <string name="name">Nombre</string>
