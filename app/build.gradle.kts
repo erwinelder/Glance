@@ -121,6 +121,7 @@ dependencies {
 
     // Billing
     implementation(libs.google.billing)
+    implementation(libs.google.billing.ktx)
 
     // SplashScreen
     implementation(libs.androidx.core.splashscreen)
