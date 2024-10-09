@@ -88,7 +88,7 @@ private fun RecordDraftItem.toCreatedRecordItem(): CreatedRecordItem? {
 
     return CreatedRecordItem(
         categoryWithSubcategory = categoryWithSubcategory,
-        note = note,
+        note = note.trim().takeUnless { it.isNotBlank() },
         totalAmount = this.getTotalAmount(),
         quantity = quantity.toIntOrNull()
     )
