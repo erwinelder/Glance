@@ -16,6 +16,7 @@ espressoCore = "3.6.1"
 featureDelivery = "2.1.0"
 firebaseBom = "33.4.0"
 firebaseAuth = "23.0.0"
+firebaseFirestore = "25.1.0"
 foundation = "1.7.3"
 gson = "2.10.1"
 googleBilling = "7.1.1"
@@ -76,6 +77,7 @@ feature-delivery-ktx = { module = "com.google.android.play:feature-delivery-ktx"
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
