@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
@@ -38,7 +39,8 @@ fun WalletGlanceAppComponent(
     appViewModel: AppViewModel,
     navViewModel: NavigationViewModel,
     personalizationViewModel: PersonalizationViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    subscriptionViewModel: SubscriptionViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
     val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()

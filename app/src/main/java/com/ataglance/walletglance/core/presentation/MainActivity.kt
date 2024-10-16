@@ -10,6 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navViewModel: NavigationViewModel
     private lateinit var personalizationViewModel: PersonalizationViewModel
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var subscriptionViewModel: SubscriptionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         initializeNavViewModel()
         initializePersonalizationViewModel()
         initializeAuthViewModel()
+        initializeSubscriptionViewModel()
 
         setupSplashScreen()
 
@@ -40,7 +43,8 @@ class MainActivity : AppCompatActivity() {
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
                     personalizationViewModel = personalizationViewModel,
-                    authViewModel = authViewModel
+                    authViewModel = authViewModel,
+                    subscriptionViewModel = subscriptionViewModel
                 )
             }
         }
@@ -63,6 +67,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeAuthViewModel() {
         authViewModel = app.authViewModel
+    }
+
+    private fun initializeSubscriptionViewModel() {
+        subscriptionViewModel = SubscriptionViewModel(billingManager = app.billingManager)
     }
 
     private fun setupSplashScreen() {

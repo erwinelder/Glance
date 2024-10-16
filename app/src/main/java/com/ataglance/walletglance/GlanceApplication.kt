@@ -8,6 +8,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.account.data.repository.AccountRepository
+import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.billing.domain.BillingManager
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
@@ -16,7 +18,6 @@ import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
@@ -41,6 +42,7 @@ class GlanceApplication : Application() {
     lateinit var navViewModel: NavigationViewModel
     lateinit var personalizationViewModel: PersonalizationViewModel
     lateinit var authViewModel: AuthViewModel
+    lateinit var billingManager: BillingManager
 
     override fun onCreate() {
         super.onCreate()
@@ -51,6 +53,7 @@ class GlanceApplication : Application() {
         initializeNavViewModel()
         initializePersonalizationViewModel()
         initializeAuthViewModel()
+        initializeBillingManager()
 
         applyAppLanguage()
         updateSetupStageIfNeeded()
@@ -126,6 +129,9 @@ class GlanceApplication : Application() {
         authViewModel = AuthViewModel(auth = auth)
     }
 
+    private fun initializeBillingManager() {
+        billingManager = BillingManager(context = this)
+    }
 
     /**
      * Apply app language saved in data preferences to the app using AppCompatDelegate's
