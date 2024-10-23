@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.account.domain
 
-import com.ataglance.walletglance.account.data.utils.findById
+import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.budget.domain.model.Budget
 
 data class AccountsAndActiveOne(
