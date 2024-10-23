@@ -2,6 +2,8 @@ package com.ataglance.walletglance.core.data.local
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.core.utils.getNowDateTimeLong
 
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
@@ -189,6 +191,41 @@ val MIGRATION_9_10 = object : Migration(9, 10) {
             CREATE INDEX IF NOT EXISTS index_BudgetOnWidget_budgetId
             ON BudgetOnWidget(budgetId)
         """.trimIndent())
+
+    }
+}
+
+val MIGRATION_10_11 = object : Migration(10, 11) {
+
+    val timestamp: Long = getNowDateTimeLong()
+    val tableNames: List<String> = listOf(
+        TableName.Account.name,
+        TableName.Category.name,
+        TableName.CategoryCollection.name,
+        TableName.CategoryCollectionCategoryAssociation.name,
+        TableName.Record.name,
+        TableName.Budget.name,
+        TableName.BudgetAccountAssociation.name,
+        TableName.NavigationButton.name,
+        TableName.Widget.name,
+        TableName.BudgetOnWidget.name
+    )
+
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS TableUpdateTime (
+                tableName TEXT PRIMARY KEY NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+
+        tableNames.forEach { tableName ->
+            db.execSQL("""
+                INSERT INTO TableUpdateTime (tableName, timestamp)
+                VALUES ('$tableName', $timestamp)
+            """.trimIndent())
+        }
 
     }
 }

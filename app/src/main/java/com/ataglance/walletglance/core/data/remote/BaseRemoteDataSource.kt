@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.data.remote
 
+import com.ataglance.walletglance.core.data.model.TableName
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -7,19 +8,32 @@ import com.google.firebase.firestore.SetOptions
 
 abstract class BaseRemoteDataSource<T>(
     private val userId: String,
-    private val firestore: FirebaseFirestore,
+    val firestore: FirebaseFirestore,
     private val collectionName: String,
+    private val tableName: TableName,
 
     private val getDocumentRef: CollectionReference.(T) -> DocumentReference,
     private val dataToEntityMapper: (Map<String, Any>) -> T,
     private val entityToDataMapper: (T) -> Map<String, Any>
 ) {
 
+    private val userFirestoreRef
+        get() = firestore.collection("users").document(userId)
+
     val collectionRef
-        get() = firestore.collection("users").document(userId).collection(collectionName)
+        get() = userFirestoreRef.collection(collectionName)
+
+    private val tableUpdateTimeCollectionRef
+        get() = userFirestoreRef.collection("tableUpdateTimes")
+
+    fun tableUpdateTimeCollectionRef(timestamp: Long) {
+        tableUpdateTimeCollectionRef.document(tableName.name)
+            .set(mapOf("timestamp" to timestamp), SetOptions.merge())
+    }
 
     fun upsertEntities(
         entityList: List<T>,
+        timestamp: Long,
         onSuccessListener: () -> Unit = {},
         onFailureListener: (Exception) -> Unit = {}
     ) {
@@ -27,24 +41,28 @@ abstract class BaseRemoteDataSource<T>(
             val entityData = entityToDataMapper(entity)
             collectionRef.getDocumentRef(entity)
                 .set(entityData, SetOptions.merge())
-                .addOnSuccessListener { onSuccessListener() }
+                .addOnSuccessListener {
+                    tableUpdateTimeCollectionRef(timestamp)
+                    onSuccessListener()
+                }
                 .addOnFailureListener(onFailureListener)
         }
     }
 
     fun deleteAllEntities(
+        timestamp: Long,
         onSuccessListener: () -> Unit = {},
         onFailureListener: (Exception) -> Unit = {}
     ) {
         deleteEntitiesInBatches(
-            collectionRef = collectionRef,
+            timestamp = timestamp,
             onSuccessListener = onSuccessListener,
             onFailureListener = onFailureListener
         )
     }
 
     private fun deleteEntitiesInBatches(
-        collectionRef: CollectionReference,
+        timestamp: Long,
         onSuccessListener: () -> Unit,
         onFailureListener: (Exception) -> Unit
     ) {
@@ -60,13 +78,14 @@ abstract class BaseRemoteDataSource<T>(
                     .addOnSuccessListener {
                         if (querySnapshot.size() == 500) {
                             deleteEntitiesInBatches(
-                                collectionRef = collectionRef,
+                                timestamp = timestamp,
                                 onSuccessListener = onSuccessListener,
                                 onFailureListener = onFailureListener
                             )
                         } else {
                             onSuccessListener()
                         }
+                        tableUpdateTimeCollectionRef(timestamp)
                     }
                     .addOnFailureListener(onFailureListener)
             }

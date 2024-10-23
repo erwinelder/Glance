@@ -1,6 +1,6 @@
-package com.ataglance.walletglance.account.utils
+package com.ataglance.walletglance.account.data.utils
 
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.model.AccountEntity
 
 
 fun List<AccountEntity>.findById(id: Int): AccountEntity? {

@@ -232,6 +232,10 @@ fun getTodayDateLong(): Long {
     return LocalDate.now().asTimestamp()
 }
 
+fun getNowDateTimeLong(): Long {
+    return LocalDateTime.now().asTimestamp()
+}
+
 
 fun getTodayLongDateRange(): LongDateRange {
     return getTodayDateLong().asOneDayDateRange()

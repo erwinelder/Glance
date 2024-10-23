@@ -2,7 +2,7 @@ package com.ataglance.walletglance.recordCreation.utils
 
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
-import com.ataglance.walletglance.account.utils.getOtherFrom
+import com.ataglance.walletglance.account.domain.utils.getOtherFrom
 import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.utils.findByRecordNum

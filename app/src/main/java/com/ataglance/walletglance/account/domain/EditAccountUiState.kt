@@ -2,7 +2,7 @@ package com.ataglance.walletglance.account.domain
 
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
 import com.ataglance.walletglance.account.domain.color.AccountColors
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 
 data class EditAccountUiState(
     val id: Int = 0,

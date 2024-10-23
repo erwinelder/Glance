@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.utils.asChar
 

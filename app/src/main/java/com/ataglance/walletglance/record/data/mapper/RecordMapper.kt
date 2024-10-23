@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.data.mapper
 
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.utils.findById
+import com.ataglance.walletglance.account.data.utils.findById
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordStack

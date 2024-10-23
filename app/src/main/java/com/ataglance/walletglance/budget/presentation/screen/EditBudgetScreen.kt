@@ -30,7 +30,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.mapper.toBudget

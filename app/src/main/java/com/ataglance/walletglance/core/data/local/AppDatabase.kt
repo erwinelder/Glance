@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.ataglance.walletglance.account.data.local.dao.AccountDao
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.local.AccountDao
+import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.budget.data.local.dao.BudgetAccountAssociationDao
 import com.ataglance.walletglance.budget.data.local.dao.BudgetDao
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
@@ -16,6 +16,7 @@ import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryColl
 import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionDao
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.core.data.model.TableUpdateTime
 import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonDao
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
 import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetDao
@@ -27,6 +28,7 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 @Database(
     entities = [
+        TableUpdateTime::class,
         AccountEntity::class,
         CategoryEntity::class,
         CategoryCollectionEntity::class,
@@ -38,11 +40,12 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
         WidgetEntity::class,
         BudgetOnWidgetEntity::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
+    abstract val tableUpdateTimeDao: TableUpdateTimeDao
     abstract val accountDao: AccountDao
     abstract val categoryDao: CategoryDao
     abstract val categoryCollectionDao: CategoryCollectionDao
@@ -66,7 +69,7 @@ abstract class AppDatabase : RoomDatabase() {
 
                     .addMigrations(
                         MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
-                        MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10
+                        MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11
                     )
 
                     /*.addCallback(object : Callback() {

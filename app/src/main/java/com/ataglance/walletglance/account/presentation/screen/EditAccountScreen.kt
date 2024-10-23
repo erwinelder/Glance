@@ -39,7 +39,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.EditAccountUiState
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme

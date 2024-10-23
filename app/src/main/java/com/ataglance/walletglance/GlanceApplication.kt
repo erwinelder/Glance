@@ -7,25 +7,20 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.billing.domain.BillingManager
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepository
 import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.data.repository.RepositoryManager
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
-import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -36,27 +31,47 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class GlanceApplication : Application() {
 
+    private lateinit var repositoryManager: RepositoryManager
+
     private lateinit var db: AppDatabase
+    private lateinit var firestore: FirebaseFirestore
+    lateinit var authViewModel: AuthViewModel
+    lateinit var billingManager: BillingManager
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
     lateinit var navViewModel: NavigationViewModel
     lateinit var personalizationViewModel: PersonalizationViewModel
-    lateinit var authViewModel: AuthViewModel
-    lateinit var billingManager: BillingManager
 
     override fun onCreate() {
         super.onCreate()
 
         db = AppDatabase.getDatabase(this)
+        initializeFirestore()
+        initializeAuthViewModel()
+        initializeBillingManager()
+
+        repositoryManager = RepositoryManager(db, authViewModel.user, firestore)
+
         initializeSettingsRepository()
         initializeAppViewModel()
         initializeNavViewModel()
         initializePersonalizationViewModel()
-        initializeAuthViewModel()
-        initializeBillingManager()
 
         applyAppLanguage()
         updateSetupStageIfNeeded()
+    }
+
+    private fun initializeFirestore() {
+        firestore = FirebaseFirestore.getInstance()
+    }
+
+    private fun initializeAuthViewModel() {
+        val auth: FirebaseAuth = FirebaseAuth.getInstance()
+        authViewModel = AuthViewModel(auth = auth)
+    }
+
+    private fun initializeBillingManager() {
+        billingManager = BillingManager(context = this)
     }
 
     private fun initializeSettingsRepository() {
@@ -67,24 +82,18 @@ class GlanceApplication : Application() {
      * Initialize repositories and then initialize AppViewModel with passing them into it.
      */
     private fun initializeAppViewModel() {
-        val accountRepository = AccountRepository(db.accountDao)
-        val categoryRepository = CategoryRepository(db.categoryDao)
-        val categoryCollectionRepository = CategoryCollectionRepository(db.categoryCollectionDao)
-        val categoryCollectionAndCollectionCategoryAssociationRepository =
-            CategoryCollectionAndCollectionCategoryAssociationRepository(
-                categoryCollectionDao = db.categoryCollectionDao,
-                categoryCollectionCategoryAssociationDao = db.categoryCollectionCategoryAssociationDao
-            )
-        val recordRepository = RecordRepository(db.recordDao)
-        val budgetAndBudgetAccountAssociationRepository =
-            BudgetAndBudgetAccountAssociationRepository(
-                budgetDao = db.budgetDao,
-                budgetAccountAssociationDao = db.budgetAccountAssociationDao
-            )
-
+        val accountRepository = repositoryManager.getAccountRepository()
+        val categoryRepository = repositoryManager.getCategoryRepository()
+        val categoryCollectionRepository = repositoryManager.getCategoryCollectionRepository()
+        val categoryCollectionAndCollectionCategoryAssociationRepository = repositoryManager
+            .getCategoryCollectionAndCollectionCategoryAssociationRepository()
+        val recordRepository = repositoryManager.getRecordRepository()
+        val budgetAndBudgetAccountAssociationRepository = repositoryManager
+            .getBudgetAndBudgetAccountAssociationRepository()
         val recordAndAccountRepository by lazy {
-            RecordAndAccountRepository(db.recordDao, db.accountDao)
+            repositoryManager.getRecordAndAccountRepository()
         }
+
         val generalRepository by lazy {
             GeneralRepository(
                 settingsRepository = settingsRepository,
@@ -122,15 +131,6 @@ class GlanceApplication : Application() {
             widgetRepository = widgetRepository,
             budgetOnWidgetRepository = budgetOnWidgetRepository
         )
-    }
-
-    private fun initializeAuthViewModel() {
-        val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        authViewModel = AuthViewModel(auth = auth)
-    }
-
-    private fun initializeBillingManager() {
-        billingManager = BillingManager(context = this)
     }
 
     /**

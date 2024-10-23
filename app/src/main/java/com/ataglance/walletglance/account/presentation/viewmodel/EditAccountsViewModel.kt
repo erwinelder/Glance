@@ -2,12 +2,12 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
+import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.account.mapper.toAccountEntityList
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.utils.fixOrderNums
-import com.ataglance.walletglance.account.utils.makeSureActiveAccountIsVisibleOne
-import com.ataglance.walletglance.account.utils.makeSureThereIsOnlyOneActiveAccount
+import com.ataglance.walletglance.account.domain.utils.fixOrderNums
+import com.ataglance.walletglance.account.domain.utils.makeSureActiveAccountIsVisibleOne
+import com.ataglance.walletglance.account.domain.utils.makeSureThereIsOnlyOneActiveAccount
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow

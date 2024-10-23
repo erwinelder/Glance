@@ -23,7 +23,7 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.components.AccountCard
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage

@@ -1,9 +1,9 @@
-package com.ataglance.walletglance.account.data.local.dao
+package com.ataglance.walletglance.account.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.model.AccountEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.account.data.mapper
+package com.ataglance.walletglance.account.mapper
 
 import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.account.domain.Account

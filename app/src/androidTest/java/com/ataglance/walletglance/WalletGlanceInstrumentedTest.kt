@@ -5,8 +5,8 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.account.data.mapper.toAccountEntityList
+import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.account.mapper.toAccountEntityList
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.color.AccountColorName
 import com.ataglance.walletglance.account.presentation.components.AccountCard

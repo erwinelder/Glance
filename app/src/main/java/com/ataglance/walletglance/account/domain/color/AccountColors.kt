@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.components.AccountCard
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorByTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors

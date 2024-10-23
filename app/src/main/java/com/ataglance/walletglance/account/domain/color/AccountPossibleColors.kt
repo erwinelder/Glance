@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.account.domain.color
 
-import com.ataglance.walletglance.account.utils.toColorWithName
+import com.ataglance.walletglance.account.domain.utils.toColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 

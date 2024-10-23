@@ -3,7 +3,7 @@ package com.ataglance.walletglance.recordCreation.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.utils.getOtherFrom
+import com.ataglance.walletglance.account.domain.utils.getOtherFrom
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums

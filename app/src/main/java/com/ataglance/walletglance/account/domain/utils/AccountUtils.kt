@@ -1,7 +1,8 @@
-package com.ataglance.walletglance.account.utils
+package com.ataglance.walletglance.account.domain.utils
 
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.account.data.mapper.toAccountList
+import com.ataglance.walletglance.account.mapper.toAccountList
+import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.account.data.utils.findById
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
 import com.ataglance.walletglance.account.domain.color.AccountColors

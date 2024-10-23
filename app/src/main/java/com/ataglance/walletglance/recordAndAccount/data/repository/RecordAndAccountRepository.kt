@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.recordAndAccount.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.account.data.local.dao.AccountDao
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.local.AccountDao
+import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.record.data.local.dao.RecordDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 

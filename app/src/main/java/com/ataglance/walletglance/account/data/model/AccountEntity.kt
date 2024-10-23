@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.account.data.local.model
+package com.ataglance.walletglance.account.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

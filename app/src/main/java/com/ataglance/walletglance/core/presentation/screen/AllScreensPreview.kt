@@ -10,7 +10,7 @@ import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.mapper.toBudgetList
