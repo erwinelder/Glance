@@ -1,18 +1,18 @@
 package com.ataglance.walletglance.account.data.local
 
 import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.local.TableUpdateTimeDao
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
 
 class AccountLocalDataSource(
     private val accountDao: AccountDao,
-    private val updateTimeDao: TableUpdateTimeDao
+    updateTimeDao: TableUpdateTimeDao
+) : BaseLocalDataSource(
+    updateTimeDao = updateTimeDao,
+    tableName = TableName.Account
 ) {
-
-    private suspend fun updateTime(timestamp: Long) {
-        updateTimeDao.updateTime(TableName.Account.name, timestamp)
-    }
 
     suspend fun upsertAccounts(accountList: List<AccountEntity>, timestamp: Long) {
         accountDao.upsertAccounts(accountList)

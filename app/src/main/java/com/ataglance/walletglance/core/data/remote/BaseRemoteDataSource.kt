@@ -31,6 +31,11 @@ abstract class BaseRemoteDataSource<T>(
             .set(mapOf("timestamp" to timestamp), SetOptions.merge())
     }
 
+    fun getUpdateTime(): Long? {
+        return tableUpdateTimeCollectionRef.document(tableName.name).get()
+            .result?.get("timestamp") as? Long
+    }
+
     fun upsertEntities(
         entityList: List<T>,
         timestamp: Long,
