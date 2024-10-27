@@ -34,7 +34,7 @@ class BudgetOnWidgetRemoteDataSource(
 
         batch.commit()
             .addOnSuccessListener {
-                updateTime(timestamp)
+                updateLastModifiedTime(timestamp)
                 onSuccessListener()
             }
             .addOnFailureListener(onFailureListener)

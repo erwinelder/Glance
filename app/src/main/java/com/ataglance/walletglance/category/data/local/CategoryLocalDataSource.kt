@@ -19,7 +19,7 @@ class CategoryLocalDataSource(
     @Transaction
     suspend fun deleteAllCategories(timestamp: Long) {
         categoryDao.deleteAllCategories()
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     fun getAllCategories(): Flow<List<CategoryEntity>> = categoryDao.getAllCategories()

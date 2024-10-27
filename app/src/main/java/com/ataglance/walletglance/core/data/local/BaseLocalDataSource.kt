@@ -10,18 +10,18 @@ abstract class BaseLocalDataSource<T>(
     private val tableName: TableName
 ) {
 
-    suspend fun updateTime(timestamp: Long) {
+    suspend fun updateLastModifiedTime(timestamp: Long) {
         updateTimeDao.updateTime(tableName.name, timestamp)
     }
 
-    suspend fun getUpdateTime(): Long {
+    suspend fun getLastModifierTime(): Long {
         return updateTimeDao.getUpdateTime(tableName.name).first()
     }
 
     @Transaction
     suspend fun upsertEntities(entityList: List<T>, timestamp: Long) {
         dao.upsertEntities(entityList)
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     @Transaction
@@ -36,7 +36,7 @@ abstract class BaseLocalDataSource<T>(
         if (entitiesToUpsert.isNotEmpty()) {
             dao.upsertEntities(entitiesToUpsert)
         }
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
 }

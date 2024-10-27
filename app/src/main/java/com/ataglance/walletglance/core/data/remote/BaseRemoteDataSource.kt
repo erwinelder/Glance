@@ -33,12 +33,12 @@ abstract class BaseRemoteDataSource<T>(
         get() = userFirestoreRef.collection("tableUpdateTimes")
 
 
-    fun updateTime(timestamp: Long) {
+    fun updateLastModifiedTime(timestamp: Long) {
         tableUpdateTimeCollectionRef.document(tableName.name)
             .set(mapOf("timestamp" to timestamp), SetOptions.merge())
     }
 
-    fun getUpdateTime(): Long? {
+    fun getLastModifierTime(): Long? {
         return tableUpdateTimeCollectionRef.document(tableName.name).get()
             .result?.get("timestamp") as? Long
     }
@@ -66,7 +66,7 @@ abstract class BaseRemoteDataSource<T>(
             collectionRef.getDocumentRef(entity)
                 .set(entityData, SetOptions.merge())
                 .addOnSuccessListener {
-                    updateTime(timestamp)
+                    updateLastModifiedTime(timestamp)
                     onSuccessListener()
                 }
                 .addOnFailureListener(onFailureListener)
@@ -93,7 +93,7 @@ abstract class BaseRemoteDataSource<T>(
 
         batch.commit()
             .addOnSuccessListener {
-                updateTime(timestamp)
+                updateLastModifiedTime(timestamp)
                 onSuccessListener()
             }
             .addOnFailureListener(onFailureListener)
@@ -135,7 +135,7 @@ abstract class BaseRemoteDataSource<T>(
                         } else {
                             onSuccessListener()
                         }
-                        updateTime(timestamp)
+                        updateLastModifiedTime(timestamp)
                     }
                     .addOnFailureListener(onFailureListener)
             }
@@ -167,17 +167,6 @@ abstract class BaseRemoteDataSource<T>(
         }
 
         awaitClose { listenerRegistration.remove() }
-    }
-
-    fun getAllEntities(): Flow<List<T>> = callbackFlow {
-        collectionRef.get()
-            .addOnSuccessListener { querySnapshot ->
-                trySend(querySnapshot.documents.toEntityList())
-                close()
-            }
-            .addOnFailureListener(::close)
-
-        awaitClose()
     }
 
 }

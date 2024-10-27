@@ -19,7 +19,7 @@ class AccountLocalDataSource(
     @Transaction
     suspend fun deleteAllAccounts(timestamp: Long) {
         accountDao.deleteAllAccounts()
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     fun getAllAccounts(): Flow<List<AccountEntity>> = accountDao.getAllAccounts()

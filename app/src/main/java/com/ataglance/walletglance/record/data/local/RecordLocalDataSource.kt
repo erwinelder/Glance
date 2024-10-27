@@ -19,13 +19,13 @@ class RecordLocalDataSource(
     @Transaction
     suspend fun deleteRecordsByRecordNumbers(recordNumbers: List<Int>, timestamp: Long) {
         recordDao.deleteRecordsByRecordNumbers(recordNumbers)
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     @Transaction
     suspend fun deleteAllRecords(timestamp: Long) {
         recordDao.deleteAllRecords()
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     fun getLastRecordOrderNum(): Flow<Int?> = recordDao.getLastRecordOrderNum()
@@ -53,7 +53,7 @@ class RecordLocalDataSource(
 
     suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long) {
         recordDao.convertTransfersToRecords(noteValues)
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
 }

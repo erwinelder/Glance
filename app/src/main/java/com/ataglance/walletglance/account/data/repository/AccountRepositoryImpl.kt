@@ -6,11 +6,8 @@ import com.ataglance.walletglance.account.data.remote.AccountRemoteDataSource
 import com.ataglance.walletglance.core.utils.getNowDateTimeLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class AccountRepositoryImpl(
     private val localSource: AccountLocalDataSource,
@@ -41,22 +38,32 @@ class AccountRepositoryImpl(
         onFailureListener: (Exception) -> Unit
     ): Flow<List<AccountEntity>> = flow {
         try {
-            val localTimestamp = localSource.getUpdateTime()
-            val remoteTimestamp = remoteSource?.getUpdateTime()
 
-            if (remoteTimestamp != null && remoteTimestamp > localTimestamp) {
-                val remoteList = suspendCoroutine { continuation ->
-                    remoteSource?.getAllEntities(
-                        onSuccessListener = { list -> continuation.resume(list) },
-                        onFailureListener = onFailureListener
-                    )
-                }
-                localSource.upsertEntities(entityList = remoteList, timestamp = remoteTimestamp)
-                emit(remoteList)
-                onSuccessListener()
+            val localTimestamp = localSource.getLastModifierTime()
+            val remoteTimestamp = remoteSource?.getLastModifierTime() ?: localTimestamp
+
+            if (remoteSource != null && remoteTimestamp > localTimestamp) {
+                remoteSource.getEntitiesAfterTimestamp(localTimestamp)
+                    .collect { entitiesToDeleteAndUpsert ->
+
+                        localSource.deleteAndUpsertEntities(
+                            entitiesToDelete = entitiesToDeleteAndUpsert.toDelete,
+                            entitiesToUpsert = entitiesToDeleteAndUpsert.toUpsert,
+                            timestamp = remoteTimestamp
+                        )
+                        localSource.getAllAccounts().collect { localList ->
+                            emit(localList)
+                            onSuccessListener()
+                        }
+
+                    }
             } else {
-                emit(localSource.getAllAccounts().first())
+                localSource.getAllAccounts().collect { localList ->
+                    emit(localList)
+                    onSuccessListener()
+                }
             }
+
         } catch (e: Exception) {
             onFailureListener(e)
         }

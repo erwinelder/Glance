@@ -19,7 +19,7 @@ class BudgetOnWidgetLocalDataSource(
     @Transaction
     suspend fun deleteBudgetsThatAreNotInList(budgetIds: List<Int>, timestamp: Long) {
         budgetOnWidgetDao.deleteBudgetsThatAreNotInList(budgetIds)
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>> =

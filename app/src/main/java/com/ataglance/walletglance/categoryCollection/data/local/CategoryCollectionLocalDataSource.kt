@@ -19,7 +19,7 @@ class CategoryCollectionLocalDataSource(
     @Transaction
     suspend fun deleteAllCollections(timestamp: Long) {
         categoryCollectionDao.deleteAllCollections()
-        updateTime(timestamp)
+        updateLastModifiedTime(timestamp)
     }
 
     fun getAllCollections(): Flow<List<CategoryCollectionEntity>> =
