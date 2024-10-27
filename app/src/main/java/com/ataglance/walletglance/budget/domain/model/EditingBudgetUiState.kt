@@ -2,7 +2,7 @@ package com.ataglance.walletglance.budget.domain.model
 
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.category.domain.Category
+import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime

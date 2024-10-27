@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.personalization.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetDao
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetDao
+import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
 import kotlinx.coroutines.flow.Flow
 
 class BudgetOnWidgetRepository(

@@ -23,13 +23,13 @@ import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.navigation.utils.anyScreenInHierarchyIs
-import com.ataglance.walletglance.navigation.utils.currentScreenIs
-import com.ataglance.walletglance.navigation.utils.getSetupProgressTopBarTitleRes
+import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
+import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs
+import com.ataglance.walletglance.navigation.domain.utils.getSetupProgressTopBarTitleRes
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
-import com.ataglance.walletglance.record.utils.filterAccountId
-import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.record.utils.shrinkForCompactView
+import com.ataglance.walletglance.record.domain.utils.filterAccountId
+import com.ataglance.walletglance.record.domain.utils.getExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import java.time.LocalDateTime
 

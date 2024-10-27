@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.personalization.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.personalization.data.local.dao.WidgetDao
-import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
+import com.ataglance.walletglance.personalization.data.local.WidgetDao
+import com.ataglance.walletglance.personalization.data.model.WidgetEntity
 import kotlinx.coroutines.flow.Flow
 
 class WidgetRepository(

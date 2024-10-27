@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.recordCreation.domain.record
 
 import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.category.domain.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 
 data class RecordDraftGeneral(

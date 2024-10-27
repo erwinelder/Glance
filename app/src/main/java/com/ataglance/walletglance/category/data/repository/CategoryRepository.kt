@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.category.data.repository
 
-import com.ataglance.walletglance.category.data.local.dao.CategoryDao
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.local.CategoryDao
+import com.ataglance.walletglance.category.data.model.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 class CategoryRepository(

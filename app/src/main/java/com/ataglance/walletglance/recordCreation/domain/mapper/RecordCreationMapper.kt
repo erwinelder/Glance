@@ -2,12 +2,12 @@ package com.ataglance.walletglance.recordCreation.domain.mapper
 
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.category.utils.asChar
+import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.utils.toCategoryTypeOrNullIfTransfer
+import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecord
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecordItem
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft

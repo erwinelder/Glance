@@ -16,28 +16,6 @@ class AccountRemoteDataSource(
     collectionName = "accounts",
     tableName = TableName.Account,
     getDocumentRef = { this.document(it.id.toString()) },
-    dataToEntityMapper = Map<String, Any>::toAccountEntity,
+    dataToEntityMapper = Map<String, Any?>::toAccountEntity,
     entityToDataMapper = AccountEntity::toMap
-) {
-
-    fun deleteAccountsByIds(
-        idList: List<Int>,
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
-        val batch = firestore.batch()
-
-        idList.forEach { id ->
-            batch.delete(collectionRef.document(id.toString()))
-        }
-
-        batch.commit()
-            .addOnSuccessListener {
-                tableUpdateTimeCollectionRef(timestamp)
-                onSuccessListener()
-            }
-            .addOnFailureListener(onFailureListener)
-    }
-
-}
+)

@@ -11,9 +11,9 @@ import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.color.AccountColorName
 import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.color.CategoryColorName
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
@@ -26,10 +26,10 @@ import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getFormattedDateWithTime
 import com.ataglance.walletglance.core.utils.toLongWithTime
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.utils.filterAccountId
+import com.ataglance.walletglance.record.domain.utils.filterAccountId
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import io.mockk.coEvery
 import io.mockk.coVerify

@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
-import com.ataglance.walletglance.category.domain.Category
+import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.modifiers.innerShadow

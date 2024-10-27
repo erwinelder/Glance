@@ -3,9 +3,9 @@ package com.ataglance.walletglance.record.data.repository
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.record.data.local.dao.RecordDao
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
+import com.ataglance.walletglance.record.data.local.RecordDao
+import com.ataglance.walletglance.record.data.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow

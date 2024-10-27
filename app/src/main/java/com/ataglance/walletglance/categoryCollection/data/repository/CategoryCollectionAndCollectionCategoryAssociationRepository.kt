@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.categoryCollection.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionCategoryAssociationDao
-import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionDao
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationDao
+import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionDao
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
 
 class CategoryCollectionAndCollectionCategoryAssociationRepository(
     private val categoryCollectionDao: CategoryCollectionDao,
@@ -17,7 +17,7 @@ class CategoryCollectionAndCollectionCategoryAssociationRepository(
     {
         val collections = categoryCollectionDao.getAllCollections()
         val collectionCategoryAssociations =
-            categoryCollectionCategoryAssociationDao.getAllCategoryCollectionCategoryAssociations()
+            categoryCollectionCategoryAssociationDao.getAllAssociations()
         return collections to collectionCategoryAssociations
     }
 

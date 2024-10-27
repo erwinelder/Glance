@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.recordCreation.domain.record
 
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 
 data class CreatedRecordItem(
     val categoryWithSubcategory: CategoryWithSubcategory,

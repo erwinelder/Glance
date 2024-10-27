@@ -1,10 +1,16 @@
 package com.ataglance.walletglance.core.data.remote
 
+import com.ataglance.walletglance.core.data.model.EntitiesToUpsertAndDelete
 import com.ataglance.walletglance.core.data.model.TableName
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.WriteBatch
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 abstract class BaseRemoteDataSource<T>(
     private val userId: String,
@@ -13,8 +19,8 @@ abstract class BaseRemoteDataSource<T>(
     private val tableName: TableName,
 
     private val getDocumentRef: CollectionReference.(T) -> DocumentReference,
-    private val dataToEntityMapper: (Map<String, Any>) -> T,
-    private val entityToDataMapper: (T) -> Map<String, Any>
+    private val dataToEntityMapper: (Map<String, Any?>) -> T,
+    private val entityToDataMapper: T.(Long) -> Map<String, Any?>
 ) {
 
     private val userFirestoreRef
@@ -26,7 +32,8 @@ abstract class BaseRemoteDataSource<T>(
     private val tableUpdateTimeCollectionRef
         get() = userFirestoreRef.collection("tableUpdateTimes")
 
-    fun tableUpdateTimeCollectionRef(timestamp: Long) {
+
+    fun updateTime(timestamp: Long) {
         tableUpdateTimeCollectionRef.document(tableName.name)
             .set(mapOf("timestamp" to timestamp), SetOptions.merge())
     }
@@ -36,6 +43,17 @@ abstract class BaseRemoteDataSource<T>(
             .result?.get("timestamp") as? Long
     }
 
+    fun WriteBatch.softDelete(documentRef: DocumentReference, timestamp: Long) {
+        update(
+            documentRef,
+            mapOf("LMT" to timestamp, "isDeleted" to true)
+        )
+    }
+
+    private fun List<DocumentSnapshot>.toEntityList(): List<T> {
+        return mapNotNull { it.data?.toMap()?.let(dataToEntityMapper) }
+    }
+
     fun upsertEntities(
         entityList: List<T>,
         timestamp: Long,
@@ -43,15 +61,42 @@ abstract class BaseRemoteDataSource<T>(
         onFailureListener: (Exception) -> Unit = {}
     ) {
         entityList.forEach { entity ->
-            val entityData = entityToDataMapper(entity)
+            val entityData = entityToDataMapper(entity, timestamp)
+
             collectionRef.getDocumentRef(entity)
                 .set(entityData, SetOptions.merge())
                 .addOnSuccessListener {
-                    tableUpdateTimeCollectionRef(timestamp)
+                    updateTime(timestamp)
                     onSuccessListener()
                 }
                 .addOnFailureListener(onFailureListener)
         }
+    }
+
+    fun deleteAndUpsertEntities(
+        entitiesToDelete: List<T>,
+        entitiesToUpsert: List<T>,
+        timestamp: Long,
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
+    ) {
+        val batch = firestore.batch()
+
+        entitiesToDelete.forEach { entity ->
+            batch.softDelete(collectionRef.getDocumentRef(entity), timestamp)
+        }
+
+        entitiesToUpsert.forEach { entity ->
+            val entityData = entityToDataMapper(entity, timestamp)
+            batch.set(collectionRef.getDocumentRef(entity), entityData, SetOptions.merge())
+        }
+
+        batch.commit()
+            .addOnSuccessListener {
+                updateTime(timestamp)
+                onSuccessListener()
+            }
+            .addOnFailureListener(onFailureListener)
     }
 
     fun deleteAllEntities(
@@ -76,7 +121,7 @@ abstract class BaseRemoteDataSource<T>(
                 val batch = firestore.batch()
 
                 querySnapshot.documents.forEach { document ->
-                    batch.delete(document.reference)
+                    batch.softDelete(document.reference, timestamp)
                 }
 
                 batch.commit()
@@ -90,25 +135,49 @@ abstract class BaseRemoteDataSource<T>(
                         } else {
                             onSuccessListener()
                         }
-                        tableUpdateTimeCollectionRef(timestamp)
+                        updateTime(timestamp)
                     }
                     .addOnFailureListener(onFailureListener)
             }
             .addOnFailureListener(onFailureListener)
     }
 
-    fun getAllEntities(
-        onSuccessListener: (List<T>) -> Unit,
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
+    fun getEntitiesAfterTimestamp(
+        timestamp: Long
+    ): Flow<EntitiesToUpsertAndDelete<T>> = callbackFlow {
+        val query = collectionRef.whereGreaterThan("LMT", timestamp)
+
+        val listenerRegistration = query.addSnapshotListener { querySnapshot, exception ->
+            if (exception != null) {
+                close(exception)
+                return@addSnapshotListener
+            }
+
+            val entitiesToUpsertAndDelete = querySnapshot?.documents
+                ?.partition { it.get("isDeleted") == true }
+                ?.let { (deletedDocuments, updatedDocuments) ->
+                    EntitiesToUpsertAndDelete(
+                        toUpsert = updatedDocuments.toEntityList(),
+                        toDelete = deletedDocuments.toEntityList()
+                    )
+                }
+                ?: EntitiesToUpsertAndDelete()
+
+            trySend(entitiesToUpsertAndDelete)
+        }
+
+        awaitClose { listenerRegistration.remove() }
+    }
+
+    fun getAllEntities(): Flow<List<T>> = callbackFlow {
         collectionRef.get()
             .addOnSuccessListener { querySnapshot ->
-                val accountList = querySnapshot.documents.mapNotNull {
-                    it.data?.toMap()?.let(dataToEntityMapper) ?: return@mapNotNull null
-                }
-                onSuccessListener(accountList)
+                trySend(querySnapshot.documents.toEntityList())
+                close()
             }
-            .addOnFailureListener(onFailureListener)
+            .addOnFailureListener(::close)
+
+        awaitClose()
     }
 
 }

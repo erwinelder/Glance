@@ -3,11 +3,11 @@ package com.ataglance.walletglance.categoryCollection.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithCategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithCategories
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

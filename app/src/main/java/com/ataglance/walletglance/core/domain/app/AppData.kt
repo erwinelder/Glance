@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.core.domain.app
 
 import com.ataglance.walletglance.account.data.model.AccountEntity
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.settings.domain.Settings
 
 data class AppData(

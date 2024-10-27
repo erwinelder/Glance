@@ -25,8 +25,8 @@ import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
 import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -49,15 +49,15 @@ import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.plus
 import com.ataglance.walletglance.core.utils.top
-import com.ataglance.walletglance.navigation.utils.isScreen
+import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.data.mapper.toRecordStackList
+import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.utils.getExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.record.utils.shrinkForCompactView
+import com.ataglance.walletglance.record.domain.utils.getExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 
 @Composable
 fun HomeScreen(

@@ -6,25 +6,25 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ataglance.walletglance.account.data.local.AccountDao
 import com.ataglance.walletglance.account.data.model.AccountEntity
-import com.ataglance.walletglance.budget.data.local.dao.BudgetAccountAssociationDao
-import com.ataglance.walletglance.budget.data.local.dao.BudgetDao
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.category.data.local.dao.CategoryDao
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionCategoryAssociationDao
-import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionDao
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationDao
+import com.ataglance.walletglance.budget.data.local.BudgetDao
+import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.category.data.local.CategoryDao
+import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationDao
+import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionDao
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
 import com.ataglance.walletglance.core.data.model.TableUpdateTime
-import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonDao
-import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
-import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetDao
-import com.ataglance.walletglance.personalization.data.local.dao.WidgetDao
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
-import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
-import com.ataglance.walletglance.record.data.local.dao.RecordDao
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.navigation.data.local.NavigationButtonDao
+import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
+import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetDao
+import com.ataglance.walletglance.personalization.data.local.WidgetDao
+import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.personalization.data.model.WidgetEntity
+import com.ataglance.walletglance.record.data.local.RecordDao
+import com.ataglance.walletglance.record.data.model.RecordEntity
 
 @Database(
     entities = [

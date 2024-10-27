@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.domain
 
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 
 @Stable
 data class RecordStackItem(

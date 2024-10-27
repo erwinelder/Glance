@@ -6,8 +6,8 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.budget.utils.groupByType
-import com.ataglance.walletglance.budget.utils.replaceById
+import com.ataglance.walletglance.budget.domain.utils.groupByType
+import com.ataglance.walletglance.budget.domain.utils.replaceById
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

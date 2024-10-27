@@ -2,10 +2,8 @@ package com.ataglance.walletglance.record.domain
 
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.RecordAccount
-import com.ataglance.walletglance.category.domain.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.utils.asChar
 
 @Stable
 data class RecordStack(
@@ -32,24 +30,6 @@ data class RecordStack(
     fun isExplicitlyOfType(type: CategoryType): Boolean {
         return type == CategoryType.Expense && isExpense() ||
                 type == CategoryType.Income && isIncome()
-    }
-
-    fun toRecordList(): List<RecordEntity> {
-        return stack.map { unit ->
-            RecordEntity(
-                id = unit.id,
-                recordNum = recordNum,
-                date = date,
-                type = type.asChar(),
-                accountId = account.id,
-                amount = unit.amount,
-                quantity = unit.quantity,
-                categoryId = unit.categoryWithSubcategory?.category?.id ?: 0,
-                subcategoryId = unit.categoryWithSubcategory?.subcategory?.id,
-                note = unit.note,
-                includeInBudgets = unit.includeInBudgets
-            )
-        }
     }
 
     private fun getSign(): Char {

@@ -35,7 +35,7 @@ import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.navigation.utils.isScreen
+import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.navigation.SettingsScreens

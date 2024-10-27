@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.recordCreation.domain.record
 
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.core.utils.addZeroIfDotIsAtTheBeginning
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import java.util.Locale

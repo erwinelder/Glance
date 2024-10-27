@@ -14,7 +14,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class AccountRepositoryImpl(
     private val localSource: AccountLocalDataSource,
-    private val remoteSource: AccountRemoteDataSource? = null
+    private val remoteSource: AccountRemoteDataSource?
 ) : AccountRepository {
 
     override suspend fun upsertAccounts(
@@ -23,18 +23,8 @@ class AccountRepositoryImpl(
         onFailureListener: (Exception) -> Unit
     ) {
         val timestamp = getNowDateTimeLong()
-        localSource.upsertAccounts(accountList = accountList, timestamp = timestamp)
+        localSource.upsertEntities(entityList = accountList, timestamp = timestamp)
         remoteSource?.upsertEntities(entityList = accountList, timestamp = timestamp)
-    }
-
-    override suspend fun deleteAccountsByIds(
-        idList: List<Int>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
-        val timestamp = getNowDateTimeLong()
-        localSource.deleteAccountsByIds(idList = idList, timestamp = timestamp)
-        remoteSource?.deleteAccountsByIds(idList = idList, timestamp = timestamp)
     }
 
     override suspend fun deleteAllAccounts(
@@ -61,7 +51,7 @@ class AccountRepositoryImpl(
                         onFailureListener = onFailureListener
                     )
                 }
-                localSource.upsertAccounts(accountList = remoteList, timestamp = remoteTimestamp)
+                localSource.upsertEntities(entityList = remoteList, timestamp = remoteTimestamp)
                 emit(remoteList)
                 onSuccessListener()
             } else {

@@ -1,13 +1,13 @@
 package com.ataglance.walletglance.budget.domain.model
 
-import com.ataglance.walletglance.budget.utils.addUsedAmountsByRecords
-import com.ataglance.walletglance.budget.utils.fillUsedAmountsByRecords
-import com.ataglance.walletglance.budget.utils.findById
-import com.ataglance.walletglance.budget.utils.getMaxIdOrZero
-import com.ataglance.walletglance.budget.utils.subtractUsedAmountsByRecords
+import com.ataglance.walletglance.budget.domain.utils.addUsedAmountsByRecords
+import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
+import com.ataglance.walletglance.budget.domain.utils.findById
+import com.ataglance.walletglance.budget.domain.utils.getMaxIdOrZero
+import com.ataglance.walletglance.budget.domain.utils.subtractUsedAmountsByRecords
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.model.RecordEntity
 
 data class BudgetsByType(
     val daily: List<Budget> = emptyList(),

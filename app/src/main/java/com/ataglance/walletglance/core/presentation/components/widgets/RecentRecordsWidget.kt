@@ -25,8 +25,8 @@ import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordsTypeFilter
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
 import com.ataglance.walletglance.record.presentation.components.TransferComponent
-import com.ataglance.walletglance.record.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.record.utils.getNoRecordsMessageRes
+import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
+import com.ataglance.walletglance.record.domain.utils.getNoRecordsMessageRes
 
 @Composable
 fun RecentRecordsWidget(

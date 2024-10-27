@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ataglance.walletglance.budget.domain.mapper.toCheckedBudgetsByType
+import com.ataglance.walletglance.budget.mapper.toCheckedBudgetsByType
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.components.CheckedBudgetListsByPeriodComponent

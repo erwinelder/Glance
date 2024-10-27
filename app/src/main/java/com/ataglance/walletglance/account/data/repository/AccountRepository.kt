@@ -11,12 +11,6 @@ interface AccountRepository {
         onFailureListener: (Exception) -> Unit = {}
     )
 
-    suspend fun deleteAccountsByIds(
-        idList: List<Int>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    )
-
     suspend fun deleteAllAccounts(
         onSuccessListener: () -> Unit = {},
         onFailureListener: (Exception) -> Unit = {}

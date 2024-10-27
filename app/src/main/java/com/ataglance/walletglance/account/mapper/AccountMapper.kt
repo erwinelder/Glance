@@ -5,7 +5,7 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
 
 
-fun Map<String, Any>.toAccountEntity(): AccountEntity {
+fun Map<String, Any?>.toAccountEntity(): AccountEntity {
     return AccountEntity(
         id = this["id"] as Int,
         orderNum = this["orderNum"] as Int,
@@ -20,8 +20,9 @@ fun Map<String, Any>.toAccountEntity(): AccountEntity {
     )
 }
 
-fun AccountEntity.toMap(): Map<String, Any> {
+fun AccountEntity.toMap(timestamp: Long): HashMap<String, Any> {
     return hashMapOf(
+        "LMT" to timestamp,
         "id" to this.id,
         "orderNum" to this.orderNum,
         "name" to this.name,

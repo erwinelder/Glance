@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
-import com.ataglance.walletglance.personalization.domain.mapper.toEntityList
-import com.ataglance.walletglance.personalization.domain.mapper.toIntList
-import com.ataglance.walletglance.personalization.domain.mapper.toWidgetNamesList
+import com.ataglance.walletglance.personalization.mapper.toEntityList
+import com.ataglance.walletglance.personalization.mapper.toIntList
+import com.ataglance.walletglance.personalization.mapper.toWidgetNamesList
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.domain.utils.getItemsThatAreNotInList
