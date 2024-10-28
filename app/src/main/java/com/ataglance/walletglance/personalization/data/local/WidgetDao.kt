@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WidgetDao : BaseDao<WidgetEntity> {
 
-    @Query("SELECT * FROM Widget")
-    fun getAllWidgets(): Flow<List<WidgetEntity>>
+    @Query("SELECT * FROM Widget ORDER BY orderNum ASC")
+    override fun getAllEntities(): Flow<List<WidgetEntity>>
 
 }

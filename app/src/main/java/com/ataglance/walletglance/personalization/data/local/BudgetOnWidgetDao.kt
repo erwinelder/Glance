@@ -13,6 +13,6 @@ interface BudgetOnWidgetDao : BaseDao<BudgetOnWidgetEntity> {
     suspend fun deleteBudgetsThatAreNotInList(budgetIds: List<Int>)
 
     @Query("SELECT * FROM BudgetOnWidget")
-    fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>>
+    override fun getAllEntities(): Flow<List<BudgetOnWidgetEntity>>
 
 }

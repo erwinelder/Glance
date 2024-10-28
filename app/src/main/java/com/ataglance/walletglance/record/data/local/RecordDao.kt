@@ -28,6 +28,9 @@ interface RecordDao : BaseDao<RecordEntity> {
     """)
     fun getRecordsInDateRange(startPastDate: Long, endFutureDate: Long): Flow<List<RecordEntity>>
 
+    @Query("SELECT * FROM Record")
+    override fun getAllEntities(): Flow<List<RecordEntity>>
+
     @Query("""
         SELECT SUM(amount) FROM Record
         WHERE includeInBudgets = 1

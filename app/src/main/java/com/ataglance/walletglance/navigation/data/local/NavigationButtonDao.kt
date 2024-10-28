@@ -10,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface NavigationButtonDao : BaseDao<NavigationButtonEntity> {
 
     @Query("SELECT * FROM NavigationButton ORDER BY orderNum ASC")
-    fun getAllNavigationButtons(): Flow<List<NavigationButtonEntity>>
+    override fun getAllEntities(): Flow<List<NavigationButtonEntity>>
 
 }

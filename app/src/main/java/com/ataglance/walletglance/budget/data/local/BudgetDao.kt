@@ -10,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface BudgetDao : BaseDao<BudgetEntity> {
 
     @Query("SELECT * FROM Budget")
-    fun getAllBudgets(): Flow<List<BudgetEntity>>
+    override fun getAllEntities(): Flow<List<BudgetEntity>>
 
 }

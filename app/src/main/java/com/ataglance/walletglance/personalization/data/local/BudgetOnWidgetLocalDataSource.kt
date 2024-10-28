@@ -5,7 +5,6 @@ import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.local.TableUpdateTimeDao
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
-import kotlinx.coroutines.flow.Flow
 
 class BudgetOnWidgetLocalDataSource(
     private val budgetOnWidgetDao: BudgetOnWidgetDao,
@@ -21,8 +20,5 @@ class BudgetOnWidgetLocalDataSource(
         budgetOnWidgetDao.deleteBudgetsThatAreNotInList(budgetIds)
         updateLastModifiedTime(timestamp)
     }
-
-    fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>> =
-        budgetOnWidgetDao.getAllBudgetsOnWidget()
 
 }

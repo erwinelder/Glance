@@ -5,7 +5,6 @@ import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.local.TableUpdateTimeDao
 import com.ataglance.walletglance.core.data.model.TableName
-import kotlinx.coroutines.flow.Flow
 
 class AccountLocalDataSource(
     private val accountDao: AccountDao,
@@ -21,7 +20,5 @@ class AccountLocalDataSource(
         accountDao.deleteAllAccounts()
         updateLastModifiedTime(timestamp)
     }
-
-    fun getAllAccounts(): Flow<List<AccountEntity>> = accountDao.getAllAccounts()
 
 }

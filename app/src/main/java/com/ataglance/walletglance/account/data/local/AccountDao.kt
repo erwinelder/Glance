@@ -13,6 +13,6 @@ interface AccountDao : BaseDao<AccountEntity> {
     suspend fun deleteAllAccounts()
 
     @Query("SELECT * FROM Account ORDER BY orderNum ASC")
-    fun getAllAccounts(): Flow<List<AccountEntity>>
+    override fun getAllEntities(): Flow<List<AccountEntity>>
 
 }

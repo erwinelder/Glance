@@ -10,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryCollectionCategoryAssociationDao : BaseDao<CategoryCollectionCategoryAssociation> {
 
     @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
-    fun getAllAssociations(): Flow<List<CategoryCollectionCategoryAssociation>>
+    override fun getAllEntities(): Flow<List<CategoryCollectionCategoryAssociation>>
 
 }

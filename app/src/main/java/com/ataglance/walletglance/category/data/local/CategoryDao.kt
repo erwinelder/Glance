@@ -13,6 +13,6 @@ interface CategoryDao : BaseDao<CategoryEntity> {
     suspend fun deleteAllCategories()
 
     @Query("SELECT * FROM Category")
-    fun getAllCategories(): Flow<List<CategoryEntity>>
+    override fun getAllEntities(): Flow<List<CategoryEntity>>
 
 }

@@ -5,7 +5,6 @@ import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollecti
 import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.local.TableUpdateTimeDao
 import com.ataglance.walletglance.core.data.model.TableName
-import kotlinx.coroutines.flow.Flow
 
 class CategoryCollectionLocalDataSource(
     private val categoryCollectionDao: CategoryCollectionDao,
@@ -21,8 +20,5 @@ class CategoryCollectionLocalDataSource(
         categoryCollectionDao.deleteAllCollections()
         updateLastModifiedTime(timestamp)
     }
-
-    fun getAllCollections(): Flow<List<CategoryCollectionEntity>> =
-        categoryCollectionDao.getAllCollections()
 
 }

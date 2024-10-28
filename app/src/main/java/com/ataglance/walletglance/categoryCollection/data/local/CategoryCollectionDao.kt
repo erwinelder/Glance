@@ -12,7 +12,7 @@ interface CategoryCollectionDao : BaseDao<CategoryCollectionEntity> {
     @Query("DELETE FROM CategoryCollection")
     suspend fun deleteAllCollections()
 
-    @Query("SELECT * FROM CategoryCollection")
-    fun getAllCollections(): Flow<List<CategoryCollectionEntity>>
+    @Query("SELECT * FROM CategoryCollection ORDER BY orderNum ASC")
+    override fun getAllEntities(): Flow<List<CategoryCollectionEntity>>
 
 }
