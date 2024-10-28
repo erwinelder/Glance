@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-interface BaseRepository<T> {
+interface BaseEntityRepository<T> {
 
     val localSource: BaseLocalDataSource<T>
     val remoteSource: BaseRemoteDataSource<T>?

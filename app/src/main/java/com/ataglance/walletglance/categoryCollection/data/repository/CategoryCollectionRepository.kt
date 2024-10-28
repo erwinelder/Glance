@@ -1,13 +1,6 @@
 package com.ataglance.walletglance.categoryCollection.data.repository
 
-import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionDao
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
+import com.ataglance.walletglance.core.data.repository.BaseEntityRepository
 
-class CategoryCollectionRepository(
-    private val dao: CategoryCollectionDao
-) {
-
-    suspend fun deleteAllCollections() {
-        dao.deleteAllCollections()
-    }
-
-}
+interface CategoryCollectionRepository : BaseEntityRepository<CategoryCollectionEntity>
