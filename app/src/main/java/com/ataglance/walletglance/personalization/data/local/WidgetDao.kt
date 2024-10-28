@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WidgetDao : BaseDao<WidgetEntity> {
 
+    @Query("DELETE FROM Widget")
+    suspend fun deleteAllWidgets()
+
     @Query("SELECT * FROM Widget ORDER BY orderNum ASC")
     override fun getAllEntities(): Flow<List<WidgetEntity>>
 
