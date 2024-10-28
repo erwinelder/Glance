@@ -14,7 +14,7 @@ import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.RepositoryManager
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
+import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
@@ -118,9 +118,9 @@ class GlanceApplication : Application() {
     }
 
     private fun initializeNavViewModel() {
-        val navigationRepository = NavigationRepository(db.navigationButtonDao)
+        val navigationButtonRepository = NavigationButtonRepository(db.navigationButtonDao)
 
-        navViewModel = NavigationViewModel(navigationRepository)
+        navViewModel = NavigationViewModel(navigationButtonRepository)
     }
 
     private fun initializePersonalizationViewModel() {
