@@ -106,9 +106,9 @@ class BudgetAndBudgetAccountAssociationRepositoryImpl(
                         timestamp = remoteTimestamp
                     )
                 }
-                .flatMapConcat { budgetLocalSource.getAllBudgets() }
+                .flatMapConcat { budgetLocalSource.getAllEntities() }
         } else {
-            budgetLocalSource.getAllBudgets()
+            budgetLocalSource.getAllEntities()
         }
     }
 
@@ -124,9 +124,9 @@ class BudgetAndBudgetAccountAssociationRepositoryImpl(
                         timestamp = remoteTimestamp
                     )
                 }
-                .flatMapConcat { associationLocalSource.getAllAssociations() }
+                .flatMapConcat { associationLocalSource.getAllEntities() }
         } else {
-            associationLocalSource.getAllAssociations()
+            associationLocalSource.getAllEntities()
         }
     }
 

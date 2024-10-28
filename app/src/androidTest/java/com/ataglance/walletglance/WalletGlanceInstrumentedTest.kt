@@ -144,7 +144,7 @@ class WalletGlanceInstrumentedTest {
     }
 
     private fun setupCategoryRepository() {
-        every { mockCategoryRepository.getCategories() } returns flowOf(
+        every { mockCategoryRepository.getAllCategories() } returns flowOf(
             listOf(
                 CategoryEntity(
                     id = 1,

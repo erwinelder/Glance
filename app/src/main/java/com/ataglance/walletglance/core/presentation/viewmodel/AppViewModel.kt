@@ -402,7 +402,7 @@ class AppViewModel(
 
     private fun fetchCategoriesFromDb() {
         viewModelScope.launch {
-            categoryRepository.getCategories().collect { categoryEntityList ->
+            categoryRepository.getAllCategories().collect { categoryEntityList ->
                 _categoriesWithSubcategories.update {
                     categoryEntityList.toCategoriesWithSubcategories()
                 }
