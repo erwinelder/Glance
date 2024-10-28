@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BudgetOnWidgetDao : BaseDao<BudgetOnWidgetEntity> {
 
-    @Query("DELETE FROM BudgetOnWidget WHERE budgetId NOT IN (:budgetIds)")
-    suspend fun deleteBudgetsThatAreNotInList(budgetIds: List<Int>)
+    @Query("DELETE FROM BudgetOnWidget")
+    suspend fun deleteAllBudgetsOnWidget()
 
     @Query("SELECT * FROM BudgetOnWidget")
     override fun getAllEntities(): Flow<List<BudgetOnWidgetEntity>>

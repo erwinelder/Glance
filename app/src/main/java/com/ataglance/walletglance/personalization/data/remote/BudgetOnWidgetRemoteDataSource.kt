@@ -18,26 +18,4 @@ class BudgetOnWidgetRemoteDataSource(
     getDocumentRef = { this.document(it.budgetId.toString()) },
     dataToEntityMapper = Map<String, Any?>::toBudgetOnWidgetEntity,
     entityToDataMapper = BudgetOnWidgetEntity::toMap
-) {
-
-    fun deleteBudgetsThatAreNotInList(
-        budgetIds: List<Int>,
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
-        val batch = firestore.batch()
-
-        budgetIds.forEach { budgetId ->
-            batch.softDelete(collectionRef.document(budgetId.toString()), timestamp)
-        }
-
-        batch.commit()
-            .addOnSuccessListener {
-                updateLastModifiedTime(timestamp)
-                onSuccessListener()
-            }
-            .addOnFailureListener(onFailureListener)
-    }
-
-}
+)

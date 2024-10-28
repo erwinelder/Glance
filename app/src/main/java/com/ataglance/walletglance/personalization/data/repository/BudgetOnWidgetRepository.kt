@@ -1,24 +1,16 @@
 package com.ataglance.walletglance.personalization.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetDao
+import com.ataglance.walletglance.core.data.repository.BaseEntityRepository
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
-import kotlinx.coroutines.flow.Flow
 
-class BudgetOnWidgetRepository(
-    private val dao: BudgetOnWidgetDao
-) {
+interface BudgetOnWidgetRepository : BaseEntityRepository<BudgetOnWidgetEntity> {
 
     @Transaction
     suspend fun upsertBudgetsOnWidgetAndDeleteOther(
-        budgetOnWidgetListToUpsert: List<BudgetOnWidgetEntity>,
-    ) {
-        dao.deleteBudgetsThatAreNotInList(budgetOnWidgetListToUpsert.map { it.budgetId })
-        dao.upsertBudgetsOnWidget(budgetOnWidgetListToUpsert)
-    }
-
-    fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>> {
-        return dao.getAllBudgetsOnWidget()
-    }
+        budgetsToUpsert: List<BudgetOnWidgetEntity>,
+        onSuccessListener: () -> Unit,
+        onFailureListener: (Exception) -> Unit
+    )
 
 }

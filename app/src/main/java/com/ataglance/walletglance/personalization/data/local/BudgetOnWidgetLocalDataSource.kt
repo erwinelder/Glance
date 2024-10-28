@@ -16,8 +16,8 @@ class BudgetOnWidgetLocalDataSource(
 ) {
 
     @Transaction
-    suspend fun deleteBudgetsThatAreNotInList(budgetIds: List<Int>, timestamp: Long) {
-        budgetOnWidgetDao.deleteBudgetsThatAreNotInList(budgetIds)
+    suspend fun deleteAllBudgetsOnWidget(timestamp: Long) {
+        budgetOnWidgetDao.deleteAllBudgetsOnWidget()
         updateLastModifiedTime(timestamp)
     }
 
