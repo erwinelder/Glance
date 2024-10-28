@@ -39,16 +39,15 @@ class AccountRepositoryImpl(
     ): Flow<List<AccountEntity>> = flow {
         try {
 
-            val localTimestamp = localSource.getLastModifierTime()
-            val remoteTimestamp = remoteSource?.getLastModifierTime() ?: localTimestamp
+            val localTimestamp = localSource.getLastModifiedTime()
+            val remoteTimestamp = remoteSource?.getLastModifiedTime() ?: localTimestamp
 
             if (remoteSource != null && remoteTimestamp > localTimestamp) {
                 remoteSource.getEntitiesAfterTimestamp(localTimestamp)
                     .collect { entitiesToDeleteAndUpsert ->
 
                         localSource.deleteAndUpsertEntities(
-                            entitiesToDelete = entitiesToDeleteAndUpsert.toDelete,
-                            entitiesToUpsert = entitiesToDeleteAndUpsert.toUpsert,
+                            entitiesToDeleteAndUpsert = entitiesToDeleteAndUpsert,
                             timestamp = remoteTimestamp
                         )
                         localSource.getAllAccounts().collect { localList ->

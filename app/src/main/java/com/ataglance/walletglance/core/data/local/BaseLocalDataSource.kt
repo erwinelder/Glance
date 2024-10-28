@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.core.data.local
 
 import androidx.room.Transaction
+import com.ataglance.walletglance.core.data.model.EntitiesToUpsertAndDelete
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.first
 
@@ -14,7 +15,7 @@ abstract class BaseLocalDataSource<T>(
         updateTimeDao.updateTime(tableName.name, timestamp)
     }
 
-    suspend fun getLastModifierTime(): Long {
+    suspend fun getLastModifiedTime(): Long {
         return updateTimeDao.getUpdateTime(tableName.name).first()
     }
 
@@ -35,6 +36,20 @@ abstract class BaseLocalDataSource<T>(
         }
         if (entitiesToUpsert.isNotEmpty()) {
             dao.upsertEntities(entitiesToUpsert)
+        }
+        updateLastModifiedTime(timestamp)
+    }
+
+    @Transaction
+    suspend fun deleteAndUpsertEntities(
+        entitiesToDeleteAndUpsert: EntitiesToUpsertAndDelete<T>,
+        timestamp: Long
+    ) {
+        if (entitiesToDeleteAndUpsert.toDelete.isNotEmpty()) {
+            dao.deleteEntities(entitiesToDeleteAndUpsert.toDelete)
+        }
+        if (entitiesToDeleteAndUpsert.toUpsert.isNotEmpty()) {
+            dao.upsertEntities(entitiesToDeleteAndUpsert.toUpsert)
         }
         updateLastModifiedTime(timestamp)
     }

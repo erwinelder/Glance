@@ -38,7 +38,7 @@ abstract class BaseRemoteDataSource<T>(
             .set(mapOf("timestamp" to timestamp), SetOptions.merge())
     }
 
-    fun getLastModifierTime(): Long? {
+    fun getLastModifiedTime(): Long? {
         return tableUpdateTimeCollectionRef.document(tableName.name).get()
             .result?.get("timestamp") as? Long
     }
