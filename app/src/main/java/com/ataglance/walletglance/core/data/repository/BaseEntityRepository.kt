@@ -28,8 +28,8 @@ interface BaseEntityRepository<T> {
     suspend fun deleteAndUpsertEntities(
         toDelete: List<T>,
         toUpsert: List<T>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ) {
         val timestamp = getNowDateTimeLong()
 
@@ -48,13 +48,13 @@ interface BaseEntityRepository<T> {
     }
 
     suspend fun deleteAllEntities(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
     fun getAllEntities(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<List<T>> = syncDataAndGetFlowWrapper(
         flowSource = { localSource.getAllEntities() },
         onSuccessListener = onSuccessListener,
@@ -84,8 +84,8 @@ interface BaseEntityRepository<T> {
 
     fun <F> syncDataAndGetFlowWrapper(
         flowSource: () -> Flow<F>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<F> = flow {
         try {
             if (needToSyncData()) {
@@ -100,8 +100,8 @@ interface BaseEntityRepository<T> {
 
     fun <F> syncAndExecute(
         onExecute: suspend FlowCollector<F>.() -> Unit,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<F> = flow {
         try {
             if (needToSyncData()) {

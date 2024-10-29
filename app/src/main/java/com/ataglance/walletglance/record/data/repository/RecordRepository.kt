@@ -11,31 +11,31 @@ interface RecordRepository : BaseEntityRepository<RecordEntity> {
 
     suspend fun convertRecordsToTransfers(
         noteValues: List<String>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
     fun getLastRecordNum(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<Int?>
 
     fun getRecordsForToday(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<List<RecordEntity>>
 
     fun getRecordsInDateRange(
         longDateRange: LongDateRange,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<List<RecordEntity>>
 
     fun getTotalAmountForBudgetInDateRanges(
         budget: Budget,
         dateRangeList: List<LongDateRange>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<List<TotalAmountByRange>>
 
 }

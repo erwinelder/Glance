@@ -10,8 +10,8 @@ interface RecordAndAccountRepository {
     suspend fun deleteRecordsAndUpsertAccounts(
         recordListToDelete: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
     @Transaction
@@ -19,24 +19,24 @@ interface RecordAndAccountRepository {
         recordListToDelete: List<RecordEntity>,
         recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
     @Transaction
     suspend fun upsertRecordsAndUpsertAccounts(
         recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
     @Transaction
     suspend fun deleteAndUpdateAccountsAndConvertTransfersToRecords(
         accountListToDelete: List<AccountEntity>,
         accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
 }

@@ -61,8 +61,8 @@ interface BaseEntityAndAssociationRepository<E, A> {
     }
 
     fun getEntitiesAndAssociations(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     ): Flow<Pair<List<E>, List<A>>> = flow {
         try {
 
