@@ -5,6 +5,8 @@ import com.ataglance.walletglance.core.data.remote.BaseRemoteDataSource
 import com.ataglance.walletglance.core.utils.getNowDateTimeLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -53,34 +55,60 @@ interface BaseEntityRepository<T> {
     fun getAllEntities(
         onSuccessListener: () -> Unit,
         onFailureListener: (Exception) -> Unit
-    ): Flow<List<T>> = flow {
+    ): Flow<List<T>> = syncDataAndGetFlowWrapper(
+        flowSource = { localSource.getAllEntities() },
+        onSuccessListener = onSuccessListener,
+        onFailureListener = onFailureListener
+    )
+
+    suspend fun needToSyncData(): Boolean {
+        val localTimestamp = localSource.getLastModifiedTime()
+        val remoteTimestamp = remoteSource?.getLastModifiedTime() ?: return false
+
+        return remoteTimestamp > localTimestamp
+    }
+
+    suspend fun syncDataFromRemoteSource() {
+        val localTimestamp = localSource.getLastModifiedTime()
+        val remoteTimestamp = remoteSource?.getLastModifiedTime() ?: return
+
+        remoteSource?.getEntitiesAfterTimestamp(localTimestamp)?.collect { dataToSync ->
+
+            localSource.deleteAndUpsertEntities(
+                entitiesToDeleteAndUpsert = dataToSync,
+                timestamp = remoteTimestamp
+            )
+
+        }
+    }
+
+    fun <F> syncDataAndGetFlowWrapper(
+        flowSource: () -> Flow<F>,
+        onSuccessListener: () -> Unit,
+        onFailureListener: (Exception) -> Unit
+    ): Flow<F> = flow {
         try {
-            val remoteDataSource = remoteSource
-
-            val localTimestamp = localSource.getLastModifiedTime()
-            val remoteTimestamp = remoteDataSource?.getLastModifiedTime() ?: localTimestamp
-
-            if (remoteDataSource != null && remoteTimestamp > localTimestamp) {
-                remoteDataSource.getEntitiesAfterTimestamp(localTimestamp)
-                    .collect { entitiesToDeleteAndUpsert ->
-
-                        localSource.deleteAndUpsertEntities(
-                            entitiesToDeleteAndUpsert = entitiesToDeleteAndUpsert,
-                            timestamp = remoteTimestamp
-                        )
-                        localSource.getAllEntities().collect { localList ->
-                            emit(localList)
-                            onSuccessListener()
-                        }
-
-                    }
-            } else {
-                localSource.getAllEntities().collect { localList ->
-                    emit(localList)
-                    onSuccessListener()
-                }
+            if (needToSyncData()) {
+                syncDataFromRemoteSource()
             }
+            emitAll(flowSource())
+            onSuccessListener()
+        } catch (e: Exception) {
+            onFailureListener(e)
+        }
+    }.flowOn(Dispatchers.IO)
 
+    fun <F> syncAndExecute(
+        onExecute: suspend FlowCollector<F>.() -> Unit,
+        onSuccessListener: () -> Unit,
+        onFailureListener: (Exception) -> Unit
+    ): Flow<F> = flow {
+        try {
+            if (needToSyncData()) {
+                syncDataFromRemoteSource()
+            }
+            onExecute()
+            onSuccessListener()
         } catch (e: Exception) {
             onFailureListener(e)
         }

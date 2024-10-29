@@ -5,7 +5,7 @@ import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.findById
 import com.ataglance.walletglance.budget.domain.utils.getMaxIdOrZero
 import com.ataglance.walletglance.budget.domain.utils.subtractUsedAmountsByRecords
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.record.data.model.RecordEntity
 

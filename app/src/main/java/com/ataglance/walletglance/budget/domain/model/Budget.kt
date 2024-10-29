@@ -2,7 +2,7 @@ package com.ataglance.walletglance.budget.domain.model
 
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import java.util.Locale
 

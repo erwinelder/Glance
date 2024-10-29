@@ -20,29 +20,6 @@ class RecordRemoteDataSource(
     entityToDataMapper = RecordEntity::toMap
 ) {
 
-    fun deleteRecordsByRecordNumbers(
-        recordNumbers: List<Int>,
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
-        val batch = firestore.batch()
-
-        collectionRef.whereIn("recordNum", recordNumbers).get()
-            .addOnSuccessListener { querySnapshot ->
-                querySnapshot.documents.forEach { document ->
-                    batch.softDelete(document.reference, timestamp)
-                }
-                batch.commit()
-                    .addOnSuccessListener {
-                        updateLastModifiedTime(timestamp)
-                        onSuccessListener()
-                    }
-                    .addOnFailureListener(onFailureListener)
-            }
-            .addOnFailureListener(onFailureListener)
-    }
-
     fun convertTransfersToRecords(
         noteValues: List<String>,
         timestamp: Long,

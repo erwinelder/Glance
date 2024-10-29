@@ -9,17 +9,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RecordDao : BaseDao<RecordEntity> {
 
-    @Query("DELETE FROM Record WHERE recordNum IN (:recordNumbers)")
-    suspend fun deleteRecordsByRecordNumbers(recordNumbers: List<Int>)
-
     @Query("DELETE FROM Record")
     suspend fun deleteAllRecords()
 
     @Query("SELECT recordNum FROM Record ORDER BY recordNum DESC LIMIT 1")
     fun getLastRecordOrderNum(): Flow<Int?>
-
-    @Query("SELECT * FROM Record WHERE recordNum IN (:recordNumbers)")
-    fun getRecordsByRecordNumbers(recordNumbers: List<Int>): Flow<List<RecordEntity>>
 
     @Query("""    
         SELECT * FROM Record
@@ -44,9 +38,6 @@ interface RecordDao : BaseDao<RecordEntity> {
         from: Long,
         to: Long
     ): Flow<Double>
-
-    @Query("SELECT * FROM Record WHERE (accountId == :accountId) AND (type == 60 OR type == 62)")
-    fun getTransfersByAccountId(accountId: Int): Flow<List<RecordEntity>>
 
     @Query(
         """

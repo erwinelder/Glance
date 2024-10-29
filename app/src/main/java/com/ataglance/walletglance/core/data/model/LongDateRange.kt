@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.domain.date
+package com.ataglance.walletglance.core.data.model
 
 import com.ataglance.walletglance.core.utils.extractYearMonthDay
 
