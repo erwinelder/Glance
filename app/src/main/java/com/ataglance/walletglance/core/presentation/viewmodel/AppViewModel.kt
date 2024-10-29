@@ -382,8 +382,8 @@ class AppViewModel(
         if (listOfIdsToDelete.isNotEmpty()) {
             viewModelScope.launch {
                 recordAndAccountRepository
-                    .deleteAndUpdateAccountsAndDeleteRecordsByAccountIdAndConvertTransfersToRecords(
-                        accountsIdsToDelete = listOfIdsToDelete,
+                    .deleteAndUpdateAccountsAndConvertTransfersToRecords(
+                        accountListToDelete = listOfIdsToDelete,
                         accountListToUpsert = accountsList
                     )
             }
@@ -418,7 +418,7 @@ class AppViewModel(
 
         if (listOfIdsToDelete.isNotEmpty()) {
             viewModelScope.launch {
-                categoryRepository.deleteAndUpsertCategories(listOfIdsToDelete, categoryList)
+                categoryRepository.deleteAndUpsertEntities(listOfIdsToDelete, categoryList)
             }
         } else {
             viewModelScope.launch {

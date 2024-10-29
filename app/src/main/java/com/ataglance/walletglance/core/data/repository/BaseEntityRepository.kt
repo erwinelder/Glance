@@ -25,22 +25,22 @@ interface BaseEntityRepository<T> {
         remoteSource?.upsertEntities(entityList = entityList, timestamp = timestamp)
     }
 
-    suspend fun deleteAndUpsertCategories(
-        listToDelete: List<T>,
-        listToUpsert: List<T>,
+    suspend fun deleteAndUpsertEntities(
+        toDelete: List<T>,
+        toUpsert: List<T>,
         onSuccessListener: () -> Unit,
         onFailureListener: (Exception) -> Unit
     ) {
         val timestamp = getNowDateTimeLong()
 
         localSource.deleteAndUpsertEntities(
-            entitiesToDelete = listToDelete,
-            entitiesToUpsert = listToUpsert,
+            entitiesToDelete = toDelete,
+            entitiesToUpsert = toUpsert,
             timestamp = timestamp
         )
         remoteSource?.deleteAndUpsertEntities(
-            entitiesToDelete = listToDelete,
-            entitiesToUpsert = listToUpsert,
+            entitiesToDelete = toDelete,
+            entitiesToUpsert = toUpsert,
             timestamp = timestamp,
             onSuccessListener = onSuccessListener,
             onFailureListener = onFailureListener
