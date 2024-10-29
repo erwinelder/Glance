@@ -43,7 +43,7 @@ class BudgetOnWidgetRepositoryImpl(
     ) {
         val timestamp = getNowDateTimeLong()
         localSource.deleteAllBudgetsOnWidget(timestamp)
-        remoteSource?.deleteAllEntities(timestamp)
+        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
 }

@@ -15,7 +15,7 @@ class CategoryCollectionRepositoryImpl(
     ) {
         val timestamp = getNowDateTimeLong()
         localSource.deleteAllCollections(timestamp = timestamp)
-        remoteSource?.deleteAllEntities(timestamp = timestamp)
+        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
 }

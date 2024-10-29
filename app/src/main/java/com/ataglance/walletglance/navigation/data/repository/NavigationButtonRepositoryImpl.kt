@@ -15,10 +15,6 @@ class NavigationButtonRepositoryImpl(
     ) {
         val timestamp = getNowDateTimeLong()
         localSource.deleteAllNavigationButtons(timestamp)
-        remoteSource?.deleteAllEntities(
-            timestamp = timestamp,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
-        )
+        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 }

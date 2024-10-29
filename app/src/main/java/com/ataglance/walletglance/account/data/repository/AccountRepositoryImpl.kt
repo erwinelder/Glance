@@ -15,7 +15,7 @@ class AccountRepositoryImpl(
     ) {
         val timestamp = getNowDateTimeLong()
         localSource.deleteAllAccounts(timestamp = timestamp)
-        remoteSource?.deleteAllEntities(timestamp = timestamp)
+        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
 }
