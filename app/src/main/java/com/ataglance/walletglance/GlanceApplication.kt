@@ -14,11 +14,9 @@ import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.RepositoryManager
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
-import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
+import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -91,7 +89,10 @@ class GlanceApplication : Application() {
         val budgetAndBudgetAccountAssociationRepository = repositoryManager
             .getBudgetAndBudgetAccountAssociationRepository()
         val recordAndAccountRepository by lazy {
-            repositoryManager.getRecordAndAccountRepository()
+            RecordAndAccountRepositoryImpl(
+                recordRepository = recordRepository,
+                accountRepository = accountRepository
+            )
         }
 
         val generalRepository by lazy {
@@ -118,14 +119,14 @@ class GlanceApplication : Application() {
     }
 
     private fun initializeNavViewModel() {
-        val navigationButtonRepository = NavigationButtonRepository(db.navigationButtonDao)
+        val navigationButtonRepository = repositoryManager.getNavigationButtonRepository()
 
         navViewModel = NavigationViewModel(navigationButtonRepository)
     }
 
     private fun initializePersonalizationViewModel() {
-        val widgetRepository = WidgetRepository(db.widgetDao)
-        val budgetOnWidgetRepository = BudgetOnWidgetRepository(db.budgetOnWidgetDao)
+        val widgetRepository = repositoryManager.getWidgetRepository()
+        val budgetOnWidgetRepository = repositoryManager.getBudgetOnWidgetRepository()
 
         personalizationViewModel = PersonalizationViewModel(
             widgetRepository = widgetRepository,

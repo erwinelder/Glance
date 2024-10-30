@@ -6,7 +6,7 @@ import com.ataglance.walletglance.core.utils.getNowDateTimeLong
 
 class CategoryRepositoryImpl(
     override val localSource: CategoryLocalDataSource,
-    override val remoteSource: CategoryRemoteDataSource
+    override val remoteSource: CategoryRemoteDataSource?
 ) : CategoryRepository {
 
     override suspend fun deleteAllEntities(
@@ -15,7 +15,7 @@ class CategoryRepositoryImpl(
     ) {
         val timestamp = getNowDateTimeLong()
         localSource.deleteAllCategories(timestamp = timestamp)
-        remoteSource.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
+        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
 }
