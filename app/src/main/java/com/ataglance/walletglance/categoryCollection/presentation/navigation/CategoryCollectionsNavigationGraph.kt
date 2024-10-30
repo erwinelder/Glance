@@ -69,7 +69,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 },
                 onSaveCollectionsButton = {
                     coroutineScope.launch {
-                        appViewModel.saveCategoryCollectionsToDb(
+                        appViewModel.saveCategoryCollections(
                             collectionsViewModel.getAllCollections().toCollectionsWithIds()
                         )
                         navController.popBackStack()

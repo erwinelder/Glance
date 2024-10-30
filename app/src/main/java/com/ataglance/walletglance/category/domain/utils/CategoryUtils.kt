@@ -1,17 +1,17 @@
 package com.ataglance.walletglance.category.domain.utils
 
 import com.ataglance.walletglance.category.data.model.CategoryEntity
-import com.ataglance.walletglance.category.mapper.toCategoryList
+import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
+import com.ataglance.walletglance.category.domain.color.CategoryColors
+import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
+import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.CheckedCategory
 import com.ataglance.walletglance.category.domain.model.EditingCategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
-import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.category.mapper.toCategoryList
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.record.domain.RecordType
@@ -95,6 +95,26 @@ fun List<CategoryWithSubcategories>.getCategoryWithSubcategoryById(
                 }
     }
     return null
+}
+
+
+fun translateCategories(
+    defaultCategoriesInCurrLocale: List<Category>,
+    defaultCategoriesInNewLocale: List<Category>,
+    currCategoryList: List<Category>
+): List<Category> {
+    val namesToTranslateMap = currCategoryList
+        .mapNotNull { currentCategory ->
+            defaultCategoriesInCurrLocale.find { it.name == currentCategory.name }
+                ?.let { defaultCurrentCategory ->
+                    currentCategory.id to defaultCategoriesInNewLocale
+                        .find { it.id == defaultCurrentCategory.id }!!.name
+                }
+        }
+        .toMap()
+    return currCategoryList.mapNotNull { currentCategory ->
+        namesToTranslateMap[currentCategory.id]?.let { currentCategory.copy(name = it) }
+    }
 }
 
 

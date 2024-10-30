@@ -1,12 +1,11 @@
 package com.ataglance.walletglance.account.domain.utils
 
-import com.ataglance.walletglance.account.mapper.toAccountList
 import com.ataglance.walletglance.account.data.model.AccountEntity
-import com.ataglance.walletglance.account.data.utils.findById
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
 import com.ataglance.walletglance.account.domain.color.AccountColors
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.mapper.toAccountList
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
@@ -35,13 +34,6 @@ fun AccountColors.toColorWithName(theme: AppTheme): ColorWithName {
 fun List<AccountEntity>.toAccountList(): List<Account> {
     val possibleColors = AccountPossibleColors()
     return this.toAccountList(accountColorProvider = possibleColors::getByName)
-}
-
-
-fun List<Account>.getIdsThatAreNotInList(list: List<AccountEntity>): List<Int> {
-    return this
-        .filter { list.findById(it.id) == null }
-        .map { it.id }
 }
 
 

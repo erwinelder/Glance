@@ -7,10 +7,8 @@ fun List<CategoryEntity>.findById(id: Int): CategoryEntity? {
     return this.find { it.id == id }
 }
 
-fun List<CategoryEntity>.getIdsThatAreNotInList(list: List<CategoryEntity>): List<Int> {
-    return this
-        .filter { list.findById(it.id) == null }
-        .map { it.id }
+fun List<CategoryEntity>.getThatAreNotInList(list: List<CategoryEntity>): List<CategoryEntity> {
+    return this.filter { list.findById(it.id) == null }
 }
 
 fun List<CategoryEntity>.fixOrderNumbers(): List<CategoryEntity> {

@@ -10,18 +10,17 @@ import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.data.utils.checkOrderNumbers
 import com.ataglance.walletglance.account.data.utils.fixOrderNumbers
+import com.ataglance.walletglance.account.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
-import com.ataglance.walletglance.account.domain.utils.getIdsThatAreNotInList
 import com.ataglance.walletglance.account.domain.utils.mergeWith
 import com.ataglance.walletglance.account.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.account.domain.utils.toAccountList
 import com.ataglance.walletglance.account.mapper.toAccountEntityList
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.budget.data.utils.getAssociationsThatAreNotInList
-import com.ataglance.walletglance.budget.data.utils.getIdsThatAreNotInList
+import com.ataglance.walletglance.budget.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
@@ -30,7 +29,7 @@ import com.ataglance.walletglance.budget.mapper.divideIntoBudgetsAndAssociations
 import com.ataglance.walletglance.budget.mapper.toBudgetList
 import com.ataglance.walletglance.category.data.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.data.utils.getIdsThatAreNotInList
+import com.ataglance.walletglance.category.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
@@ -38,15 +37,17 @@ import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.utils.toRecordType
+import com.ataglance.walletglance.category.domain.utils.translateCategories
 import com.ataglance.walletglance.category.mapper.toCategoriesWithSubcategories
 import com.ataglance.walletglance.category.mapper.toCategoryEntityList
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.categoryCollection.data.utils.getAssociationsThatAreNotInList
-import com.ataglance.walletglance.categoryCollection.data.utils.getIdsThatAreNotInList
+import com.ataglance.walletglance.categoryCollection.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.mapper.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.categoryCollection.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
+import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -55,7 +56,6 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
@@ -106,11 +106,11 @@ class AppViewModel(
     val settingsRepository: SettingsRepository,
     val accountRepository: AccountRepository,
     val categoryRepository: CategoryRepository,
-    private val categoryCollectionAndCollectionCategoryAssociationRepository:
+    private val categoryCollectionAndAssociationRepository:
     CategoryCollectionAndCollectionCategoryAssociationRepository,
     val recordRepository: RecordRepository,
     val recordAndAccountRepository: RecordAndAccountRepository,
-    val budgetAndBudgetAccountAssociationRepository: BudgetAndBudgetAccountAssociationRepository,
+    val budgetAndAssociationRepository: BudgetAndBudgetAccountAssociationRepository,
     val generalRepository: GeneralRepository
 ) : ViewModel() {
 
@@ -168,24 +168,13 @@ class AppViewModel(
         newLangCode: String,
         context: Context
     ) {
-        val defaultCurrentCategoryList = getDefaultCategoriesByLanguage(currentLangCode, context)
-        val defaultNewCategoryList = getDefaultCategoriesByLanguage(newLangCode, context)
-
-        val currentCategoryList = categoriesWithSubcategories.value.concatenateAsCategoryList()
-
-        val namesToTranslateMap = currentCategoryList.mapNotNull { currentCategory ->
-            defaultCurrentCategoryList.find { it.name == currentCategory.name }
-                ?.let { defaultCurrentCategory ->
-                    currentCategory.id to defaultNewCategoryList
-                        .find { it.id == defaultCurrentCategory.id }!!.name
-                }
-        }.toMap()
-        val translatedCategoryList = currentCategoryList.mapNotNull { currentCategory ->
-            namesToTranslateMap[currentCategory.id]?.let { currentCategory.copy(name = it) }
-        }
-
+        val translatedCategories = translateCategories(
+            defaultCategoriesInCurrLocale = getDefaultCategoriesByLanguage(currentLangCode, context),
+            defaultCategoriesInNewLocale = getDefaultCategoriesByLanguage(newLangCode, context),
+            currCategoryList = categoriesWithSubcategories.value.concatenateAsCategoryList()
+        )
         viewModelScope.launch {
-            categoryRepository.upsertCategories(translatedCategoryList.toCategoryEntityList())
+            categoryRepository.upsertEntities(translatedCategories.toCategoryEntityList())
         }
     }
 
@@ -272,49 +261,16 @@ class AppViewModel(
     }
 
     suspend fun preFinishSetup() {
-        viewModelScope.launch {
-            settingsRepository.saveIsSetUpPreference(2)
-        }
+        settingsRepository.saveIsSetUpPreference(2)
     }
     suspend fun finishSetup() {
-        viewModelScope.launch {
-            settingsRepository.saveIsSetUpPreference(1)
-        }
+        settingsRepository.saveIsSetUpPreference(1)
     }
     suspend fun resetAppData() {
-        viewModelScope.launch {
-            generalRepository.resetAllData()
-        }
+        generalRepository.resetAllData()
     }
 
-    /*suspend fun exportAppData(context: Context) {
-        val records: List<Record> = recordRepository.getAllRecords().first()
-        val accounts: List<Account> = accountRepository.getAllAccounts().first()
-        val categories: List<Category> = categoryRepository.getCategories().first()
-        val settings: Settings = settingsRepository.getSettings()
-
-        val appData = AppData(
-            records = records,
-            accounts = accounts,
-            categories = categories,
-            settings = settings
-        )
-
-        val gson = Gson()
-        val appDataJson = gson.toJson(appData)
-
-        val file = File(context.getExternalFilesDir(null), "walletglance_data.json")
-        file.writeText(appDataJson)
-
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/json"
-            putExtra(Intent.EXTRA_TITLE, "walletglance_data.json")
-        }
-        startActivityForResult(intent, CREATE_FILE_REQUEST)
-    }*/
-
-    private fun fetchLastRecordNumFromDb() {
+    private fun fetchLastRecordNum() {
         viewModelScope.launch {
             recordRepository.getLastRecordNum().collect { recordNum ->
                 _lastRecordNum.update { recordNum ?: 0 }
@@ -327,13 +283,13 @@ class AppViewModel(
         MutableStateFlow(AccountsAndActiveOne())
     val accountsAndActiveOne: StateFlow<AccountsAndActiveOne> = _accountsAndActiveOne.asStateFlow()
 
-    private fun fetchAccountsFromDb() {
+    private fun fetchAccounts() {
         viewModelScope.launch {
-            accountRepository.getAllAccounts().collect { accountList ->
+            accountRepository.getAllEntities().collect { accountList ->
                 if (accountList.checkOrderNumbers()) {
                     applyAccountListToUiState(accountList.toAccountList())
                 } else {
-                    saveAccountsToDb(accountList.fixOrderNumbers())
+                    saveAccounts(accountList.fixOrderNumbers())
                 }
             }
         }
@@ -375,22 +331,18 @@ class AppViewModel(
         }
     }
 
-    suspend fun saveAccountsToDb(accountsList: List<AccountEntity>) {
-        val listOfIdsToDelete = accountsAndActiveOne.value.accountList
-            .getIdsThatAreNotInList(accountsList)
+    suspend fun saveAccounts(accountsList: List<AccountEntity>) {
+        val listToDelete = accountsAndActiveOne.value.accountList
+            .toAccountEntityList()
+            .getThatAreNotInList(accountsList)
 
-        if (listOfIdsToDelete.isNotEmpty()) {
-            viewModelScope.launch {
-                recordAndAccountRepository
-                    .deleteAndUpdateAccountsAndConvertTransfersToRecords(
-                        accountListToDelete = listOfIdsToDelete,
-                        accountListToUpsert = accountsList
-                    )
-            }
+        if (listToDelete.isNotEmpty()) {
+            recordAndAccountRepository.deleteAndUpdateAccountsAndConvertTransfersToRecords(
+                accountListToDelete = listToDelete,
+                accountListToUpsert = accountsList
+            )
         } else {
-            viewModelScope.launch {
-                accountRepository.upsertAccounts(accountsList)
-            }
+            accountRepository.upsertEntities(accountsList)
         }
     }
 
@@ -400,9 +352,9 @@ class AppViewModel(
     val categoriesWithSubcategories: StateFlow<CategoriesWithSubcategories> =
         _categoriesWithSubcategories.asStateFlow()
 
-    private fun fetchCategoriesFromDb() {
+    private fun fetchCategories() {
         viewModelScope.launch {
-            categoryRepository.getAllCategories().collect { categoryEntityList ->
+            categoryRepository.getAllEntities().collect { categoryEntityList ->
                 _categoriesWithSubcategories.update {
                     categoryEntityList.toCategoriesWithSubcategories()
                 }
@@ -410,20 +362,16 @@ class AppViewModel(
         }
     }
 
-    suspend fun saveCategoriesToDb(categoryList: List<CategoryEntity>) {
-        val listOfIdsToDelete = categoriesWithSubcategories.value
+    suspend fun saveCategories(categoryList: List<CategoryEntity>) {
+        val listToDelete = categoriesWithSubcategories.value
             .concatenateAsCategoryList()
             .toCategoryEntityList()
-            .getIdsThatAreNotInList(categoryList)
+            .getThatAreNotInList(categoryList)
 
-        if (listOfIdsToDelete.isNotEmpty()) {
-            viewModelScope.launch {
-                categoryRepository.deleteAndUpsertEntities(listOfIdsToDelete, categoryList)
-            }
+        if (listToDelete.isNotEmpty()) {
+            categoryRepository.deleteAndUpsertEntities(listToDelete, categoryList)
         } else {
-            viewModelScope.launch {
-                categoryRepository.upsertCategories(categoryList)
-            }
+            categoryRepository.upsertEntities(categoryList)
         }
     }
 
@@ -447,21 +395,20 @@ class AppViewModel(
     val categoryCollectionsUiState: StateFlow<CategoryCollectionsWithIdsByType> =
         _categoryCollectionsUiState.asStateFlow()
 
-    private fun fetchCategoryCollectionsFromDb() {
+    private fun fetchCategoryCollections() {
         viewModelScope.launch {
-            val collectionsAndCollectionCategoryAssociations =
-                categoryCollectionAndCollectionCategoryAssociationRepository
-                    .getCategoryCollectionsAndCollectionCategoryAssociations()
+            val (collections, associations) = categoryCollectionAndAssociationRepository
+                .getEntitiesAndAssociations()
             _categoryCollectionsUiState.update {
                 transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
-                    collectionsAndCollectionCategoryAssociations.first,
-                    collectionsAndCollectionCategoryAssociations.second
+                    collectionList = collections,
+                    collectionCategoryAssociationList = associations
                 )
             }
         }
     }
 
-    suspend fun saveCategoryCollectionsToDb(
+    suspend fun saveCategoryCollections(
         collectionUiStateList: List<CategoryCollectionWithIds>
     ) {
 
@@ -470,20 +417,18 @@ class AppViewModel(
         val (originalCollections, originalAssociations) = categoryCollectionsUiState.value
             .concatenateLists().divideIntoCollectionsAndAssociations()
 
-        val collectionsIdsToDelete = originalCollections.getIdsThatAreNotInList(newCollections)
+        val collectionsToDelete = originalCollections.getThatAreNotInList(newCollections)
         val associationsToDelete = originalAssociations
             .getAssociationsThatAreNotInList(newAssociations)
 
-        viewModelScope.launch {
-            categoryCollectionAndCollectionCategoryAssociationRepository
-                .deleteAndUpsertCollectionsAndDeleteAndUpsertAssociations(
-                    collectionsIdsToDelete = collectionsIdsToDelete,
-                    collectionListToUpsert = newCollections,
-                    associationsToDelete = associationsToDelete,
-                    associationsToUpsert = newAssociations
-                )
-            fetchCategoryCollectionsFromDb()
-        }
+        categoryCollectionAndAssociationRepository
+            .deleteAndUpsertEntitiesAndDeleteAndUpsertAssociations(
+                entitiesToDelete = collectionsToDelete,
+                entitiesToUpsert = newCollections,
+                associationsToDelete = associationsToDelete,
+                associationsToUpsert = newAssociations
+            )
+        fetchCategoryCollections()
 
     }
 
@@ -492,7 +437,7 @@ class AppViewModel(
         emptyList()
     )
 
-    private fun fetchRecordsFromDbForToday() {
+    private fun fetchRecordsForToday() {
         viewModelScope.launch {
             recordRepository.getRecordsForToday().collect { recordList ->
                 _todayRecordList.update { recordList }
@@ -515,7 +460,7 @@ class AppViewModel(
         RecordsInDateRange()
     )
 
-    fun fetchRecordsFromDbInDateRange(longDateRange: LongDateRange) {
+    fun fetchRecordsInDateRange(longDateRange: LongDateRange) {
         viewModelScope.launch {
             recordRepository.getRecordsInDateRange(longDateRange).collect { recordList ->
                 _recordListInDateRange.update {
@@ -547,10 +492,10 @@ class AppViewModel(
     private val _budgetsByType: MutableStateFlow<BudgetsByType> = MutableStateFlow(BudgetsByType())
     val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
 
-    private fun fetchBudgetsFromDb() {
+    private fun fetchBudgets() {
         viewModelScope.launch {
-            val (budgetEntityList, associationList) = budgetAndBudgetAccountAssociationRepository
-                .getBudgetsAndBudgetAccountAssociations()
+            val (budgetEntityList, associationList) = budgetAndAssociationRepository
+                .getEntitiesAndAssociations()
             val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
 
             val budgetsByType = budgetEntityList
@@ -586,20 +531,17 @@ class AppViewModel(
         val (originalCollections, originalAssociations) = budgetsByType.value.concatenate()
             .divideIntoBudgetsAndAssociations()
 
-        val budgetsIdsToDelete = originalCollections.getIdsThatAreNotInList(newBudgets)
-        val associationsToDelete = originalAssociations
-            .getAssociationsThatAreNotInList(newAssociations)
+        val budgetsToDelete = originalCollections.getThatAreNotInList(newBudgets)
+        val associationsToDelete = originalAssociations.getThatAreNotInList(newAssociations)
 
-        viewModelScope.launch {
-            budgetAndBudgetAccountAssociationRepository
-                .deleteAndUpsertBudgetsAndDeleteAndUpsertAssociations(
-                    budgetsIdsToDelete = budgetsIdsToDelete,
-                    budgetListToUpsert = newBudgets,
-                    associationsToDelete = associationsToDelete,
-                    associationsToUpsert = newAssociations
-                )
-            fetchBudgetsFromDb()
-        }
+        budgetAndAssociationRepository
+            .deleteAndUpsertEntitiesAndDeleteAndUpsertAssociations(
+                entitiesToDelete = budgetsToDelete,
+                entitiesToUpsert = newBudgets,
+                associationsToDelete = associationsToDelete,
+                associationsToUpsert = newAssociations
+            )
+        fetchBudgets()
     }
 
 
@@ -616,17 +558,15 @@ class AppViewModel(
             dataAfterRecordOperation.updatedBudgetsByType
         }
 
-        viewModelScope.launch {
-            recordAndAccountRepository.deleteAndUpsertRecordsAndUpsertAccounts(
-                recordListToDelete = dataAfterRecordOperation.recordListToDelete,
-                recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
-                accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
-            )
-            if (recordDraft.general.dateTimeState.dateLong.isInRange(getTodayLongDateRange())) {
-                fetchRecordsFromDbForToday()
-            }
-            fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
+        recordAndAccountRepository.deleteAndUpsertRecordsAndUpsertAccounts(
+            recordListToDelete = dataAfterRecordOperation.recordListToDelete,
+            recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
+            accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
+        )
+        if (recordDraft.general.dateTimeState.dateLong.isInRange(getTodayLongDateRange())) {
+            fetchRecordsForToday()
         }
+        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
 
     private fun getDataForDatabaseAfterNewRecord(
@@ -738,34 +678,30 @@ class AppViewModel(
 
         _budgetsByType.update { updatedBudgets }
 
-        viewModelScope.launch {
-            recordAndAccountRepository.deleteRecordsAndUpsertAccounts(
-                recordListToDelete = recordList,
-                accountListToUpsert = updatedAccounts
-            )
-        }
+        recordAndAccountRepository.deleteRecordsAndUpsertAccounts(
+            recordListToDelete = recordList,
+            accountListToUpsert = updatedAccounts
+        )
     }
 
     suspend fun saveTransfer(transferDraft: TransferDraft) {
         val createdTransfer = transferDraft.toCreatedTransfer() ?: return
 
         val dataAfterRecordOperation = if (createdTransfer.isNew) {
-            getDataForDatabaseAfterNewTransfer(createdTransfer)
+            getDataAfterNewTransfer(createdTransfer)
         } else {
-            getDataForDatabaseAfterEditedTransfer(createdTransfer)
+            getDataAfterEditedTransfer(createdTransfer)
         } ?: return
 
         _budgetsByType.update { dataAfterRecordOperation.updatedBudgetsByType }
 
-        viewModelScope.launch {
-            recordAndAccountRepository.upsertRecordsAndUpsertAccounts(
-                recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
-                accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
-            )
-        }
+        recordAndAccountRepository.upsertRecordsAndUpsertAccounts(
+            recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
+            accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
+        )
     }
 
-    private fun getDataForDatabaseAfterNewTransfer(
+    private fun getDataAfterNewTransfer(
         state: CreatedTransfer
     ): DataAfterRecordOperation {
         val recordList = state.toRecordsPair().toList()
@@ -784,7 +720,7 @@ class AppViewModel(
         )
     }
 
-    private fun getDataForDatabaseAfterEditedTransfer(
+    private fun getDataAfterEditedTransfer(
         state: CreatedTransfer
     ): DataAfterRecordOperation? {
         val (currRecordStackFrom, currRecordStackTo) = recordStackListFilteredByDate.value
@@ -876,6 +812,7 @@ class AppViewModel(
     }
 
     suspend fun deleteTransfer(senderReceiverRecordNums: TransferSenderReceiverRecordNums) {
+
         val (outTransfer, inTransfer) = recordStackListFilteredByDate.value
             .getOutAndInTransfersByRecordNums(senderReceiverRecordNums) ?: return
         val prevAccounts = Pair(
@@ -894,12 +831,10 @@ class AppViewModel(
 
         _budgetsByType.update { updatedBudgetsByType }
 
-        viewModelScope.launch {
-            recordAndAccountRepository.deleteRecordsAndUpsertAccounts(
-                recordListToDelete = recordList,
-                accountListToUpsert = updatedAccountList,
-            )
-        }
+        recordAndAccountRepository.deleteRecordsAndUpsertAccounts(
+            recordListToDelete = recordList,
+            accountListToUpsert = updatedAccountList,
+        )
     }
 
 
@@ -920,7 +855,7 @@ class AppViewModel(
                 dateRangeWithEnum = dateRangeEnum.withLongDateRange(currDateRangeWithEnum)
             )
         }
-        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
+        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
 
     fun selectCustomDateRange(pastDateMillis: Long?, futureDateMillis: Long?) {
@@ -941,18 +876,18 @@ class AppViewModel(
                 )
             )
         }
-        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
+        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
 
 
     fun fetchDataOnStart() {
-        fetchAccountsFromDb()
-        fetchCategoriesFromDb()
-        fetchLastRecordNumFromDb()
-        fetchCategoryCollectionsFromDb()
-        fetchRecordsFromDbForToday()
-        fetchRecordsFromDbInDateRange(dateRangeMenuUiState.value.getLongDateRange())
-        fetchBudgetsFromDb()
+        fetchAccounts()
+        fetchCategories()
+        fetchLastRecordNum()
+        fetchCategoryCollections()
+        fetchRecordsForToday()
+        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
+        fetchBudgets()
     }
 
 }

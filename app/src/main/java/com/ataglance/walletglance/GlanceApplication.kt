@@ -107,11 +107,11 @@ class GlanceApplication : Application() {
             settingsRepository = settingsRepository,
             accountRepository = accountRepository,
             categoryRepository = categoryRepository,
-            categoryCollectionAndCollectionCategoryAssociationRepository =
+            categoryCollectionAndAssociationRepository =
             categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = recordRepository,
             recordAndAccountRepository = recordAndAccountRepository,
-            budgetAndBudgetAccountAssociationRepository =
+            budgetAndAssociationRepository =
             budgetAndBudgetAccountAssociationRepository,
             generalRepository = generalRepository
         )

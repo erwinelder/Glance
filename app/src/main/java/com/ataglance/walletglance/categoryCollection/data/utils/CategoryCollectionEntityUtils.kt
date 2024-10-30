@@ -3,14 +3,12 @@ package com.ataglance.walletglance.categoryCollection.data.utils
 import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
 
-fun List<CategoryCollectionEntity>.getIdsThatAreNotInList(
+fun List<CategoryCollectionEntity>.getThatAreNotInList(
     list: List<CategoryCollectionEntity>
-): List<Int> {
-    return this
-        .filter { collection ->
-            list.find { it.id == collection.id } == null
-        }
-        .map { it.id }
+): List<CategoryCollectionEntity> {
+    return this.filter { collection ->
+        list.find { it.id == collection.id } == null
+    }
 }
 
 fun List<CategoryCollectionCategoryAssociation>.getAssociationsThatAreNotInList(

@@ -64,7 +64,7 @@ fun NavGraphBuilder.accountsGraph(
                 onSaveButton = {
                     coroutineScope.launch {
                         editAccountsViewModel.getAccountEntities()?.let {
-                            appViewModel.saveAccountsToDb(it)
+                            appViewModel.saveAccounts(it)
                         }
                         if (appUiSettings.isSetUp) {
                             navController.popBackStack()

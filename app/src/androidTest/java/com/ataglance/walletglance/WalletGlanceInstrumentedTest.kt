@@ -84,11 +84,11 @@ class WalletGlanceInstrumentedTest {
         appViewModel = AppViewModel(
             accountRepository = mockAccountRepository,
             categoryRepository = mockCategoryRepository,
-            categoryCollectionAndCollectionCategoryAssociationRepository =
+            categoryCollectionAndAssociationRepository =
                 categoryCollectionAndCollectionCategoryAssociationRepository,
             recordRepository = mockRecordRepository,
             recordAndAccountRepository = mockRecordAndAccountRepository,
-            budgetAndBudgetAccountAssociationRepository =
+            budgetAndAssociationRepository =
                 budgetAndBudgetAccountAssociationRepository,
             generalRepository = mockGeneralRepository,
             settingsRepository = mockSettingsRepository
@@ -274,7 +274,7 @@ class WalletGlanceInstrumentedTest {
             providedRecordList.add(record)
         }
 
-        appViewModel.fetchRecordsFromDbInDateRange(
+        appViewModel.fetchRecordsInDateRange(
             appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
@@ -367,7 +367,7 @@ class WalletGlanceInstrumentedTest {
             providedRecordList.add(record)
         }
 
-        appViewModel.fetchRecordsFromDbInDateRange(
+        appViewModel.fetchRecordsInDateRange(
             appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
@@ -503,7 +503,7 @@ class WalletGlanceInstrumentedTest {
             providedRecordList.add(record)
         }
 
-        appViewModel.fetchRecordsFromDbInDateRange(
+        appViewModel.fetchRecordsInDateRange(
             appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 
@@ -604,7 +604,7 @@ class WalletGlanceInstrumentedTest {
             providedRecordList.add(record)
         }
 
-        appViewModel.fetchRecordsFromDbInDateRange(
+        appViewModel.fetchRecordsInDateRange(
             appViewModel.dateRangeMenuUiState.value.getLongDateRange()
         )
 

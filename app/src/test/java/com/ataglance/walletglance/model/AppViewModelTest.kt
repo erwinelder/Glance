@@ -34,12 +34,12 @@ class AppViewModelTest {
             settingsRepository = Mockito.mock(SettingsRepository::class.java),
             accountRepository = Mockito.mock(AccountRepository::class.java),
             categoryRepository = Mockito.mock(CategoryRepository::class.java),
-            categoryCollectionAndCollectionCategoryAssociationRepository = Mockito.mock(
+            categoryCollectionAndAssociationRepository = Mockito.mock(
                 CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
             ),
             recordRepository = Mockito.mock(RecordRepository::class.java),
             recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
-            budgetAndBudgetAccountAssociationRepository = Mockito.mock(
+            budgetAndAssociationRepository = Mockito.mock(
                 BudgetAndBudgetAccountAssociationRepository::class.java
             ),
             generalRepository = Mockito.mock(GeneralRepository::class.java)

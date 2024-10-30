@@ -7,6 +7,10 @@ fun List<AccountEntity>.findById(id: Int): AccountEntity? {
     return this.find { it.id == id }
 }
 
+fun List<AccountEntity>.getThatAreNotInList(list: List<AccountEntity>): List<AccountEntity> {
+    return this.filter { list.findById(it.id) == null }
+}
+
 fun List<AccountEntity>.checkOrderNumbers(): Boolean {
     this.sortedBy { it.orderNum }.forEachIndexed { index, account ->
         if (account.orderNum != index + 1) {

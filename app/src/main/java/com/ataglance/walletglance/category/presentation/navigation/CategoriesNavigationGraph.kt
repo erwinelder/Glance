@@ -80,7 +80,7 @@ fun NavGraphBuilder.categoriesGraph(
                 onResetButton = categoriesViewModel::reapplyCategoryLists,
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
-                        appViewModel.saveCategoriesToDb(
+                        appViewModel.saveCategories(
                             categoryList = categoriesViewModel.getAllCategoryEntities()
                         )
                         if (isAppSetUp) {
