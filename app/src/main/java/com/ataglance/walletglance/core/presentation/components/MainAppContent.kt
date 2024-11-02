@@ -11,6 +11,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
@@ -21,11 +23,11 @@ import com.ataglance.walletglance.core.presentation.components.containers.MainSc
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
-import com.ataglance.walletglance.navigation.presentation.AppNavHost
-import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs
 import com.ataglance.walletglance.navigation.domain.utils.getSetupProgressTopBarTitleRes
+import com.ataglance.walletglance.navigation.presentation.AppNavHost
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.domain.utils.filterAccountId
 import com.ataglance.walletglance.record.domain.utils.getExpensesIncomeWidgetUiState
@@ -35,6 +37,8 @@ import java.time.LocalDateTime
 
 @Composable
 fun MainAppContent(
+    authViewModel: AuthViewModel,
+    subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,
@@ -68,7 +72,7 @@ fun MainAppContent(
     val budgetsOnWidget by personalizationViewModel.budgetsOnWidget.collectAsStateWithLifecycle()
 
     val currentLocalDateTime = LocalDateTime.now()
-    val greetingsTitleRes by remember(key1 = currentLocalDateTime.hour) {
+    val greetingsTitleRes by remember(currentLocalDateTime.hour) {
         derivedStateOf {
             currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
         }

@@ -35,12 +35,12 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun WalletGlanceAppComponent(
+fun GlanceAppComponent(
+    authViewModel: AuthViewModel,
+    subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     navViewModel: NavigationViewModel,
-    personalizationViewModel: PersonalizationViewModel,
-    authViewModel: AuthViewModel,
-    subscriptionViewModel: SubscriptionViewModel
+    personalizationViewModel: PersonalizationViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
     val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()
@@ -67,6 +67,8 @@ fun WalletGlanceAppComponent(
                         AppBackground(appTheme = appUiSettings.appTheme)
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
+                                authViewModel = authViewModel,
+                                subscriptionViewModel = subscriptionViewModel,
                                 appViewModel = appViewModel,
                                 appUiSettings = appUiSettings,
                                 themeUiState = safeThemeUiState,

@@ -11,7 +11,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
-import com.ataglance.walletglance.core.presentation.components.WalletGlanceAppComponent
+import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
@@ -39,12 +39,12 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
-                WalletGlanceAppComponent(
+                GlanceAppComponent(
+                    authViewModel = authViewModel,
+                    subscriptionViewModel = subscriptionViewModel,
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
-                    personalizationViewModel = personalizationViewModel,
-                    authViewModel = authViewModel,
-                    subscriptionViewModel = subscriptionViewModel
+                    personalizationViewModel = personalizationViewModel
                 )
             }
         }

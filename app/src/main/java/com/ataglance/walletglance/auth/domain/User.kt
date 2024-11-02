@@ -7,7 +7,7 @@ data class User(
 
     fun isSignedIn(): Boolean = uid != null
 
-    fun isAliableForDataSync(): Boolean {
+    fun isEligibleForDataSync(): Boolean {
         return isSignedIn() && subscription != AppSubscription.Free
     }
 

@@ -47,10 +47,10 @@ class GlanceApplication : Application() {
         initializeFirestore()
         initializeAuthViewModel()
         initializeBillingManager()
+        initializeSettingsRepository()
 
         repositoryManager = RepositoryManager(db, authViewModel.user, firestore)
 
-        initializeSettingsRepository()
         initializeAppViewModel()
         initializeNavViewModel()
         initializePersonalizationViewModel()
@@ -65,7 +65,7 @@ class GlanceApplication : Application() {
 
     private fun initializeAuthViewModel() {
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        authViewModel = AuthViewModel(auth = auth)
+        authViewModel = AuthViewModel(auth = auth, firestore = firestore)
     }
 
     private fun initializeBillingManager() {

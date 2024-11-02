@@ -10,10 +10,8 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.settings.domain.Settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -21,6 +19,7 @@ class SettingsRepository(
     private val dataStore: DataStore<Preferences>
 ) {
     private companion object {
+        val UID = stringPreferencesKey("uid")
         val LANGUAGE = stringPreferencesKey("language")
         val SETUP_STAGE = intPreferencesKey("setupStage")
         val USE_DEVICE_THEME = booleanPreferencesKey("useDeviceTheme")
@@ -29,6 +28,19 @@ class SettingsRepository(
         val LAST_CHOSEN_THEME = stringPreferencesKey("lastChosenTheme")
         const val TAG = "SettingsRepository"
     }
+
+    val uid: Flow<String?> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading user id.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[UID]?.takeIf { it.isNotBlank() }
+        }
 
     val language: Flow<String> = dataStore.data
         .catch {
@@ -108,6 +120,10 @@ class SettingsRepository(
             preferences[LAST_CHOSEN_THEME] ?: AppTheme.LightDefault.name
         }
 
+    suspend fun saveUidPreference(uid: String) {
+        dataStore.edit { it[UID] = uid }
+    }
+
     suspend fun saveLanguagePreference(langCode: String) {
         dataStore.edit { it[LANGUAGE] = langCode }
     }
@@ -130,16 +146,6 @@ class SettingsRepository(
 
     suspend fun saveLastChosenThemePreference(theme: String) {
         dataStore.edit { it[LAST_CHOSEN_THEME] = theme }
-    }
-
-    suspend fun getSettings(): Settings {
-        return Settings(
-            language = language.first(),
-            useDeviceTheme = useDeviceTheme.first(),
-            chosenLightTheme = chosenLightTheme.first(),
-            chosenDarkTheme = chosenDarkTheme.first(),
-            lastChosenTheme = lastChosenTheme.first()
-        )
     }
 
 }

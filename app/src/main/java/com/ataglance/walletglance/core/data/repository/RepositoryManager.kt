@@ -49,7 +49,7 @@ class RepositoryManager(
 ) {
 
     private inline fun <reified RS> createRemoteDataSource(): RS? {
-        return if (user.isAliableForDataSync() && user.uid != null) {
+        return if (user.isEligibleForDataSync() && user.uid != null) {
             when (RS::class) {
                 AccountRemoteDataSource::class -> AccountRemoteDataSource(
                     userId = user.uid, firestore = firestore

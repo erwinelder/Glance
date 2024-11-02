@@ -24,7 +24,7 @@ abstract class BaseRemoteDataSource<T>(
 ) {
 
     private val userFirestoreRef
-        get() = firestore.collection("users").document(userId)
+        get() = firestore.collection("usersData").document(userId)
 
     val collectionRef
         get() = userFirestoreRef.collection(collectionName)

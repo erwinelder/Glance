@@ -186,6 +186,18 @@ class AppViewModel(
             .concatenateAsCategoryList()
     }
 
+    fun setUid(uid: String) {
+        viewModelScope.launch {
+            settingsRepository.saveUidPreference(uid)
+        }
+    }
+
+    fun resetUid() {
+        viewModelScope.launch {
+            settingsRepository.saveUidPreference("")
+        }
+    }
+
     fun setLanguage(langCode: String) {
 
         viewModelScope.launch {
