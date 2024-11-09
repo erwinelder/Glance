@@ -9,8 +9,8 @@ interface BudgetOnWidgetRepository : BaseEntityRepository<BudgetOnWidgetEntity> 
     @Transaction
     suspend fun upsertBudgetsOnWidgetAndDeleteOther(
         budgetsToUpsert: List<BudgetOnWidgetEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        onSuccessListener: () -> Unit = {},
+        onFailureListener: (Exception) -> Unit = {}
     )
 
 }

@@ -20,7 +20,8 @@ import com.ataglance.walletglance.account.domain.utils.returnAmountToFirstBalanc
 import com.ataglance.walletglance.account.domain.utils.toAccountList
 import com.ataglance.walletglance.account.mapper.toAccountEntityList
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.budget.data.utils.getThatAreNotInList
+import com.ataglance.walletglance.budget.data.utils.getAssociationsThatAreNotInList
+import com.ataglance.walletglance.budget.data.utils.getBudgetsThatAreNotInList
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
@@ -547,8 +548,8 @@ class AppViewModel(
         val (originalCollections, originalAssociations) = budgetsByType.value.concatenate()
             .divideIntoBudgetsAndAssociations()
 
-        val budgetsToDelete = originalCollections.getThatAreNotInList(newBudgets)
-        val associationsToDelete = originalAssociations.getThatAreNotInList(newAssociations)
+        val budgetsToDelete = originalCollections.getBudgetsThatAreNotInList(newBudgets)
+        val associationsToDelete = originalAssociations.getAssociationsThatAreNotInList(newAssociations)
 
         budgetAndAssociationRepository
             .deleteAndUpsertEntitiesAndDeleteAndUpsertAssociations(

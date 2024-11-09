@@ -15,8 +15,8 @@ class GeneralRepository(
     @Transaction
     suspend fun resetAllData() {
         settingsRepository.saveIsSetUpPreference(0)
-        accountRepository.deleteAllAccounts()
-        categoryRepository.deleteAllCategories()
-        categoryCollectionRepository.deleteAllCollections()
+        accountRepository.deleteAllEntities()
+        categoryRepository.deleteAllEntities()
+        categoryCollectionRepository.deleteAllEntities()
     }
 }

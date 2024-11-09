@@ -3,6 +3,7 @@ package com.ataglance.walletglance.core.data.local
 import androidx.room.Transaction
 import com.ataglance.walletglance.core.data.model.EntitiesToUpsertAndDelete
 import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.core.data.model.TableUpdateTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -13,7 +14,9 @@ abstract class BaseLocalDataSource<T>(
 ) {
 
     suspend fun updateLastModifiedTime(timestamp: Long) {
-        updateTimeDao.updateTime(tableName.name, timestamp)
+        updateTimeDao.updateTime(
+            TableUpdateTime(tableName.name, timestamp)
+        )
     }
 
     suspend fun getLastModifiedTime(): Long {

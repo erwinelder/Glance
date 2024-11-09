@@ -81,7 +81,7 @@ fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun AuthScreenPreview() {
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = AppTheme.DarkDefault) {
         AuthScreen(
             onSignInWithEmailAndPassword = { _, _ -> }
         )

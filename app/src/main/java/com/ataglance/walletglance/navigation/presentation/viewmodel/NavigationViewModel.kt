@@ -8,14 +8,14 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
-import com.ataglance.walletglance.navigation.mapper.toBottomBarNavigationButtonList
-import com.ataglance.walletglance.navigation.mapper.toDefaultNavigationButtonEntityList
-import com.ataglance.walletglance.navigation.mapper.toNavigationButtonEntityList
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsNoneOf
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
 import com.ataglance.walletglance.navigation.domain.utils.simpleName
+import com.ataglance.walletglance.navigation.mapper.toBottomBarNavigationButtonList
+import com.ataglance.walletglance.navigation.mapper.toDefaultNavigationButtonEntityList
+import com.ataglance.walletglance.navigation.mapper.toNavigationButtonEntityList
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,7 +41,7 @@ class NavigationViewModel(
 
     fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
-            navigationButtonRepository.getNavigationButtonsSorted().collect { buttons ->
+            navigationButtonRepository.getAllEntities().collect { buttons ->
                 if (buttons.isNotEmpty()) {
                     _navigationButtonList.update {
                         buttons.toBottomBarNavigationButtonList()
@@ -49,7 +49,7 @@ class NavigationViewModel(
                 } else {
                     val defaultNavigationButtonList = getDefaultNavigationButtonList()
 
-                    navigationButtonRepository.upsertNavigationButtons(defaultNavigationButtonList)
+                    navigationButtonRepository.upsertEntities(defaultNavigationButtonList)
                     _navigationButtonList.update {
                         defaultNavigationButtonList.toBottomBarNavigationButtonList()
                     }
@@ -72,7 +72,7 @@ class NavigationViewModel(
         val navigationButtonEntityList = navigationButtonList.toNavigationButtonEntityList()
 
         viewModelScope.launch {
-            navigationButtonRepository.upsertNavigationButtons(navigationButtonEntityList)
+            navigationButtonRepository.upsertEntities(navigationButtonEntityList)
             _navigationButtonList.update {
                 navigationButtonEntityList.toBottomBarNavigationButtonList()
             }

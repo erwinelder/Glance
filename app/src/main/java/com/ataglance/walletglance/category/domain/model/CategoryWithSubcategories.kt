@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.category.domain.model
 
 import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
-import com.ataglance.walletglance.category.data.utils.findById
+import com.ataglance.walletglance.category.domain.utils.findById
 import com.ataglance.walletglance.category.domain.utils.toCheckedCategoryList
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 

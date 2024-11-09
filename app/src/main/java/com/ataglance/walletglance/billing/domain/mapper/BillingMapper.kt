@@ -7,7 +7,7 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.ataglance.walletglance.billing.domain.AppSubscriptions
 
 
-fun List<AppSubscriptions>.toProductDetailsParamsList(): List<QueryProductDetailsParams.Product> {
+fun List<AppSubscriptions>.subsToProductDetailsParamsList(): List<QueryProductDetailsParams.Product> {
     return this.map { subscription ->
         QueryProductDetailsParams.Product.newBuilder()
             .setProductId(subscription.id)

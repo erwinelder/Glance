@@ -8,7 +8,7 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
-import com.ataglance.walletglance.billing.domain.mapper.toProductDetailsParamsList
+import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
 
 class BillingManager(private val context: Context) {
 
@@ -58,7 +58,7 @@ class BillingManager(private val context: Context) {
 
     private fun onBillingSetupSucceed() {
         val queryProductDetailsParams = QueryProductDetailsParams.newBuilder()
-            .setProductList(AppSubscriptions.asPaidSubscriptionsList().toProductDetailsParamsList())
+            .setProductList(AppSubscriptions.asPaidSubscriptionsList().subsToProductDetailsParamsList())
             .build()
 
         billingClient.queryProductDetailsAsync(

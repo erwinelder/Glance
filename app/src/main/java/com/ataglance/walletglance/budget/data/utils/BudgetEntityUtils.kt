@@ -4,13 +4,13 @@ import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
 
 
-fun List<BudgetEntity>.getThatAreNotInList(list: List<BudgetEntity>): List<BudgetEntity> {
+fun List<BudgetEntity>.getBudgetsThatAreNotInList(list: List<BudgetEntity>): List<BudgetEntity> {
     return this.filter { budget ->
         list.find { it.id == budget.id } == null
     }
 }
 
-fun List<BudgetAccountAssociation>.getThatAreNotInList(
+fun List<BudgetAccountAssociation>.getAssociationsThatAreNotInList(
     list: List<BudgetAccountAssociation>
 ): List<BudgetAccountAssociation> {
     return this.filter { thisAssociation ->

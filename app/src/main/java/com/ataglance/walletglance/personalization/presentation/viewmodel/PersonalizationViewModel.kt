@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
-import com.ataglance.walletglance.personalization.mapper.toEntityList
-import com.ataglance.walletglance.personalization.mapper.toIntList
-import com.ataglance.walletglance.personalization.mapper.toWidgetNamesList
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.domain.utils.getItemsThatAreNotInList
+import com.ataglance.walletglance.personalization.mapper.toEntityList
+import com.ataglance.walletglance.personalization.mapper.toIntList
+import com.ataglance.walletglance.personalization.mapper.toWidgetNamesList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,11 +26,11 @@ class PersonalizationViewModel(
 
     private fun fetchWidgetListFromDb() {
         viewModelScope.launch {
-            widgetRepository.getAllWidgets().collect { widgetList ->
+            widgetRepository.getAllEntities().collect { widgetList ->
                 if (widgetList.isEmpty()) {
 
                     val defaultWidgetNamesList = getDefaultWidgetNamesList()
-                    widgetRepository.upsertWidgets(defaultWidgetNamesList.toEntityList())
+                    widgetRepository.upsertEntities(defaultWidgetNamesList.toEntityList())
                     _widgetNamesList.update { defaultWidgetNamesList }
 
                 } else {
@@ -62,9 +62,9 @@ class PersonalizationViewModel(
             .toEntityList()
 
         viewModelScope.launch {
-            widgetRepository.deleteAndUpsertWidgets(
-                widgetListToDelete = widgetsToDelete,
-                widgetListToUpsert = widgetsToUpsert
+            widgetRepository.deleteAndUpsertEntities(
+                toDelete = widgetsToDelete,
+                toUpsert = widgetsToUpsert
             )
         }
 
@@ -101,7 +101,7 @@ class PersonalizationViewModel(
 
     private fun fetchBudgetsOnWidgetFromDb() {
         viewModelScope.launch {
-            budgetOnWidgetRepository.getAllBudgetsOnWidget().collect { budgetOnWidgetList ->
+            budgetOnWidgetRepository.getAllEntities().collect { budgetOnWidgetList ->
                 _budgetsOnWidget.update { budgetOnWidgetList.toIntList() }
             }
         }
