@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.core.domain.app
 
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
 data class AppUiSettings(

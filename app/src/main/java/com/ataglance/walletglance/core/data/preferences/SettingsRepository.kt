@@ -19,7 +19,7 @@ class SettingsRepository(
     private val dataStore: DataStore<Preferences>
 ) {
     private companion object {
-        val UID = stringPreferencesKey("uid")
+        val USER_ID = stringPreferencesKey("userId")
         val LANGUAGE = stringPreferencesKey("language")
         val SETUP_STAGE = intPreferencesKey("setupStage")
         val USE_DEVICE_THEME = booleanPreferencesKey("useDeviceTheme")
@@ -29,7 +29,7 @@ class SettingsRepository(
         const val TAG = "SettingsRepository"
     }
 
-    val uid: Flow<String?> = dataStore.data
+    val userId: Flow<String?> = dataStore.data
         .catch {
             if (it is IOException) {
                 Log.e(TAG, "Error reading user id.", it)
@@ -39,7 +39,7 @@ class SettingsRepository(
             }
         }
         .map { preferences ->
-            preferences[UID]?.takeIf { it.isNotBlank() }
+            preferences[USER_ID]?.takeIf { it.isNotBlank() }
         }
 
     val language: Flow<String> = dataStore.data
@@ -120,8 +120,8 @@ class SettingsRepository(
             preferences[LAST_CHOSEN_THEME] ?: AppTheme.LightDefault.name
         }
 
-    suspend fun saveUidPreference(uid: String) {
-        dataStore.edit { it[UID] = uid }
+    suspend fun saveUserIdPreference(userId: String) {
+        dataStore.edit { it[USER_ID] = userId }
     }
 
     suspend fun saveLanguagePreference(langCode: String) {

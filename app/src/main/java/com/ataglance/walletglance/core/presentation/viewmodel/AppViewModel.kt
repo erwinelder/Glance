@@ -56,7 +56,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
@@ -186,16 +186,20 @@ class AppViewModel(
             .concatenateAsCategoryList()
     }
 
-    fun setUid(uid: String) {
+    fun setUserId(userId: String) {
         viewModelScope.launch {
-            settingsRepository.saveUidPreference(uid)
+            settingsRepository.saveUserIdPreference(userId)
         }
     }
 
-    fun resetUid() {
+    fun resetUserId() {
         viewModelScope.launch {
-            settingsRepository.saveUidPreference("")
+            settingsRepository.saveUserIdPreference("")
         }
+    }
+
+    fun getUserId(): Flow<String?> {
+        return settingsRepository.userId
     }
 
     fun setLanguage(langCode: String) {

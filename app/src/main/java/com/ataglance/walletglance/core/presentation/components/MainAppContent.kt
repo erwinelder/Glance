@@ -17,10 +17,10 @@ import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.core.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
@@ -162,6 +162,8 @@ fun MainAppContent(
                 scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
                 moveScreenTowardsLeft = moveScreenTowardsLeft,
+                authViewModel = authViewModel,
+                subscriptionViewModel = subscriptionViewModel,
                 appViewModel = appViewModel,
                 personalizationViewModel = personalizationViewModel,
                 appUiSettings = appUiSettings,

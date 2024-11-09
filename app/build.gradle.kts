@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.ataglance.walletglance"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.ataglance.walletglance"

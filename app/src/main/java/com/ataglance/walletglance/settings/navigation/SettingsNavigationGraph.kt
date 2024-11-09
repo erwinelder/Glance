@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
+import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
@@ -19,7 +21,7 @@ import com.ataglance.walletglance.category.presentation.navigation.categoriesGra
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -40,6 +42,8 @@ fun NavGraphBuilder.settingsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     navigationButtonList: List<BottomBarNavigationButton>,
+    authViewModel: AuthViewModel,
+    subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
     themeUiState: ThemeUiState,

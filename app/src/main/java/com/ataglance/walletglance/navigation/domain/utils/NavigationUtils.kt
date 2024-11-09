@@ -7,7 +7,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.presentation.navigation.AccountsSettingsScreens
 import com.ataglance.walletglance.category.presentation.navigation.CategoriesSettingsScreens
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlin.reflect.KClass
 
