@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.auth.domain.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -36,7 +36,7 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GlanceAppComponent(
-    authViewModel: AuthViewModel,
+    authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     navViewModel: NavigationViewModel,
@@ -67,7 +67,7 @@ fun GlanceAppComponent(
                         AppBackground(appTheme = appUiSettings.appTheme)
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
-                                authViewModel = authViewModel,
+                                authController = authController,
                                 subscriptionViewModel = subscriptionViewModel,
                                 appViewModel = appViewModel,
                                 appUiSettings = appUiSettings,

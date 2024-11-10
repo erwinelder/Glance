@@ -12,7 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.presentation.navigation.authGraph
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
@@ -42,7 +43,7 @@ fun NavGraphBuilder.settingsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     navigationButtonList: List<BottomBarNavigationButton>,
-    authViewModel: AuthViewModel,
+    authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
@@ -63,6 +64,14 @@ fun NavGraphBuilder.settingsGraph(
                 }
             )
         }
+        authGraph(
+            navController = navController,
+            navViewModel = navViewModel,
+            authController = authController,
+            subscriptionViewModel = subscriptionViewModel,
+            appViewModel = appViewModel,
+            appUiSettings = appUiSettings
+        )
         composable<SettingsScreens.SettingsHome> {
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,

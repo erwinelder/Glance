@@ -9,7 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.GlanceApplication
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.auth.domain.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -19,7 +19,7 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 class MainActivity : AppCompatActivity() {
 
     private lateinit var app: GlanceApplication
-    private lateinit var authViewModel: AuthViewModel
+    private lateinit var authController: AuthController
     private lateinit var subscriptionViewModel: SubscriptionViewModel
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 GlanceAppComponent(
-                    authViewModel = authViewModel,
+                    authController = authController,
                     subscriptionViewModel = subscriptionViewModel,
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeAuthViewModel() {
-        authViewModel = app.authViewModel
+        authController = app.authController
     }
 
     private fun initializeSubscriptionViewModel() {

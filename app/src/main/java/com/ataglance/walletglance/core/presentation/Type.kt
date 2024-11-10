@@ -5,6 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 
@@ -18,7 +19,26 @@ val Manrope = FontFamily(
     Font(R.font.manrope_extrabold, weight = FontWeight.ExtraBold)
 )
 
+val NotoSans = FontFamily(
+    Font(R.font.notosans_extralight, weight = FontWeight.ExtraLight),
+    Font(R.font.notosans_light, weight = FontWeight.Light),
+    Font(R.font.notosans_regular, weight = FontWeight.Normal),
+    Font(R.font.notosans_medium, weight = FontWeight.Medium),
+    Font(R.font.notosans_semibold, weight = FontWeight.SemiBold),
+    Font(R.font.notosans_bold, weight = FontWeight.Bold),
+    Font(R.font.notosans_extrabold, weight = FontWeight.ExtraBold),
+    Font(R.font.notosans_black, weight = FontWeight.Black)
+)
+
 val Typography = Typography(
+    titleLarge = TextStyle(
+        fontFamily = NotoSans,
+        fontSize = 40.sp,
+        lineHeight = 46.sp,
+        letterSpacing = 0.sp,
+        fontWeight = FontWeight.W900,
+        textAlign = TextAlign.Center,
+    ),
     bodyLarge = TextStyle(
         fontFamily = Manrope,
         fontWeight = FontWeight.Normal,

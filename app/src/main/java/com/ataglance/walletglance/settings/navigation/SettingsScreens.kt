@@ -8,6 +8,9 @@ sealed interface SettingsScreens {
     data object Start : SettingsScreens
 
     @Serializable
+    data object Auth : SettingsScreens
+
+    @Serializable
     data object SettingsHome : SettingsScreens
 
     @Serializable

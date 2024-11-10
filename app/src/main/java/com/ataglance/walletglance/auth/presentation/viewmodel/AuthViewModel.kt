@@ -1,57 +1,56 @@
 package com.ataglance.walletglance.auth.presentation.viewmodel
 
-import com.ataglance.walletglance.auth.domain.User
-import com.ataglance.walletglance.core.data.model.UserRemotePreferences
-import com.ataglance.walletglance.core.mapper.toMap
-import com.ataglance.walletglance.core.mapper.toUserRemotePreferences
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import kotlinx.coroutines.tasks.await
+import androidx.lifecycle.ViewModel
+import com.ataglance.walletglance.core.domain.componentState.FieldWithValidationState
+import com.ataglance.walletglance.core.utils.isValidEmail
+import com.ataglance.walletglance.core.utils.isValidPassword
+import com.ataglance.walletglance.core.utils.validateEmail
+import com.ataglance.walletglance.core.utils.validatePassword
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
-class AuthViewModel(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
-) {
+class AuthViewModel : ViewModel() {
 
-    var user = User()
+    private val _emailState: MutableStateFlow<FieldWithValidationState> = MutableStateFlow(
+        FieldWithValidationState()
+    )
+    val emailState = _emailState.asStateFlow()
 
-    private fun setUser(user: FirebaseUser) {
-        this.user = User(uid = user.uid)
+    fun updateEmail(email: String) {
+        _emailState.update {
+            it.copy(
+                fieldText = email,
+                validationStates = email.validateEmail()
+            )
+        }
     }
 
-    fun getUserId(): String? {
-        return user.uid
+
+    private val _passwordState: MutableStateFlow<FieldWithValidationState> = MutableStateFlow(
+        FieldWithValidationState()
+    )
+    val passwordState = _passwordState.asStateFlow()
+
+    fun updatePassword(password: String) {
+        _passwordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = password.validatePassword()
+            )
+        }
     }
 
-    private val userFirestoreRef: DocumentReference?
-        get() = user.uid?.let { firestore.collection("usersPreferences").document(it) }
 
-    suspend fun createNewUser(email: String, password: String, lang: String): Boolean {
-        val result = auth.createUserWithEmailAndPassword(email, password).await()
-        result.user?.let(::setUser) ?: return false
+    private val _signInIsAllowed: MutableStateFlow<Boolean> = MutableStateFlow(
+        emailState.value.fieldText.isValidEmail() && passwordState.value.fieldText.isValidPassword()
+    )
+    val signInIsAllowed = _signInIsAllowed.asStateFlow()
 
-        val userPreferences = UserRemotePreferences(
-            language = lang,
-            subscription = user.subscription
-        )
+    private val _signUpIsAllowed: MutableStateFlow<Boolean> = MutableStateFlow(
+        emailState.value.isValid() && passwordState.value.isValid()
+    )
 
-        userFirestoreRef?.set(userPreferences.toMap(), SetOptions.merge())?.await()
-        return true
-    }
-
-    suspend fun signIn(email: String, password: String): UserRemotePreferences? {
-        val result = auth.signInWithEmailAndPassword(email, password).await()
-        result.user?.let(::setUser) ?: return null
-
-        return userFirestoreRef?.get()?.await()?.data?.toUserRemotePreferences()
-    }
-
-    fun signOut() {
-        auth.signOut()
-        user = User()
-    }
+    val signUpIsAllowed = _signUpIsAllowed.asStateFlow()
 
 }

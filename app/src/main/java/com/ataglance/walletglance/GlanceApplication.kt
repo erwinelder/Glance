@@ -7,7 +7,7 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.auth.domain.AuthController
 import com.ataglance.walletglance.billing.domain.BillingManager
 import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
@@ -32,8 +32,9 @@ class GlanceApplication : Application() {
     private lateinit var repositoryManager: RepositoryManager
 
     private lateinit var db: AppDatabase
+    private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-    lateinit var authViewModel: AuthViewModel
+    lateinit var authController: AuthController
     lateinit var billingManager: BillingManager
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
@@ -44,12 +45,13 @@ class GlanceApplication : Application() {
         super.onCreate()
 
         db = AppDatabase.getDatabase(this)
+        initializeFirebaseAuth()
         initializeFirestore()
-        initializeAuthViewModel()
+        initializeAuthController()
         initializeBillingManager()
         initializeSettingsRepository()
 
-        repositoryManager = RepositoryManager(db, authViewModel.user, firestore)
+        repositoryManager = RepositoryManager(db, authController.user, firestore)
 
         initializeAppViewModel()
         initializeNavViewModel()
@@ -59,13 +61,16 @@ class GlanceApplication : Application() {
         updateSetupStageIfNeeded()
     }
 
+    private fun initializeFirebaseAuth() {
+        auth = FirebaseAuth.getInstance()
+    }
+
     private fun initializeFirestore() {
         firestore = FirebaseFirestore.getInstance()
     }
 
-    private fun initializeAuthViewModel() {
-        val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        authViewModel = AuthViewModel(auth = auth, firestore = firestore)
+    private fun initializeAuthController() {
+        authController = AuthController(auth = auth, firestore = firestore)
     }
 
     private fun initializeBillingManager() {

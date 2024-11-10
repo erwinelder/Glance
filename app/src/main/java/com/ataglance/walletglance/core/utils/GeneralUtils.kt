@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.componentState.FieldValidationState
 import java.util.Locale
 import kotlin.enums.enumEntries
 
@@ -97,6 +99,93 @@ fun String.isPositiveNumberWithDecimal(): Boolean {
 }
 fun String.isNumberWithDecimalOptionalDot(): Boolean {
     return Regex("^(?:\\d{1,10}(?:\\.\\d{0,2})?|\\.(?:\\d{1,2})?)?\$").matches(this)
+}
+
+
+fun String.isValidEmail(): Boolean {
+    return Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$").matches(this)
+}
+
+fun String.validateEmail(): List<FieldValidationState> {
+    val validationStates = mutableListOf<FieldValidationState>()
+
+    if (this.isValidEmail()) {
+        validationStates.add(
+            FieldValidationState(isValid = true, messageRes = R.string.is_valid)
+        )
+    } else {
+        validationStates.add(
+            FieldValidationState(isValid = false, messageRes = R.string.not_valid_email)
+        )
+    }
+
+    return validationStates
+}
+
+fun String.isValidPassword(): Boolean {
+    return this.atLeastEightChars() &&
+            this.atLeastOneUppercaseLetter() &&
+            this.atLeastOneLowercaseLetter() &&
+            this.atLeastOneDigit() &&
+            this.atLeastOneSpecChar()
+}
+
+fun String.validatePassword(): List<FieldValidationState> {
+    val validationStates = mutableListOf<FieldValidationState>()
+
+    validationStates.add(
+        FieldValidationState(
+            isValid = this.atLeastEightChars(),
+            messageRes = R.string.at_least_8_chars
+        )
+    )
+    validationStates.add(
+        FieldValidationState(
+            isValid = this.atLeastOneUppercaseLetter(),
+            messageRes = R.string.at_least_1_uppercase_letter
+        )
+    )
+    validationStates.add(
+        FieldValidationState(
+            isValid = this.atLeastOneLowercaseLetter(),
+            messageRes = R.string.at_least_1_lowercase_letter
+        )
+    )
+    validationStates.add(
+        FieldValidationState(
+            isValid = this.atLeastOneDigit(),
+            messageRes = R.string.at_least_1_digit
+        )
+    )
+    validationStates.add(
+        FieldValidationState(
+            isValid = this.atLeastOneSpecChar(),
+            messageRes = R.string.at_least_1_spec_char
+        )
+    )
+
+    return validationStates
+}
+
+fun String.atLeastEightChars(): Boolean {
+    return Regex("^.{8,}$").matches(this)
+}
+
+fun String.atLeastOneUppercaseLetter(): Boolean {
+    return Regex(".*[A-Z].*").matches(this)
+}
+
+fun String.atLeastOneLowercaseLetter(): Boolean {
+    return Regex(".*[a-z].*").matches(this)
+}
+
+fun String.atLeastOneDigit(): Boolean {
+    return Regex(".*\\d.*").matches(this)
+}
+
+fun String.atLeastOneSpecChar(): Boolean {
+    val specChars = "@\$!%*?&#_+-"
+    return Regex(".*[$specChars].*").matches(this)
 }
 
 

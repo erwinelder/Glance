@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.auth.domain.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
@@ -34,9 +34,9 @@ import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -67,7 +67,7 @@ fun AppNavHost(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     moveScreenTowardsLeft: Boolean,
-    authViewModel: AuthViewModel,
+    authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel,
@@ -428,7 +428,7 @@ fun AppNavHost(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             navigationButtonList = appUiState.navigationButtonList,
-            authViewModel = authViewModel,
+            authController = authController,
             subscriptionViewModel = subscriptionViewModel,
             appViewModel = appViewModel,
             appUiSettings = appUiSettings,

@@ -11,7 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
+import com.ataglance.walletglance.auth.domain.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppUiSettings
 import com.ataglance.walletglance.core.domain.app.AppUiState
@@ -37,7 +37,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun MainAppContent(
-    authViewModel: AuthViewModel,
+    authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     appUiSettings: AppUiSettings,
@@ -162,7 +162,7 @@ fun MainAppContent(
                 scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
                 moveScreenTowardsLeft = moveScreenTowardsLeft,
-                authViewModel = authViewModel,
+                authController = authController,
                 subscriptionViewModel = subscriptionViewModel,
                 appViewModel = appViewModel,
                 personalizationViewModel = personalizationViewModel,

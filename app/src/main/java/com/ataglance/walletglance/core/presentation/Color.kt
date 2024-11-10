@@ -30,6 +30,7 @@ val md_theme_light_default_tertiary = Color(0xFF80543C)
 val md_theme_light_default_onTertiary = Color(0xFFFFFFFF)
 val md_theme_light_default_tertiaryContainer = Color(0xFFFFDBCA)
 val md_theme_light_default_onTertiaryContainer = Color(0xFF311302)
+val md_theme_light_default_success = Color(59, 162, 51)
 val md_theme_light_default_error = Color(0xFFCE3535)
 val md_theme_light_default_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_default_onError = Color(0xFFFFFFFF)
@@ -81,6 +82,7 @@ val md_theme_light_default_errorGradientLightToDark = Pair(
     Color(206, 53, 53),
     Color(119, 36, 36)
 )
+
 val md_theme_light_default_pale_green = Pair(
     Color(173, 207, 153),
     Color(151, 192, 127)
@@ -89,6 +91,7 @@ val md_theme_light_default_pale_red = Pair(
     Color(203, 139, 137),
     Color(201, 104, 98)
 )
+
 val md_theme_light_default_green = Pair(
     Color(173, 207, 153),
     Color(151, 192, 127)
@@ -114,6 +117,7 @@ val md_theme_dark_default_tertiary = Color(0xFFF3BA9C)
 val md_theme_dark_default_onTertiary = Color(0xFF4A2713)
 val md_theme_dark_default_tertiaryContainer = Color(0xFF653D27)
 val md_theme_dark_default_onTertiaryContainer = Color(0xFFFFDBCA)
+val md_theme_dark_default_success = Color(66, 155, 59)
 val md_theme_dark_default_error = Color(0xFFB83B3B)
 val md_theme_dark_default_errorContainer = Color(0xFF93000A)
 val md_theme_dark_default_onError = Color(0xFF690005)
@@ -165,6 +169,7 @@ val md_theme_dark_default_errorGradientLightToDark = Pair(
     Color(177, 55, 55),
     Color(104, 33, 33)
 )
+
 val md_theme_dark_default_pale_green = Pair(
     Color(78, 107, 58, 255),
     Color(107, 163, 72, 255)
@@ -173,6 +178,7 @@ val md_theme_dark_default_pale_red = Pair(
     Color(107, 44, 44, 255),
     Color(158, 56, 51, 255)
 )
+
 val md_theme_dark_default_green = Pair(
     Color(108, 156, 78, 255),
     Color(83, 115, 62, 255)
@@ -198,6 +204,7 @@ val md_theme_dark_blue_tertiary = Color(0xFFF3BA9C)
 val md_theme_dark_blue_onTertiary = Color(0xFF4A2713)
 val md_theme_dark_blue_tertiaryContainer = Color(0xFF653D27)
 val md_theme_dark_blue_onTertiaryContainer = Color(0xFFFFDBCA)
+val md_theme_dark_blue_success = Color(66, 155, 59)
 val md_theme_dark_blue_error = Color(0xFFFFB4AB)
 val md_theme_dark_blue_errorContainer = Color(0xFF93000A)
 val md_theme_dark_blue_onError = Color(0xFF690005)
@@ -249,6 +256,7 @@ val md_theme_dark_blue_errorGradientLightToDark = Pair(
     Color(184, 59, 59),
     Color(136, 44, 44)
 )
+
 val md_theme_dark_blue_pale_green = Pair(
     Color(78, 107, 58, 255),
     Color(107, 163, 72, 255)
@@ -257,6 +265,7 @@ val md_theme_dark_blue_pale_red = Pair(
     Color(107, 44, 44, 255),
     Color(158, 56, 51, 255)
 )
+
 val md_theme_dark_blue_green = Pair(
     Color(108, 156, 78, 255),
     Color(83, 115, 62, 255)

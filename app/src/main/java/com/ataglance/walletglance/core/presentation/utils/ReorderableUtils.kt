@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.utils
+package com.ataglance.walletglance.core.presentation.utils
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.scrollBy

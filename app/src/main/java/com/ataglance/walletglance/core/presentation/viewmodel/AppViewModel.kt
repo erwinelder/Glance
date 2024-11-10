@@ -49,6 +49,7 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.mapper.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.categoryCollection.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -187,16 +188,16 @@ class AppViewModel(
             .concatenateAsCategoryList()
     }
 
-    fun setUserId(userId: String) {
-        viewModelScope.launch {
-            settingsRepository.saveUserIdPreference(userId)
-        }
+    fun updatePreferencesAfterSignIn(preferences: UserRemotePreferences) {
+        setLanguage(preferences.language)
     }
 
-    fun resetUserId() {
-        viewModelScope.launch {
-            settingsRepository.saveUserIdPreference("")
-        }
+    suspend fun setUserId(userId: String) {
+        settingsRepository.saveUserIdPreference(userId)
+    }
+
+    suspend fun resetUserId() {
+        settingsRepository.saveUserIdPreference("")
     }
 
     fun getUserId(): Flow<String?> {
