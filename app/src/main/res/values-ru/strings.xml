@@ -70,6 +70,7 @@
     <!-- Fields -->
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
+    <string name="confirm_password">Подтверждение пароля</string>
     <string name="use_device_theme">Использовать тему устройства</string>
     <string name="color">Цвет</string>
     <string name="name">Название</string>
@@ -98,6 +99,16 @@
     <string name="limit">Лимит</string>
     <string name="budget_limit">Лимит бюджета</string>
     <string name="repeating_period">Повторяющийся период</string>
+
+    <!-- Field validation -->
+    <string name="required_field">обязательное поле</string>
+    <string name="is_valid">допустимо</string>
+    <string name="not_valid_email">некорректный email</string>
+    <string name="at_least_8_chars">не менее 8 символов</string>
+    <string name="at_least_1_spec_char">не менее 1 специального символа</string>
+    <string name="at_least_1_digit">не менее 1 цифры</string>
+    <string name="at_least_1_uppercase_letter">не менее 1 заглавной буквы</string>
+    <string name="at_least_1_lowercase_letter">не менее 1 строчной буквы</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>

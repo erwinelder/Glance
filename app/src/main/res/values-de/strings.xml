@@ -70,6 +70,7 @@
     <!-- Fields -->
     <string name="email">E-mail</string>
     <string name="password">Passwort</string>
+    <string name="confirm_password">Passwortbestätigung</string>
     <string name="use_device_theme">Gerät-Thema verwenden</string>
     <string name="color">Farbe</string>
     <string name="name">Name</string>
@@ -98,6 +99,16 @@
     <string name="limit">Limit</string>
     <string name="budget_limit">Budgetlimit</string>
     <string name="repeating_period">Wiederkehrender Zeitraum</string>
+
+    <!-- Field validation -->
+    <string name="required_field">Pflichtfeld</string>
+    <string name="is_valid">ist gültig</string>
+    <string name="not_valid_email">keine gültige E-Mail</string>
+    <string name="at_least_8_chars">mindestens 8 Zeichen</string>
+    <string name="at_least_1_spec_char">mindestens 1 Sonderzeichen</string>
+    <string name="at_least_1_digit">mindestens 1 Ziffer</string>
+    <string name="at_least_1_uppercase_letter">mindestens 1 Großbuchstabe</string>
+    <string name="at_least_1_lowercase_letter">mindestens 1 Kleinbuchstabe</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>

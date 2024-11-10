@@ -70,6 +70,7 @@
     <!-- Fields -->
     <string name="email">E-mail</string>
     <string name="password">Heslo</string>
+    <string name="confirm_password">Potvrzení hesla</string>
     <string name="use_device_theme">Použít téma zařízení</string>
     <string name="color">Barva</string>
     <string name="name">Název</string>
@@ -98,6 +99,16 @@
     <string name="limit">Limit</string>
     <string name="budget_limit">Rozpočtový limit</string>
     <string name="repeating_period">Opakovaný interval</string>
+
+    <!-- Field validation -->
+    <string name="required_field">povinné pole</string>
+    <string name="is_valid">je platné</string>
+    <string name="not_valid_email">neplatný email</string>
+    <string name="at_least_8_chars">alespoň 8 znaků</string>
+    <string name="at_least_1_spec_char">alespoň 1 speciální znak</string>
+    <string name="at_least_1_digit">alespoň 1 číslice</string>
+    <string name="at_least_1_uppercase_letter">alespoň 1 velké písmeno</string>
+    <string name="at_least_1_lowercase_letter">alespoň 1 malé písmeno</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>

@@ -70,6 +70,7 @@
     <!-- Fields -->
     <string name="email">Електронна пошта</string>
     <string name="password">Пароль</string>
+    <string name="confirm_password">Підтвердження паролю</string>
     <string name="use_device_theme">Використовувати тему пристрою</string>
     <string name="color">Колір</string>
     <string name="name">Назва</string>
@@ -98,6 +99,16 @@
     <string name="limit">Ліміт</string>
     <string name="budget_limit">Ліміт бюджета</string>
     <string name="repeating_period">Повторюваний період</string>
+
+    <!-- Field validation -->
+    <string name="required_field">обов’язкове поле</string>
+    <string name="is_valid">є дійсним</string>
+    <string name="not_valid_email">некоректна електронна пошта</string>
+    <string name="at_least_8_chars">щонайменше 8 символів</string>
+    <string name="at_least_1_spec_char">щонайменше 1 спеціальний символ</string>
+    <string name="at_least_1_digit">щонайменше 1 цифра</string>
+    <string name="at_least_1_uppercase_letter">щонайменше 1 велика літера</string>
+    <string name="at_least_1_lowercase_letter">щонайменше 1 маленька літера</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>
