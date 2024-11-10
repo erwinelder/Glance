@@ -26,6 +26,7 @@ class BillingManager(private val context: Context) {
     private fun initializeBillingClient() {
         billingClient = BillingClient.newBuilder(context)
             .setListener(purchasesUpdatedListener)
+            .enablePendingPurchases()
             .build()
 
         billingClient.startConnection(object : BillingClientStateListener {

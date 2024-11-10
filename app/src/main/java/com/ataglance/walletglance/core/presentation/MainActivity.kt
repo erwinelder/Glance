@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeSubscriptionViewModel() {
-        subscriptionViewModel = SubscriptionViewModel(billingManager = app.billingManager)
+        subscriptionViewModel = SubscriptionViewModel(/*billingManager = app.billingManager*/)
     }
 
     private fun initializeAppViewModel() {

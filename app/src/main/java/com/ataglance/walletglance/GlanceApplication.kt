@@ -8,7 +8,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.auth.domain.AuthController
-import com.ataglance.walletglance.billing.domain.BillingManager
 import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
@@ -35,7 +34,7 @@ class GlanceApplication : Application() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     lateinit var authController: AuthController
-    lateinit var billingManager: BillingManager
+//    lateinit var billingManager: BillingManager
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
     lateinit var navViewModel: NavigationViewModel
@@ -48,7 +47,7 @@ class GlanceApplication : Application() {
         initializeFirebaseAuth()
         initializeFirestore()
         initializeAuthController()
-        initializeBillingManager()
+//        initializeBillingManager()
         initializeSettingsRepository()
 
         repositoryManager = RepositoryManager(db, authController.user, firestore)
@@ -73,9 +72,9 @@ class GlanceApplication : Application() {
         authController = AuthController(auth = auth, firestore = firestore)
     }
 
-    private fun initializeBillingManager() {
-        billingManager = BillingManager(context = this)
-    }
+//    private fun initializeBillingManager() {
+//        billingManager = BillingManager(context = this)
+//    }
 
     private fun initializeSettingsRepository() {
         settingsRepository = SettingsRepository(dataStore)
