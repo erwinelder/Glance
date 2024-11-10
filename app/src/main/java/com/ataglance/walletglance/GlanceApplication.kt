@@ -16,6 +16,7 @@ import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepositoryImpl
+import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +47,7 @@ class GlanceApplication : Application() {
         db = AppDatabase.getDatabase(this)
         initializeFirebaseAuth()
         initializeFirestore()
+        initializeFirebaseDebugger()
         initializeAuthController()
 //        initializeBillingManager()
         initializeSettingsRepository()
@@ -66,6 +68,13 @@ class GlanceApplication : Application() {
 
     private fun initializeFirestore() {
         firestore = FirebaseFirestore.getInstance()
+    }
+
+    private fun initializeFirebaseDebugger() {
+        if (BuildConfig.DEBUG) {
+            auth.useEmulator("10.0.2.2", 9099)
+            firestore.useEmulator("10.0.2.2", 8080)
+        }
     }
 
     private fun initializeAuthController() {

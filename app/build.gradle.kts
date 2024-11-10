@@ -124,8 +124,10 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    testImplementation(libs.firebase.auth.ktx)
+    testImplementation(libs.firebase.firestore.ktx)
 
     // Billing
     implementation(libs.google.billing)
