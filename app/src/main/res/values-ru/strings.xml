@@ -64,8 +64,13 @@
     <string name="start">Старт</string>
     <string name="finish">Завершить</string>
     <string name="_import">Импорт</string>
-    <string name="import_data">Импортировать данные</string>
     <string name="start_setup">Начать настройку</string>
+    <string name="sign_in_to_your_account">Войдите в свой аккаунт</string>
+    <string name="create_new_account">Создайте новый аккаунт</string>
+    <string name="welcome_back_to_glance">С возвращением в Glance!</string>
+    <string name="welcome_to_glance">Добро пожаловать в Glance!</string>
+    <string name="continue_to_app">Перейти в приложение</string>
+    <string name="continue_setup">Продолжить настройку</string>
 
     <!-- Fields -->
     <string name="email">Электронная почта</string>

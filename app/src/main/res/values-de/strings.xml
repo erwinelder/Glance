@@ -64,8 +64,13 @@
     <string name="start">Start</string>
     <string name="finish">Abschließen</string>
     <string name="_import">Importieren</string>
-    <string name="import_data">Daten importieren</string>
     <string name="start_setup">Setup starten</string>
+    <string name="sign_in_to_your_account">Melden Sie sich bei Ihrem Konto an</string>
+    <string name="create_new_account">Erstellen Sie ein neues Konto</string>
+    <string name="welcome_back_to_glance">Willkommen zurück bei Glance!</string>
+    <string name="welcome_to_glance">Willkommen bei Glance!</string>
+    <string name="continue_to_app">Zur App fortfahren</string>
+    <string name="continue_setup">Einrichtung fortsetzen</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>

@@ -64,8 +64,13 @@
     <string name="start">Start</string>
     <string name="finish">Dokončit</string>
     <string name="_import">Import</string>
-    <string name="import_data">Importovat data</string>
     <string name="start_setup">Začít nastavení</string>
+    <string name="sign_in_to_your_account">Přihlaste se ke svému účtu</string>
+    <string name="create_new_account">Vytvořte nový účet</string>
+    <string name="welcome_back_to_glance">Vítejte zpět v Glance!</string>
+    <string name="welcome_to_glance">Vítejte v Glance!</string>
+    <string name="continue_to_app">Pokračovat do aplikace</string>
+    <string name="continue_setup">Pokračovat v nastavení</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>

@@ -65,8 +65,13 @@
     <string name="start">Start</string>
     <string name="finish">Finish</string>
     <string name="_import">Import</string>
-    <string name="import_data">Import data</string>
     <string name="start_setup">Start setup</string>
+    <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="create_new_account">Create a new account</string>
+    <string name="welcome_back_to_glance">Welcome back to Glance!</string>
+    <string name="welcome_to_glance">Welcome to Glance!</string>
+    <string name="continue_to_app">Continue to app</string>
+    <string name="continue_setup">Continue setup</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
