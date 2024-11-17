@@ -51,7 +51,7 @@ import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.PopupFloatingPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.utils.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 
@@ -76,7 +76,7 @@ fun EditBudgetScreen(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             fillGlassSurface = false,
             topButton = if (!budget.isNew) { {

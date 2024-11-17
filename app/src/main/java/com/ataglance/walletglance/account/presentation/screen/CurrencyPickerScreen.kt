@@ -31,7 +31,7 @@ import com.ataglance.walletglance.core.presentation.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import java.util.Currency
 
@@ -46,7 +46,7 @@ fun CurrencyPickerScreen(
     onSaveButtonClick: (String) -> Unit,
 ) {
 
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topPadding = scaffoldPadding.calculateTopPadding(),
         topButton = {
             AnimatedContent(
@@ -59,7 +59,7 @@ fun CurrencyPickerScreen(
                     placeholderText = "\"${targetCurrencyCode}\"",
                     modifier = Modifier.fillMaxWidth(
                         FilledWidthByScreenType(compact = .86f)
-                            .getByScreenType(LocalWindowType.current)
+                            .getByType(LocalWindowType.current)
                     ),
                     fontSize = 20.sp,
                     cornerSize = 17.dp

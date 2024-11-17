@@ -167,6 +167,18 @@ fun String.validatePassword(): List<FieldValidationState> {
     return validationStates
 }
 
+fun String.validateConfirmationPassword(password: String): List<FieldValidationState> {
+    val passwordsMatch = this == password
+
+    return listOf(
+        FieldValidationState(
+            isValid = passwordsMatch,
+            messageRes = if (passwordsMatch) R.string.passwords_do_match else
+                R.string.passwords_do_not_match
+        )
+    )
+}
+
 fun String.atLeastEightChars(): Boolean {
     return Regex("^.{8,}$").matches(this)
 }

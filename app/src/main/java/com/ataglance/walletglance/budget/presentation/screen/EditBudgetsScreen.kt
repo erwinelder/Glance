@@ -24,7 +24,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryBu
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 
@@ -36,7 +36,7 @@ fun EditBudgetsScreen(
     onNavigateToEditBudgetScreen: (Budget?) -> Unit,
     onSaveBudgetsButton: () -> Unit,
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(

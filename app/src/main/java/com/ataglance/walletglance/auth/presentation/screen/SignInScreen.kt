@@ -1,28 +1,20 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.presentation.components.SignInBlockComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.LocalWindowType
-import com.ataglance.walletglance.core.presentation.Typography
+import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.utils.isValidEmail
 import com.ataglance.walletglance.core.utils.isValidPassword
 
@@ -36,34 +28,56 @@ fun SignInScreen(
     onSignInWithEmailAndPassword: (String, String) -> Unit,
     onNavigateToSignUpScreen: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .padding(vertical = 24.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+    GlassSurfaceScreenContainerWithTitle(
+        title = stringResource(R.string.sign_in_to_your_account),
+        glassSurfaceContent = {
+            GlassSurfaceContent(
+                email = email,
+                onEmailChange = onEmailChange,
+                password = password,
+                onPasswordChange = onPasswordChange,
+            )
+        },
+        buttonUnderGlassSurface = {
+            PrimaryButton(
+                text = stringResource(R.string.sign_in),
+                enabled = signInIsAllowed
+            ) {
+                onSignInWithEmailAndPassword(email, password)
+            }
+        },
+        bottomButton = {
+            SecondaryButton(
+                text = stringResource(R.string.sign_up),
+                onClick = onNavigateToSignUpScreen
+            )
+        }
+    )
+}
+
+@Composable
+private fun GlassSurfaceContent(
+    email: String,
+    onEmailChange: (String) -> Unit,
+    password: String,
+    onPasswordChange: (String) -> Unit,
+) {
+    GlassSurfaceContentColumnWrapper(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = "Welcome back to Glance!",
-            style = Typography.titleLarge,
-            modifier = Modifier
-                .fillMaxWidth(
-                    FilledWidthByScreenType().getByScreenType(LocalWindowType.current)
-                )
+        TextFieldWithLabel(
+            text = email,
+            onValueChange = onEmailChange,
+            keyboardType = KeyboardType.Email,
+            placeholderText = stringResource(R.string.email),
+            labelText = stringResource(R.string.email)
         )
-        Spacer(modifier = Modifier.height(32.dp))
-        SignInBlockComponent(
-            email = email,
-            onEmailChange = onEmailChange,
-            password = password,
-            onPasswordChange = onPasswordChange,
-            signInIsAllowed = signInIsAllowed,
-            onSignInWithEmailAndPassword = onSignInWithEmailAndPassword,
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        SecondaryButton(
-            text = stringResource(R.string.sign_up),
-            onClick = onNavigateToSignUpScreen
+        TextFieldWithLabel(
+            text = password,
+            onValueChange = onPasswordChange,
+            keyboardType = KeyboardType.Password,
+            placeholderText = stringResource(R.string.password),
+            labelText = stringResource(R.string.password)
         )
     }
 }

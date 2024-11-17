@@ -219,7 +219,7 @@ class WalletGlanceInstrumentedTest {
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
-            recordNum = appViewModel.appUiSettings.value.nextRecordNum(),
+            recordNum = appViewModel.appConfiguration.value.nextRecordNum(),
             account = accountsUiState.activeAccount,
             type = RecordType.Expense,
             dateTimeState = dateTimeState
@@ -285,7 +285,7 @@ class WalletGlanceInstrumentedTest {
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsAndActiveOne.value.accountList,
-                appTheme = appViewModel.appUiSettings.value.appTheme,
+                appTheme = appViewModel.appConfiguration.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
@@ -312,7 +312,7 @@ class WalletGlanceInstrumentedTest {
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
-            recordNum = appViewModel.appUiSettings.value.nextRecordNum(),
+            recordNum = appViewModel.appConfiguration.value.nextRecordNum(),
             account = accountsUiState.activeAccount,
             type = RecordType.Expense,
             dateTimeState = dateTimeState
@@ -378,7 +378,7 @@ class WalletGlanceInstrumentedTest {
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsAndActiveOne.value.accountList,
-                appTheme = appViewModel.appUiSettings.value.appTheme,
+                appTheme = appViewModel.appConfiguration.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
@@ -397,7 +397,7 @@ class WalletGlanceInstrumentedTest {
 
         val uiState = MakeRecordUiState(
             recordStatus = MakeRecordStatus.Create,
-            recordNum = appViewModel.appUiSettings.value.nextRecordNum(),
+            recordNum = appViewModel.appConfiguration.value.nextRecordNum(),
             account = null,
             type = RecordType.Expense,
             dateTimeState = dateTimeState
@@ -514,7 +514,7 @@ class WalletGlanceInstrumentedTest {
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsAndActiveOne.value.accountList,
-                appTheme = appViewModel.appUiSettings.value.appTheme,
+                appTheme = appViewModel.appConfiguration.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}
@@ -615,7 +615,7 @@ class WalletGlanceInstrumentedTest {
                     activeAccount = accountsUiState.activeAccount
                 ),
                 accountList = appViewModel.accountsAndActiveOne.value.accountList,
-                appTheme = appViewModel.appUiSettings.value.appTheme,
+                appTheme = appViewModel.appConfiguration.value.appTheme,
                 isCustomDateRange = false,
                 onRecordClick = {},
                 onTransferClick = {}

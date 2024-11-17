@@ -9,7 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ataglance.walletglance.GlanceApplication
-import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 appViewModel.themeUiState.value == null ||
-                        appViewModel.appUiSettings.value.appTheme == null
+                        appViewModel.appConfiguration.value.appTheme == null
             }
         }
     }

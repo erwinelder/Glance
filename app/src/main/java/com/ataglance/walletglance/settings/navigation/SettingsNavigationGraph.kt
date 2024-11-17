@@ -12,7 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
-import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthController
+import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.auth.presentation.navigation.authGraph
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
@@ -21,7 +22,7 @@ import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategor
 import com.ataglance.walletglance.category.presentation.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.categoryCollectionsGraph
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
@@ -46,7 +47,7 @@ fun NavGraphBuilder.settingsGraph(
     authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings,
+    appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
@@ -55,10 +56,10 @@ fun NavGraphBuilder.settingsGraph(
     personalizationViewModel: PersonalizationViewModel,
     widgetNamesList: List<WidgetName>
 ) {
-    navigation<MainScreens.Settings>(startDestination = appUiSettings.startSettingsDestination) {
+    navigation<MainScreens.Settings>(startDestination = appConfiguration.startSettingsDestination) {
         composable<SettingsScreens.Start> {
             StartSetupScreen(
-                isAppThemeSetUp = appUiSettings.appTheme != null,
+                isAppThemeSetUp = appConfiguration.appTheme != null,
                 onManualSetupButton = {
                     navViewModel.navigateToScreen(navController, SettingsScreens.Language)
                 }
@@ -70,7 +71,7 @@ fun NavGraphBuilder.settingsGraph(
             authController = authController,
             subscriptionViewModel = subscriptionViewModel,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings
+            appConfiguration = appConfiguration
         )
         composable<SettingsScreens.SettingsHome> {
             SettingsHomeScreen(
@@ -85,7 +86,7 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings,
+            appConfiguration = appConfiguration,
             accountList = accountList
         )
         budgetsGraph(
@@ -93,7 +94,7 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             appViewModel = appViewModel,
-            isAppSetUp = appUiSettings.isSetUp,
+            isAppSetUp = appConfiguration.isSetUp,
             budgetsByType = budgetsByType,
             accountList = accountList,
             categoriesWithSubcategories = categoriesWithSubcategories
@@ -103,7 +104,7 @@ fun NavGraphBuilder.settingsGraph(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             appViewModel = appViewModel,
-            isAppSetUp = appUiSettings.isSetUp,
+            isAppSetUp = appConfiguration.isSetUp,
             categoriesWithSubcategories = categoriesWithSubcategories
         )
         categoryCollectionsGraph(
@@ -115,7 +116,7 @@ fun NavGraphBuilder.settingsGraph(
         )
         composable<SettingsScreens.Appearance> {
             AppearanceScreen(
-                isAppSetUp = appUiSettings.isSetUp,
+                isAppSetUp = appConfiguration.isSetUp,
                 themeUiState = themeUiState,
                 onNavigateBack = navController::popBackStack,
                 onChooseLightTheme = appViewModel::chooseLightTheme,
@@ -126,27 +127,31 @@ fun NavGraphBuilder.settingsGraph(
                 initialWidgetNamesList = widgetNamesList,
                 onSaveWidgetNames = personalizationViewModel::saveWidgetList,
                 onContinueSetupButton = {
-                    navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
+                    if (appConfiguration.isSignedIn) {
+                        navViewModel.navigateToScreen(navController, AuthScreens.Profile)
+                    } else {
+                        navViewModel.navigateToScreen(navController, AuthScreens.SignIn)
+                    }
                 }
             )
         }
         composable<SettingsScreens.Language> {
             val viewModel = viewModel<LanguageViewModel>(
-                factory = LanguageViewModelFactory(appUiSettings.langCode)
+                factory = LanguageViewModelFactory(appConfiguration.langCode)
             )
 
             val chosenLanguage by viewModel.langCode.collectAsState()
             val context = LocalContext.current
 
             LanguageScreen(
-                isAppSetUp = appUiSettings.isSetUp,
+                isAppSetUp = appConfiguration.isSetUp,
                 onNavigateBack = navController::popBackStack,
-                appLanguage = appUiSettings.langCode,
+                appLanguage = appConfiguration.langCode,
                 chosenLanguage = chosenLanguage,
                 onSelectNewLanguage = viewModel::selectNewLanguage,
                 onApplyLanguageButton = { langCode: String ->
                     appViewModel.translateAndSaveCategoriesWithDefaultNames(
-                        currentLangCode = appUiSettings.langCode,
+                        currentLangCode = appConfiguration.langCode,
                         newLangCode = langCode,
                         context = context
                     )

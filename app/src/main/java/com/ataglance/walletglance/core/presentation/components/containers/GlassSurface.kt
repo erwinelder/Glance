@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ fun GlassSurface(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(filledWidths.getByScreenType(LocalWindowType.current))
+            .fillMaxWidth(filledWidths.getByType(LocalWindowType.current))
             .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
@@ -69,7 +70,7 @@ fun GlassSurface(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun GlassSurfacePreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {

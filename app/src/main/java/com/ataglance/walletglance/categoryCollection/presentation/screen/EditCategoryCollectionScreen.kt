@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,11 +47,12 @@ import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryBu
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.ThreeStateCheckbox
+import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 
 @Composable
 fun EditCategoryCollectionScreen(
@@ -66,7 +67,7 @@ fun EditCategoryCollectionScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topButton = if (allowDeleting) {
             {
                 SecondaryButton(
@@ -104,16 +105,8 @@ private fun GlassSurfaceContent(
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = 20.dp,
-                end = 20.dp,
-                top = dimensionResource(R.dimen.field_gap)
-            )
+    GlassSurfaceContentColumnWrapper(
+        paddingValues = PaddingValues(start = 16.dp, end = 16.dp, top = 20.dp)
     ) {
         TextFieldWithLabel(
             text = collection.name,
@@ -323,7 +316,7 @@ private fun CollectionSubcategoryItem(
 
 
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun EditCategoryCollectionScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,

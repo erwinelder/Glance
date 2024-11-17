@@ -30,7 +30,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.model.RecordEntity
@@ -61,7 +61,7 @@ fun CategoryStatisticsScreen(
     onClearParentCategory: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    GlassSurfaceContainerWithFilterBars(
+    GlassSurfaceScreenContainerWithFilters(
         screenPadding = scaffoldAppScreenPadding,
         accountList = accountList,
         onAccountClick = onAccountClick,

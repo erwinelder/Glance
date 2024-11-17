@@ -20,7 +20,7 @@ import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 
 @Composable
-fun GlassSurfaceContainer(
+fun GlassSurfaceScreenContainer(
     topPadding: Dp? = null,
     topButton: @Composable (() -> Unit)? = null,
     topBar: @Composable (() -> Unit)? = null,
@@ -58,10 +58,9 @@ fun GlassSurfaceContainer(
                 topBar?.let { it() }
                 GlassSurface(
                     modifier = Modifier.weight(1f, fill = fillGlassSurface),
-                    filledWidths = glassSurfaceFilledWidths
-                ) {
-                    glassSurfaceContent()
-                }
+                    filledWidths = glassSurfaceFilledWidths,
+                    content = glassSurfaceContent
+                )
                 smallPrimaryButton?.let { it() }
             }
         }

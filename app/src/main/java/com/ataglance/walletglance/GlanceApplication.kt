@@ -7,7 +7,7 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository

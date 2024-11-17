@@ -53,7 +53,7 @@ import com.ataglance.walletglance.core.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
@@ -116,17 +116,20 @@ class AppViewModel(
     val generalRepository: GeneralRepository
 ) : ViewModel() {
 
+    private val _isSignedIn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _appTheme: MutableStateFlow<AppTheme?> = MutableStateFlow(null)
     private val _lastRecordNum: MutableStateFlow<Int> = MutableStateFlow(0)
-    val appUiSettings: StateFlow<AppUiSettings> =
+    val appConfiguration: StateFlow<AppConfiguration> =
         combine(
             settingsRepository.setupStage,
+            _isSignedIn,
             settingsRepository.language,
             _appTheme,
             _lastRecordNum
-        ) { setupStage, language, appTheme, lastRecordNum ->
-            AppUiSettings(
+        ) { setupStage, isSignedIn, language, appTheme, lastRecordNum ->
+            AppConfiguration(
                 isSetUp = setupStage == 1,
+                isSignedIn = isSignedIn,
                 mainStartDestination = when(setupStage) {
                     1 -> MainScreens.Home
                     0 -> MainScreens.Settings
@@ -143,7 +146,7 @@ class AppViewModel(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = AppUiSettings()
+            initialValue = AppConfiguration()
         )
 
     val themeUiState: StateFlow<ThemeUiState?> =
@@ -194,10 +197,12 @@ class AppViewModel(
 
     suspend fun setUserId(userId: String) {
         settingsRepository.saveUserIdPreference(userId)
+        _isSignedIn.update { true }
     }
 
     suspend fun resetUserId() {
         settingsRepository.saveUserIdPreference("")
+        _isSignedIn.update { false }
     }
 
     fun getUserId(): Flow<String?> {
@@ -671,7 +676,7 @@ class AppViewModel(
             recordDraft = recordDraft.copy(
                 general = recordDraft.general.copy(
                     isNew = true,
-                    recordNum = appUiSettings.value.nextRecordNum(),
+                    recordNum = appConfiguration.value.nextRecordNum(),
                     dateTimeState = DateTimeState()
                 )
             )
@@ -812,7 +817,7 @@ class AppViewModel(
     suspend fun repeatTransfer(state: TransferDraft) {
         if (!state.savingIsAllowed()) return
 
-        val nextRecordNum = appUiSettings.value.nextRecordNum()
+        val nextRecordNum = appConfiguration.value.nextRecordNum()
 
         val newMakeTransferState = state.copy(
             sender = state.sender.copy(

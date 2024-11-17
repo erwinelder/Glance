@@ -34,7 +34,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 
 @Composable
-fun <S> GlassSurfaceContainerWithFilterBars(
+fun <S> GlassSurfaceScreenContainerWithFilters(
     screenPadding: PaddingValues,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,

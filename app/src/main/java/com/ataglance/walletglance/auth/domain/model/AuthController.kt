@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.auth.domain
+package com.ataglance.walletglance.auth.domain.model
 
 import com.ataglance.walletglance.core.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.mapper.toMap
@@ -25,13 +25,17 @@ class AuthController(
         return user.uid
     }
 
+    fun getEmail(): String {
+        return auth.currentUser?.email ?: ""
+    }
+
     private val userFirestoreRef: DocumentReference?
         get() = user.uid?.let { firestore.collection("usersPreferences").document(it) }
 
 
-    suspend fun createNewUser(email: String, password: String, lang: String): Boolean {
+    suspend fun createNewUser(email: String, password: String, lang: String): String? {
         val result = auth.createUserWithEmailAndPassword(email, password).await()
-        result.user?.let(::setUser) ?: return false
+        result.user?.let(::setUser) ?: return null
 
         val userPreferences = UserRemotePreferences(
             language = lang,
@@ -39,7 +43,7 @@ class AuthController(
         )
 
         userFirestoreRef?.set(userPreferences.toMap(), SetOptions.merge())?.await()
-        return true
+        return user.uid
     }
 
     suspend fun signIn(email: String, password: String): UserRemotePreferences? {

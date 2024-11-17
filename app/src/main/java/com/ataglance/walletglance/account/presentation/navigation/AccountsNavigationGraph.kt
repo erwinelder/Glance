@@ -19,7 +19,7 @@ import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerV
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModelFactory
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -31,7 +31,7 @@ fun NavGraphBuilder.accountsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings,
+    appConfiguration: AppConfiguration,
     accountList: List<Account>
 ) {
     navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
@@ -50,7 +50,7 @@ fun NavGraphBuilder.accountsGraph(
 
             EditAccountsScreen(
                 scaffoldPadding = scaffoldPadding,
-                isAppSetUp = appUiSettings.isSetUp,
+                isAppSetUp = appConfiguration.isSetUp,
                 accountList = accountsList,
                 onNavigateToEditAccountScreen = { account ->
                     editAccountViewModel.applyAccountData(
@@ -66,7 +66,7 @@ fun NavGraphBuilder.accountsGraph(
                         editAccountsViewModel.getAccountEntities()?.let {
                             appViewModel.saveAccounts(it)
                         }
-                        if (appUiSettings.isSetUp) {
+                        if (appConfiguration.isSetUp) {
                             navController.popBackStack()
                         } else {
                             navViewModel.navigateToScreen(navController, SettingsScreens.Categories)

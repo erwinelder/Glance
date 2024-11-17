@@ -11,9 +11,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
@@ -40,7 +40,7 @@ fun MainAppContent(
     authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
-    appUiSettings: AppUiSettings,
+    appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
     navViewModel: NavigationViewModel,
     personalizationViewModel: PersonalizationViewModel
@@ -50,19 +50,19 @@ fun MainAppContent(
 
     val navController: NavHostController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val setupProgressTopBarUiState by remember(appUiSettings.isSetUp, navBackStackEntry) {
+    val setupProgressTopBarUiState by remember(appConfiguration.isSetUp, navBackStackEntry) {
         derivedStateOf {
             SetupProgressTopBarUiState(
                 isVisible = navViewModel.shouldDisplaySetupProgressTopBar(
-                    appUiSettings.isSetUp, navBackStackEntry
+                    appConfiguration.isSetUp, navBackStackEntry
                 ),
                 titleRes = navBackStackEntry.getSetupProgressTopBarTitleRes()
             )
         }
     }
-    val isBottomBarVisible by remember(appUiSettings.isSetUp, navBackStackEntry) {
+    val isBottomBarVisible by remember(appConfiguration.isSetUp, navBackStackEntry) {
         derivedStateOf {
-            navViewModel.shouldDisplayBottomNavigationBar(appUiSettings.isSetUp, navBackStackEntry)
+            navViewModel.shouldDisplayBottomNavigationBar(appConfiguration.isSetUp, navBackStackEntry)
         }
     }
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
@@ -151,7 +151,7 @@ fun MainAppContent(
                 navViewModel.navigateToScreenMovingTowardsLeft(
                     navController = navController,
                     screen = MainScreens.RecordCreation(
-                        isNew = true, recordNum = appUiSettings.nextRecordNum()
+                        isNew = true, recordNum = appConfiguration.nextRecordNum()
                     )
                 )
             },
@@ -166,7 +166,7 @@ fun MainAppContent(
                 subscriptionViewModel = subscriptionViewModel,
                 appViewModel = appViewModel,
                 personalizationViewModel = personalizationViewModel,
-                appUiSettings = appUiSettings,
+                appConfiguration = appConfiguration,
                 themeUiState = themeUiState,
                 appUiState = appUiState,
                 widgetsUiState = widgetsUiState,

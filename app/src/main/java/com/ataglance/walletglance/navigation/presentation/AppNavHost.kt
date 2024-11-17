@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
@@ -30,7 +30,7 @@ import com.ataglance.walletglance.category.presentation.screen.CategoryStatistic
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
-import com.ataglance.walletglance.core.domain.app.AppUiSettings
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
@@ -71,7 +71,7 @@ fun AppNavHost(
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel,
-    appUiSettings: AppUiSettings,
+    appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
     appUiState: AppUiState,
     widgetsUiState: WidgetsUiState,
@@ -81,7 +81,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = appUiSettings.mainStartDestination,
+        startDestination = appConfiguration.mainStartDestination,
         contentAlignment = Alignment.Center,
         enterTransition = { screenEnterTransition(moveScreenTowardsLeft) },
         popEnterTransition = { screenEnterTransition(!moveScreenTowardsLeft) },
@@ -93,7 +93,7 @@ fun AppNavHost(
         ) {
             HomeScreen(
                 scaffoldPadding = scaffoldPadding,
-                isAppThemeSetUp = appUiSettings.appTheme != null,
+                isAppThemeSetUp = appConfiguration.appTheme != null,
                 accountsAndActiveOne = appUiState.accountsAndActiveOne,
                 onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
                 dateRangeWithEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum,
@@ -334,7 +334,7 @@ fun AppNavHost(
                     navViewModel.navigateToScreen(
                         navController = navController,
                         screen = MainScreens.TransferCreation(
-                            isNew = true, recordNum = appUiSettings.nextRecordNum()
+                            isNew = true, recordNum = appConfiguration.nextRecordNum()
                         )
                     )
                 },
@@ -431,7 +431,7 @@ fun AppNavHost(
             authController = authController,
             subscriptionViewModel = subscriptionViewModel,
             appViewModel = appViewModel,
-            appUiSettings = appUiSettings,
+            appConfiguration = appConfiguration,
             themeUiState = themeUiState,
             accountList = appUiState.accountsAndActiveOne.accountList,
             categoriesWithSubcategories = appUiState.categoriesWithSubcategories,

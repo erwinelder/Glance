@@ -42,7 +42,7 @@ import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
@@ -90,7 +90,7 @@ fun RecordCreationScreen(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             topBar = {
                 RecordCreationTopBar(
                     showCategoryTypeButton = recordDraftGeneral.isNew,

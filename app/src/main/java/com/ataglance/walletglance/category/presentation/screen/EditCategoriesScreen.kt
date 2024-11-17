@@ -37,7 +37,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryBu
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 
 @Composable
 fun EditCategoriesScreen(
@@ -51,7 +51,7 @@ fun EditCategoriesScreen(
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
         topBar = {
             CategoryTypeBar(

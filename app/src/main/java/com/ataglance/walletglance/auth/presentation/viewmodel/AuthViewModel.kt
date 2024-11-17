@@ -1,19 +1,32 @@
 package com.ataglance.walletglance.auth.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.core.domain.componentState.FieldWithValidationState
 import com.ataglance.walletglance.core.utils.isValidEmail
 import com.ataglance.walletglance.core.utils.isValidPassword
+import com.ataglance.walletglance.core.utils.validateConfirmationPassword
 import com.ataglance.walletglance.core.utils.validateEmail
 import com.ataglance.walletglance.core.utils.validatePassword
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(
+    email: String,
+    password: String
+) : ViewModel() {
 
     private val _emailState: MutableStateFlow<FieldWithValidationState> = MutableStateFlow(
-        FieldWithValidationState()
+        FieldWithValidationState(
+            fieldText = email,
+            validationStates = email.validateEmail()
+        )
     )
     val emailState = _emailState.asStateFlow()
 
@@ -28,7 +41,10 @@ class AuthViewModel : ViewModel() {
 
 
     private val _passwordState: MutableStateFlow<FieldWithValidationState> = MutableStateFlow(
-        FieldWithValidationState()
+        FieldWithValidationState(
+            fieldText = password,
+            validationStates = password.validatePassword()
+        )
     )
     val passwordState = _passwordState.asStateFlow()
 
@@ -42,15 +58,94 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    private val _signInIsAllowed: MutableStateFlow<Boolean> = MutableStateFlow(
-        emailState.value.fieldText.isValidEmail() && passwordState.value.fieldText.isValidPassword()
+    private val _confirmPasswordState: MutableStateFlow<FieldWithValidationState> =
+        MutableStateFlow(FieldWithValidationState())
+    val confirmPasswordState = _confirmPasswordState.asStateFlow()
+
+    fun updateConfirmPassword(password: String) {
+        _confirmPasswordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = password
+                    .validateConfirmationPassword(passwordState.value.fieldText)
+            )
+        }
+    }
+
+
+    private val _newPasswordState: MutableStateFlow<FieldWithValidationState> = MutableStateFlow(
+        FieldWithValidationState(
+            fieldText = password,
+            validationStates = password.validatePassword()
+        )
     )
-    val signInIsAllowed = _signInIsAllowed.asStateFlow()
+    val newPasswordState = _newPasswordState.asStateFlow()
 
-    private val _signUpIsAllowed: MutableStateFlow<Boolean> = MutableStateFlow(
-        emailState.value.isValid() && passwordState.value.isValid()
+    fun updateNewPassword(password: String) {
+        _newPasswordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = password.validatePassword()
+            )
+        }
+    }
+
+
+    private val _newPasswordConfirmationState: MutableStateFlow<FieldWithValidationState> =
+        MutableStateFlow(FieldWithValidationState())
+    val newPasswordConfirmationState = _newPasswordConfirmationState.asStateFlow()
+
+    fun updateNewPasswordConfirmation(password: String) {
+        _newPasswordConfirmationState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = password
+                    .validateConfirmationPassword(newPasswordState.value.fieldText)
+            )
+        }
+    }
+
+
+    val signInIsAllowed: StateFlow<Boolean> = combine(
+        emailState, passwordState
+    ) { emailState, passwordState ->
+        emailState.fieldText.isValidEmail() && passwordState.fieldText.isValidPassword()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = false
     )
 
-    val signUpIsAllowed = _signUpIsAllowed.asStateFlow()
+    val signUpIsAllowed: StateFlow<Boolean> = combine(
+        emailState, passwordState, confirmPasswordState
+    ) { emailState, passwordState, confirmPasswordState ->
+        emailState.fieldText.isValidEmail() && passwordState.fieldText.isValidPassword() &&
+                passwordState.fieldText == confirmPasswordState.fieldText
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = false
+    )
 
+    val passwordUpdateIsAllowed: StateFlow<Boolean> = combine(
+        newPasswordState, newPasswordConfirmationState
+    ) { newPasswordState, newPasswordConfirmationState ->
+        newPasswordState.fieldText.isValidPassword() &&
+                newPasswordState.fieldText == newPasswordConfirmationState.fieldText
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = false
+    )
+
+}
+
+data class AuthViewModelFactory(
+    private val email: String = "",
+    private val password: String = ""
+) : ViewModelProvider.NewInstanceFactory() {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return AuthViewModel(email, password) as T
+    }
 }

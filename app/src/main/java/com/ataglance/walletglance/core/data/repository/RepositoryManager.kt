@@ -4,7 +4,7 @@ import com.ataglance.walletglance.account.data.local.AccountLocalDataSource
 import com.ataglance.walletglance.account.data.remote.AccountRemoteDataSource
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.data.repository.AccountRepositoryImpl
-import com.ataglance.walletglance.auth.domain.User
+import com.ataglance.walletglance.auth.domain.model.User
 import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationLocalDataSource
 import com.ataglance.walletglance.budget.data.local.BudgetLocalDataSource
 import com.ataglance.walletglance.budget.data.remote.BudgetAccountAssociationRemoteDataSource

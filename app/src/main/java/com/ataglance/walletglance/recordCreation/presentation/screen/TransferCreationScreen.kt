@@ -39,7 +39,7 @@ import com.ataglance.walletglance.core.presentation.components.fields.FieldWithL
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
@@ -68,7 +68,7 @@ fun TransferCreationScreen(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             fillGlassSurface = false,
             topButton = {
                 BackButton(onNavigateBack)

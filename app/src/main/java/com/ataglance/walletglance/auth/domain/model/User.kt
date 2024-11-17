@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.auth.domain
+package com.ataglance.walletglance.auth.domain.model
 
 data class User(
     val uid: String? = null,

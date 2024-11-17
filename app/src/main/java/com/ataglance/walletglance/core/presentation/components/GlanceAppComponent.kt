@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -43,7 +43,7 @@ fun GlanceAppComponent(
     personalizationViewModel: PersonalizationViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
-    val appUiSettings by appViewModel.appUiSettings.collectAsStateWithLifecycle()
+    val appUiSettings by appViewModel.appConfiguration.collectAsStateWithLifecycle()
     val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
@@ -70,7 +70,7 @@ fun GlanceAppComponent(
                                 authController = authController,
                                 subscriptionViewModel = subscriptionViewModel,
                                 appViewModel = appViewModel,
-                                appUiSettings = appUiSettings,
+                                appConfiguration = appUiSettings,
                                 themeUiState = safeThemeUiState,
                                 navViewModel = navViewModel,
                                 personalizationViewModel = personalizationViewModel
