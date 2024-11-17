@@ -18,6 +18,7 @@
     <!-- Buttons -->
     <string name="sign_in">Iniciar sesión</string>
     <string name="sign_up">Registrarse</string>
+    <string name="update_password">Actualizar contraseña</string>
     <string name="create">Crear</string>
     <string name="save">Guardar</string>
     <string name="apply">Aplicar</string>
@@ -68,6 +69,8 @@
     <string name="start_setup">Iniciar configuración</string>
     <string name="sign_in_to_your_account">Inicia sesión en tu cuenta</string>
     <string name="create_new_account">Crear una nueva cuenta</string>
+    <string name="update_your_password">Actualiza tu contraseña</string>
+    <string name="reset_your_password">Restablece tu contraseña</string>
     <string name="welcome_back_to_glance">¡Bienvenido de nuevo a Glance!</string>
     <string name="welcome_to_glance">¡Bienvenido a Glance!</string>
     <string name="continue_to_app">Continuar a la aplicación</string>
@@ -77,6 +80,9 @@
     <string name="email">Correo electrónico</string>
     <string name="password">Contraseña</string>
     <string name="confirm_password">Confirmar contraseña</string>
+    <string name="current_password">Contraseña actual</string>
+    <string name="new_password">Nueva contraseña</string>
+    <string name="new_password_confirmation">Confirmación de nueva contraseña</string>
     <string name="use_device_theme">Usar tema del dispositivo</string>
     <string name="color">Color</string>
     <string name="name">Nombre</string>
@@ -115,6 +121,8 @@
     <string name="at_least_1_digit">al menos 1 dígito</string>
     <string name="at_least_1_uppercase_letter">al menos 1 letra mayúscula</string>
     <string name="at_least_1_lowercase_letter">al menos 1 letra minúscula</string>
+    <string name="passwords_do_match">Las contraseñas coinciden</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>

@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Přihlásit se</string>
     <string name="sign_up">Zaregistrovat se</string>
+    <string name="update_password">Aktualizovat heslo</string>
     <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
     <string name="apply">Použít</string>
@@ -67,6 +68,8 @@
     <string name="start_setup">Začít nastavení</string>
     <string name="sign_in_to_your_account">Přihlaste se ke svému účtu</string>
     <string name="create_new_account">Vytvořte nový účet</string>
+    <string name="update_your_password">Aktualizujte své heslo</string>
+    <string name="reset_your_password">Obnovte své heslo</string>
     <string name="welcome_back_to_glance">Vítejte zpět v Glance!</string>
     <string name="welcome_to_glance">Vítejte v Glance!</string>
     <string name="continue_to_app">Pokračovat do aplikace</string>
@@ -76,6 +79,9 @@
     <string name="email">E-mail</string>
     <string name="password">Heslo</string>
     <string name="confirm_password">Potvrzení hesla</string>
+    <string name="current_password">Aktuální heslo</string>
+    <string name="new_password">Nové heslo</string>
+    <string name="new_password_confirmation">Potvrzení nového hesla</string>
     <string name="use_device_theme">Použít téma zařízení</string>
     <string name="color">Barva</string>
     <string name="name">Název</string>
@@ -114,6 +120,8 @@
     <string name="at_least_1_digit">alespoň 1 číslice</string>
     <string name="at_least_1_uppercase_letter">alespoň 1 velké písmeno</string>
     <string name="at_least_1_lowercase_letter">alespoň 1 malé písmeno</string>
+    <string name="passwords_do_match">Hesla se shodují</string>
+    <string name="passwords_do_not_match">Hesla se neshodují</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>

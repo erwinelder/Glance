@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Увійти</string>
     <string name="sign_up">Зареєструватися</string>
+    <string name="update_password">Оновити пароль</string>
     <string name="create">Створити</string>
     <string name="save">Зберегти</string>
     <string name="apply">Застосувати</string>
@@ -67,6 +68,8 @@
     <string name="start_setup">Почати налаштування</string>
     <string name="sign_in_to_your_account">Увійдіть у свій акаунт</string>
     <string name="create_new_account">Створіть новий акаунт</string>
+    <string name="update_your_password">Оновіть свій пароль</string>
+    <string name="reset_your_password">Скиньте свій пароль</string>
     <string name="welcome_back_to_glance">Ласкаво просимо назад до Glance!</string>
     <string name="welcome_to_glance">Ласкаво просимо до Glance!</string>
     <string name="continue_to_app">Перейти до додатка</string>
@@ -75,7 +78,10 @@
     <!-- Fields -->
     <string name="email">Електронна пошта</string>
     <string name="password">Пароль</string>
-    <string name="confirm_password">Підтвердження паролю</string>
+    <string name="confirm_password">Підтвердження пароля</string>
+    <string name="current_password">Поточний пароль</string>
+    <string name="new_password">Новий пароль</string>
+    <string name="new_password_confirmation">Підтвердження нового пароля</string>
     <string name="use_device_theme">Використовувати тему пристрою</string>
     <string name="color">Колір</string>
     <string name="name">Назва</string>
@@ -114,6 +120,8 @@
     <string name="at_least_1_digit">щонайменше 1 цифра</string>
     <string name="at_least_1_uppercase_letter">щонайменше 1 велика літера</string>
     <string name="at_least_1_lowercase_letter">щонайменше 1 маленька літера</string>
+    <string name="passwords_do_match">Паролі співпадають</string>
+    <string name="passwords_do_not_match">Паролі не співпадають</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>

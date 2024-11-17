@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
+    <string name="update_password">Обновить пароль</string>
     <string name="create">Создать</string>
     <string name="save">Сохранить</string>
     <string name="apply">Применить</string>
@@ -67,6 +68,8 @@
     <string name="start_setup">Начать настройку</string>
     <string name="sign_in_to_your_account">Войдите в свой аккаунт</string>
     <string name="create_new_account">Создайте новый аккаунт</string>
+    <string name="update_your_password">Обновите свой пароль</string>
+    <string name="reset_your_password">Сбросьте свой пароль</string>
     <string name="welcome_back_to_glance">С возвращением в Glance!</string>
     <string name="welcome_to_glance">Добро пожаловать в Glance!</string>
     <string name="continue_to_app">Перейти в приложение</string>
@@ -76,6 +79,9 @@
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
     <string name="confirm_password">Подтверждение пароля</string>
+    <string name="current_password">Текущий пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="new_password_confirmation">Подтверждение нового пароля</string>
     <string name="use_device_theme">Использовать тему устройства</string>
     <string name="color">Цвет</string>
     <string name="name">Название</string>
@@ -114,6 +120,8 @@
     <string name="at_least_1_digit">не менее 1 цифры</string>
     <string name="at_least_1_uppercase_letter">не менее 1 заглавной буквы</string>
     <string name="at_least_1_lowercase_letter">не менее 1 строчной буквы</string>
+    <string name="passwords_do_match">Пароли совпадают</string>
+    <string name="passwords_do_not_match">Пароли не совпадают</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>

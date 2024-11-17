@@ -18,6 +18,7 @@
     <!-- Buttons -->
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
+    <string name="update_password">Update password</string>
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
@@ -68,6 +69,8 @@
     <string name="start_setup">Start setup</string>
     <string name="sign_in_to_your_account">Sign in to your account</string>
     <string name="create_new_account">Create a new account</string>
+    <string name="update_your_password">Update your password</string>
+    <string name="reset_your_password">Reset your password</string>
     <string name="welcome_back_to_glance">Welcome back to Glance!</string>
     <string name="welcome_to_glance">Welcome to Glance!</string>
     <string name="continue_to_app">Continue to app</string>
@@ -77,6 +80,9 @@
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="new_password_confirmation">New password confirmation</string>
     <string name="use_device_theme">Use device theme</string>
     <string name="color">Color</string>
     <string name="name">Name</string>
@@ -115,6 +121,8 @@
     <string name="at_least_1_digit">at least 1 digit</string>
     <string name="at_least_1_uppercase_letter">at least 1 uppercase letter</string>
     <string name="at_least_1_lowercase_letter">at least 1 lowercase letter</string>
+    <string name="passwords_do_match">Passwords do match</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>
