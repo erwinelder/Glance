@@ -48,7 +48,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.Secondary
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.ThreeStateCheckbox
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel

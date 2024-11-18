@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.components.containers
+package com.ataglance.walletglance.core.presentation.components.screenContainers
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

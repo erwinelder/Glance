@@ -29,7 +29,7 @@ import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName

@@ -37,7 +37,7 @@ import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ChosenWidgetsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget

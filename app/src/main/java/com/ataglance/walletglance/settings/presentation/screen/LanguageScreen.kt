@@ -22,7 +22,7 @@ import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
 

@@ -1,10 +1,11 @@
-package com.ataglance.walletglance.core.presentation.components.containers
+package com.ataglance.walletglance.core.presentation.components.screenContainers
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,13 +14,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
+import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PreviewContainer(
+fun PreviewWithMainScaffoldContainer(
     appTheme: AppTheme = AppTheme.LightDefault,
-    content: @Composable () -> Unit
+    isSetupProgressTopBarVisible: Boolean = false,
+    isBottomBarVisible: Boolean = false,
+    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean = { false },
+    currentScreenIsScreenProvider: (Any) -> Boolean = { false },
+    content: @Composable (PaddingValues) -> Unit
 ) {
     BoxWithConstraints {
         SharedTransitionLayout {
@@ -44,7 +51,25 @@ fun PreviewContainer(
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier.fillMaxSize()
                     )
-                    content()
+                    MainScaffold(
+                        setupProgressTopBarUiState = SetupProgressTopBarUiState(
+                            isVisible = isSetupProgressTopBarVisible
+                        ),
+                        isBottomBarVisible = isBottomBarVisible,
+                        onNavigateBack = {},
+                        onNavigateToScreenAndPopUp = {},
+                        onMakeRecordButtonClick = {},
+                        anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
+                        currentScreenIsScreenProvider = currentScreenIsScreenProvider,
+                        bottomBarButtons = listOf(
+                            BottomBarNavigationButton.Home,
+                            BottomBarNavigationButton.Records,
+                            BottomBarNavigationButton.CategoryStatistics,
+                            BottomBarNavigationButton.Budgets,
+                            BottomBarNavigationButton.Settings
+                        ),
+                        content = content
+                    )
                 }
             }
         }

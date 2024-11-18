@@ -60,7 +60,7 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
 fun RowScope.CategoryCollectionPicker(

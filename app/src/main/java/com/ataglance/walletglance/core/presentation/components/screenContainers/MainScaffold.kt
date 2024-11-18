@@ -1,10 +1,11 @@
-package com.ataglance.walletglance.core.presentation.components.containers
+package com.ataglance.walletglance.core.presentation.components.screenContainers
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
+import com.ataglance.walletglance.core.presentation.components.containers.BottomNavBar
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.settings.presentation.components.SetupProgressTopBar

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.components.fields
+package com.ataglance.walletglance.errorHandling.presentation.components.fields
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.input.KeyboardType
@@ -6,7 +6,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.domain.componentState.FieldWithValidationState
+import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
+import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
 
 @Composable
 fun TextFieldWithLabelAndErrorMsg(

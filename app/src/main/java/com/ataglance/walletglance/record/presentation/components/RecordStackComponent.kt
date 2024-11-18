@@ -17,7 +17,7 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.record.domain.RecordStack

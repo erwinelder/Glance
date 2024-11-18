@@ -21,7 +21,7 @@ import com.ataglance.walletglance.category.presentation.components.CategoryStati
 import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
 fun CategoriesStatisticsWidget(

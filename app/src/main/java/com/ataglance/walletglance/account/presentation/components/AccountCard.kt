@@ -37,7 +37,7 @@ import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import java.util.Locale
 
 @Composable

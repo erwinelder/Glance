@@ -46,7 +46,7 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getPrevDateRanges

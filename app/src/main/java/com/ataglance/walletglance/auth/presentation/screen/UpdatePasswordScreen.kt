@@ -9,11 +9,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.componentState.FieldWithValidationState
+import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabelAndErrorMsg
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.utils.validateConfirmationPassword
 import com.ataglance.walletglance.core.utils.validatePassword

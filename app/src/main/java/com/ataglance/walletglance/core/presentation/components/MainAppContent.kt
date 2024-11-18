@@ -17,8 +17,8 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.core.presentation.components.containers.DimmedBackgroundOverlay
-import com.ataglance.walletglance.core.presentation.components.containers.MainScaffold
+import com.ataglance.walletglance.core.presentation.components.screenContainers.DimmedBackgroundOverlay
+import com.ataglance.walletglance.core.presentation.components.screenContainers.MainScaffold
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel

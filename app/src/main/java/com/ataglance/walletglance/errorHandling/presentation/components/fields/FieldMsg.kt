@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.components.fields
+package com.ataglance.walletglance.errorHandling.presentation.components.fields
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.material3.Text
@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.domain.componentState.FieldValidationState
+import com.ataglance.walletglance.errorHandling.domain.model.FieldValidationState
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
 

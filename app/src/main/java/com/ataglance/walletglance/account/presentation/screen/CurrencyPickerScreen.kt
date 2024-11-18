@@ -29,7 +29,7 @@ import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect

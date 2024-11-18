@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.domain.componentState
+package com.ataglance.walletglance.errorHandling.domain.model
 
 import androidx.compose.runtime.Stable
 

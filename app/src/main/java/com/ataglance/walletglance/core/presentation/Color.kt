@@ -16,7 +16,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 val md_theme_light_default_primary = Color(165, 93, 135, 255)
 val md_theme_light_default_onPrimary = Color(0xFFFFFFFF)

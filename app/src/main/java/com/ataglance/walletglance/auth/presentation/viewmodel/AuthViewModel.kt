@@ -3,7 +3,7 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.core.domain.componentState.FieldWithValidationState
+import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
 import com.ataglance.walletglance.core.utils.isValidEmail
 import com.ataglance.walletglance.core.utils.isValidPassword
 import com.ataglance.walletglance.core.utils.validateConfirmationPassword
@@ -103,6 +103,15 @@ class AuthViewModel(
                     .validateConfirmationPassword(newPasswordState.value.fieldText)
             )
         }
+    }
+
+
+    fun resetAllFields() {
+        updateEmail("")
+        updatePassword("")
+        updateConfirmPassword("")
+        updateNewPassword("")
+        updateNewPasswordConfirmation("")
     }
 
 

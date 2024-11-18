@@ -10,7 +10,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorByTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 sealed class AccountColors(
     val name: AccountColorName,

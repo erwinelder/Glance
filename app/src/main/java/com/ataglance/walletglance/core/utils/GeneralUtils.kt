@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.componentState.FieldValidationState
+import com.ataglance.walletglance.errorHandling.domain.model.FieldValidationState
 import java.util.Locale
 import kotlin.enums.enumEntries
 

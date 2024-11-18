@@ -30,7 +30,7 @@ import com.ataglance.walletglance.categoryCollection.presentation.components.Cat
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen

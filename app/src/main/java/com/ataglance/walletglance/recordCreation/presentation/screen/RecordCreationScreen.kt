@@ -37,7 +37,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.components.buttons.AddNewItemButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker

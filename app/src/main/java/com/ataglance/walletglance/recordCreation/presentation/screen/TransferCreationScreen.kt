@@ -32,7 +32,7 @@ import com.ataglance.walletglance.account.presentation.components.SmallAccount
 import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.BackButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
