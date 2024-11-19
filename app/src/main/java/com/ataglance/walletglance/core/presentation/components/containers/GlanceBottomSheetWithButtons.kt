@@ -2,6 +2,7 @@ package com.ataglance.walletglance.core.presentation.components.containers
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,7 +26,7 @@ fun GlanceBottomSheetWithButtons(
     onSaveButtonClick: () -> Unit,
     backgroundColor: Color = GlanceTheme.background,
     contentColor: Color = GlanceTheme.onBackground,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     GlanceBottomSheet(
         visible = visible,

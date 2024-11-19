@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.core.presentation
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -8,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var subscriptionViewModel: SubscriptionViewModel
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
+    private lateinit var navController: NavHostController
     private lateinit var personalizationViewModel: PersonalizationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,11 +43,14 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
+                navController = rememberNavController()
+
                 GlanceAppComponent(
                     authController = authController,
                     subscriptionViewModel = subscriptionViewModel,
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
+                    navController = navController,
                     personalizationViewModel = personalizationViewModel
                 )
             }
@@ -78,6 +85,28 @@ class MainActivity : AppCompatActivity() {
             setKeepOnScreenCondition {
                 appViewModel.themeUiState.value == null ||
                         appViewModel.appConfiguration.value.appTheme == null
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent) {
+        intent.data?.let { uri ->
+            if (uri.host == "reset_password") {
+                uri.getQueryParameter("oobCode").takeUnless { it.isNullOrEmpty() }
+                    ?.let { obbCode ->
+                        navViewModel.navigateToResetPasswordScreen(
+                            navController = navController,
+                            obbCode = obbCode
+                        )
+                    }
+                    ?: run {
+                        Log.e("Reset password link", "No oobCode found in the deep link")
+                    }
             }
         }
     }

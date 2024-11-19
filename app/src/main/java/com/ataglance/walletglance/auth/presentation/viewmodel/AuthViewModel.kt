@@ -3,12 +3,13 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
 import com.ataglance.walletglance.core.utils.isValidEmail
 import com.ataglance.walletglance.core.utils.isValidPassword
 import com.ataglance.walletglance.core.utils.validateConfirmationPassword
 import com.ataglance.walletglance.core.utils.validateEmail
 import com.ataglance.walletglance.core.utils.validatePassword
+import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
+import com.ataglance.walletglance.errorHandling.domain.model.TaskResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +30,14 @@ class AuthViewModel(
         )
     )
     val emailState = _emailState.asStateFlow()
+
+    val emailIsValid: StateFlow<Boolean> = combine(_emailState) { emailStateArray ->
+        emailStateArray[0].fieldText.isValidEmail()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = false
+    )
 
     fun updateEmail(email: String) {
         _emailState.update {
@@ -73,11 +82,14 @@ class AuthViewModel(
     }
 
 
+    private var obbCode = ""
+
+    fun setObbCode(code: String) {
+        obbCode = code
+    }
+
     private val _newPasswordState: MutableStateFlow<FieldWithValidationState> = MutableStateFlow(
-        FieldWithValidationState(
-            fieldText = password,
-            validationStates = password.validatePassword()
-        )
+        FieldWithValidationState()
     )
     val newPasswordState = _newPasswordState.asStateFlow()
 
@@ -103,15 +115,6 @@ class AuthViewModel(
                     .validateConfirmationPassword(newPasswordState.value.fieldText)
             )
         }
-    }
-
-
-    fun resetAllFields() {
-        updateEmail("")
-        updatePassword("")
-        updateConfirmPassword("")
-        updateNewPassword("")
-        updateNewPasswordConfirmation("")
     }
 
 
@@ -146,6 +149,28 @@ class AuthViewModel(
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = false
     )
+
+
+    private val _taskResult: MutableStateFlow<TaskResult?> = MutableStateFlow(null)
+    val taskResult = _taskResult.asStateFlow()
+
+    fun setTaskResult(taskResult: TaskResult) {
+        _taskResult.update { taskResult }
+    }
+
+    fun resetTaskResult() {
+        _taskResult.update { null }
+    }
+
+
+    fun resetAllFields() {
+        updateEmail("")
+        updatePassword("")
+        updateConfirmPassword("")
+        updateNewPassword("")
+        updateNewPasswordConfirmation("")
+        resetTaskResult()
+    }
 
 }
 

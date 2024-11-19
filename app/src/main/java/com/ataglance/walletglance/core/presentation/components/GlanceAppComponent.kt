@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
@@ -40,6 +41,7 @@ fun GlanceAppComponent(
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
     navViewModel: NavigationViewModel,
+    navController: NavHostController,
     personalizationViewModel: PersonalizationViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
@@ -73,6 +75,7 @@ fun GlanceAppComponent(
                                 appConfiguration = appUiSettings,
                                 themeUiState = safeThemeUiState,
                                 navViewModel = navViewModel,
+                                navController = navController,
                                 personalizationViewModel = personalizationViewModel
                             )
                         }

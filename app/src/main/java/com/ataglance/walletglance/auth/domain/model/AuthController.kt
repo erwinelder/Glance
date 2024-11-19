@@ -97,7 +97,7 @@ class AuthController(
 
     suspend fun updatePassword(currentPassword: String, newPassword: String): TaskResult {
         val (currentUser, email) = auth.currentUser.let { it to it?.email }.takeIfNoneIsNull()
-            ?: return TaskResult.error(R.string.user_not_logged_in_error)
+            ?: return TaskResult.error(R.string.user_not_signed_in_error)
 
         getTaskErrorRunning(R.string.wrong_credentials_error) {
             val credential = EmailAuthProvider.getCredential(email, currentPassword)
@@ -106,6 +106,33 @@ class AuthController(
 
         return getTaskResultRunning(errorMessageRes = R.string.update_password_error) {
             currentUser.updatePassword(newPassword).await()
+        }
+    }
+
+    suspend fun requestPasswordReset(email: String): TaskResult {
+        return runCatching {
+            auth.sendPasswordResetEmail(email).await()
+            TaskResult.success(R.string.reset_password_email_sent)
+        }.getOrElse { exception ->
+            when (exception) {
+                is FirebaseAuthInvalidUserException -> TaskResult.error(R.string.user_not_found_error)
+                is FirebaseAuthInvalidCredentialsException -> TaskResult.error(R.string.invalid_email_error)
+                else -> TaskResult.error(R.string.email_for_password_reset_error)
+            }
+        }
+    }
+
+    suspend fun setNewPassword(obbCode: String, newPassword: String): TaskResult {
+        auth.currentUser ?: return TaskResult.error(R.string.user_not_signed_in_error)
+
+        return runCatching {
+            auth.confirmPasswordReset(obbCode, newPassword).await()
+            TaskResult.success(R.string.password_reset_success)
+        }.getOrElse { exception ->
+            when (exception) {
+                is FirebaseAuthInvalidCredentialsException -> TaskResult.error(R.string.invalid_code_error)
+                else -> TaskResult.error(R.string.password_reset_error)
+            }
         }
     }
 

@@ -20,6 +20,9 @@ sealed interface AuthScreens {
     data object UpdatePassword : AuthScreens
 
     @Serializable
-    data object ResetPassword : AuthScreens
+    data object RequestPasswordReset : AuthScreens
+
+    @Serializable
+    data class ResetPassword(val obbCode: String) : AuthScreens
 
 }

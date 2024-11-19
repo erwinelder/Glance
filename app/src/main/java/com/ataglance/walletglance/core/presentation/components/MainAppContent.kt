@@ -10,16 +10,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
+import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.screenContainers.MainScaffold
-import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
@@ -43,12 +42,12 @@ fun MainAppContent(
     appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
     navViewModel: NavigationViewModel,
+    navController: NavHostController,
     personalizationViewModel: PersonalizationViewModel
 ) {
     var dimBackground by remember { mutableStateOf(false) }
     var openCustomDateRangeWindow by remember { mutableStateOf(false) }
 
-    val navController: NavHostController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val setupProgressTopBarUiState by remember(appConfiguration.isSetUp, navBackStackEntry) {
         derivedStateOf {

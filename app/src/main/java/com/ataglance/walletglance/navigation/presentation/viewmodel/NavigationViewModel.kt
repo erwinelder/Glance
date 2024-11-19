@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
@@ -160,6 +161,15 @@ class NavigationViewModel(
         screen: Any
     ) {
         navController.navigate(screen) {
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToResetPasswordScreen(
+        navController: NavController,
+        obbCode: String
+    ) {
+        navController.navigate(AuthScreens.ResetPassword(obbCode)) {
             launchSingleTop = true
         }
     }

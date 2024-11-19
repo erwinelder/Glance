@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.presentation.components.containers
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -22,7 +23,7 @@ fun GlanceBottomSheet(
     dragHandle: @Composable () -> Unit = {
         BottomSheetHandle()
     },
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     if (visible) {
         ModalBottomSheet(
