@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Přihlásit se</string>
     <string name="sign_up">Zaregistrovat se</string>
+    <string name="send_email">Odeslat e-mail</string>
     <string name="update_password">Aktualizovat heslo</string>
     <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
@@ -69,6 +70,7 @@
     <string name="sign_in_to_your_account">Přihlaste se ke svému účtu</string>
     <string name="create_new_account">Vytvořte nový účet</string>
     <string name="update_your_password">Aktualizujte své heslo</string>
+    <string name="request_password_reset">Požádat o resetování hesla</string>
     <string name="reset_your_password">Obnovte své heslo</string>
     <string name="welcome_back_to_glance">Vítejte zpět v Glance!</string>
     <string name="welcome_to_glance">Vítejte v Glance!</string>
@@ -137,7 +139,7 @@
     <string name="password_reset_success">Heslo bylo úspěšně resetováno</string>
     <string name="password_reset_error">Resetování hesla se nezdařilo</string>
     <string name="update_password_error">Chyba během aktualizace hesla</string>
-    <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán</string>
+    <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán. Postupujte prosím podle odkazu v e-mailu.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>

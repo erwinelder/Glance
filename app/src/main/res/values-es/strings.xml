@@ -18,6 +18,7 @@
     <!-- Buttons -->
     <string name="sign_in">Iniciar sesión</string>
     <string name="sign_up">Registrarse</string>
+    <string name="send_email">Enviar correo electrónico</string>
     <string name="update_password">Actualizar contraseña</string>
     <string name="create">Crear</string>
     <string name="save">Guardar</string>
@@ -70,6 +71,7 @@
     <string name="sign_in_to_your_account">Inicia sesión en tu cuenta</string>
     <string name="create_new_account">Crear una nueva cuenta</string>
     <string name="update_your_password">Actualiza tu contraseña</string>
+    <string name="request_password_reset">Solicitar restablecimiento de contraseña</string>
     <string name="reset_your_password">Restablece tu contraseña</string>
     <string name="welcome_back_to_glance">¡Bienvenido de nuevo a Glance!</string>
     <string name="welcome_to_glance">¡Bienvenido a Glance!</string>
@@ -138,7 +140,7 @@
     <string name="password_reset_success">La contraseña se ha restablecido con éxito</string>
     <string name="password_reset_error">El restablecimiento de la contraseña falló</string>
     <string name="update_password_error">Error al actualizar la contraseña</string>
-    <string name="reset_password_email_sent">El correo para restablecer la contraseña fue enviado</string>
+    <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, siga el enlace en el correo.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>

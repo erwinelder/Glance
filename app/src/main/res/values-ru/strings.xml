@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
+    <string name="send_email">Отправить письмо</string>
     <string name="update_password">Обновить пароль</string>
     <string name="create">Создать</string>
     <string name="save">Сохранить</string>
@@ -69,6 +70,7 @@
     <string name="sign_in_to_your_account">Войдите в свой аккаунт</string>
     <string name="create_new_account">Создайте новый аккаунт</string>
     <string name="update_your_password">Обновите свой пароль</string>
+    <string name="request_password_reset">Запросить сброс пароля</string>
     <string name="reset_your_password">Сбросьте свой пароль</string>
     <string name="welcome_back_to_glance">С возвращением в Glance!</string>
     <string name="welcome_to_glance">Добро пожаловать в Glance!</string>
@@ -137,7 +139,7 @@
     <string name="password_reset_success">Пароль успешно сброшен</string>
     <string name="password_reset_error">Сброс пароля не удался</string>
     <string name="update_password_error">Ошибка при обновлении пароля</string>
-    <string name="reset_password_email_sent">Письмо для сброса пароля отправлено</string>
+    <string name="reset_password_email_sent">Письмо для сброса пароля было отправлено. Пожалуйста, перейдите по ссылке в письме.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>

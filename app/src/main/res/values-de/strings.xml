@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Anmelden</string>
     <string name="sign_up">Registrieren</string>
+    <string name="send_email">E-Mail senden</string>
     <string name="update_password">Passwort aktualisieren</string>
     <string name="create">Erstellen</string>
     <string name="save">Speichern</string>
@@ -69,6 +70,7 @@
     <string name="sign_in_to_your_account">Melden Sie sich bei Ihrem Konto an</string>
     <string name="create_new_account">Erstellen Sie ein neues Konto</string>
     <string name="update_your_password">Aktualisieren Sie Ihr Passwort</string>
+    <string name="request_password_reset">Passwort zurücksetzen anfordern</string>
     <string name="reset_your_password">Setzen Sie Ihr Passwort zurück</string>
     <string name="welcome_back_to_glance">Willkommen zurück bei Glance!</string>
     <string name="welcome_to_glance">Willkommen bei Glance!</string>
@@ -137,7 +139,7 @@
     <string name="password_reset_success">Passwort wurde erfolgreich zurückgesetzt</string>
     <string name="password_reset_error">Passwort zurücksetzen fehlgeschlagen</string>
     <string name="update_password_error">Fehler beim Aktualisieren des Passworts</string>
-    <string name="reset_password_email_sent">E-Mail zum Zurücksetzen des Passworts wurde gesendet</string>
+    <string name="reset_password_email_sent">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte folgen Sie dem Link in der E-Mail.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>

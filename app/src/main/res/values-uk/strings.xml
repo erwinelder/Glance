@@ -17,6 +17,7 @@
     <!-- Buttons -->
     <string name="sign_in">Увійти</string>
     <string name="sign_up">Зареєструватися</string>
+    <string name="send_email">Надіслати електронний лист</string>
     <string name="update_password">Оновити пароль</string>
     <string name="create">Створити</string>
     <string name="save">Зберегти</string>
@@ -69,6 +70,7 @@
     <string name="sign_in_to_your_account">Увійдіть у свій акаунт</string>
     <string name="create_new_account">Створіть новий акаунт</string>
     <string name="update_your_password">Оновіть свій пароль</string>
+    <string name="request_password_reset">Запросити скидання пароля</string>
     <string name="reset_your_password">Скиньте свій пароль</string>
     <string name="welcome_back_to_glance">Ласкаво просимо назад до Glance!</string>
     <string name="welcome_to_glance">Ласкаво просимо до Glance!</string>
@@ -137,7 +139,7 @@
     <string name="password_reset_success">Пароль успішно скинуто</string>
     <string name="password_reset_error">Скидання пароля не вдалося</string>
     <string name="update_password_error">Помилка під час оновлення пароля</string>
-    <string name="reset_password_email_sent">Лист для скидання пароля було відправлено</string>
+    <string name="reset_password_email_sent">Лист для скидання пароля було надіслано. Будь ласка, перейдіть за посиланням у листі.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>
