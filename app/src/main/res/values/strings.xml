@@ -124,6 +124,22 @@
     <string name="passwords_do_match">Passwords do match</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
 
+    <!-- Errors -->
+    <string name="user_already_exists_error">User already exists</string>
+    <string name="user_not_created_error">User creation failed</string>
+    <string name="user_data_not_saved_error">User data was not saved</string>
+    <string name="user_not_found_error">User not found</string>
+    <string name="user_not_signed_in_error">User is not signed in</string>
+    <string name="invalid_email_error">Invalid email</string>
+    <string name="invalid_code_error">Invalid code</string>
+    <string name="wrong_credentials_error">Wrong credentials</string>
+    <string name="sign_in_error">Error during sign in</string>
+    <string name="email_for_password_reset_error">Error during sending email for password reset</string>
+    <string name="password_reset_success">Password has been reset successfully</string>
+    <string name="password_reset_error">Password reset failed</string>
+    <string name="update_password_error">Error during updating password</string>
+    <string name="reset_password_email_sent">Email for password reset was sent</string>
+
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>
     <string name="greetings_title_afternoon">Good afternoon!</string>

@@ -123,6 +123,22 @@
     <string name="passwords_do_match">Hesla se shodují</string>
     <string name="passwords_do_not_match">Hesla se neshodují</string>
 
+    <!-- Errors -->
+    <string name="user_already_exists_error">Uživatel již existuje</string>
+    <string name="user_not_created_error">Vytvoření uživatele se nezdařilo</string>
+    <string name="user_data_not_saved_error">Uživatelská data nebyla uložena</string>
+    <string name="user_not_found_error">Uživatel nebyl nalezen</string>
+    <string name="user_not_signed_in_error">Uživatel není přihlášen</string>
+    <string name="invalid_email_error">Neplatný e-mail</string>
+    <string name="invalid_code_error">Neplatný kód</string>
+    <string name="wrong_credentials_error">Špatné přihlašovací údaje</string>
+    <string name="sign_in_error">Chyba během přihlášení</string>
+    <string name="email_for_password_reset_error">Chyba při odesílání e-mailu pro obnovení hesla</string>
+    <string name="password_reset_success">Heslo bylo úspěšně resetováno</string>
+    <string name="password_reset_error">Resetování hesla se nezdařilo</string>
+    <string name="update_password_error">Chyba během aktualizace hesla</string>
+    <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán</string>
+
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
     <string name="greetings_title_afternoon">Dobré poledne!</string>

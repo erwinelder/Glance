@@ -123,6 +123,22 @@
     <string name="passwords_do_match">Пароли совпадают</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
 
+    <!-- Errors -->
+    <string name="user_already_exists_error">Пользователь уже существует</string>
+    <string name="user_not_created_error">Не удалось создать пользователя</string>
+    <string name="user_data_not_saved_error">Данные пользователя не были сохранены</string>
+    <string name="user_not_found_error">Пользователь не найден</string>
+    <string name="user_not_signed_in_error">Пользователь не вошел в систему</string>
+    <string name="invalid_email_error">Недействительный адрес электронной почты</string>
+    <string name="invalid_code_error">Неверный код</string>
+    <string name="wrong_credentials_error">Неверные учетные данные</string>
+    <string name="sign_in_error">Ошибка при входе в систему</string>
+    <string name="email_for_password_reset_error">Ошибка при отправке письма для сброса пароля</string>
+    <string name="password_reset_success">Пароль успешно сброшен</string>
+    <string name="password_reset_error">Сброс пароля не удался</string>
+    <string name="update_password_error">Ошибка при обновлении пароля</string>
+    <string name="reset_password_email_sent">Письмо для сброса пароля отправлено</string>
+
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>
     <string name="greetings_title_afternoon">Добрый день!</string>
