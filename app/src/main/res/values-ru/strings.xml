@@ -18,6 +18,7 @@
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="send_email">Отправить письмо</string>
+    <string name="reset_password">Сбросить пароль</string>
     <string name="update_password">Обновить пароль</string>
     <string name="create">Создать</string>
     <string name="save">Сохранить</string>
@@ -139,7 +140,7 @@
     <string name="password_reset_success">Пароль успешно сброшен</string>
     <string name="password_reset_error">Сброс пароля не удался</string>
     <string name="update_password_error">Ошибка при обновлении пароля</string>
-    <string name="reset_password_email_sent">Письмо для сброса пароля было отправлено. Пожалуйста, перейдите по ссылке в письме.</string>
+    <string name="reset_password_email_sent">Письмо для сброса пароля было отправлено</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>
@@ -214,6 +215,7 @@
     <string name="you_have_no_income_in_date_range">У вас нет доходов за этот период</string>
     <string name="no_data_for_the_selected_filter">Нет данных для выбранного фильтра</string>
     <string name="you_have_no_budgets_yet">У вас еще нет бюджетов</string>
+    <string name="follow_link_in_email">Пожалуйста, перейдите по ссылке в письме</string>
 
 
 

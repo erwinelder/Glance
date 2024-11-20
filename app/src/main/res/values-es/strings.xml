@@ -19,6 +19,7 @@
     <string name="sign_in">Iniciar sesión</string>
     <string name="sign_up">Registrarse</string>
     <string name="send_email">Enviar correo electrónico</string>
+    <string name="reset_password">Restablecer la contraseña</string>
     <string name="update_password">Actualizar contraseña</string>
     <string name="create">Crear</string>
     <string name="save">Guardar</string>
@@ -140,7 +141,7 @@
     <string name="password_reset_success">La contraseña se ha restablecido con éxito</string>
     <string name="password_reset_error">El restablecimiento de la contraseña falló</string>
     <string name="update_password_error">Error al actualizar la contraseña</string>
-    <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, siga el enlace en el correo.</string>
+    <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>
@@ -215,6 +216,7 @@
     <string name="you_have_no_income_in_date_range">No tienes ingresos en este período</string>
     <string name="no_data_for_the_selected_filter">No hay datos para el filtro seleccionado</string>
     <string name="you_have_no_budgets_yet">Aún no tienes presupuestos</string>
+    <string name="follow_link_in_email">Por favor, siga el enlace en el correo</string>
 
 
 

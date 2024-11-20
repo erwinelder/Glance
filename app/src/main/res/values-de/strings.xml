@@ -18,6 +18,7 @@
     <string name="sign_in">Anmelden</string>
     <string name="sign_up">Registrieren</string>
     <string name="send_email">E-Mail senden</string>
+    <string name="reset_password">Passwort zurücksetzen</string>
     <string name="update_password">Passwort aktualisieren</string>
     <string name="create">Erstellen</string>
     <string name="save">Speichern</string>
@@ -139,7 +140,7 @@
     <string name="password_reset_success">Passwort wurde erfolgreich zurückgesetzt</string>
     <string name="password_reset_error">Passwort zurücksetzen fehlgeschlagen</string>
     <string name="update_password_error">Fehler beim Aktualisieren des Passworts</string>
-    <string name="reset_password_email_sent">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte folgen Sie dem Link in der E-Mail.</string>
+    <string name="reset_password_email_sent">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>
@@ -214,6 +215,7 @@
     <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum</string>
     <string name="no_data_for_the_selected_filter">Keine Daten für den ausgewählten Filter vorhanden</string>
     <string name="you_have_no_budgets_yet">Sie haben noch keine Budgets</string>
+    <string name="follow_link_in_email">Bitte folgen Sie dem Link in der E-Mail</string>
 
 
 

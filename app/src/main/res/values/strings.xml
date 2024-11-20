@@ -19,6 +19,7 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
     <string name="send_email">Send email</string>
+    <string name="reset_password">Reset password</string>
     <string name="update_password">Update password</string>
     <string name="create">Create</string>
     <string name="save">Save</string>
@@ -140,7 +141,7 @@
     <string name="password_reset_success">Password has been reset successfully</string>
     <string name="password_reset_error">Password reset failed</string>
     <string name="update_password_error">Error during updating password</string>
-    <string name="reset_password_email_sent">An email for password reset has been sent. Please follow the link in the email.</string>
+    <string name="reset_password_email_sent">An email for password reset has been sent</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>
@@ -215,6 +216,7 @@
     <string name="you_have_no_income_in_date_range">You have no income in this period</string>
     <string name="no_data_for_the_selected_filter">No data for the selected filter</string>
     <string name="you_have_no_budgets_yet">You have no budgets yet</string>
+    <string name="follow_link_in_email">Please follow the link in the email</string>
 
 
 

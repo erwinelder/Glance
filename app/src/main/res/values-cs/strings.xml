@@ -18,6 +18,7 @@
     <string name="sign_in">Přihlásit se</string>
     <string name="sign_up">Zaregistrovat se</string>
     <string name="send_email">Odeslat e-mail</string>
+    <string name="reset_password">Obnovit heslo</string>
     <string name="update_password">Aktualizovat heslo</string>
     <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
@@ -139,7 +140,7 @@
     <string name="password_reset_success">Heslo bylo úspěšně resetováno</string>
     <string name="password_reset_error">Resetování hesla se nezdařilo</string>
     <string name="update_password_error">Chyba během aktualizace hesla</string>
-    <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán. Postupujte prosím podle odkazu v e-mailu.</string>
+    <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
@@ -214,6 +215,7 @@
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>
     <string name="no_data_for_the_selected_filter">Žádná data pro vybraný filtr</string>
     <string name="you_have_no_budgets_yet">Ještě nemáte žádné rozpočty</string>
+    <string name="follow_link_in_email">Postupujte prosím podle odkazu v e-mailu</string>
 
 
 
