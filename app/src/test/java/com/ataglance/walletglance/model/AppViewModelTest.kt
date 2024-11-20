@@ -5,17 +5,20 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.category.data.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.category.data.utils.fixOrderNumbers
+import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransferSenderReceiver
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -63,16 +66,25 @@ class AppViewModelTest {
         toAccount: Account,
         startAmount: Double,
         finalAmount: Double,
-    ): MadeTransferState {
-        return MadeTransferState(
-            recordIdFrom = fromAccount.id,
-            recordIdTo = toAccount.id,
-            recordStatus = MakeRecordStatus.Edit,
-            fromAccount = fromAccount,
-            toAccount = toAccount,
-            startAmount = startAmount,
-            finalAmount = finalAmount,
-            recordNum = 1
+    ): CreatedTransfer {
+        return CreatedTransfer(
+            isNew = true,
+            sender = CreatedTransferSenderReceiver(
+                account = fromAccount,
+                recordNum = 1,
+                recordId = 1,
+                amount = startAmount,
+                rate = 1.0,
+            ),
+            receiver = CreatedTransferSenderReceiver(
+                account = toAccount,
+                recordNum = 2,
+                recordId = 2,
+                amount = finalAmount,
+                rate = 1.0,
+            ),
+            dateTimeState = DateTimeState(),
+            includeInBudgets = true,
         )
     }
 
