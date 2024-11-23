@@ -2,7 +2,7 @@ package com.ataglance.walletglance.billing.presentation.viewmodel
 
 import android.app.Activity
 import androidx.lifecycle.ViewModel
-import com.ataglance.walletglance.billing.domain.SubscriptionInfo
+import com.ataglance.walletglance.billing.domain.model.SubscriptionInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

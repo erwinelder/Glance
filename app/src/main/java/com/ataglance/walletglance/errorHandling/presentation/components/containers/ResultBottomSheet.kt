@@ -36,7 +36,8 @@ import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
 @Composable
 fun ResultBottomSheet(
     resultState: ResultUiState?,
-    onResultReset: () -> Unit
+    onResultReset: () -> Unit,
+    button: @Composable (() -> Unit)? = null
 ) {
     val sheetState = rememberModalBottomSheetState()
 
@@ -95,6 +96,7 @@ fun ResultBottomSheet(
                         lineHeight = 32.sp
                     )
                 }
+                button?.invoke()
             }
         }
     }

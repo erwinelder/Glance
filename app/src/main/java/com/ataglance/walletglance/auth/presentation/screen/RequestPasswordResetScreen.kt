@@ -16,10 +16,10 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun RequestPasswordResetScreen(
@@ -49,7 +49,10 @@ fun RequestPasswordResetScreen(
         )
         ResultBottomSheet(
             resultState = resultState,
-            onResultReset = onResultReset
+            onResultReset = onResultReset,
+            button = if (resultState?.isSuccessful == false) {{
+
+            }} else null
         )
     }
 }

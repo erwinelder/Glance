@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.core.mapper
 
-import com.ataglance.walletglance.auth.domain.model.AppSubscription
+import com.ataglance.walletglance.billing.domain.model.AppSubscription
 import com.ataglance.walletglance.core.data.model.UserRemotePreferences
 
 fun UserRemotePreferences.toMap(): Map<String, Any?> {

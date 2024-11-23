@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.billing.domain
+package com.ataglance.walletglance.billing.domain.model
 
 data class SubscriptionInfo(
     val title: String,

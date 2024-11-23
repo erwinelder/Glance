@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.billing.domain
+package com.ataglance.walletglance.billing.domain.model
 
 import android.content.Context
 import com.android.billingclient.api.BillingClient
