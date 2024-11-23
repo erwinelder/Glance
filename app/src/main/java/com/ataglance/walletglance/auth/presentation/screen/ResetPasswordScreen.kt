@@ -18,7 +18,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessErrorMessageBottomSheet
+import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 
 @Composable
@@ -51,7 +51,7 @@ fun ResetPasswordScreen(
                 )
             }
         )
-        SuccessErrorMessageBottomSheet(
+        ResultBottomSheet(
             resultState = resultState,
             onResultReset = onResultReset
         )

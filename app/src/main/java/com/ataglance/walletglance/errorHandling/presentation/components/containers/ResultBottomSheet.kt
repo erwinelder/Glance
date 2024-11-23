@@ -25,6 +25,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.NotoSans
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
 import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
@@ -33,7 +34,7 @@ import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuccessErrorMessageBottomSheet(
+fun ResultBottomSheet(
     resultState: ResultUiState?,
     onResultReset: () -> Unit
 ) {
@@ -71,22 +72,24 @@ fun SuccessErrorMessageBottomSheet(
                     iconDescription = if (resultState.isSuccessful) "Success" else "Error"
                 )
                 Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(.9f)
                 ) {
                     Text(
-                        text = stringResource(resultState.titleRes), // TODO
-                        fontSize = 24.sp,
+                        text = stringResource(resultState.titleRes),
+                        fontSize = 28.sp,
                         color = solidColor,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.Black,
                         textAlign = TextAlign.Center,
-                        fontFamily = Manrope,
+                        fontFamily = NotoSans,
                         lineHeight = 32.sp
                     )
                     Text(
                         text = stringResource(resultState.messageRes),
-                        fontSize = 24.sp,
-                        color = solidColor,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp,
+                        color = GlanceTheme.onBackground,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
                         fontFamily = Manrope,
                         lineHeight = 32.sp
@@ -104,9 +107,10 @@ fun SuccessErrorMessageBottomSheet(
 private fun ErrorMessageBottomSheetPreview() {
     val resultState = ResultUiState(
 //        isSuccessful = true,
+//        titleRes = R.string.email_sent,
 //        messageRes = R.string.reset_password_email_sent
         isSuccessful = false,
-        titleRes = 0, // TODO
+        titleRes = R.string.oops,
         messageRes = R.string.email_for_password_reset_error
     )
 
@@ -117,7 +121,7 @@ private fun ErrorMessageBottomSheetPreview() {
             text = "Show error",
             onClick = { state = resultState }
         )
-        SuccessErrorMessageBottomSheet(
+        ResultBottomSheet(
             resultState = state,
             onResultReset = { state = null }
         )
