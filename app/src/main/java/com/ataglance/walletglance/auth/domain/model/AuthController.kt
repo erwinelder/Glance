@@ -75,6 +75,17 @@ class AuthController(
         }
     }
 
+    suspend fun sendSignUpVerificationEmail(): AuthResult {
+        val currentUser = auth.currentUser ?: return Result.Error(AuthError.UserNotSignedIn)
+
+        return try {
+            currentUser.sendEmailVerification().await()
+            Result.Success(AuthSuccess.SignUpEmailVerificationSent)
+        } catch (e: Exception) {
+            Result.Error(AuthError.SignUpEmailVerificationError)
+        }
+    }
+
     suspend fun signIn(
         email: String,
         password: String

@@ -36,12 +36,14 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
 @StringRes private fun AuthSuccess.asTitleRes(): Int {
     return when (this) {
         AuthSuccess.PasswordUpdated -> R.string.all_set
-        AuthSuccess.ResetPasswordEmailSent -> R.string.email_sent
+        AuthSuccess.SignUpEmailVerificationSent, AuthSuccess.ResetPasswordEmailSent ->
+            R.string.email_sent
     }
 }
 
 @StringRes private fun AuthSuccess.asMessageRes(): Int {
     return when (this) {
+        AuthSuccess.SignUpEmailVerificationSent -> R.string.sign_up_email_verification_sent
         AuthSuccess.PasswordUpdated -> R.string.password_update_success
         AuthSuccess.ResetPasswordEmailSent -> R.string.reset_password_email_sent
     }
@@ -52,8 +54,8 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.UserAlreadyExists, AuthError.UserNotCreated, AuthError.UserDataNotSaved,
         AuthError.UserNotFound, AuthError.UserNotSignedIn, AuthError.InvalidEmail,
         AuthError.InvalidCode, AuthError.WrongCredentials, AuthError.SignInError,
-        AuthError.EmailForPasswordResetError, AuthError.PasswordResetError,
-        AuthError.UpdatePasswordError ->
+        AuthError.SignUpEmailVerificationError, AuthError.EmailForPasswordResetError,
+        AuthError.PasswordResetError, AuthError.UpdatePasswordError ->
             R.string.oops
     }
 }
@@ -69,6 +71,7 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.InvalidCode -> R.string.invalid_code_error
         AuthError.WrongCredentials -> R.string.wrong_credentials_error
         AuthError.SignInError -> R.string.sign_in_error
+        AuthError.SignUpEmailVerificationError -> R.string.sign_up_email_verification_error
         AuthError.EmailForPasswordResetError -> R.string.email_for_password_reset_error
         AuthError.PasswordResetError -> R.string.password_reset_error
         AuthError.UpdatePasswordError -> R.string.update_password_error

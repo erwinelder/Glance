@@ -10,6 +10,7 @@ enum class AuthError : Error {
     InvalidCode,
     WrongCredentials,
     SignInError,
+    SignUpEmailVerificationError,
     EmailForPasswordResetError,
     PasswordResetError,
     UpdatePasswordError
