@@ -65,7 +65,7 @@ fun UpdatePasswordScreen(
         )
         ResultBottomSheet(
             resultState = resultState,
-            onResultReset = onResultReset
+            onSheetClose = onResultReset
         )
     }
 }

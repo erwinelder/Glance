@@ -25,4 +25,7 @@ sealed interface AuthScreens {
     @Serializable
     data class ResetPassword(val obbCode: String) : AuthScreens
 
+    @Serializable
+    data object PasswordResetSuccessful : AuthScreens
+
 }

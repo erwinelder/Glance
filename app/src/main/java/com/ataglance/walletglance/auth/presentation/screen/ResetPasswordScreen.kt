@@ -53,7 +53,7 @@ fun ResetPasswordScreen(
         )
         ResultBottomSheet(
             resultState = resultState,
-            onResultReset = onResultReset
+            onSheetClose = onResultReset
         )
     }
 }

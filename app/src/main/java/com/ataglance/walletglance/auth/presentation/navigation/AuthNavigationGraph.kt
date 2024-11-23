@@ -13,6 +13,7 @@ import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthenticationSuccessfulScreenType
 import com.ataglance.walletglance.auth.domain.model.ProfileScreenTypeEnum
 import com.ataglance.walletglance.auth.presentation.screen.AuthSuccessfulScreen
+import com.ataglance.walletglance.auth.presentation.screen.PasswordResetSuccessfulScreen
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreen
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreen
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreen
@@ -293,6 +294,18 @@ fun NavGraphBuilder.authGraph(
                 },
                 resultState = resultState,
                 onResultReset = viewModel::resetResultState
+            )
+        }
+        composable<AuthScreens.PasswordResetSuccessful> {
+            PasswordResetSuccessfulScreen(
+                isAppSetUp = appConfiguration.isSetUp,
+                onContinueButtonClick = {
+                    navController.popBackStack(
+                        route = if (appConfiguration.isSetUp) AuthScreens.Profile else
+                            AuthScreens.SignIn,
+                        inclusive = false
+                    )
+                }
             )
         }
     }

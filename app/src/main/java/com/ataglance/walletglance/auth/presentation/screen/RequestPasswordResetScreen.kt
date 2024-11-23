@@ -49,10 +49,7 @@ fun RequestPasswordResetScreen(
         )
         ResultBottomSheet(
             resultState = resultState,
-            onResultReset = onResultReset,
-            button = if (resultState?.isSuccessful == false) {{
-
-            }} else null
+            onSheetClose = onResultReset
         )
     }
 }
