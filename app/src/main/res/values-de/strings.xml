@@ -143,6 +143,7 @@
     <string name="password_reset_error">Passwort zurücksetzen fehlgeschlagen</string>
     <string name="update_password_error">Fehler beim Aktualisieren des Passworts</string>
     <string name="email_sent">E-Mail gesendet!</string>
+    <string name="sign_up_email_verification_sent">Eine Bestätigungs-E-Mail für die Registrierung wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um Ihre Registrierung abzuschließen.</string>
     <string name="reset_password_email_sent">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte folgen Sie dem Link in der E-Mail.</string>
 
     <!-- Widgets -->

@@ -143,6 +143,7 @@
     <string name="password_reset_error">Скидання пароля не вдалося</string>
     <string name="update_password_error">Помилка під час оновлення пароля</string>
     <string name="email_sent">Лист надіслано!</string>
+    <string name="sign_up_email_verification_sent">Лист для підтвердження реєстрації було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити реєстрацію.</string>
     <string name="reset_password_email_sent">Лист для скидання пароля було надіслано. Будь ласка, перейдіть за посиланням у листі.</string>
 
     <!-- Widgets -->

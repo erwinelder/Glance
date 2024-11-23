@@ -143,6 +143,7 @@
     <string name="password_reset_error">Сброс пароля не удался</string>
     <string name="update_password_error">Ошибка при обновлении пароля</string>
     <string name="email_sent">Письмо отправлено!</string>
+    <string name="sign_up_email_verification_sent">Письмо для подтверждения регистрации было отправлено. Пожалуйста, перейдите по ссылке в письме, чтобы завершить регистрацию.</string>
     <string name="reset_password_email_sent">Письмо для сброса пароля было отправлено. Пожалуйста, перейдите по ссылке в письме.</string>
 
     <!-- Widgets -->
