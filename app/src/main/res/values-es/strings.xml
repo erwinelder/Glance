@@ -127,7 +127,9 @@
     <string name="passwords_do_match">Las contraseñas coinciden</string>
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
 
-    <!-- Errors -->
+    <!-- Results -->
+    <string name="all_set">¡Todo listo!</string>
+    <string name="oops">¡Uy!</string>
     <string name="user_already_exists_error">El usuario ya existe</string>
     <string name="user_not_created_error">La creación del usuario falló</string>
     <string name="user_data_not_saved_error">Los datos del usuario no se guardaron</string>
@@ -138,10 +140,11 @@
     <string name="wrong_credentials_error">Credenciales incorrectas</string>
     <string name="sign_in_error">Error al iniciar sesión</string>
     <string name="email_for_password_reset_error">Error al enviar el correo para restablecer la contraseña</string>
-    <string name="password_reset_success">La contraseña se ha restablecido con éxito</string>
+    <string name="password_update_success">La contraseña se ha actualizado correctamente</string>
     <string name="password_reset_error">El restablecimiento de la contraseña falló</string>
     <string name="update_password_error">Error al actualizar la contraseña</string>
-    <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña</string>
+    <string name="email_sent">¡Correo enviado!</string>
+    <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, siga el enlace en el correo.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>
