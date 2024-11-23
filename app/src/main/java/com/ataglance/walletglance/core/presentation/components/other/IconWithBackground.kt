@@ -25,7 +25,7 @@ fun IconWithBackground(
     backgroundGradient: List<Color>,
     iconDescription: String,
     iconTint: Color = GlanceTheme.background,
-    iconSize: Dp = 120.dp
+    iconSize: Dp = 100.dp
 ) {
     Box(
         contentAlignment = Alignment.Center,
