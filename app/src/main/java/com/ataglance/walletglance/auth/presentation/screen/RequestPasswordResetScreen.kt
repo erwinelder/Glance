@@ -9,25 +9,26 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.utils.validateEmail
-import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
-import com.ataglance.walletglance.errorHandling.domain.model.TaskResult
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.ErrorMessageBottomSheet
+import com.ataglance.walletglance.errorHandling.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessErrorMessageBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 
 @Composable
 fun RequestPasswordResetScreen(
-    emailState: FieldWithValidationState,
+    emailState: ValidatedFieldUiState,
     onEmailChange: (String) -> Unit,
     requestIsAllowed: Boolean,
     onRequestPasswordResetButtonClick: () -> Unit,
-    taskResult: TaskResult?,
-    onTaskResultReset: () -> Unit
+    resultState: ResultUiState?,
+    onResultReset: () -> Unit
 ) {
     Box {
         GlassSurfaceScreenContainerWithTitle(
@@ -46,16 +47,16 @@ fun RequestPasswordResetScreen(
                 )
             }
         )
-        ErrorMessageBottomSheet(
-            taskResult = taskResult,
-            onTaskResultReset = onTaskResultReset
+        SuccessErrorMessageBottomSheet(
+            resultState = resultState,
+            onResultReset = onResultReset
         )
     }
 }
 
 @Composable
 private fun GlassSurfaceContent(
-    emailState: FieldWithValidationState,
+    emailState: ValidatedFieldUiState,
     onEmailChange: (String) -> Unit
 ) {
     GlassSurfaceContentColumnWrapper(
@@ -76,19 +77,21 @@ private fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun RequestPasswordResetScreenPreview() {
+    val userDataValidator = UserDataValidator()
+
     val email = "example@gmail.com"
 
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
         RequestPasswordResetScreen(
-            emailState = FieldWithValidationState(
+            emailState = ValidatedFieldUiState(
                 fieldText = email,
-                validationStates = email.validateEmail()
+                validationStates = userDataValidator.validateEmail(email).toUiStates()
             ),
             onEmailChange = {},
             requestIsAllowed = true,
             onRequestPasswordResetButtonClick = {},
-            taskResult = null,
-            onTaskResultReset = {}
+            resultState = null,
+            onResultReset = {}
         )
     }
 }

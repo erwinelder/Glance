@@ -12,10 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 val md_theme_light_default_primary = Color(165, 93, 135, 255)
@@ -30,8 +31,16 @@ val md_theme_light_default_tertiary = Color(0xFF80543C)
 val md_theme_light_default_onTertiary = Color(0xFFFFFFFF)
 val md_theme_light_default_tertiaryContainer = Color(0xFFFFDBCA)
 val md_theme_light_default_onTertiaryContainer = Color(0xFF311302)
-val md_theme_light_default_success = Color(59, 162, 51)
-val md_theme_light_default_error = Color(0xFFCE3535)
+val md_theme_light_default_success = Color(92, 180, 85)
+val md_theme_light_default_successGradient = listOf(
+    Color(92, 180, 85),
+    Color(75, 148, 70)
+)
+val md_theme_light_default_error = Color(211, 92, 92)
+val md_theme_light_default_errorGradient = listOf(
+    Color(211, 92, 92),
+    Color(171, 67, 67)
+)
 val md_theme_light_default_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_default_onError = Color(0xFFFFFFFF)
 val md_theme_light_default_onErrorContainer = Color(0xFF410002)
@@ -117,8 +126,16 @@ val md_theme_dark_default_tertiary = Color(0xFFF3BA9C)
 val md_theme_dark_default_onTertiary = Color(0xFF4A2713)
 val md_theme_dark_default_tertiaryContainer = Color(0xFF653D27)
 val md_theme_dark_default_onTertiaryContainer = Color(0xFFFFDBCA)
-val md_theme_dark_default_success = Color(66, 155, 59)
-val md_theme_dark_default_error = Color(0xFFB83B3B)
+val md_theme_dark_default_success = Color(82, 161, 76)
+val md_theme_dark_default_successGradient = listOf(
+    Color(82, 161, 76),
+    Color(72, 141, 66)
+)
+val md_theme_dark_default_error = Color(169, 66, 66)
+val md_theme_dark_default_errorGradient = listOf(
+    Color(169, 66, 66),
+    Color(150, 52, 52)
+)
 val md_theme_dark_default_errorContainer = Color(0xFF93000A)
 val md_theme_dark_default_onError = Color(0xFF690005)
 val md_theme_dark_default_onErrorContainer = Color(0xFFFFDAD6)
@@ -204,8 +221,16 @@ val md_theme_dark_blue_tertiary = Color(0xFFF3BA9C)
 val md_theme_dark_blue_onTertiary = Color(0xFF4A2713)
 val md_theme_dark_blue_tertiaryContainer = Color(0xFF653D27)
 val md_theme_dark_blue_onTertiaryContainer = Color(0xFFFFDBCA)
-val md_theme_dark_blue_success = Color(66, 155, 59)
-val md_theme_dark_blue_error = Color(0xFFFFB4AB)
+val md_theme_dark_blue_success = Color(82, 161, 76)
+val md_theme_dark_blue_successGradient = listOf(
+    Color(82, 161, 76),
+    Color(72, 141, 66)
+)
+val md_theme_dark_blue_error = Color(169, 66, 66)
+val md_theme_dark_blue_errorGradient = listOf(
+    Color(169, 66, 66),
+    Color(150, 52, 52)
+)
 val md_theme_dark_blue_errorContainer = Color(0xFF93000A)
 val md_theme_dark_blue_onError = Color(0xFF690005)
 val md_theme_dark_blue_onErrorContainer = Color(0xFFFFDAD6)
@@ -304,12 +329,17 @@ private fun PreviewColors() {
                         .fillMaxWidth()
                         .padding(vertical = 32.dp)
                 ) {
+                    IconWithBackground(
+                        iconRes = R.drawable.error_icon,
+                        backgroundGradient = GlanceTheme.errorGradient,
+                        iconDescription = ""
+                    )
                     GlassSurfaceOnGlassSurface {
                         Box(
                             modifier = Modifier.size(150.dp, 100.dp)
                         )
                     }
-                    GlanceSingleValuePieChart(
+                    /*GlanceSingleValuePieChart(
                         percentage = 50f * 3.6f,
                         brush = GlanceTheme.greenGradient.toList().reversed(),
                         size = 90.dp
@@ -323,7 +353,7 @@ private fun PreviewColors() {
                         percentage = 100f * 3.6f,
                         brush = GlanceTheme.redGradient.toList().reversed(),
                         size = 90.dp
-                    )
+                    )*/
                 }
             }
         }

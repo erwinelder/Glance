@@ -11,7 +11,7 @@ sealed interface AuthScreens {
     data object SignUp : AuthScreens
 
     @Serializable
-    data class AuthenticationSuccessful(val screenType: String) : AuthScreens
+    data class AuthSuccessful(val screenType: String) : AuthScreens
 
     @Serializable
     data object Profile : AuthScreens

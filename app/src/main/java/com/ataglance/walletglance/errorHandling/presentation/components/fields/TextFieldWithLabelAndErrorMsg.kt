@@ -7,11 +7,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
-import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun TextFieldWithLabelAndErrorMsg(
-    state: FieldWithValidationState,
+    state: ValidatedFieldUiState,
     onValueChange: (String) -> Unit,
     placeholderText: String = "",
     isError: Boolean = false,

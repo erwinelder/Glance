@@ -1,0 +1,125 @@
+package com.ataglance.walletglance.errorHandling.presentation.components.containers
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SuccessErrorMessageBottomSheet(
+    resultState: ResultUiState?,
+    onResultReset: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState()
+
+    val solidColor = if (resultState?.isSuccessful == true) {
+        GlanceTheme.success
+    } else {
+        GlanceTheme.error
+    }
+    val gradientColor = if (resultState?.isSuccessful == true) {
+        GlanceTheme.successGradient
+    } else {
+        GlanceTheme.errorGradient
+    }
+
+    GlanceBottomSheet(
+        visible = resultState != null,
+        sheetState = sheetState,
+        onDismissRequest = onResultReset,
+        dragHandle = {}
+    ) {
+        resultState?.let {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
+            ) {
+                IconWithBackground(
+                    iconRes = if (resultState.isSuccessful) R.drawable.success_icon else
+                        R.drawable.error_icon,
+                    backgroundGradient = gradientColor,
+                    iconDescription = if (resultState.isSuccessful) "Success" else "Error"
+                )
+                Column(
+                    modifier = Modifier.fillMaxWidth(.9f)
+                ) {
+                    Text(
+                        text = stringResource(resultState.titleRes), // TODO
+                        fontSize = 24.sp,
+                        color = solidColor,
+                        fontWeight = FontWeight.ExtraBold,
+                        textAlign = TextAlign.Center,
+                        fontFamily = Manrope,
+                        lineHeight = 32.sp
+                    )
+                    Text(
+                        text = stringResource(resultState.messageRes),
+                        fontSize = 24.sp,
+                        color = solidColor,
+                        fontWeight = FontWeight.ExtraBold,
+                        textAlign = TextAlign.Center,
+                        fontFamily = Manrope,
+                        lineHeight = 32.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+private fun ErrorMessageBottomSheetPreview() {
+    val resultState = ResultUiState(
+//        isSuccessful = true,
+//        messageRes = R.string.reset_password_email_sent
+        isSuccessful = false,
+        titleRes = 0, // TODO
+        messageRes = R.string.email_for_password_reset_error
+    )
+
+    var state by remember { mutableStateOf<ResultUiState?>(resultState) }
+
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        SmallPrimaryButton(
+            text = "Show error",
+            onClick = { state = resultState }
+        )
+        SuccessErrorMessageBottomSheet(
+            resultState = state,
+            onResultReset = { state = null }
+        )
+    }
+}

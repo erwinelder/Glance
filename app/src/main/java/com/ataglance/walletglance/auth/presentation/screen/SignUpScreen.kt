@@ -11,27 +11,24 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
-import com.ataglance.walletglance.core.utils.isValidEmail
-import com.ataglance.walletglance.core.utils.isValidPassword
-import com.ataglance.walletglance.core.utils.validateConfirmationPassword
-import com.ataglance.walletglance.core.utils.validateEmail
-import com.ataglance.walletglance.core.utils.validatePassword
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.errorHandling.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 
 @Composable
 fun SignUpScreen(
-    emailState: FieldWithValidationState,
+    emailState: ValidatedFieldUiState,
     onEmailChange: (String) -> Unit,
-    passwordState: FieldWithValidationState,
+    passwordState: ValidatedFieldUiState,
     onPasswordChange: (String) -> Unit,
-    confirmPasswordState: FieldWithValidationState,
+    confirmPasswordState: ValidatedFieldUiState,
     onConfirmPasswordChange: (String) -> Unit,
     signUpIsAllowed: Boolean,
     onCreateNewUserWithEmailAndPassword: (String, String) -> Unit,
@@ -69,11 +66,11 @@ fun SignUpScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    emailState: FieldWithValidationState,
+    emailState: ValidatedFieldUiState,
     onEmailChange: (String) -> Unit,
-    passwordState: FieldWithValidationState,
+    passwordState: ValidatedFieldUiState,
     onPasswordChange: (String) -> Unit,
-    confirmPasswordState: FieldWithValidationState,
+    confirmPasswordState: ValidatedFieldUiState,
     onConfirmPasswordChange: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -111,22 +108,26 @@ private fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun SignUpScreenPreview() {
+    val userDataValidator = UserDataValidator()
+
     val email = "example@domain.com"
     val password = "_Password1"
     val confirmPassword = "_Password1"
     val passwordsMatch = true
 
-    val emailState = FieldWithValidationState(
+    val emailState = ValidatedFieldUiState(
         fieldText = email,
-        validationStates = email.validateEmail()
+        validationStates = userDataValidator.validateEmail(email).toUiStates()
     )
-    val passwordState = FieldWithValidationState(
+    val passwordState = ValidatedFieldUiState(
         fieldText = password,
-        validationStates = password.validatePassword()
+        validationStates = userDataValidator.validatePassword(password).toUiStates()
     )
-    val confirmPasswordState = FieldWithValidationState(
+    val confirmPasswordState = ValidatedFieldUiState(
         fieldText = confirmPassword,
-        validationStates = password.validateConfirmationPassword(confirmPassword)
+        validationStates = userDataValidator
+            .validateConfirmationPassword(password, confirmPassword)
+            .toUiStates()
     )
 
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
@@ -137,7 +138,9 @@ fun SignUpScreenPreview() {
             onPasswordChange = {},
             confirmPasswordState = confirmPasswordState,
             onConfirmPasswordChange = {},
-            signUpIsAllowed = email.isValidEmail() && password.isValidPassword() && passwordsMatch,
+            signUpIsAllowed = userDataValidator.isValidEmail(email) &&
+                    userDataValidator.isValidPassword(password) &&
+                    passwordsMatch,
             onCreateNewUserWithEmailAndPassword = { _, _ -> },
             onNavigateToSignInScreen = {}
         )

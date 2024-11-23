@@ -9,30 +9,32 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
+import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.utils.validateConfirmationPassword
-import com.ataglance.walletglance.core.utils.validatePassword
-import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
-import com.ataglance.walletglance.errorHandling.domain.model.TaskResult
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.ErrorMessageBottomSheet
+import com.ataglance.walletglance.errorHandling.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessErrorMessageBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 
 @Composable
 fun UpdatePasswordScreen(
-    currentPasswordState: FieldWithValidationState,
+    currentPasswordState: ValidatedFieldUiState,
     onCurrentPasswordChange: (String) -> Unit,
-    newPasswordState: FieldWithValidationState,
+    newPasswordState: ValidatedFieldUiState,
     onNewPasswordChange: (String) -> Unit,
-    newPasswordConfirmationState: FieldWithValidationState,
+    newPasswordConfirmationState: ValidatedFieldUiState,
     onNewPasswordConfirmationChange: (String) -> Unit,
     passwordUpdateIsAllowed: Boolean,
     onUpdatePasswordButtonClick: () -> Unit,
-    taskResult: TaskResult?,
-    onTaskResultReset: () -> Unit
+    onNavigateToRequestPasswordResetScreen: () -> Unit,
+    resultState: ResultUiState?,
+    onResultReset: () -> Unit
 ) {
     Box {
         GlassSurfaceScreenContainerWithTitle(
@@ -47,28 +49,34 @@ fun UpdatePasswordScreen(
                     onNewPasswordConfirmationChange = onNewPasswordConfirmationChange
                 )
             },
-            bottomButton = {
+            buttonUnderGlassSurface = {
                 PrimaryButton(
                     text = stringResource(R.string.update_password),
                     enabled = passwordUpdateIsAllowed,
                     onClick = onUpdatePasswordButtonClick
                 )
+            },
+            bottomButton = {
+                SecondaryButton(
+                    text = stringResource(R.string.reset_password),
+                    onClick = onNavigateToRequestPasswordResetScreen
+                )
             }
         )
-        ErrorMessageBottomSheet(
-            taskResult = taskResult,
-            onTaskResultReset = onTaskResultReset
+        SuccessErrorMessageBottomSheet(
+            resultState = resultState,
+            onResultReset = onResultReset
         )
     }
 }
 
 @Composable
 private fun GlassSurfaceContent(
-    currentPasswordState: FieldWithValidationState,
+    currentPasswordState: ValidatedFieldUiState,
     onCurrentPasswordChange: (String) -> Unit,
-    newPasswordState: FieldWithValidationState,
+    newPasswordState: ValidatedFieldUiState,
     onNewPasswordChange: (String) -> Unit,
-    newPasswordConfirmationState: FieldWithValidationState,
+    newPasswordConfirmationState: ValidatedFieldUiState,
     onNewPasswordConfirmationChange: (String) -> Unit
 ) {
     GlassSurfaceContentColumnWrapper(
@@ -103,28 +111,33 @@ private fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun UpdatePasswordScreenPreview() {
+    val userDataValidator = UserDataValidator()
+
     val newPassword = "_Password1"
     val newPasswordConfirmation = "_Password11"
 
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
         UpdatePasswordScreen(
-            currentPasswordState = FieldWithValidationState(),
+            currentPasswordState = ValidatedFieldUiState(),
             onCurrentPasswordChange = {},
-            newPasswordState = FieldWithValidationState(
+            newPasswordState = ValidatedFieldUiState(
                 fieldText = newPassword,
-                validationStates = newPassword.validatePassword()
+                validationStates = userDataValidator.validatePassword(newPassword)
+                    .toUiStates()
             ),
             onNewPasswordChange = {},
-            newPasswordConfirmationState = FieldWithValidationState(
+            newPasswordConfirmationState = ValidatedFieldUiState(
                 fieldText = newPasswordConfirmation,
-                validationStates = newPasswordConfirmation
-                    .validateConfirmationPassword(newPassword)
+                validationStates = userDataValidator
+                    .validateConfirmationPassword(newPassword, newPasswordConfirmation)
+                    .toUiStates()
             ),
             onNewPasswordConfirmationChange = {},
             passwordUpdateIsAllowed = true,
             onUpdatePasswordButtonClick = {},
-            taskResult = null,
-            onTaskResultReset = {}
+            onNavigateToRequestPasswordResetScreen = {},
+            resultState = null,
+            onResultReset = {}
         )
     }
 }

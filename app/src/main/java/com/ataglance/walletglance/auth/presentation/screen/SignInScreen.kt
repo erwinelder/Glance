@@ -8,15 +8,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
-import com.ataglance.walletglance.core.utils.isValidEmail
-import com.ataglance.walletglance.core.utils.isValidPassword
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun SignInScreen(
@@ -87,6 +86,8 @@ private fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun SignInScreenPreview() {
+    val userDataValidator = UserDataValidator()
+
     val email = "example@domain.com"
     val password = "_Password1"
 
@@ -96,7 +97,8 @@ fun SignInScreenPreview() {
             onEmailChange = {},
             password = password,
             onPasswordChange = {},
-            signInIsAllowed = email.isValidEmail() && password.isValidPassword(),
+            signInIsAllowed = userDataValidator.isValidEmail(email) &&
+                    userDataValidator.isValidPassword(password),
             onSignInWithEmailAndPassword = { _, _ -> },
             onNavigateToSignUpScreen = {}
         )

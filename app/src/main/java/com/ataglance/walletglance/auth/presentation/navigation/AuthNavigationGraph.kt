@@ -26,7 +26,8 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
-import com.ataglance.walletglance.errorHandling.domain.mapper.toTaskResult
+import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
+import com.ataglance.walletglance.errorHandling.mapper.toUiState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
@@ -62,22 +63,23 @@ fun NavGraphBuilder.authGraph(
                 signInIsAllowed = signInIsAllowed,
                 onSignInWithEmailAndPassword = { email, password ->
                     coroutineScope.launch {
-                        val result = authController.signIn(email, password)
+                        when (val result = authController.signIn(email, password)) {
+                            is ResultData.Success -> {
+                                val userId = authController.getUserId() ?: return@launch
 
-                        if (result.isSuccessful) {
-                            val userId = authController.getUserId() ?: return@launch
+                                appViewModel.setUserId(userId)
+                                appViewModel.updatePreferencesAfterSignIn(result.data)
 
-                            appViewModel.setUserId(userId)
-                            result.data?.let { appViewModel.updatePreferencesAfterSignIn(it) }
-
-                            navViewModel.navigateToScreenMovingTowardsLeft(
-                                navController = navController,
-                                screen = AuthScreens.AuthenticationSuccessful(
-                                    screenType = ProfileScreenTypeEnum.AfterSignIn.name
+                                navViewModel.navigateToScreenMovingTowardsLeft(
+                                    navController = navController,
+                                    screen = AuthScreens.AuthSuccessful(
+                                        screenType = ProfileScreenTypeEnum.AfterSignIn.name
+                                    )
                                 )
-                            )
-                        } else {
-                            viewModel.setTaskResult(result.toTaskResult())
+                            }
+                            is ResultData.Error -> {
+                                viewModel.setResultState(result.toUiState())
+                            }
                         }
                     }
                 },
@@ -120,16 +122,19 @@ fun NavGraphBuilder.authGraph(
                             lang = appConfiguration.langCode
                         )
 
-                        if (result.isSuccessful) {
-                            result.data?.let { appViewModel.setUserId(it) }
-                            navViewModel.navigateToScreenMovingTowardsLeft(
-                                navController = navController,
-                                screen = AuthScreens.AuthenticationSuccessful(
-                                    screenType = ProfileScreenTypeEnum.AfterSignUp.name
+                        when (result) {
+                            is ResultData.Success -> {
+                                appViewModel.setUserId(result.data)
+                                navViewModel.navigateToScreenMovingTowardsLeft(
+                                    navController = navController,
+                                    screen = AuthScreens.AuthSuccessful(
+                                        screenType = ProfileScreenTypeEnum.AfterSignUp.name
+                                    )
                                 )
-                            )
-                        } else {
-                            viewModel.setTaskResult(result.toTaskResult())
+                            }
+                            is ResultData.Error -> {
+                                viewModel.setResultState(result.toUiState())
+                            }
                         }
                     }
                 },
@@ -141,9 +146,9 @@ fun NavGraphBuilder.authGraph(
                 }
             )
         }
-        composable<AuthScreens.AuthenticationSuccessful> { backStack ->
+        composable<AuthScreens.AuthSuccessful> { backStack ->
             val screenType = AuthenticationSuccessfulScreenType.fromString(
-                backStack.toRoute<AuthScreens.AuthenticationSuccessful>().screenType
+                backStack.toRoute<AuthScreens.AuthSuccessful>().screenType
             )
 
             AuthSuccessfulScreen(
@@ -159,7 +164,7 @@ fun NavGraphBuilder.authGraph(
                         ProfileScreenTypeEnum.AfterSignUp -> {
                             navViewModel.navigateToScreenMovingTowardsLeft(
                                 navController = navController,
-                                screen = SettingsScreens.Start
+                                screen = SettingsScreens.Accounts
                             )
                         }
                     }
@@ -192,7 +197,7 @@ fun NavGraphBuilder.authGraph(
                 .collectAsStateWithLifecycle()
             val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed
                 .collectAsStateWithLifecycle()
-            val taskResult by viewModel.taskResult.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             UpdatePasswordScreen(
                 currentPasswordState = currentPasswordState,
@@ -208,11 +213,17 @@ fun NavGraphBuilder.authGraph(
                             currentPassword = currentPasswordState.fieldText,
                             newPassword = newPasswordState.fieldText
                         )
-                        viewModel.setTaskResult(result)
+                        viewModel.setResultState(result.toUiState())
                     }
                 },
-                taskResult = taskResult,
-                onTaskResultReset = viewModel::resetTaskResult
+                onNavigateToRequestPasswordResetScreen = {
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = AuthScreens.RequestPasswordReset
+                    )
+                },
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState
             )
         }
         composable<AuthScreens.RequestPasswordReset> { backStack ->
@@ -227,7 +238,7 @@ fun NavGraphBuilder.authGraph(
 
             val emailState by viewModel.emailState.collectAsStateWithLifecycle()
             val emailIsValid by viewModel.emailIsValid.collectAsStateWithLifecycle()
-            val taskResult by viewModel.taskResult.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             RequestPasswordResetScreen(
                 emailState = emailState,
@@ -236,11 +247,11 @@ fun NavGraphBuilder.authGraph(
                 onRequestPasswordResetButtonClick = {
                     coroutineScope.launch {
                         val result = authController.requestPasswordReset(emailState.fieldText)
-                        viewModel.setTaskResult(result)
+                        viewModel.setResultState(result.toUiState())
                     }
                 },
-                taskResult = taskResult,
-                onTaskResultReset = viewModel::resetTaskResult
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState
             )
         }
         composable<AuthScreens.ResetPassword> { backStack ->
@@ -264,7 +275,7 @@ fun NavGraphBuilder.authGraph(
                 .collectAsStateWithLifecycle()
             val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed
                 .collectAsStateWithLifecycle()
-            val taskResult by viewModel.taskResult.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             ResetPasswordScreen(
                 newPasswordState = newPasswordState,
@@ -277,11 +288,11 @@ fun NavGraphBuilder.authGraph(
                         val result = authController.setNewPassword(
                             obbCode = obbCode, newPassword = newPasswordState.fieldText
                         )
-                        viewModel.setTaskResult(result)
+                        viewModel.setResultState(result.toUiState())
                     }
                 },
-                taskResult = taskResult,
-                onTaskResultReset = viewModel::resetTaskResult
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState
             )
         }
     }

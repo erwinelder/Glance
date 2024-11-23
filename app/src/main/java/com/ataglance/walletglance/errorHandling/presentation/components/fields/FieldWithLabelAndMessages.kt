@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
-import com.ataglance.walletglance.errorHandling.domain.model.FieldWithValidationState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun FieldWithLabelAndMessages(
     labelText: String,
-    state: FieldWithValidationState,
+    state: ValidatedFieldUiState,
     field: @Composable () -> Unit
 ) {
     Column(
