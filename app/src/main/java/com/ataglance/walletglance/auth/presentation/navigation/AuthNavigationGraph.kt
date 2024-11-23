@@ -39,7 +39,7 @@ fun NavGraphBuilder.authGraph(
     authController: AuthController,
     subscriptionViewModel: SubscriptionViewModel,
     appViewModel: AppViewModel,
-    appConfiguration: AppConfiguration,
+    appConfiguration: AppConfiguration
 ) {
     navigation<SettingsScreens.Auth>(startDestination = AuthScreens.SignIn) {
         composable<AuthScreens.SignIn> { backStack ->
@@ -155,20 +155,13 @@ fun NavGraphBuilder.authGraph(
             AuthSuccessfulScreen(
                 screenType = screenType,
                 onContinueButtonClick = {
-                    when (screenType.type) {
-                        ProfileScreenTypeEnum.AfterSignIn -> {
-                            navViewModel.navigateToScreenMovingTowardsLeft(
-                                navController = navController,
-                                screen = MainScreens.FinishSetup
-                            )
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = when (screenType.type) {
+                            ProfileScreenTypeEnum.AfterSignIn -> MainScreens.FinishSetup
+                            ProfileScreenTypeEnum.AfterSignUp -> SettingsScreens.Accounts
                         }
-                        ProfileScreenTypeEnum.AfterSignUp -> {
-                            navViewModel.navigateToScreenMovingTowardsLeft(
-                                navController = navController,
-                                screen = SettingsScreens.Accounts
-                            )
-                        }
-                    }
+                    )
                 }
             )
         }
