@@ -138,7 +138,8 @@
     <string name="invalid_code_error">Недійсний код</string>
     <string name="wrong_credentials_error">Неправильні облікові дані</string>
     <string name="sign_in_error">Помилка під час входу в систему</string>
-    <string name="email_for_password_reset_error">Помилка під час відправлення листа для скидання пароля</string>
+    <string name="sign_up_email_verification_error">Сталася помилка під час надсилання листа для підтвердження</string>
+    <string name="email_for_password_reset_error">Сталася помилка під час надсилання листа для скидання пароля</string>
     <string name="password_update_success">Пароль успішно оновлено</string>
     <string name="password_reset_error">Скидання пароля не вдалося</string>
     <string name="update_password_error">Помилка під час оновлення пароля</string>

@@ -139,7 +139,8 @@
     <string name="invalid_code_error">Código no válido</string>
     <string name="wrong_credentials_error">Credenciales incorrectas</string>
     <string name="sign_in_error">Error al iniciar sesión</string>
-    <string name="email_for_password_reset_error">Error al enviar el correo para restablecer la contraseña</string>
+    <string name="sign_up_email_verification_error">Ocurrió un error al enviar el correo electrónico de verificación</string>
+    <string name="email_for_password_reset_error">Ocurrió un error al enviar el correo electrónico para restablecer la contraseña</string>
     <string name="password_update_success">La contraseña se ha actualizado correctamente</string>
     <string name="password_reset_error">El restablecimiento de la contraseña falló</string>
     <string name="update_password_error">Error al actualizar la contraseña</string>

@@ -138,7 +138,8 @@
     <string name="invalid_code_error">Неверный код</string>
     <string name="wrong_credentials_error">Неверные учетные данные</string>
     <string name="sign_in_error">Ошибка при входе в систему</string>
-    <string name="email_for_password_reset_error">Ошибка при отправке письма для сброса пароля</string>
+    <string name="sign_up_email_verification_error">Произошла ошибка при отправке письма для подтверждения</string>
+    <string name="email_for_password_reset_error">Произошла ошибка при отправке письма для сброса пароля</string>
     <string name="password_update_success">Пароль был успешно обновлён</string>
     <string name="password_reset_error">Сброс пароля не удался</string>
     <string name="update_password_error">Ошибка при обновлении пароля</string>
