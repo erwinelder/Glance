@@ -146,6 +146,7 @@
     <string name="update_password_error">Error al actualizar la contraseña</string>
     <string name="email_sent">¡Correo enviado!</string>
     <string name="sign_up_email_verification_sent">Se ha enviado un correo electrónico de verificación para el registro. Por favor, siga el enlace en el correo para completar su registro.</string>
+    <string name="email_verification_error">La verificación del correo electrónico falló</string>
     <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, siga el enlace en el correo.</string>
 
     <!-- Widgets -->

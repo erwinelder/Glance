@@ -146,6 +146,7 @@
     <string name="update_password_error">Error during updating password</string>
     <string name="email_sent">Email sent!</string>
     <string name="sign_up_email_verification_sent">A verification email for sign-up has been sent. Please follow the link in the email to complete your registration.</string>
+    <string name="email_verification_error">Email verification failed</string>
     <string name="reset_password_email_sent">An email for password reset has been sent. Please follow the link in the email.</string>
 
     <!-- Widgets -->
