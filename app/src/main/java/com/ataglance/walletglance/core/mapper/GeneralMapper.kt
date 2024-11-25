@@ -10,8 +10,9 @@ fun UserRemotePreferences.toMap(): Map<String, Any?> {
     )
 }
 
-fun Map<String, Any?>.toUserRemotePreferences(): UserRemotePreferences {
+fun Map<String, Any?>.toUserRemotePreferences(userId: String): UserRemotePreferences {
     return UserRemotePreferences(
+        userId = userId,
         language = this["language"] as String,
         subscription = this["subscription"] as AppSubscription
     )

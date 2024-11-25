@@ -59,7 +59,7 @@ class AuthController(
             setUser(firebaseUser)
 
             val userPreferences = UserRemotePreferences(
-                language = lang, subscription = user.subscription
+                userId = firebaseUser.uid, language = lang, subscription = user.subscription
             )
 
             userFirestoreRef?.set(userPreferences.toMap(), SetOptions.merge())?.await()
@@ -75,17 +75,6 @@ class AuthController(
         }
     }
 
-    suspend fun sendSignUpVerificationEmail(): AuthResult {
-        val currentUser = auth.currentUser ?: return Result.Error(AuthError.UserNotSignedIn)
-
-        return try {
-            currentUser.sendEmailVerification().await()
-            Result.Success(AuthSuccess.SignUpEmailVerificationSent)
-        } catch (e: Exception) {
-            Result.Error(AuthError.SignUpEmailVerificationError)
-        }
-    }
-
     suspend fun signIn(
         email: String,
         password: String
@@ -94,9 +83,14 @@ class AuthController(
             auth.signInWithEmailAndPassword(email, password).await()
                 .user?.let(::setUser)
                 ?: return ResultData.Error(AuthError.WrongCredentials)
+            val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.SignInError)
+
+            if (!firebaseUser.isEmailVerified) {
+                return ResultData.Error(AuthError.EmailVerificationError)
+            }
 
             userFirestoreRef?.get()?.await()
-                ?.data?.toUserRemotePreferences()
+                ?.data?.toUserRemotePreferences(userId = firebaseUser.uid)
                 ?.let { return ResultData.Success(it) }
                 ?: return ResultData.Error(AuthError.UserNotFound)
         } catch (e: Exception) {
@@ -107,6 +101,17 @@ class AuthController(
                 is FirebaseAuthInvalidUserException -> ResultData.Error(AuthError.UserNotFound)
                 else -> ResultData.Error(AuthError.SignInError)
             }
+        }
+    }
+
+    suspend fun sendSignUpVerificationEmail(): AuthResult {
+        val currentUser = auth.currentUser ?: return Result.Error(AuthError.UserNotSignedIn)
+
+        return try {
+            currentUser.sendEmailVerification().await()
+            Result.Success(AuthSuccess.SignUpEmailVerificationSent)
+        } catch (e: Exception) {
+            Result.Error(AuthError.SignUpEmailVerificationError)
         }
     }
 

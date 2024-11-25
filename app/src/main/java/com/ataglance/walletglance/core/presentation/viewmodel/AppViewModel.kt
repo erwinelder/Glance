@@ -52,8 +52,8 @@ import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
-import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
@@ -192,6 +192,9 @@ class AppViewModel(
     }
 
     fun updatePreferencesAfterSignIn(preferences: UserRemotePreferences) {
+        viewModelScope.launch {
+            setUserId(preferences.userId)
+        }
         setLanguage(preferences.language)
     }
 

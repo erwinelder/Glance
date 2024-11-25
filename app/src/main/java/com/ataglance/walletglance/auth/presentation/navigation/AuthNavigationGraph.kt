@@ -29,6 +29,7 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.mapper.toUiState
@@ -46,6 +47,8 @@ fun NavGraphBuilder.authGraph(
 ) {
     navigation<SettingsScreens.Auth>(startDestination = AuthScreens.SignIn(SignInCase.Default)) {
         composable<AuthScreens.SignIn> { backStack ->
+            val case = backStack.toRoute<AuthScreens.SignIn>().case
+
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
                 factory = AuthViewModelFactory(
@@ -69,11 +72,7 @@ fun NavGraphBuilder.authGraph(
                     coroutineScope.launch {
                         when (val result = authController.signIn(email, password)) {
                             is ResultData.Success -> {
-                                val userId = authController.getUserId() ?: return@launch
-
-                                appViewModel.setUserId(userId)
                                 appViewModel.updatePreferencesAfterSignIn(result.data)
-
                                 navViewModel.navigateToScreenMovingTowardsLeft(
                                     navController = navController,
                                     screen = AuthScreens.AuthSuccessful(
@@ -82,7 +81,17 @@ fun NavGraphBuilder.authGraph(
                                 )
                             }
                             is ResultData.Error -> {
-                                viewModel.setResultState(result.toUiState())
+                                if (result.error == AuthError.EmailVerificationError) {
+                                    val verificationEmailResult = authController.sendSignUpVerificationEmail()
+                                    viewModel.setResultState(verificationEmailResult.toUiState())
+                                    if (verificationEmailResult is Result.Success) {
+                                        authController.getUserId()?.let {
+                                            appViewModel.setUserId(it)
+                                        }
+                                    }
+                                } else {
+                                    viewModel.setResultState(result.toUiState())
+                                }
                             }
                         }
                     }
