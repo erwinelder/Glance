@@ -1,14 +1,18 @@
 package com.ataglance.walletglance.auth.presentation.navigation
 
+import com.ataglance.walletglance.auth.domain.model.SignInCase
 import kotlinx.serialization.Serializable
 
 sealed interface AuthScreens {
 
     @Serializable
-    data object SignIn : AuthScreens
+    data class SignIn(val case: SignInCase) : AuthScreens
 
     @Serializable
     data object SignUp : AuthScreens
+
+    @Serializable
+    data object EmailVerificationFailed : AuthScreens
 
     @Serializable
     data class AuthSuccessful(val screenType: String) : AuthScreens

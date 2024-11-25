@@ -9,15 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.domain.model.AuthController
+import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenTypeEnum
+import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleDeepLink(intent)
 
         app = application as GlanceApplication
         initializeAuthViewModel()
@@ -95,9 +101,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleDeepLink(intent: Intent) {
-        intent.data?.let { uri ->
-            if (uri.host == "reset_password") {
-                uri.getQueryParameter("oobCode").takeUnless { it.isNullOrEmpty() }
+        val uri = intent.data ?: return
+
+        when (val mode = uri.getQueryParameter("mode")) {
+            "resetPassword" -> {
+                uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
                     ?.let { obbCode ->
                         navViewModel.navigateToResetPasswordScreen(
                             navController = navController,
@@ -107,6 +115,22 @@ class MainActivity : AppCompatActivity() {
                     ?: run {
                         Log.e("Reset password link", "No oobCode found in the deep link")
                     }
+            }
+            "verify_email" -> {
+                lifecycleScope.launch {
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = when (authController.resignIn()) {
+                            is ResultData.Success -> AuthScreens.AuthSuccessful(
+                                screenType = AuthSuccessfulScreenTypeEnum.AfterSignUp.name
+                            )
+                            is ResultData.Error -> AuthScreens.EmailVerificationFailed
+                        }
+                    )
+                }
+            }
+            else -> {
+                Log.e("Deep link", "Unknown deep link mode or action: $mode")
             }
         }
     }

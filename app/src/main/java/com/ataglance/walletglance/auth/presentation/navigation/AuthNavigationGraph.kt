@@ -10,9 +10,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.model.AuthenticationSuccessfulScreenType
-import com.ataglance.walletglance.auth.domain.model.ProfileScreenTypeEnum
+import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenType
+import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenTypeEnum
+import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.screen.AuthSuccessfulScreen
+import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreen
 import com.ataglance.walletglance.auth.presentation.screen.PasswordResetSuccessfulScreen
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreen
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreen
@@ -42,7 +44,7 @@ fun NavGraphBuilder.authGraph(
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
-    navigation<SettingsScreens.Auth>(startDestination = AuthScreens.SignIn) {
+    navigation<SettingsScreens.Auth>(startDestination = AuthScreens.SignIn(SignInCase.Default)) {
         composable<AuthScreens.SignIn> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
@@ -75,7 +77,7 @@ fun NavGraphBuilder.authGraph(
                                 navViewModel.navigateToScreenMovingTowardsLeft(
                                     navController = navController,
                                     screen = AuthScreens.AuthSuccessful(
-                                        screenType = ProfileScreenTypeEnum.AfterSignIn.name
+                                        screenType = AuthSuccessfulScreenTypeEnum.AfterSignIn.name
                                     )
                                 )
                             }
@@ -138,13 +140,21 @@ fun NavGraphBuilder.authGraph(
                 onNavigateToSignInScreen = {
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
-                        screen = AuthScreens.SignIn
+                        screen = AuthScreens.SignIn(SignInCase.Default)
                     )
                 }
             )
         }
+        composable<AuthScreens.EmailVerificationFailed> {
+            EmailVerificationErrorScreen {
+                navViewModel.navigateToScreenMovingTowardsLeft(
+                    navController = navController,
+                    screen = AuthScreens.SignIn(SignInCase.EmailVerificationError)
+                )
+            }
+        }
         composable<AuthScreens.AuthSuccessful> { backStack ->
-            val screenType = AuthenticationSuccessfulScreenType.fromString(
+            val screenType = AuthSuccessfulScreenType.fromString(
                 backStack.toRoute<AuthScreens.AuthSuccessful>().screenType
             )
 
@@ -154,8 +164,8 @@ fun NavGraphBuilder.authGraph(
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
                         screen = when (screenType.type) {
-                            ProfileScreenTypeEnum.AfterSignIn -> MainScreens.FinishSetup
-                            ProfileScreenTypeEnum.AfterSignUp -> SettingsScreens.Accounts
+                            AuthSuccessfulScreenTypeEnum.AfterSignIn -> MainScreens.FinishSetup
+                            AuthSuccessfulScreenTypeEnum.AfterSignUp -> SettingsScreens.Accounts
                         }
                     )
                 }

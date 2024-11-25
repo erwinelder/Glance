@@ -55,7 +55,8 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.UserNotFound, AuthError.UserNotSignedIn, AuthError.InvalidEmail,
         AuthError.InvalidCode, AuthError.WrongCredentials, AuthError.SignInError,
         AuthError.SignUpEmailVerificationError, AuthError.EmailForPasswordResetError,
-        AuthError.PasswordResetError, AuthError.UpdatePasswordError ->
+        AuthError.EmailVerificationError, AuthError.PasswordResetError,
+        AuthError.UpdatePasswordError ->
             R.string.oops
     }
 }
@@ -72,6 +73,7 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.WrongCredentials -> R.string.wrong_credentials_error
         AuthError.SignInError -> R.string.sign_in_error
         AuthError.SignUpEmailVerificationError -> R.string.sign_up_email_verification_error
+        AuthError.EmailVerificationError -> R.string.email_verification_error
         AuthError.EmailForPasswordResetError -> R.string.email_for_password_reset_error
         AuthError.PasswordResetError -> R.string.password_reset_error
         AuthError.UpdatePasswordError -> R.string.update_password_error

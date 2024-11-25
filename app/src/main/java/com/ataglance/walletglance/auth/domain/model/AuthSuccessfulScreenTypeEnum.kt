@@ -1,5 +1,5 @@
 package com.ataglance.walletglance.auth.domain.model
 
-enum class ProfileScreenTypeEnum {
+enum class AuthSuccessfulScreenTypeEnum {
     AfterSignIn, AfterSignUp
 }

@@ -22,7 +22,7 @@ fun SuccessMessageWithIcon(
     message: String,
     @DrawableRes iconRes: Int = R.drawable.success_icon,
     iconDescription: String = "Success",
-    iconBackgroundGradient: List<Color> = GlanceTheme.primaryGradientLightToDark.toList(),
+    iconBackgroundGradient: List<Color> = GlanceTheme.primaryGradientLightToDark.toList()
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

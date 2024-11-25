@@ -156,6 +156,23 @@ class AuthController(
         }
     }
 
+    suspend fun resignIn(): ResultData<String, AuthError> {
+        try {
+            auth.currentUser?.reload()?.await() ?: return ResultData.Error(AuthError.UserNotSignedIn)
+            val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.UserNotSignedIn)
+            firebaseUser.let(::setUser)
+
+            if (!firebaseUser.isEmailVerified) {
+                return ResultData.Error(AuthError.EmailVerificationError)
+            }
+
+            val userId = user.uid ?: return ResultData.Error(AuthError.UserNotSignedIn)
+            return ResultData.Success(userId)
+        } catch (e: Exception) {
+            return ResultData.Error(AuthError.EmailVerificationError)
+        }
+    }
+
     fun signOut() {
         auth.signOut()
         user = User()
