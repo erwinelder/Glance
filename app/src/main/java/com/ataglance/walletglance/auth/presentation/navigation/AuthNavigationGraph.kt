@@ -76,7 +76,11 @@ fun NavGraphBuilder.authGraph(
                                 navViewModel.navigateToScreenMovingTowardsLeft(
                                     navController = navController,
                                     screen = AuthScreens.AuthSuccessful(
-                                        screenType = AuthSuccessfulScreenTypeEnum.AfterSignIn.name
+                                        screenType = if (case == SignInCase.Default) {
+                                            AuthSuccessfulScreenTypeEnum.AfterSignIn
+                                        } else {
+                                            AuthSuccessfulScreenTypeEnum.AfterSignUp
+                                        }.name
                                     )
                                 )
                             }
