@@ -28,13 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.SettingsCategory
@@ -124,7 +124,7 @@ private fun CompactLayout(
     ) {
         categories.forEach { category ->
             GlassSurfaceNavigationButton(
-                textRes = category.stringRes,
+                text = stringResource(category.stringRes),
                 imageRes = category.iconRes,
                 showRightIconInsteadOfLeft = true,
                 onClick = {
@@ -158,7 +158,7 @@ private fun ExpandedLayout(
         }
         items(items = settingsCategories) { category ->
             GlassSurfaceNavigationButton(
-                textRes = category.stringRes,
+                text = stringResource(category.stringRes),
                 imageRes = category.iconRes,
                 showRightIconInsteadOfLeft = true,
                 onClick = {

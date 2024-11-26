@@ -49,7 +49,7 @@ fun LanguageScreen(
     ) {
         if (isAppSetUp && WindowTypeIsCompact) {
             GlassSurfaceNavigationButton(
-                textRes = settingsCategory.stringRes,
+                text = stringResource(settingsCategory.stringRes),
                 imageRes = settingsCategory.iconRes,
                 showRightIconInsteadOfLeft = false,
                 filledWidths = FilledWidthByScreenType(.96f),

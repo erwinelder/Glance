@@ -97,7 +97,7 @@ fun AppearanceScreen(
         ) {
             if (isAppSetUp && WindowTypeIsCompact) {
                 GlassSurfaceNavigationButton(
-                    textRes = settingsCategories.appearance.stringRes,
+                    text = stringResource(settingsCategories.appearance.stringRes),
                     imageRes = settingsCategories.appearance.iconRes,
                     showRightIconInsteadOfLeft = false,
                     filledWidths = FilledWidthByScreenType(.96f),
@@ -113,7 +113,7 @@ fun AppearanceScreen(
             ) {
                 appearanceSettingsCategories.forEach { category ->
                     GlassSurfaceNavigationButton(
-                        textRes = category.stringRes,
+                        text = stringResource(category.stringRes),
                         imageRes = category.iconRes,
                         showRightIconInsteadOfLeft = true,
                         rightIconRes = R.drawable.short_arrow_up_icon,

@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.core.presentation.components.buttons
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,7 +28,7 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun GlassSurfaceNavigationButton(
-    @StringRes textRes: Int,
+    text: String,
     @DrawableRes imageRes: Int,
     showRightIconInsteadOfLeft: Boolean = true,
     @DrawableRes rightIconRes: Int = R.drawable.short_arrow_right_icon,
@@ -59,11 +57,11 @@ fun GlassSurfaceNavigationButton(
             }
             Image(
                 painter = painterResource(imageRes),
-                contentDescription = stringResource(textRes) + " icon",
+                contentDescription = "$text icon",
                 modifier = Modifier.size(46.dp)
             )
             Text(
-                text = stringResource(textRes),
+                text = text,
                 color = GlanceTheme.onSurface,
                 fontSize = 21.sp,
                 textAlign = TextAlign.Center,
