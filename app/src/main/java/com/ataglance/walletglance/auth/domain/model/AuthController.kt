@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.auth.domain.model
 
-import android.util.Log
 import com.ataglance.walletglance.core.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.mapper.toMap
 import com.ataglance.walletglance.core.mapper.toUserRemotePreferences
@@ -19,7 +18,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
 typealias AuthResult = Result<AuthSuccess, AuthError>
@@ -53,7 +51,7 @@ class AuthController(
         lang: String
     ): ResultData<String, AuthError> {
         return try {
-            val firebaseUser = auth.createUserWithEmailAndPassword(email, password).await().user
+            val firebaseUser = auth.createUserWithEmailAndPassword(email, password).await()?.user
                 ?: return ResultData.Error(AuthError.UserNotCreated)
 
             setUser(firebaseUser)
@@ -62,10 +60,9 @@ class AuthController(
                 userId = firebaseUser.uid, language = lang, subscription = user.subscription
             )
 
-            userFirestoreRef?.set(userPreferences.toMap(), SetOptions.merge())?.await()
+            userFirestoreRef?.set(userPreferences.toMap())?.await()
             ResultData.Success(firebaseUser.uid)
         } catch (e: Exception) {
-            Log.e("Create new user Firebase operation", "Error occurred: ", e)
             when (e) {
                 is FirebaseAuthUserCollisionException -> ResultData.Error(AuthError.UserAlreadyExists)
                 is FirebaseAuthEmailException -> ResultData.Error(AuthError.InvalidEmail)
@@ -94,7 +91,6 @@ class AuthController(
                 ?.let { return ResultData.Success(it) }
                 ?: return ResultData.Error(AuthError.UserNotFound)
         } catch (e: Exception) {
-            Log.e("Sign in Firebase operation", "Error occurred: ", e)
             return when (e) {
                 is FirebaseAuthEmailException -> ResultData.Error(AuthError.InvalidEmail)
                 is FirebaseAuthInvalidCredentialsException -> ResultData.Error(AuthError.WrongCredentials)
@@ -148,8 +144,6 @@ class AuthController(
     }
 
     suspend fun setNewPassword(obbCode: String, newPassword: String): AuthResult {
-        auth.currentUser ?: return Result.Error(AuthError.UserNotSignedIn)
-
         return try {
             auth.confirmPasswordReset(obbCode, newPassword).await()
             Result.Success(AuthSuccess.PasswordUpdated)
