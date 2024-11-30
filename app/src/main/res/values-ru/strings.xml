@@ -17,7 +17,9 @@
     <!-- Buttons -->
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_out">Выйти из аккаунта</string>
     <string name="send_email">Отправить письмо</string>
+    <string name="update_email">Обновить электронную почту</string>
     <string name="reset_password">Сбросить пароль</string>
     <string name="update_password">Обновить пароль</string>
     <string name="create">Создать</string>
@@ -70,6 +72,7 @@
     <string name="start_setup">Начать настройку</string>
     <string name="sign_in_to_your_account">Войдите в свой аккаунт</string>
     <string name="create_new_account">Создайте новый аккаунт</string>
+    <string name="update_your_email">Обновите вашу электронную почту</string>
     <string name="update_your_password">Обновите свой пароль</string>
     <string name="request_password_reset">Запросить сброс пароля</string>
     <string name="reset_your_password">Сбросьте свой пароль</string>
@@ -80,6 +83,8 @@
 
     <!-- Fields -->
     <string name="email">Электронная почта</string>
+    <string name="current_email">Текущая электронная почта</string>
+    <string name="new_email">Новая электронная почта</string>
     <string name="password">Пароль</string>
     <string name="confirm_password">Подтверждение пароля</string>
     <string name="current_password">Текущий пароль</string>
@@ -126,7 +131,7 @@
     <string name="passwords_do_match">Пароли совпадают</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
 
-    <!-- Results -->
+    <!-- Messages -->
     <string name="all_set">Всё готово!</string>
     <string name="oops">Ой!</string>
     <string name="user_already_exists_error">Пользователь уже существует</string>
@@ -138,6 +143,7 @@
     <string name="invalid_code_error">Неверный код</string>
     <string name="wrong_credentials_error">Неверные учетные данные</string>
     <string name="sign_in_error">Ошибка при входе в систему</string>
+    <string name="reauthentication_error">Ошибка при повторной аутентификации</string>
     <string name="sign_up_email_verification_error">Произошла ошибка при отправке письма для подтверждения</string>
     <string name="email_for_password_reset_error">Произошла ошибка при отправке письма для сброса пароля</string>
     <string name="password_update_success">Пароль был успешно обновлён</string>
@@ -145,8 +151,11 @@
     <string name="update_password_error">Ошибка при обновлении пароля</string>
     <string name="email_sent">Письмо отправлено!</string>
     <string name="sign_up_email_verification_sent">Письмо для подтверждения регистрации было отправлено. Пожалуйста, перейдите по ссылке в письме, чтобы завершить регистрацию.</string>
+    <string name="update_email_email_verification_sent">Письмо для подтверждения обновления вашей электронной почты было отправлено. Пожалуйста, перейдите по ссылке в письме, чтобы завершить обновление.</string>
+    <string name="email_update_success">Электронная почта была успешно обновлена</string>
     <string name="email_verification_error">Подтверждение электронной почты не удалось</string>
     <string name="reset_password_email_sent">Письмо для сброса пароля было отправлено. Пожалуйста, перейдите по ссылке в письме.</string>
+    <string name="sign_out_of_your_account">Выйти из своего аккаунта? Вам нужно будет снова войти, чтобы получить доступ к своим данным.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>
