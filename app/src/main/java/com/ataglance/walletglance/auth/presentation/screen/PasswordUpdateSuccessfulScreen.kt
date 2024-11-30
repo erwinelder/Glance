@@ -10,7 +10,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultMessageScreenContainer
 
 @Composable
-fun PasswordResetSuccessfulScreen(
+fun PasswordUpdateSuccessfulScreen(
     isAppSetUp: Boolean,
     onContinueButtonClick: () -> Unit
 ) {
@@ -27,9 +27,9 @@ fun PasswordResetSuccessfulScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun PasswordResetSuccessfulScreenPreview() {
+fun PasswordUpdateSuccessfulScreenPreview() {
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
-        PasswordResetSuccessfulScreen(
+        PasswordUpdateSuccessfulScreen(
             isAppSetUp = true,
             onContinueButtonClick = {}
         )

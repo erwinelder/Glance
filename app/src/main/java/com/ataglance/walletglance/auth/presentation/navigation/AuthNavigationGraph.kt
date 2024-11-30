@@ -15,7 +15,7 @@ import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenTypeEnum
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.screen.AuthSuccessfulScreen
 import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreen
-import com.ataglance.walletglance.auth.presentation.screen.PasswordResetSuccessfulScreen
+import com.ataglance.walletglance.auth.presentation.screen.PasswordUpdateSuccessfulScreen
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreen
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreen
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreen
@@ -363,8 +363,8 @@ fun NavGraphBuilder.authGraph(
                 onResultReset = viewModel::resetResultState
             )
         }
-        composable<AuthScreens.PasswordResetSuccessful> {
-            PasswordResetSuccessfulScreen(
+        composable<AuthScreens.PasswordUpdateSuccessful> {
+            PasswordUpdateSuccessfulScreen(
                 isAppSetUp = appConfiguration.isSetUp,
                 onContinueButtonClick = {
                     navController.popBackStack(

@@ -33,6 +33,6 @@ sealed interface AuthScreens {
     data class ResetPassword(val obbCode: String) : AuthScreens
 
     @Serializable
-    data object PasswordResetSuccessful : AuthScreens
+    data object PasswordUpdateSuccessful : AuthScreens
 
 }
