@@ -45,6 +45,10 @@ class AuthController(
         get() = user.uid?.let { firestore.collection("usersPreferences").document(it) }
 
 
+    fun emailIsVerified(): Boolean {
+        return auth.currentUser?.isEmailVerified ?: false
+    }
+
     suspend fun createNewUser(
         email: String,
         password: String,
@@ -75,21 +79,21 @@ class AuthController(
     suspend fun signIn(
         email: String,
         password: String
-    ): ResultData<UserRemotePreferences, AuthError> {
+    ): ResultData<UserRemotePreferences?, AuthError> {
         try {
             auth.signInWithEmailAndPassword(email, password).await()
                 .user?.let(::setUser)
                 ?: return ResultData.Error(AuthError.WrongCredentials)
             val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.SignInError)
 
-            if (!firebaseUser.isEmailVerified) {
-                return ResultData.Error(AuthError.EmailVerificationError)
+            if (firebaseUser.isEmailVerified) {
+                userFirestoreRef?.get()?.await()
+                    ?.data?.toUserRemotePreferences(userId = firebaseUser.uid)
+                    ?.let { return ResultData.Success(it) }
+                    ?: return ResultData.Error(AuthError.UserNotFound)
+            } else {
+                return ResultData.Success(null)
             }
-
-            userFirestoreRef?.get()?.await()
-                ?.data?.toUserRemotePreferences(userId = firebaseUser.uid)
-                ?.let { return ResultData.Success(it) }
-                ?: return ResultData.Error(AuthError.UserNotFound)
         } catch (e: Exception) {
             return when (e) {
                 is FirebaseAuthEmailException -> ResultData.Error(AuthError.InvalidEmail)
@@ -100,7 +104,7 @@ class AuthController(
         }
     }
 
-    suspend fun sendSignUpVerificationEmail(): AuthResult {
+    suspend fun sendEmailVerificationEmail(): AuthResult {
         val currentUser = auth.currentUser ?: return Result.Error(AuthError.UserNotSignedIn)
 
         return try {
@@ -108,6 +112,34 @@ class AuthController(
             Result.Success(AuthSuccess.SignUpEmailVerificationSent)
         } catch (e: Exception) {
             Result.Error(AuthError.SignUpEmailVerificationError)
+        }
+    }
+
+    suspend fun updateEmail(password: String, newEmail: String): AuthResult {
+        val (currentUser, currentEmail) = auth.currentUser.let { it to it?.email }.takeIfNoneIsNull()
+            ?: return Result.Error(AuthError.UserNotSignedIn)
+
+        try {
+            val credential = EmailAuthProvider.getCredential(currentEmail, password)
+            currentUser.reauthenticate(credential).await()
+        } catch (e: Exception) {
+            return when (e) {
+                is FirebaseAuthInvalidCredentialsException -> Result.Error(AuthError.WrongCredentials)
+                is FirebaseAuthInvalidUserException -> Result.Error(AuthError.UserNotFound)
+                else -> Result.Error(AuthError.ReauthenticationError)
+            }
+        }
+
+        return try {
+            currentUser.verifyBeforeUpdateEmail(newEmail).await()
+            Result.Success(AuthSuccess.UpdateEmailEmailVerificationSent)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseAuthEmailException, is FirebaseAuthInvalidCredentialsException ->
+                    Result.Error(AuthError.InvalidEmail)
+                is FirebaseAuthUserCollisionException -> Result.Error(AuthError.UserAlreadyExists)
+                else -> Result.Error(AuthError.EmailVerificationError)
+            }
         }
     }
 
@@ -155,7 +187,7 @@ class AuthController(
         }
     }
 
-    suspend fun resignIn(): ResultData<String, AuthError> {
+    suspend fun reloadUser(): ResultData<String, AuthError> {
         try {
             auth.currentUser?.reload()?.await() ?: return ResultData.Error(AuthError.UserNotSignedIn)
             val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.UserNotSignedIn)

@@ -6,4 +6,10 @@ import androidx.compose.runtime.Stable
 data class ValidatedFieldUiState(
     val fieldText: String = "",
     val validationStates: List<ValidationUiState> = emptyList()
-)
+) {
+
+    fun isValid(): Boolean {
+        return validationStates.all { it.isValid }
+    }
+
+}

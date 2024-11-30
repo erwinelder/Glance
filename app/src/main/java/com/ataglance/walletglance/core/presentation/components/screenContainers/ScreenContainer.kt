@@ -9,19 +9,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
 
 @Composable
 fun ScreenContainer(
     verticalArrangement: Arrangement.Vertical = Arrangement.Center,
+    onBackButtonClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = verticalArrangement,
         modifier = Modifier
-            .padding(vertical = 24.dp)
+            .padding(
+                top = if (onBackButtonClick == null) 24.dp else 0.dp,
+                bottom = 24.dp
+            )
             .fillMaxSize()
     ) {
-        content()
+        onBackButtonClick?.let { BackButtonBlock(it) }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = verticalArrangement,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            content()
+        }
     }
 }

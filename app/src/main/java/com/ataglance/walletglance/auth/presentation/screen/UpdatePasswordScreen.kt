@@ -2,7 +2,9 @@ package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
@@ -17,10 +19,10 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun UpdatePasswordScreen(
@@ -36,7 +38,9 @@ fun UpdatePasswordScreen(
     resultState: ResultUiState?,
     onResultReset: () -> Unit
 ) {
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         GlassSurfaceScreenContainerWithTitle(
             title = stringResource(R.string.update_your_password),
             glassSurfaceContent = {
@@ -65,7 +69,7 @@ fun UpdatePasswordScreen(
         )
         ResultBottomSheet(
             resultState = resultState,
-            onSheetClose = onResultReset
+            onDismissRequest = onResultReset
         )
     }
 }

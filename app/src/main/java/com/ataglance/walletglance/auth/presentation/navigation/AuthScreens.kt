@@ -21,6 +21,9 @@ sealed interface AuthScreens {
     data object Profile : AuthScreens
 
     @Serializable
+    data object UpdateEmail : AuthScreens
+
+    @Serializable
     data object UpdatePassword : AuthScreens
 
     @Serializable

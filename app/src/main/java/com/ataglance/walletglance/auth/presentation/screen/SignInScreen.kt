@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -16,6 +17,8 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
 
 @Composable
 fun SignInScreen(
@@ -25,33 +28,38 @@ fun SignInScreen(
     onPasswordChange: (String) -> Unit,
     signInIsAllowed: Boolean,
     onSignInWithEmailAndPassword: (String, String) -> Unit,
+    resultState: ResultUiState?,
+    onResultReset: () -> Unit,
     onNavigateToSignUpScreen: () -> Unit
 ) {
-    GlassSurfaceScreenContainerWithTitle(
-        title = stringResource(R.string.sign_in_to_your_account),
-        glassSurfaceContent = {
-            GlassSurfaceContent(
-                email = email,
-                onEmailChange = onEmailChange,
-                password = password,
-                onPasswordChange = onPasswordChange,
-            )
-        },
-        buttonUnderGlassSurface = {
-            PrimaryButton(
-                text = stringResource(R.string.sign_in),
-                enabled = signInIsAllowed
-            ) {
-                onSignInWithEmailAndPassword(email, password)
+    Box {
+        GlassSurfaceScreenContainerWithTitle(
+            title = stringResource(R.string.sign_in_to_your_account),
+            glassSurfaceContent = {
+                GlassSurfaceContent(
+                    email = email,
+                    onEmailChange = onEmailChange,
+                    password = password,
+                    onPasswordChange = onPasswordChange,
+                )
+            },
+            buttonUnderGlassSurface = {
+                PrimaryButton(
+                    text = stringResource(R.string.sign_in),
+                    enabled = signInIsAllowed
+                ) {
+                    onSignInWithEmailAndPassword(email, password)
+                }
+            },
+            bottomButton = {
+                SecondaryButton(
+                    text = stringResource(R.string.sign_up),
+                    onClick = onNavigateToSignUpScreen
+                )
             }
-        },
-        bottomButton = {
-            SecondaryButton(
-                text = stringResource(R.string.sign_up),
-                onClick = onNavigateToSignUpScreen
-            )
-        }
-    )
+        )
+        ResultBottomSheet(resultState = resultState, onDismissRequest = onResultReset)
+    }
 }
 
 @Composable
@@ -100,6 +108,8 @@ fun SignInScreenPreview() {
             signInIsAllowed = userDataValidator.isValidEmail(email) &&
                     userDataValidator.isValidPassword(password),
             onSignInWithEmailAndPassword = { _, _ -> },
+            resultState = null,
+            onResultReset = {},
             onNavigateToSignUpScreen = {}
         )
     }

@@ -146,6 +146,20 @@ class NavigationViewModel(
         }
     }
 
+
+    fun navigateToScreenMovingTowardsLeftAndPopUp(
+        navController: NavController,
+        screenNavigateTo: Any
+    ) {
+        setMoveScreensTowardsLeft(true)
+        navController.navigate(screenNavigateTo) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                inclusive = false
+            }
+            launchSingleTop = true
+        }
+    }
+
     fun navigateToScreenMovingTowardsLeft(
         navController: NavController,
         screen: Any

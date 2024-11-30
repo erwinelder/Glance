@@ -21,6 +21,7 @@ import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetS
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreen
 import com.ataglance.walletglance.auth.presentation.screen.SignInScreen
 import com.ataglance.walletglance.auth.presentation.screen.SignUpScreen
+import com.ataglance.walletglance.auth.presentation.screen.UpdateEmailScreen
 import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreen
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModelFactory
@@ -29,7 +30,6 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
-import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.mapper.toUiState
@@ -61,10 +61,11 @@ fun NavGraphBuilder.authGraph(
             val emailState by viewModel.emailState.collectAsStateWithLifecycle()
             val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
             val signInIsAllowed by viewModel.signInIsAllowed.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             SignInScreen(
                 email = emailState.fieldText,
-                onEmailChange = viewModel::updateEmail,
+                onEmailChange = viewModel::updateAndValidateEmail,
                 password = passwordState.fieldText,
                 onPasswordChange = viewModel::updatePassword,
                 signInIsAllowed = signInIsAllowed,
@@ -72,21 +73,11 @@ fun NavGraphBuilder.authGraph(
                     coroutineScope.launch {
                         when (val result = authController.signIn(email, password)) {
                             is ResultData.Success -> {
-                                appViewModel.updatePreferencesAfterSignIn(result.data)
-                                navViewModel.navigateToScreenMovingTowardsLeft(
-                                    navController = navController,
-                                    screen = AuthScreens.AuthSuccessful(
-                                        screenType = if (case == SignInCase.Default) {
-                                            AuthSuccessfulScreenTypeEnum.AfterSignIn
-                                        } else {
-                                            AuthSuccessfulScreenTypeEnum.AfterSignUp
-                                        }.name
-                                    )
-                                )
-                            }
-                            is ResultData.Error -> {
-                                if (result.error == AuthError.EmailVerificationError) {
-                                    val verificationEmailResult = authController.sendSignUpVerificationEmail()
+                                result.data?.let { appViewModel.updatePreferencesAfterSignIn(it) }
+
+                                if (!authController.emailIsVerified()) {
+                                    val verificationEmailResult = authController
+                                        .sendEmailVerificationEmail()
                                     viewModel.setResultState(verificationEmailResult.toUiState())
                                     if (verificationEmailResult is Result.Success) {
                                         authController.getUserId()?.let {
@@ -94,12 +85,26 @@ fun NavGraphBuilder.authGraph(
                                         }
                                     }
                                 } else {
-                                    viewModel.setResultState(result.toUiState())
+                                    navViewModel.navigateToScreenMovingTowardsLeft(
+                                        navController = navController,
+                                        screen = AuthScreens.AuthSuccessful(
+                                            screenType = if (case == SignInCase.Default) {
+                                                AuthSuccessfulScreenTypeEnum.AfterSignIn
+                                            } else {
+                                                AuthSuccessfulScreenTypeEnum.AfterEmailVerification
+                                            }.name
+                                        )
+                                    )
                                 }
+                            }
+                            is ResultData.Error -> {
+                                viewModel.setResultState(result.toUiState())
                             }
                         }
                     }
                 },
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState,
                 onNavigateToSignUpScreen = {
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
@@ -122,14 +127,15 @@ fun NavGraphBuilder.authGraph(
             val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
             val confirmPasswordState by viewModel.confirmPasswordState.collectAsStateWithLifecycle()
             val signUpIsAllowed by viewModel.signUpIsAllowed.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             SignUpScreen(
                 emailState = emailState,
-                onEmailChange = viewModel::updateEmail,
+                onEmailChange = viewModel::updateAndValidateEmail,
                 passwordState = passwordState,
-                onPasswordChange = viewModel::updatePassword,
+                onPasswordChange = viewModel::updateAndValidatePassword,
                 confirmPasswordState = confirmPasswordState,
-                onConfirmPasswordChange = viewModel::updateConfirmPassword,
+                onConfirmPasswordChange = viewModel::updateAndValidatePasswordConfirmation,
                 signUpIsAllowed = signUpIsAllowed,
                 onCreateNewUserWithEmailAndPassword = { email, password ->
                     coroutineScope.launch {
@@ -143,7 +149,7 @@ fun NavGraphBuilder.authGraph(
                             return@launch
                         }
 
-                        val verificationEmailResult = authController.sendSignUpVerificationEmail()
+                        val verificationEmailResult = authController.sendEmailVerificationEmail()
                         viewModel.setResultState(verificationEmailResult.toUiState())
                         if (verificationEmailResult is Result.Success) {
                             appViewModel.setUserId((userCreationResult as ResultData.Success).data)
@@ -155,7 +161,9 @@ fun NavGraphBuilder.authGraph(
                         navController = navController,
                         screen = AuthScreens.SignIn(SignInCase.Default)
                     )
-                }
+                },
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState
             )
         }
         composable<AuthScreens.EmailVerificationFailed> {
@@ -168,23 +176,46 @@ fun NavGraphBuilder.authGraph(
         }
         composable<AuthScreens.AuthSuccessful> { backStack ->
             val screenType = AuthSuccessfulScreenType.fromString(
-                backStack.toRoute<AuthScreens.AuthSuccessful>().screenType
+                type = backStack.toRoute<AuthScreens.AuthSuccessful>().screenType,
+                isAppSetUp = appConfiguration.isSetUp
             )
 
             AuthSuccessfulScreen(
                 screenType = screenType,
                 onContinueButtonClick = {
-                    navViewModel.navigateToScreenMovingTowardsLeft(
-                        navController = navController,
-                        screen = when (screenType.type) {
-                            AuthSuccessfulScreenTypeEnum.AfterSignIn -> MainScreens.FinishSetup
-                            AuthSuccessfulScreenTypeEnum.AfterSignUp -> SettingsScreens.Accounts
-                        }
-                    )
+                    if (appConfiguration.isSetUp) {
+                        navViewModel.navigateToScreenMovingTowardsLeftAndPopUp(
+                            navController = navController, screenNavigateTo = AuthScreens.Profile
+                        )
+                    } else {
+                        navViewModel.navigateToScreenMovingTowardsLeft(
+                            navController = navController,
+                            screen = when (screenType.type) {
+                                AuthSuccessfulScreenTypeEnum.AfterSignIn -> MainScreens.FinishSetup
+                                AuthSuccessfulScreenTypeEnum.AfterEmailVerification ->
+                                    SettingsScreens.Accounts
+                            }
+                        )
+                    }
                 }
             )
         }
-        composable<AuthScreens.Profile> { backStack ->
+        composable<AuthScreens.Profile> {
+            ProfileScreen(
+                onNavigateBack = navController::popBackStack,
+                onSignOut = {
+                    authController.signOut()
+                    navController.popBackStack()
+                },
+                onNavigateToUpdateEmailScreen = {
+                    navViewModel.navigateToScreen(navController, AuthScreens.UpdateEmail)
+                },
+                onNavigateToUpdatePasswordScreen = {
+                    navViewModel.navigateToScreen(navController, AuthScreens.UpdatePassword)
+                }
+            )
+        }
+        composable<AuthScreens.UpdateEmail> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
                 factory = AuthViewModelFactory(
@@ -192,7 +223,31 @@ fun NavGraphBuilder.authGraph(
                 )
             )
 
-            ProfileScreen()
+            val coroutineScope = rememberCoroutineScope()
+
+            val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
+            val newEmailState by viewModel.newEmailState.collectAsStateWithLifecycle()
+            val emailUpdateIsAllowed by viewModel.emailUpdateIsAllowed.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            UpdateEmailScreen(
+                passwordState = passwordState,
+                onPasswordChange = viewModel::updatePassword,
+                newEmailState = newEmailState,
+                onNewEmailChange = viewModel::updateAndValidateNewEmail,
+                emailUpdateIsAllowed = emailUpdateIsAllowed,
+                onUpdateEmailButtonClick = {
+                    coroutineScope.launch {
+                        val result = authController.updateEmail(
+                            password = passwordState.fieldText,
+                            newEmail = newEmailState.fieldText
+                        )
+                        viewModel.setResultState(result.toUiState())
+                    }
+                },
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState
+            )
         }
         composable<AuthScreens.UpdatePassword> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
@@ -216,9 +271,9 @@ fun NavGraphBuilder.authGraph(
                 currentPasswordState = currentPasswordState,
                 onCurrentPasswordChange = viewModel::updatePassword,
                 newPasswordState = newPasswordState,
-                onNewPasswordChange = viewModel::updateNewPassword,
+                onNewPasswordChange = viewModel::updateAndValidateNewPassword,
                 newPasswordConfirmationState = newPasswordConfirmationState,
-                onNewPasswordConfirmationChange = viewModel::updateNewPasswordConfirmation,
+                onNewPasswordConfirmationChange = viewModel::updateAndValidateNewPasswordConfirmation,
                 passwordUpdateIsAllowed = passwordUpdateIsAllowed,
                 onUpdatePasswordButtonClick = {
                     coroutineScope.launch {
@@ -255,7 +310,7 @@ fun NavGraphBuilder.authGraph(
 
             RequestPasswordResetScreen(
                 emailState = emailState,
-                onEmailChange = viewModel::updateEmail,
+                onEmailChange = viewModel::updateAndValidateEmail,
                 requestIsAllowed = emailIsValid,
                 onRequestPasswordResetButtonClick = {
                     coroutineScope.launch {
@@ -292,9 +347,9 @@ fun NavGraphBuilder.authGraph(
 
             ResetPasswordScreen(
                 newPasswordState = newPasswordState,
-                onNewPasswordChange = viewModel::updateNewPassword,
+                onNewPasswordChange = viewModel::updateAndValidateNewPassword,
                 newPasswordConfirmationState = newPasswordConfirmationState,
-                onNewPasswordConfirmationChange = viewModel::updateNewPasswordConfirmation,
+                onNewPasswordConfirmationChange = viewModel::updateAndValidateNewPasswordConfirmation,
                 passwordUpdateIsAllowed = passwordUpdateIsAllowed,
                 onUpdatePasswordButtonClick = {
                     coroutineScope.launch {
@@ -314,7 +369,7 @@ fun NavGraphBuilder.authGraph(
                 onContinueButtonClick = {
                     navController.popBackStack(
                         route = if (appConfiguration.isSetUp) AuthScreens.Profile else
-                            AuthScreens.SignIn,
+                            AuthScreens.SignIn(SignInCase.Default),
                         inclusive = false
                     )
                 }

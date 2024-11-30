@@ -2,7 +2,9 @@ package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
@@ -22,28 +24,34 @@ import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
-fun RequestPasswordResetScreen(
-    emailState: ValidatedFieldUiState,
-    onEmailChange: (String) -> Unit,
-    requestIsAllowed: Boolean,
-    onRequestPasswordResetButtonClick: () -> Unit,
+fun UpdateEmailScreen(
+    passwordState: ValidatedFieldUiState,
+    onPasswordChange: (String) -> Unit,
+    newEmailState: ValidatedFieldUiState,
+    onNewEmailChange: (String) -> Unit,
+    emailUpdateIsAllowed: Boolean,
+    onUpdateEmailButtonClick: () -> Unit,
     resultState: ResultUiState?,
     onResultReset: () -> Unit
 ) {
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         GlassSurfaceScreenContainerWithTitle(
-            title = stringResource(R.string.request_password_reset),
+            title = stringResource(R.string.update_your_email),
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    emailState = emailState,
-                    onEmailChange = onEmailChange
+                    passwordState = passwordState,
+                    onPasswordChange = onPasswordChange,
+                    newEmailState = newEmailState,
+                    onNewEmailChange = onNewEmailChange
                 )
             },
             bottomButton = {
                 PrimaryButton(
-                    text = stringResource(R.string.send_email),
-                    enabled = requestIsAllowed,
-                    onClick = onRequestPasswordResetButtonClick
+                    text = stringResource(R.string.update_email),
+                    enabled = emailUpdateIsAllowed,
+                    onClick = onUpdateEmailButtonClick
                 )
             }
         )
@@ -56,18 +64,27 @@ fun RequestPasswordResetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    emailState: ValidatedFieldUiState,
-    onEmailChange: (String) -> Unit
+    passwordState: ValidatedFieldUiState,
+    onPasswordChange: (String) -> Unit,
+    newEmailState: ValidatedFieldUiState,
+    onNewEmailChange: (String) -> Unit
 ) {
     GlassSurfaceContentColumnWrapper(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TextFieldWithLabelAndErrorMsg(
-            state = emailState,
-            onValueChange = onEmailChange,
+            state = passwordState,
+            onValueChange = onPasswordChange,
+            keyboardType = KeyboardType.Password,
+            placeholderText = stringResource(R.string.password),
+            labelText = stringResource(R.string.current_password)
+        )
+        TextFieldWithLabelAndErrorMsg(
+            state = newEmailState,
+            onValueChange = onNewEmailChange,
             keyboardType = KeyboardType.Email,
             placeholderText = stringResource(R.string.email),
-            labelText = stringResource(R.string.email)
+            labelText = stringResource(R.string.new_email)
         )
     }
 }
@@ -76,20 +93,22 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun RequestPasswordResetScreenPreview() {
+fun UpdateEmailScreenPreview() {
     val userDataValidator = UserDataValidator()
 
-    val email = "example@gmail.com"
+    val newEmail = "newEmail@domain.com"
 
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
-        RequestPasswordResetScreen(
-            emailState = ValidatedFieldUiState(
-                fieldText = email,
-                validationStates = userDataValidator.validateEmail(email).toUiStates()
+        UpdateEmailScreen(
+            passwordState = ValidatedFieldUiState(),
+            onPasswordChange = {},
+            newEmailState = ValidatedFieldUiState(
+                fieldText = newEmail,
+                validationStates = userDataValidator.validateEmail(newEmail).toUiStates()
             ),
-            onEmailChange = {},
-            requestIsAllowed = true,
-            onRequestPasswordResetButtonClick = {},
+            onNewEmailChange = {},
+            emailUpdateIsAllowed = true,
+            onUpdateEmailButtonClick = {},
             resultState = null,
             onResultReset = {}
         )

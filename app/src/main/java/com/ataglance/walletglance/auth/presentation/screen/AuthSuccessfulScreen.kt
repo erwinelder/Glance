@@ -29,7 +29,10 @@ fun AuthSuccessfulScreen(
 fun AuthSuccessfulScreenPreview() {
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
         AuthSuccessfulScreen(
-            screenType = AuthSuccessfulScreenType(AuthSuccessfulScreenTypeEnum.AfterSignUp),
+            screenType = AuthSuccessfulScreenType(
+                type = AuthSuccessfulScreenTypeEnum.AfterEmailVerification,
+                isAppSetUp = true
+            ),
             onContinueButtonClick = {}
         )
     }

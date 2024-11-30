@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -19,8 +20,10 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun SignUpScreen(
@@ -32,36 +35,41 @@ fun SignUpScreen(
     onConfirmPasswordChange: (String) -> Unit,
     signUpIsAllowed: Boolean,
     onCreateNewUserWithEmailAndPassword: (String, String) -> Unit,
-    onNavigateToSignInScreen: () -> Unit
+    onNavigateToSignInScreen: () -> Unit,
+    resultState: ResultUiState?,
+    onResultReset: () -> Unit
 ) {
 
-    GlassSurfaceScreenContainerWithTitle(
-        title = stringResource(R.string.create_new_account),
-        glassSurfaceContent = {
-            GlassSurfaceContent(
-                emailState = emailState,
-                onEmailChange = onEmailChange,
-                passwordState = passwordState,
-                onPasswordChange = onPasswordChange,
-                confirmPasswordState = confirmPasswordState,
-                onConfirmPasswordChange = onConfirmPasswordChange
-            )
-        },
-        buttonUnderGlassSurface = {
-            PrimaryButton(
-                text = stringResource(R.string.sign_up),
-                enabled = signUpIsAllowed
-            ) {
-                onCreateNewUserWithEmailAndPassword(emailState.fieldText, passwordState.fieldText)
+    Box {
+        GlassSurfaceScreenContainerWithTitle(
+            title = stringResource(R.string.create_new_account),
+            glassSurfaceContent = {
+                GlassSurfaceContent(
+                    emailState = emailState,
+                    onEmailChange = onEmailChange,
+                    passwordState = passwordState,
+                    onPasswordChange = onPasswordChange,
+                    confirmPasswordState = confirmPasswordState,
+                    onConfirmPasswordChange = onConfirmPasswordChange
+                )
+            },
+            buttonUnderGlassSurface = {
+                PrimaryButton(
+                    text = stringResource(R.string.sign_up),
+                    enabled = signUpIsAllowed
+                ) {
+                    onCreateNewUserWithEmailAndPassword(emailState.fieldText, passwordState.fieldText)
+                }
+            },
+            bottomButton = {
+                SecondaryButton(
+                    text = stringResource(R.string.sign_in),
+                    onClick = onNavigateToSignInScreen
+                )
             }
-        },
-        bottomButton = {
-            SecondaryButton(
-                text = stringResource(R.string.sign_in),
-                onClick = onNavigateToSignInScreen
-            )
-        }
-    )
+        )
+        ResultBottomSheet(resultState = resultState, onDismissRequest = onResultReset)
+    }
 }
 
 @Composable
@@ -142,7 +150,9 @@ fun SignUpScreenPreview() {
                     userDataValidator.isValidPassword(password) &&
                     passwordsMatch,
             onCreateNewUserWithEmailAndPassword = { _, _ -> },
-            onNavigateToSignInScreen = {}
+            onNavigateToSignInScreen = {},
+            resultState = null,
+            onResultReset = {}
         )
     }
 }

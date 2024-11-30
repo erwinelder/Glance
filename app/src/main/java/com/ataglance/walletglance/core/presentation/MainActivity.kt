@@ -116,13 +116,13 @@ class MainActivity : AppCompatActivity() {
                         Log.e("Reset password link", "No oobCode found in the deep link")
                     }
             }
-            "verify_email" -> {
+            "verifyEmail" -> {
                 lifecycleScope.launch {
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
-                        screen = when (authController.resignIn()) {
+                        screen = when (authController.reloadUser()) {
                             is ResultData.Success -> AuthScreens.AuthSuccessful(
-                                screenType = AuthSuccessfulScreenTypeEnum.AfterSignUp.name
+                                screenType = AuthSuccessfulScreenTypeEnum.AfterEmailVerification.name
                             )
                             is ResultData.Error -> AuthScreens.EmailVerificationFailed
                         }

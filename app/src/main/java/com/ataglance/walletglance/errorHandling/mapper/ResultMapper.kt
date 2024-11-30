@@ -35,8 +35,10 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
 
 @StringRes private fun AuthSuccess.asTitleRes(): Int {
     return when (this) {
-        AuthSuccess.PasswordUpdated -> R.string.all_set
-        AuthSuccess.SignUpEmailVerificationSent, AuthSuccess.ResetPasswordEmailSent ->
+        AuthSuccess.EmailUpdated, AuthSuccess.PasswordUpdated ->
+            R.string.all_set
+        AuthSuccess.SignUpEmailVerificationSent, AuthSuccess.UpdateEmailEmailVerificationSent,
+        AuthSuccess.ResetPasswordEmailSent ->
             R.string.email_sent
     }
 }
@@ -44,6 +46,8 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
 @StringRes private fun AuthSuccess.asMessageRes(): Int {
     return when (this) {
         AuthSuccess.SignUpEmailVerificationSent -> R.string.sign_up_email_verification_sent
+        AuthSuccess.UpdateEmailEmailVerificationSent -> R.string.update_email_email_verification_sent
+        AuthSuccess.EmailUpdated -> R.string.email_update_success
         AuthSuccess.PasswordUpdated -> R.string.password_update_success
         AuthSuccess.ResetPasswordEmailSent -> R.string.reset_password_email_sent
     }
@@ -54,9 +58,9 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.UserAlreadyExists, AuthError.UserNotCreated, AuthError.UserDataNotSaved,
         AuthError.UserNotFound, AuthError.UserNotSignedIn, AuthError.InvalidEmail,
         AuthError.InvalidCode, AuthError.WrongCredentials, AuthError.SignInError,
-        AuthError.SignUpEmailVerificationError, AuthError.EmailForPasswordResetError,
-        AuthError.EmailVerificationError, AuthError.PasswordResetError,
-        AuthError.UpdatePasswordError ->
+        AuthError.ReauthenticationError, AuthError.SignUpEmailVerificationError,
+        AuthError.EmailForPasswordResetError, AuthError.EmailVerificationError,
+        AuthError.PasswordResetError, AuthError.UpdatePasswordError ->
             R.string.oops
     }
 }
@@ -72,6 +76,7 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.InvalidCode -> R.string.invalid_code_error
         AuthError.WrongCredentials -> R.string.wrong_credentials_error
         AuthError.SignInError -> R.string.sign_in_error
+        AuthError.ReauthenticationError -> R.string.reauthentication_error
         AuthError.SignUpEmailVerificationError -> R.string.sign_up_email_verification_error
         AuthError.EmailVerificationError -> R.string.email_verification_error
         AuthError.EmailForPasswordResetError -> R.string.email_for_password_reset_error
