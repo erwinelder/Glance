@@ -49,6 +49,15 @@ class AuthController(
         return auth.currentUser?.isEmailVerified ?: false
     }
 
+    suspend fun applyObbCode(obbCode: String): Boolean {
+        return try {
+            auth.applyActionCode(obbCode).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     suspend fun createNewUser(
         email: String,
         password: String,
@@ -184,23 +193,6 @@ class AuthController(
                 is FirebaseAuthInvalidCredentialsException -> Result.Error(AuthError.InvalidCode)
                 else -> Result.Error(AuthError.PasswordResetError)
             }
-        }
-    }
-
-    suspend fun reloadUser(): ResultData<String, AuthError> {
-        try {
-            auth.currentUser?.reload()?.await() ?: return ResultData.Error(AuthError.UserNotSignedIn)
-            val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.UserNotSignedIn)
-            firebaseUser.let(::setUser)
-
-            if (!firebaseUser.isEmailVerified) {
-                return ResultData.Error(AuthError.EmailVerificationError)
-            }
-
-            val userId = user.uid ?: return ResultData.Error(AuthError.UserNotSignedIn)
-            return ResultData.Success(userId)
-        } catch (e: Exception) {
-            return ResultData.Error(AuthError.EmailVerificationError)
         }
     }
 

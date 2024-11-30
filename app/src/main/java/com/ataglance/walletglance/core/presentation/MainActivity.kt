@@ -19,7 +19,6 @@ import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import kotlinx.coroutines.launch
@@ -95,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleDeepLink(intent)
@@ -105,28 +105,23 @@ class MainActivity : AppCompatActivity() {
 
         when (val mode = uri.getQueryParameter("mode")) {
             "resetPassword" -> {
-                uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
-                    ?.let { obbCode ->
-                        navViewModel.navigateToResetPasswordScreen(
-                            navController = navController,
-                            obbCode = obbCode
-                        )
-                    }
-                    ?: run {
-                        Log.e("Reset password link", "No oobCode found in the deep link")
-                    }
+                val obbCode = uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
+                if (obbCode != null) {
+                    navViewModel.navigateToResetPasswordScreen(
+                        navController = navController, obbCode = obbCode
+                    )
+                } else {
+                    Log.e("Reset password link", "No oobCode found in the deep link")
+                }
             }
             "verifyEmail" -> {
+                val obbCode = uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
                 lifecycleScope.launch {
-                    navViewModel.navigateToScreenMovingTowardsLeft(
-                        navController = navController,
-                        screen = when (authController.reloadUser()) {
-                            is ResultData.Success -> AuthScreens.AuthSuccessful(
-                                screenType = AuthSuccessfulScreenTypeEnum.AfterEmailVerification.name
-                            )
-                            is ResultData.Error -> AuthScreens.EmailVerificationFailed
-                        }
-                    )
+                    if (obbCode != null) {
+                        processEmailVerification(obbCode)
+                    } else {
+                        Log.e("Email verification link", "No oobCode found in the deep link")
+                    }
                 }
             }
             else -> {
@@ -134,6 +129,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private suspend fun processEmailVerification(obbCode: String) {
+        val screen = if (authController.applyObbCode(obbCode)) {
+            AuthScreens.AuthSuccessful(
+                screenType = AuthSuccessfulScreenTypeEnum.AfterEmailVerification.name
+            )
+        } else {
+            AuthScreens.EmailVerificationFailed
+        }
+
+        navViewModel.navigateToScreenMovingTowardsLeft(
+            navController = navController,
+            screen = screen
+        )
+    }
+
 
     override fun onStart() {
         super.onStart()
