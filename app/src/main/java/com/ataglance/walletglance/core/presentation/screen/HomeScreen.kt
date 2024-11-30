@@ -22,8 +22,8 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
@@ -33,7 +33,6 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
@@ -43,6 +42,7 @@ import com.ataglance.walletglance.core.presentation.components.widgets.ChosenWid
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
 import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
@@ -52,12 +52,12 @@ import com.ataglance.walletglance.core.utils.top
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.data.model.RecordEntity
-import com.ataglance.walletglance.record.mapper.toRecordStackList
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
 import com.ataglance.walletglance.record.domain.RecordType
 import com.ataglance.walletglance.record.domain.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
+import com.ataglance.walletglance.record.mapper.toRecordStackList
 
 @Composable
 fun HomeScreen(
@@ -226,7 +226,6 @@ private fun CompactLayout(
 fun HomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
@@ -343,7 +342,6 @@ fun HomeScreenPreview(
 
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Home) }
     ) { scaffoldPadding ->

@@ -31,8 +31,8 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditSubcategoriesScreen(
@@ -167,15 +167,11 @@ private fun ExpandedLayout(
 fun EditSubcategoriesScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditSubcategoriesScreen(
             scaffoldPadding = scaffoldPadding,
             categoryWithSubcategories = categoriesWithSubcategories.expense[2],

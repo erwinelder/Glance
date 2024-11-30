@@ -22,15 +22,15 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.presentation.components.EditingAccountComponent
 import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.presentation.components.EditingAccountComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditAccountsScreen(
@@ -160,7 +160,6 @@ private fun ExpandedLayout(
 fun EditAccountsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     accountList: List<Account> = listOf(
         Account(
             id = 1,
@@ -182,10 +181,7 @@ fun EditAccountsScreenPreview(
         ),
     ),
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountsScreen(
             scaffoldPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,

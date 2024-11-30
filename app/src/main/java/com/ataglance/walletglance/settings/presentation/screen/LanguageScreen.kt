@@ -87,14 +87,12 @@ fun LanguageScreen(
 fun LanguageScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = false,
     appLanguage: String = AppLanguage.English.languageCode,
     selectedLanguage: String? = AppLanguage.German.languageCode,
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible
     ) {
         LanguageScreen(

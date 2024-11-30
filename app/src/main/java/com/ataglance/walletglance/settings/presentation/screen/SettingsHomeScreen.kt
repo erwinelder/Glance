@@ -185,12 +185,10 @@ fun BottomSpacer(scaffoldBottomPadding: Dp) {
 fun SettingsHomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Settings) },
         currentScreenIsScreenProvider = { false }

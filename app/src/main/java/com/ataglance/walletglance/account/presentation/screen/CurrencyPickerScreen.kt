@@ -21,17 +21,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerUiState
-import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import java.util.Currency
 
@@ -133,13 +133,9 @@ private fun GlassSurfaceContent(
 @Composable
 fun CurrencyPickerScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
+    isAppSetUp: Boolean = true
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         CurrencyPickerScreen(
             scaffoldPadding = scaffoldPadding,
             currencyPickerUiState = CurrencyPickerUiState(

@@ -29,12 +29,12 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
-import com.ataglance.walletglance.budget.mapper.toBudget
 import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
+import com.ataglance.walletglance.budget.mapper.toBudget
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
@@ -46,12 +46,12 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckbox
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.PopupFloatingPicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.utils.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 
@@ -242,7 +242,6 @@ private fun LazyListScope.accountCheckedList(
 fun EditBudgetScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -270,10 +269,7 @@ fun EditBudgetScreenPreview(
             linkedAccounts = accountList.subList(0, 1)
         )
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditBudgetScreen(
             scaffoldPadding = scaffoldPadding,
             budget = budgetUiState,

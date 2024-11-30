@@ -10,7 +10,6 @@ import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
-import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsNoneOf
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
 import com.ataglance.walletglance.navigation.domain.utils.simpleName
@@ -108,16 +107,6 @@ class NavigationViewModel(
                 }
             }
         return true
-    }
-
-
-    fun shouldDisplaySetupProgressTopBar(
-        isSetUp: Boolean,
-        navBackStackEntry: NavBackStackEntry?
-    ): Boolean {
-        return !isSetUp && navBackStackEntry.currentScreenIsNoneOf(
-            SettingsScreens.Start, MainScreens.FinishSetup
-        )
     }
 
 

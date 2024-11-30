@@ -48,11 +48,11 @@ import com.ataglance.walletglance.core.presentation.components.buttons.Secondary
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.ThreeStateCheckbox
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionScreen(
@@ -321,7 +321,6 @@ private fun CollectionSubcategoryItem(
 fun EditCategoryCollectionScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -339,10 +338,7 @@ fun EditCategoryCollectionScreenPreview(
     val editingCategoriesWithSubcategories = categoriesWithSubcategories
         .toEditingCategoriesWithSubcategories(collection)
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionScreen(
             collection = collection,
             editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,

@@ -174,7 +174,6 @@ fun AppearanceScreen(
 fun AppearanceScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = false,
     themeUiState: ThemeUiState = ThemeUiState(
         useDeviceTheme = false,
@@ -191,7 +190,6 @@ fun AppearanceScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible
     ) {
         AppearanceScreen(

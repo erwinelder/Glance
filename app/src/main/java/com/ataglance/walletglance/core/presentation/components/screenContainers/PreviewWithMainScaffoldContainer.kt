@@ -14,7 +14,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
@@ -22,7 +21,6 @@ import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationBut
 @Composable
 fun PreviewWithMainScaffoldContainer(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = false,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean = { false },
     currentScreenIsScreenProvider: (Any) -> Boolean = { false },
@@ -52,11 +50,7 @@ fun PreviewWithMainScaffoldContainer(
                         modifier = Modifier.fillMaxSize()
                     )
                     MainScaffold(
-                        setupProgressTopBarUiState = SetupProgressTopBarUiState(
-                            isVisible = isSetupProgressTopBarVisible
-                        ),
                         isBottomBarVisible = isBottomBarVisible,
-                        onNavigateBack = {},
                         onNavigateToScreenAndPopUp = {},
                         onMakeRecordButtonClick = {},
                         anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,

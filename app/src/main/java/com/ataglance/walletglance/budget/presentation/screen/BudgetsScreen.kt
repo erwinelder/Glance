@@ -16,21 +16,21 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
-import com.ataglance.walletglance.budget.mapper.toBudgetList
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.domain.utils.groupByType
+import com.ataglance.walletglance.budget.mapper.toBudgetList
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
-import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
@@ -76,7 +76,6 @@ fun BudgetsScreen(
 fun BudgetsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
@@ -164,7 +163,6 @@ fun BudgetsScreenPreview(
 
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Budgets) }
     ) { scaffoldPadding ->

@@ -147,7 +147,6 @@ fun RecordsScreen(
 fun RecordsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
@@ -190,7 +189,6 @@ fun RecordsScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Records) }
     ) { scaffoldPadding ->

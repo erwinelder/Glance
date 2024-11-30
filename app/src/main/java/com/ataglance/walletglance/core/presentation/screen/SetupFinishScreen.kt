@@ -55,12 +55,10 @@ fun SetupFinishScreen(
 @Composable
 fun SetupFinishScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
+    isAppSetUp: Boolean = true
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         anyScreenInHierarchyIsScreenProvider = { false },
         currentScreenIsScreenProvider = { false }
     ) {

@@ -35,8 +35,8 @@ import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionsScreen(
@@ -164,7 +164,6 @@ private fun ExpandedLayoutContent(
 fun EditCategoryCollectionsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -203,10 +202,7 @@ fun EditCategoryCollectionsScreenPreview(
             ),
         )
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionsScreen(
             collectionWithCategoriesList = collectionWithCategoriesList,
             collectionType = CategoryCollectionType.Mixed,

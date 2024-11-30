@@ -46,11 +46,11 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
@@ -222,7 +222,6 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
 fun EditAccountScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     account: Account = Account(
         id = 1,
         orderNum = 1,
@@ -236,10 +235,7 @@ fun EditAccountScreenPreview(
 ) {
     val editAccountUiState = account.toEditAccountUiState()
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountScreen(
             scaffoldPadding = scaffoldPadding,
             editAccountUiState = editAccountUiState,

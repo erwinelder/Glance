@@ -140,13 +140,9 @@ private fun StartButtonShadow(color: Color) {
 @Composable
 fun StartSetupScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
+    isAppSetUp: Boolean = true
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         StartSetupScreen(
             isAppThemeSetUp = true,
             onManualSetupButton = {}

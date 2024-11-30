@@ -14,7 +14,6 @@ import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
-import com.ataglance.walletglance.core.domain.componentState.SetupProgressTopBarUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.DimmedBackgroundOverlay
@@ -24,7 +23,6 @@ import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs
-import com.ataglance.walletglance.navigation.domain.utils.getSetupProgressTopBarTitleRes
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
@@ -49,16 +47,6 @@ fun MainAppContent(
     var openCustomDateRangeWindow by remember { mutableStateOf(false) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val setupProgressTopBarUiState by remember(appConfiguration.isSetUp, navBackStackEntry) {
-        derivedStateOf {
-            SetupProgressTopBarUiState(
-                isVisible = navViewModel.shouldDisplaySetupProgressTopBar(
-                    appConfiguration.isSetUp, navBackStackEntry
-                ),
-                titleRes = navBackStackEntry.getSetupProgressTopBarTitleRes()
-            )
-        }
-    }
     val isBottomBarVisible by remember(appConfiguration.isSetUp, navBackStackEntry) {
         derivedStateOf {
             navViewModel.shouldDisplayBottomNavigationBar(appConfiguration.isSetUp, navBackStackEntry)
@@ -134,11 +122,9 @@ fun MainAppContent(
 
     Box {
         MainScaffold(
-            setupProgressTopBarUiState = setupProgressTopBarUiState,
             isBottomBarVisible = isBottomBarVisible,
             anyScreenInHierarchyIsScreenProvider = navBackStackEntry::anyScreenInHierarchyIs,
             currentScreenIsScreenProvider = navBackStackEntry::currentScreenIs,
-            onNavigateBack = navController::popBackStack,
             onNavigateToScreenAndPopUp = { screenNavigateTo: MainScreens ->
                 navViewModel.navigateToScreenAndPopUp(
                     navController = navController,

@@ -7,18 +7,18 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.mapper.toBudgetList
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
-import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
@@ -41,8 +41,8 @@ import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.record.domain.utils.asChar
+import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
@@ -64,7 +64,6 @@ private const val device = "spec:width=1440px,height=3120px,dpi=560" // default
 private val appTheme: AppTheme = AppTheme.LightDefault
 private const val langCode: String = "en"
 private const val isAppSetUp: Boolean = true
-private const val isSetupProgressTopBarVisible: Boolean = false
 private const val isBottomBarVisible: Boolean = true
 
 private val accountList = listOf(
@@ -335,7 +334,6 @@ fun MainAppContentHomeScreenPreview() {
     HomeScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountsAndActiveOne = accountsAndActiveOne,
         dateRangeMenuUiState = dateRangeMenuUiState,
@@ -371,7 +369,6 @@ fun MainAppContentRecordsScreenPreview() {
     RecordsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountList = accountsAndActiveOne.accountList,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
@@ -400,7 +397,6 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
     CategoryStatisticsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         accountList = accountsAndActiveOne.accountList,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
@@ -424,7 +420,6 @@ fun MainAppContentBudgetsScreenPreview() {
     BudgetsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
@@ -454,7 +449,6 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
     BudgetStatisticsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         categoriesWithSubcategories = defaultCategories,
         accountList = accountsAndActiveOne.accountList.let { listOf(it[0], it[3]) },
@@ -475,7 +469,6 @@ fun MainAppContentFinishSetupScreenPreview() {
     SetupFinishScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     )
 }
 
@@ -568,7 +561,6 @@ fun MainAppContentStartSetupScreenPreview() {
     StartSetupScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     )
 }
 
@@ -584,7 +576,6 @@ fun MainAppContentSettingHomeScreenPreview() {
     SettingsHomeScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
     )
 }
@@ -601,7 +592,6 @@ fun MainAppContentEditAccountsScreenPreview() {
     EditAccountsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         accountList = accountsAndActiveOne.accountList
     )
 }
@@ -618,7 +608,6 @@ fun MainAppContentEditAccountScreenPreview() {
     EditAccountScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         account = accountsAndActiveOne.accountList.first()
     )
 }
@@ -635,7 +624,6 @@ fun MainAppContentCurrencyPickerScreenPreview() {
     CurrencyPickerScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible
     )
 }
 
@@ -651,7 +639,6 @@ fun MainAppContentEditBudgetsScreenPreview() {
     EditBudgetsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
         accountList = accountsAndActiveOne.accountList
@@ -670,7 +657,6 @@ fun MainAppContentEditBudgetScreenPreview() {
     EditBudgetScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         accountList = accountsAndActiveOne.accountList,
         budgetEntity = budgetEntityList.first(),
         budgetAccountAssociationList = budgetAccountAssociationList
@@ -689,7 +675,6 @@ fun MainAppContentEditCategoriesScreenPreview() {
     EditCategoriesScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         categoryType = CategoryType.Expense
     )
 }
@@ -706,7 +691,6 @@ fun MainAppContentEditSubcategoriesScreenPreview() {
     EditSubcategoriesScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     )
 }
 
@@ -722,7 +706,6 @@ fun MainAppContentEditCategoryScreenPreview() {
     EditCategoryScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
     )
 }
 
@@ -738,7 +721,6 @@ fun MainAppContentEditCategoryCollectionsScreenPreview() {
     EditCategoryCollectionsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         collectionType = CategoryCollectionType.Mixed,
         categoryCollectionsWithIdsByType = categoryCollectionsWithIdsByType,
     )
@@ -756,7 +738,6 @@ fun MainAppContentEditCategoryCollectionScreenPreview() {
     EditCategoryCollectionScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         collectionWithIds = categoryCollectionsWithIdsByType.mixed.first()
     )
 }
@@ -773,7 +754,6 @@ fun MainAppContentAppearanceScreenPreview() {
     AppearanceScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         themeUiState = ThemeUiState(
             useDeviceTheme = true,
@@ -796,7 +776,6 @@ fun MainAppContentLanguageScreenPreview() {
     LanguageScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         appLanguage = AppLanguage.English.languageCode,
         selectedLanguage = AppLanguage.German.languageCode
     )
@@ -814,7 +793,6 @@ fun MainAppContentSettingsDataScreenPreview() {
     SettingsDataScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
     )
 }
