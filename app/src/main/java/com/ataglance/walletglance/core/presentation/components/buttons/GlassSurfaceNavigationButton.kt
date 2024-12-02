@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -64,12 +63,13 @@ fun GlassSurfaceNavigationButton(
                 text = text,
                 color = GlanceTheme.onSurface,
                 fontSize = 21.sp,
-                textAlign = TextAlign.Center,
                 fontFamily = Manrope,
-                overflow = TextOverflow.Ellipsis
+                textAlign = TextAlign.Start,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.weight(1f)
             )
             if (showRightIconInsteadOfLeft) {
-                Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     painter = painterResource(rightIconRes),
                     contentDescription = "right arrow icon",

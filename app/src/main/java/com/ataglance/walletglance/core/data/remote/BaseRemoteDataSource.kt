@@ -43,7 +43,7 @@ abstract class BaseRemoteDataSource<T>(
             .result?.get("timestamp") as? Long
     }
 
-    fun WriteBatch.softDelete(documentRef: DocumentReference, timestamp: Long) {
+    private fun WriteBatch.softDelete(documentRef: DocumentReference, timestamp: Long) {
         update(
             documentRef,
             mapOf("LMT" to timestamp, "isDeleted" to true)

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.settings.presentation.screen
+package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -10,12 +10,12 @@ import com.ataglance.walletglance.core.presentation.components.containers.Danger
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
-fun ResetDataScreen(onResetData: () -> Unit) {
+fun DeleteAccountScreen(onDeleteAccount: () -> Unit) {
     DangerousActionBlock(
-        actionText = stringResource(R.string.reset_data_action),
-        actionConfirmationText = stringResource(R.string.reset_data_confirmation),
-        actionButtonText = stringResource(R.string.reset_data),
-        onAction = onResetData
+        actionText = stringResource(R.string.delete_account_action),
+        actionConfirmationText = stringResource(R.string.delete_account_confirmation),
+        actionButtonText = stringResource(R.string.delete_account),
+        onAction = onDeleteAccount
     )
 }
 
@@ -23,7 +23,7 @@ fun ResetDataScreen(onResetData: () -> Unit) {
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun ResetDataScreenPreview(
+fun DeleteAccountScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isBottomBarVisible: Boolean = true,
 ) {
@@ -31,8 +31,8 @@ fun ResetDataScreenPreview(
         appTheme = appTheme,
         isBottomBarVisible = isBottomBarVisible
     ) {
-        ResetDataScreen(
-            onResetData = {}
+        DeleteAccountScreen(
+            onDeleteAccount = {}
         )
     }
 }

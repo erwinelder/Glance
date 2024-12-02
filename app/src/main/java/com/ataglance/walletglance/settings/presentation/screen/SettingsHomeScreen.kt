@@ -32,32 +32,22 @@ import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
-import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.SettingsCategory
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
 
 @Composable
 fun SettingsHomeScreen(
     scaffoldPadding: PaddingValues,
-    onNavigateToScreen: (SettingsScreens) -> Unit
+    isSignedIn: Boolean,
+    onNavigateToScreen: (Any) -> Unit
 ) {
     val appTheme = CurrAppTheme
-    val settingsCategories = remember(appTheme) {
-        SettingsCategories(appTheme).let {
-            listOf(
-                it.accounts,
-                it.budgets,
-                it.categories,
-                it.categoryCollections,
-                it.appearance,
-                it.language,
-                it.resetData
-            )
-        }
+    val settingsCategories = remember(appTheme, isSignedIn) {
+        SettingsCategories(appTheme).getCategories(isSignedIn = isSignedIn)
     }
 
     Column(
@@ -77,7 +67,7 @@ fun SettingsHomeScreen(
                 fontFamily = Manrope
             )
             Text(
-                text = stringResource(R.string.version) + " 3.0.1",
+                text = stringResource(R.string.version) + " 4.0",
                 color = GlanceTheme.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
@@ -105,7 +95,7 @@ fun SettingsHomeScreen(
 private fun CompactLayout(
     scaffoldPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
-    onNavigateToScreen: (SettingsScreens) -> Unit
+    onNavigateToScreen: (Any) -> Unit
 ) {
     val gap = 20.dp
     val scrollState = rememberScrollState(initial = 1800)
@@ -123,14 +113,7 @@ private fun CompactLayout(
             .padding(horizontal = 24.dp)
     ) {
         categories.forEach { category ->
-            GlassSurfaceNavigationButton(
-                text = stringResource(category.stringRes),
-                imageRes = category.iconRes,
-                showRightIconInsteadOfLeft = true,
-                onClick = {
-                    onNavigateToScreen(category.screen)
-                }
-            )
+            NavigateToSettingsCategoryButton(category = category, onNavigateToScreen = onNavigateToScreen)
         }
         BottomSpacer(scaffoldPadding.calculateBottomPadding())
     }
@@ -140,7 +123,7 @@ private fun CompactLayout(
 private fun ExpandedLayout(
     scaffoldPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
-    onNavigateToScreen: (SettingsScreens) -> Unit
+    onNavigateToScreen: (Any) -> Unit
 ) {
     val lazyGridState = rememberLazyGridState()
 
@@ -157,14 +140,7 @@ private fun ExpandedLayout(
             item { BottomSpacer(scaffoldPadding.calculateBottomPadding()) }
         }
         items(items = settingsCategories) { category ->
-            GlassSurfaceNavigationButton(
-                text = stringResource(category.stringRes),
-                imageRes = category.iconRes,
-                showRightIconInsteadOfLeft = true,
-                onClick = {
-                    onNavigateToScreen(category.screen)
-                }
-            )
+            NavigateToSettingsCategoryButton(category = category, onNavigateToScreen = onNavigateToScreen)
         }
     }
 }
@@ -195,6 +171,7 @@ fun SettingsHomeScreenPreview(
     ) { scaffoldPadding ->
         SettingsHomeScreen(
             scaffoldPadding = scaffoldPadding,
+            isSignedIn = true,
             onNavigateToScreen = {}
         )
     }

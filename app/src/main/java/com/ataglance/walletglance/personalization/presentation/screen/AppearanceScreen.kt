@@ -1,33 +1,20 @@
 package com.ataglance.walletglance.personalization.presentation.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
@@ -42,6 +29,8 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.EditWid
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditWidgetsViewModelFactory
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.components.OpenSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 
 @Composable
 fun AppearanceScreen(
@@ -84,60 +73,29 @@ fun AppearanceScreen(
 
 
     Box {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = 8.dp,
-                    bottom = if (isAppSetUp) 8.dp else
-                        dimensionResource(R.dimen.screen_vertical_padding)
-                )
-        ) {
-            if (isAppSetUp && WindowTypeIsCompact) {
-                GlassSurfaceNavigationButton(
-                    text = stringResource(settingsCategories.appearance.stringRes),
-                    imageRes = settingsCategories.appearance.iconRes,
-                    showRightIconInsteadOfLeft = false,
-                    filledWidths = FilledWidthByScreenType(.96f),
-                    onClick = onNavigateBack
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.verticalScroll(scrollState)
-            ) {
+        SettingsCategoryScreenContainer(
+            thisCategory = settingsCategories.appearance,
+            onNavigateBack = onNavigateBack,
+            title = stringResource(R.string.appearance_settings_category_title),
+            subcategoriesButtonsBlock = {
                 appearanceSettingsCategories.forEach { category ->
-                    GlassSurfaceNavigationButton(
-                        text = stringResource(category.stringRes),
-                        imageRes = category.iconRes,
-                        showRightIconInsteadOfLeft = true,
-                        rightIconRes = R.drawable.short_arrow_up_icon,
-                        filledWidths = FilledWidthByScreenType(),
-                        onClick = {
-                            when (category) {
-                                settingsCategories.colorTheme -> showThemeSettingsBottomSheet = true
-                                settingsCategories.widgets -> showWidgetsSettingsBottomSheet = true
-                                settingsCategories.navigationButtons ->
-                                    showNavigationButtonsSettingsBottomSheet = true
-                            }
+                    OpenSettingsCategoryButton(category) {
+                        when (category) {
+                            settingsCategories.colorTheme -> showThemeSettingsBottomSheet = true
+                            settingsCategories.widgets -> showWidgetsSettingsBottomSheet = true
+                            settingsCategories.navigationButtons ->
+                                showNavigationButtonsSettingsBottomSheet = true
                         }
-                    )
+                    }
                 }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-            if (!isAppSetUp) {
+            },
+            bottomBlock = if (!isAppSetUp) {{
                 PrimaryButton(
                     onClick = onContinueSetupButton,
                     text = stringResource(R.string._continue)
                 )
-            }
-        }
+            }} else null
+        )
         ThemeSettingsBottomSheet(
             visible = showThemeSettingsBottomSheet,
             onDismissRequest = { showThemeSettingsBottomSheet = false },
@@ -169,7 +127,7 @@ fun AppearanceScreen(
 }
 
 
-@Preview(device = Devices.PIXEL_7_PRO)
+@Preview(device = Devices.PIXEL_7_PRO, locale = "de")
 @Composable
 fun AppearanceScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,

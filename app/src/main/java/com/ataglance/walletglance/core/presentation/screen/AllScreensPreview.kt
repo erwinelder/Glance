@@ -52,7 +52,7 @@ import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreat
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
-import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreenPreview
+import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
 
@@ -790,9 +790,8 @@ fun MainAppContentLanguageScreenPreview() {
 )
 @Composable
 fun MainAppContentSettingsDataScreenPreview() {
-    SettingsDataScreenPreview(
+    ResetDataScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         isBottomBarVisible = isBottomBarVisible,
     )
 }

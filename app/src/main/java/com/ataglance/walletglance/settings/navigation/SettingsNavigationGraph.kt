@@ -33,7 +33,7 @@ import com.ataglance.walletglance.personalization.presentation.screen.Appearance
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
-import com.ataglance.walletglance.settings.presentation.screen.SettingsDataScreen
+import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreen
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
@@ -77,6 +77,7 @@ fun NavGraphBuilder.settingsGraph(
         composable<SettingsScreens.SettingsHome> {
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,
+                isSignedIn = authController.isSignedIn(),
                 onNavigateToScreen = { screen ->
                     navViewModel.navigateToScreen(navController, screen)
                 }
@@ -169,7 +170,7 @@ fun NavGraphBuilder.settingsGraph(
         composable<SettingsScreens.ResetData> {
             val coroutineScope = rememberCoroutineScope()
 
-            SettingsDataScreen(
+            ResetDataScreen(
                 onResetData = {
                     coroutineScope.launch {
                         appViewModel.resetAppData()

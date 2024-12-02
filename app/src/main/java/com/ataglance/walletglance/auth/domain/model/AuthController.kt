@@ -33,6 +33,10 @@ class AuthController(
         this.user = User(uid = user.uid)
     }
 
+    fun isSignedIn(): Boolean {
+        return getUserId() != null
+    }
+
     fun getUserId(): String? {
         return user.uid
     }

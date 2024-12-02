@@ -14,6 +14,7 @@ import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenType
 import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenTypeEnum
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.screen.AuthSuccessfulScreen
+import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreen
 import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreen
 import com.ataglance.walletglance.auth.presentation.screen.PasswordUpdateSuccessfulScreen
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreen
@@ -45,7 +46,12 @@ fun NavGraphBuilder.authGraph(
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
-    navigation<SettingsScreens.Auth>(startDestination = AuthScreens.SignIn(SignInCase.Default)) {
+    navigation<SettingsScreens.Auth>(
+        startDestination = when (authController.isSignedIn()) {
+            true -> AuthScreens.Profile
+            false -> AuthScreens.SignIn(SignInCase.Default)
+        }
+    ) {
         composable<AuthScreens.SignIn> { backStack ->
             val case = backStack.toRoute<AuthScreens.SignIn>().case
 
@@ -207,11 +213,8 @@ fun NavGraphBuilder.authGraph(
                     authController.signOut()
                     navController.popBackStack()
                 },
-                onNavigateToUpdateEmailScreen = {
-                    navViewModel.navigateToScreen(navController, AuthScreens.UpdateEmail)
-                },
-                onNavigateToUpdatePasswordScreen = {
-                    navViewModel.navigateToScreen(navController, AuthScreens.UpdatePassword)
+                onNavigateToScreen = { screen ->
+                    navViewModel.navigateToScreen(navController, screen)
                 }
             )
         }
@@ -372,6 +375,18 @@ fun NavGraphBuilder.authGraph(
                             AuthScreens.SignIn(SignInCase.Default),
                         inclusive = false
                     )
+                }
+            )
+        }
+        composable<AuthScreens.DeleteAccount> {
+            val coroutineScope = rememberCoroutineScope()
+
+            DeleteAccountScreen(
+                onDeleteAccount = {
+                    coroutineScope.launch {
+                        appViewModel.resetAppData()
+                        authController.deleteAccount()
+                    }
                 }
             )
         }
