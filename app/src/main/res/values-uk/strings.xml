@@ -64,6 +64,7 @@
     <string name="widgets">Віджети</string>
     <string name="language">Мова</string>
     <string name="reset_data">Скинути дані</string>
+    <string name="profile">Профіль</string>
 
     <!-- Setting up -->
     <string name="start">Старт</string>

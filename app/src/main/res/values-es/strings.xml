@@ -65,6 +65,7 @@
     <string name="widgets">Widgets</string>
     <string name="language">Idioma</string>
     <string name="reset_data">Restablecer datos</string>
+    <string name="profile">Perfil</string>
 
     <!-- Setting up -->
     <string name="start">Iniciar</string>

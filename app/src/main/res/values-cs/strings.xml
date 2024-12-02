@@ -64,6 +64,7 @@
     <string name="widgets">Widgety</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
+    <string name="profile">Profil</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
