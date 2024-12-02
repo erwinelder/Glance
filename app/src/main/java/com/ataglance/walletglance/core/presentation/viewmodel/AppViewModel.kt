@@ -296,6 +296,10 @@ class AppViewModel(
         generalRepository.resetAllData()
     }
 
+    suspend fun deleteAllData() {
+        generalRepository.deleteAllDataLocally()
+    }
+
     private fun fetchLastRecordNum() {
         viewModelScope.launch {
             recordRepository.getLastRecordNum().collect { recordNum ->

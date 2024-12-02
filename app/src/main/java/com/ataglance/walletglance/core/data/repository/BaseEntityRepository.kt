@@ -52,6 +52,8 @@ interface BaseEntityRepository<T> {
         onFailureListener: (Exception) -> Unit = {}
     )
 
+    suspend fun deleteAllEntitiesLocally()
+
     fun getAllEntities(
         onSuccessListener: () -> Unit = {},
         onFailureListener: (Exception) -> Unit = {}

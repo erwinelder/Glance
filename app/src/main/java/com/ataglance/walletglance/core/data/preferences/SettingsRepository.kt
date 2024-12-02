@@ -148,4 +148,10 @@ class SettingsRepository(
         dataStore.edit { it[LAST_CHOSEN_THEME] = theme }
     }
 
+    suspend fun clearAllPreferences() {
+        dataStore.edit {
+            it.clear()
+        }
+    }
+
 }

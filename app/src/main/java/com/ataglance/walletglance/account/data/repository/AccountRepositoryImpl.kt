@@ -18,4 +18,9 @@ class AccountRepositoryImpl(
         remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
+    override suspend fun deleteAllEntitiesLocally() {
+        val timestamp = getNowDateTimeLong()
+        localSource.deleteAllAccounts(timestamp = timestamp)
+    }
+
 }

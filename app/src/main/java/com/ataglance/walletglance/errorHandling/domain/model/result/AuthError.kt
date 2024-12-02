@@ -15,5 +15,7 @@ enum class AuthError : Error {
     EmailVerificationError,
     EmailForPasswordResetError,
     PasswordResetError,
-    UpdatePasswordError
+    UpdatePasswordError,
+    DataDeletionError,
+    AccountDeletionError
 }

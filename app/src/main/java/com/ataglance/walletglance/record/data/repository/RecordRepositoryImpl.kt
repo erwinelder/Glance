@@ -36,7 +36,13 @@ class RecordRepositoryImpl(
         onFailureListener: (Exception) -> Unit
     ) {
         val timestamp = getNowDateTimeLong()
+        localSource.deleteAllRecords(timestamp)
         remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
+    }
+
+    override suspend fun deleteAllEntitiesLocally() {
+        val timestamp = getNowDateTimeLong()
+        localSource.deleteAllRecords(timestamp = timestamp)
     }
 
     override fun getLastRecordNum(

@@ -46,4 +46,9 @@ class BudgetOnWidgetRepositoryImpl(
         remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
+    override suspend fun deleteAllEntitiesLocally() {
+        val timestamp = getNowDateTimeLong()
+        localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
+    }
+
 }

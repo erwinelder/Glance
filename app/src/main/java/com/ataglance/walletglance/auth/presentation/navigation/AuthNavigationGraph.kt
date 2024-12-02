@@ -75,9 +75,13 @@ fun NavGraphBuilder.authGraph(
                 password = passwordState.fieldText,
                 onPasswordChange = viewModel::updatePassword,
                 signInIsAllowed = signInIsAllowed,
-                onSignInWithEmailAndPassword = { email, password ->
+                onSignIn = {
                     coroutineScope.launch {
-                        when (val result = authController.signIn(email, password)) {
+                        val result = authController.signIn(
+                            email = emailState.fieldText, password = passwordState.fieldText
+                        )
+
+                        when (result) {
                             is ResultData.Success -> {
                                 result.data?.let { appViewModel.updatePreferencesAfterSignIn(it) }
 
@@ -108,6 +112,13 @@ fun NavGraphBuilder.authGraph(
                             }
                         }
                     }
+                },
+                onNavigateToResetPasswordScreen = {
+                    viewModel.resetPassword()
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = AuthScreens.RequestPasswordReset
+                    )
                 },
                 resultState = resultState,
                 onResultReset = viewModel::resetResultState,
@@ -378,16 +389,42 @@ fun NavGraphBuilder.authGraph(
                 }
             )
         }
-        composable<AuthScreens.DeleteAccount> {
+        composable<AuthScreens.DeleteAccount> { backStack ->
+            val viewModel = backStack.sharedViewModel<AuthViewModel>(
+                navController = navController,
+                factory = AuthViewModelFactory(
+                    email = authController.getEmail()
+                )
+            )
+
             val coroutineScope = rememberCoroutineScope()
 
+            val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
+            val deletionIsAllowed by viewModel.signInIsAllowed.collectAsStateWithLifecycle()
+            val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
             DeleteAccountScreen(
+                password = passwordState.fieldText,
+                onPasswordChange = viewModel::updatePassword,
+                deletionIsAllowed = deletionIsAllowed,
                 onDeleteAccount = {
                     coroutineScope.launch {
-                        appViewModel.resetAppData()
-                        authController.deleteAccount()
+                        appViewModel.deleteAllData()
+                        val result = authController.deleteAccount(
+                            password = passwordState.fieldText
+                        )
+
+                        when (result) {
+                            is Result.Success -> {
+                            }
+                            is Result.Error -> {
+                                viewModel.setResultState(result.toUiState())
+                            }
+                        }
                     }
-                }
+                },
+                resultState = resultState,
+                onResultReset = viewModel::resetResultState
             )
         }
     }

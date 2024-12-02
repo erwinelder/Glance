@@ -18,4 +18,9 @@ class WidgetRepositoryImpl(
         remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
     }
 
+    override suspend fun deleteAllEntitiesLocally() {
+        val timestamp = getNowDateTimeLong()
+        localSource.deleteAllWidgets(timestamp = timestamp)
+    }
+
 }

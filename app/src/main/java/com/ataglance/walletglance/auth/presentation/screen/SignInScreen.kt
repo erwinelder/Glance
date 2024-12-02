@@ -2,6 +2,7 @@ package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,7 +28,8 @@ fun SignInScreen(
     password: String,
     onPasswordChange: (String) -> Unit,
     signInIsAllowed: Boolean,
-    onSignInWithEmailAndPassword: (String, String) -> Unit,
+    onSignIn: () -> Unit,
+    onNavigateToResetPasswordScreen: () -> Unit,
     resultState: ResultUiState?,
     onResultReset: () -> Unit,
     onNavigateToSignUpScreen: () -> Unit
@@ -44,11 +46,18 @@ fun SignInScreen(
                 )
             },
             buttonUnderGlassSurface = {
-                PrimaryButton(
-                    text = stringResource(R.string.sign_in),
-                    enabled = signInIsAllowed
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    onSignInWithEmailAndPassword(email, password)
+                    PrimaryButton(
+                        text = stringResource(R.string.sign_in),
+                        enabled = signInIsAllowed,
+                        onClick = onSignIn
+                    )
+                    SecondaryButton(
+                        text = stringResource(R.string.reset_password),
+                        onClick = onNavigateToResetPasswordScreen
+                    )
                 }
             },
             bottomButton = {
@@ -107,7 +116,8 @@ fun SignInScreenPreview() {
             onPasswordChange = {},
             signInIsAllowed = userDataValidator.isValidEmail(email) &&
                     userDataValidator.isValidPassword(password),
-            onSignInWithEmailAndPassword = { _, _ -> },
+            onSignIn = {},
+            onNavigateToResetPasswordScreen = {},
             resultState = null,
             onResultReset = {},
             onNavigateToSignUpScreen = {}

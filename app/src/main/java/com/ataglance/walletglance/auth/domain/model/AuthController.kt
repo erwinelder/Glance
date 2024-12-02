@@ -45,8 +45,11 @@ class AuthController(
         return auth.currentUser?.email ?: ""
     }
 
-    private val userFirestoreRef: DocumentReference?
+    private val userPreferencesFirestoreRef: DocumentReference?
         get() = user.uid?.let { firestore.collection("usersPreferences").document(it) }
+
+    private val userDataFirestoreRef: DocumentReference?
+        get() = user.uid?.let { firestore.collection("usersData").document(it) }
 
 
     fun emailIsVerified(): Boolean {
@@ -77,7 +80,7 @@ class AuthController(
                 userId = firebaseUser.uid, language = lang, subscription = user.subscription
             )
 
-            userFirestoreRef?.set(userPreferences.toMap())?.await()
+            userPreferencesFirestoreRef?.set(userPreferences.toMap())?.await()
             ResultData.Success(firebaseUser.uid)
         } catch (e: Exception) {
             when (e) {
@@ -100,7 +103,7 @@ class AuthController(
             val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.SignInError)
 
             if (firebaseUser.isEmailVerified) {
-                userFirestoreRef?.get()?.await()
+                userPreferencesFirestoreRef?.get()?.await()
                     ?.data?.toUserRemotePreferences(userId = firebaseUser.uid)
                     ?.let { return ResultData.Success(it) }
                     ?: return ResultData.Error(AuthError.UserNotFound)
@@ -114,6 +117,23 @@ class AuthController(
                 is FirebaseAuthInvalidUserException -> ResultData.Error(AuthError.UserNotFound)
                 else -> ResultData.Error(AuthError.SignInError)
             }
+        }
+    }
+
+    private suspend fun reauthenticate(password: String): ResultData<FirebaseUser, AuthError> {
+        val (currentUser, email) = auth.currentUser.let { it to it?.email }.takeIfNoneIsNull()
+            ?: return ResultData.Error(AuthError.UserNotSignedIn)
+
+        return try {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            currentUser.reauthenticate(credential).await()
+            auth.currentUser?.reload()?.await()
+
+            auth.currentUser
+                ?.let { ResultData.Success(it) }
+                ?: ResultData.Error(AuthError.UserNotSignedIn)
+        } catch (e: Exception) {
+            ResultData.Error(AuthError.WrongCredentials)
         }
     }
 
@@ -157,18 +177,22 @@ class AuthController(
     }
 
     suspend fun updatePassword(currentPassword: String, newPassword: String): AuthResult {
-        val (currentUser, email) = auth.currentUser.let { it to it?.email }.takeIfNoneIsNull()
-            ?: return Result.Error(AuthError.UserNotSignedIn)
+        val reauthenticationResult = reauthenticate(currentPassword)
+        if (reauthenticationResult is ResultData.Error) {
+            return Result.Error(reauthenticationResult.error)
+        }
+        val firebaseUser = (reauthenticationResult as ResultData.Success).data
+        val email = firebaseUser.email ?: return Result.Error(AuthError.UserNotFound)
 
         try {
             val credential = EmailAuthProvider.getCredential(email, currentPassword)
-            currentUser.reauthenticate(credential).await()
+            firebaseUser.reauthenticate(credential).await()
         } catch (e: Exception) {
             return Result.Error(AuthError.WrongCredentials)
         }
 
         return try {
-            currentUser.updatePassword(newPassword).await()
+            firebaseUser.updatePassword(newPassword).await()
             Result.Success(AuthSuccess.PasswordUpdated)
         } catch (e: Exception) {
             Result.Error(AuthError.UpdatePasswordError)
@@ -203,6 +227,35 @@ class AuthController(
     fun signOut() {
         auth.signOut()
         user = User()
+    }
+
+    suspend fun deleteAccount(password: String): AuthResult {
+        val reauthenticationResult = reauthenticate(password)
+        if (reauthenticationResult is ResultData.Error) {
+            return Result.Error(reauthenticationResult.error)
+        }
+        val firebaseUser = (reauthenticationResult as ResultData.Success).data
+
+        val userPreferencesRef = userPreferencesFirestoreRef
+            ?: return Result.Error(AuthError.UserNotFound)
+        val userDataRef = userDataFirestoreRef ?: return Result.Error(AuthError.UserNotFound)
+
+        return try {
+            firestore.runBatch { batch ->
+                batch.delete(userPreferencesRef)
+                batch.delete(userDataRef)
+            }
+
+            firebaseUser.delete().await()
+            user = User()
+
+            Result.Success(AuthSuccess.AccountDeleted)
+        } catch (e: Exception) {
+            when (e) {
+                is FirebaseFirestoreException -> Result.Error(AuthError.DataDeletionError)
+                else -> Result.Error(AuthError.AccountDeletionError)
+            }
+        }
     }
 
 }

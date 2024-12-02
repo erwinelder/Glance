@@ -53,6 +53,10 @@ class AuthViewModel(
         }
     }
 
+    fun resetEmail() {
+        updateAndValidateEmail("")
+    }
+
 
     private val _newEmailState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState()
@@ -66,6 +70,10 @@ class AuthViewModel(
                 validationStates = userDataValidator.validateEmail(email).toUiStates()
             )
         }
+    }
+
+    fun resetNewEmail() {
+        updateAndValidateNewEmail("")
     }
 
 
@@ -92,6 +100,10 @@ class AuthViewModel(
         }
     }
 
+    fun resetPassword() {
+        updateAndValidatePassword("")
+    }
+
 
     private val _confirmPasswordState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState()
@@ -109,6 +121,11 @@ class AuthViewModel(
         }
     }
 
+    fun resetPasswordConfirmation() {
+        updateAndValidatePasswordConfirmation("")
+    }
+
+
     private val _newPasswordState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState()
     )
@@ -121,6 +138,10 @@ class AuthViewModel(
                 validationStates = userDataValidator.validatePassword(password).toUiStates()
             )
         }
+    }
+
+    fun resetNewPassword() {
+        updateAndValidateNewPassword("")
     }
 
 
@@ -137,6 +158,10 @@ class AuthViewModel(
                     .toUiStates()
             )
         }
+    }
+
+    fun resetNewPasswordConfirmation() {
+        updateAndValidateNewPasswordConfirmation("")
     }
 
 

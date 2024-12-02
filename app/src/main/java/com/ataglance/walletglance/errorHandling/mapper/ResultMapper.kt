@@ -40,6 +40,7 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthSuccess.SignUpEmailVerificationSent, AuthSuccess.UpdateEmailEmailVerificationSent,
         AuthSuccess.ResetPasswordEmailSent ->
             R.string.email_sent
+        AuthSuccess.AccountDeleted -> R.string.account_deleted
     }
 }
 
@@ -50,6 +51,7 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthSuccess.EmailUpdated -> R.string.email_update_success
         AuthSuccess.PasswordUpdated -> R.string.password_update_success
         AuthSuccess.ResetPasswordEmailSent -> R.string.reset_password_email_sent
+        AuthSuccess.AccountDeleted -> R.string.your_account_has_been_deleted_successfully
     }
 }
 
@@ -60,7 +62,8 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.InvalidCode, AuthError.WrongCredentials, AuthError.SignInError,
         AuthError.ReauthenticationError, AuthError.SignUpEmailVerificationError,
         AuthError.EmailForPasswordResetError, AuthError.EmailVerificationError,
-        AuthError.PasswordResetError, AuthError.UpdatePasswordError ->
+        AuthError.PasswordResetError, AuthError.UpdatePasswordError,
+        AuthError.DataDeletionError, AuthError.AccountDeletionError ->
             R.string.oops
     }
 }
@@ -82,5 +85,7 @@ fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
         AuthError.EmailForPasswordResetError -> R.string.email_for_password_reset_error
         AuthError.PasswordResetError -> R.string.password_reset_error
         AuthError.UpdatePasswordError -> R.string.update_password_error
+        AuthError.DataDeletionError -> R.string.deleting_user_data_error
+        AuthError.AccountDeletionError -> R.string.deleting_user_account_error
     }
 }

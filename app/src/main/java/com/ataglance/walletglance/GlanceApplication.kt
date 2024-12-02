@@ -13,7 +13,9 @@ import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.RepositoryManager
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepositoryImpl
 import com.google.firebase.BuildConfig
@@ -39,6 +41,8 @@ class GlanceApplication : Application() {
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
     lateinit var navViewModel: NavigationViewModel
+    private lateinit var widgetRepository: WidgetRepository
+    private lateinit var navigationButtonRepository: NavigationButtonRepository
     lateinit var personalizationViewModel: PersonalizationViewModel
 
     override fun onCreate() {
@@ -50,9 +54,9 @@ class GlanceApplication : Application() {
         initializeFirebaseDebugger()
         initializeAuthController()
 //        initializeBillingManager()
-        initializeSettingsRepository()
 
         repositoryManager = RepositoryManager(db, authController.user, firestore)
+        initializeRepositories()
 
         initializeAppViewModel()
         initializeNavViewModel()
@@ -85,8 +89,10 @@ class GlanceApplication : Application() {
 //        billingManager = BillingManager(context = this)
 //    }
 
-    private fun initializeSettingsRepository() {
+    private fun initializeRepositories() {
         settingsRepository = SettingsRepository(dataStore)
+        navigationButtonRepository = repositoryManager.getNavigationButtonRepository()
+        widgetRepository = repositoryManager.getWidgetRepository()
     }
 
     /**
@@ -113,7 +119,9 @@ class GlanceApplication : Application() {
                 settingsRepository = settingsRepository,
                 accountRepository = accountRepository,
                 categoryRepository = categoryRepository,
-                categoryCollectionRepository = categoryCollectionRepository
+                categoryCollectionRepository = categoryCollectionRepository,
+                widgetRepository = widgetRepository,
+                navigationButtonRepository = navigationButtonRepository,
             )
         }
 
@@ -138,7 +146,6 @@ class GlanceApplication : Application() {
     }
 
     private fun initializePersonalizationViewModel() {
-        val widgetRepository = repositoryManager.getWidgetRepository()
         val budgetOnWidgetRepository = repositoryManager.getBudgetOnWidgetRepository()
 
         personalizationViewModel = PersonalizationViewModel(

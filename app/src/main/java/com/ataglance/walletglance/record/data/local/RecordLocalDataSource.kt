@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.record.data.local
 
+import androidx.room.Transaction
 import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.local.TableUpdateTimeDao
 import com.ataglance.walletglance.core.data.model.LongDateRange
@@ -15,6 +16,12 @@ class RecordLocalDataSource(
     updateTimeDao = updateTimeDao,
     tableName = TableName.Record
 ) {
+
+    @Transaction
+    suspend fun deleteAllRecords(timestamp: Long) {
+        recordDao.deleteAllRecords()
+        updateLastModifiedTime(timestamp)
+    }
 
     suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long) {
         recordDao.convertTransfersToRecords(noteValues)
