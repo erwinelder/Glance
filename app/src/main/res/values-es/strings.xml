@@ -226,10 +226,10 @@
     <string name="transfer">Transferencia</string>
     <string name="all_categories">Todas las categorías</string>
     <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
-    <string name="reset_data_description">Restablecer todos los datos de la aplicación. Tu cuenta no será eliminada.</string>
-    <string name="reset_data_warning">¿Está seguro de que desea restablecer todos sus datos?</string>
-    <string name="delete_account_description">Elimina tu cuenta con todos tus datos</string>
-    <string name="delete_account_warning">¿Estás seguro de que deseas eliminar tu cuenta?</string>
+    <string name="reset_data_action">Restablecer todos los datos de la aplicación. Tu cuenta no será eliminada.</string>
+    <string name="reset_data_confirmation">¿Está seguro de que desea restablecer todos sus datos?</string>
+    <string name="delete_account_action">Elimina tu cuenta con todos tus datos</string>
+    <string name="delete_account_confirmation">¿Estás seguro de que deseas eliminar tu cuenta?</string>
     <string name="you_have_no_records_in_date_range">No hay registros en este período</string>
     <string name="you_have_no_expenses_in_date_range">No tienes gastos en este período</string>
     <string name="you_have_no_income_in_date_range">No tienes ingresos en este período</string>

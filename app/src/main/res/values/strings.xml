@@ -226,10 +226,10 @@
     <string name="transfer">Transfer</string>
     <string name="all_categories">All categories</string>
     <string name="no_collections_of_this_type">No collections of this type</string>
-    <string name="reset_data_description">Reset all app data. Your account will not be deleted.</string>
-    <string name="reset_data_warning">Are you sure you want to reset all your data?</string>
-    <string name="delete_account_description">Delete your account with all your data</string>
-    <string name="delete_account_warning">Are you sure you want to delete your account?</string>
+    <string name="reset_data_action">Reset all app data. Your account will not be deleted.</string>
+    <string name="reset_data_confirmation">Are you sure you want to reset all your data?</string>
+    <string name="delete_account_action">Delete your account with all your data</string>
+    <string name="delete_account_confirmation">Are you sure you want to delete your account?</string>
     <string name="you_have_no_records_in_date_range">You have no records in this period</string>
     <string name="you_have_no_expenses_in_date_range">You have no expenses in this period</string>
     <string name="you_have_no_income_in_date_range">You have no income in this period</string>
