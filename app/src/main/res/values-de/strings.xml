@@ -231,8 +231,7 @@
     <string name="no_collections_of_this_type">Keine Sammlungen dieses Typs vorhanden</string>
     <string name="reset_data_action">Setzen Sie alle App-Daten zurück. Ihr Konto wird nicht gelöscht.</string>
     <string name="reset_data_confirmation">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
-    <string name="delete_account_action">Löschen Sie Ihr Konto mit allen Ihren Daten.</string>
-    <string name="delete_account_confirmation">Sind Sie sicher, dass Sie Ihr Konto löschen möchten?</string>
+    <string name="delete_your_account_with_all_data">Löschen Sie Ihr Konto mit allen Ihren Daten.</string>
     <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum</string>
     <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum</string>
     <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum</string>

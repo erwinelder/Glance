@@ -231,8 +231,7 @@
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
     <string name="reset_data_action">Resetovat všechna data aplikace. Váš účet nebude smazán.</string>
     <string name="reset_data_confirmation">Jste si jisti, že chcete resetovat všechna data?</string>
-    <string name="delete_account_action">Smažte svůj účet se všemi svými daty</string>
-    <string name="delete_account_confirmation">Opravdu chcete smazat svůj účet?</string>
+    <string name="delete_your_account_with_all_data">Smažte svůj účet se všemi svými daty</string>
     <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období</string>
     <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>
