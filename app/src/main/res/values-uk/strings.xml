@@ -66,6 +66,7 @@
     <string name="language">Мова</string>
     <string name="reset_data">Скинути дані</string>
     <string name="profile">Профіль</string>
+    <string name="delete_account">Видалити акаунт</string>
 
     <!-- Setting up -->
     <string name="start">Старт</string>
@@ -215,7 +216,6 @@
 
     <!-- Other -->
     <string name="hello">Привіт</string>
-    <string name="or">або</string>
     <string name="version">Версія</string>
     <string name="expense">Витрата</string>
     <string name="expenses">Витрати</string>
@@ -225,8 +225,10 @@
     <string name="transfer">Переказ</string>
     <string name="all_categories">Всі категорії</string>
     <string name="no_collections_of_this_type">Немає колекцій цього типу</string>
-    <string name="reset_data_description">Скинути всі дані застосунку, включаючи рахунки, записи, категорії та налаштування.</string>
+    <string name="reset_data_description">Скинути всі дані додатка. Ваш акаунт не буде видалено.</string>
     <string name="reset_data_warning">Ви впевнені, що хочете скинути всі дані?</string>
+    <string name="delete_account_description">Видаліть свій акаунт разом із усіма даними</string>
+    <string name="delete_account_warning">Ви впевнені, що хочете видалити свій акаунт?</string>
     <string name="you_have_no_records_in_date_range">У вас немає записів за цей період</string>
     <string name="you_have_no_expenses_in_date_range">У вас немає витрат за цей період</string>
     <string name="you_have_no_income_in_date_range">У вас немає доходів за цей період</string>

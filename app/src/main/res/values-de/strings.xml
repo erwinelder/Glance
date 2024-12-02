@@ -66,6 +66,7 @@
     <string name="language">Sprachen</string>
     <string name="reset_data">Daten zurücksetzen</string>
     <string name="profile">Profil</string>
+    <string name="delete_account">Konto löschen</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
@@ -215,7 +216,6 @@
 
     <!-- Other -->
     <string name="hello">Hallo</string>
-    <string name="or">oder</string>
     <string name="version">Version</string>
     <string name="expense">Spesen</string>
     <string name="expenses">Spesen</string>
@@ -225,8 +225,10 @@
     <string name="transfer">Transfer</string>
     <string name="all_categories">Alle Kategorien</string>
     <string name="no_collections_of_this_type">Keine Sammlungen dieses Typs vorhanden</string>
-    <string name="reset_data_description">Setzen Sie alle App-Daten zurück, einschließlich Konten, Datensätze, Kategorien und Einstellungen.</string>
+    <string name="reset_data_description">Setzen Sie alle App-Daten zurück. Ihr Konto wird nicht gelöscht.</string>
     <string name="reset_data_warning">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
+    <string name="delete_account_description">Löschen Sie Ihr Konto mit allen Ihren Daten.</string>
+    <string name="delete_account_warning">Sind Sie sicher, dass Sie Ihr Konto löschen möchten?</string>
     <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum</string>
     <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum</string>
     <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum</string>

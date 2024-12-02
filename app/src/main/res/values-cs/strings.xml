@@ -66,6 +66,7 @@
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
     <string name="profile">Profil</string>
+    <string name="delete_account">Smazat účet</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
@@ -215,7 +216,6 @@
 
     <!-- Other -->
     <string name="hello">Ahoj</string>
-    <string name="or">nebo</string>
     <string name="version">Verze</string>
     <string name="expense">Výdaj</string>
     <string name="expenses">Výdaje</string>
@@ -225,8 +225,10 @@
     <string name="transfer">Převod</string>
     <string name="all_categories">Všechny kategorie</string>
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
-    <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
+    <string name="reset_data_description">Resetovat všechna data aplikace. Váš účet nebude smazán.</string>
     <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>
+    <string name="delete_account_description">Smažte svůj účet se všemi svými daty</string>
+    <string name="delete_account_warning">Opravdu chcete smazat svůj účet?</string>
     <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období</string>
     <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>

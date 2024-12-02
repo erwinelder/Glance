@@ -67,6 +67,7 @@
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
     <string name="profile">Profile</string>
+    <string name="delete_account">Delete account</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
@@ -216,7 +217,6 @@
 
     <!-- Other -->
     <string name="hello">Hello</string>
-    <string name="or">or</string>
     <string name="version">Version</string>
     <string name="expense">Expense</string>
     <string name="expenses">Expenses</string>
@@ -226,8 +226,10 @@
     <string name="transfer">Transfer</string>
     <string name="all_categories">All categories</string>
     <string name="no_collections_of_this_type">No collections of this type</string>
-    <string name="reset_data_description">Reset all app data, including accounts, records, categories, and settings.</string>
+    <string name="reset_data_description">Reset all app data. Your account will not be deleted.</string>
     <string name="reset_data_warning">Are you sure you want to reset all your data?</string>
+    <string name="delete_account_description">Delete your account with all your data</string>
+    <string name="delete_account_warning">Are you sure you want to delete your account?</string>
     <string name="you_have_no_records_in_date_range">You have no records in this period</string>
     <string name="you_have_no_expenses_in_date_range">You have no expenses in this period</string>
     <string name="you_have_no_income_in_date_range">You have no income in this period</string>

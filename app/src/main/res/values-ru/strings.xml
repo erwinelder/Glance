@@ -66,6 +66,7 @@
     <string name="language">Язык</string>
     <string name="reset_data">Сбросить данные</string>
     <string name="profile">Профиль</string>
+    <string name="delete_account">Удалить аккаунт</string>
 
     <!-- Setting up -->
     <string name="start">Старт</string>
@@ -215,7 +216,6 @@
 
     <!-- Other -->
     <string name="hello">Привет</string>
-    <string name="or">или</string>
     <string name="version">Версия</string>
     <string name="expense">Расход</string>
     <string name="expenses">Расходы</string>
@@ -225,8 +225,10 @@
     <string name="transfer">Перевод</string>
     <string name="all_categories">Все категории</string>
     <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
-    <string name="reset_data_description">Сбросить все данные приложения, включая счета, записи, категории и настройки.</string>
+    <string name="reset_data_description">Сбросить все данные приложения. Ваш аккаунт не будет удален.</string>
     <string name="reset_data_warning">Вы уверены, что хотите сбросить все данные?</string>
+    <string name="delete_account_description">Удалите свой аккаунт со всеми данными</string>
+    <string name="delete_account_warning">Вы уверены, что хотите удалить свой аккаунт?</string>
     <string name="you_have_no_records_in_date_range">У вас нет записей за этот период</string>
     <string name="you_have_no_expenses_in_date_range">У вас нет расходов за этот период</string>
     <string name="you_have_no_income_in_date_range">У вас нет доходов за этот период</string>
