@@ -160,6 +160,10 @@
     <string name="email_verification_error">La verificación del correo electrónico falló</string>
     <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, siga el enlace en el correo.</string>
     <string name="sign_out_of_your_account">¿Cerrar sesión de tu cuenta? Tendrás que volver a iniciar sesión para acceder a tus datos.</string>
+    <string name="account_deleted">Cuenta eliminada</string>
+    <string name="your_account_has_been_deleted_successfully">Tu cuenta se ha eliminado con éxito</string>
+    <string name="deleting_user_account_error">Ocurrió un error al eliminar la cuenta de usuario</string>
+    <string name="deleting_user_data_error">Ocurrió un error al eliminar los datos del usuario</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>

@@ -159,6 +159,10 @@
     <string name="email_verification_error">Die E-Mail-Verifizierung ist fehlgeschlagen</string>
     <string name="reset_password_email_sent">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte folgen Sie dem Link in der E-Mail.</string>
     <string name="sign_out_of_your_account">Von Ihrem Konto abmelden? Sie müssen sich erneut anmelden, um auf Ihre Daten zuzugreifen.</string>
+    <string name="account_deleted">Konto gelöscht</string>
+    <string name="your_account_has_been_deleted_successfully">Ihr Konto wurde erfolgreich gelöscht</string>
+    <string name="deleting_user_account_error">Beim Löschen des Benutzerkontos ist ein Fehler aufgetreten</string>
+    <string name="deleting_user_data_error">Beim Löschen der Benutzerdaten ist ein Fehler aufgetreten</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>

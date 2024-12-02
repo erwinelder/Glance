@@ -159,6 +159,10 @@
     <string name="email_verification_error">Подтверждение электронной почты не удалось</string>
     <string name="reset_password_email_sent">Письмо для сброса пароля было отправлено. Пожалуйста, перейдите по ссылке в письме.</string>
     <string name="sign_out_of_your_account">Выйти из своего аккаунта? Вам нужно будет снова войти, чтобы получить доступ к своим данным.</string>
+    <string name="account_deleted">Аккаунт удалён</string>
+    <string name="your_account_has_been_deleted_successfully">Ваш аккаунт был успешно удалён</string>
+    <string name="deleting_user_account_error">Произошла ошибка при удалении аккаунта пользователя</string>
+    <string name="deleting_user_data_error">Произошла ошибка при удалении данных пользователя</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>

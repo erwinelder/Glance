@@ -160,6 +160,10 @@
     <string name="email_verification_error">Email verification failed</string>
     <string name="reset_password_email_sent">An email for password reset has been sent. Please follow the link in the email.</string>
     <string name="sign_out_of_your_account">Sign out of your account? You will need to sign in again to access your data.</string>
+    <string name="account_deleted">Account deleted</string>
+    <string name="your_account_has_been_deleted_successfully">Your account has been deleted successfully</string>
+    <string name="deleting_user_account_error">An error occurred while deleting user account</string>
+    <string name="deleting_user_data_error">An error occurred while deleting user data</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>

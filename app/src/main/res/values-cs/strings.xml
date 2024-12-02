@@ -159,6 +159,10 @@
     <string name="email_verification_error">Ověření e-mailu se nezdařilo</string>
     <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán. Postupujte prosím podle odkazu v e-mailu.</string>
     <string name="sign_out_of_your_account">Odhlásit se ze svého účtu? Budete se muset znovu přihlásit, abyste získali přístup k vašim datům.</string>
+    <string name="account_deleted">Účet smazán</string>
+    <string name="your_account_has_been_deleted_successfully">Váš účet byl úspěšně smazán</string>
+    <string name="deleting_user_account_error">Při mazání uživatelského účtu došlo k chybě</string>
+    <string name="deleting_user_data_error">Při mazání uživatelských dat došlo k chybě</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
