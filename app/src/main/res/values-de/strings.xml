@@ -59,6 +59,7 @@
     <string name="categories">Kategorien</string>
     <string name="category_collections">Kategorien Sammlungen</string>
     <string name="appearance">Aussehen</string>
+    <string name="appearance_settings_category_title">Personalisieren Sie das Aussehen Ihrer App</string>
     <string name="color_theme">Farbthema</string>
     <string name="navigation_buttons">Navigationsschaltflächen</string>
     <string name="widgets">Widgets</string>

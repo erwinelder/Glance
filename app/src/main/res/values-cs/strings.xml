@@ -59,6 +59,7 @@
     <string name="categories">Kategorie</string>
     <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
+    <string name="appearance_settings_category_title">Přizpůsobte vzhled aplikace</string>
     <string name="color_theme">Barevný motiv</string>
     <string name="navigation_buttons">Navigační tlačítka</string>
     <string name="widgets">Widgety</string>

@@ -59,6 +59,7 @@
     <string name="categories">Категорії</string>
     <string name="category_collections">Колекції категорій</string>
     <string name="appearance">Зовнішній вигляд</string>
+    <string name="appearance_settings_category_title">Налаштуйте вигляд додатка</string>
     <string name="color_theme">Кольорова тема</string>
     <string name="navigation_buttons">Кнопки навігації</string>
     <string name="widgets">Віджети</string>

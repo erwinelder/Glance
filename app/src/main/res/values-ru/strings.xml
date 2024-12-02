@@ -59,6 +59,7 @@
     <string name="categories">Категории</string>
     <string name="category_collections">Коллекции категорий</string>
     <string name="appearance">Внешний вид</string>
+    <string name="appearance_settings_category_title">Настройте внешний вид приложения</string>
     <string name="color_theme">Цветовая тема</string>
     <string name="navigation_buttons">Кнопки навигации</string>
     <string name="widgets">Виджеты</string>
