@@ -7,13 +7,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ErrorResultScreenContainer
+import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultErrorScreenContainer
 
 @Composable
 fun EmailVerificationErrorScreen(
     onContinueButtonClick: () -> Unit
 ) {
-    ErrorResultScreenContainer(
+    ResultErrorScreenContainer(
         message = stringResource(R.string.email_verification_error),
         buttonText = stringResource(R.string.sign_in),
         onContinueButtonClick = onContinueButtonClick

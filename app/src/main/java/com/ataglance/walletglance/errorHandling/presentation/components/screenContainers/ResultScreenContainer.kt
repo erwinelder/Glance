@@ -13,7 +13,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessMessageWithIcon
 
 @Composable
-fun ResultMessageScreenContainer(
+fun ResultScreenContainer(
     message: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,

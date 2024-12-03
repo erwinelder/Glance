@@ -4,18 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenState
-import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenType
+import com.ataglance.walletglance.auth.presentation.model.AuthResultSuccessScreenState
+import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.SuccessResultScreenContainer
+import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultSuccessScreenContainer
 
 @Composable
 fun AuthSuccessfulScreen(
-    screenType: SuccessResultScreenState,
+    screenType: AuthResultSuccessScreenState,
     onContinueButtonClick: () -> Unit
 ) {
-    SuccessResultScreenContainer(
+    ResultSuccessScreenContainer(
         message = stringResource(screenType.getScreenTitleRes()),
         buttonText = stringResource(screenType.getPrimaryButtonTextRes()),
         onContinueButtonClick = onContinueButtonClick
@@ -29,8 +29,8 @@ fun AuthSuccessfulScreen(
 fun AuthSuccessfulScreenPreview() {
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
         AuthSuccessfulScreen(
-            screenType = SuccessResultScreenState(
-                type = SuccessResultScreenType.EmailVerificationSuccess,
+            screenType = AuthResultSuccessScreenState(
+                type = AuthResultSuccessScreenType.EmailVerification,
                 isAppSetUp = true
             ),
             onContinueButtonClick = {}

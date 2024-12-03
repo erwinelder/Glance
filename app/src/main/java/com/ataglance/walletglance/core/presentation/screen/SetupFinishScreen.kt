@@ -7,13 +7,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.SuccessResultScreenContainer
+import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultSuccessScreenContainer
 
 @Composable
 fun SetupFinishScreen(
     onFinishSetupButton: () -> Unit
 ) {
-    SuccessResultScreenContainer(
+    ResultSuccessScreenContainer(
         message = stringResource(R.string.all_set),
         buttonText = stringResource(R.string.continue_to_app),
         onContinueButtonClick = onFinishSetupButton

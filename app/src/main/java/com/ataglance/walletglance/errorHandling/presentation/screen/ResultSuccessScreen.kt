@@ -4,18 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenState
-import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenType
+import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
+import com.ataglance.walletglance.auth.presentation.model.AuthResultSuccessScreenState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.SuccessResultScreenContainer
+import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultSuccessScreenContainer
 
 @Composable
-fun SuccessResultScreen(
-    screenState: SuccessResultScreenState,
+fun ResultSuccessScreen(
+    screenState: AuthResultSuccessScreenState,
     onContinueButtonClick: () -> Unit
 ) {
-    SuccessResultScreenContainer(
+    ResultSuccessScreenContainer(
         message = stringResource(screenState.getScreenTitleRes()),
         buttonText = stringResource(screenState.getPrimaryButtonTextRes()),
         onContinueButtonClick = onContinueButtonClick
@@ -26,11 +26,11 @@ fun SuccessResultScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun SuccessResultScreenPreview() {
+fun ResultSuccessScreenPreview() {
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
-        SuccessResultScreen(
-            screenState = SuccessResultScreenState.fromString(
-                type = SuccessResultScreenType.PasswordUpdateSuccess .name,
+        ResultSuccessScreen(
+            screenState = AuthResultSuccessScreenState.fromString(
+                type = AuthResultSuccessScreenType.PasswordUpdate .name,
                 isAppSetUp = true
             ),
             onContinueButtonClick = {}

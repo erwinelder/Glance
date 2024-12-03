@@ -7,7 +7,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 
 @Composable
-fun ErrorResultScreenContainer(
+fun ResultErrorScreenContainer(
     message: String,
     @DrawableRes iconRes: Int = R.drawable.error_icon,
     iconDescription: String = "Error",
@@ -15,7 +15,7 @@ fun ErrorResultScreenContainer(
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {
-    ResultMessageScreenContainer(
+    ResultScreenContainer(
         message = message,
         iconRes = iconRes,
         iconDescription = iconDescription,

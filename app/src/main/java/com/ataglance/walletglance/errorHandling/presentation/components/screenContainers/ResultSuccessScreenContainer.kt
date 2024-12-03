@@ -7,7 +7,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 
 @Composable
-fun SuccessResultScreenContainer(
+fun ResultSuccessScreenContainer(
     message: String,
     @DrawableRes iconRes: Int = R.drawable.success_icon,
     iconDescription: String = "Success",
@@ -15,7 +15,7 @@ fun SuccessResultScreenContainer(
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {
-    ResultMessageScreenContainer(
+    ResultScreenContainer(
         message = message,
         iconRes = iconRes,
         iconDescription = iconDescription,

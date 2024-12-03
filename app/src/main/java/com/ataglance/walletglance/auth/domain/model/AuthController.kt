@@ -148,7 +148,7 @@ class AuthController(
         }
     }
 
-    suspend fun updateEmail(password: String, newEmail: String): AuthResult {
+    suspend fun requestEmailUpdate(password: String, newEmail: String): AuthResult {
         val (currentUser, currentEmail) = auth.currentUser.let { it to it?.email }.takeIfNoneIsNull()
             ?: return Result.Error(AuthError.UserNotSignedIn)
 

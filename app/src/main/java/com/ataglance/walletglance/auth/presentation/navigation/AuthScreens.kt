@@ -12,7 +12,7 @@ sealed interface AuthScreens {
     data object SignUp : AuthScreens
 
     @Serializable
-    data class SuccessResult(val screenType: String) : AuthScreens
+    data class ResultSuccess(val screenType: String) : AuthScreens
 
     @Serializable
     data object EmailVerificationFailed : AuthScreens
