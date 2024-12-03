@@ -150,6 +150,7 @@
     <string name="sign_up_email_verification_error">Сталася помилка під час надсилання листа для підтвердження</string>
     <string name="email_for_password_reset_error">Сталася помилка під час надсилання листа для скидання пароля</string>
     <string name="password_update_success">Пароль успішно оновлено</string>
+    <string name="password_updated">Пароль оновлено!</string>
     <string name="password_reset_error">Скидання пароля не вдалося</string>
     <string name="update_password_error">Помилка під час оновлення пароля</string>
     <string name="email_sent">Лист надіслано!</string>
@@ -159,7 +160,7 @@
     <string name="email_verification_error">Підтвердження електронної пошти не вдалося</string>
     <string name="reset_password_email_sent">Лист для скидання пароля було надіслано. Будь ласка, перейдіть за посиланням у листі.</string>
     <string name="sign_out_of_your_account">Вийти зі свого акаунту? Вам потрібно буде знову увійти, щоб отримати доступ до своїх даних.</string>
-    <string name="account_deleted">Акаунт видалено</string>
+    <string name="account_deleted">Акаунт видалено!</string>
     <string name="your_account_has_been_deleted_successfully">Ваш акаунт успішно видалено</string>
     <string name="deleting_user_account_error">Сталася помилка під час видалення акаунта користувача</string>
     <string name="deleting_user_data_error">Сталася помилка під час видалення даних користувача</string>

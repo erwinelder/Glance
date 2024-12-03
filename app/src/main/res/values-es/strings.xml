@@ -151,6 +151,7 @@
     <string name="sign_up_email_verification_error">Ocurrió un error al enviar el correo electrónico de verificación</string>
     <string name="email_for_password_reset_error">Ocurrió un error al enviar el correo electrónico para restablecer la contraseña</string>
     <string name="password_update_success">La contraseña se ha actualizado correctamente</string>
+    <string name="password_updated">¡Contraseña actualizada!</string>
     <string name="password_reset_error">El restablecimiento de la contraseña falló</string>
     <string name="update_password_error">Error al actualizar la contraseña</string>
     <string name="email_sent">¡Correo enviado!</string>
@@ -160,7 +161,7 @@
     <string name="email_verification_error">La verificación del correo electrónico falló</string>
     <string name="reset_password_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, siga el enlace en el correo.</string>
     <string name="sign_out_of_your_account">¿Cerrar sesión de tu cuenta? Tendrás que volver a iniciar sesión para acceder a tus datos.</string>
-    <string name="account_deleted">Cuenta eliminada</string>
+    <string name="account_deleted">¡Cuenta eliminada!</string>
     <string name="your_account_has_been_deleted_successfully">Tu cuenta se ha eliminado con éxito</string>
     <string name="deleting_user_account_error">Ocurrió un error al eliminar la cuenta de usuario</string>
     <string name="deleting_user_data_error">Ocurrió un error al eliminar los datos del usuario</string>

@@ -150,6 +150,7 @@
     <string name="sign_up_email_verification_error">Při odesílání ověřovacího e-mailu došlo k chybě</string>
     <string name="email_for_password_reset_error">Při odesílání e-mailu pro obnovení hesla došlo k chybě</string>
     <string name="password_update_success">Heslo bylo úspěšně aktualizováno</string>
+    <string name="password_updated">Heslo aktualizováno!</string>
     <string name="password_reset_error">Resetování hesla se nezdařilo</string>
     <string name="update_password_error">Chyba během aktualizace hesla</string>
     <string name="email_sent">E-mail odeslán!</string>
@@ -159,7 +160,7 @@
     <string name="email_verification_error">Ověření e-mailu se nezdařilo</string>
     <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán. Postupujte prosím podle odkazu v e-mailu.</string>
     <string name="sign_out_of_your_account">Odhlásit se ze svého účtu? Budete se muset znovu přihlásit, abyste získali přístup k vašim datům.</string>
-    <string name="account_deleted">Účet smazán</string>
+    <string name="account_deleted">Účet smazán!</string>
     <string name="your_account_has_been_deleted_successfully">Váš účet byl úspěšně smazán</string>
     <string name="deleting_user_account_error">Při mazání uživatelského účtu došlo k chybě</string>
     <string name="deleting_user_data_error">Při mazání uživatelských dat došlo k chybě</string>
