@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.auth.presentation.screen
+package com.ataglance.walletglance.errorHandling.presentation.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -11,13 +11,13 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.SuccessResultScreenContainer
 
 @Composable
-fun AuthSuccessfulScreen(
-    screenType: SuccessResultScreenState,
+fun SuccessResultScreen(
+    screenState: SuccessResultScreenState,
     onContinueButtonClick: () -> Unit
 ) {
     SuccessResultScreenContainer(
-        message = stringResource(screenType.getScreenTitleRes()),
-        buttonText = stringResource(screenType.getPrimaryButtonTextRes()),
+        message = stringResource(screenState.getScreenTitleRes()),
+        buttonText = stringResource(screenState.getPrimaryButtonTextRes()),
         onContinueButtonClick = onContinueButtonClick
     )
 }
@@ -26,11 +26,11 @@ fun AuthSuccessfulScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun AuthSuccessfulScreenPreview() {
+fun SuccessResultScreenPreview() {
     PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
-        AuthSuccessfulScreen(
-            screenType = SuccessResultScreenState(
-                type = SuccessResultScreenType.EmailVerificationSuccess,
+        SuccessResultScreen(
+            screenState = SuccessResultScreenState.fromString(
+                type = SuccessResultScreenType.PasswordUpdateSuccess .name,
                 isAppSetUp = true
             ),
             onContinueButtonClick = {}

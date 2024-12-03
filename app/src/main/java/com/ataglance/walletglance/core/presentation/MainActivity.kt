@@ -14,7 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenTypeEnum
+import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenType
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
@@ -132,8 +132,8 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun processEmailVerification(obbCode: String) {
         val screen = if (authController.applyObbCode(obbCode)) {
-            AuthScreens.AuthSuccessful(
-                screenType = AuthSuccessfulScreenTypeEnum.AfterEmailVerification.name
+            AuthScreens.SuccessResult(
+                screenType = SuccessResultScreenType.EmailVerificationSuccess.name
             )
         } else {
             AuthScreens.EmailVerificationFailed

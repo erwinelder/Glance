@@ -10,13 +10,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenType
-import com.ataglance.walletglance.auth.domain.model.AuthSuccessfulScreenTypeEnum
 import com.ataglance.walletglance.auth.domain.model.SignInCase
-import com.ataglance.walletglance.auth.presentation.screen.AuthSuccessfulScreen
+import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenState
+import com.ataglance.walletglance.auth.domain.model.SuccessResultScreenType
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreen
 import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreen
-import com.ataglance.walletglance.auth.presentation.screen.PasswordUpdateSuccessfulScreen
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreen
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreen
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreen
@@ -34,6 +32,7 @@ import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.mapper.toUiState
+import com.ataglance.walletglance.errorHandling.presentation.screen.SuccessResultScreen
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
@@ -97,11 +96,12 @@ fun NavGraphBuilder.authGraph(
                                 } else {
                                     navViewModel.navigateToScreenMovingTowardsLeft(
                                         navController = navController,
-                                        screen = AuthScreens.AuthSuccessful(
-                                            screenType = if (case == SignInCase.Default) {
-                                                AuthSuccessfulScreenTypeEnum.AfterSignIn
-                                            } else {
-                                                AuthSuccessfulScreenTypeEnum.AfterEmailVerification
+                                        screen = AuthScreens.SuccessResult(
+                                            screenType = when (case) {
+                                                SignInCase.Default ->
+                                                    SuccessResultScreenType.SignInSuccess
+                                                SignInCase.EmailVerificationError ->
+                                                    SuccessResultScreenType.EmailVerificationSuccess
                                             }.name
                                         )
                                     )
@@ -184,36 +184,46 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthScreens.EmailVerificationFailed> {
-            EmailVerificationErrorScreen {
-                navViewModel.navigateToScreenMovingTowardsLeft(
-                    navController = navController,
-                    screen = AuthScreens.SignIn(SignInCase.EmailVerificationError)
-                )
-            }
+            EmailVerificationErrorScreen(
+                onContinueButtonClick = {
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = AuthScreens.SignIn(SignInCase.EmailVerificationError)
+                    )
+                }
+            )
         }
-        composable<AuthScreens.AuthSuccessful> { backStack ->
-            val screenType = AuthSuccessfulScreenType.fromString(
-                type = backStack.toRoute<AuthScreens.AuthSuccessful>().screenType,
+        composable<AuthScreens.SuccessResult> { backStack ->
+            val screenState = SuccessResultScreenState.fromString(
+                type = backStack.toRoute<AuthScreens.SuccessResult>().screenType,
                 isAppSetUp = appConfiguration.isSetUp
             )
 
-            AuthSuccessfulScreen(
-                screenType = screenType,
+            SuccessResultScreen(
+                screenState = screenState,
                 onContinueButtonClick = {
-                    if (appConfiguration.isSetUp) {
-                        navViewModel.navigateToScreenMovingTowardsLeftAndPopUp(
-                            navController = navController, screenNavigateTo = AuthScreens.Profile
-                        )
-                    } else {
-                        navViewModel.navigateToScreenMovingTowardsLeft(
-                            navController = navController,
-                            screen = when (screenType.type) {
-                                AuthSuccessfulScreenTypeEnum.AfterSignIn -> MainScreens.FinishSetup
-                                AuthSuccessfulScreenTypeEnum.AfterEmailVerification ->
-                                    SettingsScreens.Accounts
-                            }
-                        )
-                    }
+                    navViewModel.navigateToScreenMovingTowardsLeft(
+                        navController = navController,
+                        screen = when (screenState.type) {
+                            SuccessResultScreenType.SignInSuccess ->
+                                when (appConfiguration.isSetUp) {
+                                    true -> AuthScreens.Profile
+                                    false -> MainScreens.FinishSetup
+                                }
+                            SuccessResultScreenType.EmailVerificationSuccess ->
+                                when (appConfiguration.isSetUp) {
+                                    true -> AuthScreens.Profile
+                                    false -> MainScreens.FinishSetup
+                                }
+                            SuccessResultScreenType.PasswordUpdateSuccess ->
+                                when (appConfiguration.isSetUp) {
+                                    true -> AuthScreens.Profile
+                                    false -> AuthScreens.SignIn(SignInCase.Default)
+                                }
+                            SuccessResultScreenType.AccountDeletionSuccess ->
+                                SettingsScreens.Start
+                        }
+                    )
                 }
             )
         }
@@ -377,18 +387,6 @@ fun NavGraphBuilder.authGraph(
                 onResultReset = viewModel::resetResultState
             )
         }
-        composable<AuthScreens.PasswordUpdateSuccessful> {
-            PasswordUpdateSuccessfulScreen(
-                isAppSetUp = appConfiguration.isSetUp,
-                onContinueButtonClick = {
-                    navController.popBackStack(
-                        route = if (appConfiguration.isSetUp) AuthScreens.Profile else
-                            AuthScreens.SignIn(SignInCase.Default),
-                        inclusive = false
-                    )
-                }
-            )
-        }
         composable<AuthScreens.DeleteAccount> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
@@ -416,6 +414,12 @@ fun NavGraphBuilder.authGraph(
 
                         when (result) {
                             is Result.Success -> {
+                                navViewModel.navigateToScreenMovingTowardsLeft(
+                                    navController = navController,
+                                    screen = AuthScreens.SuccessResult(
+                                        screenType = SuccessResultScreenType.AccountDeletionSuccess.name
+                                    )
+                                )
                             }
                             is Result.Error -> {
                                 viewModel.setResultState(result.toUiState())
