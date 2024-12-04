@@ -14,7 +14,6 @@ import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.SignInCase
-import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.auth.presentation.navigation.authGraph
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
@@ -130,12 +129,9 @@ fun NavGraphBuilder.settingsGraph(
                 onSaveWidgetNames = personalizationViewModel::saveWidgetList,
                 onContinueSetupButton = {
                     if (appConfiguration.isSignedIn) {
-                        navViewModel.navigateToScreen(navController, AuthScreens.Profile)
+                        navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
                     } else {
-                        navViewModel.navigateToScreen(
-                            navController = navController,
-                            screen = AuthScreens.SignIn(SignInCase.Default)
-                        )
+                        navViewModel.navigateToSignInScreen(navController, SignInCase.Default)
                     }
                 }
             )

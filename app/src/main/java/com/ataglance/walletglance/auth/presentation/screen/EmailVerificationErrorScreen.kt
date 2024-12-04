@@ -23,8 +23,10 @@ fun EmailVerificationErrorScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun EmailVerificationErrorScreenPreview() {
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+fun EmailVerificationErrorScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EmailVerificationErrorScreen(
             onContinueButtonClick = {}
         )

@@ -16,10 +16,10 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun ResetPasswordScreen(
@@ -89,13 +89,15 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun ResetPasswordScreenPreview() {
+fun ResetPasswordScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
     val userDataValidator = UserDataValidator()
 
     val newPassword = "_Password1"
     val newPasswordConfirmation = "_Password11"
 
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         ResetPasswordScreen(
             newPasswordState = ValidatedFieldUiState(
                 fieldText = newPassword,

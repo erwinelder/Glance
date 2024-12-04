@@ -11,6 +11,16 @@ import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
+import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
+import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.ProfileScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.SignInScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.SignUpScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.UpdateEmailScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenPreview
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
@@ -37,6 +47,7 @@ import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
+import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.record.data.model.RecordEntity
@@ -793,5 +804,147 @@ fun MainAppContentSettingsDataScreenPreview() {
     ResetDataScreenPreview(
         appTheme = appTheme,
         isBottomBarVisible = isBottomBarVisible,
+    )
+}
+
+
+@Preview(
+    name = "SignInScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentSignInScreenPreview() {
+    SignInScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "SignUpScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentSignUpScreenPreview() {
+    SignUpScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "ProfileScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentProfileScreenPreview() {
+    ProfileScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "UpdateEmailScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentUpdateEmailScreenPreview() {
+    UpdateEmailScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "UpdatePasswordScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentUpdatePasswordScreenPreview() {
+    UpdatePasswordScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "RequestPasswordResetScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentRequestPasswordResetScreenPreview() {
+    RequestPasswordResetScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "ResetPasswordScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentResetPasswordScreenPreview() {
+    ResetPasswordScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "DeleteAccountScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentDeleteAccountScreenPreview() {
+    DeleteAccountScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "EmailVerificationFailedScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentEmailVerificationFailedScreenPreview() {
+    EmailVerificationErrorScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "AuthResultSuccessScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentAuthResultSuccessScreenPreview() {
+    AuthResultSuccessScreenPreview(
+        appTheme = appTheme,
+        screenType = AuthResultSuccessScreenType.PasswordUpdate
     )
 }

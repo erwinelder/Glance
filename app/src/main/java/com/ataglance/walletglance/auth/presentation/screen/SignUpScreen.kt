@@ -39,7 +39,6 @@ fun SignUpScreen(
     resultState: ResultUiState?,
     onResultReset: () -> Unit
 ) {
-
     Box {
         GlassSurfaceScreenContainerWithTitle(
             title = stringResource(R.string.create_new_account),
@@ -115,12 +114,14 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun SignUpScreenPreview() {
+fun SignUpScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
     val userDataValidator = UserDataValidator()
 
     val email = "example@domain.com"
     val password = "_Password1"
-    val confirmPassword = "_Password1"
+    val confirmPassword = "_Password11"
     val passwordsMatch = true
 
     val emailState = ValidatedFieldUiState(
@@ -138,7 +139,7 @@ fun SignUpScreenPreview() {
             .toUiStates()
     )
 
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         SignUpScreen(
             emailState = emailState,
             onEmailChange = {},

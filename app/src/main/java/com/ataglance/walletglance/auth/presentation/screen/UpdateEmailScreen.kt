@@ -93,12 +93,14 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun UpdateEmailScreenPreview() {
+fun UpdateEmailScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
     val userDataValidator = UserDataValidator()
 
     val newEmail = "newEmail@domain.com"
 
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         UpdateEmailScreen(
             passwordState = ValidatedFieldUiState(),
             onPasswordChange = {},

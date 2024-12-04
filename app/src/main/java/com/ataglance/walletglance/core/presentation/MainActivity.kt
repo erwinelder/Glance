@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             "resetPassword" -> {
                 val obbCode = uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
                 if (obbCode != null) {
-                    navViewModel.navigateToResetPasswordScreen(
+                    navViewModel.popBackStackAndNavigateToResetPasswordScreen(
                         navController = navController, obbCode = obbCode
                     )
                 } else {
@@ -131,15 +131,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun processEmailVerification(obbCode: String) {
-        val screen = if (authController.applyObbCode(obbCode)) {
-            AuthScreens.ResultSuccess(
+        val screen = when (authController.applyObbCode(obbCode)) {
+            true -> AuthScreens.ResultSuccess(
                 screenType = AuthResultSuccessScreenType.EmailVerification.name
             )
-        } else {
-            AuthScreens.EmailVerificationFailed
+            false -> AuthScreens.EmailVerificationFailed
         }
 
-        navViewModel.navigateToScreenMovingTowardsLeft(
+        navViewModel.popBackStackAndNavigateToScreen(
             navController = navController,
             screen = screen
         )

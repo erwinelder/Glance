@@ -74,17 +74,13 @@ private fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun DeleteAccountScreenPreview(
-    appTheme: AppTheme = AppTheme.LightDefault,
-    isBottomBarVisible: Boolean = false,
+    appTheme: AppTheme = AppTheme.LightDefault
 ) {
     val userDataValidator = UserDataValidator()
 
     val password = "_Password1"
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         DeleteAccountScreen(
             password = password,
             onPasswordChange = {},

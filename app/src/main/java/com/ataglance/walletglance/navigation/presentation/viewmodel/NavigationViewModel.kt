@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
+import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
@@ -121,7 +123,7 @@ class NavigationViewModel(
     }
 
 
-    fun navigateToScreenAndPopUp(
+    fun navigateToScreenPoppingToStartDestination(
         navController: NavController,
         navBackStackEntry: NavBackStackEntry?,
         screenNavigateTo: MainScreens
@@ -135,16 +137,12 @@ class NavigationViewModel(
         }
     }
 
-
-    fun navigateToScreenMovingTowardsLeftAndPopUp(
+    fun popBackStackAndNavigateToScreen(
         navController: NavController,
-        screenNavigateTo: Any
+        screen: Any
     ) {
-        setMoveScreensTowardsLeft(true)
-        navController.navigate(screenNavigateTo) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                inclusive = false
-            }
+        navController.popBackStack()
+        navController.navigate(screen) {
             launchSingleTop = true
         }
     }
@@ -168,11 +166,31 @@ class NavigationViewModel(
         }
     }
 
-    fun navigateToResetPasswordScreen(
+    fun navigateToSignInScreen(
+        navController: NavController,
+        signInCase: SignInCase
+    ) {
+        navController.navigate(AuthScreens.SignIn(signInCase)) {
+            launchSingleTop = true
+        }
+    }
+
+    fun popBackStackAndNavigateToResetPasswordScreen(
         navController: NavController,
         obbCode: String
     ) {
+        navController.popBackStack()
         navController.navigate(AuthScreens.ResetPassword(obbCode)) {
+            launchSingleTop = true
+        }
+    }
+
+    fun popBackStackAndNavigateToResultSuccessScreen(
+        navController: NavController,
+        screenType: AuthResultSuccessScreenType
+    ) {
+        navController.popBackStack()
+        navController.navigate(AuthScreens.ResultSuccess(screenType.name)) {
             launchSingleTop = true
         }
     }

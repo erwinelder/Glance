@@ -11,7 +11,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultSuccessScreenContainer
 
 @Composable
-fun ResultSuccessScreen(
+fun AuthResultSuccessScreen(
     screenState: AuthResultSuccessScreenState,
     onContinueButtonClick: () -> Unit
 ) {
@@ -26,11 +26,14 @@ fun ResultSuccessScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun ResultSuccessScreenPreview() {
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
-        ResultSuccessScreen(
+fun AuthResultSuccessScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault,
+    screenType: AuthResultSuccessScreenType = AuthResultSuccessScreenType.PasswordUpdate
+) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
+        AuthResultSuccessScreen(
             screenState = AuthResultSuccessScreenState.fromString(
-                type = AuthResultSuccessScreenType.PasswordUpdate .name,
+                type = screenType.name,
                 isAppSetUp = true
             ),
             onContinueButtonClick = {}

@@ -29,7 +29,7 @@ fun SignInScreen(
     onPasswordChange: (String) -> Unit,
     signInIsAllowed: Boolean,
     onSignIn: () -> Unit,
-    onNavigateToResetPasswordScreen: () -> Unit,
+    onNavigateToRequestPasswordResetScreen: () -> Unit,
     resultState: ResultUiState?,
     onResultReset: () -> Unit,
     onNavigateToSignUpScreen: () -> Unit
@@ -56,8 +56,9 @@ fun SignInScreen(
                     )
                     SecondaryButton(
                         text = stringResource(R.string.reset_password),
-                        onClick = onNavigateToResetPasswordScreen
+                        onClick = onNavigateToRequestPasswordResetScreen
                     )
+                    // TODO add continue as guest button
                 }
             },
             bottomButton = {
@@ -102,13 +103,15 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun SignInScreenPreview() {
+fun SignInScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
     val userDataValidator = UserDataValidator()
 
     val email = "example@domain.com"
     val password = "_Password1"
 
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         SignInScreen(
             email = email,
             onEmailChange = {},
@@ -117,7 +120,7 @@ fun SignInScreenPreview() {
             signInIsAllowed = userDataValidator.isValidEmail(email) &&
                     userDataValidator.isValidPassword(password),
             onSignIn = {},
-            onNavigateToResetPasswordScreen = {},
+            onNavigateToRequestPasswordResetScreen = {},
             resultState = null,
             onResultReset = {},
             onNavigateToSignUpScreen = {}

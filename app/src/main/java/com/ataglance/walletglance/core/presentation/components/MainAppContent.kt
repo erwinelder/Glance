@@ -126,7 +126,7 @@ fun MainAppContent(
             anyScreenInHierarchyIsScreenProvider = navBackStackEntry::anyScreenInHierarchyIs,
             currentScreenIsScreenProvider = navBackStackEntry::currentScreenIs,
             onNavigateToScreenAndPopUp = { screenNavigateTo: MainScreens ->
-                navViewModel.navigateToScreenAndPopUp(
+                navViewModel.navigateToScreenPoppingToStartDestination(
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
                     screenNavigateTo = screenNavigateTo

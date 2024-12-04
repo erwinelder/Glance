@@ -80,8 +80,10 @@ fun ProfileScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun ProfileScreenPreview() {
-    PreviewContainer(appTheme = AppTheme.LightDefault) {
+fun ProfileScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
+    PreviewContainer(appTheme = appTheme) {
         ProfileScreen(
             onNavigateBack = {},
             onSignOut = {},

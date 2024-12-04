@@ -76,12 +76,14 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun RequestPasswordResetScreenPreview() {
+fun RequestPasswordResetScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
     val userDataValidator = UserDataValidator()
 
     val email = "example@gmail.com"
 
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RequestPasswordResetScreen(
             emailState = ValidatedFieldUiState(
                 fieldText = email,

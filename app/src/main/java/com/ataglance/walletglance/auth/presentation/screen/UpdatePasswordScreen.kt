@@ -114,13 +114,15 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun UpdatePasswordScreenPreview() {
+fun UpdatePasswordScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
     val userDataValidator = UserDataValidator()
 
     val newPassword = "_Password1"
     val newPasswordConfirmation = "_Password11"
 
-    PreviewWithMainScaffoldContainer(appTheme = AppTheme.LightDefault) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         UpdatePasswordScreen(
             currentPasswordState = ValidatedFieldUiState(),
             onCurrentPasswordChange = {},

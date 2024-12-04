@@ -1,11 +1,11 @@
 package com.ataglance.walletglance.core.presentation.components.screenContainers
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,21 +25,23 @@ fun GlassSurfaceScreenContainerWithTitle(
     buttonUnderGlassSurface: @Composable (() -> Unit)? = null,
     bottomButton: @Composable () -> Unit
 ) {
-    ScreenContainer(
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = title,
-            style = Typography.titleLarge,
+    ScreenContainer {
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
-        )
-        Spacer(modifier = Modifier.height(32.dp))
+                .weight(2f)
+        ) {
+            Text(
+                text = title,
+                style = Typography.titleLarge
+            )
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f, fill = fillGlassSurface),
+                /*.weight(1f, fill = fillGlassSurface)*/,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -51,7 +53,7 @@ fun GlassSurfaceScreenContainerWithTitle(
             buttonUnderGlassSurface?.let { it() }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.weight(1f))
         bottomButton()
     }
 }
