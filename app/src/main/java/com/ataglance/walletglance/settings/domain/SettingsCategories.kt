@@ -162,12 +162,12 @@ class SettingsCategories(appTheme: AppTheme) {
 
     fun getCategories(isSignedIn: Boolean): List<SettingsCategory> {
         return listOf(
+            if (isSignedIn) profile else signIn,
             accounts,
             budgets,
             categories,
             categoryCollections,
             appearance,
-            if (isSignedIn) profile else signIn,
             language,
             resetData
         )

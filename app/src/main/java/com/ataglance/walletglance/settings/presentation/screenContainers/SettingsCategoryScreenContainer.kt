@@ -27,10 +27,12 @@ fun SettingsCategoryScreenContainer(
     thisCategory: SettingsCategory,
     onNavigateBack: (() -> Unit)? = null,
     title: String,
-    subcategoriesButtonsBlock: @Composable ColumnScope.() -> Unit,
+    mainScreenContentBlock: @Composable ColumnScope.() -> Unit,
+    allowScroll: Boolean = true,
     bottomBlock: @Composable (() -> Unit)? = null
 ) {
-    val scrollState = rememberScrollState()
+    val scrollState =  rememberScrollState()
+    val columnModifier = if (allowScroll) Modifier.verticalScroll(scrollState) else Modifier
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,11 +63,10 @@ fun SettingsCategoryScreenContainer(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = columnModifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
-                .verticalScroll(scrollState)
         ) {
-            subcategoriesButtonsBlock()
+            mainScreenContentBlock()
         }
 
         Spacer(modifier = Modifier.weight(1f))

@@ -113,7 +113,10 @@ private fun CompactLayout(
             .padding(horizontal = 24.dp)
     ) {
         categories.forEach { category ->
-            NavigateToSettingsCategoryButton(category = category, onNavigateToScreen = onNavigateToScreen)
+            NavigateToSettingsCategoryButton(
+                category = category,
+                onNavigateToScreen = onNavigateToScreen
+            )
         }
         BottomSpacer(scaffoldPadding.calculateBottomPadding())
     }

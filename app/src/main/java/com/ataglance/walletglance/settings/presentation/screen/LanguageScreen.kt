@@ -1,30 +1,20 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
+import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 
 @Composable
 fun LanguageScreen(
@@ -36,48 +26,37 @@ fun LanguageScreen(
     onApplyLanguageButton: (String) -> Unit,
     onContinueButton: () -> Unit
 ) {
-    val settingsCategory = SettingsCategories(CurrAppTheme).language
+    val appTheme = CurrAppTheme
+    val thisCategory = remember {
+        SettingsCategories(appTheme).language
+    }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = 8.dp,
-                bottom = dimensionResource(R.dimen.screen_vertical_padding)
+    SettingsCategoryScreenContainer(
+        thisCategory = thisCategory,
+        onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
+        title = stringResource(R.string.choose_app_language),
+        mainScreenContentBlock = {
+            LanguagePicker(
+                currentLangCode = chosenLanguage,
+                onRadioButton = { langCode ->
+                    onSelectNewLanguage(langCode)
+                }
             )
-    ) {
-        if (isAppSetUp && WindowTypeIsCompact) {
-            GlassSurfaceNavigationButton(
-                text = stringResource(settingsCategory.stringRes),
-                imageRes = settingsCategory.iconRes,
-                showRightIconInsteadOfLeft = false,
-                filledWidths = FilledWidthByScreenType(.96f),
-                onClick = onNavigateBack
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        LanguagePicker(
-            currentLangCode = chosenLanguage,
-            onRadioButton = { langCode ->
-                onSelectNewLanguage(langCode)
+            SmallPrimaryButton(
+                text = stringResource(R.string.apply),
+                enabled = appLanguage != chosenLanguage
+            ) {
+                chosenLanguage?.let { onApplyLanguageButton(it) }
             }
-        )
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.buttons_gap)))
-        SmallPrimaryButton(
-            text = stringResource(R.string.apply),
-            enabled = appLanguage != chosenLanguage
-        ) {
-            chosenLanguage?.let { onApplyLanguageButton(it) }
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        if (!isAppSetUp) {
+        },
+        allowScroll = false,
+        bottomBlock = if (!isAppSetUp) {{
             PrimaryButton(
                 onClick = onContinueButton,
                 text = stringResource(R.string._continue)
             )
-        }
-    }
+        }} else null
+    )
 }
 
 

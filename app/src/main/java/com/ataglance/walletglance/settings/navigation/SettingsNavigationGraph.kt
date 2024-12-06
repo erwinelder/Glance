@@ -65,14 +65,6 @@ fun NavGraphBuilder.settingsGraph(
                 }
             )
         }
-        authGraph(
-            navController = navController,
-            navViewModel = navViewModel,
-            authController = authController,
-            subscriptionViewModel = subscriptionViewModel,
-            appViewModel = appViewModel,
-            appConfiguration = appConfiguration
-        )
         composable<SettingsScreens.SettingsHome> {
             SettingsHomeScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -82,6 +74,14 @@ fun NavGraphBuilder.settingsGraph(
                 }
             )
         }
+        authGraph(
+            navController = navController,
+            navViewModel = navViewModel,
+            authController = authController,
+            subscriptionViewModel = subscriptionViewModel,
+            appViewModel = appViewModel,
+            appConfiguration = appConfiguration
+        )
         accountsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,

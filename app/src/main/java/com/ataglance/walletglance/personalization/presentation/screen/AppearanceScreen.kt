@@ -77,7 +77,7 @@ fun AppearanceScreen(
             thisCategory = settingsCategories.appearance,
             onNavigateBack = onNavigateBack,
             title = stringResource(R.string.appearance_settings_category_title),
-            subcategoriesButtonsBlock = {
+            mainScreenContentBlock = {
                 appearanceSettingsCategories.forEach { category ->
                     OpenSettingsCategoryButton(category) {
                         when (category) {
@@ -127,7 +127,7 @@ fun AppearanceScreen(
 }
 
 
-@Preview(device = Devices.PIXEL_7_PRO, locale = "de")
+@Preview(device = Devices.PIXEL_7_PRO, locale = "en")
 @Composable
 fun AppearanceScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,

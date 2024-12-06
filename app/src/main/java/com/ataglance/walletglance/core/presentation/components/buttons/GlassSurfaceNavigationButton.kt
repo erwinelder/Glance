@@ -44,7 +44,7 @@ fun GlassSurfaceNavigationButton(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             if (!showRightIconInsteadOfLeft) {
                 Icon(

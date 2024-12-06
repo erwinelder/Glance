@@ -37,7 +37,7 @@ fun ProfileScreen(
     }
     val appTheme = CurrAppTheme
     val categories by remember {
-        mutableStateOf(SettingsCategories(appTheme = appTheme))
+        derivedStateOf { SettingsCategories(appTheme = appTheme) }
     }
 
     var showSignOutSheet by remember { mutableStateOf(false) }
@@ -47,7 +47,7 @@ fun ProfileScreen(
             thisCategory = categories.profile,
             onNavigateBack = onNavigateBack,
             title = stringResource(greetingsTitleRes),
-            subcategoriesButtonsBlock = {
+            mainScreenContentBlock = {
                 NavigateToSettingsCategoryButton(categories.deleteAccount, onNavigateToScreen)
                 OpenSettingsCategoryButton(categories.signOut) {
                     showSignOutSheet = true
