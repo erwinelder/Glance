@@ -84,6 +84,7 @@
     <string name="welcome_to_glance">Welcome to Glance!</string>
     <string name="continue_to_app">Continue to app</string>
     <string name="continue_setup">Continue setup</string>
+    <string name="choose_app_language">Choose app language</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>

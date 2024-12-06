@@ -83,6 +83,7 @@
     <string name="welcome_to_glance">Добро пожаловать в Glance!</string>
     <string name="continue_to_app">Перейти в приложение</string>
     <string name="continue_setup">Продолжить настройку</string>
+    <string name="choose_app_language">Выберите язык приложения</string>
 
     <!-- Fields -->
     <string name="email">Электронная почта</string>
