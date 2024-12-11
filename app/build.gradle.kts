@@ -133,6 +133,10 @@ dependencies {
     implementation(libs.google.billing)
     implementation(libs.google.billing.ktx)
 
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compat)
+
     // SplashScreen
     implementation(libs.androidx.core.splashscreen)
 
