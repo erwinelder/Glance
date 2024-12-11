@@ -67,6 +67,7 @@
     <string name="reset_data">Скинути дані</string>
     <string name="profile">Профіль</string>
     <string name="delete_account">Видалити акаунт</string>
+    <string name="manage_subscriptions">Керувати підписками</string>
 
     <!-- Setting up -->
     <string name="start">Старт</string>
@@ -135,7 +136,7 @@
     <string name="passwords_do_match">Паролі співпадають</string>
     <string name="passwords_do_not_match">Паролі не співпадають</string>
 
-    <!-- Messages -->
+    <!-- Auth error handling -->
     <string name="all_set">Все готово!</string>
     <string name="oops">Ой!</string>
     <string name="user_already_exists_error">Користувач вже існує</string>
@@ -165,6 +166,13 @@
     <string name="your_account_has_been_deleted_successfully">Ваш акаунт успішно видалено</string>
     <string name="deleting_user_account_error">Сталася помилка під час видалення акаунта користувача</string>
     <string name="deleting_user_data_error">Сталася помилка під час видалення даних користувача</string>
+
+    <!-- Billing error handling -->
+    <string name="subscribed_successfully">Підписку успішно оформлено</string>
+    <string name="thank_you_for_subscribing">Дякуємо за підписку на Glance! Насолоджуйтесь розблокованими функціями.</string>
+    <string name="purchase_was_cancelled">Покупку скасовано</string>
+    <string name="no_network">Немає підключення до мережі</string>
+    <string name="subscription_purchase_error">Під час обробки покупки сталася помилка</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>

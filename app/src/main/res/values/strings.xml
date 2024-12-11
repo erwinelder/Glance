@@ -68,6 +68,7 @@
     <string name="reset_data">Reset data</string>
     <string name="profile">Profile</string>
     <string name="delete_account">Delete account</string>
+    <string name="manage_subscriptions">Manage subscriptions</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
@@ -136,7 +137,7 @@
     <string name="passwords_do_match">Passwords do match</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
 
-    <!-- Messages -->
+    <!-- Auth error handling -->
     <string name="all_set">All set!</string>
     <string name="oops">Oops!</string>
     <string name="user_already_exists_error">User already exists</string>
@@ -166,6 +167,13 @@
     <string name="your_account_has_been_deleted_successfully">Your account has been deleted successfully</string>
     <string name="deleting_user_account_error">An error occurred while deleting user account</string>
     <string name="deleting_user_data_error">An error occurred while deleting user data</string>
+
+    <!-- Billing error handling -->
+    <string name="subscribed_successfully">Subscribed successfully</string>
+    <string name="thank_you_for_subscribing">Thank you for subscribing to Glance! Enjoy unlocked features.</string>
+    <string name="purchase_was_cancelled">Purchase was cancelled</string>
+    <string name="no_network">No network connection</string>
+    <string name="subscription_purchase_error">An error occurred while handling the purchase</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>

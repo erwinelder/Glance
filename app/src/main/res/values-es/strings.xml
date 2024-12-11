@@ -68,6 +68,7 @@
     <string name="reset_data">Restablecer datos</string>
     <string name="profile">Perfil</string>
     <string name="delete_account">Eliminar cuenta</string>
+    <string name="manage_subscriptions">Gestionar suscripciones</string>
 
     <!-- Setting up -->
     <string name="start">Iniciar</string>
@@ -136,7 +137,7 @@
     <string name="passwords_do_match">Las contraseñas coinciden</string>
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
 
-    <!-- Messages -->
+    <!-- Auth error handling -->
     <string name="all_set">¡Todo listo!</string>
     <string name="oops">¡Uy!</string>
     <string name="user_already_exists_error">El usuario ya existe</string>
@@ -166,6 +167,13 @@
     <string name="your_account_has_been_deleted_successfully">Tu cuenta se ha eliminado con éxito</string>
     <string name="deleting_user_account_error">Ocurrió un error al eliminar la cuenta de usuario</string>
     <string name="deleting_user_data_error">Ocurrió un error al eliminar los datos del usuario</string>
+
+    <!-- Billing error handling -->
+    <string name="subscribed_successfully">Suscripción realizada con éxito</string>
+    <string name="thank_you_for_subscribing">¡Gracias por suscribirte a Glance! Disfruta de las funciones desbloqueadas.</string>
+    <string name="purchase_was_cancelled">La compra fue cancelada</string>
+    <string name="no_network">Sin conexión a la red</string>
+    <string name="subscription_purchase_error">Ocurrió un error al procesar la compra</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>

@@ -67,6 +67,7 @@
     <string name="reset_data">Resetovat data</string>
     <string name="profile">Profil</string>
     <string name="delete_account">Smazat účet</string>
+    <string name="manage_subscriptions">Spravovat předplatná</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
@@ -135,7 +136,7 @@
     <string name="passwords_do_match">Hesla se shodují</string>
     <string name="passwords_do_not_match">Hesla se neshodují</string>
 
-    <!-- Messages -->
+    <!-- Auth error handling -->
     <string name="all_set">Vše připraveno!</string>
     <string name="oops">Jejda!</string>
     <string name="user_already_exists_error">Uživatel již existuje</string>
@@ -165,6 +166,13 @@
     <string name="your_account_has_been_deleted_successfully">Váš účet byl úspěšně smazán</string>
     <string name="deleting_user_account_error">Při mazání uživatelského účtu došlo k chybě</string>
     <string name="deleting_user_data_error">Při mazání uživatelských dat došlo k chybě</string>
+
+    <!-- Billing error handling -->
+    <string name="subscribed_successfully">Předplatné úspěšně aktivováno</string>
+    <string name="thank_you_for_subscribing">Děkujeme, že jste si předplatili Glance! Užijte si odemčené funkce.</string>
+    <string name="purchase_was_cancelled">Nákup byl zrušen</string>
+    <string name="no_network">Žádné připojení k síti</string>
+    <string name="subscription_purchase_error">Při zpracování nákupu došlo k chybě</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
