@@ -35,4 +35,7 @@ sealed interface AuthScreens {
     @Serializable
     data object DeleteAccount : AuthScreens
 
+    @Serializable
+    data object ManageSubscriptions : AuthScreens
+
 }

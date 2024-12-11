@@ -22,7 +22,7 @@ fun ScreenContainer(
         verticalArrangement = verticalArrangement,
         modifier = Modifier
             .padding(
-                top = if (onBackButtonClick == null) 24.dp else 0.dp,
+                top = if (onBackButtonClick == null) 0.dp else 0.dp,
                 bottom = 24.dp
             )
             .fillMaxSize()

@@ -27,7 +27,8 @@ import java.time.LocalDateTime
 fun ProfileScreen(
     onNavigateBack: () -> Unit,
     onSignOut: () -> Unit,
-    onNavigateToScreen: (Any) -> Unit
+    onNavigateToScreen: (Any) -> Unit,
+    onPopBackStackAndNavigateToScreen: (Any) -> Unit
 ) {
     val currentLocalDateTime = LocalDateTime.now()
     val greetingsTitleRes by remember(currentLocalDateTime.hour) {
@@ -48,12 +49,13 @@ fun ProfileScreen(
             onNavigateBack = onNavigateBack,
             title = stringResource(greetingsTitleRes),
             mainScreenContentBlock = {
-                NavigateToSettingsCategoryButton(categories.deleteAccount, onNavigateToScreen)
+                NavigateToSettingsCategoryButton(categories.deleteAccount, onPopBackStackAndNavigateToScreen)
                 OpenSettingsCategoryButton(categories.signOut) {
                     showSignOutSheet = true
                 }
-                NavigateToSettingsCategoryButton(categories.updateEmail, onNavigateToScreen)
-                NavigateToSettingsCategoryButton(categories.updatePassword, onNavigateToScreen)
+                NavigateToSettingsCategoryButton(categories.updateEmail, onPopBackStackAndNavigateToScreen)
+                NavigateToSettingsCategoryButton(categories.updatePassword, onPopBackStackAndNavigateToScreen)
+                NavigateToSettingsCategoryButton(categories.manageSubscriptions, onNavigateToScreen)
             }
         )
         GlanceBottomSheetDialog(
@@ -87,7 +89,8 @@ fun ProfileScreenPreview(
         ProfileScreen(
             onNavigateBack = {},
             onSignOut = {},
-            onNavigateToScreen = {}
+            onNavigateToScreen = {},
+            onPopBackStackAndNavigateToScreen = {}
         )
     }
 }

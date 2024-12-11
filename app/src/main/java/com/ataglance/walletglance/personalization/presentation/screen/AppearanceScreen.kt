@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.personalization.presentation.screen
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +51,6 @@ fun AppearanceScreen(
         settingsCategories.widgets,
         settingsCategories.navigationButtons
     )
-    val scrollState = rememberScrollState()
 
     var showThemeSettingsBottomSheet by remember { mutableStateOf(false) }
 
@@ -75,7 +73,7 @@ fun AppearanceScreen(
     Box {
         SettingsCategoryScreenContainer(
             thisCategory = settingsCategories.appearance,
-            onNavigateBack = onNavigateBack,
+            onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
             title = stringResource(R.string.appearance_settings_category_title),
             mainScreenContentBlock = {
                 appearanceSettingsCategories.forEach { category ->
@@ -131,7 +129,7 @@ fun AppearanceScreen(
 @Composable
 fun AppearanceScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
+    isAppSetUp: Boolean = false,
     isBottomBarVisible: Boolean = false,
     themeUiState: ThemeUiState = ThemeUiState(
         useDeviceTheme = false,

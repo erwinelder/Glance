@@ -1,8 +1,10 @@
 package com.ataglance.walletglance.auth.presentation.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -26,7 +28,10 @@ import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreen
 import com.ataglance.walletglance.auth.presentation.utils.getAuthNavGraphStartDestination
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModelFactory
+import com.ataglance.walletglance.billing.domain.model.BillingManager
+import com.ataglance.walletglance.billing.presentation.screen.SubscriptionsScreen
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
+import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModelFactory
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
@@ -42,7 +47,7 @@ fun NavGraphBuilder.authGraph(
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     authController: AuthController,
-    subscriptionViewModel: SubscriptionViewModel,
+    billingManager: BillingManager,
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
@@ -181,6 +186,9 @@ fun NavGraphBuilder.authGraph(
                     }
                 },
                 onNavigateToScreen = { screen ->
+                    navViewModel.navigateToScreen(navController, screen)
+                },
+                onPopBackStackAndNavigateToScreen = { screen ->
                     navViewModel.popBackStackAndNavigateToScreen(navController, screen)
                 }
             )
@@ -393,6 +401,32 @@ fun NavGraphBuilder.authGraph(
                 },
                 resultState = resultState,
                 onResultReset = viewModel::resetResultState
+            )
+        }
+        composable<AuthScreens.ManageSubscriptions> { backStack ->
+            val activity = LocalContext.current as? Activity
+
+            val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
+                navController = navController,
+                factory = SubscriptionViewModelFactory(billingManager = billingManager)
+            )
+
+            val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()
+            val availableSubscriptions by viewModel.availableSubscriptions
+                .collectAsStateWithLifecycle()
+            val purchaseResult by viewModel.purchaseResult.collectAsStateWithLifecycle()
+
+            SubscriptionsScreen(
+                onNavigateBack = navController::popBackStack,
+                activeSubscriptions = activeSubscriptions,
+                availableSubscriptions = availableSubscriptions,
+                onStartPurchase = { subscription ->
+                    activity?.let {
+                        viewModel.startPurchase(activity = it, subscription = subscription)
+                    }
+                },
+                purchaseResultUiState = purchaseResult,
+                onResultReset = viewModel::resetPurchaseResult
             )
         }
         composable<AuthScreens.EmailVerificationFailed> {

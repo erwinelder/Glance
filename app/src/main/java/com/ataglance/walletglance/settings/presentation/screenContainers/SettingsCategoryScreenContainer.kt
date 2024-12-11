@@ -26,7 +26,8 @@ import com.ataglance.walletglance.settings.presentation.components.NavigateBackS
 fun SettingsCategoryScreenContainer(
     thisCategory: SettingsCategory,
     onNavigateBack: (() -> Unit)? = null,
-    title: String,
+    topBottomSpacingProportion: Pair<Float, Float> = Pair(2f, 1f),
+    title: String? = null,
     mainScreenContentBlock: @Composable ColumnScope.() -> Unit,
     allowScroll: Boolean = true,
     bottomBlock: @Composable (() -> Unit)? = null
@@ -41,7 +42,7 @@ fun SettingsCategoryScreenContainer(
             .fillMaxSize()
             .padding(
                 top = 8.dp,
-                bottom = if (onNavigateBack != null) 8.dp else 24.dp
+                bottom = if (bottomBlock != null) 24.dp else 8.dp
             )
     ) {
         if (onNavigateBack != null && WindowTypeIsCompact) {
@@ -52,12 +53,14 @@ fun SettingsCategoryScreenContainer(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
-                .weight(2f)
+                .weight(topBottomSpacingProportion.first)
         ) {
-            Text(
-                text = title,
-                style = Typography.titleLarge
-            )
+            title?.let {
+                Text(
+                    text = title,
+                    style = Typography.titleLarge
+                )
+            }
         }
 
         Column(
@@ -69,7 +72,7 @@ fun SettingsCategoryScreenContainer(
             mainScreenContentBlock()
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(topBottomSpacingProportion.second))
         bottomBlock?.invoke()
     }
 }

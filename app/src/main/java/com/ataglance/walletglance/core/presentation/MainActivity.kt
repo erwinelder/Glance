@@ -16,7 +16,6 @@ import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
-import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -27,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var app: GlanceApplication
     private lateinit var authController: AuthController
-    private lateinit var subscriptionViewModel: SubscriptionViewModel
     private lateinit var appViewModel: AppViewModel
     private lateinit var navViewModel: NavigationViewModel
     private lateinit var navController: NavHostController
@@ -39,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         app = application as GlanceApplication
         initializeAuthViewModel()
-        initializeSubscriptionViewModel()
         initializeAppViewModel()
         initializeNavViewModel()
         initializePersonalizationViewModel()
@@ -52,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
                 GlanceAppComponent(
                     authController = authController,
-                    subscriptionViewModel = subscriptionViewModel,
+                    billingManager = app.billingManager,
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
                     navController = navController,
@@ -64,10 +61,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeAuthViewModel() {
         authController = app.authController
-    }
-
-    private fun initializeSubscriptionViewModel() {
-        subscriptionViewModel = SubscriptionViewModel(/*billingManager = app.billingManager*/)
     }
 
     private fun initializeAppViewModel() {

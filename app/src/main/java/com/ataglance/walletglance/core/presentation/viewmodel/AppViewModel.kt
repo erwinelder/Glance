@@ -49,7 +49,7 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.mapper.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.categoryCollection.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.core.data.model.LongDateRange
-import com.ataglance.walletglance.core.data.model.UserRemotePreferences
+import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration

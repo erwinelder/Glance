@@ -26,7 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
+import com.ataglance.walletglance.billing.domain.model.BillingManager
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
@@ -38,7 +38,7 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 @Composable
 fun GlanceAppComponent(
     authController: AuthController,
-    subscriptionViewModel: SubscriptionViewModel,
+    billingManager: BillingManager,
     appViewModel: AppViewModel,
     navViewModel: NavigationViewModel,
     navController: NavHostController,
@@ -70,7 +70,7 @@ fun GlanceAppComponent(
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
                                 authController = authController,
-                                subscriptionViewModel = subscriptionViewModel,
+                                billingManager = billingManager,
                                 appViewModel = appViewModel,
                                 appConfiguration = appUiSettings,
                                 themeUiState = safeThemeUiState,

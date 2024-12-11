@@ -7,7 +7,9 @@ import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.ataglance.walletglance.auth.data.repository.UserRepository
 import com.ataglance.walletglance.auth.domain.model.AuthController
+import com.ataglance.walletglance.billing.domain.model.BillingManager
 import com.ataglance.walletglance.core.data.local.AppDatabase
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
@@ -36,8 +38,9 @@ class GlanceApplication : Application() {
     private lateinit var db: AppDatabase
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var userRepository: UserRepository
     lateinit var authController: AuthController
-//    lateinit var billingManager: BillingManager
+    lateinit var billingManager: BillingManager
     private lateinit var settingsRepository: SettingsRepository
     lateinit var appViewModel: AppViewModel
     lateinit var navViewModel: NavigationViewModel
@@ -52,8 +55,9 @@ class GlanceApplication : Application() {
         initializeFirebaseAuth()
         initializeFirestore()
         initializeFirebaseDebugger()
+        initializeUserRepository()
         initializeAuthController()
-//        initializeBillingManager()
+        initializeBillingManager()
 
         repositoryManager = RepositoryManager(db, authController.user, firestore)
         initializeRepositories()
@@ -81,13 +85,22 @@ class GlanceApplication : Application() {
         }
     }
 
-    private fun initializeAuthController() {
-        authController = AuthController(auth = auth, firestore = firestore)
+    private fun initializeUserRepository() {
+        userRepository = UserRepository(firestore)
     }
 
-//    private fun initializeBillingManager() {
-//        billingManager = BillingManager(context = this)
-//    }
+    private fun initializeAuthController() {
+        authController = AuthController(auth = auth, userRepository = userRepository)
+    }
+
+    private fun initializeBillingManager() {
+        val coroutineScope = CoroutineScope(Dispatchers.IO)
+        billingManager = BillingManager(
+            context = this,
+            coroutineScope = coroutineScope,
+            userRepository = userRepository
+        )
+    }
 
     private fun initializeRepositories() {
         settingsRepository = SettingsRepository(dataStore)

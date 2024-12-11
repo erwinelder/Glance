@@ -14,9 +14,9 @@ import com.ataglance.walletglance.core.presentation.Manrope
 
 @Composable
 fun TertiaryButton(
-    onClick: () -> Unit,
     text: String,
-    fontSize: TextUnit = 20.sp
+    fontSize: TextUnit = 20.sp,
+    onClick: () -> Unit
 ) {
     TextButton(
         onClick = onClick,

@@ -1,8 +1,7 @@
 package com.ataglance.walletglance.auth.domain.model
 
-import com.ataglance.walletglance.core.data.model.UserRemotePreferences
-import com.ataglance.walletglance.core.mapper.toMap
-import com.ataglance.walletglance.core.mapper.toUserRemotePreferences
+import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
+import com.ataglance.walletglance.auth.data.repository.UserRepository
 import com.ataglance.walletglance.core.utils.takeIfNoneIsNull
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthSuccess
@@ -15,8 +14,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 
@@ -24,7 +21,7 @@ typealias AuthResult = Result<AuthSuccess, AuthError>
 
 class AuthController(
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val userRepository: UserRepository
 ) {
 
     var user = User()
@@ -34,7 +31,7 @@ class AuthController(
     }
 
     fun isSignedIn(): Boolean {
-        return getUserId() != null
+        return user.isSignedIn()
     }
 
     fun getUserId(): String? {
@@ -44,13 +41,6 @@ class AuthController(
     fun getEmail(): String {
         return auth.currentUser?.email ?: ""
     }
-
-    private val userPreferencesFirestoreRef: DocumentReference?
-        get() = user.uid?.let { firestore.collection("usersPreferences").document(it) }
-
-    private val userDataFirestoreRef: DocumentReference?
-        get() = user.uid?.let { firestore.collection("usersData").document(it) }
-
 
     fun emailIsVerified(): Boolean {
         return auth.currentUser?.isEmailVerified ?: false
@@ -80,7 +70,7 @@ class AuthController(
                 userId = firebaseUser.uid, language = lang, subscription = user.subscription
             )
 
-            userPreferencesFirestoreRef?.set(userPreferences.toMap())?.await()
+            userRepository.saveUserPreferences(userPreferences)
             ResultData.Success(firebaseUser.uid)
         } catch (e: Exception) {
             when (e) {
@@ -102,13 +92,10 @@ class AuthController(
                 ?: return ResultData.Error(AuthError.WrongCredentials)
             val firebaseUser = auth.currentUser ?: return ResultData.Error(AuthError.SignInError)
 
-            if (firebaseUser.isEmailVerified) {
-                userPreferencesFirestoreRef?.get()?.await()
-                    ?.data?.toUserRemotePreferences(userId = firebaseUser.uid)
-                    ?.let { return ResultData.Success(it) }
-                    ?: return ResultData.Error(AuthError.UserNotFound)
+            return if (firebaseUser.isEmailVerified) {
+                userRepository.getUserPreferences(firebaseUser.uid)
             } else {
-                return ResultData.Success(null)
+                ResultData.Success(null)
             }
         } catch (e: Exception) {
             return when (e) {
@@ -236,15 +223,8 @@ class AuthController(
         }
         val firebaseUser = (reauthenticationResult as ResultData.Success).data
 
-        val userPreferencesRef = userPreferencesFirestoreRef
-            ?: return Result.Error(AuthError.UserNotFound)
-        val userDataRef = userDataFirestoreRef ?: return Result.Error(AuthError.UserNotFound)
-
         return try {
-            firestore.runBatch { batch ->
-                batch.delete(userPreferencesRef)
-                batch.delete(userDataRef)
-            }
+            userRepository.deleteAllUserData(firebaseUser.uid)
 
             firebaseUser.delete().await()
             user = User()

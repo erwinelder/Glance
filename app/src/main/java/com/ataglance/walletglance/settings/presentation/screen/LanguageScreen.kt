@@ -65,7 +65,7 @@ fun LanguageScreen(
 @Composable
 fun LanguageScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
+    isAppSetUp: Boolean = false,
     isBottomBarVisible: Boolean = false,
     appLanguage: String = AppLanguage.English.languageCode,
     selectedLanguage: String? = AppLanguage.German.languageCode,

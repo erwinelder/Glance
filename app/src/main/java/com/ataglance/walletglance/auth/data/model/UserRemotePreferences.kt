@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.data.model
+package com.ataglance.walletglance.auth.data.model
 
 import com.ataglance.walletglance.billing.domain.model.AppSubscription
 

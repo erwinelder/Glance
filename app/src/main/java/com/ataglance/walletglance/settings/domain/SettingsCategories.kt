@@ -150,6 +150,15 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
+    val manageSubscriptions = SettingsCategory(
+        screen = AuthScreens.ManageSubscriptions,
+        stringRes = R.string.manage_subscriptions,
+        iconRes = when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.manage_subscriptions_light_default
+            AppTheme.DarkDefault -> R.drawable.manage_subscriptions_dark_default
+        }
+    )
+
     val resetData = SettingsCategory(
         screen = SettingsScreens.ResetData,
         stringRes = R.string.reset_data,

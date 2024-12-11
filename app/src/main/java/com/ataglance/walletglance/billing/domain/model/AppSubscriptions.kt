@@ -2,17 +2,22 @@ package com.ataglance.walletglance.billing.domain.model
 
 sealed class AppSubscriptions(val id: String, val subscription: AppSubscriptionWithPeriod) {
 
-    data object Free : AppSubscriptions("free", AppSubscriptionWithPeriod.Free)
-    data object PremiumMonthly : AppSubscriptions("premium_monthly",
-        AppSubscriptionWithPeriod.PremiumMonthly
+    data object Free : AppSubscriptions(
+        id = "free",
+        subscription = AppSubscriptionWithPeriod.Free
     )
-    data object PremiumYearly : AppSubscriptions("premium_yearly",
-        AppSubscriptionWithPeriod.PremiumYearly
+    data object PremiumMonthly : AppSubscriptions(
+        id = "premium_monthly",
+        subscription = AppSubscriptionWithPeriod.PremiumMonthly
+    )
+    data object PremiumYearly : AppSubscriptions(
+        id = "premium_yearly",
+        subscription = AppSubscriptionWithPeriod.PremiumYearly
     )
 
     companion object {
 
-        fun asPaidSubscriptionsList(): List<AppSubscriptions> {
+        fun getPaidSubscriptions(): List<AppSubscriptions> {
             return listOf(PremiumMonthly, PremiumYearly)
         }
 

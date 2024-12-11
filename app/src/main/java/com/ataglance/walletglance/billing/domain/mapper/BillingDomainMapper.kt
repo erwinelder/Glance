@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.billing.domain.mapper
 
 import com.android.billingclient.api.BillingClient.ProductType
-import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.ataglance.walletglance.billing.domain.model.AppSubscriptions
 
@@ -16,13 +16,13 @@ fun List<AppSubscriptions>.subsToProductDetailsParamsList(): List<QueryProductDe
     }
 }
 
-fun List<ProductDetails>.toProductDetailsParamsList():
-        List<BillingFlowParams.ProductDetailsParams> {
-    return map { it.toProductDetailsParams() }
+
+fun Purchase.getProductDetails(allProductsDetailsList: List<ProductDetails>): ProductDetails? {
+    return allProductsDetailsList.find { it.productId in this.products }
 }
 
-fun ProductDetails.toProductDetailsParams(): BillingFlowParams.ProductDetailsParams {
-    return BillingFlowParams.ProductDetailsParams.newBuilder()
-        .setProductDetails(this)
-        .build()
+fun List<Purchase>.getProductsDetails(
+    allProductsDetailsList: List<ProductDetails>
+): List<ProductDetails> {
+    return mapNotNull { it.getProductDetails(allProductsDetailsList) }
 }
