@@ -19,6 +19,7 @@ import com.ataglance.walletglance.account.domain.utils.mergeWith
 import com.ataglance.walletglance.account.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.account.domain.utils.toAccountList
 import com.ataglance.walletglance.account.mapper.toAccountEntityList
+import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.budget.data.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.budget.data.utils.getBudgetsThatAreNotInList
@@ -49,7 +50,6 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.mapper.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.categoryCollection.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.core.data.model.LongDateRange
-import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
@@ -98,6 +98,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -212,6 +213,14 @@ class AppViewModel(
         return settingsRepository.userId
     }
 
+    fun applyAppLanguage() {
+        viewModelScope.launch {
+            settingsRepository.language.firstOrNull()?.let { langCode ->
+                setLanguage(langCode)
+            }
+        }
+    }
+
     fun setLanguage(langCode: String) {
 
         viewModelScope.launch {
@@ -292,6 +301,22 @@ class AppViewModel(
     suspend fun finishSetup() {
         settingsRepository.saveIsSetUpPreference(1)
     }
+
+    /**
+     * Check for right screen setting after the first app setup.
+     * If the app has been setup but finish screen was not closed (so 2 is still saved as a start
+     * destination in the datastore preferences, which is the finish screen), reassign this
+     * preference to 1 (home screen).
+     */
+    fun updateSetupStageIfNeeded() {
+        viewModelScope.launch {
+            val isSetUp = settingsRepository.setupStage.first()
+            if (isSetUp == 2) {
+                finishSetup()
+            }
+        }
+    }
+
     suspend fun resetAppData() {
         generalRepository.resetAllData()
     }
@@ -490,7 +515,7 @@ class AppViewModel(
         RecordsInDateRange()
     )
 
-    fun fetchRecordsInDateRange(longDateRange: LongDateRange) {
+    private fun fetchRecordsInDateRange(longDateRange: LongDateRange) {
         viewModelScope.launch {
             recordRepository.getRecordsInDateRange(longDateRange).collect { recordList ->
                 _recordListInDateRange.update {

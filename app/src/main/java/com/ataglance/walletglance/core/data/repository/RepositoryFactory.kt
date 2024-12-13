@@ -42,7 +42,7 @@ import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.repository.RecordRepositoryImpl
 import com.google.firebase.firestore.FirebaseFirestore
 
-class RepositoryManager(
+class RepositoryFactory(
     private val db: AppDatabase,
     private val user: User,
     private val firestore: FirebaseFirestore

@@ -12,36 +12,38 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.ataglance.walletglance.GlanceApplication
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
+import com.ataglance.walletglance.billing.domain.model.BillingManager
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
+import com.google.firebase.BuildConfig
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var app: GlanceApplication
-    private lateinit var authController: AuthController
-    private lateinit var appViewModel: AppViewModel
-    private lateinit var navViewModel: NavigationViewModel
+    private val auth: FirebaseAuth by inject()
+    private val firestore: FirebaseFirestore by inject()
+    private val authController: AuthController by inject()
+    private val appViewModel: AppViewModel by inject()
+    private val navViewModel: NavigationViewModel by inject()
+    private val personalizationViewModel: PersonalizationViewModel by inject()
     private lateinit var navController: NavHostController
-    private lateinit var personalizationViewModel: PersonalizationViewModel
+    private val billingManager: BillingManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handleDeepLink(intent)
 
-        app = application as GlanceApplication
-        initializeAuthViewModel()
-        initializeAppViewModel()
-        initializeNavViewModel()
-        initializePersonalizationViewModel()
-
+        doInitialSetup()
         setupSplashScreen()
+        initializeFirebaseDebugger()
 
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
                 GlanceAppComponent(
                     authController = authController,
-                    billingManager = app.billingManager,
+                    billingManager = billingManager,
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
                     navController = navController,
@@ -59,22 +61,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initializeAuthViewModel() {
-        authController = app.authController
-    }
-
-    private fun initializeAppViewModel() {
-        appViewModel = app.appViewModel
+    private fun doInitialSetup() {
+        appViewModel.applyAppLanguage()
+        appViewModel.updateSetupStageIfNeeded()
         appViewModel.fetchDataOnStart()
-    }
-
-    private fun initializeNavViewModel() {
-        navViewModel = app.navViewModel
         navViewModel.fetchBottomBarNavigationButtons()
-    }
-
-    private fun initializePersonalizationViewModel() {
-        personalizationViewModel = app.personalizationViewModel
         personalizationViewModel.fetchDataOnStart()
     }
 
@@ -135,6 +126,14 @@ class MainActivity : AppCompatActivity() {
             navController = navController,
             screen = screen
         )
+    }
+
+
+    private fun initializeFirebaseDebugger() {
+        if (BuildConfig.DEBUG) {
+            auth.useEmulator("10.0.2.2", 9099)
+            firestore.useEmulator("10.0.2.2", 8080)
+        }
     }
 
 
