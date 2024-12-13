@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.auth.data.repository.UserRepository
+import com.ataglance.walletglance.auth.data.repository.UserRepositoryImpl
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
@@ -20,7 +21,7 @@ val repositoryModule = module {
     single { androidContext().dataStore }
     single { SettingsRepository(dataStore = get()) }
 
-    single { UserRepository(firestore = get()) }
+    single<UserRepository> { UserRepositoryImpl(firestore = get()) }
 
     single { RepositoryFactory(db = get(), user = get<AuthController>().user, firestore = get()) }
 
