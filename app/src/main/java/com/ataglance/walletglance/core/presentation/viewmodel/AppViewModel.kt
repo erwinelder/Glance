@@ -117,20 +117,19 @@ class AppViewModel(
     val generalRepository: GeneralRepository
 ) : ViewModel() {
 
-    private val _isSignedIn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _appTheme: MutableStateFlow<AppTheme?> = MutableStateFlow(null)
     private val _lastRecordNum: MutableStateFlow<Int> = MutableStateFlow(0)
     val appConfiguration: StateFlow<AppConfiguration> =
         combine(
             settingsRepository.setupStage,
-            _isSignedIn,
+            settingsRepository.userId,
             settingsRepository.language,
             _appTheme,
             _lastRecordNum
-        ) { setupStage, isSignedIn, language, appTheme, lastRecordNum ->
+        ) { setupStage, userId, language, appTheme, lastRecordNum ->
             AppConfiguration(
                 isSetUp = setupStage == 1,
-                isSignedIn = isSignedIn,
+                isSignedIn = userId != null,
                 mainStartDestination = when(setupStage) {
                     1 -> MainScreens.Home
                     0 -> MainScreens.Settings
@@ -201,16 +200,10 @@ class AppViewModel(
 
     suspend fun setUserId(userId: String) {
         settingsRepository.saveUserIdPreference(userId)
-        _isSignedIn.update { true }
     }
 
     suspend fun resetUserId() {
         settingsRepository.saveUserIdPreference("")
-        _isSignedIn.update { false }
-    }
-
-    fun getUserId(): Flow<String?> {
-        return settingsRepository.userId
     }
 
     fun applyAppLanguage() {
