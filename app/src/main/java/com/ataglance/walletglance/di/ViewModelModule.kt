@@ -20,7 +20,9 @@ val viewModelModule = module {
                 generalRepository = get()
             )
         }
+        scoped { NavigationViewModel(navigationButtonRepository = get()) }
+        scoped {
+            PersonalizationViewModel(widgetRepository = get(), budgetOnWidgetRepository = get())
+        }
     }
-    single { NavigationViewModel(navigationButtonRepository = get()) }
-    single { PersonalizationViewModel(widgetRepository = get(), budgetOnWidgetRepository = get()) }
 }
