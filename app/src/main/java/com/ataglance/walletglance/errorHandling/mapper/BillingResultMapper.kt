@@ -25,7 +25,8 @@ fun ResultData<ProductDetails, BillingError>.toUiState(): ResultUiState {
 @StringRes
 private fun BillingError.asTitleRes(): Int {
     return when (this) {
-        BillingError.UserCancelledPurchase, BillingError.NoNetwork, BillingError.Unknown ->
+        BillingError.UserCancelledPurchase, BillingError.UserNotSignedIn, BillingError.NoNetwork,
+        BillingError.Unknown ->
             R.string.oops
     }
 }
@@ -34,6 +35,7 @@ private fun BillingError.asTitleRes(): Int {
 private fun BillingError.asMessageRes(): Int {
     return when (this) {
         BillingError.UserCancelledPurchase -> R.string.purchase_was_cancelled
+        BillingError.UserNotSignedIn -> R.string.user_not_signed_in_error
         BillingError.NoNetwork -> R.string.no_network
         BillingError.Unknown -> R.string.subscription_purchase_error
     }

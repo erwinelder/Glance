@@ -28,7 +28,7 @@ import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreen
 import com.ataglance.walletglance.auth.presentation.utils.getAuthNavGraphStartDestination
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModelFactory
-import com.ataglance.walletglance.billing.domain.model.BillingManager
+import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.billing.presentation.screen.SubscriptionsScreen
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModelFactory
@@ -47,7 +47,7 @@ fun NavGraphBuilder.authGraph(
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     authController: AuthController,
-    billingManager: BillingManager,
+    billingSubscriptionManager: BillingSubscriptionManager,
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
@@ -408,7 +408,7 @@ fun NavGraphBuilder.authGraph(
 
             val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
                 navController = navController,
-                factory = SubscriptionViewModelFactory(billingManager = billingManager)
+                factory = SubscriptionViewModelFactory(billingSubscriptionManager = billingSubscriptionManager)
             )
 
             val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()

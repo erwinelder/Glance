@@ -13,6 +13,7 @@ import com.ataglance.walletglance.core.data.repository.RepositoryFactory
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepositoryImpl
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -23,30 +24,34 @@ val repositoryModule = module {
 
     single<UserRepository> { UserRepositoryImpl(firestore = get()) }
 
-    single { RepositoryFactory(db = get(), user = get<AuthController>().user, firestore = get()) }
+    scope(named("UserScope")) {
+        scoped {
+            RepositoryFactory(db = get(), user = get<AuthController>().getUser(), firestore = get())
+        }
 
-    single { get<RepositoryFactory>().getNavigationButtonRepository() }
-    single { get<RepositoryFactory>().getWidgetRepository() }
-    single { get<RepositoryFactory>().getBudgetOnWidgetRepository() }
-    single { get<RepositoryFactory>().getAccountRepository() }
-    single { get<RepositoryFactory>().getCategoryRepository() }
-    single { get<RepositoryFactory>().getCategoryCollectionRepository() }
-    single {
-        get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository()
-    }
-    single { get<RepositoryFactory>().getRecordRepository() }
-    single { get<RepositoryFactory>().getBudgetAndBudgetAccountAssociationRepository() }
-    single<RecordAndAccountRepository> {
-        RecordAndAccountRepositoryImpl(recordRepository = get(), accountRepository = get())
-    }
-    single {
-        GeneralRepository(
-            settingsRepository = get(),
-            accountRepository = get(),
-            categoryRepository = get(),
-            categoryCollectionRepository = get(),
-            widgetRepository = get(),
-            navigationButtonRepository = get()
-        )
+        scoped { get<RepositoryFactory>().getNavigationButtonRepository() }
+        scoped { get<RepositoryFactory>().getWidgetRepository() }
+        scoped { get<RepositoryFactory>().getBudgetOnWidgetRepository() }
+        scoped { get<RepositoryFactory>().getAccountRepository() }
+        scoped { get<RepositoryFactory>().getCategoryRepository() }
+        scoped { get<RepositoryFactory>().getCategoryCollectionRepository() }
+        scoped {
+            get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository()
+        }
+        scoped { get<RepositoryFactory>().getRecordRepository() }
+        scoped { get<RepositoryFactory>().getBudgetAndBudgetAccountAssociationRepository() }
+        scoped<RecordAndAccountRepository> {
+            RecordAndAccountRepositoryImpl(recordRepository = get(), accountRepository = get())
+        }
+        scoped {
+            GeneralRepository(
+                settingsRepository = get(),
+                accountRepository = get(),
+                categoryRepository = get(),
+                categoryCollectionRepository = get(),
+                widgetRepository = get(),
+                navigationButtonRepository = get()
+            )
+        }
     }
 }

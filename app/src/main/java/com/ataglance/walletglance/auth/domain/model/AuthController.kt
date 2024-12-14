@@ -2,6 +2,7 @@ package com.ataglance.walletglance.auth.domain.model
 
 import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
 import com.ataglance.walletglance.auth.data.repository.UserRepository
+import com.ataglance.walletglance.billing.domain.model.AppSubscription
 import com.ataglance.walletglance.core.utils.takeIfNoneIsNull
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthSuccess
@@ -15,6 +16,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 
 typealias AuthResult = Result<AuthSuccess, AuthError>
@@ -24,27 +28,31 @@ class AuthController(
     private val userRepository: UserRepository
 ) {
 
-    var user = User()
+    private val _userState: MutableStateFlow<User> = MutableStateFlow(User())
+    val userState = _userState.asStateFlow()
 
-    private fun setUser(user: FirebaseUser) {
-        this.user = User(uid = user.uid)
+    fun getUser(): User = userState.value
+
+    private fun setUser(firebaseUser: FirebaseUser) {
+        _userState.update { User(uid = firebaseUser.uid) }
     }
 
-    fun isSignedIn(): Boolean {
-        return user.isSignedIn()
+    fun setUserSubscription(subscription: AppSubscription) {
+        _userState.update { it.copy(subscription = subscription) }
     }
 
-    fun getUserId(): String? {
-        return user.uid
+    private fun resetUser() {
+        _userState.update { User() }
     }
 
-    fun getEmail(): String {
-        return auth.currentUser?.email ?: ""
-    }
+    fun isSignedIn(): Boolean = getUser().isSignedIn()
 
-    fun emailIsVerified(): Boolean {
-        return auth.currentUser?.isEmailVerified ?: false
-    }
+    fun getUserId(): String? = getUser().uid
+
+    fun getEmail(): String = auth.currentUser?.email ?: ""
+
+    fun emailIsVerified(): Boolean = auth.currentUser?.isEmailVerified ?: false
+
 
     suspend fun applyObbCode(obbCode: String): Boolean {
         return try {
@@ -67,7 +75,9 @@ class AuthController(
             setUser(firebaseUser)
 
             val userPreferences = UserRemotePreferences(
-                userId = firebaseUser.uid, language = lang, subscription = user.subscription
+                userId = firebaseUser.uid,
+                language = lang,
+                subscription = getUser().subscription
             )
 
             userRepository.saveUserPreferences(userPreferences)
@@ -213,7 +223,7 @@ class AuthController(
 
     fun signOut() {
         auth.signOut()
-        user = User()
+        resetUser()
     }
 
     suspend fun deleteAccount(password: String): AuthResult {
@@ -227,7 +237,7 @@ class AuthController(
             userRepository.deleteAllUserData(firebaseUser.uid)
 
             firebaseUser.delete().await()
-            user = User()
+            resetUser()
 
             Result.Success(AuthSuccess.AccountDeleted)
         } catch (e: Exception) {

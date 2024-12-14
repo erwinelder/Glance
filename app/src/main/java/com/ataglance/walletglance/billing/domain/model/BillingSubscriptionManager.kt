@@ -17,6 +17,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import com.ataglance.walletglance.auth.data.repository.UserRepository
+import com.ataglance.walletglance.auth.domain.model.User
 import com.ataglance.walletglance.billing.domain.mapper.getProductDetails
 import com.ataglance.walletglance.billing.domain.mapper.getProductsDetails
 import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
@@ -29,9 +30,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 
-class BillingManager(
+class BillingSubscriptionManager(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
+    private val user: User,
     private val userRepository: UserRepository
 ) {
 
@@ -74,34 +76,59 @@ class BillingManager(
     private fun handlePurchases(
         purchases: List<Purchase>?
     ): ResultData<ProductDetails, BillingError> {
-        return purchases
-            ?.find { it.purchaseState == PurchaseState.PURCHASED }
-            ?.let { purchase ->
-                acknowledgePurchase(purchase)
-                purchase.getProductDetails(productDetailsList)?.let {
-                    ResultData.Success(it)
-                }
-            }
-            ?: ResultData.Error(BillingError.Unknown)
+        val purchase = purchases?.find { it.purchaseState == PurchaseState.PURCHASED }
+            ?: return ResultData.Error(BillingError.Unknown)
+
+        val productDetails = purchase.getProductDetails(productDetailsList)
+            ?: return ResultData.Error(BillingError.Unknown)
+
+        updateUserSubscription(productDetails).let {
+            if (it is ResultData.Error) return ResultData.Error(it.error)
+        }
+
+        acknowledgeNewPurchase(purchase).let {
+            if (it is ResultData.Error) return ResultData.Error(it.error)
+        }
+
+        return ResultData.Success(productDetails)
     }
 
-    private fun acknowledgePurchase(purchase: Purchase): ResultData<Unit, BillingError> {
+    private fun updateUserSubscription(
+        productDetails: ProductDetails
+    ): ResultData<Unit, BillingError> {
+        user.uid ?: return ResultData.Error(BillingError.UserNotSignedIn)
+
+        coroutineScope.launch {
+            userRepository.updateUserSubscription(
+                userId = user.uid,
+                subscription = productDetails.productId
+            )
+        }
+
+        return ResultData.Success(Unit)
+    }
+
+    private fun acknowledgeNewPurchase(purchase: Purchase): ResultData<Unit, BillingError> {
         if (purchase.isAcknowledged) return ResultData.Success(Unit)
 
         val params = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()
 
+        var result: ResultData<Unit, BillingError> = ResultData.Success(Unit)
         billingClient.acknowledgePurchase(params) { billingResult ->
-            if (billingResult.responseCode != BillingResponseCode.OK) {
+            if (billingResult.responseCode == BillingResponseCode.OK) {
+                result = ResultData.Success(Unit)
+            } else {
                 Log.e(
                     "BillingManager",
                     "Failed to acknowledge purchase: ${billingResult.debugMessage}"
                 )
+                result = ResultData.Error(BillingError.Unknown)
             }
         }
 
-        return ResultData.Success(Unit)
+        return result
     }
 
     /** Launch the subscription purchase process for the user.

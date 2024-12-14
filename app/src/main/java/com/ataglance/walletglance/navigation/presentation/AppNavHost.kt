@@ -20,7 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.billing.domain.model.BillingManager
+import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
@@ -68,7 +68,7 @@ fun AppNavHost(
     navViewModel: NavigationViewModel,
     moveScreenTowardsLeft: Boolean,
     authController: AuthController,
-    billingManager: BillingManager,
+    billingSubscriptionManager: BillingSubscriptionManager,
     appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel,
     appConfiguration: AppConfiguration,
@@ -429,7 +429,7 @@ fun AppNavHost(
             navViewModel = navViewModel,
             navigationButtonList = appUiState.navigationButtonList,
             authController = authController,
-            billingManager = billingManager,
+            billingSubscriptionManager = billingSubscriptionManager,
             appViewModel = appViewModel,
             appConfiguration = appConfiguration,
             themeUiState = themeUiState,

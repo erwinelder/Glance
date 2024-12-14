@@ -15,7 +15,7 @@ import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.authGraph
-import com.ataglance.walletglance.billing.domain.model.BillingManager
+import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
@@ -45,7 +45,7 @@ fun NavGraphBuilder.settingsGraph(
     navViewModel: NavigationViewModel,
     navigationButtonList: List<BottomBarNavigationButton>,
     authController: AuthController,
-    billingManager: BillingManager,
+    billingSubscriptionManager: BillingSubscriptionManager,
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
@@ -78,7 +78,7 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             navViewModel = navViewModel,
             authController = authController,
-            billingManager = billingManager,
+            billingSubscriptionManager = billingSubscriptionManager,
             appViewModel = appViewModel,
             appConfiguration = appConfiguration
         )

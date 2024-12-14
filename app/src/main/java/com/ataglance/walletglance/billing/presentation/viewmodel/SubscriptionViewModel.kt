@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
 import com.ataglance.walletglance.billing.domain.model.AppSubscriptions
-import com.ataglance.walletglance.billing.domain.model.BillingManager
+import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiState
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiStateList
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SubscriptionViewModel(
-    private val billingManager: BillingManager
+    private val billingSubscriptionManager: BillingSubscriptionManager
 ) : ViewModel() {
 
     private val _availableSubscriptions: MutableStateFlow<List<SubscriptionUiState>> =
@@ -30,16 +30,16 @@ class SubscriptionViewModel(
 
     private val _activeSubscriptions: MutableStateFlow<List<SubscriptionUiState>> =
         MutableStateFlow(
-            billingManager.getProductDetails(AppSubscriptions.Free.id)
+            billingSubscriptionManager.getProductDetails(AppSubscriptions.Free.id)
                 ?.let { listOf(it.toSubscriptionUiState()) }
                 .orEmpty()
         )
     val activeSubscriptions = _activeSubscriptions.asStateFlow()
 
     private suspend fun fetchSubscriptions() {
-        val activeSubscriptions = billingManager.activePurchases.firstOrNull().orEmpty()
+        val activeSubscriptions = billingSubscriptionManager.activePurchases.firstOrNull().orEmpty()
 
-        val allSubscriptions = billingManager.getProductDetailsList()
+        val allSubscriptions = billingSubscriptionManager.getProductDetailsList()
         val activeProductIds = activeSubscriptions.map { it.productId }
 
         val availableSubscriptions = allSubscriptions.filterNot { it.productId in activeProductIds }
@@ -54,7 +54,7 @@ class SubscriptionViewModel(
 
     private fun observeNewPurchase() {
         viewModelScope.launch {
-            billingManager.newPurchase.collect { purchaseResult ->
+            billingSubscriptionManager.newPurchase.collect { purchaseResult ->
                 val result: ResultData<ProductDetails, BillingError> = when (purchaseResult) {
                     is ResultData.Success -> ResultData.Success(purchaseResult.data)
                     is ResultData.Error -> ResultData.Error(purchaseResult.error)
@@ -80,18 +80,18 @@ class SubscriptionViewModel(
 
 
     fun startPurchase(activity: Activity, subscription: SubscriptionUiState) {
-        billingManager.getProductDetails(subscription.id)?.let { productDetails ->
-            billingManager.launchBillingFlow(activity, productDetails)
+        billingSubscriptionManager.getProductDetails(subscription.id)?.let { productDetails ->
+            billingSubscriptionManager.launchBillingFlow(activity, productDetails)
         }
     }
 
 }
 
 class SubscriptionViewModelFactory(
-    private val billingManager: BillingManager
+    private val billingSubscriptionManager: BillingSubscriptionManager
 ) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return SubscriptionViewModel(billingManager) as T
+        return SubscriptionViewModel(billingSubscriptionManager) as T
     }
 }

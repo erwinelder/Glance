@@ -15,7 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
-import com.ataglance.walletglance.billing.domain.model.BillingManager
+import com.ataglance.walletglance.billing.domain.mapper.asAppSubscription
+import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -23,8 +24,11 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,9 +39,11 @@ class MainActivity : AppCompatActivity() {
     private val navViewModel: NavigationViewModel by inject()
     private val personalizationViewModel: PersonalizationViewModel by inject()
     private lateinit var navController: NavHostController
-    private val billingManager: BillingManager by inject()
+    private val billingSubscriptionManager: BillingSubscriptionManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val coroutineScope: CoroutineScope by inject()
+
         super.onCreate(savedInstanceState)
         handleDeepLink(intent)
 
@@ -45,13 +51,28 @@ class MainActivity : AppCompatActivity() {
         setupSplashScreen()
         initializeFirebaseDebugger()
 
+        coroutineScope.launch {
+            billingSubscriptionManager.newPurchase.collect { purchaseResult ->
+                purchaseResult.getDataIfSuccess()
+                    ?.asAppSubscription()
+                    ?.let(authController::setUserSubscription)
+            }
+        }
+
+        coroutineScope.launch {
+            authController.userState.collect {
+                getKoin().getScopeOrNull(scopeId = "userScope")?.close()
+                getKoin().createScope(scopeId = "userScope", qualifier = named("UserScope"))
+            }
+        }
+
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()
 
                 GlanceAppComponent(
                     authController = authController,
-                    billingManager = billingManager,
+                    billingSubscriptionManager = billingSubscriptionManager,
                     appViewModel = appViewModel,
                     navViewModel = navViewModel,
                     navController = navController,
