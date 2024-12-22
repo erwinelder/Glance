@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         coroutineScope.launch {
             authController.userState.collect {
-                getKoin().getScopeOrNull(scopeId = "session")?.close()
+                session.close()
                 session = getKoin().createScope(scopeId = "session", named("userSession"))
             }
         }
