@@ -249,6 +249,10 @@
     <string name="you_have_no_budgets_yet">У вас ще немає бюджетів</string>
     <string name="follow_link_in_email">Будь ласка, перейдіть за посиланням у листі</string>
 
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">Усі базові функції додатка</string>
+    <string name="cloud_data_sync">Синхронізація даних у хмарі</string>
+
 
 
     <!-- Categories names -->

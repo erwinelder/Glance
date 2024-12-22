@@ -249,6 +249,10 @@
     <string name="you_have_no_budgets_yet">Sie haben noch keine Budgets</string>
     <string name="follow_link_in_email">Bitte folgen Sie dem Link in der E-Mail</string>
 
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">Alle grundlegenden App-Funktionen</string>
+    <string name="cloud_data_sync">Cloud-Datensynchronisation</string>
+
 
 
     <!-- Categories names -->

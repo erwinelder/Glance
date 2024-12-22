@@ -249,6 +249,10 @@
     <string name="you_have_no_budgets_yet">Ještě nemáte žádné rozpočty</string>
     <string name="follow_link_in_email">Postupujte prosím podle odkazu v e-mailu</string>
 
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">Všechny základní funkce aplikace</string>
+    <string name="cloud_data_sync">Synchronizace dat v cloudu</string>
+
 
 
     <!-- Categories names -->

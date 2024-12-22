@@ -249,6 +249,10 @@
     <string name="you_have_no_budgets_yet">У вас еще нет бюджетов</string>
     <string name="follow_link_in_email">Пожалуйста, перейдите по ссылке в письме</string>
 
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">Все основные функции приложения</string>
+    <string name="cloud_data_sync">Синхронизация данных в облаке</string>
+
 
 
     <!-- Categories names -->

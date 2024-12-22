@@ -250,6 +250,10 @@
     <string name="you_have_no_budgets_yet">Aún no tienes presupuestos</string>
     <string name="follow_link_in_email">Por favor, siga el enlace en el correo</string>
 
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">Todas las funciones básicas de la aplicación</string>
+    <string name="cloud_data_sync">Sincronización de datos en la nube</string>
+
 
 
     <!-- Categories names -->
