@@ -25,6 +25,7 @@ import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
@@ -35,17 +36,31 @@ class MainActivity : AppCompatActivity() {
     private val auth: FirebaseAuth by inject()
     private val firestore: FirebaseFirestore by inject()
     private val authController: AuthController by inject()
-    private val appViewModel: AppViewModel by inject()
-    private val navViewModel: NavigationViewModel by inject()
-    private val personalizationViewModel: PersonalizationViewModel by inject()
     private lateinit var navController: NavHostController
-    private val billingSubscriptionManager: BillingSubscriptionManager by inject()
+    private lateinit var appViewModel: AppViewModel
+    private lateinit var navViewModel: NavigationViewModel
+    private lateinit var personalizationViewModel: PersonalizationViewModel
+    private lateinit var billingSubscriptionManager: BillingSubscriptionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val coroutineScope: CoroutineScope by inject()
+        var session = getKoin().createScope(scopeId = "session", named("userSession"))
+
+        appViewModel = session.get<AppViewModel>()
+        navViewModel = session.get<NavigationViewModel>()
+        personalizationViewModel = session.get<PersonalizationViewModel>()
+        billingSubscriptionManager = session.get<BillingSubscriptionManager>()
 
         super.onCreate(savedInstanceState)
         handleDeepLink(intent)
+
+        val coroutineScope = CoroutineScope(Dispatchers.IO)
+
+        coroutineScope.launch {
+            authController.userState.collect {
+                getKoin().getScopeOrNull(scopeId = "session")?.close()
+                session = getKoin().createScope(scopeId = "session", named("userSession"))
+            }
+        }
 
         doInitialSetup()
         setupSplashScreen()
@@ -56,13 +71,6 @@ class MainActivity : AppCompatActivity() {
                 purchaseResult.getDataIfSuccess()
                     ?.asAppSubscription()
                     ?.let(authController::setUserSubscription)
-            }
-        }
-
-        coroutineScope.launch {
-            authController.userState.collect {
-                getKoin().getScopeOrNull(scopeId = "userScope")?.close()
-                getKoin().createScope(scopeId = "userScope", qualifier = named("UserScope"))
             }
         }
 

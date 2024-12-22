@@ -5,7 +5,7 @@ import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.ataglance.walletglance.billing.domain.model.AppSubscription
-import com.ataglance.walletglance.billing.domain.model.AppSubscriptionWithPeriod
+import com.ataglance.walletglance.billing.domain.model.AppSubscriptionBasePlan
 import com.ataglance.walletglance.billing.domain.model.AppSubscriptions
 
 
@@ -30,11 +30,13 @@ fun List<Purchase>.getProductsDetails(
 }
 
 
-fun AppSubscriptionWithPeriod.asAppSubscription(): AppSubscription {
+fun AppSubscriptionBasePlan.asAppSubscription(): AppSubscription {
     return when (this) {
-        AppSubscriptionWithPeriod.Free -> AppSubscription.Free
-        AppSubscriptionWithPeriod.PremiumMonthly -> AppSubscription.Premium
-        AppSubscriptionWithPeriod.PremiumYearly -> AppSubscription.Premium
+        AppSubscriptionBasePlan.Free -> AppSubscription.Free
+        AppSubscriptionBasePlan.PlusMonthly -> AppSubscription.Premium
+        AppSubscriptionBasePlan.PlusMonthlyFreeTrial -> AppSubscription.Premium
+        AppSubscriptionBasePlan.PlusYearly -> AppSubscription.Premium
+        AppSubscriptionBasePlan.PlusYearlyFreeTrial -> AppSubscription.Premium
     }
 }
 

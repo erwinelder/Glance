@@ -11,21 +11,23 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
-    factory { CoroutineScope(Dispatchers.IO) }
 
     single { AppDatabase.getDatabase(context = get()) }
     single { FirebaseAuth.getInstance() }
     single { FirebaseFirestore.getInstance() }
     single { AuthController(auth = get(), userRepository = get()) }
 
-    scope(named("UserScope")) {
+    scope(named("userSession")) {
+
         scoped {
             BillingSubscriptionManager(
                 context = get(),
-                coroutineScope = get(),
+                coroutineScope = CoroutineScope(Dispatchers.IO),
                 user = get<AuthController>().getUser(),
                 userRepository = get()
             )
         }
+
     }
+
 }

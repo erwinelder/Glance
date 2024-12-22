@@ -19,12 +19,14 @@ import org.koin.dsl.module
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 val repositoryModule = module {
+
     single { androidContext().dataStore }
     single { SettingsRepository(dataStore = get()) }
 
     single<UserRepository> { UserRepositoryImpl(firestore = get()) }
 
-    scope(named("UserScope")) {
+    scope(named("userSession")) {
+
         scoped {
             RepositoryFactory(db = get(), user = get<AuthController>().getUser(), firestore = get())
         }
@@ -53,5 +55,7 @@ val repositoryModule = module {
                 navigationButtonRepository = get()
             )
         }
+
     }
+
 }

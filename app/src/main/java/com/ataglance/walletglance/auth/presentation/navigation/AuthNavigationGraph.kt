@@ -408,7 +408,9 @@ fun NavGraphBuilder.authGraph(
 
             val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
                 navController = navController,
-                factory = SubscriptionViewModelFactory(billingSubscriptionManager = billingSubscriptionManager)
+                factory = SubscriptionViewModelFactory(
+                    billingSubscriptionManager = billingSubscriptionManager
+                )
             )
 
             val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()

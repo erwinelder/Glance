@@ -11,9 +11,8 @@ fun List<ProductDetails>.toSubscriptionUiStateList(): List<SubscriptionUiState> 
 fun ProductDetails.toSubscriptionUiState(): SubscriptionUiState {
     return SubscriptionUiState(
         id = this.productId,
-        title = this.title,
         name = this.name,
-        description = this.description,
+        benefits = this.subscriptionOfferDetails?.map { it.basePlanId } ?: emptyList(),
         price = this.getFormattedPrice() ?: "---"
     )
 }

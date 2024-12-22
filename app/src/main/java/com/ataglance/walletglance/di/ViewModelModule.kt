@@ -7,7 +7,9 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    scope(named("UserScope")) {
+
+    scope(named("userSession")) {
+
         scoped {
             AppViewModel(
                 settingsRepository = get(),
@@ -24,5 +26,7 @@ val viewModelModule = module {
         scoped {
             PersonalizationViewModel(widgetRepository = get(), budgetOnWidgetRepository = get())
         }
+
     }
+
 }

@@ -117,21 +117,24 @@ fun PreviewSubscriptionScreen(
             onNavigateBack = {},
             activeSubscriptions = listOf(
                 SubscriptionUiState(
-                    id = "free", title = "Base plan", name = "Base plan",
-                    description = "description",
+                    id = "free",
+                    name = "Base plan",
+                    benefits = listOf(
+                        "Benefit 1",
+                        "Benefit 2"
+                    ),
                     price = "0.00 USD"
                 )
             ),
             availableSubscriptions = listOf(
                 SubscriptionUiState(
-                    id = "premium", title = "Premium plan for month", name = "Premium plan",
-                    description = "description",
-                    price = "5.00 USD"
-                ),
-                SubscriptionUiState(
-                    id = "premium", title = "Premium plan for year", name = "Premium plan",
-                    description = "description",
-                    price = "5.00 USD"
+                    id = "free",
+                    name = "Premium plan",
+                    benefits = listOf(
+                        "Benefit 1",
+                        "Benefit 2"
+                    ),
+                    price = "0.00 USD"
                 )
             ),
             onStartPurchase = {},
