@@ -43,15 +43,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setupSplashScreen()
+
         var session = getKoin().createScope(scopeId = "session", named("userSession"))
 
         appViewModel = session.get<AppViewModel>()
         navViewModel = session.get<NavigationViewModel>()
         personalizationViewModel = session.get<PersonalizationViewModel>()
         billingSubscriptionManager = session.get<BillingSubscriptionManager>()
-
-        super.onCreate(savedInstanceState)
-        handleDeepLink(intent)
 
         val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -62,9 +61,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        doInitialSetup()
-        setupSplashScreen()
-        initializeFirebaseDebugger()
+        super.onCreate(savedInstanceState)
+        handleDeepLink(intent)
 
         coroutineScope.launch {
             billingSubscriptionManager.newPurchase.collect { purchaseResult ->
@@ -73,6 +71,9 @@ class MainActivity : AppCompatActivity() {
                     ?.let(authController::setUserSubscription)
             }
         }
+
+        doInitialSetup()
+        initializeFirebaseDebugger()
 
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {

@@ -149,7 +149,7 @@ fun NavGraphBuilder.authGraph(
                         val userCreationResult = authController.createNewUser(
                             email = email,
                             password = password,
-                            lang = appConfiguration.langCode
+                            appLanguageCode = appConfiguration.langCode
                         )
                         if (userCreationResult is ResultData.Error) {
                             viewModel.setResultState(userCreationResult.toUiState())

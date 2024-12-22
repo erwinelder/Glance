@@ -16,11 +16,11 @@ import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
-import com.ataglance.walletglance.auth.data.repository.UserRepository
 import com.ataglance.walletglance.auth.domain.model.User
 import com.ataglance.walletglance.billing.domain.mapper.getProductDetails
 import com.ataglance.walletglance.billing.domain.mapper.getProductsDetails
 import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
+import com.ataglance.walletglance.billing.domain.usecase.UpdateUserSubscriptionUseCase
 import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +34,7 @@ class BillingSubscriptionManager(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
     private val user: User,
-    private val userRepository: UserRepository
+    private val updateUserSubscriptionUseCase: UpdateUserSubscriptionUseCase
 ) {
 
     private lateinit var billingClient: BillingClient
@@ -99,7 +99,7 @@ class BillingSubscriptionManager(
         user.uid ?: return ResultData.Error(BillingError.UserNotSignedIn)
 
         coroutineScope.launch {
-            userRepository.updateUserSubscription(
+            updateUserSubscriptionUseCase.execute(
                 userId = user.uid,
                 subscription = productDetails.productId
             )
