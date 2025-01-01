@@ -36,6 +36,7 @@ fun SuccessMessageWithIcon(
         Text(
             text = message,
             style = Typography.titleLarge,
+            color = GlanceTheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
         )

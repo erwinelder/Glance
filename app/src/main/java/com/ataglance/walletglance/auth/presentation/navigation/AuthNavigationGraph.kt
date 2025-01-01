@@ -55,7 +55,7 @@ fun NavGraphBuilder.authGraph(
         startDestination = getAuthNavGraphStartDestination(appConfiguration.isSignedIn)
     ) {
         composable<AuthScreens.SignIn> { backStack ->
-            val case = backStack.toRoute<AuthScreens.SignIn>().case
+            val case = SignInCase.valueOf(backStack.toRoute<AuthScreens.SignIn>().case)
 
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
@@ -166,7 +166,7 @@ fun NavGraphBuilder.authGraph(
                 onNavigateToSignInScreen = {
                     navViewModel.popBackStackAndNavigateToScreen(
                         navController = navController,
-                        screen = AuthScreens.SignIn(SignInCase.Default)
+                        screen = AuthScreens.SignIn(SignInCase.Default.name)
                     )
                 },
                 resultState = resultState,

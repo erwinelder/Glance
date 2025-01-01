@@ -59,7 +59,7 @@ data class AuthResultSuccessScreenState(
             }
             AuthResultSuccessScreenType.PasswordUpdate -> when (isAppSetUp) {
                 true -> AuthScreens.Profile
-                false -> AuthScreens.SignIn(SignInCase.Default)
+                false -> AuthScreens.SignIn(SignInCase.Default.name)
             }
             AuthResultSuccessScreenType.AccountDeletion ->
                 SettingsScreens.Start

@@ -3,6 +3,7 @@ package com.ataglance.walletglance.settings.domain
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
@@ -97,7 +98,7 @@ class SettingsCategories(appTheme: AppTheme) {
     )
 
     val signIn = SettingsCategory(
-        screen = AuthScreens.SignIn,
+        screen = AuthScreens.SignIn(SignInCase.Default.name),
         stringRes = R.string.sign_in,
         iconRes = when (appTheme) {
             AppTheme.LightDefault -> R.drawable.sign_in_light_default

@@ -7,5 +7,5 @@ fun getAuthNavGraphStartDestination(
     isSignedIn: Boolean,
     signInCase: SignInCase = SignInCase.Default
 ): AuthScreens {
-    return if (isSignedIn) AuthScreens.Profile else AuthScreens.SignIn(case = signInCase)
+    return if (isSignedIn) AuthScreens.Profile else AuthScreens.SignIn(case = signInCase.name)
 }

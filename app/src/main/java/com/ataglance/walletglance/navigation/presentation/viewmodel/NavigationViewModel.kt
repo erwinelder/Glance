@@ -170,7 +170,7 @@ class NavigationViewModel(
         navController: NavController,
         signInCase: SignInCase
     ) {
-        navController.navigate(AuthScreens.SignIn(signInCase)) {
+        navController.navigate(AuthScreens.SignIn(signInCase.name)) {
             launchSingleTop = true
         }
     }

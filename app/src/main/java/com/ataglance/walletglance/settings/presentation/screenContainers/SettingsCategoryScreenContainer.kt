@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.LocalWindowType
 import com.ataglance.walletglance.core.presentation.Typography
 import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
@@ -58,7 +59,8 @@ fun SettingsCategoryScreenContainer(
             title?.let {
                 Text(
                     text = title,
-                    style = Typography.titleLarge
+                    style = Typography.titleLarge,
+                    color = GlanceTheme.onSurface
                 )
             }
         }

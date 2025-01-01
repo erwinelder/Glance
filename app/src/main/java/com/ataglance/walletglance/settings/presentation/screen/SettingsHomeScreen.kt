@@ -174,7 +174,7 @@ fun SettingsHomeScreenPreview(
     ) { scaffoldPadding ->
         SettingsHomeScreen(
             scaffoldPadding = scaffoldPadding,
-            isSignedIn = true,
+            isSignedIn = false,
             onNavigateToScreen = {}
         )
     }

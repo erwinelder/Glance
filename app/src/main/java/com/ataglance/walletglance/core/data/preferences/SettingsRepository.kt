@@ -18,6 +18,7 @@ import java.io.IOException
 class SettingsRepository(
     private val dataStore: DataStore<Preferences>
 ) {
+
     private companion object {
         val USER_ID = stringPreferencesKey("userId")
         val LANGUAGE = stringPreferencesKey("language")
@@ -28,6 +29,7 @@ class SettingsRepository(
         val LAST_CHOSEN_THEME = stringPreferencesKey("lastChosenTheme")
         const val TAG = "SettingsRepository"
     }
+
 
     val userId: Flow<String?> = dataStore.data
         .catch {
@@ -42,6 +44,11 @@ class SettingsRepository(
             preferences[USER_ID]?.takeIf { it.isNotBlank() }
         }
 
+    suspend fun saveUserIdPreference(userId: String) {
+        dataStore.edit { it[USER_ID] = userId }
+    }
+
+
     val language: Flow<String> = dataStore.data
         .catch {
             if (it is IOException) {
@@ -54,6 +61,11 @@ class SettingsRepository(
         .map { preferences ->
             preferences[LANGUAGE] ?: AppLanguage.English.languageCode
         }
+
+    suspend fun saveLanguagePreference(langCode: String) {
+        dataStore.edit { it[LANGUAGE] = langCode }
+    }
+
 
     val setupStage: Flow<Int> = dataStore.data
         .catch {
@@ -68,6 +80,11 @@ class SettingsRepository(
             preferences[SETUP_STAGE] ?: 0
         }
 
+    suspend fun saveIsSetUpPreference(value: Int) {
+        dataStore.edit { it[SETUP_STAGE] = value }
+    }
+
+
     val useDeviceTheme: Flow<Boolean> = dataStore.data
         .catch {
             if (it is IOException) {
@@ -80,6 +97,11 @@ class SettingsRepository(
         .map { preferences ->
             preferences[USE_DEVICE_THEME] ?: true
         }
+
+    suspend fun saveUseDeviceThemePreference(value: Boolean) {
+        dataStore.edit { it[USE_DEVICE_THEME] = value }
+    }
+
 
     val chosenLightTheme: Flow<String> = dataStore.data
         .catch {
@@ -94,6 +116,11 @@ class SettingsRepository(
             preferences[CHOSEN_LIGHT_THEME] ?: AppTheme.LightDefault.name
         }
 
+    suspend fun saveChosenLightThemePreference(theme: String) {
+        dataStore.edit { it[CHOSEN_LIGHT_THEME] = theme }
+    }
+
+
     val chosenDarkTheme: Flow<String> = dataStore.data
         .catch {
             if (it is IOException) {
@@ -106,6 +133,11 @@ class SettingsRepository(
         .map { preferences ->
             preferences[CHOSEN_DARK_THEME] ?: AppTheme.DarkDefault.name
         }
+
+    suspend fun saveChosenDarkThemePreference(theme: String) {
+        dataStore.edit { it[CHOSEN_DARK_THEME] = theme }
+    }
+
 
     val lastChosenTheme: Flow<String> = dataStore.data
         .catch {
@@ -120,38 +152,13 @@ class SettingsRepository(
             preferences[LAST_CHOSEN_THEME] ?: AppTheme.LightDefault.name
         }
 
-    suspend fun saveUserIdPreference(userId: String) {
-        dataStore.edit { it[USER_ID] = userId }
-    }
-
-    suspend fun saveLanguagePreference(langCode: String) {
-        dataStore.edit { it[LANGUAGE] = langCode }
-    }
-
-    suspend fun saveIsSetUpPreference(value: Int) {
-        dataStore.edit { it[SETUP_STAGE] = value }
-    }
-
-    suspend fun saveUseDeviceThemePreference(value: Boolean) {
-        dataStore.edit { it[USE_DEVICE_THEME] = value }
-    }
-
-    suspend fun saveChosenLightThemePreference(theme: String) {
-        dataStore.edit { it[CHOSEN_LIGHT_THEME] = theme }
-    }
-
-    suspend fun saveChosenDarkThemePreference(theme: String) {
-        dataStore.edit { it[CHOSEN_DARK_THEME] = theme }
-    }
-
     suspend fun saveLastChosenThemePreference(theme: String) {
         dataStore.edit { it[LAST_CHOSEN_THEME] = theme }
     }
 
+
     suspend fun clearAllPreferences() {
-        dataStore.edit {
-            it.clear()
-        }
+        dataStore.edit { it.clear() }
     }
 
 }
