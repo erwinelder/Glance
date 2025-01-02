@@ -83,6 +83,7 @@
     <string name="welcome_back_to_glance">Willkommen zurück bei Glance!</string>
     <string name="welcome_to_glance">Willkommen bei Glance!</string>
     <string name="continue_to_app">Zur App fortfahren</string>
+    <string name="continue_as_guest">Als Gast fortfahren</string>
     <string name="continue_setup">Einrichtung fortsetzen</string>
     <string name="choose_app_language">Wählen Sie die App-Sprache</string>
 

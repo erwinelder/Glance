@@ -83,6 +83,7 @@
     <string name="welcome_back_to_glance">Vítejte zpět v Glance!</string>
     <string name="welcome_to_glance">Vítejte v Glance!</string>
     <string name="continue_to_app">Pokračovat do aplikace</string>
+    <string name="continue_as_guest">Pokračovat jako host</string>
     <string name="continue_setup">Pokračovat v nastavení</string>
     <string name="choose_app_language">Vyberte jazyk aplikace</string>
 

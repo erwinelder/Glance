@@ -84,6 +84,7 @@
     <string name="welcome_back_to_glance">Welcome back to Glance!</string>
     <string name="welcome_to_glance">Welcome to Glance!</string>
     <string name="continue_to_app">Continue to app</string>
+    <string name="continue_as_guest">Continue as guest</string>
     <string name="continue_setup">Continue setup</string>
     <string name="choose_app_language">Choose app language</string>
 

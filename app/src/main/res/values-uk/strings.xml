@@ -83,6 +83,7 @@
     <string name="welcome_back_to_glance">Ласкаво просимо назад до Glance!</string>
     <string name="welcome_to_glance">Ласкаво просимо до Glance!</string>
     <string name="continue_to_app">Перейти до додатка</string>
+    <string name="continue_as_guest">Продовжити як гість</string>
     <string name="continue_setup">Продовжити налаштування</string>
     <string name="choose_app_language">Виберіть мову застосунку</string>
 

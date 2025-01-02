@@ -83,7 +83,8 @@
     <string name="reset_your_password">Restablece tu contraseña</string>
     <string name="welcome_back_to_glance">¡Bienvenido de nuevo a Glance!</string>
     <string name="welcome_to_glance">¡Bienvenido a Glance!</string>
-    <string name="continue_to_app">Continuar a la aplicación</string>
+    <string name="continue_to_app">Continuar como invitado</string>
+    <string name="continue_as_guest">Continue as guest</string>
     <string name="continue_setup">Continuar con la configuración</string>
     <string name="choose_app_language">Elige el idioma de la aplicación</string>
 
