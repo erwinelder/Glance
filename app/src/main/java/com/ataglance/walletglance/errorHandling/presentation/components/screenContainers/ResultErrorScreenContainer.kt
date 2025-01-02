@@ -9,7 +9,7 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 @Composable
 fun ResultErrorScreenContainer(
     message: String,
-    @DrawableRes iconRes: Int = R.drawable.error_icon,
+    @DrawableRes iconRes: Int = R.drawable.error_large_icon,
     iconDescription: String = "Error",
     iconBackgroundGradient: List<Color> = GlanceTheme.errorGradient.toList(),
     buttonText: String,

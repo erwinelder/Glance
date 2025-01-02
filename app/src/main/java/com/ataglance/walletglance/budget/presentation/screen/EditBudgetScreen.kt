@@ -54,6 +54,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.utils.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.core.utils.takeComposableIf
 
 @Composable
 fun EditBudgetScreen(
@@ -79,12 +80,12 @@ fun EditBudgetScreen(
         GlassSurfaceScreenContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             fillGlassSurface = false,
-            topButton = if (!budget.isNew) { {
+            topButton = takeComposableIf(!budget.isNew) {
                 SecondaryButton(
                     text = stringResource(R.string.delete),
                     onClick = onDeleteButton
                 )
-            } } else null,
+            },
             glassSurfaceContent = {
                 GlassSurfaceContent(
                     budget = budget,

@@ -175,16 +175,6 @@ class NavigationViewModel(
         }
     }
 
-    fun popBackStackAndNavigateToResetPasswordScreen(
-        navController: NavController,
-        obbCode: String
-    ) {
-        navController.popBackStack()
-        navController.navigate(AuthScreens.ResetPassword(obbCode)) {
-            launchSingleTop = true
-        }
-    }
-
     fun popBackStackAndNavigateToResultSuccessScreen(
         navController: NavController,
         screenType: AuthResultSuccessScreenType

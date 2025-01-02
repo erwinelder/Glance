@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.utils.takeComposableIfNotNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +105,7 @@ fun GlanceTextField(
                 errorIndicatorColor = Color.Transparent,
             ),
             contentPadding = padding,
-            trailingIcon = isPasswordVisible?.let { {
+            trailingIcon = takeComposableIfNotNull(nullableItem = isPasswordVisible) {
                 IconButton(onClick = { isPasswordVisible = !it }) {
                     Icon(
                         painter = painterResource(
@@ -115,7 +116,7 @@ fun GlanceTextField(
                         modifier = Modifier.size(26.dp)
                     )
                 }
-            } },
+            },
             innerTextField = {
                 Box(contentAlignment = Alignment.Center) {
                     if (text.isNotBlank()) {

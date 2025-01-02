@@ -198,6 +198,10 @@ class AppViewModel(
         setLanguage(preferences.language)
     }
 
+    suspend fun getUserId(): String? {
+        return settingsRepository.userId.firstOrNull()
+    }
+
     suspend fun setUserId(userId: String) {
         settingsRepository.saveUserIdPreference(userId)
     }

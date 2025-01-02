@@ -1,5 +1,5 @@
 package com.ataglance.walletglance.auth.domain.model
 
 enum class SignInCase {
-    Default, EmailVerificationError
+    Default, EmailVerificationError, AfterEmailChange
 }

@@ -14,15 +14,17 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.errorHandling.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
+import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable
 fun DeleteAccountScreen(
-    password: String,
+    passwordState: ValidatedFieldUiState,
     onPasswordChange: (String) -> Unit,
     deletionIsAllowed: Boolean,
     onDeleteAccount: () -> Unit,
@@ -34,7 +36,7 @@ fun DeleteAccountScreen(
             title = stringResource(R.string.delete_your_account_with_all_data),
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    password = password,
+                    passwordState = passwordState,
                     onPasswordChange = onPasswordChange,
                 )
             },
@@ -53,14 +55,14 @@ fun DeleteAccountScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    password: String,
+    passwordState: ValidatedFieldUiState,
     onPasswordChange: (String) -> Unit
 ) {
     GlassSurfaceContentColumnWrapper(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TextFieldWithLabel(
-            text = password,
+        TextFieldWithLabelAndErrorMsg(
+            state = passwordState,
             onValueChange = onPasswordChange,
             keyboardType = KeyboardType.Password,
             placeholderText = stringResource(R.string.password),
@@ -82,7 +84,10 @@ fun DeleteAccountScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         DeleteAccountScreen(
-            password = password,
+            passwordState = ValidatedFieldUiState(
+                fieldText = password,
+                validationStates = userDataValidator.validatePassword(password).toUiStates()
+            ),
             onPasswordChange = {},
             deletionIsAllowed = userDataValidator.isValidPassword(password),
             onDeleteAccount = {},

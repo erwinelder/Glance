@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.auth.presentation.mapper
+package com.ataglance.walletglance.auth.domain.mapper
 
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
@@ -6,6 +6,7 @@ import com.ataglance.walletglance.auth.domain.model.SignInCase
 fun SignInCase.toAuthResultSuccessScreenType(): AuthResultSuccessScreenType {
     return when (this) {
         SignInCase.Default -> AuthResultSuccessScreenType.SignIn
-        SignInCase.EmailVerificationError -> AuthResultSuccessScreenType.EmailVerification
+        SignInCase.EmailVerificationError, SignInCase.AfterEmailChange ->
+            AuthResultSuccessScreenType.EmailVerification
     }
 }

@@ -1,13 +1,56 @@
 package com.ataglance.walletglance.core.utils
 
+import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import com.ataglance.walletglance.R
 import java.util.Locale
 import kotlin.enums.enumEntries
+
+
+fun takeActionIf(condition: Boolean, action: () -> Unit): (() -> Unit)? {
+    return if (condition) {
+        action
+    } else {
+        null
+    }
+}
+
+fun <T, R> takeActionIf(condition: Boolean, action: (T) -> R): ((T) -> R)? {
+    return if (condition) {
+        action
+    } else {
+        null
+    }
+}
+
+fun takeComposableIf(
+    condition: Boolean,
+    composable: @Composable () -> Unit
+): (@Composable () -> Unit)? {
+    return if (condition) {
+        composable
+    } else {
+        null
+    }
+}
+
+fun <T> takeComposableIfNotNull(
+    nullableItem: T?,
+    composableGetter: @Composable (T) -> Unit
+): (@Composable () -> Unit)? {
+    return if (nullableItem != null) {
+        {
+            composableGetter(nullableItem)
+        }
+    } else {
+        null
+    }
+}
 
 
 fun <A, B> Pair<A?, B?>.takeIfNoneIsNull(): Pair<A, B>? {
@@ -107,7 +150,6 @@ inline fun <reified T : Enum<T>> enumValueOrNull(name: String): T? {
 
 
 
-
 operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingValues {
     return PaddingValues(
         start = this.start + paddingValues.start,
@@ -128,3 +170,9 @@ val PaddingValues.top: Dp
 
 val PaddingValues.bottom: Dp
     get() = calculateBottomPadding()
+
+
+
+fun Uri.extractOobCode(): String? {
+    return getQueryParameter("oobCode")?.takeIf { it.isNotEmpty() }
+}

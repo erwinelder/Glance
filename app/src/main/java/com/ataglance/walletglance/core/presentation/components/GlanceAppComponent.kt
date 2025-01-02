@@ -37,7 +37,7 @@ fun GlanceAppComponent(
     personalizationViewModel: PersonalizationViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
-    val appUiSettings by appViewModel.appConfiguration.collectAsStateWithLifecycle()
+    val appConfiguration by appViewModel.appConfiguration.collectAsStateWithLifecycle()
     val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
@@ -58,13 +58,13 @@ fun GlanceAppComponent(
                             .fillMaxSize()
                             .background(GlanceTheme.background)
                     ) {
-                        AppBackground(appTheme = appUiSettings.appTheme)
+                        AppBackground(appTheme = appConfiguration.appTheme)
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
                                 authController = authController,
                                 billingSubscriptionManager = billingSubscriptionManager,
                                 appViewModel = appViewModel,
-                                appConfiguration = appUiSettings,
+                                appConfiguration = appConfiguration,
                                 themeUiState = safeThemeUiState,
                                 navViewModel = navViewModel,
                                 navController = navController,

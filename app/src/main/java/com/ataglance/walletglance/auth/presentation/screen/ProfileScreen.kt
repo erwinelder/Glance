@@ -60,7 +60,7 @@ fun ProfileScreen(
         )
         GlanceBottomSheetDialog(
             visible = showSignOutSheet,
-            iconRes = R.drawable.success_icon,
+            iconRes = R.drawable.sign_out_large_icon,
             iconDescription = "Sing out",
             title = stringResource(R.string.sign_out),
             message = stringResource(R.string.sign_out_of_your_account),

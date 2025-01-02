@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.auth.domain.model
 
 import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
-import com.ataglance.walletglance.auth.domain.usecase.ApplyObbCodeUseCase
+import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.GetUserEmailUseCase
@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 class AuthController(
     private val getUserEmailUseCase: GetUserEmailUseCase,
     private val userEmailIsVerifiedUseCase: UserEmailIsVerifiedUseCase,
-    private val applyObbCodeUseCase: ApplyObbCodeUseCase,
+    private val applyOobCodeUseCase: ApplyOobCodeUseCase,
     private val createNewUserUseCase: CreateNewUserUseCase,
     private val signInUseCase: SignInUseCase,
     private val getUserRemotePreferencesUseCase: GetUserRemotePreferencesUseCase,
@@ -44,8 +44,12 @@ class AuthController(
 
     fun getUser(): User = userState.value
 
-    private fun setUser(firebaseUser: FirebaseUser) {
+    fun setUser(firebaseUser: FirebaseUser) {
         _userState.update { User(uid = firebaseUser.uid) }
+    }
+
+    fun setUserId(userId: String) {
+        _userState.update { it.copy(uid = userId) }
     }
 
     fun setUserSubscription(subscription: AppSubscription) {
@@ -65,8 +69,8 @@ class AuthController(
     fun emailIsVerified(): Boolean = userEmailIsVerifiedUseCase.execute()
 
 
-    suspend fun applyObbCode(obbCode: String): Boolean {
-        return applyObbCodeUseCase.execute(obbCode)
+    suspend fun applyOobCode(obbCode: String): Boolean {
+        return applyOobCodeUseCase.execute(obbCode)
     }
 
     suspend fun createNewUser(

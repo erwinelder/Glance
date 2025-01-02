@@ -7,14 +7,26 @@ typealias UserDataValidationResult = ValidationResult<UserDataValidation>
 
 class UserDataValidator {
 
+    fun validateRequiredFieldIsNotEmpty(value: String): List<UserDataValidationResult> {
+        return listOf(value.requireNotEmpty())
+    }
+
+    private fun takeRequiredFieldValidationIsNotEmptyIfError(
+        value: String
+    ): List<UserDataValidationResult>? {
+        return validateRequiredFieldIsNotEmpty(value).takeIf {
+            it.first() is ValidationResult.Error
+        }
+    }
+
+
     fun isValidEmail(email: String): Boolean {
         return validateEmail(email).all { it is ValidationResult.Success }
     }
 
     fun validateEmail(email: String): List<UserDataValidationResult> {
-        return listOf(
-            email.isValidEmail()
-        )
+        return takeRequiredFieldValidationIsNotEmptyIfError(email)
+            ?: listOf(email.isValidEmail())
     }
 
 
@@ -36,11 +48,17 @@ class UserDataValidator {
         password: String,
         confirmationPassword: String
     ): List<UserDataValidationResult> {
-        return listOf(
-            password.matchPassword(confirmationPassword)
-        )
+        return takeRequiredFieldValidationIsNotEmptyIfError(confirmationPassword)
+            ?: listOf(password.matchPassword(confirmationPassword))
     }
 
+
+    private fun String.requireNotEmpty(): UserDataValidationResult {
+        return ValidationResult.fromValidation(
+            validation = UserDataValidation.RequiredField,
+            isValid = this.isNotBlank()
+        )
+    }
 
     private fun String.isValidEmail(): UserDataValidationResult {
         return ValidationResult.fromValidation(

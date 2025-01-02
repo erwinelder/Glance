@@ -16,6 +16,7 @@ fun ValidationResult<UserDataValidation>.toUiState(): ValidationUiState {
     return ValidationUiState(
         isValid = isValid,
         messageRes = when (this.validation) {
+            UserDataValidation.RequiredField -> R.string.required_field
             UserDataValidation.EmailValidity ->
                 if (isValid) R.string.is_valid else R.string.not_valid_email
             UserDataValidation.AtLeastEightChars -> R.string.at_least_8_chars

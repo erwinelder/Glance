@@ -38,6 +38,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.Secondary
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.utils.takeComposableIf
 
 @Composable
 fun EditCategoriesScreen(
@@ -73,9 +74,9 @@ fun EditCategoriesScreen(
                 onNavigateToEditCategoryScreen(null)
             }
         },
-        secondaryBottomButton = if (!isAppSetUp) { {
+        secondaryBottomButton = takeComposableIf(!isAppSetUp) {
             SecondaryButton(text = stringResource(R.string.reset), onClick = onResetButton)
-        } } else null,
+        },
         primaryBottomButton = {
             PrimaryButton(
                 text = stringResource(if (isAppSetUp) R.string.save else R.string.save_and_continue),

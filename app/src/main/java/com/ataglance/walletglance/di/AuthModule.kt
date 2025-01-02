@@ -3,8 +3,8 @@ package com.ataglance.walletglance.di
 import com.ataglance.walletglance.auth.data.repository.UserRepository
 import com.ataglance.walletglance.auth.data.repository.UserRepositoryImpl
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.usecase.ApplyObbCodeUseCase
-import com.ataglance.walletglance.auth.domain.usecase.ApplyObbCodeUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
+import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCase
@@ -41,7 +41,7 @@ val authModule = module {
         AuthController(
             getUserEmailUseCase = get(),
             userEmailIsVerifiedUseCase = get(),
-            applyObbCodeUseCase = get(),
+            applyOobCodeUseCase = get(),
             createNewUserUseCase = get(),
             signInUseCase = get(),
             getUserRemotePreferencesUseCase = get(),
@@ -59,7 +59,7 @@ val authModule = module {
 
     single<GetUserEmailUseCase> { GetUserEmailUseCaseImpl(auth = get()) }
     single<UserEmailIsVerifiedUseCase> { UserEmailIsVerifiedUseCaseImpl(auth = get()) }
-    single<ApplyObbCodeUseCase> { ApplyObbCodeUseCaseImpl(auth = get()) }
+    single<ApplyOobCodeUseCase> { ApplyOobCodeUseCaseImpl(auth = get()) }
     single<CreateNewUserUseCase> { CreateNewUserUseCaseImpl(auth = get(), userRepository = get()) }
     single<SignInUseCase> { SignInUseCaseImpl(auth = get()) }
     single<ReauthenticateUseCase> { ReauthenticateUseCaseImpl(auth = get()) }

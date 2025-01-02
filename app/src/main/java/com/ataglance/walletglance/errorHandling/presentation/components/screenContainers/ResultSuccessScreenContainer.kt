@@ -9,7 +9,7 @@ import com.ataglance.walletglance.core.presentation.GlanceTheme
 @Composable
 fun ResultSuccessScreenContainer(
     message: String,
-    @DrawableRes iconRes: Int = R.drawable.success_icon,
+    @DrawableRes iconRes: Int = R.drawable.success_large_icon,
     iconDescription: String = "Success",
     iconBackgroundGradient: List<Color> = GlanceTheme.primaryGradientLightToDark.toList(),
     buttonText: String,

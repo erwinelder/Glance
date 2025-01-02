@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -14,11 +15,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
+import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.billing.domain.mapper.asAppSubscription
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.utils.extractOobCode
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.google.firebase.BuildConfig
@@ -26,7 +29,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -45,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setupSplashScreen()
 
-        var session = getKoin().createScope(scopeId = "session", named("userSession"))
+        var session = getKoin().getOrCreateScope(scopeId = "session", named("userSession"))
 
         appViewModel = session.get<AppViewModel>()
         navViewModel = session.get<NavigationViewModel>()
@@ -55,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         val coroutineScope = CoroutineScope(Dispatchers.IO)
 
         coroutineScope.launch {
+            appViewModel.getUserId()?.let { authController.setUserId(it) }
+        }
+        coroutineScope.launch {
             authController.userState.collect {
                 session.close()
                 session = getKoin().createScope(scopeId = "session", named("userSession"))
@@ -62,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
-        handleDeepLink(intent)
 
         coroutineScope.launch {
             billingSubscriptionManager.newPurchase.collect { purchaseResult ->
@@ -78,6 +85,11 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()
+
+                LaunchedEffect(true) {
+                    navController.currentBackStackEntryFlow.first()
+                    handleDeepLink(intent)
+                }
 
                 GlanceAppComponent(
                     authController = authController,
@@ -118,43 +130,60 @@ class MainActivity : AppCompatActivity() {
         val uri = intent.data ?: return
 
         when (val mode = uri.getQueryParameter("mode")) {
-            "resetPassword" -> {
-                val obbCode = uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
-                if (obbCode != null) {
-                    navViewModel.popBackStackAndNavigateToResetPasswordScreen(
-                        navController = navController, obbCode = obbCode
-                    )
-                } else {
-                    Log.e("Reset password link", "No oobCode found in the deep link")
-                }
-            }
             "verifyEmail" -> {
-                val obbCode = uri.getQueryParameter("obbCode").takeUnless { it.isNullOrEmpty() }
                 lifecycleScope.launch {
-                    if (obbCode != null) {
-                        processEmailVerification(obbCode)
-                    } else {
-                        Log.e("Email verification link", "No oobCode found in the deep link")
-                    }
+                    uri.extractOobCode()
+                        ?.let { processEmailVerificationLink(it) }
+                        ?: Log.e("Email verification link", "No oobCode found in the deep link")
                 }
             }
-            else -> {
-                Log.e("Deep link", "Unknown deep link mode or action: $mode")
+            "verifyAndChangeEmail" -> {
+                lifecycleScope.launch {
+                    uri.extractOobCode()
+                        ?.let { processEmailVerificationAndChangeLink(it) }
+                        ?: Log.e("Email verification link", "No oobCode found in the deep link")
+                }
             }
+            "resetPassword" -> {
+                lifecycleScope.launch {
+                    uri.extractOobCode()
+                        ?.let { processResetPasswordLink(it) }
+                        ?: Log.e("Reset password link", "No oobCode found in the deep link")
+                }
+            }
+            else -> Log.e("Deep link", "Unknown deep link mode or action: $mode")
         }
     }
 
-    private suspend fun processEmailVerification(obbCode: String) {
-        val screen = when (authController.applyObbCode(obbCode)) {
+    private suspend fun processEmailVerificationLink(obbCode: String) {
+        val screen = when (authController.applyOobCode(obbCode)) {
             true -> AuthScreens.ResultSuccess(
                 screenType = AuthResultSuccessScreenType.EmailVerification.name
             )
             false -> AuthScreens.EmailVerificationFailed
         }
+        auth.currentUser?.reload()?.await()
+        auth.currentUser?.let { authController.setUser(it) }
 
-        navViewModel.popBackStackAndNavigateToScreen(
+        navViewModel.navigateToScreen(navController = navController, screen = screen)
+    }
+
+    private suspend fun processEmailVerificationAndChangeLink(obbCode: String) {
+        val screen = when (authController.applyOobCode(obbCode)) {
+            true -> {
+                authController.signOut()
+                AuthScreens.SignIn(case = SignInCase.AfterEmailChange.name)
+            }
+            false -> AuthScreens.EmailVerificationFailed
+        }
+
+        navViewModel.navigateToScreen(navController = navController, screen = screen)
+    }
+
+    private fun processResetPasswordLink(oobCode: String) {
+        navViewModel.navigateToScreen(
             navController = navController,
-            screen = screen
+            screen = AuthScreens.ResetPassword(oobCode)
         )
     }
 

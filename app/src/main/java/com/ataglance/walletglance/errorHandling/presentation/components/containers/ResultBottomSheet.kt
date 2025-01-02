@@ -56,8 +56,8 @@ fun ResultBottomSheet(
                 title = stringResource(resultState.titleRes),
                 titleColor = titleColor,
                 message = stringResource(resultState.messageRes),
-                iconRes = if (resultState.isSuccessful) R.drawable.success_icon else
-                    R.drawable.error_icon,
+                iconRes = if (resultState.isSuccessful) R.drawable.success_large_icon else
+                    R.drawable.error_large_icon,
                 iconDescription = if (resultState.isSuccessful) "Success" else "Error",
                 iconGradientColor = iconGradientColor
             ) {

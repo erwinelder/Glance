@@ -11,10 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.ataglance.walletglance.auth.domain.mapper.toAuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
-import com.ataglance.walletglance.auth.presentation.mapper.toAuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.model.AuthResultSuccessScreenState
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreen
 import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreen
@@ -35,6 +35,7 @@ import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionVie
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.core.utils.takeActionIf
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.mapper.toUiState
@@ -59,10 +60,11 @@ fun NavGraphBuilder.authGraph(
 
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -72,10 +74,10 @@ fun NavGraphBuilder.authGraph(
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             SignInScreen(
-                email = emailState.fieldText,
+                emailState = emailState,
                 onEmailChange = viewModel::updateAndValidateEmail,
-                password = passwordState.fieldText,
-                onPasswordChange = viewModel::updatePassword,
+                passwordState = passwordState,
+                onPasswordChange = viewModel::updateAndValidatePassword,
                 signInIsAllowed = signInIsAllowed,
                 onSignIn = {
                     coroutineScope.launch {
@@ -110,12 +112,11 @@ fun NavGraphBuilder.authGraph(
                     }
                 },
                 onNavigateToRequestPasswordResetScreen = {
-                    viewModel.resetPassword()
                     navViewModel.navigateToScreen(navController, AuthScreens.RequestPasswordReset)
                 },
                 resultState = resultState,
                 onResultReset = viewModel::resetResultState,
-                onNavigateToSignUpScreen = {
+                onNavigateToSignUpScreen = takeActionIf(case != SignInCase.AfterEmailChange) {
                     navViewModel.popBackStackAndNavigateToScreen(navController, AuthScreens.SignUp)
                 }
             )
@@ -123,16 +124,17 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.SignUp> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             val coroutineScope = rememberCoroutineScope()
 
             val emailState by viewModel.emailState.collectAsStateWithLifecycle()
-            val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
-            val confirmPasswordState by viewModel.confirmPasswordState.collectAsStateWithLifecycle()
+            val passwordState by viewModel.newPasswordState.collectAsStateWithLifecycle()
+            val confirmPasswordState by viewModel.newPasswordConfirmationState.collectAsStateWithLifecycle()
             val signUpIsAllowed by viewModel.signUpIsAllowed.collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
@@ -140,9 +142,9 @@ fun NavGraphBuilder.authGraph(
                 emailState = emailState,
                 onEmailChange = viewModel::updateAndValidateEmail,
                 passwordState = passwordState,
-                onPasswordChange = viewModel::updateAndValidatePassword,
+                onPasswordChange = viewModel::updateAndValidateNewPassword,
                 confirmPasswordState = confirmPasswordState,
-                onConfirmPasswordChange = viewModel::updateAndValidatePasswordConfirmation,
+                onConfirmPasswordChange = viewModel::updateAndValidateNewPasswordConfirmation,
                 signUpIsAllowed = signUpIsAllowed,
                 onCreateNewUserWithEmailAndPassword = { email, password ->
                     coroutineScope.launch {
@@ -196,10 +198,11 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.UpdateEmail> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -210,7 +213,7 @@ fun NavGraphBuilder.authGraph(
 
             UpdateEmailScreen(
                 passwordState = passwordState,
-                onPasswordChange = viewModel::updatePassword,
+                onPasswordChange = viewModel::updateAndValidatePassword,
                 newEmailState = newEmailState,
                 onNewEmailChange = viewModel::updateAndValidateNewEmail,
                 emailUpdateIsAllowed = emailUpdateIsAllowed,
@@ -230,10 +233,11 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.UpdatePassword> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -247,7 +251,7 @@ fun NavGraphBuilder.authGraph(
 
             UpdatePasswordScreen(
                 currentPasswordState = currentPasswordState,
-                onCurrentPasswordChange = viewModel::updatePassword,
+                onCurrentPasswordChange = viewModel::updateAndValidatePassword,
                 newPasswordState = newPasswordState,
                 onNewPasswordChange = viewModel::updateAndValidateNewPassword,
                 newPasswordConfirmationState = newPasswordConfirmationState,
@@ -285,10 +289,11 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.RequestPasswordReset> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -315,10 +320,11 @@ fun NavGraphBuilder.authGraph(
 
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             LaunchedEffect(obbCode) {
                 viewModel.setObbCode(obbCode)
@@ -329,7 +335,7 @@ fun NavGraphBuilder.authGraph(
             val newPasswordState by viewModel.newPasswordState.collectAsStateWithLifecycle()
             val newPasswordConfirmationState by viewModel.newPasswordConfirmationState
                 .collectAsStateWithLifecycle()
-            val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed
+            val passwordUpdateIsAllowed by viewModel.passwordResetIsAllowed
                 .collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
@@ -364,10 +370,11 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.DeleteAccount> { backStack ->
             val viewModel = backStack.sharedViewModel<AuthViewModel>(
                 navController = navController,
-                factory = AuthViewModelFactory(
-                    email = authController.getEmail()
-                )
+                factory = AuthViewModelFactory(email = authController.getEmail())
             )
+            LaunchedEffect(true) {
+                viewModel.resetAllFieldsExceptEmail()
+            }
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -376,8 +383,8 @@ fun NavGraphBuilder.authGraph(
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
 
             DeleteAccountScreen(
-                password = passwordState.fieldText,
-                onPasswordChange = viewModel::updatePassword,
+                passwordState = passwordState,
+                onPasswordChange = viewModel::updateAndValidatePassword,
                 deletionIsAllowed = deletionIsAllowed,
                 onDeleteAccount = {
                     coroutineScope.launch {
@@ -434,7 +441,7 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.EmailVerificationFailed> {
             EmailVerificationErrorScreen(
                 onContinueButtonClick = {
-                    navViewModel.navigateToScreen(
+                    navViewModel.popBackStackAndNavigateToScreen(
                         navController = navController,
                         screen = getAuthNavGraphStartDestination(
                             isSignedIn = authController.isSignedIn(),
@@ -453,7 +460,7 @@ fun NavGraphBuilder.authGraph(
             AuthResultSuccessScreen(
                 screenState = screenState,
                 onContinueButtonClick = {
-                    navViewModel.navigateToScreen(
+                    navViewModel.popBackStackAndNavigateToScreen(
                         navController = navController,
                         screen = screenState.getNextScreenNavigateTo()
                     )

@@ -330,7 +330,7 @@ private fun PreviewColors() {
                         .padding(vertical = 32.dp)
                 ) {
                     IconWithBackground(
-                        iconRes = R.drawable.error_icon,
+                        iconRes = R.drawable.error_large_icon,
                         backgroundGradient = GlanceTheme.errorGradient,
                         iconDescription = ""
                     )
