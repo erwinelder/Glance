@@ -118,6 +118,14 @@ fun NavGraphBuilder.authGraph(
                 onResultReset = viewModel::resetResultState,
                 onNavigateToSignUpScreen = takeActionIf(case != SignInCase.AfterEmailChange) {
                     navViewModel.popBackStackAndNavigateToScreen(navController, AuthScreens.SignUp)
+                },
+                onContinueAsGuest = takeActionIf(
+                    case == SignInCase.Default && !appConfiguration.isSetUp
+                ) {
+                    navViewModel.popBackStackAndNavigateToScreen(
+                        navController = navController,
+                        screen = SettingsScreens.Accounts
+                    )
                 }
             )
         }

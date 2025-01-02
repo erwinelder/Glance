@@ -170,6 +170,7 @@ fun NavGraphBuilder.settingsGraph(
                 onResetData = {
                     coroutineScope.launch {
                         appViewModel.resetAppData()
+                        authController.signOut()
                     }
                 }
             )

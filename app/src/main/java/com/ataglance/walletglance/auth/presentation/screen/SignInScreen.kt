@@ -34,7 +34,8 @@ fun SignInScreen(
     onNavigateToRequestPasswordResetScreen: () -> Unit,
     resultState: ResultUiState?,
     onResultReset: () -> Unit,
-    onNavigateToSignUpScreen: (() -> Unit)?
+    onNavigateToSignUpScreen: (() -> Unit)?,
+    onContinueAsGuest: (() -> Unit)?
 ) {
     Box {
 
@@ -62,14 +63,23 @@ fun SignInScreen(
                             text = stringResource(R.string.reset_password),
                             onClick = onNavigateToRequestPasswordResetScreen
                         )
-                        // TODO add continue as guest button
                     }
                 },
                 bottomButton = {
-                    SecondaryButton(
-                        text = stringResource(R.string.sign_up),
-                        onClick = onNavigateToSignUpScreen
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        SecondaryButton(
+                            text = stringResource(R.string.sign_up),
+                            onClick = onNavigateToSignUpScreen
+                        )
+                        onContinueAsGuest?.let {
+                            SecondaryButton(
+                                text = stringResource(R.string.continue_as_guest),
+                                onClick = onContinueAsGuest
+                            )
+                        }
+                    }
                 }
             )
         } else {
@@ -161,7 +171,8 @@ fun SignInScreenPreview(
             onNavigateToRequestPasswordResetScreen = {},
             resultState = null,
             onResultReset = {},
-            onNavigateToSignUpScreen = {}
+            onNavigateToSignUpScreen = {},
+            onContinueAsGuest = {}
         )
     }
 }
