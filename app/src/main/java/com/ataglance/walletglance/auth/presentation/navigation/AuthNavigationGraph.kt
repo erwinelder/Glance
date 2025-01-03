@@ -418,34 +418,6 @@ fun NavGraphBuilder.authGraph(
                 onResultReset = viewModel::resetResultState
             )
         }
-        composable<AuthScreens.ManageSubscriptions> { backStack ->
-            val activity = LocalContext.current as? Activity
-
-            val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
-                navController = navController,
-                factory = SubscriptionViewModelFactory(
-                    billingSubscriptionManager = billingSubscriptionManager
-                )
-            )
-
-            val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()
-            val availableSubscriptions by viewModel.availableSubscriptions
-                .collectAsStateWithLifecycle()
-            val purchaseResult by viewModel.purchaseResult.collectAsStateWithLifecycle()
-
-            SubscriptionsScreen(
-                onNavigateBack = navController::popBackStack,
-                activeSubscriptions = activeSubscriptions,
-                availableSubscriptions = availableSubscriptions,
-                onStartPurchase = { subscription ->
-                    activity?.let {
-                        viewModel.startPurchase(activity = it, subscription = subscription)
-                    }
-                },
-                purchaseResultUiState = purchaseResult,
-                onResultReset = viewModel::resetPurchaseResult
-            )
-        }
         composable<AuthScreens.EmailVerificationFailed> {
             EmailVerificationErrorScreen(
                 onContinueButtonClick = {
@@ -473,6 +445,34 @@ fun NavGraphBuilder.authGraph(
                         screen = screenState.getNextScreenNavigateTo()
                     )
                 }
+            )
+        }
+        composable<AuthScreens.ManageSubscriptions> { backStack ->
+            val activity = LocalContext.current as? Activity
+
+            val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
+                navController = navController,
+                factory = SubscriptionViewModelFactory(
+                    billingSubscriptionManager = billingSubscriptionManager
+                )
+            )
+
+            val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()
+            val availableSubscriptions by viewModel.availableSubscriptions
+                .collectAsStateWithLifecycle()
+            val purchaseResult by viewModel.purchaseResult.collectAsStateWithLifecycle()
+
+            SubscriptionsScreen(
+                onNavigateBack = navController::popBackStack,
+                activeSubscriptions = activeSubscriptions,
+                availableSubscriptions = availableSubscriptions,
+                onStartPurchase = { subscription ->
+                    activity?.let {
+                        viewModel.startPurchase(activity = it, subscription = subscription)
+                    }
+                },
+                purchaseResultUiState = purchaseResult,
+                onResultReset = viewModel::resetPurchaseResult
             )
         }
     }
