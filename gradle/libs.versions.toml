@@ -46,7 +46,7 @@ mockitoCore = "5.11.0"
 mockk = "1.13.10"
 # Plugins
 androidGradlePlugin = "8.7.3"
-devtoolsKsp = "2.1.0-1.0.29"
+ksp = "2.1.0-1.0.29"
 googleServices = "4.4.2"
 kotlin = "2.1.0"
 
@@ -127,7 +127,7 @@ mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "moc
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtoolsKsp" }
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
