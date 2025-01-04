@@ -80,82 +80,81 @@ tasks.withType<Test> {
 }
 
 dependencies {
-
+    // Core
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.animation)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.core.splashscreen)
+    // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Compose & Navigation
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.animation)
+    implementation(libs.androidx.foundation)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
+    debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
+    // Google Play Services
     implementation(libs.app.update)
     implementation(libs.app.update.ktx)
-    implementation(libs.review)
-    implementation(libs.review.ktx)
     implementation(libs.asset.delivery)
     implementation(libs.asset.delivery.ktx)
     implementation(libs.feature.delivery)
     implementation(libs.feature.delivery.ktx)
-    implementation(libs.gson)
-    implementation(libs.test.core.ktx)
-    implementation(libs.kotlinx.serialization.json)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
-
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.junit.ktx)
-    implementation(libs.androidx.navigation.common.ktx)
-    testImplementation(libs.junit.jupiter)
-    androidTestImplementation(libs.junit.jupiter)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
-
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.firestore.ktx)
-    testImplementation(libs.firebase.auth.ktx)
-    testImplementation(libs.firebase.firestore.ktx)
-
-    // Billing
+    implementation(libs.review)
+    implementation(libs.review.ktx)
     implementation(libs.google.billing)
     implementation(libs.google.billing.ktx)
-
+    // Room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.analytics)
+    testImplementation(libs.firebase.auth.ktx)
+    testImplementation(libs.firebase.firestore.ktx)
     // Koin
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.android.compat)
-
-    // SplashScreen
-    implementation(libs.androidx.core.splashscreen)
-
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.viewmodel.navigation)
+    // Utilities
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
     // Testing
-    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.junit.jupiter.params)
+    implementation(libs.test.core.ktx)
+    testImplementation(libs.kotlinx.coroutines.test)
+    // Mockito
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockk)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.mockk.agent)
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.rules)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.mockk.android)
 }
