@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "com.ataglance.walletglance"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.ataglance.walletglance"
-        minSdk = 28
-        targetSdk = 35
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 64
-        versionName = "3.0.1"
+        versionName = "4.0"
         resourceConfigurations += arrayOf("en", "cs", "de", "ru", "es", "uk")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

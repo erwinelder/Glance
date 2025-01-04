@@ -1,4 +1,8 @@
 [versions]
+# SDK
+android-compileSdk = "35"
+android-minSdk = "28"
+android-targetSdk = "35"
 # Core
 core = "1.15.0"
 activityCompose = "1.9.3"
