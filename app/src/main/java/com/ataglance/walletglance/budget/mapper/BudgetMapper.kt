@@ -11,17 +11,17 @@ import com.ataglance.walletglance.budget.domain.utils.findById
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
+import com.ataglance.walletglance.core.utils.convertToDoubleOrZero
 import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getRepeatingPeriodByString
 
 
-
 fun Map<String, Any?>.toBudgetEntity(): BudgetEntity {
     return BudgetEntity(
-        id = this["id"] as Int,
-        amountLimit = this["amountLimit"] as Double,
-        categoryId = this["categoryId"] as Int,
+        id = (this["id"] as Long).toInt(),
+        amountLimit = this["amountLimit"].convertToDoubleOrZero(),
+        categoryId = (this["categoryId"] as Long).toInt(),
         name = this["name"] as String,
         repeatingPeriod = this["repeatingPeriod"] as String,
     )
@@ -42,8 +42,8 @@ fun BudgetEntity.toMap(timestamp: Long): HashMap<String, Any> {
 
 fun Map<String, Any?>.toBudgetAccountAssociation(): BudgetAccountAssociation {
     return BudgetAccountAssociation(
-        budgetId = this["budgetId"] as Int,
-        accountId = this["accountId"] as Int
+        budgetId = (this["budgetId"] as Long).toInt(),
+        accountId = (this["accountId"] as Long).toInt()
     )
 }
 

@@ -14,20 +14,14 @@ class RecordAndAccountRepositoryImpl(
     @Transaction
     override suspend fun deleteRecordsAndUpsertAccounts(
         recordListToDelete: List<RecordEntity>,
-        accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        accountListToUpsert: List<AccountEntity>
     ) {
         recordRepository.deleteAndUpsertEntities(
             toDelete = recordListToDelete,
-            toUpsert = emptyList(),
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            toUpsert = emptyList()
         )
         accountRepository.upsertEntities(
-            entityList = accountListToUpsert,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            entityList = accountListToUpsert
         )
     }
 
@@ -35,59 +29,41 @@ class RecordAndAccountRepositoryImpl(
     override suspend fun deleteAndUpsertRecordsAndUpsertAccounts(
         recordListToDelete: List<RecordEntity>,
         recordListToUpsert: List<RecordEntity>,
-        accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        accountListToUpsert: List<AccountEntity>
     ) {
         recordRepository.deleteAndUpsertEntities(
             toDelete = recordListToDelete,
-            toUpsert = recordListToUpsert,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            toUpsert = recordListToUpsert
         )
         accountRepository.upsertEntities(
-            entityList = accountListToUpsert,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            entityList = accountListToUpsert
         )
     }
 
     @Transaction
     override suspend fun upsertRecordsAndUpsertAccounts(
         recordListToUpsert: List<RecordEntity>,
-        accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        accountListToUpsert: List<AccountEntity>
     ) {
         recordRepository.upsertEntities(
-            entityList = recordListToUpsert,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            entityList = recordListToUpsert
         )
         accountRepository.upsertEntities(
-            entityList = accountListToUpsert,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            entityList = accountListToUpsert
         )
     }
 
     @Transaction
     override suspend fun deleteAndUpdateAccountsAndConvertTransfersToRecords(
         accountListToDelete: List<AccountEntity>,
-        accountListToUpsert: List<AccountEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
+        accountListToUpsert: List<AccountEntity>
     ) {
         accountRepository.deleteAndUpsertEntities(
             toDelete = accountListToDelete,
-            toUpsert = accountListToUpsert,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            toUpsert = accountListToUpsert
         )
         recordRepository.convertRecordsToTransfers(
-            noteValues = accountListToDelete.map { it.id.toString() },
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            noteValues = accountListToDelete.map { it.id.toString() }
         )
     }
 

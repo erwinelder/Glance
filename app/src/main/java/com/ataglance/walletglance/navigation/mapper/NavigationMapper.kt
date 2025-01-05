@@ -5,11 +5,10 @@ import com.ataglance.walletglance.navigation.domain.model.AppScreenEnum
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 
-
 fun Map<String, Any?>.toNavigationButtonEntity(): NavigationButtonEntity {
     return NavigationButtonEntity(
         screenName = this["screenName"] as String,
-        orderNum = this["orderNum"] as Int
+        orderNum = (this["orderNum"] as Long).toInt()
     )
 }
 

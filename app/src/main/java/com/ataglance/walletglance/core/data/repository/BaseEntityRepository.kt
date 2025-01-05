@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -15,11 +16,7 @@ interface BaseEntityRepository<T> {
     val localSource: BaseLocalDataSource<T>
     val remoteSource: BaseRemoteDataSource<T>?
 
-    suspend fun upsertEntities(
-        entityList: List<T>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
+    suspend fun upsertEntities(entityList: List<T>) {
         val timestamp = getNowDateTimeLong()
         localSource.upsertEntities(entityList = entityList, timestamp = timestamp)
         remoteSource?.upsertEntities(entityList = entityList, timestamp = timestamp)
@@ -27,9 +24,7 @@ interface BaseEntityRepository<T> {
 
     suspend fun deleteAndUpsertEntities(
         toDelete: List<T>,
-        toUpsert: List<T>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
+        toUpsert: List<T>
     ) {
         val timestamp = getNowDateTimeLong()
 
@@ -41,79 +36,49 @@ interface BaseEntityRepository<T> {
         remoteSource?.deleteAndUpsertEntities(
             entitiesToDelete = toDelete,
             entitiesToUpsert = toUpsert,
-            timestamp = timestamp,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            timestamp = timestamp
         )
     }
 
-    suspend fun deleteAllEntities(
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    )
+    suspend fun deleteAllEntities()
 
     suspend fun deleteAllEntitiesLocally()
 
-    fun getAllEntities(
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ): Flow<List<T>> = syncDataAndGetFlowWrapper(
-        flowSource = { localSource.getAllEntities() },
-        onSuccessListener = onSuccessListener,
-        onFailureListener = onFailureListener
-    )
-
-    suspend fun needToSyncData(): Boolean {
-        val localTimestamp = localSource.getLastModifiedTime()
-        val remoteTimestamp = remoteSource?.getLastModifiedTime() ?: return false
-
-        return remoteTimestamp > localTimestamp
+    fun getAllEntities(): Flow<List<T>> = syncDataAndGetFlowWrapper {
+        localSource.getAllEntities()
     }
 
-    suspend fun syncDataFromRemoteSource() {
-        val localTimestamp = localSource.getLastModifiedTime()
-        val remoteTimestamp = remoteSource?.getLastModifiedTime() ?: return
+    private suspend fun syncDataIfNeeded() {
+        val remoteTimestamp = remoteSource?.getLastModifiedTime()
+        if (remoteSource != null && remoteTimestamp == null) {
+            val localTimestamp = localSource.getLastModifiedTime() ?: return
 
-        remoteSource?.getEntitiesAfterTimestamp(localTimestamp)?.collect { dataToSync ->
+            val entities = localSource.getAllEntities().first()
+            remoteSource?.upsertEntities(entityList = entities, timestamp = localTimestamp)
+            return
+        }
+        remoteTimestamp ?: return
 
+        val localTimestamp = localSource.getLastModifiedTime() ?: 0L
+
+        if (localTimestamp >= remoteTimestamp) return
+
+        remoteSource?.getEntitiesAfterTimestamp(timestamp = localTimestamp)?.collect { dataToSync ->
             localSource.deleteAndUpsertEntities(
                 entitiesToDeleteAndUpsert = dataToSync,
                 timestamp = remoteTimestamp
             )
-
         }
     }
 
-    fun <F> syncDataAndGetFlowWrapper(
-        flowSource: () -> Flow<F>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ): Flow<F> = flow {
-        try {
-            if (needToSyncData()) {
-                syncDataFromRemoteSource()
-            }
-            emitAll(flowSource())
-            onSuccessListener()
-        } catch (e: Exception) {
-            onFailureListener(e)
-        }
+    fun <F> syncDataAndGetFlowWrapper(flowSource: () -> Flow<F>): Flow<F> = flow {
+        syncDataIfNeeded()
+        emitAll(flowSource())
     }.flowOn(Dispatchers.IO)
 
-    fun <F> syncAndExecute(
-        onExecute: suspend FlowCollector<F>.() -> Unit,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ): Flow<F> = flow {
-        try {
-            if (needToSyncData()) {
-                syncDataFromRemoteSource()
-            }
-            onExecute()
-            onSuccessListener()
-        } catch (e: Exception) {
-            onFailureListener(e)
-        }
+    fun <F> syncAndExecute(onExecute: suspend FlowCollector<F>.() -> Unit): Flow<F> = flow {
+        syncDataIfNeeded()
+        onExecute()
     }.flowOn(Dispatchers.IO)
 
 }

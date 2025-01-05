@@ -16,28 +16,16 @@ class RecordRepositoryImpl(
     override val remoteSource: RecordRemoteDataSource?
 ) : RecordRepository {
 
-    override suspend fun convertRecordsToTransfers(
-        noteValues: List<String>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
+    override suspend fun convertRecordsToTransfers(noteValues: List<String>) {
         val timestamp = getNowDateTimeLong()
         localSource.convertTransfersToRecords(noteValues, timestamp)
-        remoteSource?.convertTransfersToRecords(
-            noteValues = noteValues,
-            timestamp = timestamp,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
-        )
+        remoteSource?.convertTransfersToRecords(noteValues = noteValues, timestamp = timestamp)
     }
 
-    override suspend fun deleteAllEntities(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
+    override suspend fun deleteAllEntities() {
         val timestamp = getNowDateTimeLong()
-        localSource.deleteAllRecords(timestamp)
-        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
+        localSource.deleteAllRecords(timestamp = timestamp)
+        remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntitiesLocally() {
@@ -45,61 +33,41 @@ class RecordRepositoryImpl(
         localSource.deleteAllRecords(timestamp = timestamp)
     }
 
-    override fun getLastRecordNum(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ): Flow<Int?> = syncDataAndGetFlowWrapper(
-        flowSource = localSource::getLastRecordOrderNum,
-        onSuccessListener = onSuccessListener,
-        onFailureListener = onFailureListener
-    )
+    override fun getLastRecordNum(): Flow<Int?> = syncDataAndGetFlowWrapper {
+        localSource.getLastRecordOrderNum()
+    }
 
-    override fun getRecordsForToday(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ): Flow<List<RecordEntity>> = syncDataAndGetFlowWrapper(
-        flowSource = { localSource.getRecordsInDateRange(getTodayLongDateRange()) },
-        onSuccessListener = onSuccessListener,
-        onFailureListener = onFailureListener
-    )
+    override fun getRecordsForToday(): Flow<List<RecordEntity>> = syncDataAndGetFlowWrapper {
+        localSource.getRecordsInDateRange(getTodayLongDateRange())
+    }
 
     override fun getRecordsInDateRange(
-        longDateRange: LongDateRange,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ): Flow<List<RecordEntity>> = syncDataAndGetFlowWrapper(
-        flowSource = { localSource.getRecordsInDateRange(longDateRange) },
-        onSuccessListener = onSuccessListener,
-        onFailureListener = onFailureListener
-    )
+        longDateRange: LongDateRange
+    ): Flow<List<RecordEntity>> = syncDataAndGetFlowWrapper {
+        localSource.getRecordsInDateRange(longDateRange)
+    }
 
     override fun getTotalAmountForBudgetInDateRanges(
         budget: Budget,
-        dateRangeList: List<LongDateRange>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ): Flow<List<TotalAmountByRange>> = syncAndExecute(
-        onExecute = {
-            val initialList = dateRangeList.map { TotalAmountByRange(it, 0.0) }
-            emit(initialList)
+        dateRangeList: List<LongDateRange>
+    ): Flow<List<TotalAmountByRange>> = syncAndExecute {
+        val initialList = dateRangeList.map { TotalAmountByRange(it, 0.0) }
+        emit(initialList)
 
-            budget.category ?: return@syncAndExecute
+        budget.category ?: return@syncAndExecute
 
-            val budgetsAmountsByRanges = initialList.toMutableList()
+        val budgetsAmountsByRanges = initialList.toMutableList()
 
-            dateRangeList.forEachIndexed { index, dateRange ->
-                val totalAmount = localSource.getTotalAmountForBudgetInDateRange(
-                    linkedAccountsIds = budget.linkedAccountsIds,
-                    categoryId = budget.category.id,
-                    longDateRange = dateRange
-                ).firstOrNull() ?: 0.0
+        dateRangeList.forEachIndexed { index, dateRange ->
+            val totalAmount = localSource.getTotalAmountForBudgetInDateRange(
+                linkedAccountsIds = budget.linkedAccountsIds,
+                categoryId = budget.category.id,
+                longDateRange = dateRange
+            ).firstOrNull() ?: 0.0
 
-                budgetsAmountsByRanges[index] = TotalAmountByRange(dateRange, totalAmount)
-                emit(budgetsAmountsByRanges)
-            }
-        },
-        onSuccessListener = onSuccessListener,
-        onFailureListener = onFailureListener
-    )
+            budgetsAmountsByRanges[index] = TotalAmountByRange(dateRange, totalAmount)
+            emit(budgetsAmountsByRanges)
+        }
+    }
 
 }

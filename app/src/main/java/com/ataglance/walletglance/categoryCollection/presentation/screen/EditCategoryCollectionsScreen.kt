@@ -171,7 +171,7 @@ fun EditCategoryCollectionsScreenPreview(
     categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType? = null,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories> =
         categoryCollectionsWithIdsByType?.toCollectionsWithCategories(
-            allCategories = categoriesWithSubcategories.concatenateAsCategoryList()
+            allCategories = categoriesWithSubcategories.asSingleList()
         )?.getByType(collectionType) ?: listOf(
             CategoryCollectionWithCategories(
                 id = 1,

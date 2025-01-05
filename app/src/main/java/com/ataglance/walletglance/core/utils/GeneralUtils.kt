@@ -1,5 +1,7 @@
 package com.ataglance.walletglance.core.utils
 
+import android.content.Context
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -7,7 +9,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import com.ataglance.walletglance.R
 import java.util.Locale
 import kotlin.enums.enumEntries
 
@@ -173,6 +174,26 @@ val PaddingValues.bottom: Dp
 
 
 
+fun Context.getLanguageContext(langCode: String): Context {
+    return createConfigurationContext(
+        Configuration().apply { setLocale(Locale(langCode)) }
+    )
+}
+
+
 fun Uri.extractOobCode(): String? {
     return getQueryParameter("oobCode")?.takeIf { it.isNotEmpty() }
+}
+
+
+fun Any.convertToDouble(): Double? {
+    return when (val value = this) {
+        is Double -> value
+        is Long -> value.toDouble()
+        else -> null
+    }
+}
+
+fun Any?.convertToDoubleOrZero(): Double {
+    return this?.convertToDouble() ?: 0.0
 }

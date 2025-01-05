@@ -3,6 +3,7 @@ package com.ataglance.walletglance.record.mapper
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.core.utils.convertToDoubleOrZero
 import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordStackItem
@@ -11,18 +12,17 @@ import com.ataglance.walletglance.record.domain.utils.asRecordType
 import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
 
 
-
 fun Map<String, Any?>.toRecordEntity(): RecordEntity {
     return RecordEntity(
-        id = this["id"] as Int,
-        recordNum = this["recordNum"] as Int,
+        id = (this["id"] as Long).toInt(),
+        recordNum = (this["recordNum"] as Long).toInt(),
         date = this["date"] as Long,
-        type = this["type"] as Char,
-        accountId = this["accountId"] as Int,
-        amount = this["amount"] as Double,
-        quantity = this["quantity"] as Int?,
-        categoryId = this["categoryId"] as Int,
-        subcategoryId = this["subcategoryId"] as Int?,
+        type = (this["type"] as String).toCharArray()[0],
+        accountId = (this["accountId"] as Long).toInt(),
+        amount = this["amount"].convertToDoubleOrZero(),
+        quantity = (this["quantity"] as Long?)?.toInt(),
+        categoryId = (this["categoryId"] as Long).toInt(),
+        subcategoryId = (this["subcategoryId"] as Long?)?.toInt(),
         note = this["note"] as String?,
         includeInBudgets = this["includeInBudgets"] as Boolean
     )

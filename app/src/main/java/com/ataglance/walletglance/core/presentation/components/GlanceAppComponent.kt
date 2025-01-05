@@ -17,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
 import com.ataglance.walletglance.core.presentation.components.other.AppBackground
@@ -29,11 +27,9 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GlanceAppComponent(
-    authController: AuthController,
-    billingSubscriptionManager: BillingSubscriptionManager,
-    appViewModel: AppViewModel,
-    navViewModel: NavigationViewModel,
     navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel
 ) {
     val context = LocalContext.current as ComponentActivity
@@ -61,13 +57,11 @@ fun GlanceAppComponent(
                         AppBackground(appTheme = appConfiguration.appTheme)
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
-                                authController = authController,
-                                billingSubscriptionManager = billingSubscriptionManager,
-                                appViewModel = appViewModel,
                                 appConfiguration = appConfiguration,
                                 themeUiState = safeThemeUiState,
-                                navViewModel = navViewModel,
                                 navController = navController,
+                                navViewModel = navViewModel,
+                                appViewModel = appViewModel,
                                 personalizationViewModel = personalizationViewModel
                             )
                         }

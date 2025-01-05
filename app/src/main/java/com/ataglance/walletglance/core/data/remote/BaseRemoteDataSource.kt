@@ -11,6 +11,7 @@ import com.google.firebase.firestore.WriteBatch
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 abstract class BaseRemoteDataSource<T>(
     private val userId: String,
@@ -33,14 +34,16 @@ abstract class BaseRemoteDataSource<T>(
         get() = userFirestoreRef.collection("tableUpdateTimes")
 
 
-    fun updateLastModifiedTime(timestamp: Long) {
+    suspend fun updateLastModifiedTime(timestamp: Long) {
         tableUpdateTimeCollectionRef.document(tableName.name)
             .set(mapOf("timestamp" to timestamp), SetOptions.merge())
+            .await()
     }
 
-    fun getLastModifiedTime(): Long? {
-        return tableUpdateTimeCollectionRef.document(tableName.name).get()
-            .result?.get("timestamp") as? Long
+    suspend fun getLastModifiedTime(): Long? {
+        val updateTime = tableUpdateTimeCollectionRef.document(tableName.name).get().await()
+            ?.get("timestamp") as? Long
+        return updateTime
     }
 
     private fun WriteBatch.softDelete(documentRef: DocumentReference, timestamp: Long) {
@@ -54,31 +57,19 @@ abstract class BaseRemoteDataSource<T>(
         return mapNotNull { it.data?.toMap()?.let(dataToEntityMapper) }
     }
 
-    fun upsertEntities(
-        entityList: List<T>,
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
+    suspend fun upsertEntities(entityList: List<T>, timestamp: Long) {
         entityList.forEach { entity ->
             val entityData = entityToDataMapper(entity, timestamp)
 
-            collectionRef.getDocumentRef(entity)
-                .set(entityData, SetOptions.merge())
-                .addOnSuccessListener {
-                    updateLastModifiedTime(timestamp)
-                    onSuccessListener()
-                }
-                .addOnFailureListener(onFailureListener)
+            collectionRef.getDocumentRef(entity).set(entityData, SetOptions.merge()).await()
+            updateLastModifiedTime(timestamp)
         }
     }
 
-    fun deleteAndUpsertEntities(
+    suspend fun deleteAndUpsertEntities(
         entitiesToDelete: List<T>,
         entitiesToUpsert: List<T>,
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
+        timestamp: Long
     ) {
         val batch = firestore.batch()
 
@@ -91,55 +82,28 @@ abstract class BaseRemoteDataSource<T>(
             batch.set(collectionRef.getDocumentRef(entity), entityData, SetOptions.merge())
         }
 
+        batch.commit().await()
+        updateLastModifiedTime(timestamp)
+    }
+
+    suspend fun deleteAllEntities(timestamp: Long) {
+        deleteEntitiesInBatches(timestamp = timestamp)
+    }
+
+    private suspend fun deleteEntitiesInBatches(timestamp: Long) {
+        val querySnapshot = collectionRef.limit(500).get().await()
+        val batch = firestore.batch()
+
+        querySnapshot.documents.forEach { document ->
+            batch.softDelete(document.reference, timestamp)
+        }
         batch.commit()
-            .addOnSuccessListener {
-                updateLastModifiedTime(timestamp)
-                onSuccessListener()
-            }
-            .addOnFailureListener(onFailureListener)
-    }
 
-    fun deleteAllEntities(
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
-        deleteEntitiesInBatches(
-            timestamp = timestamp,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
-        )
-    }
-
-    private fun deleteEntitiesInBatches(
-        timestamp: Long,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
-        collectionRef.limit(500).get()
-            .addOnSuccessListener { querySnapshot ->
-                val batch = firestore.batch()
-
-                querySnapshot.documents.forEach { document ->
-                    batch.softDelete(document.reference, timestamp)
-                }
-
-                batch.commit()
-                    .addOnSuccessListener {
-                        if (querySnapshot.size() == 500) {
-                            deleteEntitiesInBatches(
-                                timestamp = timestamp,
-                                onSuccessListener = onSuccessListener,
-                                onFailureListener = onFailureListener
-                            )
-                        } else {
-                            onSuccessListener()
-                        }
-                        updateLastModifiedTime(timestamp)
-                    }
-                    .addOnFailureListener(onFailureListener)
-            }
-            .addOnFailureListener(onFailureListener)
+        if (querySnapshot.size() == 500) {
+            deleteEntitiesInBatches(timestamp = timestamp)
+        } else {
+            updateLastModifiedTime(timestamp)
+        }
     }
 
     fun getEntitiesAfterTimestamp(

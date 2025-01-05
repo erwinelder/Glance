@@ -333,7 +333,7 @@ fun EditCategoryCollectionScreenPreview(
     ),
 ) {
     val collection = collectionWithIds.toCategoryCollectionWithCategories(
-        allCategories = categoriesWithSubcategories.concatenateAsCategoryList()
+        allCategories = categoriesWithSubcategories.asSingleList()
     )
     val editingCategoriesWithSubcategories = categoriesWithSubcategories
         .toEditingCategoriesWithSubcategories(collection)

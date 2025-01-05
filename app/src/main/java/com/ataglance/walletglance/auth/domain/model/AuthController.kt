@@ -1,11 +1,11 @@
 package com.ataglance.walletglance.auth.domain.model
 
-import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
+import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCase
+import com.ataglance.walletglance.auth.domain.usecase.GetUserDataUseCase
 import com.ataglance.walletglance.auth.domain.usecase.GetUserEmailUseCase
-import com.ataglance.walletglance.auth.domain.usecase.GetUserRemotePreferencesUseCase
 import com.ataglance.walletglance.auth.domain.usecase.RequestEmailUpdateUseCase
 import com.ataglance.walletglance.auth.domain.usecase.RequestPasswordResetUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SendEmailVerificationEmailUseCase
@@ -16,9 +16,7 @@ import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCase
 import com.ataglance.walletglance.auth.domain.usecase.UserEmailIsVerifiedUseCase
 import com.ataglance.walletglance.billing.domain.model.AppSubscription
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -29,7 +27,7 @@ class AuthController(
     private val applyOobCodeUseCase: ApplyOobCodeUseCase,
     private val createNewUserUseCase: CreateNewUserUseCase,
     private val signInUseCase: SignInUseCase,
-    private val getUserRemotePreferencesUseCase: GetUserRemotePreferencesUseCase,
+    private val getUserDataUseCase: GetUserDataUseCase,
     private val sendEmailVerificationEmailUseCase: SendEmailVerificationEmailUseCase,
     private val requestEmailUpdateUseCase: RequestEmailUpdateUseCase,
     private val updatePasswordUseCase: UpdatePasswordUseCase,
@@ -44,10 +42,6 @@ class AuthController(
 
     fun getUser(): User = userState.value
 
-    fun setUser(firebaseUser: FirebaseUser) {
-        _userState.update { User(uid = firebaseUser.uid) }
-    }
-
     fun setUserId(userId: String) {
         _userState.update { it.copy(uid = userId) }
     }
@@ -56,7 +50,21 @@ class AuthController(
         _userState.update { it.copy(subscription = subscription) }
     }
 
-    private fun resetUser() {
+    private fun setUserByData(userData: UserData) {
+        _userState.update {
+            User(
+                uid = userData.userId,
+                subscription = userData.subscription
+            )
+        }
+    }
+
+    suspend fun fetchUserDataAndUpdateUser(uid: String) {
+        val userData = getUserDataUseCase.execute(uid).getDataIfSuccess() ?: return
+        setUserByData(userData)
+    }
+
+    fun resetUser() {
         _userState.update { User() }
     }
 
@@ -80,8 +88,7 @@ class AuthController(
     ): ResultData<String, AuthError> {
         return when (val result = createNewUserUseCase.execute(email, password, appLanguageCode)) {
             is ResultData.Success -> {
-                setUser(result.data)
-                ResultData.Success(result.data.uid)
+                ResultData.Success(result.data)
             }
             is ResultData.Error -> ResultData.Error(result.error)
         }
@@ -90,15 +97,15 @@ class AuthController(
     suspend fun signIn(
         email: String,
         password: String
-    ): ResultData<UserRemotePreferences?, AuthError> {
+    ): ResultData<UserData?, AuthError> {
         val userInstanceResult = signInUseCase.execute(email, password)
         val userInstance = userInstanceResult.getDataIfSuccess()
             ?: return ResultData.Error((userInstanceResult as ResultData.Error).error)
 
-        setUser(userInstance)
+//        setUserId(userInstance.uid)
 
         return if (userInstance.isEmailVerified) {
-            getUserRemotePreferencesUseCase.execute(userInstance.uid)
+            getUserDataUseCase.execute(userInstance.uid)
         } else {
             ResultData.Success(null)
         }
@@ -132,9 +139,9 @@ class AuthController(
     suspend fun deleteAccount(password: String): AuthResult {
         val result = deleteUserUseCase.execute(password)
 
-        if (result is Result.Success) {
-            resetUser()
-        }
+//        if (result is Result.Success) {
+//            resetUser()
+//        }
         return result
     }
 

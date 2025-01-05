@@ -39,16 +39,12 @@ interface BaseEntityAndAssociationRepository<E, A> {
         entityRemoteSource?.deleteAndUpsertEntities(
             entitiesToDelete = entitiesToDelete,
             entitiesToUpsert = entitiesToUpsert,
-            timestamp = timestamp,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            timestamp = timestamp
         )
         associationRemoteSource?.deleteAndUpsertEntities(
             entitiesToDelete = associationsToDelete,
             entitiesToUpsert = associationsToUpsert,
-            timestamp = timestamp,
-            onSuccessListener = onSuccessListener,
-            onFailureListener = onFailureListener
+            timestamp = timestamp
         )
     }
 
@@ -56,61 +52,47 @@ interface BaseEntityAndAssociationRepository<E, A> {
         onSuccessListener: () -> Unit = {},
         onFailureListener: (Exception) -> Unit = {}
     ): Pair<List<E>, List<A>> {
-        return selectEntities() to selectAssociations()
+        val entities = selectEntities()
+        val associations = selectAssociations()
+        return entities to associations
     }
 
     private suspend fun selectEntities(): List<E> {
-        val localTimestamp = entityLocalSource.getLastModifiedTime()
-        val remoteTimestamp = entityRemoteSource?.getLastModifiedTime() ?: localTimestamp
-
-        if (needToSyncData(entityLocalSource, entityRemoteSource)) {
-            syncData(
-                localSource = entityLocalSource,
-                remoteDataSource = entityRemoteSource,
-                localTimestamp = localTimestamp,
-                remoteTimestamp = remoteTimestamp
-            )
-        }
-
+        syncDataIfNeeded(entityLocalSource, entityRemoteSource)
         return entityLocalSource.getAllEntities().first()
     }
 
     private suspend fun selectAssociations(): List<A> {
-        val localTimestamp = associationLocalSource.getLastModifiedTime()
-        val remoteTimestamp = associationRemoteSource?.getLastModifiedTime() ?: localTimestamp
-
-        if (needToSyncData(associationLocalSource, associationRemoteSource)) {
-            syncData(
-                localSource = associationLocalSource,
-                remoteDataSource = associationRemoteSource,
-                localTimestamp = localTimestamp,
-                remoteTimestamp = remoteTimestamp
-            )
-        }
-
+        syncDataIfNeeded(associationLocalSource, associationRemoteSource)
         return associationLocalSource.getAllEntities().first()
     }
 
-    private suspend fun <T> needToSyncData(
+    private suspend fun <T> syncDataIfNeeded(
         localSource: BaseLocalDataSource<T>,
-        remoteDataSource: BaseRemoteDataSource<T>?
-    ): Boolean {
-        val localTimestamp = localSource.getLastModifiedTime()
-        val remoteTimestamp = remoteDataSource?.getLastModifiedTime() ?: return false
-        return remoteTimestamp > localTimestamp
-    }
-
-    private suspend fun <T> syncData(
-        localSource: BaseLocalDataSource<T>,
-        remoteDataSource: BaseRemoteDataSource<T>?,
-        localTimestamp: Long,
-        remoteTimestamp: Long
+        remoteSource: BaseRemoteDataSource<T>?
     ) {
-        remoteDataSource?.getEntitiesAfterTimestamp(localTimestamp)?.first()?.let { dataToSync ->
-            localSource.deleteAndUpsertEntities(
-                entitiesToDeleteAndUpsert = dataToSync, timestamp = remoteTimestamp
-            )
+        val remoteTimestamp = remoteSource?.getLastModifiedTime()
+        if (remoteSource != null && remoteTimestamp == null) {
+            val localTimestamp = localSource.getLastModifiedTime() ?: return
+
+            val entities = localSource.getAllEntities().first()
+            remoteSource.upsertEntities(entityList = entities, timestamp = localTimestamp)
+            return
         }
+        remoteTimestamp ?: return
+
+        val localTimestamp = localSource.getLastModifiedTime() ?: 0L
+
+        if (localTimestamp >= remoteTimestamp) return
+
+        remoteSource.getEntitiesAfterTimestamp(timestamp = localTimestamp).first()
+            .takeIf { it.isNotEmpty() }
+            ?.let { dataToSync ->
+                localSource.deleteAndUpsertEntities(
+                    entitiesToDeleteAndUpsert = dataToSync,
+                    timestamp = remoteTimestamp
+                )
+            }
     }
 
 }

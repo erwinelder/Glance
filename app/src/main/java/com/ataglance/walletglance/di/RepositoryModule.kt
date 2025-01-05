@@ -33,9 +33,7 @@ val repositoryModule = module {
         scoped { get<RepositoryFactory>().getAccountRepository() }
         scoped { get<RepositoryFactory>().getCategoryRepository() }
         scoped { get<RepositoryFactory>().getCategoryCollectionRepository() }
-        scoped {
-            get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository()
-        }
+        scoped { get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository() }
         scoped { get<RepositoryFactory>().getRecordRepository() }
         scoped { get<RepositoryFactory>().getBudgetAndBudgetAccountAssociationRepository() }
         scoped<RecordAndAccountRepository> {

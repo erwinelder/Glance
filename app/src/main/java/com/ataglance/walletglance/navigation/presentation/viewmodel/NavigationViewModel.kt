@@ -41,7 +41,7 @@ class NavigationViewModel(
         )
     val navigationButtonList = _navigationButtonList.asStateFlow()
 
-    fun fetchBottomBarNavigationButtons() {
+    private fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
             navigationButtonRepository.getAllEntities().collect { buttons ->
                 if (buttons.isNotEmpty()) {
@@ -89,6 +89,12 @@ class NavigationViewModel(
         _moveScreensTowardsLeft.update { value }
     }
 
+
+    init {
+        fetchBottomBarNavigationButtons()
+    }
+
+
     private fun changeMoveScreensTowardsLeft(currentScreen: MainScreens, nextScreen: MainScreens) {
         setMoveScreensTowardsLeft(needToMoveScreensTowardsLeft(currentScreen, nextScreen))
     }
@@ -123,6 +129,10 @@ class NavigationViewModel(
     }
 
 
+    fun popBackStackToHomeScreen(navController: NavController) {
+        navController.popBackStack(MainScreens.Home, false)
+    }
+
     fun navigateToScreenPoppingToStartDestination(
         navController: NavController,
         navBackStackEntry: NavBackStackEntry?,
@@ -137,26 +147,6 @@ class NavigationViewModel(
         }
     }
 
-    fun popBackStackAndNavigateToScreen(
-        navController: NavController,
-        screen: Any
-    ) {
-        navController.popBackStack()
-        navController.navigate(screen) {
-            launchSingleTop = true
-        }
-    }
-
-    fun navigateToScreenMovingTowardsLeft(
-        navController: NavController,
-        screen: Any
-    ) {
-        setMoveScreensTowardsLeft(true)
-        navController.navigate(screen) {
-            launchSingleTop = true
-        }
-    }
-
     fun navigateToScreen(
         navController: NavController,
         screen: Any
@@ -166,13 +156,27 @@ class NavigationViewModel(
         }
     }
 
+    fun popBackStackAndNavigateToScreen(
+        navController: NavController,
+        screen: Any
+    ) {
+        navController.popBackStack()
+        navigateToScreen(navController, screen)
+    }
+
+    fun navigateToScreenMovingTowardsLeft(
+        navController: NavController,
+        screen: Any
+    ) {
+        setMoveScreensTowardsLeft(true)
+        navigateToScreen(navController, screen)
+    }
+
     fun navigateToSignInScreen(
         navController: NavController,
         signInCase: SignInCase
     ) {
-        navController.navigate(AuthScreens.SignIn(signInCase.name)) {
-            launchSingleTop = true
-        }
+        navigateToScreen(navController, AuthScreens.SignIn(signInCase.name))
     }
 
     fun popBackStackAndNavigateToResultSuccessScreen(
@@ -180,9 +184,7 @@ class NavigationViewModel(
         screenType: AuthResultSuccessScreenType
     ) {
         navController.popBackStack()
-        navController.navigate(AuthScreens.ResultSuccess(screenType.name)) {
-            launchSingleTop = true
-        }
+        navigateToScreen(navController, AuthScreens.ResultSuccess(screenType.name))
     }
 
 }

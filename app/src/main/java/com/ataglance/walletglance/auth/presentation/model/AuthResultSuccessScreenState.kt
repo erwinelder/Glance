@@ -5,6 +5,8 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.utils.enumValueOrNull
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
 data class AuthResultSuccessScreenState(
@@ -15,7 +17,7 @@ data class AuthResultSuccessScreenState(
     companion object {
         fun fromString(type: String, isAppSetUp: Boolean): AuthResultSuccessScreenState {
             return AuthResultSuccessScreenState(
-                type = AuthResultSuccessScreenType.entries.find { it.name == type }
+                type = enumValueOrNull<AuthResultSuccessScreenType>(type)
                     ?: AuthResultSuccessScreenType.SignIn,
                 isAppSetUp = isAppSetUp
             )
@@ -51,7 +53,7 @@ data class AuthResultSuccessScreenState(
         return when (type) {
             AuthResultSuccessScreenType.SignIn -> when (isAppSetUp) {
                 true -> AuthScreens.Profile
-                false -> SettingsScreens.Accounts
+                false -> MainScreens.FinishSetup
             }
             AuthResultSuccessScreenType.EmailVerification -> when (isAppSetUp) {
                 true -> AuthScreens.Profile

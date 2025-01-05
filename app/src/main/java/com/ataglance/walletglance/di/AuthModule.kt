@@ -9,10 +9,10 @@ import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.GetUserDataUseCase
+import com.ataglance.walletglance.auth.domain.usecase.GetUserDataUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.GetUserEmailUseCase
 import com.ataglance.walletglance.auth.domain.usecase.GetUserEmailUseCaseImpl
-import com.ataglance.walletglance.auth.domain.usecase.GetUserRemotePreferencesUseCase
-import com.ataglance.walletglance.auth.domain.usecase.GetUserRemotePreferencesUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.ReauthenticateUseCase
 import com.ataglance.walletglance.auth.domain.usecase.ReauthenticateUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.RequestEmailUpdateUseCase
@@ -44,7 +44,7 @@ val authModule = module {
             applyOobCodeUseCase = get(),
             createNewUserUseCase = get(),
             signInUseCase = get(),
-            getUserRemotePreferencesUseCase = get(),
+            getUserDataUseCase = get(),
             sendEmailVerificationEmailUseCase = get(),
             requestEmailUpdateUseCase = get(),
             updatePasswordUseCase = get(),
@@ -63,8 +63,8 @@ val authModule = module {
     single<CreateNewUserUseCase> { CreateNewUserUseCaseImpl(auth = get(), userRepository = get()) }
     single<SignInUseCase> { SignInUseCaseImpl(auth = get()) }
     single<ReauthenticateUseCase> { ReauthenticateUseCaseImpl(auth = get()) }
-    single<GetUserRemotePreferencesUseCase> {
-        GetUserRemotePreferencesUseCaseImpl(userRepository = get())
+    single<GetUserDataUseCase> {
+        GetUserDataUseCaseImpl(userRepository = get())
     }
     single<SendEmailVerificationEmailUseCase> {
         SendEmailVerificationEmailUseCaseImpl(auth = get())

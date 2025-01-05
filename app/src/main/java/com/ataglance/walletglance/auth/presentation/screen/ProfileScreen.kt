@@ -49,7 +49,7 @@ fun ProfileScreen(
             onNavigateBack = onNavigateBack,
             title = stringResource(greetingsTitleRes),
             mainScreenContentBlock = {
-                NavigateToSettingsCategoryButton(categories.deleteAccount, onPopBackStackAndNavigateToScreen)
+//                NavigateToSettingsCategoryButton(categories.deleteAccount, onPopBackStackAndNavigateToScreen)
                 OpenSettingsCategoryButton(categories.signOut) {
                     showSignOutSheet = true
                 }

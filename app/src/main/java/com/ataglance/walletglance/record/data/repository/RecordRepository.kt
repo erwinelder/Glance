@@ -9,33 +9,17 @@ import kotlinx.coroutines.flow.Flow
 
 interface RecordRepository : BaseEntityRepository<RecordEntity> {
 
-    suspend fun convertRecordsToTransfers(
-        noteValues: List<String>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    )
+    suspend fun convertRecordsToTransfers(noteValues: List<String>)
 
-    fun getLastRecordNum(
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ): Flow<Int?>
+    fun getLastRecordNum(): Flow<Int?>
 
-    fun getRecordsForToday(
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ): Flow<List<RecordEntity>>
+    fun getRecordsForToday(): Flow<List<RecordEntity>>
 
-    fun getRecordsInDateRange(
-        longDateRange: LongDateRange,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ): Flow<List<RecordEntity>>
+    fun getRecordsInDateRange(longDateRange: LongDateRange): Flow<List<RecordEntity>>
 
     fun getTotalAmountForBudgetInDateRanges(
         budget: Budget,
-        dateRangeList: List<LongDateRange>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
+        dateRangeList: List<LongDateRange>
     ): Flow<List<TotalAmountByRange>>
 
 }

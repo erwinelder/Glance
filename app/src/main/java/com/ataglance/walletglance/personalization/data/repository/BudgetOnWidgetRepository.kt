@@ -7,10 +7,6 @@ import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntit
 interface BudgetOnWidgetRepository : BaseEntityRepository<BudgetOnWidgetEntity> {
 
     @Transaction
-    suspend fun upsertBudgetsOnWidgetAndDeleteOther(
-        budgetsToUpsert: List<BudgetOnWidgetEntity>,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    )
+    suspend fun upsertBudgetsOnWidgetAndDeleteOther(budgetsToUpsert: List<BudgetOnWidgetEntity>)
 
 }

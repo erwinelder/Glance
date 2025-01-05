@@ -6,6 +6,7 @@ import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.mapper.toMap
 import com.ataglance.walletglance.record.mapper.toRecordEntity
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class RecordRemoteDataSource(
     userId: String,
@@ -20,35 +21,21 @@ class RecordRemoteDataSource(
     entityToDataMapper = RecordEntity::toMap
 ) {
 
-    fun convertTransfersToRecords(
-        noteValues: List<String>,
-        timestamp: Long,
-        onSuccessListener: () -> Unit = {},
-        onFailureListener: (Exception) -> Unit = {}
-    ) {
-        val query = collectionRef.whereIn("note", noteValues)
+    suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long) {
+        val documents = collectionRef.whereIn("note", noteValues).get().await()
+        val batch = firestore.batch()
 
-        query.get()
-            .addOnSuccessListener { documents ->
-                val batch = firestore.batch()
+        documents.forEach { document ->
+            val updatedRecord = document.data
+                .toRecordEntity()
+                .convertTransferToRecord()
+                .toMap(timestamp)
 
-                documents.forEach { document ->
-                    val updatedRecord = document.data
-                        .toRecordEntity()
-                        .convertTransferToRecord()
-                        .toMap(timestamp)
+            batch.update(document.reference, updatedRecord)
+        }
 
-                    batch.update(document.reference, updatedRecord)
-                }
-
-                batch.commit()
-                    .addOnSuccessListener {
-                        updateLastModifiedTime(timestamp)
-                        onSuccessListener()
-                    }
-                    .addOnFailureListener(onFailureListener)
-            }
-            .addOnFailureListener(onFailureListener)
+        batch.commit().await()
+        updateLastModifiedTime(timestamp)
     }
 
 }

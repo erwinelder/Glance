@@ -5,7 +5,6 @@ import com.ataglance.walletglance.core.data.model.EntitiesToUpsertAndDelete
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.model.TableUpdateTime
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 
 abstract class BaseLocalDataSource<T>(
     private val dao: BaseDao<T>,
@@ -19,8 +18,8 @@ abstract class BaseLocalDataSource<T>(
         )
     }
 
-    suspend fun getLastModifiedTime(): Long {
-        return updateTimeDao.getUpdateTime(tableName.name).first()
+    suspend fun getLastModifiedTime(): Long? {
+        return updateTimeDao.getUpdateTime(tableName.name)
     }
 
     @Transaction

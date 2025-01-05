@@ -12,8 +12,6 @@ class BudgetOnWidgetRepositoryImpl(
 
     override suspend fun upsertBudgetsOnWidgetAndDeleteOther(
         budgetsToUpsert: List<BudgetOnWidgetEntity>,
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
     ) {
         val timestamp = getNowDateTimeLong()
 
@@ -30,20 +28,15 @@ class BudgetOnWidgetRepositoryImpl(
             remoteSource?.deleteAndUpsertEntities(
                 entitiesToDelete = budgetsToDelete,
                 entitiesToUpsert = budgetsToUpsert,
-                timestamp = timestamp,
-                onSuccessListener = onSuccessListener,
-                onFailureListener = onFailureListener
+                timestamp = timestamp
             )
         }
     }
 
-    override suspend fun deleteAllEntities(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
+    override suspend fun deleteAllEntities() {
         val timestamp = getNowDateTimeLong()
-        localSource.deleteAllBudgetsOnWidget(timestamp)
-        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
+        localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
+        remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntitiesLocally() {

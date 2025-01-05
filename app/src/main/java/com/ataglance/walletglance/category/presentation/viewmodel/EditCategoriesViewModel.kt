@@ -159,7 +159,7 @@ class EditCategoriesViewModel(
     fun getAllCategoryEntities(): List<CategoryEntity> {
         return uiState.value.categoriesWithSubcategories
             .fixParentCategoriesOrderNums()
-            .concatenateAsCategoryList()
+            .asSingleList()
             .toCategoryEntityList()
     }
 
@@ -182,7 +182,7 @@ data class SetupCategoriesUiState(
 ) {
 
     private fun getNewCategoryId(): Int {
-        return ((categoriesWithSubcategories.concatenateAsCategoryList() +
+        return ((categoriesWithSubcategories.asSingleList() +
                 (categoryWithSubcategories?.subcategoryList ?: emptyList()))
             .maxOfOrNull { it.id } ?: 0) + 1
     }

@@ -2,6 +2,7 @@ package com.ataglance.walletglance.core.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,8 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
@@ -34,18 +33,13 @@ import java.time.LocalDateTime
 
 @Composable
 fun MainAppContent(
-    authController: AuthController,
-    billingSubscriptionManager: BillingSubscriptionManager,
-    appViewModel: AppViewModel,
     appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
-    navViewModel: NavigationViewModel,
     navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel
 ) {
-    var dimBackground by remember { mutableStateOf(false) }
-    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isBottomBarVisible by remember(appConfiguration.isSetUp, navBackStackEntry) {
         derivedStateOf {
@@ -55,8 +49,18 @@ fun MainAppContent(
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
     val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
+    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
+    val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories.collectAsStateWithLifecycle()
+    val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
+    val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
+    val recordStackListByDate by appViewModel.recordStackListFilteredByDate.collectAsStateWithLifecycle()
+    val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
+
     val widgetNamesList by personalizationViewModel.widgetNamesList.collectAsStateWithLifecycle()
     val budgetsOnWidget by personalizationViewModel.budgetsOnWidget.collectAsStateWithLifecycle()
+
+    var dimBackground by remember { mutableStateOf(false) }
+    var openCustomDateRangeWindow by remember { mutableStateOf(false) }
 
     val currentLocalDateTime = LocalDateTime.now()
     val greetingsTitleRes by remember(currentLocalDateTime.hour) {
@@ -64,15 +68,6 @@ fun MainAppContent(
             currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
         }
     }
-    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
-    val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories
-        .collectAsStateWithLifecycle()
-    val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState
-        .collectAsStateWithLifecycle()
-    val accountsUiState by appViewModel.accountsAndActiveOne.collectAsStateWithLifecycle()
-    val recordStackListByDate by appViewModel.recordStackListFilteredByDate
-        .collectAsStateWithLifecycle()
-    val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
 
 
     val appUiState by remember {
@@ -107,15 +102,10 @@ fun MainAppContent(
                 recordStacksByDateAndAccount = recordStacksByDateAndAccount,
 
                 widgetNamesList = widgetNamesList,
-                budgetsOnWidget = budgetsByType
-                    .concatenate()
-                    .filter { it.id in budgetsOnWidget },
-                expensesIncomeWidgetUiState = recordStacksByDateAndAccount
-                    .getExpensesIncomeWidgetUiState(),
-                compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount
-                    .shrinkForCompactView(),
-                categoryStatisticsLists = categoriesWithSubcategories
-                    .getStatistics(recordStacksByDateAndAccount)
+                budgetsOnWidget = budgetsByType.concatenate().filter { it.id in budgetsOnWidget },
+                expensesIncomeWidgetUiState = recordStacksByDateAndAccount.getExpensesIncomeWidgetUiState(),
+                compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount.shrinkForCompactView(),
+                categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStacksByDateAndAccount)
             )
         }
     }
@@ -146,30 +136,22 @@ fun MainAppContent(
                 navController = navController,
                 scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
-                moveScreenTowardsLeft = moveScreenTowardsLeft,
-                authController = authController,
-                billingSubscriptionManager = billingSubscriptionManager,
                 appViewModel = appViewModel,
                 personalizationViewModel = personalizationViewModel,
+                moveScreenTowardsLeft = moveScreenTowardsLeft,
                 appConfiguration = appConfiguration,
                 themeUiState = themeUiState,
                 appUiState = appUiState,
                 widgetsUiState = widgetsUiState,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
-                onCustomDateRangeButtonClick = {
-                    openCustomDateRangeWindow = !openCustomDateRangeWindow
-                },
-                onDimBackgroundChange = { value: Boolean ->
-                    dimBackground = value
-                }
+                onCustomDateRangeButtonClick = { openCustomDateRangeWindow = !openCustomDateRangeWindow },
+                onDimBackgroundChange = { dimBackground = it }
             )
             DateRangeAssetsPickerContainer(
                 scaffoldPadding = scaffoldPadding,
                 dateRangeMenuUiState = dateRangeMenuUiState,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
-                onCloseCustomDateRangeWindow = {
-                    openCustomDateRangeWindow = false
-                },
+                onCloseCustomDateRangeWindow = { openCustomDateRangeWindow = false },
                 onDateRangeSelect = appViewModel::selectDateRange,
                 onCustomDateRangeSelect = appViewModel::selectCustomDateRange
             )

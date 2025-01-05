@@ -2,17 +2,16 @@ package com.ataglance.walletglance.core.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
 import com.ataglance.walletglance.core.data.model.TableUpdateTime
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TableUpdateTimeDao {
 
-    @Update
+    @Upsert
     suspend fun updateTime(entity: TableUpdateTime)
 
     @Query("SELECT timestamp FROM TableUpdateTime WHERE tableName = :tableName")
-    fun getUpdateTime(tableName: String): Flow<Long>
+    suspend fun getUpdateTime(tableName: String): Long?
 
 }

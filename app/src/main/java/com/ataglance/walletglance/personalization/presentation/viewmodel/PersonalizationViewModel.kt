@@ -116,7 +116,7 @@ class PersonalizationViewModel(
     }
 
 
-    fun fetchDataOnStart() {
+    init {
         fetchWidgetListFromDb()
         fetchBudgetsOnWidgetFromDb()
     }

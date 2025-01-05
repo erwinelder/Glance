@@ -9,13 +9,10 @@ class WidgetRepositoryImpl(
     override val remoteSource: WidgetRemoteDataSource?
 ) : WidgetRepository {
 
-    override suspend fun deleteAllEntities(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
+    override suspend fun deleteAllEntities() {
         val timestamp = getNowDateTimeLong()
-        localSource.deleteAllWidgets(timestamp)
-        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
+        localSource.deleteAllWidgets(timestamp = timestamp)
+        remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntitiesLocally() {

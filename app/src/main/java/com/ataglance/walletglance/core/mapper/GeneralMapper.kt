@@ -1,21 +1,21 @@
 package com.ataglance.walletglance.core.mapper
 
-import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
+import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.billing.domain.model.AppSubscription
+import com.ataglance.walletglance.core.utils.enumValueOrNull
 
-fun UserRemotePreferences.toMap(): Map<String, Any?> {
+fun UserData.toMap(): Map<String, Any?> {
     return mapOf(
         "language" to language,
         "subscription" to subscription.name
     )
 }
 
-fun Map<String, Any?>.toUserRemotePreferences(userId: String): UserRemotePreferences {
+fun Map<String, Any?>.toUserData(userId: String): UserData {
     val subscriptionString = this["subscription"] as String
-    val subscription = AppSubscription.entries.find { it.name == subscriptionString }
-        ?: AppSubscription.Free
+    val subscription = enumValueOrNull<AppSubscription>(subscriptionString) ?: AppSubscription.Free
 
-    return UserRemotePreferences(
+    return UserData(
         userId = userId,
         language = this["language"] as String,
         subscription = subscription

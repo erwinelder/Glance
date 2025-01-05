@@ -5,11 +5,10 @@ import com.ataglance.walletglance.personalization.data.model.WidgetEntity
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 
 
-
 fun Map<String, Any?>.toWidgetEntity(): WidgetEntity {
     return WidgetEntity(
         name = this["name"] as String,
-        orderNum = this["orderNum"] as Int
+        orderNum = (this["orderNum"] as Long).toInt()
     )
 }
 

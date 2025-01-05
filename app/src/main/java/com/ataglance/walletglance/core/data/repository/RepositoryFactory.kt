@@ -49,43 +49,43 @@ class RepositoryFactory(
 ) {
 
     private inline fun <reified RS> createRemoteDataSource(): RS? {
-        return if (user.isEligibleForDataSync() && user.uid != null) {
-            when (RS::class) {
-                AccountRemoteDataSource::class -> AccountRemoteDataSource(
+        if (!user.isEligibleForDataSync() || user.uid == null) return null
+
+        return when (RS::class) {
+            AccountRemoteDataSource::class -> AccountRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            CategoryRemoteDataSource::class -> CategoryRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            CategoryCollectionRemoteDataSource::class -> CategoryCollectionRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            CategoryCollectionCategoryAssociationRemoteDataSource::class ->
+                CategoryCollectionCategoryAssociationRemoteDataSource(
                     userId = user.uid, firestore = firestore
                 ) as RS
-                CategoryRemoteDataSource::class -> CategoryRemoteDataSource(
+            RecordRemoteDataSource::class -> RecordRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            BudgetRemoteDataSource::class -> BudgetRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            BudgetAccountAssociationRemoteDataSource::class ->
+                BudgetAccountAssociationRemoteDataSource(
                     userId = user.uid, firestore = firestore
                 ) as RS
-                CategoryCollectionRemoteDataSource::class -> CategoryCollectionRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
-                CategoryCollectionCategoryAssociationRemoteDataSource::class ->
-                    CategoryCollectionCategoryAssociationRemoteDataSource(
-                        userId = user.uid, firestore = firestore
-                    ) as RS
-                RecordRemoteDataSource::class -> RecordRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
-                BudgetRemoteDataSource::class -> BudgetRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
-                BudgetAccountAssociationRemoteDataSource::class ->
-                    BudgetAccountAssociationRemoteDataSource(
-                        userId = user.uid, firestore = firestore
-                    ) as RS
-                NavigationButtonRemoteDataSource::class -> NavigationButtonRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
-                WidgetRemoteDataSource::class -> WidgetRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
-                BudgetOnWidgetRemoteDataSource::class -> BudgetOnWidgetRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
-                else -> null
-            }
-        } else null
+            NavigationButtonRemoteDataSource::class -> NavigationButtonRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            WidgetRemoteDataSource::class -> WidgetRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            BudgetOnWidgetRemoteDataSource::class -> BudgetOnWidgetRemoteDataSource(
+                userId = user.uid, firestore = firestore
+            ) as RS
+            else -> null
+        }
     }
 
     fun getAccountRepository(): AccountRepository {

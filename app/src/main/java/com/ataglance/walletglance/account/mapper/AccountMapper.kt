@@ -3,15 +3,16 @@ package com.ataglance.walletglance.account.mapper
 import com.ataglance.walletglance.account.data.model.AccountEntity
 import com.ataglance.walletglance.account.domain.Account
 import com.ataglance.walletglance.account.domain.color.AccountColorWithName
+import com.ataglance.walletglance.core.utils.convertToDoubleOrZero
 
 
 fun Map<String, Any?>.toAccountEntity(): AccountEntity {
     return AccountEntity(
-        id = this["id"] as Int,
-        orderNum = this["orderNum"] as Int,
+        id = (this["id"] as Long).toInt(),
+        orderNum = (this["orderNum"] as Long).toInt(),
         name = this["name"] as String,
         currency = this["currency"] as String,
-        balance = this["balance"] as Double,
+        balance = this["balance"].convertToDoubleOrZero(),
         color = this["color"] as String,
         hide = this["hide"] as Boolean,
         hideBalance = this["hideBalance"] as Boolean,

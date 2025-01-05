@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.core.presentation.viewmodel
 
 import android.content.Context
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
@@ -19,7 +18,7 @@ import com.ataglance.walletglance.account.domain.utils.mergeWith
 import com.ataglance.walletglance.account.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.account.domain.utils.toAccountList
 import com.ataglance.walletglance.account.mapper.toAccountEntityList
-import com.ataglance.walletglance.auth.data.model.UserRemotePreferences
+import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.budget.data.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.budget.data.utils.getBudgetsThatAreNotInList
@@ -63,6 +62,7 @@ import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutS
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
+import com.ataglance.walletglance.core.utils.getLanguageContext
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
@@ -103,7 +103,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 class AppViewModel(
     val settingsRepository: SettingsRepository,
@@ -135,7 +134,7 @@ class AppViewModel(
                     0 -> MainScreens.Settings
                     else -> MainScreens.FinishSetup
                 },
-                startSettingsDestination = when (setupStage) {
+                settingsStartDestination = when (setupStage) {
                     1 -> SettingsScreens.SettingsHome
                     else -> SettingsScreens.Start
                 },
@@ -176,7 +175,7 @@ class AppViewModel(
         val translatedCategories = translateCategories(
             defaultCategoriesInCurrLocale = getDefaultCategoriesByLanguage(currentLangCode, context),
             defaultCategoriesInNewLocale = getDefaultCategoriesByLanguage(newLangCode, context),
-            currCategoryList = categoriesWithSubcategories.value.concatenateAsCategoryList()
+            currCategoryList = categoriesWithSubcategories.value.asSingleList()
         )
         viewModelScope.launch {
             categoryRepository.upsertEntities(translatedCategories.toCategoryEntityList())
@@ -184,18 +183,16 @@ class AppViewModel(
     }
 
     private fun getDefaultCategoriesByLanguage(langCode: String, context: Context): List<Category> {
-        val langContext = context.createConfigurationContext(Configuration().apply {
-            setLocale(Locale(langCode))
-        })
-        return DefaultCategoriesPackage(langContext).getDefaultCategories()
-            .concatenateAsCategoryList()
+        val langContext = context.getLanguageContext(langCode = langCode)
+        return DefaultCategoriesPackage(langContext).getDefaultCategories().asSingleList()
     }
 
-    fun updatePreferencesAfterSignIn(preferences: UserRemotePreferences) {
+
+    fun updateConfigurationAfterSignIn(userData: UserData) {
         viewModelScope.launch {
-            setUserId(preferences.userId)
+            setUserId(userData.userId)
         }
-        setLanguage(preferences.language)
+        setLanguage(userData.language)
     }
 
     suspend fun getUserId(): String? {
@@ -210,7 +207,7 @@ class AppViewModel(
         settingsRepository.saveUserIdPreference("")
     }
 
-    fun applyAppLanguage() {
+    private fun applyAppLanguage() {
         viewModelScope.launch {
             settingsRepository.language.firstOrNull()?.let { langCode ->
                 setLanguage(langCode)
@@ -219,7 +216,6 @@ class AppViewModel(
     }
 
     fun setLanguage(langCode: String) {
-
         viewModelScope.launch {
             settingsRepository.saveLanguagePreference(langCode)
         }
@@ -232,7 +228,6 @@ class AppViewModel(
 
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
         AppCompatDelegate.setApplicationLocales(appLocale)
-
     }
 
     fun setUseDeviceTheme(value: Boolean) {
@@ -305,7 +300,7 @@ class AppViewModel(
      * destination in the datastore preferences, which is the finish screen), reassign this
      * preference to 1 (home screen).
      */
-    fun updateSetupStageIfNeeded() {
+    private fun updateSetupStageIfNeeded() {
         viewModelScope.launch {
             val isSetUp = settingsRepository.setupStage.first()
             if (isSetUp == 2) {
@@ -318,8 +313,10 @@ class AppViewModel(
         generalRepository.resetAllData()
     }
 
-    suspend fun deleteAllData() {
-        generalRepository.deleteAllDataLocally()
+    fun deleteAllData() {
+        viewModelScope.launch {
+            generalRepository.deleteAllDataLocally()
+        }
     }
 
     private fun fetchLastRecordNum() {
@@ -331,10 +328,13 @@ class AppViewModel(
     }
 
 
-    private val _accountsAndActiveOne: MutableStateFlow<AccountsAndActiveOne> =
-        MutableStateFlow(AccountsAndActiveOne())
+    // TODO-ACCOUNTS
+    private val _accountsAndActiveOne: MutableStateFlow<AccountsAndActiveOne> = MutableStateFlow(
+        AccountsAndActiveOne()
+    )
     val accountsAndActiveOne: StateFlow<AccountsAndActiveOne> = _accountsAndActiveOne.asStateFlow()
 
+    // TODO-ACCOUNTS
     private fun fetchAccounts() {
         viewModelScope.launch {
             accountRepository.getAllEntities().collect { accountList ->
@@ -347,6 +347,7 @@ class AppViewModel(
         }
     }
 
+    // TODO-ACCOUNTS
     fun applyAccountListToUiState(accountList: List<Account>) {
         _accountsAndActiveOne.update { uiState ->
             uiState.copy(
@@ -356,6 +357,7 @@ class AppViewModel(
         }
     }
 
+    // TODO-ACCOUNTS
     fun onChangeHideActiveAccountBalance() {
         _accountsAndActiveOne.update {
             it.copy(
@@ -371,6 +373,7 @@ class AppViewModel(
         }
     }
 
+    // TODO-ACCOUNTS
     fun applyActiveAccountByOrderNum(accountOrderNum: Int) {
         _accountsAndActiveOne.update {
             it.copy(
@@ -383,6 +386,8 @@ class AppViewModel(
         }
     }
 
+    // TODO-ACCOUNTS
+    // TODO-RECORDS
     suspend fun saveAccounts(accountsList: List<AccountEntity>) {
         val listToDelete = accountsAndActiveOne.value.accountList
             .toAccountEntityList()
@@ -416,7 +421,7 @@ class AppViewModel(
 
     suspend fun saveCategories(categoryList: List<CategoryEntity>) {
         val listToDelete = categoriesWithSubcategories.value
-            .concatenateAsCategoryList()
+            .asSingleList()
             .toCategoryEntityList()
             .getThatAreNotInList(categoryList)
 
@@ -434,6 +439,7 @@ class AppViewModel(
         )
     }
 
+    // TODO-ACCOUNTS-DEPENDENCY
     private fun getLastUsedRecordCategoryByType(type: CategoryType): CategoryWithSubcategory? {
         return accountsAndActiveOne.value.activeAccount?.id
             ?.let { recordStackListFilteredByDate.value.getFirstByTypeAndAccountIdOrJustType(type, it) }
@@ -460,9 +466,7 @@ class AppViewModel(
         }
     }
 
-    suspend fun saveCategoryCollections(
-        collectionUiStateList: List<CategoryCollectionWithIds>
-    ) {
+    suspend fun saveCategoryCollections(collectionUiStateList: List<CategoryCollectionWithIds>) {
 
         val (newCollections, newAssociations) = collectionUiStateList
             .divideIntoCollectionsAndAssociations()
@@ -497,6 +501,7 @@ class AppViewModel(
         }
     }
 
+    // TODO-ACCOUNTS-DEPENDENCY
     fun getActiveAccountExpensesForToday(): Double {
         return accountsAndActiveOne.value.activeAccount?.id
             ?.let {
@@ -525,6 +530,7 @@ class AppViewModel(
         }
     }
 
+    // TODO-ACCOUNTS-DEPENDENCY
     val recordStackListFilteredByDate: StateFlow<List<RecordStack>> = combine(
         _recordListInDateRange,
         _accountsAndActiveOne,
@@ -550,6 +556,7 @@ class AppViewModel(
                 .getEntitiesAndAssociations()
             val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
 
+            // TODO-ACCOUNTS-DEPENDENCY
             val budgetsByType = budgetEntityList
                 .toBudgetList(
                     categoryWithSubcategoriesList = categoryWithSubcategoriesList,
@@ -625,6 +632,7 @@ class AppViewModel(
         createdRecord: CreatedRecord
     ): DataAfterRecordOperation {
         val recordList = createdRecord.toRecordEntityList()
+        // TODO-ACCOUNTS-DEPENDENCY
         val updatedAccounts = listOf(
             createdRecord.account.cloneAndAddToOrSubtractFromBalance(
                 amount = createdRecord.totalAmount,
@@ -648,6 +656,7 @@ class AppViewModel(
         val currentRecordStack = recordStackListFilteredByDate.value.findByRecordNum(createdRecord.recordNum)
             ?: return null
         val currentRecordList = currentRecordStack.toRecordList()
+        // TODO-ACCOUNTS-DEPENDENCY
         val updatedAccounts = getUpdatedAccountsAfterRecordEditing(
             createdRecord = createdRecord,
             recordStack = currentRecordStack,
@@ -690,6 +699,7 @@ class AppViewModel(
                 )
             )
         } else {
+            // TODO-ACCOUNTS-DEPENDENCY
             val prevAccount = accountsAndActiveOne.value.getAccountById(recordStack.account.id)
                 ?: return null
             (prevAccount to createdRecord.account).returnAmountToFirstBalanceAndUpdateSecondBalance(
@@ -715,6 +725,7 @@ class AppViewModel(
     suspend fun deleteRecord(recordNum: Int) {
         val recordStack = recordStackListFilteredByDate.value.findByRecordNum(recordNum) ?: return
 
+        // TODO-ACCOUNTS-DEPENDENCY
         val updatedAccount = accountsAndActiveOne.value.accountList
             .findById(recordStack.account.id)
             ?.cloneAndAddToOrSubtractFromBalance(
@@ -723,6 +734,7 @@ class AppViewModel(
             )
             ?: return
         val recordList = recordStack.toRecordList()
+        // TODO-ACCOUNTS-DEPENDENCY
         val updatedAccounts = listOf(updatedAccount)
             .mergeWith(accountsAndActiveOne.value.accountList)
             .toAccountEntityList()
@@ -757,6 +769,7 @@ class AppViewModel(
         state: CreatedTransfer
     ): DataAfterRecordOperation {
         val recordList = state.toRecordsPair().toList()
+        // TODO-ACCOUNTS-DEPENDENCY
         val updatedAccountList = listOf(
             state.sender.account.cloneAndSubtractFromBalance(state.sender.amount),
             state.receiver.account.cloneAndAddToBalance(state.receiver.amount)
@@ -779,6 +792,7 @@ class AppViewModel(
             .getOutAndInTransfersByRecordNums(state.getSenderReceiverRecordNums()) ?: return null
 
         val recordList = state.toRecordsPair().toList()
+        // TODO-ACCOUNTS-DEPENDENCY
         val updatedAccounts = getUpdatedAccountsAfterEditedTransfer(
             uiState = state,
             currRecordStackFrom = currRecordStackFrom,
@@ -800,6 +814,7 @@ class AppViewModel(
         )
     }
 
+    // TODO-ACCOUNTS-DEPENDENCY
     fun getUpdatedAccountsAfterEditedTransfer(
         uiState: CreatedTransfer,
         currRecordStackFrom: RecordStack,
@@ -822,6 +837,7 @@ class AppViewModel(
         return updatedAccounts?.mergeWith(updatedPreviousAccounts)
     }
 
+    // TODO-ACCOUNTS-DEPENDENCY
     private fun applyAmountsToAccountsAfterTransfer(
         state: CreatedTransfer,
         prevAccounts: List<Account>
@@ -867,6 +883,7 @@ class AppViewModel(
 
         val (outTransfer, inTransfer) = recordStackListFilteredByDate.value
             .getOutAndInTransfersByRecordNums(senderReceiverRecordNums) ?: return
+        // TODO-ACCOUNTS-DEPENDENCY
         val prevAccounts = Pair(
             accountsAndActiveOne.value.accountList.findById(outTransfer.account.id) ?: return,
             accountsAndActiveOne.value.accountList.findById(inTransfer.account.id) ?: return
@@ -932,7 +949,7 @@ class AppViewModel(
     }
 
 
-    fun fetchDataOnStart() {
+    private fun fetchDataOnStart() {
         fetchAccounts()
         fetchCategories()
         fetchLastRecordNum()
@@ -940,6 +957,13 @@ class AppViewModel(
         fetchRecordsForToday()
         fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
         fetchBudgets()
+    }
+
+
+    init {
+        applyAppLanguage()
+        updateSetupStageIfNeeded()
+        fetchDataOnStart()
     }
 
 }

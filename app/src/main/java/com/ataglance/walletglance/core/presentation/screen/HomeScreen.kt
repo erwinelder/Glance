@@ -139,11 +139,13 @@ private fun CompactLayout(
                     visible = isAppThemeSetUp && accountsAndActiveOne.activeAccount != null,
                     delayMillis = 100
                 ) {
-                    AccountCard(
-                        account = accountsAndActiveOne.activeAccount!!,
-                        todayExpenses = widgetsUiState.activeAccountExpensesForToday,
-                        onHideBalanceButton = onChangeHideActiveAccountBalance
-                    )
+                    if (accountsAndActiveOne.activeAccount != null) {
+                        AccountCard(
+                            account = accountsAndActiveOne.activeAccount,
+                            todayExpenses = widgetsUiState.activeAccountExpensesForToday,
+                            onHideBalanceButton = onChangeHideActiveAccountBalance
+                        )
+                    }
                 }
             }
             itemsIndexed(items = widgetsUiState.widgetNamesList) { index, widgetName ->

@@ -14,7 +14,7 @@ data class CategoriesWithSubcategories(
     val income: List<CategoryWithSubcategories> = emptyList()
 ) {
 
-    fun concatenateAsCategoryList(): List<Category> {
+    fun asSingleList(): List<Category> {
         return (expense + income).flatMap { categoryWithSubcategories ->
             categoryWithSubcategories.asSingleList()
         }

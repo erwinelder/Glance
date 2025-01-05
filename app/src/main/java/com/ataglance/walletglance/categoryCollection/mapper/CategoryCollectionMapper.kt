@@ -8,12 +8,11 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.domain.utils.asChar
 
 
-
 fun Map<String, Any?>.toCategoryCollectionEntity(): CategoryCollectionEntity {
     return CategoryCollectionEntity(
-        id = this["id"] as Int,
-        orderNum = this["orderNum"] as Int,
-        type = this["type"] as Char,
+        id = (this["id"] as Long).toInt(),
+        orderNum = (this["orderNum"] as Long).toInt(),
+        type = (this["type"] as String).toCharArray()[0],
         name = this["name"] as String
     )
 }
@@ -34,8 +33,8 @@ fun Map<String, Any?>.toCategoryCollectionCategoryAssociation():
         CategoryCollectionCategoryAssociation
 {
     return CategoryCollectionCategoryAssociation(
-        categoryCollectionId = this["categoryCollectionId"] as Int,
-        categoryId = this["categoryId"] as Int
+        categoryCollectionId = (this["categoryCollectionId"] as Long).toInt(),
+        categoryId = (this["categoryId"] as Long).toInt()
     )
 }
 

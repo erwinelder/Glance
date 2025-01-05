@@ -20,7 +20,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
@@ -60,17 +59,16 @@ import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    moveScreenTowardsLeft: Boolean,
-    authController: AuthController,
-    billingSubscriptionManager: BillingSubscriptionManager,
     appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel,
+    moveScreenTowardsLeft: Boolean,
     appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
     appUiState: AppUiState,
@@ -79,6 +77,8 @@ fun AppNavHost(
     onCustomDateRangeButtonClick: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
+    val authController = koinInject<AuthController>()
+
     NavHost(
         navController = navController,
         startDestination = appConfiguration.mainStartDestination,
@@ -132,14 +132,12 @@ fun AppNavHost(
             }
             LaunchedEffect(appUiState.categoryCollectionsUiState) {
                 viewModel.setCategoryCollections(
-                    appUiState.categoryCollectionsUiState
-                        .appendDefaultCollection(name = defaultCollectionName)
+                    appUiState.categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
                 )
             }
 
             val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
-            val filteredRecords by viewModel.recordsByDateAccountAndCollection
-                .collectAsStateWithLifecycle()
+            val filteredRecords by viewModel.recordsByDateAccountAndCollection.collectAsStateWithLifecycle()
             val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
             val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
 
@@ -164,8 +162,7 @@ fun AppNavHost(
             )
         }
         composable<MainScreens.CategoryStatistics> { backStack ->
-            val parentCategoryId =
-                backStack.toRoute<MainScreens.CategoryStatistics>().parentCategoryId
+            val parentCategoryId = backStack.toRoute<MainScreens.CategoryStatistics>().parentCategoryId
             val defaultCollectionName = stringResource(R.string.all_categories)
 
             val viewModel = viewModel<CategoryStatisticsViewModel>(
@@ -188,13 +185,12 @@ fun AppNavHost(
             }
             LaunchedEffect(appUiState.categoryCollectionsUiState) {
                 viewModel.setCategoryCollections(
-                    appUiState.categoryCollectionsUiState
-                        .appendDefaultCollection(name = defaultCollectionName)
+                    appUiState.categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
                 )
             }
             LaunchedEffect(
-                key1 = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
-                key2 = appUiState.accountsAndActiveOne.accountList
+                appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
+                appUiState.accountsAndActiveOne.accountList
             ) {
                 viewModel.clearParentCategoryStatistics()
             }
@@ -204,8 +200,7 @@ fun AppNavHost(
             }
 
             val parentCategory by viewModel.parentCategoryStatistics.collectAsStateWithLifecycle()
-            val categoryStatisticsList by viewModel.categoryStatisticsList
-                .collectAsStateWithLifecycle()
+            val categoryStatisticsList by viewModel.categoryStatisticsList.collectAsStateWithLifecycle()
             val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
             val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
             val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
@@ -267,8 +262,7 @@ fun AppNavHost(
                 )
             )
 
-            val budgetsTotalAmountsByRanges by budgetStatisticsViewModel.budgetsTotalAmountsByRanges
-                .collectAsState()
+            val budgetsTotalAmountsByRanges by budgetStatisticsViewModel.budgetsTotalAmountsByRanges.collectAsState()
             val columnChartDataUiState by remember {
                 derivedStateOf {
                     budget?.let {
@@ -407,19 +401,19 @@ fun AppNavHost(
                     coroutineScope.launch {
                         appViewModel.saveTransfer(viewModel.getTransferDraft())
                     }
-                    navController.popBackStack(MainScreens.Home, false)
+                    navViewModel.popBackStackToHomeScreen(navController)
                 },
                 onRepeatButton = {
                     coroutineScope.launch {
                         appViewModel.repeatTransfer(viewModel.getTransferDraft())
                     }
-                    navController.popBackStack(MainScreens.Home, false)
+                    navViewModel.popBackStackToHomeScreen(navController)
                 },
                 onDeleteButton = {
                     coroutineScope.launch {
                         appViewModel.deleteTransfer(viewModel.getSenderReceiverRecordNums())
                     }
-                    navController.popBackStack(MainScreens.Home, false)
+                    navViewModel.popBackStackToHomeScreen(navController)
                 }
             )
         }
@@ -429,7 +423,6 @@ fun AppNavHost(
             navViewModel = navViewModel,
             navigationButtonList = appUiState.navigationButtonList,
             authController = authController,
-            billingSubscriptionManager = billingSubscriptionManager,
             appViewModel = appViewModel,
             appConfiguration = appConfiguration,
             themeUiState = themeUiState,

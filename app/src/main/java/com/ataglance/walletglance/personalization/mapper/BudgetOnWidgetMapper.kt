@@ -3,9 +3,10 @@ package com.ataglance.walletglance.personalization.mapper
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
 
 
-
 fun Map<String, Any?>.toBudgetOnWidgetEntity(): BudgetOnWidgetEntity {
-    return BudgetOnWidgetEntity(budgetId = this["budgetId"] as Int)
+    return BudgetOnWidgetEntity(
+        budgetId = (this["budgetId"] as Long).toInt()
+    )
 }
 
 fun BudgetOnWidgetEntity.toMap(timestamp: Long): HashMap<String, Any> {

@@ -36,7 +36,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
             val collectionsViewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
                 navController = navController,
                 factory = CategoryCollectionsViewModelFactory(
-                    categoryList = categoriesWithSubcategories.concatenateAsCategoryList(),
+                    categoryList = categoriesWithSubcategories.asSingleList(),
                     collectionsWithIds = categoryCollectionsWithIdsByType
                 )
             )

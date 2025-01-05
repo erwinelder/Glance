@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +19,6 @@ import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
-import com.ataglance.walletglance.billing.domain.mapper.asAppSubscription
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -42,44 +43,35 @@ class MainActivity : AppCompatActivity() {
     private val firestore: FirebaseFirestore by inject()
     private val authController: AuthController by inject()
     private lateinit var navController: NavHostController
-    private lateinit var appViewModel: AppViewModel
-    private lateinit var navViewModel: NavigationViewModel
-    private lateinit var personalizationViewModel: PersonalizationViewModel
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
+
+    private val userSessionScopeState = mutableStateOf(
+        getKoin().getOrCreateScope("session", named("userSession"))
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setupSplashScreen()
 
-        var session = getKoin().getOrCreateScope(scopeId = "session", named("userSession"))
-
-        appViewModel = session.get<AppViewModel>()
-        navViewModel = session.get<NavigationViewModel>()
-        personalizationViewModel = session.get<PersonalizationViewModel>()
-        billingSubscriptionManager = session.get<BillingSubscriptionManager>()
+        billingSubscriptionManager = userSessionScopeState.value.get<BillingSubscriptionManager>()
 
         val coroutineScope = CoroutineScope(Dispatchers.IO)
 
         coroutineScope.launch {
-            appViewModel.getUserId()?.let { authController.setUserId(it) }
-        }
-        coroutineScope.launch {
             authController.userState.collect {
-                session.close()
-                session = getKoin().createScope(scopeId = "session", named("userSession"))
+                reinitializeUserScopeAndItsDependencies()
             }
         }
 
         super.onCreate(savedInstanceState)
 
-        coroutineScope.launch {
+        /*coroutineScope.launch {
             billingSubscriptionManager.newPurchase.collect { purchaseResult ->
                 purchaseResult.getDataIfSuccess()
                     ?.asAppSubscription()
                     ?.let(authController::setUserSubscription)
             }
-        }
+        }*/
 
-        doInitialSetup()
         initializeFirebaseDebugger()
 
         setContent {
@@ -91,35 +83,44 @@ class MainActivity : AppCompatActivity() {
                     handleDeepLink(intent)
                 }
 
+                val userSessionScope by userSessionScopeState
+
+                val navViewModel = userSessionScope.get<NavigationViewModel>()
+                val appViewModel = userSessionScope.get<AppViewModel>()
+
+                val personalizationViewModel = userSessionScope.get<PersonalizationViewModel>()
+
+                LaunchedEffect(true) {
+                    appViewModel.getUserId()?.let { authController.fetchUserDataAndUpdateUser(it) }
+                }
+
                 GlanceAppComponent(
-                    authController = authController,
-                    billingSubscriptionManager = billingSubscriptionManager,
-                    appViewModel = appViewModel,
-                    navViewModel = navViewModel,
                     navController = navController,
+                    navViewModel = navViewModel,
+                    appViewModel = appViewModel,
                     personalizationViewModel = personalizationViewModel
                 )
             }
         }
     }
 
-    private fun doInitialSetup() {
-        appViewModel.applyAppLanguage()
-        appViewModel.updateSetupStageIfNeeded()
-        appViewModel.fetchDataOnStart()
-        navViewModel.fetchBottomBarNavigationButtons()
-        personalizationViewModel.fetchDataOnStart()
+    private fun reinitializeUserScopeAndItsDependencies() {
+        getKoin().getScopeOrNull(scopeId = "session")?.close()
+        val scope = getKoin().getOrCreateScope(scopeId = "session", named("userSession"))
+        userSessionScopeState.value = scope
+
+        billingSubscriptionManager = userSessionScopeState.value.get<BillingSubscriptionManager>()
     }
 
     private fun setupSplashScreen() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                appViewModel.themeUiState.value == null ||
-                        appViewModel.appConfiguration.value.appTheme == null
+                false
+            //                appViewModel.themeUiState.value == null ||
+//                        appViewModel.appConfiguration.value.appTheme == null
             }
         }
     }
-
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -163,9 +164,9 @@ class MainActivity : AppCompatActivity() {
             false -> AuthScreens.EmailVerificationFailed
         }
         auth.currentUser?.reload()?.await()
-        auth.currentUser?.let { authController.setUser(it) }
+        auth.currentUser?.let { authController.fetchUserDataAndUpdateUser(it.uid) }
 
-        navViewModel.navigateToScreen(navController = navController, screen = screen)
+        navController.navigate(screen) { launchSingleTop = true }
     }
 
     private suspend fun processEmailVerificationAndChangeLink(obbCode: String) {
@@ -177,14 +178,11 @@ class MainActivity : AppCompatActivity() {
             false -> AuthScreens.EmailVerificationFailed
         }
 
-        navViewModel.navigateToScreen(navController = navController, screen = screen)
+        navController.navigate(screen) { launchSingleTop = true }
     }
 
     private fun processResetPasswordLink(oobCode: String) {
-        navViewModel.navigateToScreen(
-            navController = navController,
-            screen = AuthScreens.ResetPassword(oobCode)
-        )
+        navController.navigate(AuthScreens.ResetPassword(oobCode)) { launchSingleTop = true }
     }
 
 

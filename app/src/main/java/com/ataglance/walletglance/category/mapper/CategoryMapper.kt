@@ -13,10 +13,10 @@ import com.ataglance.walletglance.category.domain.utils.toCategoryList
 
 fun Map<String, Any?>.toCategoryEntity(): CategoryEntity {
     return CategoryEntity(
-        id = this["id"] as Int,
-        type = this["type"] as Char,
-        orderNum = this["orderNum"] as Int,
-        parentCategoryId = this["parentCategoryId"] as Int?,
+        id = (this["id"] as Long).toInt(),
+        type = (this["type"] as String).toCharArray()[0],
+        orderNum = (this["orderNum"] as Long).toInt(),
+        parentCategoryId = (this["parentCategoryId"] as Long?)?.toInt(),
         name = this["name"] as String,
         iconName = this["iconName"] as String,
         colorName = this["colorName"] as String
@@ -27,7 +27,7 @@ fun CategoryEntity.toMap(timestamp: Long): HashMap<String, Any?> {
     return hashMapOf(
         "LMT" to timestamp,
         "id" to id,
-        "type" to type,
+        "type" to type.toString(),
         "orderNum" to orderNum,
         "parentCategoryId" to parentCategoryId,
         "name" to name,

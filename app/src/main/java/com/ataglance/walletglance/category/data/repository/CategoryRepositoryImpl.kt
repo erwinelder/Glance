@@ -9,13 +9,10 @@ class CategoryRepositoryImpl(
     override val remoteSource: CategoryRemoteDataSource?
 ) : CategoryRepository {
 
-    override suspend fun deleteAllEntities(
-        onSuccessListener: () -> Unit,
-        onFailureListener: (Exception) -> Unit
-    ) {
+    override suspend fun deleteAllEntities() {
         val timestamp = getNowDateTimeLong()
         localSource.deleteAllCategories(timestamp = timestamp)
-        remoteSource?.deleteAllEntities(timestamp, onSuccessListener, onFailureListener)
+        remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntitiesLocally() {

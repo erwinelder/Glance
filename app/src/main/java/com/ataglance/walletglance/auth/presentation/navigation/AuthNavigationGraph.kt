@@ -43,17 +43,17 @@ import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSu
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
+import org.koin.compose.getKoin
 
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     authController: AuthController,
-    billingSubscriptionManager: BillingSubscriptionManager,
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
     navigation<SettingsScreens.Auth>(
-        startDestination = getAuthNavGraphStartDestination(appConfiguration.isSignedIn)
+        startDestination = AuthScreens.SignIn(case = SignInCase.Default.name)
     ) {
         composable<AuthScreens.SignIn> { backStack ->
             val case = SignInCase.valueOf(backStack.toRoute<AuthScreens.SignIn>().case)
@@ -87,23 +87,26 @@ fun NavGraphBuilder.authGraph(
 
                         when (result) {
                             is ResultData.Success -> {
-                                result.data?.let(appViewModel::updatePreferencesAfterSignIn)
-
                                 if (authController.emailIsVerified()) {
                                     navViewModel.popBackStackAndNavigateToResultSuccessScreen(
                                         navController = navController,
                                         screenType = case.toAuthResultSuccessScreenType()
                                     )
+                                    result.data?.userId?.let {
+                                        authController.setUserId(it)
+                                    }
                                 } else {
-                                    val verificationResult = authController
-                                        .sendEmailVerificationEmail()
+                                    val verificationResult = authController.sendEmailVerificationEmail()
                                     viewModel.setResultState(verificationResult.toUiState())
                                     if (verificationResult is Result.Success) {
-                                        authController.getUserId()?.let {
+                                        result.data?.userId?.let {
+                                            authController.setUserId(it)
                                             appViewModel.setUserId(it)
                                         }
                                     }
                                 }
+
+                                result.data?.let(appViewModel::updateConfigurationAfterSignIn)
                             }
                             is ResultData.Error -> {
                                 viewModel.setResultState(result.toUiState())
@@ -119,12 +122,9 @@ fun NavGraphBuilder.authGraph(
                 onNavigateToSignUpScreen = takeActionIf(case != SignInCase.AfterEmailChange) {
                     navViewModel.popBackStackAndNavigateToScreen(navController, AuthScreens.SignUp)
                 },
-                onContinueAsGuest = takeActionIf(
-                    case == SignInCase.Default && !appConfiguration.isSetUp
-                ) {
+                onContinueAsGuest = takeActionIf(case == SignInCase.Default && !appConfiguration.isSetUp) {
                     navViewModel.popBackStackAndNavigateToScreen(
-                        navController = navController,
-                        screen = SettingsScreens.Accounts
+                        navController = navController, screen = SettingsScreens.Accounts
                     )
                 }
             )
@@ -169,6 +169,7 @@ fun NavGraphBuilder.authGraph(
                         val verificationResult = authController.sendEmailVerificationEmail()
                         if (verificationResult is Result.Success) {
                             appViewModel.setUserId((userCreationResult as ResultData.Success).data)
+                            authController.setUserId(userCreationResult.data)
                         }
                         viewModel.setResultState(verificationResult.toUiState())
                     }
@@ -396,7 +397,6 @@ fun NavGraphBuilder.authGraph(
                 deletionIsAllowed = deletionIsAllowed,
                 onDeleteAccount = {
                     coroutineScope.launch {
-                        appViewModel.deleteAllData()
                         val result = authController.deleteAccount(
                             password = passwordState.fieldText
                         )
@@ -440,6 +440,10 @@ fun NavGraphBuilder.authGraph(
             AuthResultSuccessScreen(
                 screenState = screenState,
                 onContinueButtonClick = {
+                    if (screenState.type == AuthResultSuccessScreenType.AccountDeletion) {
+                        appViewModel.deleteAllData()
+                        authController.resetUser()
+                    }
                     navViewModel.popBackStackAndNavigateToScreen(
                         navController = navController,
                         screen = screenState.getNextScreenNavigateTo()
@@ -450,6 +454,7 @@ fun NavGraphBuilder.authGraph(
         composable<AuthScreens.ManageSubscriptions> { backStack ->
             val activity = LocalContext.current as? Activity
 
+            val billingSubscriptionManager = getKoin().getScope("session").get<BillingSubscriptionManager>()
             val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
                 navController = navController,
                 factory = SubscriptionViewModelFactory(
@@ -458,8 +463,7 @@ fun NavGraphBuilder.authGraph(
             )
 
             val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()
-            val availableSubscriptions by viewModel.availableSubscriptions
-                .collectAsStateWithLifecycle()
+            val availableSubscriptions by viewModel.availableSubscriptions.collectAsStateWithLifecycle()
             val purchaseResult by viewModel.purchaseResult.collectAsStateWithLifecycle()
 
             SubscriptionsScreen(
