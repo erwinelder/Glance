@@ -96,9 +96,8 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 # Koin
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
-koin-android = { module = "io.insert-koin:koin-android" }
-koin-android-compat = { module = "io.insert-koin:koin-android-compat" }
-koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-android-compat = { group = "io.insert-koin", name = "koin-android-compat" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
 koin-compose-viewmodel-navigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation" }
