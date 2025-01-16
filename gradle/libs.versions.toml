@@ -5,13 +5,13 @@ android-minSdk = "28"
 android-targetSdk = "35"
 # Core
 core = "1.15.0"
-activityCompose = "1.9.3"
+activityCompose = "1.10.0"
 appcompat = "1.7.0"
 coreSplashscreen = "1.0.1"
 # Lifecycle
 lifecycle = "2.8.7"
 # Compose & Navigation
-composeBom = "2024.12.01"
+composeBom = "2025.01.00"
 navigationCommonKtx = "2.8.5"
 # Google Play Services
 appUpdate = "2.1.0"
@@ -22,7 +22,7 @@ review = "2.0.2"
 # Room
 room = "2.6.1"
 # DataStore
-datastore = "1.1.1"
+datastore = "1.1.2"
 # Firebase
 firebase = "33.7.0"
 # Koin
@@ -45,7 +45,7 @@ uiTestManifest = "1.7.6"
 mockitoCore = "5.11.0"
 mockk = "1.13.10"
 # Plugins
-androidGradlePlugin = "8.7.3"
+androidGradlePlugin = "8.8.0"
 ksp = "2.1.0-1.0.29"
 googleServices = "4.4.2"
 kotlin = "2.1.0"
