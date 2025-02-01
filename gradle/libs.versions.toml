@@ -11,8 +11,8 @@ coreSplashscreen = "1.0.1"
 # Lifecycle
 lifecycle = "2.8.7"
 # Compose & Navigation
-composeBom = "2025.01.00"
-navigationCommonKtx = "2.8.5"
+composeBom = "2025.01.01"
+navigationCommonKtx = "2.8.6"
 # Google Play Services
 appUpdate = "2.1.0"
 assetDelivery = "2.3.0"
@@ -24,7 +24,7 @@ room = "2.6.1"
 # DataStore
 datastore = "1.1.2"
 # Firebase
-firebase = "33.7.0"
+firebase = "33.8.0"
 # Koin
 koin = "4.0.0"
 # Utilities
@@ -40,7 +40,7 @@ junitKtx = "1.2.1"
 junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
 kotlinxCoroutinesTest = "1.8.0"
-uiTestManifest = "1.7.6"
+uiTestManifest = "1.7.7"
 # Mockito
 mockitoCore = "5.11.0"
 mockk = "1.13.10"

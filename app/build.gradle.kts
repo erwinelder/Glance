@@ -17,7 +17,6 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 64
         versionName = "4.0"
-        resourceConfigurations += arrayOf("en", "cs", "de", "ru", "es", "uk")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,6 +43,7 @@ android {
             }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -54,17 +54,25 @@ android {
             }
         }
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     bundle {
         language {
             enableSplit = false
         }
     }
+
+    androidResources {
+        localeFilters += listOf("en", "es", "cs", "de", "ru", "uk")
+    }
+
     buildFeatures {
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
