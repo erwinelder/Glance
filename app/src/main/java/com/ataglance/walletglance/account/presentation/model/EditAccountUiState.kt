@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.account.domain.model
+package com.ataglance.walletglance.account.presentation.model
 
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 
@@ -21,23 +21,6 @@ data class EditAccountUiState(
                 balance.isNotBlank() &&
                 balance.last() != '.' &&
                 balance.last() != '-'
-    }
-
-    fun toAccount(): Account? {
-        val balance = balance.toDoubleOrNull() ?: return null
-
-        return Account(
-            id = id,
-            orderNum = orderNum,
-            name = name,
-            currency = currency,
-            balance = balance,
-            color = color,
-            hide = hide,
-            hideBalance = hideBalance,
-            withoutBalance = withoutBalance,
-            isActive = isActive
-        )
     }
 
 }

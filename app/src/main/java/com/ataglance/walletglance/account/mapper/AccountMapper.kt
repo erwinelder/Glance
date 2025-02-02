@@ -3,6 +3,8 @@ package com.ataglance.walletglance.account.mapper
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.presentation.model.EditAccountUiState
+import java.util.Locale
 
 
 fun AccountEntity.toDomainModel(): Account {
@@ -28,6 +30,39 @@ fun Account.toDataModel(): AccountEntity {
         currency = currency,
         balance = balance,
         color = color.getNameValue(),
+        hide = hide,
+        hideBalance = hideBalance,
+        withoutBalance = withoutBalance,
+        isActive = isActive
+    )
+}
+
+
+fun Account.toEditAccountUiState(): EditAccountUiState {
+    return EditAccountUiState(
+        id = id,
+        orderNum = orderNum,
+        name = name,
+        currency = currency,
+        balance = "%.2f".format(Locale.US, balance),
+        color = color,
+        hide = hide,
+        hideBalance = hideBalance,
+        withoutBalance = withoutBalance,
+        isActive = isActive
+    )
+}
+
+fun EditAccountUiState.toAccount(): Account? {
+    val balance = balance.toDoubleOrNull() ?: return null
+
+    return Account(
+        id = id,
+        orderNum = orderNum,
+        name = name,
+        currency = currency,
+        balance = balance,
+        color = color,
         hide = hide,
         hideBalance = hideBalance,
         withoutBalance = withoutBalance,

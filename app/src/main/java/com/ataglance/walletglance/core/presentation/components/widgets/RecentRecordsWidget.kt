@@ -17,16 +17,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.record.domain.RecordStack
 import com.ataglance.walletglance.record.domain.RecordsTypeFilter
-import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
-import com.ataglance.walletglance.record.presentation.components.TransferComponent
 import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.record.domain.utils.getNoRecordsMessageRes
+import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
+import com.ataglance.walletglance.record.presentation.components.TransferComponent
 
 @Composable
 fun RecentRecordsWidget(

@@ -87,28 +87,4 @@ data class Account(
         )
     }
 
-    fun toRecordAccount(): RecordAccount {
-        return RecordAccount(
-            id = id,
-            name = name,
-            currency = currency,
-            color = color
-        )
-    }
-
-    fun toEditAccountUiState(): EditAccountUiState {
-        return EditAccountUiState(
-            id = id,
-            orderNum = orderNum,
-            name = name,
-            currency = currency,
-            balance = "%.2f".format(Locale.US, balance),
-            color = color,
-            hide = hide,
-            hideBalance = hideBalance,
-            withoutBalance = withoutBalance,
-            isActive = isActive
-        )
-    }
-
 }

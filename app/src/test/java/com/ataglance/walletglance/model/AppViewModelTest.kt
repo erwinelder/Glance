@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.model
 
+import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.category.data.model.CategoryEntity
