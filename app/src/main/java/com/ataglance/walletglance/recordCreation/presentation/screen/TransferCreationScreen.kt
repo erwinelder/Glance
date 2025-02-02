@@ -25,14 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.components.AccountPicker
 import com.ataglance.walletglance.account.presentation.components.SmallAccount
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.BackButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
@@ -40,6 +38,7 @@ import com.ataglance.walletglance.core.presentation.components.fields.GlanceText
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
@@ -233,11 +232,11 @@ fun TransferCreationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     accountList: List<Account> = listOf(
         Account(
-            id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(),
+            id = 1, color = AccountColors.Pink,
             name = "Main account"
         ),
         Account(
-            id = 2, color = AccountPossibleColors().blue.toAccountColorWithName(),
+            id = 2, color = AccountColors.Blue,
             name = "Czech Local Card", currency = "CZK"
         )
     ),

@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.recordCreation.domain.mapper
 
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
 import com.ataglance.walletglance.record.data.model.RecordEntity

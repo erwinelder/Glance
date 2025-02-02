@@ -27,9 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
@@ -247,9 +246,9 @@ fun EditBudgetScreenPreview(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
-        Account(id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(), name = "Main account"),
-        Account(id = 2, color = AccountPossibleColors().blue.toAccountColorWithName()),
-        Account(id = 3, color = AccountPossibleColors().default.toAccountColorWithName(), currency = "CZK"),
+        Account(id = 1, color = AccountColors.Pink, name = "Main account"),
+        Account(id = 2, color = AccountColors.Blue),
+        Account(id = 3, color = AccountColors.Default, currency = "CZK"),
     ),
     budgetEntity: BudgetEntity? = null,
     budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,

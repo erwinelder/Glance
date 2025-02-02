@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.recordCreation.domain.transfer
 
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import java.util.Locale
 

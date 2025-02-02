@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.core.data.remote
 
-import com.ataglance.walletglance.core.data.model.EntitiesToUpsertAndDelete
+import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
 import com.ataglance.walletglance.core.data.model.TableName
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -108,7 +108,7 @@ abstract class BaseRemoteDataSource<T>(
 
     fun getEntitiesAfterTimestamp(
         timestamp: Long
-    ): Flow<EntitiesToUpsertAndDelete<T>> = callbackFlow {
+    ): Flow<EntitiesToSynchronise<T>> = callbackFlow {
         val query = collectionRef.whereGreaterThan("LMT", timestamp)
 
         val listenerRegistration = query.addSnapshotListener { querySnapshot, exception ->
@@ -120,12 +120,12 @@ abstract class BaseRemoteDataSource<T>(
             val entitiesToUpsertAndDelete = querySnapshot?.documents
                 ?.partition { it.get("isDeleted") == true }
                 ?.let { (deletedDocuments, updatedDocuments) ->
-                    EntitiesToUpsertAndDelete(
+                    EntitiesToSynchronise(
                         toUpsert = updatedDocuments.toEntityList(),
                         toDelete = deletedDocuments.toEntityList()
                     )
                 }
-                ?: EntitiesToUpsertAndDelete()
+                ?: EntitiesToSynchronise()
 
             trySend(entitiesToUpsertAndDelete)
         }

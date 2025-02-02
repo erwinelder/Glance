@@ -3,7 +3,7 @@ package com.ataglance.walletglance.record.data.repository
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.data.model.LongDateRange
-import com.ataglance.walletglance.core.utils.getNowDateTimeLong
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.record.data.local.RecordLocalDataSource
 import com.ataglance.walletglance.record.data.model.RecordEntity
@@ -17,19 +17,19 @@ class RecordRepositoryImpl(
 ) : RecordRepository {
 
     override suspend fun convertRecordsToTransfers(noteValues: List<String>) {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
         localSource.convertTransfersToRecords(noteValues, timestamp)
         remoteSource?.convertTransfersToRecords(noteValues = noteValues, timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntities() {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
         localSource.deleteAllRecords(timestamp = timestamp)
         remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntitiesLocally() {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
         localSource.deleteAllRecords(timestamp = timestamp)
     }
 

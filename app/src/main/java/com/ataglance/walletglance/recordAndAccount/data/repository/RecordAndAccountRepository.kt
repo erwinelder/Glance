@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.recordAndAccount.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.record.data.model.RecordEntity
 
 interface RecordAndAccountRepository {
@@ -25,10 +25,10 @@ interface RecordAndAccountRepository {
         accountListToUpsert: List<AccountEntity>
     )
 
-    @Transaction
+    /*@Transaction
     suspend fun deleteAndUpdateAccountsAndConvertTransfersToRecords(
         accountListToDelete: List<AccountEntity>,
         accountListToUpsert: List<AccountEntity>
-    )
+    )*/
 
 }

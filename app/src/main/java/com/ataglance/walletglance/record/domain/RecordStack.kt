@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.domain
 
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.account.domain.RecordAccount
+import com.ataglance.walletglance.account.domain.model.RecordAccount
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 

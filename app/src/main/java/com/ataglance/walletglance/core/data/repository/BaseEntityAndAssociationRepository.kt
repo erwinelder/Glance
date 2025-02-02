@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.core.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
+import com.ataglance.walletglance.core.data.local.source.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.remote.BaseRemoteDataSource
-import com.ataglance.walletglance.core.utils.getNowDateTimeLong
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.flow.first
 
 interface BaseEntityAndAssociationRepository<E, A> {
@@ -23,7 +23,7 @@ interface BaseEntityAndAssociationRepository<E, A> {
         onSuccessListener: () -> Unit = {},
         onFailureListener: (Exception) -> Unit = {}
     ) {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
 
         entityLocalSource.deleteAndUpsertEntities(
             entitiesToDelete = entitiesToDelete,

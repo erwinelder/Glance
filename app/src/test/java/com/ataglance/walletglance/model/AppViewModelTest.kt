@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.category.data.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
@@ -213,7 +212,7 @@ class AppViewModelTest {
             newStartAmount, newFinalAmount
         )
 
-        appViewModel.applyAccountListToUiState(accounts)
+        appViewModel.applyAccountsToUiState(accounts)
 
         val result = appViewModel.getUpdatedAccountsAfterEditedTransfer(
             uiState, recordStacks.first, recordStacks.second

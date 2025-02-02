@@ -19,10 +19,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
@@ -240,7 +239,7 @@ fun HomeScreenPreview(
                 name = "Main Card CZK",
                 currency = "CZK",
                 balance = 43551.63,
-                color = AccountPossibleColors().pink.toAccountColorWithName(),
+                color = AccountColors.Pink,
                 isActive = true
             ),
             Account(
@@ -249,7 +248,7 @@ fun HomeScreenPreview(
                 name = "USD Card",
                 currency = "USD",
                 balance = 1516.41,
-                color = AccountPossibleColors().blue.toAccountColorWithName(),
+                color = AccountColors.Blue,
                 isActive = false
             )
         ),
@@ -259,7 +258,7 @@ fun HomeScreenPreview(
             name = "Main Card CZK",
             currency = "CZK",
             balance = 43551.63,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            color = AccountColors.Pink,
             isActive = true
         )
     ),

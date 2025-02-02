@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreen
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreen
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreen

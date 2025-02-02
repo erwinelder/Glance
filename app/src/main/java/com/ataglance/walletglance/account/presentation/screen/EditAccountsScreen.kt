@@ -20,9 +20,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.components.EditingAccountComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
@@ -167,7 +166,7 @@ fun EditAccountsScreenPreview(
             name = "Main USD",
             currency = "USD",
             balance = 112.13,
-            color = AccountPossibleColors().default.toAccountColorWithName(),
+            color = AccountColors.Default,
             isActive = false
         ),
         Account(
@@ -176,7 +175,7 @@ fun EditAccountsScreenPreview(
             name = "Local Card CZK",
             currency = "CZK",
             balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            color = AccountColors.Pink,
             isActive = false
         ),
     ),

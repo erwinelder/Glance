@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.record.mapper
 
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.core.utils.convertToDoubleOrZero

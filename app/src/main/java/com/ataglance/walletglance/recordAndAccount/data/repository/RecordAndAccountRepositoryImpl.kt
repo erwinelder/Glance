@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.recordAndAccount.data.repository
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.data.repository.RecordRepository
@@ -17,12 +17,9 @@ class RecordAndAccountRepositoryImpl(
         accountListToUpsert: List<AccountEntity>
     ) {
         recordRepository.deleteAndUpsertEntities(
-            toDelete = recordListToDelete,
-            toUpsert = emptyList()
+            toDelete = recordListToDelete, toUpsert = emptyList()
         )
-        accountRepository.upsertEntities(
-            entityList = accountListToUpsert
-        )
+        accountRepository.upsertAccounts(accounts = accountListToUpsert)
     }
 
     @Transaction
@@ -32,12 +29,9 @@ class RecordAndAccountRepositoryImpl(
         accountListToUpsert: List<AccountEntity>
     ) {
         recordRepository.deleteAndUpsertEntities(
-            toDelete = recordListToDelete,
-            toUpsert = recordListToUpsert
+            toDelete = recordListToDelete, toUpsert = recordListToUpsert
         )
-        accountRepository.upsertEntities(
-            entityList = accountListToUpsert
-        )
+        accountRepository.upsertAccounts(accounts = accountListToUpsert)
     }
 
     @Transaction
@@ -45,15 +39,11 @@ class RecordAndAccountRepositoryImpl(
         recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
-        recordRepository.upsertEntities(
-            entityList = recordListToUpsert
-        )
-        accountRepository.upsertEntities(
-            entityList = accountListToUpsert
-        )
+        recordRepository.upsertEntities(entityList = recordListToUpsert)
+        accountRepository.upsertAccounts(accounts = accountListToUpsert)
     }
 
-    @Transaction
+    /*@Transaction
     override suspend fun deleteAndUpdateAccountsAndConvertTransfersToRecords(
         accountListToDelete: List<AccountEntity>,
         accountListToUpsert: List<AccountEntity>
@@ -65,6 +55,6 @@ class RecordAndAccountRepositoryImpl(
         recordRepository.convertRecordsToTransfers(
             noteValues = accountListToDelete.map { it.id.toString() }
         )
-    }
+    }*/
 
 }

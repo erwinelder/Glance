@@ -2,9 +2,9 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.EditAccountUiState
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.EditAccountUiState
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalNegative
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +36,7 @@ class EditAccountViewModel : ViewModel() {
 
     fun changeColor(colorName: String) {
         _editAccountUiState.update {
-            it.copy(color = AccountPossibleColors().getByName(colorName))
+            it.copy(color = AccountColors.fromName(colorName))
         }
     }
 

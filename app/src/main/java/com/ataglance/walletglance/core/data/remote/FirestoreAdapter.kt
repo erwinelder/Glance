@@ -16,7 +16,7 @@ class FirestoreAdapter <T> (
     private val collectionName: String,
     private val dataToEntityMapper: EntityMap.() -> T,
     private val entityToDataMapper: T.() -> EntityMap,
-    private val getDocumentRef: CollectionReference.(T) -> DocumentReference
+    private val getDocumentIdentifier: (T) -> String
 ) {
 
     private fun getUserFirestoreRef(userId: String): DocumentReference {
@@ -35,7 +35,7 @@ class FirestoreAdapter <T> (
 
     private fun WriteBatch.upsertEntities(entities: List<T>, userId: String) {
         entities.forEach { entity ->
-            val documentRef = getCollectionRef(userId).getDocumentRef(entity)
+            val documentRef = getCollectionRef(userId).document(getDocumentIdentifier(entity))
             val entityData = entityToDataMapper(entity)
             this.set(documentRef, entityData, SetOptions.merge())
         }

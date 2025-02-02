@@ -23,11 +23,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.presentation.components.AccountPopupPicker
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
@@ -37,12 +36,12 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.components.buttons.AddNewItemButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
@@ -263,18 +262,18 @@ fun RecordCreationScreenPreview(
     accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
         accountList = listOf(
             Account(
-                id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(),
+                id = 1, color = AccountColors.Pink,
                 name = "Main account",
                 isActive = true
             ),
             Account(
-                id = 2, color = AccountPossibleColors().blue.toAccountColorWithName(),
+                id = 2, color = AccountColors.Blue,
                 name = "Czech Local Card", currency = "CZK",
                 isActive = false
             )
         ),
         activeAccount = Account(
-            id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(),
+            id = 1, color = AccountColors.Pink,
             name = "Main account",
             isActive = true
         )

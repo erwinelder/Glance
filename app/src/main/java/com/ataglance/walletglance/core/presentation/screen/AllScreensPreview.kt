@@ -4,10 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.AccountsAndActiveOne
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
@@ -84,7 +83,7 @@ private val accountList = listOf(
         name = "Czech Local Card",
         currency = "CZK",
         balance = 43551.63,
-        color = AccountPossibleColors().pink.toAccountColorWithName(),
+        color = AccountColors.Pink,
         isActive = true
     ),
     Account(
@@ -93,7 +92,7 @@ private val accountList = listOf(
         name = "Main USD Card",
         currency = "USD",
         balance = 1516.41,
-        color = AccountPossibleColors().blue.toAccountColorWithName(),
+        color = AccountColors.Blue,
         isActive = false
     ),
     Account(
@@ -102,7 +101,7 @@ private val accountList = listOf(
         name = "Work Card",
         currency = "USD",
         balance = 412.0,
-        color = AccountPossibleColors().camel.toAccountColorWithName(),
+        color = AccountColors.Camel,
         isActive = false
     ),
     Account(
@@ -111,7 +110,7 @@ private val accountList = listOf(
         name = "Secondary Card CZK",
         currency = "CZK",
         balance = 5000.0,
-        color = AccountPossibleColors().default.toAccountColorWithName(),
+        color = AccountColors.Default,
         isActive = false
     ),
 )

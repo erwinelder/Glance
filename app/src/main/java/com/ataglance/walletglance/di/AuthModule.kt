@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.di
 
+import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.auth.data.repository.UserRepository
 import com.ataglance.walletglance.auth.data.repository.UserRepositoryImpl
 import com.ataglance.walletglance.auth.domain.model.AuthController
@@ -36,26 +37,11 @@ import org.koin.dsl.module
 
 val authModule = module {
 
-    single { FirebaseAuth.getInstance() }
-    single {
-        AuthController(
-            getUserEmailUseCase = get(),
-            userEmailIsVerifiedUseCase = get(),
-            applyOobCodeUseCase = get(),
-            createNewUserUseCase = get(),
-            signInUseCase = get(),
-            getUserDataUseCase = get(),
-            sendEmailVerificationEmailUseCase = get(),
-            requestEmailUpdateUseCase = get(),
-            updatePasswordUseCase = get(),
-            requestPasswordResetUseCase = get(),
-            setNewPasswordUseCase = get(),
-            deleteUserUseCase = get(),
-            signOutUseCase = get()
-        )
-    }
+    /* ---------- Repositories ---------- */
 
     single<UserRepository> { UserRepositoryImpl(firestore = get()) }
+
+    /* ---------- Use Cases ---------- */
 
     single<GetUserEmailUseCase> { GetUserEmailUseCaseImpl(auth = get()) }
     single<UserEmailIsVerifiedUseCase> { UserEmailIsVerifiedUseCaseImpl(auth = get()) }
@@ -77,5 +63,33 @@ val authModule = module {
         DeleteUserUseCaseImpl(userRepository = get(), reauthenticateUseCase = get())
     }
     single<SignOutUseCase> { SignOutUseCaseImpl(auth = get()) }
+
+    /* ---------- Other ---------- */
+
+    single {
+        FirebaseAuth.getInstance()
+    }
+
+    single {
+        AuthController(
+            getUserEmailUseCase = get(),
+            userEmailIsVerifiedUseCase = get(),
+            applyOobCodeUseCase = get(),
+            createNewUserUseCase = get(),
+            signInUseCase = get(),
+            getUserDataUseCase = get(),
+            sendEmailVerificationEmailUseCase = get(),
+            requestEmailUpdateUseCase = get(),
+            updatePasswordUseCase = get(),
+            requestPasswordResetUseCase = get(),
+            setNewPasswordUseCase = get(),
+            deleteUserUseCase = get(),
+            signOutUseCase = get()
+        )
+    }
+
+    single {
+        UserContext()
+    }
 
 }

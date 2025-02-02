@@ -2,9 +2,7 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.account.data.model.AccountEntity
-import com.ataglance.walletglance.account.mapper.toAccountEntityList
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.fixOrderNums
 import com.ataglance.walletglance.account.domain.utils.makeSureActiveAccountIsVisibleOne
 import com.ataglance.walletglance.account.domain.utils.makeSureThereIsOnlyOneActiveAccount
@@ -76,13 +74,12 @@ class EditAccountsViewModel(
         }
     }
 
-    fun getAccountEntities(): List<AccountEntity>? {
+    fun getAccountEntities(): List<Account>? {
         return accountList.value
             .takeIf { it.isNotEmpty() }
             ?.fixOrderNums()
             ?.makeSureThereIsOnlyOneActiveAccount()
             ?.makeSureActiveAccountIsVisibleOne()
-            ?.toAccountEntityList()
     }
 
 }

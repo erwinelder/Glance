@@ -2,12 +2,12 @@ package com.ataglance.walletglance.record.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.ataglance.walletglance.core.data.local.BaseDao
+import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
 import com.ataglance.walletglance.record.data.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface RecordDao : BaseDao<RecordEntity> {
+interface RecordDao : BaseLocalDao<RecordEntity> {
 
     @Query("DELETE FROM Record")
     suspend fun deleteAllRecords()

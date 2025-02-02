@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.core.data.repository
 
-import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
+import com.ataglance.walletglance.core.data.local.source.BaseLocalDataSource
 import com.ataglance.walletglance.core.data.remote.BaseRemoteDataSource
-import com.ataglance.walletglance.core.utils.getNowDateTimeLong
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -17,7 +17,7 @@ interface BaseEntityRepository<T> {
     val remoteSource: BaseRemoteDataSource<T>?
 
     suspend fun upsertEntities(entityList: List<T>) {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
         localSource.upsertEntities(entityList = entityList, timestamp = timestamp)
         remoteSource?.upsertEntities(entityList = entityList, timestamp = timestamp)
     }
@@ -26,7 +26,7 @@ interface BaseEntityRepository<T> {
         toDelete: List<T>,
         toUpsert: List<T>
     ) {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
 
         localSource.deleteAndUpsertEntities(
             entitiesToDelete = toDelete,

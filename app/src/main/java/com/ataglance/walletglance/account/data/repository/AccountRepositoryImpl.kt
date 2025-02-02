@@ -1,23 +1,75 @@
 package com.ataglance.walletglance.account.data.repository
 
-import com.ataglance.walletglance.account.data.local.AccountLocalDataSource
-import com.ataglance.walletglance.account.data.remote.AccountRemoteDataSource
-import com.ataglance.walletglance.core.utils.getNowDateTimeLong
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.local.source.AccountLocalDataSource
+import com.ataglance.walletglance.account.data.mapper.toLocalEntity
+import com.ataglance.walletglance.account.data.mapper.toRemoteEntity
+import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
+import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSource
+import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class AccountRepositoryImpl(
-    override val localSource: AccountLocalDataSource,
-    override val remoteSource: AccountRemoteDataSource?
+    private val localSource: AccountLocalDataSource,
+    private val remoteSource: AccountRemoteDataSource,
+    private val userContext: UserContext
 ) : AccountRepository {
 
-    override suspend fun deleteAllEntities() {
-        val timestamp = getNowDateTimeLong()
-        localSource.deleteAllAccounts(timestamp = timestamp)
-        remoteSource?.deleteAllEntities(timestamp = timestamp)
+    private suspend fun synchroniseAccounts() {
+        val userId = userContext.getUserId()
+        synchroniseData(
+            localUpdateTimeGetter = localSource::getUpdateTime,
+            remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
+            remoteDataGetter = { timestamp ->
+                remoteSource.getAccountsAfterTimestamp(timestamp = timestamp, userId = userId)
+            },
+            remoteDataToLocalDataMapper = AccountRemoteEntity::toLocalEntity,
+            localSynchroniser = localSource::synchroniseAccounts
+        )
     }
 
-    override suspend fun deleteAllEntitiesLocally() {
-        val timestamp = getNowDateTimeLong()
+    override suspend fun upsertAccounts(accounts: List<AccountEntity>) {
+        val timestamp = getCurrentTimestamp()
+
+        localSource.upsertAccounts(accounts = accounts, timestamp = timestamp)
+        remoteSource.upsertAccounts(
+            accounts = accounts.map {
+                it.toRemoteEntity(updateTime = timestamp, deleted = false)
+            },
+            timestamp = timestamp,
+            userId = userContext.getUserId()
+        )
+    }
+
+    override suspend fun deleteAndUpsertAccounts(
+        toDelete: List<AccountEntity>,
+        toUpsert: List<AccountEntity>
+    ) {
+        val timestamp = getCurrentTimestamp()
+        val accountsToSync = EntitiesToSynchronise(toDelete = toDelete, toUpsert = toUpsert)
+
+        localSource.synchroniseAccounts(accountsToSync = accountsToSync, timestamp = timestamp)
+        remoteSource.synchroniseAccounts(
+            accountsToSync = accountsToSync.map { deleted ->
+                toRemoteEntity(updateTime = timestamp, deleted = deleted)
+            },
+            timestamp = timestamp,
+            userId = userContext.getUserId()
+        )
+    }
+
+    override suspend fun deleteAllAccountsLocally() {
+        val timestamp = getCurrentTimestamp()
         localSource.deleteAllAccounts(timestamp = timestamp)
+    }
+
+    override fun getAllAccounts(): Flow<List<AccountEntity>> = flow {
+        synchroniseAccounts()
+        localSource.getAllAccounts().collect(::emit)
     }
 
 }

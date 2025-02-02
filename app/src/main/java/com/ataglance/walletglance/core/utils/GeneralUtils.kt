@@ -186,10 +186,27 @@ fun Uri.extractOobCode(): String? {
 }
 
 
+fun Any.convertToInt(): Int? {
+    return when (this) {
+        is Int -> this
+        is Double -> this.toInt()
+        is Float -> this.toInt()
+        is Long -> this.toInt()
+        else -> null
+    }
+}
+
+fun Any?.convertToIntOrZero(): Int {
+    return this?.convertToInt() ?: 0
+}
+
+
 fun Any.convertToDouble(): Double? {
-    return when (val value = this) {
-        is Double -> value
-        is Long -> value.toDouble()
+    return when (this) {
+        is Int -> this.toDouble()
+        is Double -> this
+        is Float -> this.toDouble()
+        is Long -> this.toDouble()
         else -> null
     }
 }

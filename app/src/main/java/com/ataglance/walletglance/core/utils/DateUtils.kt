@@ -2,12 +2,12 @@ package com.ataglance.walletglance.core.utils
 
 import android.content.Context
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.app.LongRange
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.StringDateRange
 import com.ataglance.walletglance.core.domain.date.TimeInMillisRange
@@ -232,7 +232,7 @@ fun getTodayDateLong(): Long {
     return LocalDate.now().asTimestamp()
 }
 
-fun getNowDateTimeLong(): Long {
+fun getCurrentTimestamp(): Long {
     return LocalDateTime.now().asTimestamp()
 }
 

@@ -20,7 +20,7 @@ class GeneralRepository(
     @Transaction
     suspend fun resetAllData() {
         settingsRepository.clearAllPreferences()
-        accountRepository.deleteAllEntities()
+        accountRepository.deleteAllAccountsLocally()
         categoryRepository.deleteAllEntities()
         categoryCollectionRepository.deleteAllEntities()
         widgetRepository.deleteAllEntities()
@@ -30,7 +30,7 @@ class GeneralRepository(
     @Transaction
     suspend fun deleteAllDataLocally() {
         settingsRepository.clearAllPreferences()
-        accountRepository.deleteAllEntitiesLocally()
+        accountRepository.deleteAllAccountsLocally()
         categoryRepository.deleteAllEntitiesLocally()
         categoryCollectionRepository.deleteAllEntitiesLocally()
         widgetRepository.deleteAllEntitiesLocally()

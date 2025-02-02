@@ -2,12 +2,12 @@ package com.ataglance.walletglance.personalization.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.ataglance.walletglance.core.data.local.BaseDao
+import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface BudgetOnWidgetDao : BaseDao<BudgetOnWidgetEntity> {
+interface BudgetOnWidgetDao : BaseLocalDao<BudgetOnWidgetEntity> {
 
     @Query("DELETE FROM BudgetOnWidget")
     suspend fun deleteAllBudgetsOnWidget()

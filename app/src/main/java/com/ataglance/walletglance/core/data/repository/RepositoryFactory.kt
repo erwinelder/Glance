@@ -1,9 +1,5 @@
 package com.ataglance.walletglance.core.data.repository
 
-import com.ataglance.walletglance.account.data.local.AccountLocalDataSource
-import com.ataglance.walletglance.account.data.remote.AccountRemoteDataSource
-import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.account.data.repository.AccountRepositoryImpl
 import com.ataglance.walletglance.auth.domain.model.User
 import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationLocalDataSource
 import com.ataglance.walletglance.budget.data.local.BudgetLocalDataSource
@@ -23,7 +19,7 @@ import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCol
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepositoryImpl
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepositoryImpl
-import com.ataglance.walletglance.core.data.local.AppDatabase
+import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.navigation.data.local.NavigationButtonLocalDataSource
 import com.ataglance.walletglance.navigation.data.remote.NavigationButtonRemoteDataSource
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
@@ -52,9 +48,6 @@ class RepositoryFactory(
         if (!user.isEligibleForDataSync() || user.uid == null) return null
 
         return when (RS::class) {
-            AccountRemoteDataSource::class -> AccountRemoteDataSource(
-                userId = user.uid, firestore = firestore
-            ) as RS
             CategoryRemoteDataSource::class -> CategoryRemoteDataSource(
                 userId = user.uid, firestore = firestore
             ) as RS
@@ -88,23 +81,16 @@ class RepositoryFactory(
         }
     }
 
-    fun getAccountRepository(): AccountRepository {
-        return AccountRepositoryImpl(
-            localSource = AccountLocalDataSource(db.accountDao, db.tableUpdateTimeDao),
-            remoteSource = createRemoteDataSource<AccountRemoteDataSource>()
-        )
-    }
-
     fun getCategoryRepository(): CategoryRepository {
         return CategoryRepositoryImpl(
-            localSource = CategoryLocalDataSource(db.categoryDao, db.tableUpdateTimeDao),
+            localSource = CategoryLocalDataSource(db.categoryDao, db.localUpdateTimeDao),
             remoteSource = createRemoteDataSource<CategoryRemoteDataSource>()
         )
     }
 
     fun getCategoryCollectionRepository(): CategoryCollectionRepository {
         return CategoryCollectionRepositoryImpl(
-            localSource = CategoryCollectionLocalDataSource(db.categoryCollectionDao, db.tableUpdateTimeDao),
+            localSource = CategoryCollectionLocalDataSource(db.categoryCollectionDao, db.localUpdateTimeDao),
             remoteSource = createRemoteDataSource<CategoryCollectionRemoteDataSource>()
         )
     }
@@ -112,10 +98,10 @@ class RepositoryFactory(
     fun getCategoryCollectionAndCollectionCategoryAssociationRepository():
             CategoryCollectionAndCollectionCategoryAssociationRepository {
         return CategoryCollectionAndCollectionCategoryAssociationRepositoryImpl(
-            entityLocalSource = CategoryCollectionLocalDataSource(db.categoryCollectionDao, db.tableUpdateTimeDao),
+            entityLocalSource = CategoryCollectionLocalDataSource(db.categoryCollectionDao, db.localUpdateTimeDao),
             entityRemoteSource = createRemoteDataSource<CategoryCollectionRemoteDataSource>(),
             associationLocalSource = CategoryCollectionCategoryAssociationLocalDataSource(
-                db.categoryCollectionCategoryAssociationDao, db.tableUpdateTimeDao
+                db.categoryCollectionCategoryAssociationDao, db.localUpdateTimeDao
             ),
             associationRemoteSource = createRemoteDataSource<CategoryCollectionCategoryAssociationRemoteDataSource>()
         )
@@ -123,7 +109,7 @@ class RepositoryFactory(
 
     fun getRecordRepository(): RecordRepository {
         return RecordRepositoryImpl(
-            localSource = RecordLocalDataSource(db.recordDao, db.tableUpdateTimeDao),
+            localSource = RecordLocalDataSource(db.recordDao, db.localUpdateTimeDao),
             remoteSource = createRemoteDataSource<RecordRemoteDataSource>()
         )
     }
@@ -131,10 +117,10 @@ class RepositoryFactory(
     fun getBudgetAndBudgetAccountAssociationRepository():
             BudgetAndBudgetAccountAssociationRepository {
         return BudgetAndBudgetAccountAssociationRepositoryImpl(
-            entityLocalSource = BudgetLocalDataSource(db.budgetDao, db.tableUpdateTimeDao),
+            entityLocalSource = BudgetLocalDataSource(db.budgetDao, db.localUpdateTimeDao),
             entityRemoteSource = createRemoteDataSource<BudgetRemoteDataSource>(),
             associationLocalSource = BudgetAccountAssociationLocalDataSource(
-                db.budgetAccountAssociationDao, db.tableUpdateTimeDao
+                db.budgetAccountAssociationDao, db.localUpdateTimeDao
             ),
             associationRemoteSource = createRemoteDataSource<BudgetAccountAssociationRemoteDataSource>()
         )
@@ -142,21 +128,21 @@ class RepositoryFactory(
 
     fun getNavigationButtonRepository(): NavigationButtonRepository {
         return NavigationButtonRepositoryImpl(
-            localSource = NavigationButtonLocalDataSource(db.navigationButtonDao, db.tableUpdateTimeDao),
+            localSource = NavigationButtonLocalDataSource(db.navigationButtonDao, db.localUpdateTimeDao),
             remoteSource = createRemoteDataSource<NavigationButtonRemoteDataSource>()
         )
     }
 
     fun getWidgetRepository(): WidgetRepository {
         return WidgetRepositoryImpl(
-            localSource = WidgetLocalDataSource(db.widgetDao, db.tableUpdateTimeDao),
+            localSource = WidgetLocalDataSource(db.widgetDao, db.localUpdateTimeDao),
             remoteSource = createRemoteDataSource<WidgetRemoteDataSource>()
         )
     }
 
     fun getBudgetOnWidgetRepository(): BudgetOnWidgetRepository {
         return BudgetOnWidgetRepositoryImpl(
-            localSource = BudgetOnWidgetLocalDataSource(db.budgetOnWidgetDao, db.tableUpdateTimeDao),
+            localSource = BudgetOnWidgetLocalDataSource(db.budgetOnWidgetDao, db.localUpdateTimeDao),
             remoteSource = createRemoteDataSource<BudgetOnWidgetRemoteDataSource>()
         )
     }

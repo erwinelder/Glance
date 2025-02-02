@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.recordCreation.domain.transfer
 
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 
 data class CreatedTransferSenderReceiver(
     val account: Account,

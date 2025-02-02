@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.personalization.data.repository
 
-import com.ataglance.walletglance.core.utils.getNowDateTimeLong
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetLocalDataSource
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
 import com.ataglance.walletglance.personalization.data.remote.BudgetOnWidgetRemoteDataSource
@@ -13,7 +13,7 @@ class BudgetOnWidgetRepositoryImpl(
     override suspend fun upsertBudgetsOnWidgetAndDeleteOther(
         budgetsToUpsert: List<BudgetOnWidgetEntity>,
     ) {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
 
         localSource.getAllEntities().collect { budgetOnWidgetList ->
             val budgetsToDelete = budgetOnWidgetList.filter { budget ->
@@ -34,13 +34,13 @@ class BudgetOnWidgetRepositoryImpl(
     }
 
     override suspend fun deleteAllEntities() {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
         localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
         remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
     override suspend fun deleteAllEntitiesLocally() {
-        val timestamp = getNowDateTimeLong()
+        val timestamp = getCurrentTimestamp()
         localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
     }
 

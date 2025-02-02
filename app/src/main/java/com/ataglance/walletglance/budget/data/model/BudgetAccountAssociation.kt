@@ -3,7 +3,7 @@ package com.ataglance.walletglance.budget.data.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.ataglance.walletglance.account.data.model.AccountEntity
+import com.ataglance.walletglance.account.data.local.model.AccountEntity
 
 @Entity(
     tableName = "BudgetAccountAssociation",

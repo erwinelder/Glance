@@ -1,14 +1,14 @@
 package com.ataglance.walletglance.personalization.data.local
 
 import androidx.room.Transaction
-import com.ataglance.walletglance.core.data.local.BaseLocalDataSource
-import com.ataglance.walletglance.core.data.local.TableUpdateTimeDao
+import com.ataglance.walletglance.core.data.local.source.BaseLocalDataSource
+import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
 
 class BudgetOnWidgetLocalDataSource(
     private val budgetOnWidgetDao: BudgetOnWidgetDao,
-    updateTimeDao: TableUpdateTimeDao
+    updateTimeDao: LocalUpdateTimeDao
 ) : BaseLocalDataSource<BudgetOnWidgetEntity>(
     dao = budgetOnWidgetDao,
     updateTimeDao = updateTimeDao,

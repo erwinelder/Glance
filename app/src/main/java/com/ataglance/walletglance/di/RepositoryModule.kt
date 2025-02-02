@@ -30,7 +30,6 @@ val repositoryModule = module {
         scoped { get<RepositoryFactory>().getNavigationButtonRepository() }
         scoped { get<RepositoryFactory>().getWidgetRepository() }
         scoped { get<RepositoryFactory>().getBudgetOnWidgetRepository() }
-        scoped { get<RepositoryFactory>().getAccountRepository() }
         scoped { get<RepositoryFactory>().getCategoryRepository() }
         scoped { get<RepositoryFactory>().getCategoryCollectionRepository() }
         scoped { get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository() }

@@ -36,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.EditAccountUiState
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.domain.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.EditAccountUiState
+import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -108,7 +108,7 @@ fun EditAccountScreen(
         )
         ColorPicker(
             visible = showColorPicker,
-            colorList = AccountPossibleColors().asColorWithNameList(CurrAppTheme),
+            colorList = getAccountColorsWithNames(CurrAppTheme),
             onColorClick = onColorChange,
             onPickerClose = {
                 showColorPicker = false
@@ -228,7 +228,7 @@ fun EditAccountScreenPreview(
         name = "Main USD",
         currency = "USD",
         balance = 112.13,
-        color = AccountPossibleColors().default.toAccountColorWithName(),
+        color = AccountColors.Default,
         isActive = false
     ),
     allowDeleting: Boolean = false,
