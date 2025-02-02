@@ -4,7 +4,6 @@ import androidx.room.Transaction
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepository
-import com.ataglance.walletglance.core.data.preferences.SettingsRepository
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 

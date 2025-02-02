@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.RepositoryFactory
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository

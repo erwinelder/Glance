@@ -8,7 +8,7 @@ import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.category.domain.color.CategoryColors
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.core.data.preferences.SettingsRepository
+import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel

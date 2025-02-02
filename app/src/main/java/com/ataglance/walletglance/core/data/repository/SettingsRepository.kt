@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.data.preferences
+package com.ataglance.walletglance.core.data.repository
 
 import android.util.Log
 import androidx.datastore.core.DataStore
