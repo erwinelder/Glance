@@ -20,7 +20,8 @@ class AccountRepositoryImpl(
 ) : AccountRepository {
 
     private suspend fun synchroniseAccounts() {
-        val userId = userContext.getUserId()
+        val userId = userContext.getUserId() ?: return
+
         synchroniseData(
             localUpdateTimeGetter = localSource::getUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
@@ -36,13 +37,15 @@ class AccountRepositoryImpl(
         val timestamp = getCurrentTimestamp()
 
         localSource.upsertAccounts(accounts = accounts, timestamp = timestamp)
-        remoteSource.upsertAccounts(
-            accounts = accounts.map {
-                it.toRemoteEntity(updateTime = timestamp, deleted = false)
-            },
-            timestamp = timestamp,
-            userId = userContext.getUserId()
-        )
+        userContext.getUserId()?.let { userId ->
+            remoteSource.upsertAccounts(
+                accounts = accounts.map {
+                    it.toRemoteEntity(updateTime = timestamp, deleted = false)
+                },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
     }
 
     override suspend fun deleteAndUpsertAccounts(
@@ -53,13 +56,15 @@ class AccountRepositoryImpl(
         val accountsToSync = EntitiesToSynchronise(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseAccounts(accountsToSync = accountsToSync, timestamp = timestamp)
-        remoteSource.synchroniseAccounts(
-            accountsToSync = accountsToSync.map { deleted ->
-                toRemoteEntity(updateTime = timestamp, deleted = deleted)
-            },
-            timestamp = timestamp,
-            userId = userContext.getUserId()
-        )
+        userContext.getUserId()?.let { userId ->
+            remoteSource.synchroniseAccounts(
+                accountsToSync = accountsToSync.map { deleted ->
+                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
+                },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
     }
 
     override suspend fun deleteAllAccountsLocally() {

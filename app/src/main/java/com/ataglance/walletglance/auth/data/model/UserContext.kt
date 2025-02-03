@@ -4,14 +4,18 @@ import com.ataglance.walletglance.billing.domain.model.AppSubscription
 
 class UserContext {
 
-    private var userId = ""
+    private var userId: String? = null
 
-    fun getUserId(): String {
+    fun getUserId(): String? {
         return userId
     }
 
     fun setUserId(userId: String) {
         this.userId = userId
+    }
+
+    fun resetUserId() {
+        userId = null
     }
 
 
