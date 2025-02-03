@@ -3,7 +3,7 @@ package com.ataglance.walletglance.account.domain.model
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordType
 import java.util.Locale
 
 @Stable

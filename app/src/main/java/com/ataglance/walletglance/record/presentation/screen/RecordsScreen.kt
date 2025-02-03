@@ -36,9 +36,9 @@ import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.model.RecordEntity
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.record.mapper.toRecordStackList
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent

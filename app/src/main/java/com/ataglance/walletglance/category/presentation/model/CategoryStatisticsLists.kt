@@ -2,9 +2,9 @@ package com.ataglance.walletglance.category.presentation.model
 
 import com.ataglance.walletglance.category.domain.model.CategoriesStatsMapItem
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
 
 data class CategoryStatisticsLists(
     val expense: List<CategoryStatisticsElementUiState> = emptyList(),

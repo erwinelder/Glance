@@ -63,8 +63,8 @@ import com.ataglance.walletglance.record.data.model.RecordEntity
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.utils.filterByAccountId
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordsInDateRange
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordsInDateRange
 import com.ataglance.walletglance.record.domain.utils.findByRecordNum
 import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
 import com.ataglance.walletglance.record.domain.utils.getOutAndInTransfersByRecordNums

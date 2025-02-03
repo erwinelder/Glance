@@ -6,7 +6,7 @@ import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategor
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
-import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStack
 
 data class AppUiState(
     val navigationButtonList: List<BottomBarNavigationButton>,

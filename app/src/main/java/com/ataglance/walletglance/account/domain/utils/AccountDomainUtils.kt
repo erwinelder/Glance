@@ -5,7 +5,7 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordType
 import java.util.Currency
 import java.util.Locale
 

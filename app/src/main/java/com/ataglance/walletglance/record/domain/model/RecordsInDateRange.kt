@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.record.domain
+package com.ataglance.walletglance.record.domain.model
 
 import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.record.data.model.RecordEntity

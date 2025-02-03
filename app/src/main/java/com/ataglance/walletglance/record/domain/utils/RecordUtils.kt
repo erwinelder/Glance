@@ -8,10 +8,10 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.utils.extractYear
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.domain.RecordsTypeFilter
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordsTypeFilter
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
 
 

@@ -22,7 +22,7 @@ import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
-import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStack
 
 @Composable
 fun TransferComponent(

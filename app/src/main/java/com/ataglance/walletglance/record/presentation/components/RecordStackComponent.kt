@@ -21,9 +21,9 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
 import com.ataglance.walletglance.core.utils.getTodayDateLong
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
 
 @Composable
 fun RecordStackComponent(

@@ -4,7 +4,7 @@ import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordType
 
 
 fun CategoryType.asChar(): Char {

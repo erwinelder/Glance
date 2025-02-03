@@ -4,7 +4,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.utils.getOtherFrom
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
-import com.ataglance.walletglance.record.domain.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.utils.findByRecordNum
 import com.ataglance.walletglance.record.domain.utils.getOutAndInTransfersByRecordNum
 import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordDraft

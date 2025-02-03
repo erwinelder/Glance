@@ -13,9 +13,9 @@ import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
 import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransferSenderReceiver

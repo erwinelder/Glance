@@ -50,7 +50,7 @@ import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSu
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
 import com.ataglance.walletglance.record.data.model.RecordEntity
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
