@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.category.domain.model.EditingCategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.EditingCategoryWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.EditingCategoriesWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.EditingCategoryWithSubcategories
+import com.ataglance.walletglance.category.mapper.toEditingCategoriesWithSubcategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

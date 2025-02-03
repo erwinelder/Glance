@@ -167,7 +167,6 @@ fun AppNavHost(
 
             val viewModel = viewModel<CategoryStatisticsViewModel>(
                 factory = CategoryStatisticsViewModelFactory(
-                    categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
                     categoryCollections = appUiState.categoryCollectionsUiState
                         .appendDefaultCollection(name = defaultCollectionName),
                     recordsFilteredByDateAndAccount = widgetsUiState.recordStacksByDateAndAccount,

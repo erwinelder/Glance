@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
@@ -105,7 +106,7 @@ fun MainAppContent(
                 budgetsOnWidget = budgetsByType.concatenate().filter { it.id in budgetsOnWidget },
                 expensesIncomeWidgetUiState = recordStacksByDateAndAccount.getExpensesIncomeWidgetUiState(),
                 compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount.shrinkForCompactView(),
-                categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStacksByDateAndAccount)
+                categoryStatisticsLists = CategoryStatisticsLists.fromRecordStacks(recordStacksByDateAndAccount)
             )
         }
     }

@@ -1,4 +1,6 @@
-package com.ataglance.walletglance.category.domain.model
+package com.ataglance.walletglance.category.presentation.model
+
+import com.ataglance.walletglance.category.domain.model.Category
 
 data class CheckedCategory(
     val category: Category,

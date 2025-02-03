@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.model.color.CategoryColors
-import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
-import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
+import com.ataglance.walletglance.category.domain.model.CategoryColor
+import com.ataglance.walletglance.category.mapper.toEditingCategoriesWithSubcategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
@@ -116,7 +116,7 @@ private fun EditCategoryCollectionScreenPreview() {
             parentCategoryId = 1,
             name = "Groceries",
             icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+            color = CategoryColor.Olive
         ),
         Category(
             id = 14,
@@ -125,7 +125,7 @@ private fun EditCategoryCollectionScreenPreview() {
             parentCategoryId = null,
             name = "Category 2",
             icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+            color = CategoryColor.Olive
         ),
         Category(
             id = 25,
@@ -134,7 +134,7 @@ private fun EditCategoryCollectionScreenPreview() {
             parentCategoryId = null,
             name = "Category 3",
             icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+            color = CategoryColor.Olive
         ),
         Category(
             id = 30,
@@ -143,7 +143,7 @@ private fun EditCategoryCollectionScreenPreview() {
             parentCategoryId = null,
             name = "Category 3",
             icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+            color = CategoryColor.Olive
         )
     )
     val collection = CategoryCollectionWithCategories(

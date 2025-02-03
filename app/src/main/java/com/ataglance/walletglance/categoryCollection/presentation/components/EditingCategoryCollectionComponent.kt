@@ -39,7 +39,7 @@ fun EditingCategoryCollectionComponent(
     val categoriesWithUniqueIcons = collection.categoryList
         ?.groupBy { it.icon }
         ?.flatMap { (_, categories) ->
-            categories.distinctBy { it.colorWithName }
+            categories.distinctBy { it.color }
         }
         ?: emptyList()
 

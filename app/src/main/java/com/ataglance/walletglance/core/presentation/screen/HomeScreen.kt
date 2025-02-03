@@ -27,6 +27,7 @@ import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -339,7 +340,7 @@ fun HomeScreenPreview(
         budgetsOnWidget = budgetsOnWidget,
         expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
         compactRecordStacksByDateAndAccount = recordStackList.shrinkForCompactView(),
-        categoryStatisticsLists = categoriesWithSubcategories.getStatistics(recordStackList)
+        categoryStatisticsLists = CategoryStatisticsLists.fromRecordStacks(recordStackList)
     )
 
     PreviewWithMainScaffoldContainer(

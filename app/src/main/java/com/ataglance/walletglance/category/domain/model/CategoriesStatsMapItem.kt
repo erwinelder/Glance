@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.category.domain.model
 
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import java.util.Locale
 

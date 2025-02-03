@@ -2,7 +2,10 @@ package com.ataglance.walletglance.category.domain.mapper
 
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.color.ColorWithName
 
 
 fun List<Category>.toCategoriesWithSubcategories(): CategoriesWithSubcategories {
@@ -36,4 +39,9 @@ fun List<Category>.toCategoriesWithSubcategories(): CategoriesWithSubcategories 
                     .sortedBy { it.category.orderNum }
             )
         }
+}
+
+
+fun CategoryColor.toColorWithName(theme: AppTheme): ColorWithName {
+    return ColorWithName(this.name.name, this.color.getByTheme(theme).darker)
 }

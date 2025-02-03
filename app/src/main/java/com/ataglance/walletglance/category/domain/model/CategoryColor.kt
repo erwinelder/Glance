@@ -1,21 +1,22 @@
-package com.ataglance.walletglance.category.domain.model.color
+package com.ataglance.walletglance.category.domain.model
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.mapper.toColorWithName
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
-sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {
+sealed class CategoryColor(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {
 
-    data object Olive : CategoryColors(
+    data object Olive : CategoryColor(
         CategoryColorName.Olive,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -27,7 +28,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Camel : CategoryColors(
+    data object Camel : CategoryColor(
         CategoryColorName.Camel,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -39,7 +40,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Pink : CategoryColors(
+    data object Pink : CategoryColor(
         CategoryColorName.Pink,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -51,7 +52,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Green : CategoryColors(
+    data object Green : CategoryColor(
         CategoryColorName.Green,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -63,7 +64,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Red : CategoryColors(
+    data object Red : CategoryColor(
         CategoryColorName.Red,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -75,7 +76,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object LightBlue : CategoryColors(
+    data object LightBlue : CategoryColor(
         CategoryColorName.LightBlue,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -87,7 +88,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Lavender : CategoryColors(
+    data object Lavender : CategoryColor(
         CategoryColorName.Lavender,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -99,7 +100,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Blue : CategoryColors(
+    data object Blue : CategoryColor(
         CategoryColorName.Blue,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -111,7 +112,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Aquamarine : CategoryColors(
+    data object Aquamarine : CategoryColor(
         CategoryColorName.Aquamarine,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -123,7 +124,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Orange : CategoryColors(
+    data object Orange : CategoryColor(
         CategoryColorName.Orange,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -135,7 +136,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object Yellow : CategoryColors(
+    data object Yellow : CategoryColor(
         CategoryColorName.Yellow,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -147,7 +148,7 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-    data object GrayDefault : CategoryColors(
+    data object GrayDefault : CategoryColor(
         CategoryColorName.GrayDefault,
         LighterDarkerColorsByTheme(
             lightDefault = LighterDarkerColors(
@@ -159,8 +160,59 @@ sealed class CategoryColors(val name: CategoryColorName, val color: LighterDarke
         )
     )
 
-}
 
+    fun getNameValue(): String {
+        return name.name
+    }
+
+    fun getColorByTheme(theme: AppTheme): LighterDarkerColors {
+        return color.getByTheme(theme)
+    }
+
+    companion object {
+
+        private fun getAll(): List<CategoryColor> {
+            return listOf(
+                Olive,
+                Camel,
+                Pink,
+                Green,
+                Red,
+                LightBlue,
+                Lavender,
+                Blue,
+                Aquamarine,
+                Orange,
+                Yellow,
+                GrayDefault
+            )
+        }
+
+        fun getByName(name: String): CategoryColor {
+            return when (name) {
+                CategoryColorName.Olive.name -> Olive
+                CategoryColorName.Camel.name -> Camel
+                CategoryColorName.Pink.name -> Pink
+                CategoryColorName.Green.name -> Green
+                CategoryColorName.Red.name -> Red
+                CategoryColorName.LightBlue.name -> LightBlue
+                CategoryColorName.Lavender.name -> Lavender
+                CategoryColorName.Blue.name -> Blue
+                CategoryColorName.Aquamarine.name -> Aquamarine
+                CategoryColorName.Orange.name -> Orange
+                CategoryColorName.Yellow.name -> Yellow
+                CategoryColorName.GrayDefault.name -> GrayDefault
+                else -> GrayDefault
+            }
+        }
+
+        fun asColorWithNameList(theme: AppTheme): List<ColorWithName> {
+            return getAll().map { it.toColorWithName(theme) }
+        }
+
+    }
+
+}
 
 
 @Preview(heightDp = 1520)

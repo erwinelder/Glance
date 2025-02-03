@@ -26,12 +26,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.color.CategoryPossibleColors
-import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
-import com.ataglance.walletglance.category.domain.model.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.GlanceTheme
@@ -59,7 +58,7 @@ fun EditCategoryScreen(
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
     val categoryIconList by remember {
-        derivedStateOf { CategoryPossibleIcons().asList() }
+        derivedStateOf { CategoryIcon.getAll() }
     }
 
     Box(
@@ -95,7 +94,7 @@ fun EditCategoryScreen(
         )
         ColorPicker(
             visible = showColorPicker,
-            colorList = CategoryPossibleColors().asColorWithNameList(CurrAppTheme),
+            colorList = CategoryColor.asColorWithNameList(CurrAppTheme),
             onColorClick = onCategoryColorChange,
             onPickerClose = {
                 showColorPicker = false
@@ -190,7 +189,7 @@ fun EditCategoryScreenPreview(
             scaffoldPadding = scaffoldPadding,
             category = category,
             allowDeleting = false,
-            allowSaving = category.allowSaving(),
+            allowSaving = category.savingIsAllowed(),
             onNameChange = {},
             onCategoryColorChange = {},
             onIconChange = {},

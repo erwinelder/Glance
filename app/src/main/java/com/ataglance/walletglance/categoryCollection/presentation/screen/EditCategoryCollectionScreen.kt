@@ -34,11 +34,12 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CheckedCategory
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.model.EditingCategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.EditingCategoryWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.EditingCategoriesWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.EditingCategoryWithSubcategories
+import com.ataglance.walletglance.category.mapper.toEditingCategoriesWithSubcategories
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
+import com.ataglance.walletglance.category.presentation.model.CheckedCategory
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds

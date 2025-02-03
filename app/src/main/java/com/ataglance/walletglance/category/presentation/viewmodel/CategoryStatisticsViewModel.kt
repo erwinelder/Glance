@@ -3,10 +3,9 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.category.domain.model.CategoryStatisticsLists
 import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.record.domain.RecordStack
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class CategoryStatisticsViewModel(
-    private val categoriesWithSubcategories: CategoriesWithSubcategories,
     passedCategoryCollections: CategoryCollectionsWithIdsByType,
     recordsFilteredByDateAndAccount: List<RecordStack>,
     categoryStatisticsLists: CategoryStatisticsLists,
@@ -136,9 +134,9 @@ class CategoryStatisticsViewModel(
 
         parentCategory?.subcategoriesStatisticsUiState
             ?: selectedCollection.takeIf { it.hasLinkedCategories() }?.let {
-                categoriesWithSubcategories.getStatistics(
-                    recordStackList = recordsFilteredByDateAndAccount.filterByCollection(it)
-                ).getByType(categoryType)
+                CategoryStatisticsLists
+                    .fromRecordStacks(recordsFilteredByDateAndAccount.filterByCollection(it))
+                    .getByType(categoryType)
             }
             ?: categoryStatisticsByAccountAndDate.getByType(categoryType)
     }.stateIn(
@@ -150,7 +148,6 @@ class CategoryStatisticsViewModel(
 }
 
 class CategoryStatisticsViewModelFactory(
-    private val categoriesWithSubcategories: CategoriesWithSubcategories,
     private val categoryCollections: CategoryCollectionsWithIdsByType,
     private val recordsFilteredByDateAndAccount: List<RecordStack>,
     private val categoryStatisticsLists: CategoryStatisticsLists,
@@ -159,7 +156,6 @@ class CategoryStatisticsViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return CategoryStatisticsViewModel(
-            categoriesWithSubcategories = categoriesWithSubcategories,
             passedCategoryCollections = categoryCollections,
             recordsFilteredByDateAndAccount = recordsFilteredByDateAndAccount,
             categoryStatisticsLists = categoryStatisticsLists,

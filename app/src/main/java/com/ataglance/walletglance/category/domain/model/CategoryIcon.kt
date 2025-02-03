@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.category.domain.model.icons
+package com.ataglance.walletglance.category.domain.model
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
@@ -6,6 +6,7 @@ import com.ataglance.walletglance.R
 
 @Stable
 sealed class CategoryIcon(val name: String, @DrawableRes val res: Int) {
+
     data object FoodAndDrinks : CategoryIcon("food_and_drinks", R.drawable.food_and_drinks_icon)
     data object Groceries : CategoryIcon("groceries", R.drawable.groceries_icon)
     data object Restaurant : CategoryIcon("restaurant", R.drawable.restaurant_icon)
@@ -35,4 +36,78 @@ sealed class CategoryIcon(val name: String, @DrawableRes val res: Int) {
     data object Sales : CategoryIcon("sales", R.drawable.sales_icon)
     data object Refunds : CategoryIcon("refunds", R.drawable.refunds_icon)
     data object Gifts : CategoryIcon("gifts", R.drawable.gifts_icon)
+
+    companion object {
+
+        fun getAll(): List<CategoryIcon> {
+            return listOf(
+                FoodAndDrinks,
+                Groceries,
+                Restaurant,
+                Housing,
+                HousingPurchase,
+                Shopping,
+                Clothes,
+                Transport,
+                Vehicle,
+                DigitalLife,
+                ProfessionalSubs,
+                EntertainmentSubs,
+                Games,
+                Medicine,
+                Education,
+                Travels,
+                Accommodation,
+                TravelTickets,
+                Entertainment,
+                CinemaTheater,
+                Investments,
+                Other,
+                Transfers,
+                Missing,
+                Salary,
+                Scholarship,
+                Sales,
+                Refunds,
+                Gifts
+            )
+        }
+
+        fun getByName(name: String): CategoryIcon {
+            return when (name) {
+                FoodAndDrinks.name -> FoodAndDrinks
+                Groceries.name -> Groceries
+                Restaurant.name -> Restaurant
+                Housing.name -> Housing
+                HousingPurchase.name -> HousingPurchase
+                Shopping.name -> Shopping
+                Clothes.name -> Clothes
+                Transport.name -> Transport
+                Vehicle.name -> Vehicle
+                DigitalLife.name -> DigitalLife
+                ProfessionalSubs.name -> ProfessionalSubs
+                EntertainmentSubs.name -> EntertainmentSubs
+                Games.name -> Games
+                Medicine.name -> Medicine
+                Education.name -> Education
+                Travels.name -> Travels
+                Accommodation.name -> Accommodation
+                TravelTickets.name -> TravelTickets
+                Entertainment.name -> Entertainment
+                CinemaTheater.name -> CinemaTheater
+                Investments.name -> Investments
+                Other.name -> Other
+                Transfers.name -> Transfers
+                Missing.name -> Missing
+                Salary.name -> Salary
+                Scholarship.name -> Scholarship
+                Sales.name -> Sales
+                Refunds.name -> Refunds
+                Gifts.name -> Gifts
+                else -> Other
+            }
+        }
+
+    }
+
 }

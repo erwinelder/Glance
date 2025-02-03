@@ -1,8 +1,6 @@
 package com.ataglance.walletglance.category.domain.model
 
-import com.ataglance.walletglance.category.domain.model.color.CategoryColorWithName
 import com.ataglance.walletglance.category.domain.utils.findById
-import com.ataglance.walletglance.category.domain.utils.toCheckedCategoryList
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 
 data class CategoryWithSubcategories(
@@ -36,11 +34,11 @@ data class CategoryWithSubcategories(
         )
     }
 
-    fun changeSubcategoriesColorTo(colorWithName: CategoryColorWithName): List<Category> {
-        return if (subcategoryList.firstOrNull()?.colorWithName?.name == colorWithName.name) {
+    fun changeSubcategoriesColorTo(categoryColor: CategoryColor): List<Category> {
+        return if (subcategoryList.firstOrNull()?.color?.name == categoryColor.name) {
             subcategoryList
         } else {
-            subcategoryList.map { it.copy(colorWithName = colorWithName) }
+            subcategoryList.map { it.copy(color = categoryColor) }
         }
     }
 
@@ -69,32 +67,6 @@ data class CategoryWithSubcategories(
             subcategoryList = subcategoryList.mapIndexed { index, category ->
                 category.copy(orderNum = index + 1)
             }
-        )
-    }
-
-    fun toEditingCategoryWithSubcategories(
-        checkedCategoryList: List<Category>
-    ): EditingCategoryWithSubcategories {
-        val subcategoryList = subcategoryList.toCheckedCategoryList(checkedCategoryList)
-        val (checkedSubcategoryList, uncheckedSubcategoryList) = subcategoryList
-            .partition { it.checked }
-
-        val checked = if (subcategoryList.isNotEmpty()) {
-            if (checkedSubcategoryList.isEmpty()) {
-                false
-            } else if (uncheckedSubcategoryList.isEmpty()) {
-                true
-            } else {
-                null
-            }
-        } else {
-            checkedCategoryList.findById(category.id) != null
-        }
-
-        return EditingCategoryWithSubcategories(
-            category = category,
-            checked = checked,
-            subcategoryList = subcategoryList
         )
     }
 

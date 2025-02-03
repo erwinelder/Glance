@@ -1,13 +1,7 @@
 package com.ataglance.walletglance.category.domain.model
 
 import com.ataglance.walletglance.category.domain.utils.fixParentOrderNums
-import com.ataglance.walletglance.category.domain.utils.toEditingCategoryWithSubcategoriesList
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
 
 data class CategoriesWithSubcategories(
     val expense: List<CategoryWithSubcategories> = emptyList(),
@@ -67,7 +61,7 @@ data class CategoriesWithSubcategories(
         val categoryWithSubcategoriesList = this.getByType(category.type).map {
             it.takeIf { it.category.id != category.id } ?: it.copy(
                 category = category,
-                subcategoryList = it.changeSubcategoriesColorTo(category.colorWithName)
+                subcategoryList = it.changeSubcategoriesColorTo(category.color)
             )
         }
 
@@ -79,8 +73,8 @@ data class CategoriesWithSubcategories(
 
     fun deleteCategoryById(category: Category): CategoriesWithSubcategories {
         val newList = getByType(category.type).deleteItemAndMoveOrderNum(
-            { it.category.id == category.id },
-            { it.copy(category = it.category.copy(orderNum = it.category.orderNum - 1)) }
+            predicate = { it.category.id == category.id },
+            transform = { it.copy(category = it.category.copy(orderNum = it.category.orderNum - 1)) }
         )
         return replaceListByType(newList, category.type)
     }
@@ -89,116 +83,6 @@ data class CategoriesWithSubcategories(
         return this.copy(
             expense = expense.fixParentOrderNums(),
             income = income.fixParentOrderNums()
-        )
-    }
-
-    fun getStatistics(recordStackList: List<RecordStack>): CategoryStatisticsLists {
-        return CategoryStatisticsLists(
-            expense = getCategoryStatisticsByType(
-                recordStackList = recordStackList,
-                type = RecordType.Expense,
-            ),
-            income = getCategoryStatisticsByType(
-                recordStackList = recordStackList,
-                type = RecordType.Income,
-            )
-        )
-    }
-
-    private fun getCategoryStatisticsByType(
-        recordStackList: List<RecordStack>,
-        type: RecordType,
-    ): List<CategoryStatisticsElementUiState> {
-        val categoryStatsMap = mutableMapOf<Int, CategoriesStatsMapItem>()
-        val subcategoriesStatsMap = mutableMapOf<Int, MutableMap<Int, CategoriesStatsMapItem>>()
-
-        recordStackList.forEach { recordStack ->
-            if (recordStack.isOfType(type)) {
-                recordStack.stack.forEach { stackUnit ->
-                    increaseTotalAmountOrAddNewOneInCategoryStatsMap(
-                        categoryStatsMap = categoryStatsMap,
-                        stackUnit = stackUnit
-                    )
-                    increaseTotalAmountOrAddNewOneInSubcategoriesStatsMap(
-                        subcategoriesStatsMap = subcategoriesStatsMap,
-                        stackUnit = stackUnit
-                    )
-                }
-            }
-        }
-
-        val accountCurrency = recordStackList.firstOrNull()?.account?.currency ?: ""
-        val totalAmount = categoryStatsMap.values.sumOf { it.totalAmount }
-        return categoryStatsMap.values.sortedByDescending { it.totalAmount }
-            .map { statsMapItem ->
-                statsMapItem.toCategoryStatisticsElementUiState(
-                    accountCurrency = accountCurrency,
-                    allCategoriesTotalAmount = totalAmount,
-                    subcategoriesStatistics = subcategoriesStatsMap[statsMapItem.category.id]
-                )
-            }
-    }
-
-    private fun increaseTotalAmountOrAddNewOneInCategoryStatsMap(
-        categoryStatsMap: MutableMap<Int, CategoriesStatsMapItem>,
-        stackUnit: RecordStackItem
-    ) {
-        stackUnit.categoryWithSubcategory ?: return
-        val category = stackUnit.categoryWithSubcategory.category
-
-        if (categoryStatsMap.containsKey(category.id)) {
-            categoryStatsMap[category.id]!!.totalAmount += stackUnit.amount
-        } else {
-            categoryStatsMap[category.id] = CategoriesStatsMapItem(
-                category = category,
-                totalAmount = stackUnit.amount
-            )
-        }
-    }
-
-    private fun increaseTotalAmountOrAddNewOneInSubcategoriesStatsMap(
-        subcategoriesStatsMap: MutableMap<Int, MutableMap<Int, CategoriesStatsMapItem>>,
-        stackUnit: RecordStackItem
-    ) {
-        stackUnit.categoryWithSubcategory?.subcategory ?: return
-        val category = stackUnit.categoryWithSubcategory.category
-        val subcategory = stackUnit.categoryWithSubcategory.subcategory
-
-        if (!subcategoriesStatsMap.containsKey(category.id)) {
-            subcategoriesStatsMap[category.id] = mutableMapOf(
-                subcategory.id to CategoriesStatsMapItem(subcategory, stackUnit.amount)
-            )
-            return
-        }
-
-        if (subcategoriesStatsMap[category.id]!!.containsKey(subcategory.id)) {
-            subcategoriesStatsMap[category.id]!![subcategory.id]!!
-                .totalAmount += stackUnit.amount
-        } else {
-            subcategoriesStatsMap[category.id]!![subcategory.id] =
-                CategoriesStatsMapItem(
-                    category = subcategory,
-                    totalAmount = stackUnit.amount
-                )
-        }
-    }
-
-    fun toEditingCategoriesWithSubcategories(
-        collection: CategoryCollectionWithCategories?
-    ): EditingCategoriesWithSubcategories {
-        val expensesAndIncome = (collection?.categoryList ?: emptyList())
-            .partition { it.isExpense() }
-        return EditingCategoriesWithSubcategories(
-            expense = if (collection?.type != CategoryCollectionType.Income) {
-                expense.toEditingCategoryWithSubcategoriesList(expensesAndIncome.first)
-            } else {
-                emptyList()
-            },
-            income = if (collection?.type != CategoryCollectionType.Expense) {
-                income.toEditingCategoryWithSubcategoriesList(expensesAndIncome.second)
-            } else {
-                emptyList()
-            }
         )
     }
 

@@ -2,7 +2,7 @@ package com.ataglance.walletglance.core.domain.widgets
 
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.category.domain.model.CategoryStatisticsLists
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.domain.RecordStack
 

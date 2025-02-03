@@ -2,13 +2,12 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.category.domain.model.color.CategoryColors
-import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -82,7 +81,7 @@ class EditCategoriesViewModel(
             parentCategoryId = null,
             name = "",
             icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
+            color = CategoryColor.GrayDefault
         )
     }
 
@@ -94,7 +93,7 @@ class EditCategoriesViewModel(
             parentCategoryId = parentCategory.id,
             name = "",
             icon = parentCategory.icon,
-            colorWithName = parentCategory.colorWithName
+            color = parentCategory.color
         )
     }
 

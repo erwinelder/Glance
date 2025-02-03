@@ -2,10 +2,6 @@ package com.ataglance.walletglance.category.domain.model
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.category.domain.model.color.CategoryColorWithName
-import com.ataglance.walletglance.category.domain.model.color.CategoryColors
-import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
-import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 
@@ -17,7 +13,7 @@ data class Category(
     val parentCategoryId: Int? = null,
     val name: String = "",
     val icon: CategoryIcon = CategoryIcon.Other,
-    val colorWithName: CategoryColorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
+    val color: CategoryColor = CategoryColor.GrayDefault
 ) {
 
     fun isExpense() = type == CategoryType.Expense
@@ -26,30 +22,23 @@ data class Category(
     fun isParentCategory() = parentCategoryId == null
 
     fun getColorByTheme(theme: AppTheme): LighterDarkerColors {
-        return colorWithName.getColorByTheme(theme)
+        return color.getColorByTheme(theme)
     }
 
     fun getIconSolidColorByTheme(appTheme: AppTheme): Color {
-        return colorWithName.color.getCategoryIconSolidColorByTheme(appTheme)
+        return color.color.getCategoryIconSolidColorByTheme(appTheme)
     }
 
     fun getLineChartColorsByTheme(appTheme: AppTheme): List<Color> {
-        return colorWithName.color.getCategoryLineChartColorsByTheme(appTheme)
+        return color.color.getCategoryLineChartColorsByTheme(appTheme)
     }
 
     fun canBeDeleted(): Boolean {
         return (isExpense() && id != 12 && id != 66) || (isIncome() && id != 77)
     }
 
-    fun allowSaving(): Boolean {
+    fun savingIsAllowed(): Boolean {
         return name.isNotBlank()
-    }
-
-    fun toCheckedCategory(checkedCategoryList: List<Category>): CheckedCategory {
-        return CheckedCategory(
-            category = this,
-            checked = checkedCategoryList.find { it.id == id } != null
-        )
     }
 
 }

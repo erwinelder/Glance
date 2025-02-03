@@ -13,12 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.category.domain.model.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.category.domain.model.CategoryStatisticsLists
-import com.ataglance.walletglance.category.domain.model.color.CategoryColors
-import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
-import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
@@ -82,7 +81,7 @@ private fun CategoriesStatisticsWidgetPreview() {
                             id = 1,
                             name = "Food & Drinks",
                             icon = CategoryIcon.FoodAndDrinks,
-                            colorWithName = CategoryColors.Olive.toCategoryColorWithName()
+                            color = CategoryColor.Olive
                         ),
                         totalAmount = "1000.00",
                         percentageFloat = 50f,
@@ -94,7 +93,7 @@ private fun CategoriesStatisticsWidgetPreview() {
                             id = 2,
                             name = "Housing",
                             icon = CategoryIcon.Housing,
-                            colorWithName = CategoryColors.Camel.toCategoryColorWithName()
+                            color = CategoryColor.Camel
                         ),
                         totalAmount = "500.00",
                         percentageFloat = 25f,

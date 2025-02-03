@@ -19,11 +19,12 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
 import com.ataglance.walletglance.category.presentation.components.CategoryTypeToggleButton
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -176,9 +177,9 @@ fun CategoryStatisticsScreenPreview(
     ),
     parentCategory: CategoryStatisticsElementUiState? = null
 ) {
-    val categoryStatisticsLists = categoriesWithSubcategories.getStatistics(
-        recordStackList = recordStackList.filterByCollection(selectedCollection)
-    ).getByType(currentCategoryType)
+    val categoryStatisticsLists = CategoryStatisticsLists
+        .fromRecordStacks(recordStackList.filterByCollection(selectedCollection))
+        .getByType(currentCategoryType)
 
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,

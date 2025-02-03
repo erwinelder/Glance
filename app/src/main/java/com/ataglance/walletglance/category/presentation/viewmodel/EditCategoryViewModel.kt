@@ -3,8 +3,8 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.category.domain.model.color.CategoryPossibleColors
-import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ class EditCategoryViewModel : ViewModel() {
     val categoryUiState: StateFlow<Category> = _categoryUiState.asStateFlow()
 
     val allowSaving: StateFlow<Boolean> = combine(_categoryUiState) { categoryArray ->
-        categoryArray[0].allowSaving()
+        categoryArray[0].savingIsAllowed()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -54,7 +54,7 @@ class EditCategoryViewModel : ViewModel() {
 
     fun changeColor(colorName: String) {
         _categoryUiState.update {
-            it.copy(colorWithName = CategoryPossibleColors().getByName(colorName))
+            it.copy(color = CategoryColor.getByName(colorName))
         }
     }
 

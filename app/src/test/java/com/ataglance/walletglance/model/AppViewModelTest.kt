@@ -6,7 +6,7 @@ import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountA
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.data.utils.fixOrderNumbers
-import com.ataglance.walletglance.category.domain.model.color.CategoryColors
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
@@ -295,112 +295,112 @@ class AppViewModelTest {
             CategoryEntity(
                 id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 2, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 13, type = '-', orderNum = 3, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 14, type = '-', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
 
             CategoryEntity(
                 id = 15, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 16, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 17, type = '-', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 3, type = '+', orderNum = 1, parentCategoryId = null,
                 name = "category 3", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 31, type = '+', orderNum = 4, parentCategoryId = 3,
                 name = "category 31", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 32, type = '+', orderNum = 4, parentCategoryId = 3,
                 name = "category 32", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
         )
         val expectedCategoryList = listOf(
             CategoryEntity(
                 id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 2, type = '-', orderNum = 2, parentCategoryId = null,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 13, type = '-', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 14, type = '-', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
 
             CategoryEntity(
                 id = 15, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 16, type = '-', orderNum = 2, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 17, type = '-', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 3, type = '+', orderNum = 1, parentCategoryId = null,
                 name = "category 3", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 31, type = '+', orderNum = 1, parentCategoryId = 3,
                 name = "category 31", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 32, type = '+', orderNum = 2, parentCategoryId = 3,
                 name = "category 32", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
         )
 
