@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 class GetAllCategoriesUseCaseImpl(
     private val categoryRepository: CategoryRepository
 ) : GetAllCategoriesUseCase {
-    override suspend fun execute(): Flow<CategoriesWithSubcategories> {
+    override fun execute(): Flow<CategoriesWithSubcategories> {
         return categoryRepository.getAllCategories().map { categoryEntities ->
             categoryEntities.toDomainModels().toCategoriesWithSubcategories()
         }
