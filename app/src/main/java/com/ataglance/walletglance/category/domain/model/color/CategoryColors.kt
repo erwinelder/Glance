@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.category.domain.color
+package com.ataglance.walletglance.category.domain.model.color
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable

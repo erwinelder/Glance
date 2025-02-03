@@ -1,15 +1,17 @@
 package com.ataglance.walletglance.category.data.utils
 
-import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 
 
 fun List<CategoryEntity>.findById(id: Int): CategoryEntity? {
     return this.find { it.id == id }
 }
 
+
 fun List<CategoryEntity>.getThatAreNotInList(list: List<CategoryEntity>): List<CategoryEntity> {
     return this.filter { list.findById(it.id) == null }
 }
+
 
 fun List<CategoryEntity>.fixOrderNumbers(): List<CategoryEntity> {
     val fixedCategoryList = mutableListOf<CategoryEntity>()
@@ -53,6 +55,7 @@ fun List<CategoryEntity>.fixOrderNumbers(): List<CategoryEntity> {
 
     return fixedCategoryList
 }
+
 
 private fun List<CategoryEntity>.getWithFixedOrderNumbers(): List<CategoryEntity> {
     return this.sortedBy { it.orderNum }

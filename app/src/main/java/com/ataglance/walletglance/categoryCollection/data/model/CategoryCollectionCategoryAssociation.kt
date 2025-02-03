@@ -3,7 +3,7 @@ package com.ataglance.walletglance.categoryCollection.data.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 
 @Entity(
     tableName = "CategoryCollectionCategoryAssociation",

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.category.domain.icons
+package com.ataglance.walletglance.category.domain.model.icons
 
 data class CategoryPossibleIcons(
     val foodAndDrinks: CategoryIcon = CategoryIcon.FoodAndDrinks,

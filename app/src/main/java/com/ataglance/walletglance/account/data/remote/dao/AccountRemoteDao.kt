@@ -33,7 +33,7 @@ class AccountRemoteDao(
 }
 
 
-fun accountRemoteDaoFactory(firestore: FirebaseFirestore): AccountRemoteDao {
+fun getAccountRemoteDao(firestore: FirebaseFirestore): AccountRemoteDao {
     return AccountRemoteDao(
         firestoreAdapter = FirestoreAdapter(
             firestore = firestore,

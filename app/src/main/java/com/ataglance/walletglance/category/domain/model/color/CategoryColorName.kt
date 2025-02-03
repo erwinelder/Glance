@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.category.domain.color
+package com.ataglance.walletglance.category.domain.model.color
 
 enum class CategoryColorName {
     Olive, Camel, Pink, Green, Red, LightBlue, Lavender, Blue, Aquamarine, Orange, Yellow,

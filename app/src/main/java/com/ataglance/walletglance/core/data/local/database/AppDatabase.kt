@@ -10,8 +10,8 @@ import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationDao
 import com.ataglance.walletglance.budget.data.local.BudgetDao
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
-import com.ataglance.walletglance.category.data.local.CategoryDao
-import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.category.data.local.dao.CategoryDao
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationDao
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionDao
 import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation

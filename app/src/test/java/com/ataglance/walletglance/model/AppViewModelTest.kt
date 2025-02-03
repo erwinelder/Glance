@@ -3,10 +3,10 @@ package com.ataglance.walletglance.model
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.data.utils.fixOrderNumbers
-import com.ataglance.walletglance.category.domain.color.CategoryColors
+import com.ataglance.walletglance.category.domain.model.color.CategoryColors
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository

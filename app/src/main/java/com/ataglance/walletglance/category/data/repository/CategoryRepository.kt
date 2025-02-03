@@ -1,6 +1,19 @@
 package com.ataglance.walletglance.category.data.repository
 
-import com.ataglance.walletglance.category.data.model.CategoryEntity
-import com.ataglance.walletglance.core.data.repository.BaseEntityRepository
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import kotlinx.coroutines.flow.Flow
 
-interface CategoryRepository : BaseEntityRepository<CategoryEntity>
+interface CategoryRepository {
+
+    suspend fun upsertCategories(categories: List<CategoryEntity>)
+
+    suspend fun deleteAndUpsertCategories(
+        toDelete: List<CategoryEntity>,
+        toUpsert: List<CategoryEntity>
+    )
+
+    suspend fun deleteAllCategoriesLocally()
+
+    fun getAllCategories(): Flow<List<CategoryEntity>>
+
+}

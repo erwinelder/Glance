@@ -1,10 +1,8 @@
-package com.ataglance.walletglance.category.data.model
+package com.ataglance.walletglance.category.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.color.CategoryColorName
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
 
 @Entity(tableName = "Category")
 data class CategoryEntity(
@@ -14,8 +12,8 @@ data class CategoryEntity(
     val orderNum: Int,
     val parentCategoryId: Int?,
     val name: String,
-    val iconName: String = CategoryIcon.Other.name,
-    val colorName: String = CategoryColorName.GrayDefault.name
+    val iconName: String,
+    val colorName: String
 ) {
 
     fun isExpense() = type == '-'

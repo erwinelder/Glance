@@ -2,9 +2,9 @@ package com.ataglance.walletglance.category.domain.model
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.color.CategoryColorWithName
+import com.ataglance.walletglance.category.domain.model.color.CategoryColors
+import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
 import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors

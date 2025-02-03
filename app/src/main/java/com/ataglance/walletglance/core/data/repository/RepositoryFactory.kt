@@ -7,10 +7,6 @@ import com.ataglance.walletglance.budget.data.remote.BudgetAccountAssociationRem
 import com.ataglance.walletglance.budget.data.remote.BudgetRemoteDataSource
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
 import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepositoryImpl
-import com.ataglance.walletglance.category.data.local.CategoryLocalDataSource
-import com.ataglance.walletglance.category.data.remote.CategoryRemoteDataSource
-import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.data.repository.CategoryRepositoryImpl
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationLocalDataSource
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionLocalDataSource
 import com.ataglance.walletglance.categoryCollection.data.remote.CategoryCollectionCategoryAssociationRemoteDataSource
@@ -48,9 +44,6 @@ class RepositoryFactory(
         if (!user.isEligibleForDataSync() || user.uid == null) return null
 
         return when (RS::class) {
-            CategoryRemoteDataSource::class -> CategoryRemoteDataSource(
-                userId = user.uid, firestore = firestore
-            ) as RS
             CategoryCollectionRemoteDataSource::class -> CategoryCollectionRemoteDataSource(
                 userId = user.uid, firestore = firestore
             ) as RS
@@ -79,13 +72,6 @@ class RepositoryFactory(
             ) as RS
             else -> null
         }
-    }
-
-    fun getCategoryRepository(): CategoryRepository {
-        return CategoryRepositoryImpl(
-            localSource = CategoryLocalDataSource(db.categoryDao, db.localUpdateTimeDao),
-            remoteSource = createRemoteDataSource<CategoryRemoteDataSource>()
-        )
     }
 
     fun getCategoryCollectionRepository(): CategoryCollectionRepository {

@@ -1,8 +1,8 @@
-package com.ataglance.walletglance.category.data.local
+package com.ataglance.walletglance.category.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.ataglance.walletglance.category.data.model.CategoryEntity
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
 import kotlinx.coroutines.flow.Flow
 
@@ -13,6 +13,6 @@ interface CategoryDao : BaseLocalDao<CategoryEntity> {
     suspend fun deleteAllCategories()
 
     @Query("SELECT * FROM Category")
-    override fun getAllEntities(): Flow<List<CategoryEntity>>
+    fun getAllCategories(): Flow<List<CategoryEntity>>
 
 }

@@ -8,6 +8,10 @@ import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSo
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSourceImpl
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.data.repository.AccountRepositoryImpl
+import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCase
+import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCaseImpl
+import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
+import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCaseImpl
 import org.koin.dsl.module
 
 val accountModule = module {
@@ -32,6 +36,16 @@ val accountModule = module {
 
     single<AccountRepository> {
         AccountRepositoryImpl(localSource = get(), remoteSource = get(), userContext = get())
+    }
+
+    /* ---------- Use Cases ---------- */
+
+    single<SaveAccountsUseCase> {
+        SaveAccountsUseCaseImpl(accountRepository = get(), recordRepository = )
+    }
+
+    single<GetAllAccountsUseCase> {
+        GetAllAccountsUseCaseImpl(accountRepository = get())
     }
 
 }

@@ -24,19 +24,16 @@ import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.budget.mapper.divideIntoBudgetsAndAssociations
 import com.ataglance.walletglance.budget.mapper.toBudgetList
-import com.ataglance.walletglance.category.data.model.CategoryEntity
-import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
 import com.ataglance.walletglance.category.domain.utils.toRecordType
 import com.ataglance.walletglance.category.domain.utils.translateCategories
-import com.ataglance.walletglance.category.mapper.toCategoriesWithSubcategories
-import com.ataglance.walletglance.category.mapper.toCategoryEntityList
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.categoryCollection.data.utils.getAssociationsThatAreNotInList
 import com.ataglance.walletglance.categoryCollection.data.utils.getThatAreNotInList
@@ -45,8 +42,8 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.mapper.divideIntoCollectionsAndAssociations
 import com.ataglance.walletglance.categoryCollection.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
 import com.ataglance.walletglance.core.data.model.LongDateRange
-import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -102,9 +99,13 @@ import kotlinx.coroutines.launch
 
 class AppViewModel(
     val settingsRepository: SettingsRepository,
-    private val getAllAccountsUseCase: GetAllAccountsUseCase,
+
     private val saveAccountsUseCase: SaveAccountsUseCase,
-    val categoryRepository: CategoryRepository,
+    private val getAllAccountsUseCase: GetAllAccountsUseCase,
+
+    private val saveCategoriesUseCase: SaveCategoriesUseCase,
+    private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
+
     private val categoryCollectionAndAssociationRepository:
     CategoryCollectionAndCollectionCategoryAssociationRepository,
     val recordRepository: RecordRepository,
@@ -164,6 +165,7 @@ class AppViewModel(
             initialValue = null
         )
 
+    // TODO: Android context dependency
     fun translateAndSaveCategoriesWithDefaultNames(
         currentLangCode: String,
         newLangCode: String,
@@ -175,7 +177,7 @@ class AppViewModel(
             currCategoryList = categoriesWithSubcategories.value.asSingleList()
         )
         viewModelScope.launch {
-            categoryRepository.upsertEntities(translatedCategories.toCategoryEntityList())
+            saveCategoriesUseCase.execute(categories = translatedCategories)
         }
     }
 
@@ -387,32 +389,26 @@ class AppViewModel(
     }
 
 
-    private val _categoriesWithSubcategories: MutableStateFlow<CategoriesWithSubcategories> =
-        MutableStateFlow(CategoriesWithSubcategories())
-    val categoriesWithSubcategories: StateFlow<CategoriesWithSubcategories> =
-        _categoriesWithSubcategories.asStateFlow()
+    private val _categoriesWithSubcategories = MutableStateFlow(CategoriesWithSubcategories())
+    val categoriesWithSubcategories = _categoriesWithSubcategories.asStateFlow()
+
+    private fun updateCategoriesWithSubcategories(
+        categoriesWithSubcategories: CategoriesWithSubcategories
+    ) {
+        _categoriesWithSubcategories.update { categoriesWithSubcategories }
+    }
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            categoryRepository.getAllEntities().collect { categoryEntityList ->
-                _categoriesWithSubcategories.update {
-                    categoryEntityList.toCategoriesWithSubcategories()
-                }
-            }
+            getAllCategoriesUseCase.execute().collect(::updateCategoriesWithSubcategories)
         }
     }
 
-    suspend fun saveCategories(categoryList: List<CategoryEntity>) {
-        val listToDelete = categoriesWithSubcategories.value
-            .asSingleList()
-            .toCategoryEntityList()
-            .getThatAreNotInList(categoryList)
-
-        if (listToDelete.isNotEmpty()) {
-            categoryRepository.deleteAndUpsertEntities(listToDelete, categoryList)
-        } else {
-            categoryRepository.upsertEntities(categoryList)
-        }
+    suspend fun saveCategories(categoryList: List<Category>) {
+        saveCategoriesUseCase.execute(
+            categoriesToSave = categoryList,
+            currentCategories = categoriesWithSubcategories.value.asSingleList()
+        )
     }
 
     fun getLastUsedRecordCategories(): CategoryWithSubcategoryByType {
@@ -516,8 +512,8 @@ class AppViewModel(
     // TODO-ACCOUNTS-DEPENDENCY
     val recordStackListFilteredByDate: StateFlow<List<RecordStack>> = combine(
         _recordListInDateRange,
-        _accountsAndActiveOne,
-        _categoriesWithSubcategories
+        accountsAndActiveOne,
+        categoriesWithSubcategories
     ) { recordListInDateRange, accountsUiState, categoriesWithSubcategories ->
         recordListInDateRange.recordList.toRecordStackList(
             accountList = accountsUiState.accountList,

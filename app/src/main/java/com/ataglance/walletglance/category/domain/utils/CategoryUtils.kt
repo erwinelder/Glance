@@ -1,17 +1,17 @@
 package com.ataglance.walletglance.category.domain.utils
 
-import com.ataglance.walletglance.category.data.model.CategoryEntity
-import com.ataglance.walletglance.category.domain.color.CategoryColorWithName
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
-import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.domain.model.color.CategoryColorWithName
+import com.ataglance.walletglance.category.domain.model.color.CategoryColors
+import com.ataglance.walletglance.category.domain.model.color.CategoryPossibleColors
+import com.ataglance.walletglance.category.domain.model.icons.CategoryPossibleIcons
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.CheckedCategory
 import com.ataglance.walletglance.category.domain.model.EditingCategoryWithSubcategories
-import com.ataglance.walletglance.category.mapper.toCategoryList
+import com.ataglance.walletglance.category.mapper.toDomainModels
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.record.domain.RecordType
@@ -52,7 +52,7 @@ fun List<CategoryEntity>.toCategoryList(): List<Category> {
     val possibleIcons = CategoryPossibleIcons()
     val possibleColors = CategoryPossibleColors()
 
-    return this.toCategoryList(
+    return this.toDomainModels(
         iconProvider = possibleIcons::getIconByName,
         colorProvider = possibleColors::getByName
     )

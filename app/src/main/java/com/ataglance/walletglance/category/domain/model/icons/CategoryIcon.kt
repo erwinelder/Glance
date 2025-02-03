@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.category.domain.icons
+package com.ataglance.walletglance.category.domain.model.icons
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable

@@ -2,8 +2,8 @@ package com.ataglance.walletglance.category.domain.model
 
 import android.content.Context
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.color.CategoryColors
+import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
 import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
 
 data class DefaultCategoriesPackage(

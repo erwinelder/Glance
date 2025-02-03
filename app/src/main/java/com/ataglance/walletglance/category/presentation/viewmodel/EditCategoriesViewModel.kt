@@ -2,14 +2,12 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.category.data.model.CategoryEntity
-import com.ataglance.walletglance.category.mapper.toCategoryEntityList
+import com.ataglance.walletglance.category.domain.model.color.CategoryColors
+import com.ataglance.walletglance.category.domain.model.icons.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
 import com.ataglance.walletglance.category.domain.utils.toCategoryColorWithName
 import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -156,11 +154,10 @@ class EditCategoriesViewModel(
         }
     }
 
-    fun getAllCategoryEntities(): List<CategoryEntity> {
+    fun getAllCategoryEntities(): List<Category> {
         return uiState.value.categoriesWithSubcategories
             .fixParentCategoriesOrderNums()
             .asSingleList()
-            .toCategoryEntityList()
     }
 
 }

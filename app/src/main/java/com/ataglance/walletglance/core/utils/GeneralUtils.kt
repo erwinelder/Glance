@@ -186,7 +186,7 @@ fun Uri.extractOobCode(): String? {
 }
 
 
-fun Any.convertToInt(): Int? {
+fun Any.convertToIntOrNull(): Int? {
     return when (this) {
         is Int -> this
         is Double -> this.toInt()
@@ -197,11 +197,11 @@ fun Any.convertToInt(): Int? {
 }
 
 fun Any?.convertToIntOrZero(): Int {
-    return this?.convertToInt() ?: 0
+    return this?.convertToIntOrNull() ?: 0
 }
 
 
-fun Any.convertToDouble(): Double? {
+fun Any.convertToDoubleOrNull(): Double? {
     return when (this) {
         is Int -> this.toDouble()
         is Double -> this
@@ -212,5 +212,14 @@ fun Any.convertToDouble(): Double? {
 }
 
 fun Any?.convertToDoubleOrZero(): Double {
-    return this?.convertToDouble() ?: 0.0
+    return this?.convertToDoubleOrNull() ?: 0.0
+}
+
+
+fun Any.convertToCharOrNull(): Char? {
+    return when (this) {
+        is Char -> this
+        is String -> this.firstOrNull()
+        else -> null
+    }
 }

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.category.domain.color
+package com.ataglance.walletglance.category.domain.model.color
 
 import com.ataglance.walletglance.category.domain.utils.toColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
