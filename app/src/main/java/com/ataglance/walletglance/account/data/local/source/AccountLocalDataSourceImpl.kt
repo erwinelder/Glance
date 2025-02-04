@@ -1,15 +1,15 @@
 package com.ataglance.walletglance.account.data.local.source
 
-import com.ataglance.walletglance.account.data.local.dao.AccountDao
+import com.ataglance.walletglance.account.data.local.dao.AccountLocalDao
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.local.database.AppDatabase
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
 
 class AccountLocalDataSourceImpl(
-    private val accountDao: AccountDao,
+    private val accountDao: AccountLocalDao,
     private val updateTimeDao: LocalUpdateTimeDao
 ) : AccountLocalDataSource {
 
@@ -32,7 +32,7 @@ class AccountLocalDataSourceImpl(
     }
 
     override suspend fun synchroniseAccounts(
-        accountsToSync: EntitiesToSynchronise<AccountEntity>,
+        accountsToSync: EntitiesToSync<AccountEntity>,
         timestamp: Long
     ) {
         accountDao.deleteAndUpsertEntities(

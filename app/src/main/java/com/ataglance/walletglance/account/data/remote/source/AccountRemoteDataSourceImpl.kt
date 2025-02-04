@@ -2,7 +2,7 @@ package com.ataglance.walletglance.account.data.remote.source
 
 import com.ataglance.walletglance.account.data.remote.dao.AccountRemoteDao
 import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
 
@@ -26,24 +26,24 @@ class AccountRemoteDataSourceImpl(
         timestamp: Long,
         userId: String
     ) {
-        accountDao.upsertEntities(entities = accounts, userId = userId)
+        accountDao.upsertAccounts(accounts = accounts, userId = userId)
         saveUpdateTime(timestamp = timestamp, userId = userId)
     }
 
     override suspend fun synchroniseAccounts(
-        accountsToSync: EntitiesToSynchronise<AccountRemoteEntity>,
+        accountsToSync: EntitiesToSync<AccountRemoteEntity>,
         timestamp: Long,
         userId: String
     ) {
-        accountDao.synchroniseEntities(entitiesToSync = accountsToSync, userId = userId)
+        accountDao.synchroniseAccounts(accountsToSync = accountsToSync, userId = userId)
         saveUpdateTime(timestamp = timestamp, userId = userId)
     }
 
     override suspend fun getAccountsAfterTimestamp(
         timestamp: Long,
         userId: String
-    ): EntitiesToSynchronise<AccountRemoteEntity> {
-        return accountDao.getEntitiesAfterTimestamp(timestamp = timestamp, userId = userId)
+    ): EntitiesToSync<AccountRemoteEntity> {
+        return accountDao.getAccountsAfterTimestamp(timestamp = timestamp, userId = userId)
     }
 
 }

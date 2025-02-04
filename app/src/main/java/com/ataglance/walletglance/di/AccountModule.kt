@@ -3,7 +3,6 @@ package com.ataglance.walletglance.di
 import com.ataglance.walletglance.account.data.local.source.AccountLocalDataSource
 import com.ataglance.walletglance.account.data.local.source.getAccountLocalDataSource
 import com.ataglance.walletglance.account.data.remote.dao.AccountRemoteDao
-import com.ataglance.walletglance.account.data.remote.dao.getAccountRemoteDao
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSource
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSourceImpl
 import com.ataglance.walletglance.account.data.repository.AccountRepository
@@ -12,14 +11,17 @@ import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCaseImpl
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCaseImpl
+import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import org.koin.dsl.module
 
 val accountModule = module {
 
     /* ---------- DAOs ---------- */
 
-    single<AccountRemoteDao> {
-        getAccountRemoteDao(firestore = get())
+    single {
+        AccountRemoteDao(
+            firestoreAdapter = FirestoreAdapterFactory(firestore = get()).getAccountFirestoreAdapter()
+        )
     }
 
     /* ---------- Data Sources ---------- */
@@ -41,7 +43,7 @@ val accountModule = module {
     /* ---------- Use Cases ---------- */
 
     single<SaveAccountsUseCase> {
-        SaveAccountsUseCaseImpl(accountRepository = get(), recordRepository = )
+        SaveAccountsUseCaseImpl(accountRepository = get(), recordRepository = get())
     }
 
     single<GetAllAccountsUseCase> {

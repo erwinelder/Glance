@@ -34,7 +34,7 @@ import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 @Composable
 fun BudgetsScreen(

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.account.data.remote.source
 
 import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 
 interface AccountRemoteDataSource {
 
@@ -12,7 +12,7 @@ interface AccountRemoteDataSource {
     suspend fun upsertAccounts(accounts: List<AccountRemoteEntity>, timestamp: Long, userId: String)
 
     suspend fun synchroniseAccounts(
-        accountsToSync: EntitiesToSynchronise<AccountRemoteEntity>,
+        accountsToSync: EntitiesToSync<AccountRemoteEntity>,
         timestamp: Long,
         userId: String
     )
@@ -20,6 +20,6 @@ interface AccountRemoteDataSource {
     suspend fun getAccountsAfterTimestamp(
         timestamp: Long,
         userId: String
-    ): EntitiesToSynchronise<AccountRemoteEntity>
+    ): EntitiesToSync<AccountRemoteEntity>
 
 }

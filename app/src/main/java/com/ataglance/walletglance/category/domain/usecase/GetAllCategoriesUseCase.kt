@@ -4,5 +4,6 @@ import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategor
 import kotlinx.coroutines.flow.Flow
 
 interface GetAllCategoriesUseCase {
-    fun execute(): Flow<CategoriesWithSubcategories>
+    fun getAsFlow(): Flow<CategoriesWithSubcategories>
+    suspend fun get(): CategoriesWithSubcategories
 }

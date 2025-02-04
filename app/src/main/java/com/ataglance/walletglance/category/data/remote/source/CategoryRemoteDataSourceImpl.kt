@@ -2,7 +2,7 @@ package com.ataglance.walletglance.category.data.remote.source
 
 import com.ataglance.walletglance.category.data.remote.dao.CategoryRemoteDao
 import com.ataglance.walletglance.category.data.remote.model.CategoryRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
 
@@ -26,24 +26,24 @@ class CategoryRemoteDataSourceImpl(
         timestamp: Long,
         userId: String
     ) {
-        categoryDao.upsertEntities(entities = categories, userId = userId)
+        categoryDao.upsertCategories(categories = categories, userId = userId)
         saveUpdateTime(timestamp = timestamp, userId = userId)
     }
 
     override suspend fun synchroniseCategories(
-        categoriesToSync: EntitiesToSynchronise<CategoryRemoteEntity>,
+        categoriesToSync: EntitiesToSync<CategoryRemoteEntity>,
         timestamp: Long,
         userId: String
     ) {
-        categoryDao.synchroniseEntities(entitiesToSync = categoriesToSync, userId = userId)
+        categoryDao.synchroniseCategories(categoriesToSync = categoriesToSync, userId = userId)
         saveUpdateTime(timestamp = timestamp, userId = userId)
     }
 
     override suspend fun getCategoriesAfterTimestamp(
         timestamp: Long,
         userId: String
-    ): EntitiesToSynchronise<CategoryRemoteEntity> {
-        return categoryDao.getEntitiesAfterTimestamp(timestamp = timestamp, userId = userId)
+    ): EntitiesToSync<CategoryRemoteEntity> {
+        return categoryDao.getCategoriesAfterTimestamp(timestamp = timestamp, userId = userId)
     }
 
 }

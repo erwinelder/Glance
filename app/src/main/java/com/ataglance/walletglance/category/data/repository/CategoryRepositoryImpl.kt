@@ -7,7 +7,7 @@ import com.ataglance.walletglance.category.data.mapper.toLocalEntity
 import com.ataglance.walletglance.category.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.category.data.remote.model.CategoryRemoteEntity
 import com.ataglance.walletglance.category.data.remote.source.CategoryRemoteDataSource
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.flow.Flow
@@ -53,7 +53,7 @@ class CategoryRepositoryImpl(
         toUpsert: List<CategoryEntity>
     ) {
         val timestamp = getCurrentTimestamp()
-        val categoriesToSync = EntitiesToSynchronise(toDelete = toDelete, toUpsert = toUpsert)
+        val categoriesToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseCategories(categoriesToSync = categoriesToSync, timestamp = timestamp)
         userContext.getUserId()?.let { userId ->

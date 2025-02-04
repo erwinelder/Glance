@@ -3,7 +3,7 @@ package com.ataglance.walletglance.core.data.local.source
 import androidx.room.Transaction
 import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.local.model.LocalUpdateTime
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
@@ -47,7 +47,7 @@ abstract class BaseLocalDataSource<T>(
 
     @Transaction
     suspend fun deleteAndUpsertEntities(
-        entitiesToDeleteAndUpsert: EntitiesToSynchronise<T>,
+        entitiesToDeleteAndUpsert: EntitiesToSync<T>,
         timestamp: Long
     ) {
         if (entitiesToDeleteAndUpsert.toDelete.isNotEmpty()) {

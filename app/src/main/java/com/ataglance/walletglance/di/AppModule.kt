@@ -40,7 +40,12 @@ val appModule = module {
             getAllCategoriesUseCase = get(),
 
             categoryCollectionAndAssociationRepository = get(),
+
             recordRepository = get(),
+            getLastRecordNumUseCase = get(),
+            getRecordsInDateRangeUseCase = get(),
+            getTodayTotalExpensesForAccount = get(),
+
             recordAndAccountRepository = get(),
             budgetAndAssociationRepository = get(),
             generalRepository = get()

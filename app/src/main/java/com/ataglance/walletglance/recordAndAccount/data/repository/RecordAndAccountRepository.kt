@@ -2,7 +2,7 @@ package com.ataglance.walletglance.recordAndAccount.data.repository
 
 import androidx.room.Transaction
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 interface RecordAndAccountRepository {
 

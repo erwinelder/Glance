@@ -28,10 +28,6 @@ import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidget
 import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepositoryImpl
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepositoryImpl
-import com.ataglance.walletglance.record.data.local.RecordLocalDataSource
-import com.ataglance.walletglance.record.data.remote.RecordRemoteDataSource
-import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.record.data.repository.RecordRepositoryImpl
 import com.google.firebase.firestore.FirebaseFirestore
 
 class RepositoryFactory(
@@ -51,9 +47,6 @@ class RepositoryFactory(
                 CategoryCollectionCategoryAssociationRemoteDataSource(
                     userId = user.uid, firestore = firestore
                 ) as RS
-            RecordRemoteDataSource::class -> RecordRemoteDataSource(
-                userId = user.uid, firestore = firestore
-            ) as RS
             BudgetRemoteDataSource::class -> BudgetRemoteDataSource(
                 userId = user.uid, firestore = firestore
             ) as RS
@@ -90,13 +83,6 @@ class RepositoryFactory(
                 db.categoryCollectionCategoryAssociationDao, db.localUpdateTimeDao
             ),
             associationRemoteSource = createRemoteDataSource<CategoryCollectionCategoryAssociationRemoteDataSource>()
-        )
-    }
-
-    fun getRecordRepository(): RecordRepository {
-        return RecordRepositoryImpl(
-            localSource = RecordLocalDataSource(db.recordDao, db.localUpdateTimeDao),
-            remoteSource = createRemoteDataSource<RecordRemoteDataSource>()
         )
     }
 

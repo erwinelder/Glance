@@ -3,7 +3,7 @@ package com.ataglance.walletglance.recordAndAccount.data.repository
 import androidx.room.Transaction
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 
 class RecordAndAccountRepositoryImpl(
@@ -16,7 +16,7 @@ class RecordAndAccountRepositoryImpl(
         recordListToDelete: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
-        recordRepository.deleteAndUpsertEntities(
+        recordRepository.deleteAndUpsertRecords(
             toDelete = recordListToDelete, toUpsert = emptyList()
         )
         accountRepository.upsertAccounts(accounts = accountListToUpsert)
@@ -28,7 +28,7 @@ class RecordAndAccountRepositoryImpl(
         recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
-        recordRepository.deleteAndUpsertEntities(
+        recordRepository.deleteAndUpsertRecords(
             toDelete = recordListToDelete, toUpsert = recordListToUpsert
         )
         accountRepository.upsertAccounts(accounts = accountListToUpsert)
@@ -39,7 +39,7 @@ class RecordAndAccountRepositoryImpl(
         recordListToUpsert: List<RecordEntity>,
         accountListToUpsert: List<AccountEntity>
     ) {
-        recordRepository.upsertEntities(entityList = recordListToUpsert)
+        recordRepository.upsertRecords(records = recordListToUpsert)
         accountRepository.upsertAccounts(accounts = accountListToUpsert)
     }
 

@@ -7,7 +7,7 @@ import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface CategoryDao : BaseLocalDao<CategoryEntity> {
+interface CategoryLocalDao : BaseLocalDao<CategoryEntity> {
 
     @Query("DELETE FROM Category")
     suspend fun deleteAllCategories()

@@ -4,48 +4,16 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
-import com.ataglance.walletglance.core.utils.convertToDoubleOrZero
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.utils.asChar
 import com.ataglance.walletglance.record.domain.utils.asRecordType
+import com.ataglance.walletglance.record.domain.utils.getTotalAmountByType
+import com.ataglance.walletglance.record.domain.utils.getTotalPercentages
 import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
-
-
-fun Map<String, Any?>.toRecordEntity(): RecordEntity {
-    return RecordEntity(
-        id = (this["id"] as Long).toInt(),
-        recordNum = (this["recordNum"] as Long).toInt(),
-        date = this["date"] as Long,
-        type = (this["type"] as String).toCharArray()[0],
-        accountId = (this["accountId"] as Long).toInt(),
-        amount = this["amount"].convertToDoubleOrZero(),
-        quantity = (this["quantity"] as Long?)?.toInt(),
-        categoryId = (this["categoryId"] as Long).toInt(),
-        subcategoryId = (this["subcategoryId"] as Long?)?.toInt(),
-        note = this["note"] as String?,
-        includeInBudgets = this["includeInBudgets"] as Boolean
-    )
-}
-
-fun RecordEntity.toMap(timestamp: Long): HashMap<String, Any?> {
-    return hashMapOf(
-        "LMT" to timestamp,
-        "id" to id,
-        "recordNum" to recordNum,
-        "date" to date,
-        "type" to type,
-        "accountId" to accountId,
-        "amount" to amount,
-        "quantity" to quantity,
-        "categoryId" to categoryId,
-        "subcategoryId" to subcategoryId,
-        "note" to note,
-        "includeInBudgets" to includeInBudgets
-    )
-}
-
 
 
 fun RecordEntity.toRecordStack(
@@ -115,7 +83,6 @@ fun List<RecordEntity>.toRecordStackList(
 }
 
 
-
 fun RecordStack.toRecordList(): List<RecordEntity> {
     return stack.map { unit ->
         RecordEntity(
@@ -132,4 +99,20 @@ fun RecordStack.toRecordList(): List<RecordEntity> {
             includeInBudgets = unit.includeInBudgets
         )
     }
+}
+
+
+fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiState {
+    val expensesTotal = this.getTotalAmountByType(CategoryType.Expense)
+    val incomeTotal = this.getTotalAmountByType(CategoryType.Income)
+    val (expensesPercentage, incomePercentage) = getTotalPercentages(expensesTotal, incomeTotal)
+
+    return ExpensesIncomeWidgetUiState(
+        expensesTotal = expensesTotal,
+        incomeTotal = incomeTotal,
+        expensesPercentage = expensesPercentage,
+        incomePercentage = incomePercentage,
+        expensesPercentageFloat = expensesPercentage.toFloat() / 100F,
+        incomePercentageFloat = incomePercentage.toFloat() / 100F
+    )
 }

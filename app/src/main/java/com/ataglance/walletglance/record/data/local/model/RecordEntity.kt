@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.record.data.model
+package com.ataglance.walletglance.record.data.local.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -37,22 +37,13 @@ data class RecordEntity(
 
     private fun isExpense() = type == RecordType.Expense.asChar()
     private fun isIncome() = type == RecordType.Income.asChar()
-    private fun isOutTransfer() = type == RecordType.OutTransfer.asChar()
+    fun isOutTransfer() = type == RecordType.OutTransfer.asChar()
     private fun isInTransfer() = type == RecordType.InTransfer.asChar()
     fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
     fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
 
     fun containsParentOrSubcategoryId(id: Int?): Boolean {
         return categoryId == id || subcategoryId == id
-    }
-
-    fun convertTransferToRecord(): RecordEntity {
-        return copy(
-            type = if (isOutTransfer()) RecordType.Expense.asChar() else RecordType.Income.asChar(),
-            categoryId = if (isOutTransfer()) 12 else 77,
-            subcategoryId = if (isOutTransfer()) 66 else null,
-            note = null
-        )
     }
 
 }

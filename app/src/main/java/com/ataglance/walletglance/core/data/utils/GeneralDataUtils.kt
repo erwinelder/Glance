@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.core.data.utils
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 
 
 fun needToSynchroniseData(localTimestamp: Long?, remoteTimestamp: Long?): Pair<Long?, Long>? {
@@ -13,9 +13,9 @@ fun needToSynchroniseData(localTimestamp: Long?, remoteTimestamp: Long?): Pair<L
 suspend fun <LE, RE> synchroniseData(
     localUpdateTimeGetter: suspend () -> Long?,
     remoteUpdateTimeGetter: suspend () -> Long?,
-    remoteDataGetter: suspend (timestamp: Long) -> EntitiesToSynchronise<RE>,
+    remoteDataGetter: suspend (timestamp: Long) -> EntitiesToSync<RE>,
     remoteDataToLocalDataMapper: (RE) -> LE,
-    localSynchroniser: suspend (EntitiesToSynchronise<LE>, timestamp: Long) -> Unit
+    localSynchroniser: suspend (EntitiesToSync<LE>, timestamp: Long) -> Unit
 ) {
     val (localTimestamp, remoteTimestamp) = needToSynchroniseData(
         localTimestamp = localUpdateTimeGetter(),

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.account.data.local.source
 
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import kotlinx.coroutines.flow.Flow
 
 interface AccountLocalDataSource {
@@ -14,10 +14,7 @@ interface AccountLocalDataSource {
 
     suspend fun deleteAllAccounts(timestamp: Long)
 
-    suspend fun synchroniseAccounts(
-        accountsToSync: EntitiesToSynchronise<AccountEntity>,
-        timestamp: Long
-    )
+    suspend fun synchroniseAccounts(accountsToSync: EntitiesToSync<AccountEntity>, timestamp: Long)
 
     fun getAllAccounts(): Flow<List<AccountEntity>>
 

@@ -52,12 +52,12 @@ import com.ataglance.walletglance.core.utils.plus
 import com.ataglance.walletglance.core.utils.top
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
+import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.mapper.toRecordStackList
 
 @Composable

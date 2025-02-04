@@ -7,7 +7,7 @@ import com.ataglance.walletglance.account.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSource
 import com.ataglance.walletglance.auth.data.model.UserContext
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.flow.Flow
@@ -53,7 +53,7 @@ class AccountRepositoryImpl(
         toUpsert: List<AccountEntity>
     ) {
         val timestamp = getCurrentTimestamp()
-        val accountsToSync = EntitiesToSynchronise(toDelete = toDelete, toUpsert = toUpsert)
+        val accountsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseAccounts(accountsToSync = accountsToSync, timestamp = timestamp)
         userContext.getUserId()?.let { userId ->

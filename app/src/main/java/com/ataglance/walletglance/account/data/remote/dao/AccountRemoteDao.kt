@@ -1,46 +1,35 @@
 package com.ataglance.walletglance.account.data.remote.dao
 
-import com.ataglance.walletglance.account.data.mapper.toAccountRemoteEntity
-import com.ataglance.walletglance.account.data.mapper.toMap
 import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
-import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapter
-import com.google.firebase.firestore.FirebaseFirestore
 
 class AccountRemoteDao(
     private val firestoreAdapter: FirestoreAdapter<AccountRemoteEntity>
 ) {
 
-    suspend fun upsertEntities(entities: List<AccountRemoteEntity>, userId: String) {
-        firestoreAdapter.upsertEntities(entities = entities, userId = userId)
+    suspend fun upsertAccounts(accounts: List<AccountRemoteEntity>, userId: String) {
+        firestoreAdapter.upsertEntities(entities = accounts, userId = userId)
     }
 
-    suspend fun synchroniseEntities(
-        entitiesToSync: EntitiesToSynchronise<AccountRemoteEntity>,
+    suspend fun synchroniseAccounts(
+        accountsToSync: EntitiesToSync<AccountRemoteEntity>,
         userId: String
     ) {
-        firestoreAdapter.synchroniseEntities(entitiesToSync = entitiesToSync, userId = userId)
+        firestoreAdapter.synchroniseEntities(
+            toDelete = accountsToSync.toDelete, toUpsert = accountsToSync.toUpsert, userId = userId
+        )
     }
 
-    suspend fun getEntitiesAfterTimestamp(
+    suspend fun getAccountsAfterTimestamp(
         timestamp: Long,
         userId: String
-    ): EntitiesToSynchronise<AccountRemoteEntity> {
-        return firestoreAdapter.getEntitiesAfterTimestamp(timestamp = timestamp, userId = userId)
+    ): EntitiesToSync<AccountRemoteEntity> {
+        return firestoreAdapter
+            .getEntitiesAfterTimestamp(timestamp = timestamp, userId = userId)
+            .let { entities ->
+                EntitiesToSync.fromEntities(entities = entities, deletedPredicate = { it.deleted })
+            }
     }
 
-}
-
-
-fun getAccountRemoteDao(firestore: FirebaseFirestore): AccountRemoteDao {
-    return AccountRemoteDao(
-        firestoreAdapter = FirestoreAdapter(
-            firestore = firestore,
-            collectionName = TableName.Account.name,
-            dataToEntityMapper = Map<String, Any?>::toAccountRemoteEntity,
-            entityToDataMapper = AccountRemoteEntity::toMap,
-            getDocumentIdentifier = { it.id.toString() }
-        )
-    )
 }

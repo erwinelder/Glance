@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.category.data.remote.source
 
 import com.ataglance.walletglance.category.data.remote.model.CategoryRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 
 interface CategoryRemoteDataSource {
 
@@ -16,7 +16,7 @@ interface CategoryRemoteDataSource {
     )
 
     suspend fun synchroniseCategories(
-        categoriesToSync: EntitiesToSynchronise<CategoryRemoteEntity>,
+        categoriesToSync: EntitiesToSync<CategoryRemoteEntity>,
         timestamp: Long,
         userId: String
     )
@@ -24,6 +24,6 @@ interface CategoryRemoteDataSource {
     suspend fun getCategoriesAfterTimestamp(
         timestamp: Long,
         userId: String
-    ): EntitiesToSynchronise<CategoryRemoteEntity>
+    ): EntitiesToSync<CategoryRemoteEntity>
 
 }

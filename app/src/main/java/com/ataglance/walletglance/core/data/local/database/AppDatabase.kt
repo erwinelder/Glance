@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.ataglance.walletglance.account.data.local.dao.AccountDao
+import com.ataglance.walletglance.account.data.local.dao.AccountLocalDao
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationDao
 import com.ataglance.walletglance.budget.data.local.BudgetDao
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.model.BudgetEntity
-import com.ataglance.walletglance.category.data.local.dao.CategoryDao
+import com.ataglance.walletglance.category.data.local.dao.CategoryLocalDao
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationDao
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionDao
@@ -24,8 +24,8 @@ import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetDao
 import com.ataglance.walletglance.personalization.data.local.WidgetDao
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
 import com.ataglance.walletglance.personalization.data.model.WidgetEntity
-import com.ataglance.walletglance.record.data.local.RecordDao
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
 @Database(
     entities = [
@@ -47,11 +47,11 @@ import com.ataglance.walletglance.record.data.model.RecordEntity
 abstract class AppDatabase : RoomDatabase() {
 
     abstract val localUpdateTimeDao: LocalUpdateTimeDao
-    abstract val accountDao: AccountDao
-    abstract val categoryDao: CategoryDao
+    abstract val accountDao: AccountLocalDao
+    abstract val categoryDao: CategoryLocalDao
     abstract val categoryCollectionDao: CategoryCollectionDao
     abstract val categoryCollectionCategoryAssociationDao: CategoryCollectionCategoryAssociationDao
-    abstract val recordDao: RecordDao
+    abstract val recordDao: RecordLocalDao
     abstract val budgetDao: BudgetDao
     abstract val budgetAccountAssociationDao: BudgetAccountAssociationDao
     abstract val navigationButtonDao: NavigationButtonDao

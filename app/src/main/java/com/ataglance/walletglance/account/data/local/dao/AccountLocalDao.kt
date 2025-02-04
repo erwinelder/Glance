@@ -7,7 +7,7 @@ import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AccountDao : BaseLocalDao<AccountEntity> {
+interface AccountLocalDao : BaseLocalDao<AccountEntity> {
 
     @Query("DELETE FROM Account")
     suspend fun deleteAllAccounts()

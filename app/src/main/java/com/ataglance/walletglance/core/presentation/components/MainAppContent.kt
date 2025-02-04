@@ -27,8 +27,8 @@ import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.domain.utils.filterAccountId
-import com.ataglance.walletglance.record.domain.utils.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
+import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import java.time.LocalDateTime
 

@@ -1,15 +1,15 @@
 package com.ataglance.walletglance.category.data.local.source
 
-import com.ataglance.walletglance.category.data.local.dao.CategoryDao
+import com.ataglance.walletglance.category.data.local.dao.CategoryLocalDao
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSynchronise
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
 
 class CategoryLocalDataSourceImpl(
-    private val categoryDao: CategoryDao,
+    private val categoryDao: CategoryLocalDao,
     private val updateTimeDao: LocalUpdateTimeDao
 ) : CategoryLocalDataSource {
 
@@ -32,7 +32,7 @@ class CategoryLocalDataSourceImpl(
     }
 
     override suspend fun synchroniseCategories(
-        categoriesToSync: EntitiesToSynchronise<CategoryEntity>,
+        categoriesToSync: EntitiesToSync<CategoryEntity>,
         timestamp: Long
     ) {
         categoryDao.deleteAndUpsertEntities(

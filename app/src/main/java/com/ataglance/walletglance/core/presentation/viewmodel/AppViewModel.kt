@@ -59,12 +59,15 @@ import com.ataglance.walletglance.core.utils.getLanguageContext
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
-import com.ataglance.walletglance.record.data.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.model.RecordsInDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.utils.filterByAccountId
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.model.RecordStack
-import com.ataglance.walletglance.record.domain.model.RecordsInDateRange
+import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccount
 import com.ataglance.walletglance.record.domain.utils.findByRecordNum
 import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
 import com.ataglance.walletglance.record.domain.utils.getOutAndInTransfersByRecordNums
@@ -102,13 +105,18 @@ class AppViewModel(
 
     private val saveAccountsUseCase: SaveAccountsUseCase,
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
+    private val getTodayTotalExpensesForAccount: GetTodayTotalExpensesForAccount,
 
     private val saveCategoriesUseCase: SaveCategoriesUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
 
     private val categoryCollectionAndAssociationRepository:
     CategoryCollectionAndCollectionCategoryAssociationRepository,
+
     val recordRepository: RecordRepository,
+    private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
+    private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase,
+
     val recordAndAccountRepository: RecordAndAccountRepository,
     val budgetAndAssociationRepository: BudgetAndBudgetAccountAssociationRepository,
     val generalRepository: GeneralRepository
@@ -320,7 +328,7 @@ class AppViewModel(
 
     private fun fetchLastRecordNum() {
         viewModelScope.launch {
-            recordRepository.getLastRecordNum().collect { recordNum ->
+            getLastRecordNumUseCase.execute().collect { recordNum ->
                 _lastRecordNum.update { recordNum ?: 0 }
             }
         }
@@ -336,7 +344,7 @@ class AppViewModel(
     // TODO-ACCOUNTS
     private fun fetchAccounts() {
         viewModelScope.launch {
-            getAllAccountsUseCase.execute().collect(::applyAccountsToUiState)
+            getAllAccountsUseCase.getAsFlow().collect(::applyAccountsToUiState)
         }
     }
 
@@ -400,7 +408,7 @@ class AppViewModel(
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            getAllCategoriesUseCase.execute().collect(::updateCategoriesWithSubcategories)
+            getAllCategoriesUseCase.getAsFlow().collect(::updateCategoriesWithSubcategories)
         }
     }
 
@@ -491,6 +499,12 @@ class AppViewModel(
             ?: 0.0
     }
 
+    suspend fun getActiveAccountExpensesForTodayT(): Double {
+        return accountsAndActiveOne.value.activeAccount?.id?.let {
+            getTodayTotalExpensesForAccount.execute(accountId = it)
+        } ?: 0.0
+    }
+
 
     private val _recordListInDateRange: MutableStateFlow<RecordsInDateRange> = MutableStateFlow(
         RecordsInDateRange()
@@ -514,9 +528,9 @@ class AppViewModel(
         _recordListInDateRange,
         accountsAndActiveOne,
         categoriesWithSubcategories
-    ) { recordListInDateRange, accountsUiState, categoriesWithSubcategories ->
+    ) { recordListInDateRange, accountsAndActiveOne, categoriesWithSubcategories ->
         recordListInDateRange.recordList.toRecordStackList(
-            accountList = accountsUiState.accountList,
+            accountList = accountsAndActiveOne.accountList,
             categoriesWithSubcategories = categoriesWithSubcategories
         )
     }.stateIn(

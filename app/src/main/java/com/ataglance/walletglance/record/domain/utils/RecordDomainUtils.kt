@@ -6,7 +6,6 @@ import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
-import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.utils.extractYear
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
@@ -170,23 +169,7 @@ fun List<RecordStackItem>.foldNotesByCategory(
 }
 
 
-
-fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiState {
-    val expensesTotal = this.getTotalAmountByType(CategoryType.Expense)
-    val incomeTotal = this.getTotalAmountByType(CategoryType.Income)
-    val (expensesPercentage, incomePercentage) = getTotalPercentages(expensesTotal, incomeTotal)
-
-    return ExpensesIncomeWidgetUiState(
-        expensesTotal = expensesTotal,
-        incomeTotal = incomeTotal,
-        expensesPercentage = expensesPercentage,
-        incomePercentage = incomePercentage,
-        expensesPercentageFloat = (expensesPercentage / 100).toFloat(),
-        incomePercentageFloat = (incomePercentage / 100).toFloat()
-    )
-}
-
-private fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
+fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
     val typeChecker = when (type) {
         CategoryType.Expense -> RecordStack::isExpenseOrOutTransfer
         CategoryType.Income -> RecordStack::isIncomeOrInTransfer
@@ -199,7 +182,7 @@ private fun List<RecordStack>.getTotalAmountByType(type: CategoryType): Double {
         }
 }
 
-private fun getTotalPercentages(expensesTotal: Double, incomeTotal: Double): Pair<Double, Double> {
+fun getTotalPercentages(expensesTotal: Double, incomeTotal: Double): Pair<Double, Double> {
     return (expensesTotal + incomeTotal)
         .takeUnless { it == 0.0 }
         ?.let { (100 / it) * expensesTotal to (100 / it) * incomeTotal }
