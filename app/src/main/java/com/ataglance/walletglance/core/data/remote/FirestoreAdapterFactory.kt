@@ -3,6 +3,11 @@ package com.ataglance.walletglance.core.data.remote
 import com.ataglance.walletglance.account.data.mapper.toAccountRemoteEntity
 import com.ataglance.walletglance.account.data.mapper.toMap
 import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
+import com.ataglance.walletglance.budget.data.mapper.toBudgetAccountRemoteAssociation
+import com.ataglance.walletglance.budget.data.mapper.toBudgetRemoteEntity
+import com.ataglance.walletglance.budget.data.mapper.toMap
+import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
+import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
 import com.ataglance.walletglance.category.data.mapper.toCategoryRemoteEntity
 import com.ataglance.walletglance.category.data.mapper.toMap
 import com.ataglance.walletglance.category.data.remote.model.CategoryRemoteEntity
@@ -43,6 +48,26 @@ class FirestoreAdapterFactory(
             dataToEntityMapper = Map<String, Any?>::toRecordRemoteEntity,
             entityToDataMapper = RecordRemoteEntity::toMap,
             getDocumentIdentifier = { it.id.toString() }
+        )
+    }
+
+    fun getBudgetFirestoreAdapter(): FirestoreAdapter<BudgetRemoteEntity> {
+        return FirestoreAdapterImpl(
+            firestore = firestore,
+            collectionName = TableName.Budget.name,
+            dataToEntityMapper = Map<String, Any?>::toBudgetRemoteEntity,
+            entityToDataMapper = BudgetRemoteEntity::toMap,
+            getDocumentIdentifier = { it.id.toString() }
+        )
+    }
+
+    fun getBudgetAccountAssociationFirestoreAdapter(): FirestoreAdapter<BudgetAccountRemoteAssociation> {
+        return FirestoreAdapterImpl(
+            firestore = firestore,
+            collectionName = TableName.BudgetAccountAssociation.name,
+            dataToEntityMapper = Map<String, Any?>::toBudgetAccountRemoteAssociation,
+            entityToDataMapper = BudgetAccountRemoteAssociation::toMap,
+            getDocumentIdentifier = { "${it.budgetId}-${it.accountId}" }
         )
     }
 

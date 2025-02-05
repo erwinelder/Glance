@@ -35,15 +35,11 @@ data class RecordEntity(
     val includeInBudgets: Boolean
 ) {
 
-    private fun isExpense() = type == RecordType.Expense.asChar()
-    private fun isIncome() = type == RecordType.Income.asChar()
+    fun isExpense() = type == RecordType.Expense.asChar()
+    fun isIncome() = type == RecordType.Income.asChar()
     fun isOutTransfer() = type == RecordType.OutTransfer.asChar()
-    private fun isInTransfer() = type == RecordType.InTransfer.asChar()
+    fun isInTransfer() = type == RecordType.InTransfer.asChar()
     fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
     fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
-
-    fun containsParentOrSubcategoryId(id: Int?): Boolean {
-        return categoryId == id || subcategoryId == id
-    }
 
 }

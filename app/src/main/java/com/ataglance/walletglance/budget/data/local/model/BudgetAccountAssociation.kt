@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.budget.data.model
+package com.ataglance.walletglance.budget.data.local.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

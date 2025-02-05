@@ -3,11 +3,12 @@ package com.ataglance.walletglance.budget.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
-import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.domain.utils.replaceById
+import com.ataglance.walletglance.budget.mapper.copyDataToBudget
+import com.ataglance.walletglance.budget.mapper.toNewBudget
+import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,7 @@ class EditBudgetsViewModel(
     )
     val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
 
-    fun saveBudget(budgetUiState: EditingBudgetUiState) {
+    fun saveBudget(budgetUiState: BudgetDraft) {
         val budgetsByType = budgetsByType.value
 
         val newBudgetsByType = if (budgetUiState.isNew) {
@@ -43,6 +44,14 @@ class EditBudgetsViewModel(
 
     fun getBudgetList(): List<Budget> {
         return budgetsByType.value.concatenate()
+    }
+
+
+    private fun List<Budget>.replaceById(budgetDraft: BudgetDraft): List<Budget> {
+        return this.map { budget ->
+            budget.takeUnless { it.id == budgetDraft.id }
+                ?: budgetDraft.copyDataToBudget(budget)
+        }
     }
 
 }

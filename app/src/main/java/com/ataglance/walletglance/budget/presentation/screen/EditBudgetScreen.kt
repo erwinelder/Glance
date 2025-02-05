@@ -27,13 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
-import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
-import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
-import com.ataglance.walletglance.budget.mapper.toBudget
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
+import com.ataglance.walletglance.budget.mapper.toDraft
+import com.ataglance.walletglance.budget.mapper.toDomainModel
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
@@ -58,7 +59,7 @@ import com.ataglance.walletglance.core.utils.takeComposableIf
 @Composable
 fun EditBudgetScreen(
     scaffoldPadding: PaddingValues,
-    budget: EditingBudgetUiState,
+    budget: BudgetDraft,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     onNameChange: (String) -> Unit,
@@ -118,7 +119,7 @@ fun EditBudgetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    budget: EditingBudgetUiState,
+    budget: BudgetDraft,
     accountList: List<Account>,
     onNameChange: (String) -> Unit,
     onCategoryFieldClick: () -> Unit,
@@ -204,7 +205,7 @@ private fun GlassSurfaceContent(
 }
 
 private fun LazyListScope.accountCheckedList(
-    budget: EditingBudgetUiState,
+    budget: BudgetDraft,
     accountList: List<Account>,
     onAccountCheck: (Account) -> Unit,
     onAccountUncheck: (Account) -> Unit,
@@ -252,16 +253,16 @@ fun EditBudgetScreenPreview(
     ),
     budgetEntity: BudgetEntity? = null,
     budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
-    budgetUiState: EditingBudgetUiState = (budgetEntity to budgetAccountAssociationList)
+    budgetUiState: BudgetDraft = (budgetEntity to budgetAccountAssociationList)
         .letIfNoneIsNull { (entity, associations) ->
-            entity.toBudget(
+            entity.toDomainModel(
                 categoryWithSubcategory = categoriesWithSubcategories.expense[0].getWithFirstSubcategory(),
+                accounts = accountList,
                 linkedAccountsIds = associations
                     .filter { it.budgetId == entity.id }
-                    .map { it.accountId },
-                accountList = accountList
-            )?.toBudgetUiState(accountList)
-        } ?: EditingBudgetUiState(
+                    .map { it.accountId }
+            )?.toDraft(accounts = accountList)
+        } ?: BudgetDraft(
             isNew = true,
             amountLimit = "4000",
             category = categoriesWithSubcategories.expense[0].category,

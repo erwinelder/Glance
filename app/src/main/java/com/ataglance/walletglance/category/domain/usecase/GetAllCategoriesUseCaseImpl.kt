@@ -22,7 +22,7 @@ class GetAllCategoriesUseCaseImpl(
         return categoryRepository.getAllCategories().firstOrNull()
             ?.toDomainModels()
             ?.toCategoriesWithSubcategories()
-            ?: CategoriesWithSubcategories(emptyList())
+            ?: CategoriesWithSubcategories()
     }
 
 }

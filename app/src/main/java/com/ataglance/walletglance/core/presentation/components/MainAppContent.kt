@@ -95,7 +95,7 @@ fun MainAppContent(
         derivedStateOf {
             val recordStacksByDateAndAccount = accountsUiState.activeAccount?.id
                 ?.let { recordStackListByDate.filterAccountId(it) }
-                ?: emptyList()
+                .orEmpty()
 
             WidgetsUiState(
                 greetingsTitleRes = greetingsTitleRes,

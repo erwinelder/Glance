@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 
 @Entity(
     tableName = "BudgetOnWidget",

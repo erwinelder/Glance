@@ -15,15 +15,11 @@ import com.ataglance.walletglance.account.domain.utils.mergeWith
 import com.ataglance.walletglance.account.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
 import com.ataglance.walletglance.account.mapper.toDataModel
 import com.ataglance.walletglance.auth.data.model.UserData
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.budget.data.utils.getAssociationsThatAreNotInList
-import com.ataglance.walletglance.budget.data.utils.getBudgetsThatAreNotInList
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
-import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.divideIntoBudgetsAndAssociations
-import com.ataglance.walletglance.budget.mapper.toBudgetList
+import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.SaveBudgetsUseCase
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
@@ -66,12 +62,13 @@ import com.ataglance.walletglance.record.data.utils.filterByAccountId
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
-import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccount
 import com.ataglance.walletglance.record.domain.utils.findByRecordNum
 import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
 import com.ataglance.walletglance.record.domain.utils.getOutAndInTransfersByRecordNums
 import com.ataglance.walletglance.record.domain.utils.inverse
+import com.ataglance.walletglance.record.mapper.toDomainModels
 import com.ataglance.walletglance.record.mapper.toRecordList
 import com.ataglance.walletglance.record.mapper.toRecordStackList
 import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
@@ -115,10 +112,13 @@ class AppViewModel(
 
     val recordRepository: RecordRepository,
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
-    private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase,
+    private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
 
     val recordAndAccountRepository: RecordAndAccountRepository,
-    val budgetAndAssociationRepository: BudgetAndBudgetAccountAssociationRepository,
+
+    private val saveBudgetsUseCase: SaveBudgetsUseCase,
+    private val getBudgetsUseCase: GetBudgetsUseCase,
+
     val generalRepository: GeneralRepository
 ) : ViewModel() {
 
@@ -543,31 +543,13 @@ class AppViewModel(
     private val _budgetsByType: MutableStateFlow<BudgetsByType> = MutableStateFlow(BudgetsByType())
     val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
 
+    private fun updateBudgetsByType(budgetsByType: BudgetsByType) {
+        _budgetsByType.update { budgetsByType }
+    }
+
     private fun fetchBudgets() {
         viewModelScope.launch {
-            val (budgetEntityList, associationList) = budgetAndAssociationRepository
-                .getEntitiesAndAssociations()
-            val categoryWithSubcategoriesList = categoriesWithSubcategories.value.expense
-
-            // TODO-ACCOUNTS-DEPENDENCY
-            val budgetsByType = budgetEntityList
-                .toBudgetList(
-                    categoryWithSubcategoriesList = categoryWithSubcategoriesList,
-                    associationList = associationList,
-                    accountList = accountsAndActiveOne.value.accountList
-                )
-                .groupByType()
-            val budgetsMaxDateRange = budgetsByType.getMaxDateRange() ?: return@launch
-
-            val recordList = _recordListInDateRange.value
-                .takeIf { it.dateRange.containsDateRange(budgetsMaxDateRange) }
-                ?.recordList
-                ?: recordRepository.getRecordsInDateRange(budgetsMaxDateRange).firstOrNull()
-                ?: emptyList()
-
-            val filledBudgets = budgetsByType.fillUsedAmountsByRecords(recordList)
-
-            _budgetsByType.update { filledBudgets }
+            updateBudgetsByType(budgetsByType = getBudgetsUseCase.get())
         }
     }
 
@@ -579,20 +561,10 @@ class AppViewModel(
     }
 
     suspend fun saveBudgetsToDb(budgetList: List<Budget>) {
-        val (newBudgets, newAssociations) = budgetList.divideIntoBudgetsAndAssociations()
-        val (originalCollections, originalAssociations) = budgetsByType.value.concatenate()
-            .divideIntoBudgetsAndAssociations()
-
-        val budgetsToDelete = originalCollections.getBudgetsThatAreNotInList(newBudgets)
-        val associationsToDelete = originalAssociations.getAssociationsThatAreNotInList(newAssociations)
-
-        budgetAndAssociationRepository
-            .deleteAndUpsertEntitiesAndDeleteAndUpsertAssociations(
-                entitiesToDelete = budgetsToDelete,
-                entitiesToUpsert = newBudgets,
-                associationsToDelete = associationsToDelete,
-                associationsToUpsert = newAssociations
-            )
+        saveBudgetsUseCase.execute(
+            budgetsToSave = budgetList,
+            currentBudgets = budgetsByType.value.concatenate()
+        )
         fetchBudgets()
     }
 
@@ -634,7 +606,7 @@ class AppViewModel(
         )
             .mergeWith(accountsAndActiveOne.value.accountList)
             .map(Account::toDataModel)
-        val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList)
+        val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList.toDomainModels())
 
         return DataAfterRecordOperation(
             recordListToUpsert = recordList,
@@ -658,14 +630,14 @@ class AppViewModel(
             ?.mergeWith(accountsAndActiveOne.value.accountList)
             ?.map(Account::toDataModel)
             ?: return null
-        val budgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(currentRecordList)
+        val budgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(currentRecordList.toDomainModels())
 
         return if (createdRecord.items.size == currentRecordStack.stack.size) {
             val recordListToUpsert = createdRecord.toRecordEntityListWithOldIds(currentRecordStack)
             DataAfterRecordOperation(
                 recordListToUpsert = recordListToUpsert,
                 accountListToUpsert = updatedAccounts,
-                updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert)
+                updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert.toDomainModels())
             )
         } else {
             val recordListToUpsert = createdRecord.toRecordEntityList()
@@ -673,7 +645,7 @@ class AppViewModel(
                 recordListToDelete = currentRecordList,
                 recordListToUpsert = recordListToUpsert,
                 accountListToUpsert = updatedAccounts,
-                updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert)
+                updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert.toDomainModels())
             )
         }
     }
@@ -731,7 +703,7 @@ class AppViewModel(
         val updatedAccounts = listOf(updatedAccount)
             .mergeWith(accountsAndActiveOne.value.accountList)
             .map(Account::toDataModel)
-        val updatedBudgets = budgetsByType.value.subtractUsedAmountsByRecords(recordList)
+        val updatedBudgets = budgetsByType.value.subtractUsedAmountsByRecords(recordList.toDomainModels())
 
         _budgetsByType.update { updatedBudgets }
 
@@ -769,7 +741,7 @@ class AppViewModel(
         )
             .mergeWith(accountsAndActiveOne.value.accountList)
             .map(Account::toDataModel)
-        val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList)
+        val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList.toDomainModels())
 
         return DataAfterRecordOperation(
             recordListToUpsert = recordList,
@@ -796,9 +768,9 @@ class AppViewModel(
             ?: return null
         val updatedBudgetsByType = budgetsByType.value
             .subtractUsedAmountsByRecords(
-                recordList = currRecordStackFrom.toRecordList() + currRecordStackTo.toRecordList()
+                records = (currRecordStackFrom.toRecordList() + currRecordStackTo.toRecordList()).toDomainModels()
             )
-            .addUsedAmountsByRecords(recordList)
+            .addUsedAmountsByRecords(recordList.toDomainModels())
 
         return DataAfterRecordOperation(
             recordListToUpsert = recordList,
@@ -889,7 +861,7 @@ class AppViewModel(
         )
             .mergeWith(accountsAndActiveOne.value.accountList)
             .map(Account::toDataModel)
-        val updatedBudgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(recordList)
+        val updatedBudgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(recordList.toDomainModels())
 
         _budgetsByType.update { updatedBudgetsByType }
 

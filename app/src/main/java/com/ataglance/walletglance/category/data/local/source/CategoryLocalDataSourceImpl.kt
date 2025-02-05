@@ -45,6 +45,11 @@ class CategoryLocalDataSourceImpl(
     override fun getAllCategories(): Flow<List<CategoryEntity>> {
         return categoryDao.getAllCategories()
     }
+
+    override suspend fun getCategoriesByType(type: Char): List<CategoryEntity> {
+        return categoryDao.getCategoriesByType(type = type)
+    }
+
 }
 
 

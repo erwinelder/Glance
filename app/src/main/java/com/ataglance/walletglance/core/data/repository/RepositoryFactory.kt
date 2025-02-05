@@ -1,12 +1,6 @@
 package com.ataglance.walletglance.core.data.repository
 
 import com.ataglance.walletglance.auth.domain.model.User
-import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationLocalDataSource
-import com.ataglance.walletglance.budget.data.local.BudgetLocalDataSource
-import com.ataglance.walletglance.budget.data.remote.BudgetAccountAssociationRemoteDataSource
-import com.ataglance.walletglance.budget.data.remote.BudgetRemoteDataSource
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepositoryImpl
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationLocalDataSource
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionLocalDataSource
 import com.ataglance.walletglance.categoryCollection.data.remote.CategoryCollectionCategoryAssociationRemoteDataSource
@@ -47,13 +41,6 @@ class RepositoryFactory(
                 CategoryCollectionCategoryAssociationRemoteDataSource(
                     userId = user.uid, firestore = firestore
                 ) as RS
-            BudgetRemoteDataSource::class -> BudgetRemoteDataSource(
-                userId = user.uid, firestore = firestore
-            ) as RS
-            BudgetAccountAssociationRemoteDataSource::class ->
-                BudgetAccountAssociationRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
             NavigationButtonRemoteDataSource::class -> NavigationButtonRemoteDataSource(
                 userId = user.uid, firestore = firestore
             ) as RS
@@ -83,18 +70,6 @@ class RepositoryFactory(
                 db.categoryCollectionCategoryAssociationDao, db.localUpdateTimeDao
             ),
             associationRemoteSource = createRemoteDataSource<CategoryCollectionCategoryAssociationRemoteDataSource>()
-        )
-    }
-
-    fun getBudgetAndBudgetAccountAssociationRepository():
-            BudgetAndBudgetAccountAssociationRepository {
-        return BudgetAndBudgetAccountAssociationRepositoryImpl(
-            entityLocalSource = BudgetLocalDataSource(db.budgetDao, db.localUpdateTimeDao),
-            entityRemoteSource = createRemoteDataSource<BudgetRemoteDataSource>(),
-            associationLocalSource = BudgetAccountAssociationLocalDataSource(
-                db.budgetAccountAssociationDao, db.localUpdateTimeDao
-            ),
-            associationRemoteSource = createRemoteDataSource<BudgetAccountAssociationRemoteDataSource>()
         )
     }
 

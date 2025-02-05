@@ -2,7 +2,7 @@ package com.ataglance.walletglance.budget.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
@@ -13,19 +13,19 @@ import kotlinx.coroutines.flow.update
 
 class EditBudgetViewModel : ViewModel() {
 
-    private val _budget: MutableStateFlow<EditingBudgetUiState> =
-        MutableStateFlow(EditingBudgetUiState())
-    val budget: StateFlow<EditingBudgetUiState> = _budget.asStateFlow()
+    private val _budget: MutableStateFlow<BudgetDraft> =
+        MutableStateFlow(BudgetDraft())
+    val budget: StateFlow<BudgetDraft> = _budget.asStateFlow()
 
     fun applyBudget(
-        budget: EditingBudgetUiState?,
+        budget: BudgetDraft?,
         categoryWithSubcategory: CategoryWithSubcategory? = null,
         newBudgetName: String = ""
     ) {
         val category = categoryWithSubcategory?.category
 
         _budget.update {
-            budget ?: EditingBudgetUiState(
+            budget ?: BudgetDraft(
                 isNew = true,
                 priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
                 category = category,
@@ -86,7 +86,7 @@ class EditBudgetViewModel : ViewModel() {
         }
     }
 
-    fun getBudgetUiState(): EditingBudgetUiState {
+    fun getBudgetUiState(): BudgetDraft {
         return budget.value
     }
 

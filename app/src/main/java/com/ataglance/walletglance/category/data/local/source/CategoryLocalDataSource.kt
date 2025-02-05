@@ -21,4 +21,6 @@ interface CategoryLocalDataSource {
 
     fun getAllCategories(): Flow<List<CategoryEntity>>
 
+    suspend fun getCategoriesByType(type: Char): List<CategoryEntity>
+
 }

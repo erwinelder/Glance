@@ -3,9 +3,9 @@ package com.ataglance.walletglance.category.mapper
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.category.domain.utils.findById
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
@@ -93,7 +93,7 @@ fun List<CategoryWithSubcategories>.toEditingCategoryWithSubcategoriesList(
 fun CategoriesWithSubcategories.toEditingCategoriesWithSubcategories(
     collection: CategoryCollectionWithCategories?
 ): EditingCategoriesWithSubcategories {
-    val (expenseCategories, incomeCategories) = (collection?.categoryList ?: emptyList())
+    val (expenseCategories, incomeCategories) = collection?.categoryList.orEmpty()
         .partition { it.isExpense() }
 
     return EditingCategoriesWithSubcategories(

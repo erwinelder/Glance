@@ -14,12 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.toBudgetList
+import com.ataglance.walletglance.budget.mapper.toDomainModels
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
@@ -35,6 +35,7 @@ import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.mapper.toDomainModels
 
 @Composable
 fun BudgetsScreen(
@@ -90,12 +91,12 @@ fun BudgetsScreenPreview(
 ) {
     val budgetsByType = (budgetEntityList to budgetAccountAssociationList)
         .letIfNoneIsNull { (budgets, associations) ->
-            budgets.toBudgetList(
+            budgets.toDomainModels(
                 categoryWithSubcategoriesList = categoriesWithSubcategories.expense,
-                associationList = associations,
-                accountList = accountList
+                associations = associations,
+                accounts = accountList
             )
-        }?.groupByType()?.fillUsedAmountsByRecords(recordList)
+        }?.groupByType()?.fillUsedAmountsByRecords(recordList.toDomainModels())
         ?: BudgetsByType(
             daily = listOf(
                 Budget(

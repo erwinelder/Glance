@@ -9,6 +9,8 @@ import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.data.repository.CategoryRepositoryImpl
 import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCaseImpl
+import com.ataglance.walletglance.category.domain.usecase.GetExpenseCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetExpenseCategoriesUseCaseImpl
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCaseImpl
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
@@ -48,6 +50,10 @@ val categoryModule = module {
 
     single<GetAllCategoriesUseCase> {
         GetAllCategoriesUseCaseImpl(categoryRepository = get())
+    }
+
+    single<GetExpenseCategoriesUseCase> {
+        GetExpenseCategoriesUseCaseImpl(categoryRepository = get())
     }
 
 }

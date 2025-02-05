@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.budget.domain.model
+package com.ataglance.walletglance.budget.presentation.model
 
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 

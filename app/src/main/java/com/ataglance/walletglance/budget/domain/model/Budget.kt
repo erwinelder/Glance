@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.budget.domain.model
 
-import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
@@ -41,19 +40,6 @@ data class Budget(
 
     fun subtractFromUsedAmount(amount: Double): Budget {
         return applyUsedAmount(usedAmount - amount)
-    }
-
-    fun toBudgetUiState(accountList: List<Account>): EditingBudgetUiState {
-        return EditingBudgetUiState(
-            isNew = false,
-            id = id,
-            amountLimit = amountLimit.toString(),
-            category = category,
-            name = name,
-            currRepeatingPeriod = repeatingPeriod,
-            newRepeatingPeriod = repeatingPeriod,
-            linkedAccounts = accountList.filter { linkedAccountsIds.contains(it.id) }
-        )
     }
 
     fun getTotalAmountByCurrentDateRange(): TotalAmountByRange {

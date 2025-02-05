@@ -3,11 +3,13 @@ package com.ataglance.walletglance.budget.domain.model
 import com.ataglance.walletglance.budget.domain.utils.addUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.findById
+import com.ataglance.walletglance.budget.domain.utils.getFirstDateRange
 import com.ataglance.walletglance.budget.domain.utils.getMaxIdOrZero
 import com.ataglance.walletglance.budget.domain.utils.subtractUsedAmountsByRecords
 import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.domain.model.Record
+import com.ataglance.walletglance.record.domain.utils.filterByBudgetsDateRange
 
 data class BudgetsByType(
     val daily: List<Budget> = emptyList(),
@@ -25,6 +27,13 @@ data class BudgetsByType(
             ?: weekly.findById(id)
             ?: monthly.findById(id)
             ?: yearly.findById(id)
+    }
+
+    fun getMaxDateRange(): LongDateRange? {
+        return yearly.getFirstDateRange()
+            ?: monthly.getFirstDateRange()
+            ?: weekly.getFirstDateRange()
+            ?: daily.getFirstDateRange()
     }
 
     fun concatenate(): List<Budget> {
@@ -55,6 +64,7 @@ data class BudgetsByType(
         }
     }
 
+
     private fun replaceListByType(list: List<Budget>, type: RepeatingPeriod): BudgetsByType {
         return when (type) {
             RepeatingPeriod.Daily -> this.copy(daily = list)
@@ -82,16 +92,9 @@ data class BudgetsByType(
         }
     }
 
-    fun getMaxDateRange(): LongDateRange? {
-        return (yearly.takeIf { it.isNotEmpty() }
-            ?: monthly.takeIf { it.isNotEmpty() }
-            ?: weekly.takeIf { it.isNotEmpty() }
-            ?: daily.takeIf { it.isNotEmpty() })
-                ?.first()?.dateRange
-    }
 
-    fun fillUsedAmountsByRecords(recordList: List<RecordEntity>): BudgetsByType {
-        var recordsInDateRange = recordList.filterByBudgetsDateRange(yearly)
+    fun fillUsedAmountsByRecords(records: List<Record>): BudgetsByType {
+        var recordsInDateRange = records.filterByBudgetsDateRange(yearly)
         val filledYearlyBudgets = recordsInDateRange.let { yearly.fillUsedAmountsByRecords(it) }
 
         recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(monthly)
@@ -111,29 +114,29 @@ data class BudgetsByType(
         )
     }
 
-    fun addUsedAmountsByRecords(recordList: List<RecordEntity>): BudgetsByType {
-        if (recordList.isEmpty()) return this
+    fun addUsedAmountsByRecords(records: List<Record>): BudgetsByType {
+        if (records.isEmpty()) return this
 
         return applyRecordAmountsToBudgets(
-            recordList = recordList,
+            records = records,
             applyFunction = List<Budget>::addUsedAmountsByRecords
         )
     }
 
-    fun subtractUsedAmountsByRecords(recordList: List<RecordEntity>): BudgetsByType {
-        if (recordList.isEmpty()) return this
+    fun subtractUsedAmountsByRecords(records: List<Record>): BudgetsByType {
+        if (records.isEmpty()) return this
 
         return applyRecordAmountsToBudgets(
-            recordList = recordList,
+            records = records,
             applyFunction = List<Budget>::subtractUsedAmountsByRecords
         )
     }
 
     private fun applyRecordAmountsToBudgets(
-        recordList: List<RecordEntity>,
-        applyFunction: List<Budget>.(List<RecordEntity>) -> List<Budget>
+        records: List<Record>,
+        applyFunction: List<Budget>.(List<Record>) -> List<Budget>
     ): BudgetsByType {
-        var recordsInDateRange = recordList.filterByBudgetsDateRange(yearly)
+        var recordsInDateRange = records.filterByBudgetsDateRange(yearly)
         val filledYearlyBudgets = recordsInDateRange.let { yearly.applyFunction(it) }
 
         recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(monthly)
@@ -151,12 +154,6 @@ data class BudgetsByType(
             monthly = filledMonthlyBudgets,
             yearly = filledYearlyBudgets
         )
-    }
-
-    private fun List<RecordEntity>.filterByBudgetsDateRange(budgetList: List<Budget>): List<RecordEntity> {
-        return budgetList.firstOrNull()?.dateRange?.let { dateRange ->
-            this.filter { dateRange.containsDate(it.date) }
-        } ?: this
     }
 
 }

@@ -41,18 +41,18 @@ fun AccountRemoteEntity.toLocalEntity(): AccountEntity {
 
 fun AccountRemoteEntity.toMap(): HashMap<String, Any> {
     return hashMapOf(
-        "updateTime" to this.updateTime,
-        "deleted" to this.deleted,
-        "id" to this.id,
-        "orderNum" to this.orderNum,
-        "name" to this.name,
-        "currency" to this.currency,
-        "balance" to this.balance,
-        "color" to this.color,
-        "hide" to this.hide,
-        "hideBalance" to this.hideBalance,
-        "withoutBalance" to this.withoutBalance,
-        "isActive" to this.isActive
+        "updateTime" to updateTime,
+        "deleted" to deleted,
+        "id" to id,
+        "orderNum" to orderNum,
+        "name" to name,
+        "currency" to currency,
+        "balance" to balance,
+        "color" to color,
+        "hide" to hide,
+        "hideBalance" to hideBalance,
+        "withoutBalance" to withoutBalance,
+        "isActive" to isActive
     )
 }
 

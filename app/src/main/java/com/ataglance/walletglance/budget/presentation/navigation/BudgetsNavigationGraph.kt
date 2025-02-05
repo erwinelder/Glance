@@ -11,6 +11,7 @@ import androidx.navigation.navigation
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.mapper.toDraft
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreen
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
@@ -55,7 +56,7 @@ fun NavGraphBuilder.budgetsGraph(
                 budgetsByType = budgetsByTypeState,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
                     editBudgetViewModel.applyBudget(
-                        budget = budget?.toBudgetUiState(accountList),
+                        budget = budget?.toDraft(accounts = accountList),
                         categoryWithSubcategory = categoriesWithSubcategories.expense.getOrNull(0)
                             ?.getWithFirstSubcategory()
                     )

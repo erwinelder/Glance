@@ -2,11 +2,13 @@ package com.ataglance.walletglance.record.domain.utils
 
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.utils.extractYear
+import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
@@ -219,4 +221,22 @@ fun List<RecordStack>.getOutAndInTransfersByRecordNums(
     val outTransfer = this.findByRecordNum(recordNums.sender) ?: return null
     val inTransfer = this.findByRecordNum(recordNums.receiver) ?: return null
     return outTransfer to inTransfer
+}
+
+
+fun List<Record>.filterByBudgetsDateRange(budgets: List<Budget>): List<Record> {
+    val dateRange = budgets.firstOrNull()?.dateRange ?: return this
+    return this.filter { dateRange.containsDate(it.date) }
+}
+
+fun List<Record>.getTotalAmountCorrespondingToBudget(budget: Budget): Double {
+    return this
+        .filter {
+            it.includeInBudgets &&
+                    it.containsParentOrSubcategoryId(budget.category?.id) &&
+                    budget.containsAccountId(it.accountId)
+        }
+        .fold(0.0) { total, record ->
+            total + record.amount
+        }
 }

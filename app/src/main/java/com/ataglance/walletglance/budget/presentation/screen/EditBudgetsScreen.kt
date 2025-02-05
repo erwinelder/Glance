@@ -8,12 +8,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.toBudgetList
+import com.ataglance.walletglance.budget.mapper.toDomainModels
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.components.DefaultBudgetComponent
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
@@ -97,10 +97,10 @@ fun EditBudgetsScreenPreview(
 ) {
     val budgetsByType = (budgetEntityList to budgetAccountAssociationList)
         .letIfNoneIsNull { (budgets, associations) ->
-            budgets.toBudgetList(
+            budgets.toDomainModels(
                 categoryWithSubcategoriesList = categoriesWithSubcategories.expense,
-                associationList = associations,
-                accountList = accountList
+                associations = associations,
+                accounts = accountList
             )
         }?.groupByType()
         ?: BudgetsByType(

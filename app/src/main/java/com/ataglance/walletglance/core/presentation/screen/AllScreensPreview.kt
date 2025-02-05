@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
@@ -20,10 +20,10 @@ import com.ataglance.walletglance.auth.presentation.screen.SignInScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignUpScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.UpdateEmailScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenPreview
-import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
-import com.ataglance.walletglance.budget.mapper.toBudgetList
+import com.ataglance.walletglance.budget.mapper.toDomainModels
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
@@ -52,6 +52,7 @@ import com.ataglance.walletglance.personalization.presentation.screen.Appearance
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
+import com.ataglance.walletglance.record.mapper.toDomainModels
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
@@ -349,11 +350,11 @@ fun MainAppContentHomeScreenPreview() {
         dateRangeMenuUiState = dateRangeMenuUiState,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         recordList = recordEntityList,
-        budgetsOnWidget = budgetEntityList.toBudgetList(
+        budgetsOnWidget = budgetEntityList.toDomainModels(
             categoryWithSubcategoriesList = defaultCategoriesPackage.expense,
-            associationList = budgetAccountAssociationList,
-            accountList = accountsAndActiveOne.accountList
-        ).fillUsedAmountsByRecords(recordEntityList).take(1),
+            associations = budgetAccountAssociationList,
+            accounts = accountsAndActiveOne.accountList
+        ).fillUsedAmountsByRecords(recordEntityList.toDomainModels()).take(1),
         widgetNamesList = listOf(
             WidgetName.TotalForPeriod,
             WidgetName.ChosenBudgets,
@@ -449,12 +450,12 @@ fun MainAppContentBudgetsScreenPreview() {
 fun MainAppContentBudgetStatisticsScreenPreview() {
     val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
     val budget = budgetEntityList
-        .toBudgetList(
+        .toDomainModels(
             categoryWithSubcategoriesList = defaultCategories.expense,
-            associationList = budgetAccountAssociationList,
-            accountList = accountList
+            associations = budgetAccountAssociationList,
+            accounts = accountList
         )
-        .fillUsedAmountsByRecords(recordEntityList)[0]
+        .fillUsedAmountsByRecords(recordEntityList.toDomainModels())[0]
 
     BudgetStatisticsScreenPreview(
         appTheme = appTheme,

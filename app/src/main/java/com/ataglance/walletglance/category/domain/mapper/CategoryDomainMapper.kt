@@ -9,36 +9,33 @@ import com.ataglance.walletglance.core.domain.color.ColorWithName
 
 
 fun List<Category>.toCategoriesWithSubcategories(): CategoriesWithSubcategories {
+    val categoriesWithSubcategories = this.groupCategoriesWithSubcategories()
+
+    return categoriesWithSubcategories
+        .partition { it.category.isExpense() }
+        .let { (expenseCategories, incomeCategories) ->
+            CategoriesWithSubcategories(
+                expense = expenseCategories.sortedBy { it.category.orderNum },
+                income = incomeCategories.sortedBy { it.category.orderNum }
+            )
+        }
+}
+
+fun List<Category>.groupCategoriesWithSubcategories(): List<CategoryWithSubcategories> {
     val (categories, subcategories) = this.partition { it.isParentCategory() }
 
-    val subcategoryMap = mutableMapOf<Int, MutableList<Category>>()
-    subcategories.forEach { subcategory ->
-        subcategory.parentCategoryId?.let { parentCategoryId ->
-            if (subcategoryMap.containsKey(subcategory.parentCategoryId)) {
-                subcategoryMap[parentCategoryId]!!.add(subcategory)
-            } else {
-                subcategoryMap[parentCategoryId] = mutableListOf(subcategory)
-            }
+    val subcategoryMap = subcategories
+        .groupBy { it.parentCategoryId }
+        .mapValues { entry ->
+            entry.value.sortedBy { it.orderNum }
         }
-    }
 
-    return categories
-        .map { category ->
-            CategoryWithSubcategories(
-                category = category,
-                subcategoryList = subcategoryMap[category.id]?.sortedBy { it.orderNum }
-                    ?: emptyList(),
-            )
-        }
-        .partition { it.category.isExpense() }
-        .let { expenseAndIncomeCategoriesWithSubcategories ->
-            CategoriesWithSubcategories(
-                expense = expenseAndIncomeCategoriesWithSubcategories.first
-                    .sortedBy { it.category.orderNum },
-                income = expenseAndIncomeCategoriesWithSubcategories.second
-                    .sortedBy { it.category.orderNum }
-            )
-        }
+    return categories.map { category ->
+        CategoryWithSubcategories(
+            category = category,
+            subcategoryList = subcategoryMap[category.id].orEmpty()
+        )
+    }
 }
 
 

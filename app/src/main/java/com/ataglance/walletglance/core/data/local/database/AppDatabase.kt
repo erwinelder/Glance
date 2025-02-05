@@ -6,10 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ataglance.walletglance.account.data.local.dao.AccountLocalDao
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.budget.data.local.BudgetAccountAssociationDao
-import com.ataglance.walletglance.budget.data.local.BudgetDao
-import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.dao.BudgetLocalDao
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.category.data.local.dao.CategoryLocalDao
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationDao
@@ -52,8 +51,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val categoryCollectionDao: CategoryCollectionDao
     abstract val categoryCollectionCategoryAssociationDao: CategoryCollectionCategoryAssociationDao
     abstract val recordDao: RecordLocalDao
-    abstract val budgetDao: BudgetDao
-    abstract val budgetAccountAssociationDao: BudgetAccountAssociationDao
+    abstract val budgetDao: BudgetLocalDao
     abstract val navigationButtonDao: NavigationButtonDao
     abstract val widgetDao: WidgetDao
     abstract val budgetOnWidgetDao: BudgetOnWidgetDao

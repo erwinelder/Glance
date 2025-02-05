@@ -15,4 +15,7 @@ interface CategoryLocalDao : BaseLocalDao<CategoryEntity> {
     @Query("SELECT * FROM Category")
     fun getAllCategories(): Flow<List<CategoryEntity>>
 
+    @Query("SELECT * FROM Category WHERE type = :type")
+    suspend fun getCategoriesByType(type: Char): List<CategoryEntity>
+
 }

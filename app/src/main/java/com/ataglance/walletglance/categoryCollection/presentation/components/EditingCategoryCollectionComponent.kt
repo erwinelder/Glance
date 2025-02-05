@@ -41,7 +41,7 @@ fun EditingCategoryCollectionComponent(
         ?.flatMap { (_, categories) ->
             categories.distinctBy { it.color }
         }
-        ?: emptyList()
+        .orEmpty()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

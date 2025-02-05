@@ -12,7 +12,7 @@ fun ProductDetails.toSubscriptionUiState(): SubscriptionUiState {
     return SubscriptionUiState(
         id = this.productId,
         name = this.name,
-        benefits = this.subscriptionOfferDetails?.map { it.basePlanId } ?: emptyList(),
+        benefits = this.subscriptionOfferDetails?.map { it.basePlanId }.orEmpty(),
         price = this.getFormattedPrice() ?: "---"
     )
 }

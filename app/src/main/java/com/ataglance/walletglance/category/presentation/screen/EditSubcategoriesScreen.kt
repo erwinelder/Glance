@@ -46,7 +46,7 @@ fun EditSubcategoriesScreen(
         topPadding = scaffoldPadding.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                subcategoryList = categoryWithSubcategories?.subcategoryList ?: emptyList(),
+                subcategoryList = categoryWithSubcategories?.subcategoryList.orEmpty(),
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )

@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.budget.domain.model.CheckedBudget
-import com.ataglance.walletglance.budget.domain.model.CheckedBudgetsByType
+import com.ataglance.walletglance.budget.presentation.model.CheckedBudget
+import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
 
 @Composable
 fun CheckedBudgetListsByPeriodComponent(

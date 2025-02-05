@@ -7,6 +7,7 @@ import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategor
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.utils.asChar
@@ -99,6 +100,29 @@ fun RecordStack.toRecordList(): List<RecordEntity> {
             includeInBudgets = unit.includeInBudgets
         )
     }
+}
+
+
+fun List<RecordEntity>.toDomainModels(): List<Record> {
+    return this.mapNotNull { it.toDomainModel() }
+}
+
+fun RecordEntity.toDomainModel(): Record? {
+    val type = type.asRecordType() ?: return null
+
+    return Record(
+        id = id,
+        recordNum = recordNum,
+        date = date,
+        type = type,
+        accountId = id,
+        amount = amount,
+        quantity = quantity,
+        categoryId = categoryId,
+        subcategoryId = subcategoryId,
+        note = note,
+        includeInBudgets = includeInBudgets
+    )
 }
 
 

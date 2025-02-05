@@ -26,9 +26,10 @@ class BudgetStatisticsViewModel(
         viewModelScope.launch {
             budgetUsedAmountByRangeList.collect { amountsByRanges ->
                 _budgetsTotalAmountsByRanges.update {
-                    amountsByRanges.reversed() + (passedBudget?.let { budget ->
-                        listOf(budget.getTotalAmountByCurrentDateRange())
-                    } ?: emptyList())
+                    passedBudget
+                        ?.let { listOf(it.getTotalAmountByCurrentDateRange()) }
+                        .orEmpty()
+                        .let { amountsByRanges.reversed() + it }
                 }
             }
         }

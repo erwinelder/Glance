@@ -19,7 +19,7 @@ class GetAllAccountsUseCaseImpl(
     override suspend fun get(): List<Account> {
         return accountRepository.getAllAccounts().firstOrNull()
             ?.map(AccountEntity::toDomainModel)
-            ?: emptyList()
+            .orEmpty()
     }
 
 }

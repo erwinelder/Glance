@@ -43,11 +43,14 @@ val appModule = module {
 
             recordRepository = get(),
             getLastRecordNumUseCase = get(),
-            getRecordsInDateRangeUseCase = get(),
+            getRecordStacksInDateRangeUseCase = get(),
             getTodayTotalExpensesForAccount = get(),
 
             recordAndAccountRepository = get(),
-            budgetAndAssociationRepository = get(),
+
+            saveBudgetsUseCase = get(),
+            getBudgetsUseCase = get(),
+
             generalRepository = get()
         )
     }

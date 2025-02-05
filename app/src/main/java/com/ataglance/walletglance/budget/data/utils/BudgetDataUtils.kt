@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.budget.data.utils
 
-import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 
 
 fun List<BudgetEntity>.getBudgetsThatAreNotInList(list: List<BudgetEntity>): List<BudgetEntity> {

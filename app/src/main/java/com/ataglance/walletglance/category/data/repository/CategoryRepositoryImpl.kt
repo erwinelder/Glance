@@ -77,4 +77,9 @@ class CategoryRepositoryImpl(
         localSource.getAllCategories().collect(::emit)
     }
 
+    override suspend fun getCategoriesByType(type: Char): List<CategoryEntity> {
+        synchroniseCategories()
+        return localSource.getCategoriesByType(type = type)
+    }
+
 }

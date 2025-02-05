@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -179,7 +179,7 @@ data class SetupCategoriesUiState(
 
     private fun getNewCategoryId(): Int {
         return ((categoriesWithSubcategories.asSingleList() +
-                (categoryWithSubcategories?.subcategoryList ?: emptyList()))
+                categoryWithSubcategories?.subcategoryList.orEmpty())
             .maxOfOrNull { it.id } ?: 0) + 1
     }
 

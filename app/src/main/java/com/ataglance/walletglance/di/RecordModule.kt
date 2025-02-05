@@ -10,6 +10,8 @@ import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.repository.RecordRepositoryImpl
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCaseImpl
+import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCaseImpl
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCaseImpl
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccount
@@ -49,7 +51,11 @@ val recordModule = module {
     }
 
     single<GetRecordsInDateRangeUseCase> {
-        GetRecordsInDateRangeUseCaseImpl(
+        GetRecordsInDateRangeUseCaseImpl(recordRepository = get())
+    }
+
+    single<GetRecordStacksInDateRangeUseCase> {
+        GetRecordStacksInDateRangeUseCaseImpl(
             recordRepository = get(),
             getAllAccountsUseCase = get(),
             getAllCategoriesUseCase = get()
