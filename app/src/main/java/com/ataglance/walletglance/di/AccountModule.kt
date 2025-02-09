@@ -7,8 +7,8 @@ import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSo
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSourceImpl
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.data.repository.AccountRepositoryImpl
-import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCase
-import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCaseImpl
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCaseImpl
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCaseImpl
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
@@ -46,8 +46,8 @@ val accountModule = module {
         SaveAccountsUseCaseImpl(accountRepository = get(), recordRepository = get())
     }
 
-    single<GetAllAccountsUseCase> {
-        GetAllAccountsUseCaseImpl(accountRepository = get())
+    single<GetAccountsUseCase> {
+        GetAccountsUseCaseImpl(accountRepository = get())
     }
 
 }

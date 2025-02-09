@@ -4,14 +4,14 @@ import com.ataglance.walletglance.core.domain.date.DateTimeState
 
 data class CreatedTransfer(
     val isNew: Boolean,
-    val sender: CreatedTransferSenderReceiver,
-    val receiver: CreatedTransferSenderReceiver,
+    val sender: CreatedTransferUnit,
+    val receiver: CreatedTransferUnit,
     val dateTimeState: DateTimeState,
     val includeInBudgets: Boolean
 ) {
 
-    fun getSenderReceiverRecordNums(): TransferSenderReceiverRecordNums {
-        return TransferSenderReceiverRecordNums(sender.recordNum, receiver.recordNum)
+    fun getUnitsRecordNums(): TransferUnitsRecordNums {
+        return TransferUnitsRecordNums(sender = sender.recordNum, receiver = receiver.recordNum)
     }
 
 }

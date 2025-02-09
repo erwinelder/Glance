@@ -8,9 +8,9 @@ import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryByType
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalDot
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.utils.copyWithCategoryAndSubcategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

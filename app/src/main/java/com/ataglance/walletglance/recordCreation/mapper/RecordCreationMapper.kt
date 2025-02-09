@@ -1,22 +1,63 @@
-package com.ataglance.walletglance.recordCreation.domain.mapper
+package com.ataglance.walletglance.recordCreation.mapper
 
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.utils.findById
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.utils.findByRecordNum
 import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecord
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecordItem
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.utils.getTotalAmount
 import java.util.Locale
 
+
+fun List<RecordStack>.getRecordDraft(
+    isNew: Boolean,
+    recordNum: Int,
+    accountsAndActiveOne: AccountsAndActiveOne,
+    initialCategoryWithSubcategory: CategoryWithSubcategory?
+): RecordDraft {
+    return this
+        .takeUnless { isNew }
+        ?.findByRecordNum(recordNum)
+        ?.toRecordDraft(accountsAndActiveOne.accountList)
+        ?: getClearRecordDraft(
+            recordNum = recordNum,
+            account = accountsAndActiveOne.activeAccount,
+            categoryWithSubcategory = initialCategoryWithSubcategory
+        )
+}
+
+private fun getClearRecordDraft(
+    recordNum: Int,
+    account: Account?,
+    categoryWithSubcategory: CategoryWithSubcategory?
+): RecordDraft {
+    return RecordDraft(
+        general = RecordDraftGeneral(
+            isNew = true,
+            recordNum = recordNum,
+            account = account
+        ),
+        items = listOf(
+            RecordDraftItem(
+                lazyListKey = 0,
+                index = 0,
+                categoryWithSubcategory = categoryWithSubcategory
+            )
+        )
+    )
+}
 
 fun RecordStack.toRecordDraft(
     accountList: List<Account>
@@ -52,14 +93,13 @@ private fun RecordStackItem.toRecordDraftItem(index: Int, collapsed: Boolean): R
         categoryWithSubcategory = this.categoryWithSubcategory,
         note = this.note ?: "",
         amount = "%.2f".format(
-            Locale.US,
+            locale = Locale.US,
             this.amount / (this.quantity.takeUnless { it == 0 } ?: 1)
         ),
         quantity = quantity?.toString() ?: "",
         collapsed = collapsed
     )
 }
-
 
 
 fun RecordDraft.toCreatedRecord(): CreatedRecord? {
@@ -79,7 +119,7 @@ fun RecordDraft.toCreatedRecord(): CreatedRecord? {
 }
 
 private fun List<RecordDraftItem>.toCreatedRecordItems(): List<CreatedRecordItem> {
-    return this.mapNotNull { it.toCreatedRecordItem() }
+    return this.mapNotNull(RecordDraftItem::toCreatedRecordItem)
 }
 
 private fun RecordDraftItem.toCreatedRecordItem(): CreatedRecordItem? {
@@ -95,7 +135,7 @@ private fun RecordDraftItem.toCreatedRecordItem(): CreatedRecordItem? {
 
 
 
-fun CreatedRecord.toRecordEntityList(): List<RecordEntity> {
+fun CreatedRecord.toRecordEntities(): List<RecordEntity> {
     return this.items.map { item ->
         item.toRecordEntity(
             recordNum = this.recordNum,
@@ -107,7 +147,7 @@ fun CreatedRecord.toRecordEntityList(): List<RecordEntity> {
     }
 }
 
-fun CreatedRecord.toRecordEntityListWithOldIds(recordStack: RecordStack): List<RecordEntity> {
+fun CreatedRecord.toRecordEntitiesWithOldIds(recordStack: RecordStack): List<RecordEntity> {
     return this.items.mapIndexed { index, item ->
         item.toRecordEntity(
             id = recordStack.stack.getOrNull(index)?.id ?: 0,

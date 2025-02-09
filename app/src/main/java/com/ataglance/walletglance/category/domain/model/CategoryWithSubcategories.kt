@@ -42,6 +42,11 @@ data class CategoryWithSubcategories(
         }
     }
 
+    fun getWithSubcategoryWithIdOrWithoutSubcategory(id: Int?): CategoryWithSubcategory {
+        val subcategory = id?.let { subcategoryList.findById(it) }
+        return CategoryWithSubcategory(category, subcategory)
+    }
+
     fun getWithSubcategoryWithId(id: Int): CategoryWithSubcategory {
         return CategoryWithSubcategory(category, subcategoryList.findById(id))
     }

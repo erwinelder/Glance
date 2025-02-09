@@ -34,7 +34,7 @@ val appModule = module {
             settingsRepository = get(),
 
             saveAccountsUseCase = get(),
-            getAllAccountsUseCase = get(),
+            getAccountsUseCase = get(),
 
             saveCategoriesUseCase = get(),
             getAllCategoriesUseCase = get(),
@@ -42,11 +42,13 @@ val appModule = module {
             categoryCollectionAndAssociationRepository = get(),
 
             recordRepository = get(),
+            saveRecordUseCase = get(),
+            deleteRecordUseCase = get(),
+            saveTransferUseCase = get(),
+            deleteTransferUseCase = get(),
             getLastRecordNumUseCase = get(),
+            getTodayTotalExpensesForAccountUseCase = get(),
             getRecordStacksInDateRangeUseCase = get(),
-            getTodayTotalExpensesForAccount = get(),
-
-            recordAndAccountRepository = get(),
 
             saveBudgetsUseCase = get(),
             getBudgetsUseCase = get(),

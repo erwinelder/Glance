@@ -8,18 +8,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
-class GetAllAccountsUseCaseImpl(
+class GetAccountsUseCaseImpl(
     private val accountRepository: AccountRepository
-) : GetAllAccountsUseCase {
+) : GetAccountsUseCase {
 
-    override fun getAsFlow(): Flow<List<Account>> {
+    override fun getAllAsFlow(): Flow<List<Account>> {
         return accountRepository.getAllAccounts().map { it.map(AccountEntity::toDomainModel) }
     }
 
-    override suspend fun get(): List<Account> {
+    override suspend fun getAll(): List<Account> {
         return accountRepository.getAllAccounts().firstOrNull()
             ?.map(AccountEntity::toDomainModel)
             .orEmpty()
+    }
+
+    override suspend fun get(ids: List<Int>): List<Account> {
+        return accountRepository.getAccounts(ids = ids).map(AccountEntity::toDomainModel)
+    }
+
+    override suspend fun get(id: Int): Account? {
+        return accountRepository.getAccount(id = id)?.toDomainModel()
     }
 
 }

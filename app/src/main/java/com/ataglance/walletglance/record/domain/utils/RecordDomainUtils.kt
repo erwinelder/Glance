@@ -13,7 +13,6 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.model.RecordsTypeFilter
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
 
 
 fun RecordType.inverse(): RecordType {
@@ -212,15 +211,6 @@ fun List<RecordStack>.getOutAndInTransfersByRecordNum(
         recordNum + if (first.isOutTransfer()) 1 else -1
     ) ?: return null
     return if (first.isOutTransfer()) first to second else second to first
-}
-
-
-fun List<RecordStack>.getOutAndInTransfersByRecordNums(
-    recordNums: TransferSenderReceiverRecordNums
-): Pair<RecordStack, RecordStack>? {
-    val outTransfer = this.findByRecordNum(recordNums.sender) ?: return null
-    val inTransfer = this.findByRecordNum(recordNums.receiver) ?: return null
-    return outTransfer to inTransfer
 }
 
 

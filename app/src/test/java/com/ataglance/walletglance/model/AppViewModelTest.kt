@@ -15,9 +15,8 @@ import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
 import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
-import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransferSenderReceiver
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransferUnit
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,14 +67,14 @@ class AppViewModelTest {
     ): CreatedTransfer {
         return CreatedTransfer(
             isNew = true,
-            sender = CreatedTransferSenderReceiver(
+            sender = CreatedTransferUnit(
                 account = fromAccount,
                 recordNum = 1,
                 recordId = 1,
                 amount = startAmount,
                 rate = 1.0,
             ),
-            receiver = CreatedTransferSenderReceiver(
+            receiver = CreatedTransferUnit(
                 account = toAccount,
                 recordNum = 2,
                 recordId = 2,

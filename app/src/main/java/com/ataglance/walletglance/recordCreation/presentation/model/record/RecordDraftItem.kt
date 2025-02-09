@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.recordCreation.domain.record
+package com.ataglance.walletglance.recordCreation.presentation.model.record
 
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory

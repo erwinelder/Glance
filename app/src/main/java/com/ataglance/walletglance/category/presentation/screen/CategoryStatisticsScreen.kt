@@ -40,7 +40,7 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.filterByCollection
-import com.ataglance.walletglance.record.mapper.toRecordStackList
+import com.ataglance.walletglance.record.mapper.toRecordStacks
 
 @Composable
 fun CategoryStatisticsScreen(
@@ -152,8 +152,8 @@ fun CategoryStatisticsScreenPreview(
         categoriesIds = null
     ),
     recordEntityList: List<RecordEntity>? = null,
-    recordStackList: List<RecordStack> = recordEntityList?.toRecordStackList(
-        accountList = accountList,
+    recordStackList: List<RecordStack> = recordEntityList?.toRecordStacks(
+        accounts = accountList,
         categoriesWithSubcategories = categoriesWithSubcategories
     ) ?: listOf(
         RecordStack(

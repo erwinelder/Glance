@@ -46,6 +46,14 @@ class AccountLocalDataSourceImpl(
         return accountDao.getAllAccounts()
     }
 
+    override suspend fun getAccounts(ids: List<Int>): List<AccountEntity> {
+        return accountDao.getAccounts(ids = ids)
+    }
+
+    override suspend fun getAccount(id: Int): AccountEntity? {
+        return accountDao.getAccount(id = id)
+    }
+
 }
 
 fun getAccountLocalDataSource(appDatabase: AppDatabase): AccountLocalDataSource {

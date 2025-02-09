@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.recordCreation.domain.record
+package com.ataglance.walletglance.recordCreation.presentation.model.record
 
 data class RecordDraft(
     val general: RecordDraftGeneral,

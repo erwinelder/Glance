@@ -16,4 +16,8 @@ interface AccountRepository {
 
     fun getAllAccounts(): Flow<List<AccountEntity>>
 
+    suspend fun getAccounts(ids: List<Int>): List<AccountEntity>
+
+    suspend fun getAccount(id: Int): AccountEntity?
+
 }

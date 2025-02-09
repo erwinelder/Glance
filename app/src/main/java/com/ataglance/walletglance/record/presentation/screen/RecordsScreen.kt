@@ -40,7 +40,7 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.record.mapper.toRecordStackList
+import com.ataglance.walletglance.record.mapper.toRecordStacks
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
 import com.ataglance.walletglance.record.presentation.components.TransferComponent
 
@@ -164,9 +164,8 @@ fun RecordsScreenPreview(
         name = stringResource(R.string.all_categories)
     ),
     recordList: List<RecordEntity>? = null,
-    recordStackList: List<RecordStack> = recordList?.toRecordStackList(
-        accountList = accountList,
-        categoriesWithSubcategories = categoriesWithSubcategories
+    recordStackList: List<RecordStack> = recordList?.toRecordStacks(
+        accounts = accountList, categoriesWithSubcategories = categoriesWithSubcategories
     ) ?: listOf(
         RecordStack(
             recordNum = 1,

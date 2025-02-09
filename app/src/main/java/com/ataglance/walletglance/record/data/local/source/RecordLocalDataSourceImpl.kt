@@ -27,6 +27,11 @@ class RecordLocalDataSourceImpl(
         saveUpdateTime(timestamp = timestamp)
     }
 
+    override suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long) {
+        recordDao.deleteEntities(entities = records)
+        saveUpdateTime(timestamp = timestamp)
+    }
+
     override suspend fun deleteAllRecords(timestamp: Long) {
         recordDao.deleteAllRecords()
         saveUpdateTime(timestamp = timestamp)
@@ -50,6 +55,10 @@ class RecordLocalDataSourceImpl(
 
     override suspend fun getLastRecordNum(): Flow<Int?> {
         return recordDao.getLastRecordOrderNum()
+    }
+
+    override suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity> {
+        return recordDao.getRecordsByRecordNum(recordNum = recordNum)
     }
 
     override suspend fun getRecordsInDateRange(

@@ -17,74 +17,60 @@ import com.ataglance.walletglance.record.domain.utils.getTotalPercentages
 import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
 
 
-fun RecordEntity.toRecordStack(
-    accountList: List<Account>,
+fun List<RecordEntity>.toRecordStacks(
+    accounts: List<Account>,
+    categoriesWithSubcategories: CategoriesWithSubcategories
+): List<RecordStack> {
+    return this.groupBy { it.recordNum }
+        .mapNotNull { (_, records) ->
+            records.toRecordStack(
+                accounts = accounts, categoriesWithSubcategories = categoriesWithSubcategories
+            )
+        }
+}
+
+fun List<RecordEntity>.toRecordStack(
+    accounts: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories
 ): RecordStack? {
-    val recordType = type.asRecordType() ?: return null
-    val recordAccount = accountList.findById(accountId)?.toRecordAccount() ?: return null
-    val recordStackUnit = toRecordStackUnit(categoriesWithSubcategories) ?: return null
+    val record = this.firstOrNull() ?: return null
+    val units = this.mapNotNull { it.toRecordStackUnit(categoriesWithSubcategories) }
+
+    val recordType = record.type.asRecordType() ?: return null
+    val recordAccount = accounts.findById(record.accountId)?.toRecordAccount() ?: return null
+    val amount = units.sumOf { it.amount }
 
     return RecordStack(
-        recordNum = recordNum,
-        date = date,
+        recordNum = record.recordNum,
+        date = record.date,
         type = recordType,
         account = recordAccount,
         totalAmount = amount,
-        stack = listOf(recordStackUnit)
+        stack = units
     )
 }
 
 fun RecordEntity.toRecordStackUnit(
     categoriesWithSubcategories: CategoriesWithSubcategories
 ): RecordStackItem? {
-    val recordType = type.asRecordType() ?: return null
-
-    val categoryWithSubcategories = recordType.toCategoryTypeOrNullIfTransfer()?.let {
-        categoriesWithSubcategories.findById(id = categoryId, type = it)
-    }
+    val categoryType = type.asRecordType()?.toCategoryTypeOrNullIfTransfer() ?: return null
+    val categoryWithSubcategories = categoriesWithSubcategories.findById(
+        id = categoryId, type = categoryType
+    )
 
     return RecordStackItem(
         id = id,
         amount = amount,
         quantity = quantity,
-        categoryWithSubcategory = subcategoryId?.let {
-            categoryWithSubcategories?.getWithSubcategoryWithId(it)
-        } ?: categoryWithSubcategories?.getWithoutSubcategory(),
+        categoryWithSubcategory = categoryWithSubcategories
+            ?.getWithSubcategoryWithIdOrWithoutSubcategory(id = subcategoryId),
         note = note,
         includeInBudgets = includeInBudgets
     )
 }
 
-fun List<RecordEntity>.toRecordStackList(
-    accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories
-): List<RecordStack> {
-    val recordStackList = mutableListOf<RecordStack>()
 
-    this.forEach { record ->
-        if (recordStackList.lastOrNull()?.recordNum != record.recordNum) {
-            record.toRecordStack(accountList, categoriesWithSubcategories)
-                ?.let { recordStackList.add(it) }
-        } else {
-            recordStackList.lastOrNull()?.let { lastRecordStack ->
-                record.toRecordStackUnit(categoriesWithSubcategories)?.let { recordStackUnit ->
-                    val stack = lastRecordStack.stack.toMutableList()
-                    stack.add(recordStackUnit)
-                    recordStackList[recordStackList.lastIndex] = lastRecordStack.copy(
-                        totalAmount = lastRecordStack.totalAmount + recordStackUnit.amount,
-                        stack = stack
-                    )
-                }
-            }
-        }
-    }
-
-    return recordStackList
-}
-
-
-fun RecordStack.toRecordList(): List<RecordEntity> {
+fun RecordStack.toRecordEntities(): List<RecordEntity> {
     return stack.map { unit ->
         RecordEntity(
             id = unit.id,

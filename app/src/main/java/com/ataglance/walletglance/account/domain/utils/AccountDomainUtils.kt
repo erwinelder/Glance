@@ -5,9 +5,9 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
+import com.ataglance.walletglance.core.utils.roundToTwoDecimals
 import com.ataglance.walletglance.record.domain.model.RecordType
 import java.util.Currency
-import java.util.Locale
 
 
 fun Set<Currency>.toSortedCurrencyItemList(): List<CurrencyItem> {
@@ -110,17 +110,14 @@ fun Pair<Account, Account>.returnAmountToFirstBalanceAndUpdateSecondBalance(
     newAmount: Double,
     recordType: RecordType
 ): Pair<Account, Account> {
-    return this.first.copy(
-        balance = "%.2f".format(
-            Locale.US,
-            this.first.balance +
-                    if (recordType == RecordType.Expense) prevAmount else -prevAmount
-        ).toDouble()
-    ) to this.second.copy(
-        balance = "%.2f".format(
-            Locale.US,
-            this.second.balance +
-                    if (recordType == RecordType.Expense) -newAmount else newAmount
-        ).toDouble()
+    return Pair(
+        first = first.copy(
+            balance = (first.balance + if (recordType == RecordType.Expense) prevAmount else -prevAmount)
+                .roundToTwoDecimals()
+        ),
+        second = second.copy(
+            balance = (second.balance + if (recordType == RecordType.Expense) -newAmount else newAmount)
+                .roundToTwoDecimals()
+        )
     )
 }

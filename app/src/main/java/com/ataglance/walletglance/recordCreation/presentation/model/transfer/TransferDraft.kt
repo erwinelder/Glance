@@ -1,28 +1,29 @@
-package com.ataglance.walletglance.recordCreation.domain.transfer
+package com.ataglance.walletglance.recordCreation.presentation.model.transfer
 
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.core.domain.date.DateTimeState
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRecordNums
 import java.util.Locale
 
 data class TransferDraft(
     val isNew: Boolean,
-    val sender: TransferDraftSenderReceiver,
-    val receiver: TransferDraftSenderReceiver,
+    val sender: TransferDraftUnits,
+    val receiver: TransferDraftUnits,
     val dateTimeState: DateTimeState = DateTimeState(),
     val includeInBudgets: Boolean = true,
     val savingIsAllowed: Boolean = false
 ) {
 
     fun savingIsAllowed(
-        sender: TransferDraftSenderReceiver = this.sender,
-        receiver: TransferDraftSenderReceiver = this.receiver
+        sender: TransferDraftUnits = this.sender,
+        receiver: TransferDraftUnits = this.receiver
     ): Boolean {
         return sender.savingIsAllowed() && receiver.savingIsAllowed() &&
                 sender.account != receiver.account
     }
 
-    fun getSenderReceiverRecordNums(): TransferSenderReceiverRecordNums {
-        return TransferSenderReceiverRecordNums(sender.recordNum, receiver.recordId)
+    fun getSenderReceiverRecordNums(): TransferUnitsRecordNums {
+        return TransferUnitsRecordNums(sender.recordNum, receiver.recordId)
     }
 
     fun getAccount(isSender: Boolean): Account? {

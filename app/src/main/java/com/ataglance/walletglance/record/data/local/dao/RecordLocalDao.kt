@@ -27,6 +27,9 @@ interface RecordLocalDao : BaseLocalDao<RecordEntity> {
     @Query("SELECT recordNum FROM Record ORDER BY recordNum DESC LIMIT 1")
     fun getLastRecordOrderNum(): Flow<Int?>
 
+    @Query("SELECT * FROM Record WHERE recordNum = :recordNum")
+    fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
+
     @Query("""    
         SELECT * FROM Record
         WHERE date BETWEEN :startPastDate AND :endFutureDate

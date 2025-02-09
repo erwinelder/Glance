@@ -5,11 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.RepositoryFactory
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepositoryImpl
+import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -30,14 +28,8 @@ val repositoryModule = module {
         scoped { get<RepositoryFactory>().getNavigationButtonRepository() }
         scoped { get<RepositoryFactory>().getWidgetRepository() }
         scoped { get<RepositoryFactory>().getBudgetOnWidgetRepository() }
-        scoped { get<RepositoryFactory>().getCategoryRepository() }
         scoped { get<RepositoryFactory>().getCategoryCollectionRepository() }
         scoped { get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository() }
-        scoped { get<RepositoryFactory>().getRecordRepository() }
-        scoped { get<RepositoryFactory>().getBudgetAndBudgetAccountAssociationRepository() }
-        scoped<RecordAndAccountRepository> {
-            RecordAndAccountRepositoryImpl(recordRepository = get(), accountRepository = get())
-        }
         scoped {
             GeneralRepository(
                 settingsRepository = get(),

@@ -1,8 +1,8 @@
-package com.ataglance.walletglance.recordCreation.domain.transfer
+package com.ataglance.walletglance.recordCreation.presentation.model.transfer
 
 import com.ataglance.walletglance.account.domain.model.Account
 
-data class TransferDraftSenderReceiver(
+data class TransferDraftUnits(
     val account: Account?,
     val recordNum: Int,
     val recordId: Int = 0,

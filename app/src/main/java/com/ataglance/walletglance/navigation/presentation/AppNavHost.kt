@@ -53,8 +53,8 @@ import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCr
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModelFactory
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModelFactory
-import com.ataglance.walletglance.recordCreation.utils.getRecordDraft
-import com.ataglance.walletglance.recordCreation.utils.getTransferDraft
+import com.ataglance.walletglance.recordCreation.mapper.getRecordDraft
+import com.ataglance.walletglance.recordCreation.mapper.getTransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow

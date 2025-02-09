@@ -7,9 +7,9 @@ import com.ataglance.walletglance.record.data.utils.filterByAccountId
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import kotlinx.coroutines.flow.firstOrNull
 
-class GetTodayTotalExpensesForAccountImpl(
+class GetTodayTotalExpensesForAccountUseCaseImpl(
     private val recordRepository: RecordRepository
-) : GetTodayTotalExpensesForAccount {
+) : GetTodayTotalExpensesForAccountUseCase {
     override suspend fun execute(accountId: Int): Double {
         return recordRepository
             .getRecordsInDateRange(range = getTodayLongDateRange()).firstOrNull()

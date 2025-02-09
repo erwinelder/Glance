@@ -30,7 +30,7 @@ import com.ataglance.walletglance.core.presentation.components.buttons.SmallFill
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 
 @Composable
 fun LazyItemScope.RecordItemCreationComponent(

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.getOtherFrom
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRecordNums
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -107,7 +107,7 @@ class TransferCreationViewModel(
         return transferDraft.value
     }
 
-    fun getSenderReceiverRecordNums(): TransferSenderReceiverRecordNums {
+    fun getSenderReceiverRecordNums(): TransferUnitsRecordNums {
         return transferDraft.value.getSenderReceiverRecordNums()
     }
 

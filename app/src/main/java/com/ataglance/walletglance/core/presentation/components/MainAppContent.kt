@@ -54,7 +54,7 @@ fun MainAppContent(
     val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories.collectAsStateWithLifecycle()
     val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
-    val recordStackListByDate by appViewModel.recordStackListFilteredByDate.collectAsStateWithLifecycle()
+    val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
     val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
 
     val widgetNamesList by personalizationViewModel.widgetNamesList.collectAsStateWithLifecycle()
@@ -79,7 +79,7 @@ fun MainAppContent(
                 categoriesWithSubcategories = categoriesWithSubcategories,
                 categoryCollectionsUiState = categoryCollectionsUiState,
                 accountsAndActiveOne = accountsUiState,
-                recordStackListByDate = recordStackListByDate,
+                recordStackListByDate = recordStacksInDateRange.recordStacks,
                 budgetsByType = budgetsByType
             )
         }
@@ -90,11 +90,11 @@ fun MainAppContent(
         greetingsTitleRes,
         categoriesWithSubcategories,
         accountsUiState,
-        recordStackListByDate
+        recordStacksInDateRange
     ) {
         derivedStateOf {
             val recordStacksByDateAndAccount = accountsUiState.activeAccount?.id
-                ?.let { recordStackListByDate.filterAccountId(it) }
+                ?.let { recordStacksInDateRange.recordStacks.filterAccountId(it) }
                 .orEmpty()
 
             WidgetsUiState(

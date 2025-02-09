@@ -77,4 +77,14 @@ class AccountRepositoryImpl(
         localSource.getAllAccounts().collect(::emit)
     }
 
+    override suspend fun getAccounts(ids: List<Int>): List<AccountEntity> {
+        synchroniseAccounts()
+        return localSource.getAccounts(ids = ids)
+    }
+
+    override suspend fun getAccount(id: Int): AccountEntity? {
+        synchroniseAccounts()
+        return localSource.getAccount(id = id)
+    }
+
 }

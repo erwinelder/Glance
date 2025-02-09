@@ -53,7 +53,7 @@ val budgetModule = module {
         GetBudgetsUseCaseImpl(
             budgetRepository = get(),
             getExpenseCategoriesUseCase = get(),
-            getAllAccountsUseCase = get(),
+            getAccountsUseCase = get(),
             getRecordsInDateRangeUseCase = get()
         )
     }

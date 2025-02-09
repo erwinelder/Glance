@@ -92,6 +92,11 @@ fun <T> List<T>.moveItems(fromIndex: Int, toIndex: Int): List<T> {
 }
 
 
+fun Double.roundToTwoDecimals(): Double {
+    return "%.2f".format(Locale.US, this).toDouble()
+}
+
+
 fun Int.formatWithSpaces(): String {
     val numberString = this.toString()
     var formattedNumber = ""

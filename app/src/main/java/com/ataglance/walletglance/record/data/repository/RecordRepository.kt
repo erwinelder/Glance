@@ -10,6 +10,8 @@ interface RecordRepository {
 
     suspend fun upsertRecords(records: List<RecordEntity>)
 
+    suspend fun deleteRecords(records: List<RecordEntity>)
+
     suspend fun deleteAndUpsertRecords(
         toDelete: List<RecordEntity>,
         toUpsert: List<RecordEntity>
@@ -23,6 +25,8 @@ interface RecordRepository {
 
     @Deprecated("Use getRecordsInDateRange instead")
     fun getRecordsForToday(): Flow<List<RecordEntity>>
+
+    suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 
     fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>
 

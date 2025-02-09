@@ -42,9 +42,9 @@ import com.ataglance.walletglance.core.presentation.components.pickers.CustomDat
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationTopBar
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordItemCreationComponent

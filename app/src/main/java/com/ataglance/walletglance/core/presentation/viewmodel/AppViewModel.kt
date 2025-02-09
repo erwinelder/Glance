@@ -7,13 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
-import com.ataglance.walletglance.account.domain.usecase.GetAllAccountsUseCase
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
-import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
-import com.ataglance.walletglance.account.domain.utils.mergeWith
-import com.ataglance.walletglance.account.domain.utils.returnAmountToFirstBalanceAndUpdateSecondBalance
-import com.ataglance.walletglance.account.mapper.toDataModel
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
@@ -28,7 +24,6 @@ import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryB
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
-import com.ataglance.walletglance.category.domain.utils.toRecordType
 import com.ataglance.walletglance.category.domain.utils.translateCategories
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.categoryCollection.data.utils.getAssociationsThatAreNotInList
@@ -52,37 +47,25 @@ import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getLanguageContext
-import com.ataglance.walletglance.core.utils.getTodayLongDateRange
-import com.ataglance.walletglance.core.utils.isInRange
 import com.ataglance.walletglance.core.utils.withLongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.model.RecordsInDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.utils.filterByAccountId
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
-import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
-import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccount
-import com.ataglance.walletglance.record.domain.utils.findByRecordNum
+import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
 import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
-import com.ataglance.walletglance.record.domain.utils.getOutAndInTransfersByRecordNums
-import com.ataglance.walletglance.record.domain.utils.inverse
-import com.ataglance.walletglance.record.mapper.toDomainModels
-import com.ataglance.walletglance.record.mapper.toRecordList
-import com.ataglance.walletglance.record.mapper.toRecordStackList
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
-import com.ataglance.walletglance.recordCreation.domain.DataAfterRecordOperation
-import com.ataglance.walletglance.recordCreation.domain.mapper.toCreatedRecord
-import com.ataglance.walletglance.recordCreation.domain.mapper.toCreatedTransfer
-import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordEntityList
-import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordEntityListWithOldIds
-import com.ataglance.walletglance.recordCreation.domain.mapper.toRecordsPair
-import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecord
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedRecord
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRecordNums
+import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteRecordUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCase
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.Flow
@@ -101,8 +84,7 @@ class AppViewModel(
     val settingsRepository: SettingsRepository,
 
     private val saveAccountsUseCase: SaveAccountsUseCase,
-    private val getAllAccountsUseCase: GetAllAccountsUseCase,
-    private val getTodayTotalExpensesForAccount: GetTodayTotalExpensesForAccount,
+    private val getAccountsUseCase: GetAccountsUseCase,
 
     private val saveCategoriesUseCase: SaveCategoriesUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
@@ -111,10 +93,13 @@ class AppViewModel(
     CategoryCollectionAndCollectionCategoryAssociationRepository,
 
     val recordRepository: RecordRepository,
+    private val saveRecordUseCase: SaveRecordUseCase,
+    private val deleteRecordUseCase: DeleteRecordUseCase,
+    private val saveTransferUseCase: SaveTransferUseCase,
+    private val deleteTransferUseCase: DeleteTransferUseCase,
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
+    private val getTodayTotalExpensesForAccountUseCase: GetTodayTotalExpensesForAccountUseCase,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
-
-    val recordAndAccountRepository: RecordAndAccountRepository,
 
     private val saveBudgetsUseCase: SaveBudgetsUseCase,
     private val getBudgetsUseCase: GetBudgetsUseCase,
@@ -344,7 +329,7 @@ class AppViewModel(
     // TODO-ACCOUNTS
     private fun fetchAccounts() {
         viewModelScope.launch {
-            getAllAccountsUseCase.getAsFlow().collect(::applyAccountsToUiState)
+            getAccountsUseCase.getAllAsFlow().collect(::applyAccountsToUiState)
         }
     }
 
@@ -429,7 +414,9 @@ class AppViewModel(
     // TODO-ACCOUNTS-DEPENDENCY
     private fun getLastUsedRecordCategoryByType(type: CategoryType): CategoryWithSubcategory? {
         return accountsAndActiveOne.value.activeAccount?.id
-            ?.let { recordStackListFilteredByDate.value.getFirstByTypeAndAccountIdOrJustType(type, it) }
+            ?.let {
+                recordStacksInDateRange.value.recordStacks.getFirstByTypeAndAccountIdOrJustType(type, it)
+            }
             ?.stack?.firstOrNull()?.categoryWithSubcategory
             ?: categoriesWithSubcategories.value.getLastCategoryWithSubcategoryByType(type)
     }
@@ -501,43 +488,23 @@ class AppViewModel(
 
     suspend fun getActiveAccountExpensesForTodayT(): Double {
         return accountsAndActiveOne.value.activeAccount?.id?.let {
-            getTodayTotalExpensesForAccount.execute(accountId = it)
+            getTodayTotalExpensesForAccountUseCase.execute(accountId = it)
         } ?: 0.0
     }
 
 
-    private val _recordListInDateRange: MutableStateFlow<RecordsInDateRange> = MutableStateFlow(
-        RecordsInDateRange()
-    )
+    private val _recordStacksInDateRange = MutableStateFlow(RecordsInDateRange())
+    val recordStacksInDateRange = _recordStacksInDateRange.asStateFlow()
 
     private fun fetchRecordsInDateRange(longDateRange: LongDateRange) {
         viewModelScope.launch {
-            recordRepository.getRecordsInDateRange(longDateRange).collect { recordList ->
-                _recordListInDateRange.update {
-                    it.copy(
-                        dateRange = longDateRange,
-                        recordList = recordList
-                    )
+            getRecordStacksInDateRangeUseCase.getAsFlow(range = longDateRange).collect { recordStacks ->
+                _recordStacksInDateRange.update {
+                    it.copy(dateRange = longDateRange, recordStacks = recordStacks)
                 }
             }
         }
     }
-
-    // TODO-ACCOUNTS-DEPENDENCY
-    val recordStackListFilteredByDate: StateFlow<List<RecordStack>> = combine(
-        _recordListInDateRange,
-        accountsAndActiveOne,
-        categoriesWithSubcategories
-    ) { recordListInDateRange, accountsAndActiveOne, categoriesWithSubcategories ->
-        recordListInDateRange.recordList.toRecordStackList(
-            accountList = accountsAndActiveOne.accountList,
-            categoriesWithSubcategories = categoriesWithSubcategories
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = emptyList()
-    )
 
 
     private val _budgetsByType: MutableStateFlow<BudgetsByType> = MutableStateFlow(BudgetsByType())
@@ -549,7 +516,7 @@ class AppViewModel(
 
     private fun fetchBudgets() {
         viewModelScope.launch {
-            updateBudgetsByType(budgetsByType = getBudgetsUseCase.get())
+            getBudgetsUseCase.getAsFlow().collect(::updateBudgetsByType)
         }
     }
 
@@ -570,108 +537,8 @@ class AppViewModel(
 
 
     suspend fun saveRecord(recordDraft: RecordDraft) {
-        val createdRecord = recordDraft.toCreatedRecord() ?: return
-
-        val dataAfterRecordOperation = if (recordDraft.general.isNew) {
-            getDataForDatabaseAfterNewRecord(createdRecord)
-        } else {
-            getDataForDatabaseAfterEditedRecord(createdRecord)
-        } ?: return
-
-        _budgetsByType.update {
-            dataAfterRecordOperation.updatedBudgetsByType
-        }
-
-        recordAndAccountRepository.deleteAndUpsertRecordsAndUpsertAccounts(
-            recordListToDelete = dataAfterRecordOperation.recordListToDelete,
-            recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
-            accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
-        )
-        if (recordDraft.general.dateTimeState.dateLong.isInRange(getTodayLongDateRange())) {
-            fetchRecordsForToday()
-        }
-        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
-    }
-
-    private fun getDataForDatabaseAfterNewRecord(
-        createdRecord: CreatedRecord
-    ): DataAfterRecordOperation {
-        val recordList = createdRecord.toRecordEntityList()
-        // TODO-ACCOUNTS-DEPENDENCY
-        val updatedAccounts = listOf(
-            createdRecord.account.cloneAndAddToOrSubtractFromBalance(
-                amount = createdRecord.totalAmount,
-                recordType = createdRecord.type.toRecordType()
-            )
-        )
-            .mergeWith(accountsAndActiveOne.value.accountList)
-            .map(Account::toDataModel)
-        val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList.toDomainModels())
-
-        return DataAfterRecordOperation(
-            recordListToUpsert = recordList,
-            accountListToUpsert = updatedAccounts,
-            updatedBudgetsByType = updatedBudgetsByType
-        )
-    }
-
-    private fun getDataForDatabaseAfterEditedRecord(
-        createdRecord: CreatedRecord
-    ): DataAfterRecordOperation? {
-        val currentRecordStack = recordStackListFilteredByDate.value.findByRecordNum(createdRecord.recordNum)
-            ?: return null
-        val currentRecordList = currentRecordStack.toRecordList()
-        // TODO-ACCOUNTS-DEPENDENCY
-        val updatedAccounts = getUpdatedAccountsAfterRecordEditing(
-            createdRecord = createdRecord,
-            recordStack = currentRecordStack,
-            newTotalAmount = createdRecord.totalAmount
-        )
-            ?.mergeWith(accountsAndActiveOne.value.accountList)
-            ?.map(Account::toDataModel)
-            ?: return null
-        val budgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(currentRecordList.toDomainModels())
-
-        return if (createdRecord.items.size == currentRecordStack.stack.size) {
-            val recordListToUpsert = createdRecord.toRecordEntityListWithOldIds(currentRecordStack)
-            DataAfterRecordOperation(
-                recordListToUpsert = recordListToUpsert,
-                accountListToUpsert = updatedAccounts,
-                updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert.toDomainModels())
-            )
-        } else {
-            val recordListToUpsert = createdRecord.toRecordEntityList()
-            DataAfterRecordOperation(
-                recordListToDelete = currentRecordList,
-                recordListToUpsert = recordListToUpsert,
-                accountListToUpsert = updatedAccounts,
-                updatedBudgetsByType = budgetsByType.addUsedAmountsByRecords(recordListToUpsert.toDomainModels())
-            )
-        }
-    }
-
-    private fun getUpdatedAccountsAfterRecordEditing(
-        createdRecord: CreatedRecord,
-        recordStack: RecordStack,
-        newTotalAmount: Double
-    ): List<Account>? {
-        return if (createdRecord.account.id == recordStack.account.id) {
-            listOf(
-                createdRecord.account.cloneAndReapplyAmountToBalance(
-                    prevAmount = recordStack.totalAmount,
-                    newAmount = newTotalAmount,
-                    recordType = createdRecord.type.toRecordType()
-                )
-            )
-        } else {
-            // TODO-ACCOUNTS-DEPENDENCY
-            val prevAccount = accountsAndActiveOne.value.getAccountById(recordStack.account.id)
-                ?: return null
-            (prevAccount to createdRecord.account).returnAmountToFirstBalanceAndUpdateSecondBalance(
-                prevAmount = recordStack.totalAmount,
-                newAmount = newTotalAmount,
-                recordType = createdRecord.type.toRecordType()
-            ).toList()
+        recordDraft.toCreatedRecord()?.let { createdRecord ->
+            saveRecordUseCase.execute(record = createdRecord)
         }
     }
 
@@ -688,140 +555,14 @@ class AppViewModel(
     }
 
     suspend fun deleteRecord(recordNum: Int) {
-        val recordStack = recordStackListFilteredByDate.value.findByRecordNum(recordNum) ?: return
-
-        // TODO-ACCOUNTS-DEPENDENCY
-        val updatedAccount = accountsAndActiveOne.value.accountList
-            .findById(recordStack.account.id)
-            ?.cloneAndAddToOrSubtractFromBalance(
-                amount = recordStack.totalAmount,
-                recordType = recordStack.type.inverse()
-            )
-            ?: return
-        val recordList = recordStack.toRecordList()
-        // TODO-ACCOUNTS-DEPENDENCY
-        val updatedAccounts = listOf(updatedAccount)
-            .mergeWith(accountsAndActiveOne.value.accountList)
-            .map(Account::toDataModel)
-        val updatedBudgets = budgetsByType.value.subtractUsedAmountsByRecords(recordList.toDomainModels())
-
-        _budgetsByType.update { updatedBudgets }
-
-        recordAndAccountRepository.deleteRecordsAndUpsertAccounts(
-            recordListToDelete = recordList,
-            accountListToUpsert = updatedAccounts
-        )
+        deleteRecordUseCase.execute(recordNum = recordNum)
     }
+
 
     suspend fun saveTransfer(transferDraft: TransferDraft) {
-        val createdTransfer = transferDraft.toCreatedTransfer() ?: return
-
-        val dataAfterRecordOperation = if (createdTransfer.isNew) {
-            getDataAfterNewTransfer(createdTransfer)
-        } else {
-            getDataAfterEditedTransfer(createdTransfer)
-        } ?: return
-
-        _budgetsByType.update { dataAfterRecordOperation.updatedBudgetsByType }
-
-        recordAndAccountRepository.upsertRecordsAndUpsertAccounts(
-            recordListToUpsert = dataAfterRecordOperation.recordListToUpsert,
-            accountListToUpsert = dataAfterRecordOperation.accountListToUpsert
-        )
-    }
-
-    private fun getDataAfterNewTransfer(
-        state: CreatedTransfer
-    ): DataAfterRecordOperation {
-        val recordList = state.toRecordsPair().toList()
-        // TODO-ACCOUNTS-DEPENDENCY
-        val updatedAccountList = listOf(
-            state.sender.account.cloneAndSubtractFromBalance(state.sender.amount),
-            state.receiver.account.cloneAndAddToBalance(state.receiver.amount)
-        )
-            .mergeWith(accountsAndActiveOne.value.accountList)
-            .map(Account::toDataModel)
-        val updatedBudgetsByType = budgetsByType.value.addUsedAmountsByRecords(recordList.toDomainModels())
-
-        return DataAfterRecordOperation(
-            recordListToUpsert = recordList,
-            accountListToUpsert = updatedAccountList,
-            updatedBudgetsByType = updatedBudgetsByType
-        )
-    }
-
-    private fun getDataAfterEditedTransfer(
-        state: CreatedTransfer
-    ): DataAfterRecordOperation? {
-        val (currRecordStackFrom, currRecordStackTo) = recordStackListFilteredByDate.value
-            .getOutAndInTransfersByRecordNums(state.getSenderReceiverRecordNums()) ?: return null
-
-        val recordList = state.toRecordsPair().toList()
-        // TODO-ACCOUNTS-DEPENDENCY
-        val updatedAccounts = getUpdatedAccountsAfterEditedTransfer(
-            uiState = state,
-            currRecordStackFrom = currRecordStackFrom,
-            currRecordStackTo = currRecordStackTo
-        )
-            ?.mergeWith(accountsAndActiveOne.value.accountList)
-            ?.map(Account::toDataModel)
-            ?: return null
-        val updatedBudgetsByType = budgetsByType.value
-            .subtractUsedAmountsByRecords(
-                records = (currRecordStackFrom.toRecordList() + currRecordStackTo.toRecordList()).toDomainModels()
-            )
-            .addUsedAmountsByRecords(recordList.toDomainModels())
-
-        return DataAfterRecordOperation(
-            recordListToUpsert = recordList,
-            accountListToUpsert = updatedAccounts,
-            updatedBudgetsByType = updatedBudgetsByType
-        )
-    }
-
-    // TODO-ACCOUNTS-DEPENDENCY
-    fun getUpdatedAccountsAfterEditedTransfer(
-        uiState: CreatedTransfer,
-        currRecordStackFrom: RecordStack,
-        currRecordStackTo: RecordStack
-    ): List<Account>? {
-        val prevFromAccount = accountsAndActiveOne.value.accountList
-            .findById(currRecordStackFrom.account.id) ?: return null
-        val prevToAccount = accountsAndActiveOne.value.accountList
-            .findById(currRecordStackTo.account.id) ?: return null
-
-        val updatedPreviousAccounts = listOf(
-            prevFromAccount.cloneAndAddToBalance(currRecordStackFrom.totalAmount),
-            prevToAccount.cloneAndSubtractFromBalance(currRecordStackTo.totalAmount)
-        )
-        val updatedAccounts = applyAmountsToAccountsAfterTransfer(
-            state = uiState,
-            prevAccounts = updatedPreviousAccounts
-        )
-
-        return updatedAccounts?.mergeWith(updatedPreviousAccounts)
-    }
-
-    // TODO-ACCOUNTS-DEPENDENCY
-    private fun applyAmountsToAccountsAfterTransfer(
-        state: CreatedTransfer,
-        prevAccounts: List<Account>
-    ): List<Account>? {
-        val updatedAccounts = mutableListOf<Account>()
-
-        prevAccounts.findById(state.sender.account.id)?.let {
-            updatedAccounts.add(it.cloneAndSubtractFromBalance(state.sender.amount))
-        } ?: accountsAndActiveOne.value.accountList.findById(state.sender.account.id)?.let {
-            updatedAccounts.add(it.cloneAndSubtractFromBalance(state.sender.amount))
-        } ?: return null
-
-        prevAccounts.findById(state.receiver.account.id)?.let {
-            updatedAccounts.add(it.cloneAndAddToBalance(state.receiver.amount))
-        } ?: accountsAndActiveOne.value.accountList.findById(state.receiver.account.id)?.let {
-            updatedAccounts.add(it.cloneAndAddToBalance(state.receiver.amount))
-        } ?: return null
-
-        return updatedAccounts
+        transferDraft.toCreatedTransfer()?.let { createdTransfer ->
+            saveTransferUseCase.execute(transfer = createdTransfer)
+        }
     }
 
     suspend fun repeatTransfer(state: TransferDraft) {
@@ -844,31 +585,8 @@ class AppViewModel(
         saveTransfer(newMakeTransferState)
     }
 
-    suspend fun deleteTransfer(senderReceiverRecordNums: TransferSenderReceiverRecordNums) {
-
-        val (outTransfer, inTransfer) = recordStackListFilteredByDate.value
-            .getOutAndInTransfersByRecordNums(senderReceiverRecordNums) ?: return
-        // TODO-ACCOUNTS-DEPENDENCY
-        val prevAccounts = Pair(
-            accountsAndActiveOne.value.accountList.findById(outTransfer.account.id) ?: return,
-            accountsAndActiveOne.value.accountList.findById(inTransfer.account.id) ?: return
-        )
-
-        val recordList = outTransfer.toRecordList() + inTransfer.toRecordList()
-        val updatedAccountList = listOf(
-            prevAccounts.first.cloneAndAddToBalance(outTransfer.totalAmount),
-            prevAccounts.second.cloneAndSubtractFromBalance(inTransfer.totalAmount)
-        )
-            .mergeWith(accountsAndActiveOne.value.accountList)
-            .map(Account::toDataModel)
-        val updatedBudgetsByType = budgetsByType.value.subtractUsedAmountsByRecords(recordList.toDomainModels())
-
-        _budgetsByType.update { updatedBudgetsByType }
-
-        recordAndAccountRepository.deleteRecordsAndUpsertAccounts(
-            recordListToDelete = recordList,
-            accountListToUpsert = updatedAccountList,
-        )
+    suspend fun deleteTransfer(transferUnitsRecordNums: TransferUnitsRecordNums) {
+        deleteTransferUseCase.execute(unitsRecordNums = transferUnitsRecordNums)
     }
 
 

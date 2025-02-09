@@ -39,8 +39,8 @@ import com.ataglance.walletglance.core.presentation.components.pickers.CustomDat
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
 
 @Composable
@@ -242,12 +242,12 @@ fun TransferCreationScreenPreview(
     ),
     transferDraft: TransferDraft = TransferDraft(
         isNew = true,
-        sender = TransferDraftSenderReceiver(
+        sender = TransferDraftUnits(
             account = accountList[0],
             recordNum = 0,
             amount = "300.0",
         ),
-        receiver = TransferDraftSenderReceiver(
+        receiver = TransferDraftUnits(
             account = accountList[1],
             recordNum = 0,
             amount = "100.0",

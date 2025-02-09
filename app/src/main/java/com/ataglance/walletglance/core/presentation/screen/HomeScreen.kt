@@ -58,7 +58,7 @@ import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.record.mapper.toRecordStackList
+import com.ataglance.walletglance.record.mapper.toRecordStacks
 
 @Composable
 fun HomeScreen(
@@ -273,8 +273,8 @@ fun HomeScreenPreview(
         WidgetName.TotalForPeriod,
     ),
     recordList: List<RecordEntity>? = null,
-    recordStackList: List<RecordStack> = recordList?.toRecordStackList(
-        accountList = accountsAndActiveOne.accountList,
+    recordStackList: List<RecordStack> = recordList?.toRecordStacks(
+        accounts = accountsAndActiveOne.accountList,
         categoriesWithSubcategories = categoriesWithSubcategories
     ) ?: listOf(
         RecordStack(

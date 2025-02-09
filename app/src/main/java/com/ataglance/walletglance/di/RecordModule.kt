@@ -10,12 +10,16 @@ import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.repository.RecordRepositoryImpl
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCaseImpl
+import com.ataglance.walletglance.record.domain.usecase.GetRecordStackUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetRecordStackUseCaseImpl
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCaseImpl
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCaseImpl
-import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccount
-import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountImpl
+import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCaseImpl
+import com.ataglance.walletglance.record.domain.usecase.GetTransferPairUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetTransferPairUseCaseImpl
 import org.koin.dsl.module
 
 val recordModule = module {
@@ -54,16 +58,32 @@ val recordModule = module {
         GetRecordsInDateRangeUseCaseImpl(recordRepository = get())
     }
 
-    single<GetRecordStacksInDateRangeUseCase> {
-        GetRecordStacksInDateRangeUseCaseImpl(
+    single<GetRecordStackUseCase> {
+        GetRecordStackUseCaseImpl(
             recordRepository = get(),
-            getAllAccountsUseCase = get(),
+            getAccountsUseCase = get(),
             getAllCategoriesUseCase = get()
         )
     }
 
-    single<GetTodayTotalExpensesForAccount> {
-        GetTodayTotalExpensesForAccountImpl(recordRepository = get())
+    single<GetTransferPairUseCase> {
+        GetTransferPairUseCaseImpl(
+            recordRepository = get(),
+            getAccountsUseCase = get(),
+            getAllCategoriesUseCase = get()
+        )
+    }
+
+    single<GetRecordStacksInDateRangeUseCase> {
+        GetRecordStacksInDateRangeUseCaseImpl(
+            recordRepository = get(),
+            getAccountsUseCase = get(),
+            getAllCategoriesUseCase = get()
+        )
+    }
+
+    single<GetTodayTotalExpensesForAccountUseCase> {
+        GetTodayTotalExpensesForAccountUseCaseImpl(recordRepository = get())
     }
 
 }

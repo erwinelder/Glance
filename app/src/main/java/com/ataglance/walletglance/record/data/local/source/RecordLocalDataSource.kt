@@ -13,6 +13,8 @@ interface RecordLocalDataSource {
 
     suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long)
 
+    suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long)
+
     suspend fun deleteAllRecords(timestamp: Long)
 
     suspend fun synchroniseRecords(recordsToSync: EntitiesToSync<RecordEntity>, timestamp: Long)
@@ -20,6 +22,8 @@ interface RecordLocalDataSource {
     suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long)
 
     suspend fun getLastRecordNum(): Flow<Int?>
+
+    suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 
     suspend fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>
 

@@ -54,11 +54,11 @@ import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
 import com.ataglance.walletglance.record.mapper.toDomainModels
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
 import com.ataglance.walletglance.settings.domain.ThemeUiState
@@ -536,13 +536,13 @@ fun MainAppContentTransferCreationScreenPreview() {
     val accountList = accountsAndActiveOne.accountList
     val transferDraft = TransferDraft(
         isNew = true,
-        sender = TransferDraftSenderReceiver(
+        sender = TransferDraftUnits(
             account = accountList[0],
             recordNum = 0,
             amount = "3000.0",
             rate = "22.44"
         ),
-        receiver = TransferDraftSenderReceiver(
+        receiver = TransferDraftUnits(
             account = accountList[1],
             recordNum = 0,
             amount = "133.69",

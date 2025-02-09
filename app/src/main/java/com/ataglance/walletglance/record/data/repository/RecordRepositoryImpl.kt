@@ -52,6 +52,21 @@ class RecordRepositoryImpl(
         }
     }
 
+    override suspend fun deleteRecords(records: List<RecordEntity>) {
+        val timestamp = getCurrentTimestamp()
+
+        localSource.deleteRecords(records = records, timestamp = timestamp)
+        userContext.getUserId()?.let { userId ->
+            remoteSource.upsertRecords(
+                records = records.map {
+                    it.toRemoteEntity(updateTime = timestamp, deleted = true)
+                },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
+    }
+
     override suspend fun deleteAndUpsertRecords(
         toDelete: List<RecordEntity>,
         toUpsert: List<RecordEntity>
@@ -94,6 +109,11 @@ class RecordRepositoryImpl(
     override fun getRecordsForToday(): Flow<List<RecordEntity>> = flow {
         synchroniseRecords()
         localSource.getRecordsInDateRange(range = getTodayLongDateRange()).collect(::emit)
+    }
+
+    override suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity> {
+        synchroniseRecords()
+        return localSource.getRecordsByRecordNum(recordNum = recordNum)
     }
 
     override fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>> = flow {
