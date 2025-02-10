@@ -53,6 +53,7 @@ class BudgetRepositoryImpl(
         )
     }
 
+
     override suspend fun deleteAndUpsertBudgetsAndAssociations(
         budgetsToDelete: List<BudgetEntity>,
         budgetsToUpsert: List<BudgetEntity>,
@@ -86,7 +87,9 @@ class BudgetRepositoryImpl(
         }
     }
 
-    override suspend fun getAllBudgetsAndAssociations(): Pair<List<BudgetEntity>, List<BudgetAccountAssociation>> {
+    override suspend fun getAllBudgetsAndAssociations():
+            Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
+    {
         synchroniseBudgets()
         synchroniseBudgetAccountAssociations()
 

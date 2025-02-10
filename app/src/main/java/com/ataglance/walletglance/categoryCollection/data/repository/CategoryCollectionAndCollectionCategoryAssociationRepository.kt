@@ -1,8 +1,0 @@
-package com.ataglance.walletglance.categoryCollection.data.repository
-
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
-import com.ataglance.walletglance.core.data.repository.BaseEntityAndAssociationRepository
-
-interface CategoryCollectionAndCollectionCategoryAssociationRepository
-    : BaseEntityAndAssociationRepository<CategoryCollectionEntity, CategoryCollectionCategoryAssociation>

@@ -15,6 +15,14 @@ fun CategoryCollectionType.toggle(): CategoryCollectionType {
 }
 
 
+fun Char.asCategoryCollectionType(): CategoryCollectionType {
+    return when (this) {
+        '-' -> CategoryCollectionType.Expense
+        '+' -> CategoryCollectionType.Income
+        else -> CategoryCollectionType.Mixed
+    }
+}
+
 fun CategoryCollectionType.asChar(): Char {
     return when (this) {
         CategoryCollectionType.Expense -> '-'

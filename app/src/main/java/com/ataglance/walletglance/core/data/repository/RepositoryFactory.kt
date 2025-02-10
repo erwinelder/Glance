@@ -1,14 +1,6 @@
 package com.ataglance.walletglance.core.data.repository
 
 import com.ataglance.walletglance.auth.domain.model.User
-import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationLocalDataSource
-import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionLocalDataSource
-import com.ataglance.walletglance.categoryCollection.data.remote.CategoryCollectionCategoryAssociationRemoteDataSource
-import com.ataglance.walletglance.categoryCollection.data.remote.CategoryCollectionRemoteDataSource
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepositoryImpl
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepository
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepositoryImpl
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.navigation.data.local.NavigationButtonLocalDataSource
 import com.ataglance.walletglance.navigation.data.remote.NavigationButtonRemoteDataSource
@@ -34,13 +26,6 @@ class RepositoryFactory(
         if (!user.isEligibleForDataSync() || user.uid == null) return null
 
         return when (RS::class) {
-            CategoryCollectionRemoteDataSource::class -> CategoryCollectionRemoteDataSource(
-                userId = user.uid, firestore = firestore
-            ) as RS
-            CategoryCollectionCategoryAssociationRemoteDataSource::class ->
-                CategoryCollectionCategoryAssociationRemoteDataSource(
-                    userId = user.uid, firestore = firestore
-                ) as RS
             NavigationButtonRemoteDataSource::class -> NavigationButtonRemoteDataSource(
                 userId = user.uid, firestore = firestore
             ) as RS
@@ -52,25 +37,6 @@ class RepositoryFactory(
             ) as RS
             else -> null
         }
-    }
-
-    fun getCategoryCollectionRepository(): CategoryCollectionRepository {
-        return CategoryCollectionRepositoryImpl(
-            localSource = CategoryCollectionLocalDataSource(db.categoryCollectionDao, db.localUpdateTimeDao),
-            remoteSource = createRemoteDataSource<CategoryCollectionRemoteDataSource>()
-        )
-    }
-
-    fun getCategoryCollectionAndCollectionCategoryAssociationRepository():
-            CategoryCollectionAndCollectionCategoryAssociationRepository {
-        return CategoryCollectionAndCollectionCategoryAssociationRepositoryImpl(
-            entityLocalSource = CategoryCollectionLocalDataSource(db.categoryCollectionDao, db.localUpdateTimeDao),
-            entityRemoteSource = createRemoteDataSource<CategoryCollectionRemoteDataSource>(),
-            associationLocalSource = CategoryCollectionCategoryAssociationLocalDataSource(
-                db.categoryCollectionCategoryAssociationDao, db.localUpdateTimeDao
-            ),
-            associationRemoteSource = createRemoteDataSource<CategoryCollectionCategoryAssociationRemoteDataSource>()
-        )
     }
 
     fun getNavigationButtonRepository(): NavigationButtonRepository {

@@ -28,8 +28,6 @@ val repositoryModule = module {
         scoped { get<RepositoryFactory>().getNavigationButtonRepository() }
         scoped { get<RepositoryFactory>().getWidgetRepository() }
         scoped { get<RepositoryFactory>().getBudgetOnWidgetRepository() }
-        scoped { get<RepositoryFactory>().getCategoryCollectionRepository() }
-        scoped { get<RepositoryFactory>().getCategoryCollectionAndCollectionCategoryAssociationRepository() }
         scoped {
             GeneralRepository(
                 settingsRepository = get(),

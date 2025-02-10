@@ -1,89 +1,37 @@
 package com.ataglance.walletglance.categoryCollection.mapper
 
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
+import com.ataglance.walletglance.categoryCollection.domain.utils.asCategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.utils.asChar
 
 
-fun Map<String, Any?>.toCategoryCollectionEntity(): CategoryCollectionEntity {
-    return CategoryCollectionEntity(
-        id = (this["id"] as Long).toInt(),
-        orderNum = (this["orderNum"] as Long).toInt(),
-        type = (this["type"] as String).toCharArray()[0],
-        name = this["name"] as String
-    )
-}
-
-fun CategoryCollectionEntity.toMap(timestamp: Long): HashMap<String, Any> {
-    return hashMapOf(
-        "LMT" to timestamp,
-        "id" to id,
-        "orderNum" to orderNum,
-        "type" to type,
-        "name" to name
-    )
-}
-
-
-
-fun Map<String, Any?>.toCategoryCollectionCategoryAssociation():
-        CategoryCollectionCategoryAssociation
+fun Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>.groupByType():
+        CategoryCollectionsWithIdsByType
 {
-    return CategoryCollectionCategoryAssociation(
-        categoryCollectionId = (this["categoryCollectionId"] as Long).toInt(),
-        categoryId = (this["categoryId"] as Long).toInt()
-    )
-}
-
-fun CategoryCollectionCategoryAssociation.toMap(timestamp: Long): HashMap<String, Any> {
-    return hashMapOf(
-        "LMT" to timestamp,
-        "categoryCollectionId" to categoryCollectionId,
-        "categoryId" to categoryId
-    )
-}
-
-
-
-fun transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
-    collectionList: List<CategoryCollectionEntity>,
-    collectionCategoryAssociationList: List<CategoryCollectionCategoryAssociation>
-): CategoryCollectionsWithIdsByType {
-    return collectionList
+    return first
         .map { collection ->
             CategoryCollectionWithIds(
                 id = collection.id,
                 orderNum = collection.orderNum,
-                type = collection.getCategoryType(),
+                type = collection.type.asCategoryCollectionType(),
                 name = collection.name,
-                categoriesIds = collectionCategoryAssociationList
+                categoriesIds = second
                     .filter { it.categoryCollectionId == collection.id }
                     .map { it.categoryId }
             )
         }
-        .partition { it.type == CategoryCollectionType.Expense }
-        .let { expenseAndOtherCollections ->
-            expenseAndOtherCollections.second
-                .partition { it.type == CategoryCollectionType.Income }
-                .let { incomeAndMixedCollections ->
-                    CategoryCollectionsWithIdsByType(
-                        expense = expenseAndOtherCollections.first,
-                        income = incomeAndMixedCollections.first,
-                        mixed = incomeAndMixedCollections.second
-                    )
-                }
-        }
+        .groupBy { it.type }
+        .let { CategoryCollectionsWithIdsByType.fromGroupedCollections(map = it) }
 }
-
 
 
 fun List<CategoryCollectionWithIds>.divideIntoCollectionsAndAssociations():
         Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>
 {
-    val categoryCollectionList = this.map { collectionWithIds ->
+    val collectionEntities = this.map { collectionWithIds ->
         CategoryCollectionEntity(
             id = collectionWithIds.id,
             orderNum = collectionWithIds.orderNum,
@@ -91,15 +39,16 @@ fun List<CategoryCollectionWithIds>.divideIntoCollectionsAndAssociations():
             name = collectionWithIds.name
         )
     }
-    val listOfCollectionCategoryAssociationList = this
+    val associations = this
         .filter { it.categoriesIds != null }
-        .flatMap { collectionUiState ->
-            collectionUiState.categoriesIds!!.map { categoryId ->
+        .flatMap { collectionWithIds ->
+            collectionWithIds.categoriesIds!!.map { categoryId ->
                 CategoryCollectionCategoryAssociation(
-                    categoryCollectionId = collectionUiState.id,
+                    categoryCollectionId = collectionWithIds.id,
                     categoryId = categoryId
                 )
             }
         }
-    return categoryCollectionList to listOfCollectionCategoryAssociationList
+
+    return collectionEntities to associations
 }

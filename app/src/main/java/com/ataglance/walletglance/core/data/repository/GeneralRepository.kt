@@ -20,8 +20,8 @@ class GeneralRepository(
     suspend fun resetAllData() {
         settingsRepository.clearAllPreferences()
         accountRepository.deleteAllAccountsLocally()
-        categoryRepository.deleteAllEntities()
-        categoryCollectionRepository.deleteAllEntities()
+        categoryRepository.deleteAllCategoriesLocally()
+        categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
         widgetRepository.deleteAllEntities()
         navigationButtonRepository.deleteAllEntities()
     }
@@ -30,8 +30,8 @@ class GeneralRepository(
     suspend fun deleteAllDataLocally() {
         settingsRepository.clearAllPreferences()
         accountRepository.deleteAllAccountsLocally()
-        categoryRepository.deleteAllEntitiesLocally()
-        categoryCollectionRepository.deleteAllEntitiesLocally()
+        categoryRepository.deleteAllCategoriesLocally()
+        categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
         widgetRepository.deleteAllEntitiesLocally()
         navigationButtonRepository.deleteAllEntitiesLocally()
     }

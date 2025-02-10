@@ -10,6 +10,21 @@ data class CategoryCollectionsWithIdsByType(
     val mixed: List<CategoryCollectionWithIds> = listOf()
 ) {
 
+    companion object {
+
+        fun fromGroupedCollections(
+            map: Map<CategoryCollectionType, List<CategoryCollectionWithIds>>
+        ): CategoryCollectionsWithIdsByType {
+            return CategoryCollectionsWithIdsByType(
+                expense = map[CategoryCollectionType.Expense].orEmpty(),
+                income = map[CategoryCollectionType.Income].orEmpty(),
+                mixed = map[CategoryCollectionType.Mixed].orEmpty()
+            )
+        }
+
+    }
+
+
     fun concatenateLists(): List<CategoryCollectionWithIds> {
         return expense + income + mixed
     }

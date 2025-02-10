@@ -6,7 +6,6 @@ import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.data.utils.fixOrderNumbers
 import com.ataglance.walletglance.category.domain.model.CategoryColor
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.domain.date.DateTimeState

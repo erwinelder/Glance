@@ -9,7 +9,7 @@ import com.ataglance.walletglance.core.utils.convertToIntOrZero
 
 
 fun BudgetEntity.toRemoteEntity(updateTime: Long, deleted: Boolean): BudgetRemoteEntity {
-    return  BudgetRemoteEntity(
+    return BudgetRemoteEntity(
         updateTime = updateTime,
         deleted = deleted,
         id = id,
@@ -76,20 +76,20 @@ fun Map<String, Any?>.toBudgetRemoteEntity(): BudgetRemoteEntity {
 }
 
 
-fun Map<String, Any?>.toBudgetAccountRemoteAssociation(): BudgetAccountRemoteAssociation {
-    return BudgetAccountRemoteAssociation(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        budgetId = this["budgetId"].convertToIntOrZero(),
-        accountId = this["accountId"].convertToIntOrZero()
-    )
-}
-
 fun BudgetAccountRemoteAssociation.toMap(): HashMap<String, Any> {
     return hashMapOf(
         "updateTime" to updateTime,
         "deleted" to deleted,
         "budgetId" to budgetId,
         "accountId" to accountId
+    )
+}
+
+fun Map<String, Any?>.toBudgetAccountRemoteAssociation(): BudgetAccountRemoteAssociation {
+    return BudgetAccountRemoteAssociation(
+        updateTime = this["updateTime"] as Long,
+        deleted = this["deleted"] as Boolean,
+        budgetId = this["budgetId"].convertToIntOrZero(),
+        accountId = this["accountId"].convertToIntOrZero()
     )
 }

@@ -1,9 +1,9 @@
 package com.ataglance.walletglance.categoryCollection.data.utils
 
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 
-fun List<CategoryCollectionEntity>.getThatAreNotInList(
+fun List<CategoryCollectionEntity>.getEntitiesThatAreNotInList(
     list: List<CategoryCollectionEntity>
 ): List<CategoryCollectionEntity> {
     return this.filter { collection ->

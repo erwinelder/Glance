@@ -11,10 +11,9 @@ import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociati
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.category.data.local.dao.CategoryLocalDao
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionCategoryAssociationDao
-import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionDao
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionLocalDao
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.model.LocalUpdateTime
 import com.ataglance.walletglance.navigation.data.local.NavigationButtonDao
@@ -48,8 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val localUpdateTimeDao: LocalUpdateTimeDao
     abstract val accountDao: AccountLocalDao
     abstract val categoryDao: CategoryLocalDao
-    abstract val categoryCollectionDao: CategoryCollectionDao
-    abstract val categoryCollectionCategoryAssociationDao: CategoryCollectionCategoryAssociationDao
+    abstract val categoryCollectionDao: CategoryCollectionLocalDao
     abstract val recordDao: RecordLocalDao
     abstract val budgetDao: BudgetLocalDao
     abstract val navigationButtonDao: NavigationButtonDao

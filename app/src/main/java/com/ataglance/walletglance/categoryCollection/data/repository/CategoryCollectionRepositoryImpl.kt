@@ -1,23 +1,107 @@
 package com.ataglance.walletglance.categoryCollection.data.repository
 
-import com.ataglance.walletglance.categoryCollection.data.local.CategoryCollectionLocalDataSource
-import com.ataglance.walletglance.categoryCollection.data.remote.CategoryCollectionRemoteDataSource
+import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.local.source.CategoryCollectionLocalDataSource
+import com.ataglance.walletglance.categoryCollection.data.mapper.toLocalAssociation
+import com.ataglance.walletglance.categoryCollection.data.mapper.toLocalEntity
+import com.ataglance.walletglance.categoryCollection.data.mapper.toRemoteAssociation
+import com.ataglance.walletglance.categoryCollection.data.mapper.toRemoteEntity
+import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionCategoryRemoteAssociation
+import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionRemoteEntity
+import com.ataglance.walletglance.categoryCollection.data.remote.source.CategoryCollectionRemoteDataSource
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 
 class CategoryCollectionRepositoryImpl(
-    override val localSource: CategoryCollectionLocalDataSource,
-    override val remoteSource: CategoryCollectionRemoteDataSource?
+    private val localSource: CategoryCollectionLocalDataSource,
+    private val remoteSource: CategoryCollectionRemoteDataSource,
+    private val userContext: UserContext
 ) : CategoryCollectionRepository {
 
-    override suspend fun deleteAllEntities() {
-        val timestamp = getCurrentTimestamp()
-        localSource.deleteAllCollections(timestamp = timestamp)
-        remoteSource?.deleteAllEntities(timestamp = timestamp)
+    private suspend fun synchroniseCollections() {
+        val userId = userContext.getUserId() ?: return
+
+        synchroniseData(
+            localUpdateTimeGetter = localSource::getCategoryCollectionUpdateTime,
+            remoteUpdateTimeGetter = { remoteSource.getCategoryCollectionUpdateTime(userId = userId) },
+            remoteDataGetter = { timestamp ->
+                remoteSource.getCategoryCollectionsAfterTimestamp(timestamp = timestamp, userId = userId)
+            },
+            remoteDataToLocalDataMapper = CategoryCollectionRemoteEntity::toLocalEntity,
+            localSynchroniser = localSource::synchroniseCategoryCollections
+        )
     }
 
-    override suspend fun deleteAllEntitiesLocally() {
+    private suspend fun synchroniseCollectionCategoryAssociations() {
+        val userId = userContext.getUserId() ?: return
+
+        synchroniseData(
+            localUpdateTimeGetter = localSource::getCollectionCategoryAssociationUpdateTime,
+            remoteUpdateTimeGetter = {
+                remoteSource.getCollectionCategoryAssociationUpdateTime(userId = userId)
+            },
+            remoteDataGetter = { timestamp ->
+                remoteSource.getCollectionCategoryAssociationsAfterTimestamp(
+                    timestamp = timestamp, userId = userId
+                )
+            },
+            remoteDataToLocalDataMapper = CategoryCollectionCategoryRemoteAssociation::toLocalAssociation,
+            localSynchroniser = localSource::synchroniseCollectionCategoryAssociations
+        )
+    }
+
+
+    override suspend fun deleteAndUpsertCollectionsAndAssociations(
+        collectionsToDelete: List<CategoryCollectionEntity>,
+        collectionsToUpsert: List<CategoryCollectionEntity>,
+        associationsToDelete: List<CategoryCollectionCategoryAssociation>,
+        associationsToUpsert: List<CategoryCollectionCategoryAssociation>
+    ) {
         val timestamp = getCurrentTimestamp()
-        localSource.deleteAllCollections(timestamp = timestamp)
+        val collectionsToSync = EntitiesToSync(
+            toDelete = collectionsToDelete, toUpsert = collectionsToUpsert
+        )
+        val associationsToSync = EntitiesToSync(
+            toDelete = associationsToDelete, toUpsert = associationsToUpsert
+        )
+
+        localSource.synchroniseCollectionsAndAssociations(
+            collectionsToSync = collectionsToSync,
+            associationsToSync = associationsToSync,
+            timestamp = timestamp
+        )
+        userContext.getUserId()?.let { userId ->
+            remoteSource.synchroniseCollectionsAndAssociations(
+                collectionsToSync = collectionsToSync.map { deleted ->
+                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
+                },
+                associationsToSync = associationsToSync.map { deleted ->
+                    toRemoteAssociation(updateTime = timestamp, deleted = deleted)
+                },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
+    }
+
+    override suspend fun deleteAllCategoryCollectionsLocally() {
+        val timestamp = getCurrentTimestamp()
+        localSource.deleteAllCategoryCollections(timestamp = timestamp)
+    }
+
+    override suspend fun getAllCollectionsAndAssociations():
+            Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>
+    {
+        synchroniseCollections()
+        synchroniseCollectionCategoryAssociations()
+
+        val collections = localSource.getAllCategoryCollections()
+        val associations = localSource.getAllCollectionCategoryAssociations()
+
+        return collections to associations
     }
 
 }

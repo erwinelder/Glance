@@ -25,13 +25,10 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
 import com.ataglance.walletglance.category.domain.utils.translateCategories
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.categoryCollection.data.utils.getAssociationsThatAreNotInList
-import com.ataglance.walletglance.categoryCollection.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
-import com.ataglance.walletglance.categoryCollection.mapper.divideIntoCollectionsAndAssociations
-import com.ataglance.walletglance.categoryCollection.mapper.transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds
+import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
+import com.ataglance.walletglance.categoryCollection.domain.usecase.SaveCategoryCollectionsUseCase
 import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
@@ -57,13 +54,13 @@ import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
 import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
-import com.ataglance.walletglance.recordCreation.mapper.toCreatedRecord
-import com.ataglance.walletglance.recordCreation.mapper.toCreatedTransfer
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRecordNums
 import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteRecordUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCase
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedRecord
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedTransfer
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
@@ -89,8 +86,8 @@ class AppViewModel(
     private val saveCategoriesUseCase: SaveCategoriesUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
 
-    private val categoryCollectionAndAssociationRepository:
-    CategoryCollectionAndCollectionCategoryAssociationRepository,
+    private val saveCategoryCollectionsUseCase: SaveCategoryCollectionsUseCase,
+    private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
 
     val recordRepository: RecordRepository,
     private val saveRecordUseCase: SaveRecordUseCase,
@@ -422,44 +419,23 @@ class AppViewModel(
     }
 
 
-    private val _categoryCollectionsUiState: MutableStateFlow<CategoryCollectionsWithIdsByType> =
-        MutableStateFlow(CategoryCollectionsWithIdsByType())
-    val categoryCollectionsUiState: StateFlow<CategoryCollectionsWithIdsByType> =
-        _categoryCollectionsUiState.asStateFlow()
+    private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsWithIdsByType())
+    val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
 
     private fun fetchCategoryCollections() {
         viewModelScope.launch {
-            val (collections, associations) = categoryCollectionAndAssociationRepository
-                .getEntitiesAndAssociations()
             _categoryCollectionsUiState.update {
-                transformCategCollectionsAndCollectionCategAssociationsToCollectionsWithIds(
-                    collectionList = collections,
-                    collectionCategoryAssociationList = associations
-                )
+                getCategoryCollectionsUseCase.get()
             }
         }
     }
 
-    suspend fun saveCategoryCollections(collectionUiStateList: List<CategoryCollectionWithIds>) {
-
-        val (newCollections, newAssociations) = collectionUiStateList
-            .divideIntoCollectionsAndAssociations()
-        val (originalCollections, originalAssociations) = categoryCollectionsUiState.value
-            .concatenateLists().divideIntoCollectionsAndAssociations()
-
-        val collectionsToDelete = originalCollections.getThatAreNotInList(newCollections)
-        val associationsToDelete = originalAssociations
-            .getAssociationsThatAreNotInList(newAssociations)
-
-        categoryCollectionAndAssociationRepository
-            .deleteAndUpsertEntitiesAndDeleteAndUpsertAssociations(
-                entitiesToDelete = collectionsToDelete,
-                entitiesToUpsert = newCollections,
-                associationsToDelete = associationsToDelete,
-                associationsToUpsert = newAssociations
-            )
+    suspend fun saveCategoryCollections(collections: List<CategoryCollectionWithIds>) {
+        saveCategoryCollectionsUseCase.execute(
+            collectionsToSave = collections,
+            currentCollections = categoryCollectionsUiState.value.concatenateLists()
+        )
         fetchCategoryCollections()
-
     }
 
 
