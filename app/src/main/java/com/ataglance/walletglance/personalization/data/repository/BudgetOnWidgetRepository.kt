@@ -1,12 +1,17 @@
 package com.ataglance.walletglance.personalization.data.repository
 
-import androidx.room.Transaction
-import com.ataglance.walletglance.core.data.repository.BaseEntityRepository
-import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import kotlinx.coroutines.flow.Flow
 
-interface BudgetOnWidgetRepository : BaseEntityRepository<BudgetOnWidgetEntity> {
+interface BudgetOnWidgetRepository {
 
-    @Transaction
-    suspend fun upsertBudgetsOnWidgetAndDeleteOther(budgetsToUpsert: List<BudgetOnWidgetEntity>)
+    suspend fun deleteAndUpsertBudgetsOnWidget(
+        toDelete: List<BudgetOnWidgetEntity>,
+        toUpsert: List<BudgetOnWidgetEntity>
+    )
+
+    suspend fun deleteAllBudgetsOnWidgetLocally()
+
+    fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>>
 
 }

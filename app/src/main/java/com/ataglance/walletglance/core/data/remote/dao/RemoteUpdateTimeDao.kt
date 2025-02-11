@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.core.data.remote.dao
 
-import com.ataglance.walletglance.core.data.remote.mapper.toMap
+import com.ataglance.walletglance.core.data.mapper.toRemoteUpdateTimeMap
 import com.ataglance.walletglance.core.data.remote.model.RemoteUpdateTime
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -16,7 +16,7 @@ class RemoteUpdateTimeDao(
             .document(userId)
             .collection("UpdateTime")
             .document(entity.tableName)
-            .set(entity.toMap(), SetOptions.merge()).await()
+            .set(entity.toRemoteUpdateTimeMap(), SetOptions.merge()).await()
     }
 
     suspend fun saveUpdateTime(tableName: String, timestamp: Long, userId: String) {

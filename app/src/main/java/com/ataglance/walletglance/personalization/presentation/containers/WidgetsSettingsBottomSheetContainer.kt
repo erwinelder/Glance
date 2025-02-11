@@ -46,7 +46,7 @@ fun WidgetsSettingsBottomSheetContainer(
         visible = openedWidgetSettings == WidgetName.ChosenBudgets,
         sheetState = sheetState,
         onDismissRequest = {
-            personalizationViewModel.saveCurrentBudgetsOnWidgetToDb()
+            personalizationViewModel.saveCurrentBudgetsOnWidget()
             personalizationViewModel.closeWidgetSettings()
         },
     ) {

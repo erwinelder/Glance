@@ -1,47 +1,66 @@
 package com.ataglance.walletglance.personalization.data.repository
 
+import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
-import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetLocalDataSource
-import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
-import com.ataglance.walletglance.personalization.data.remote.BudgetOnWidgetRemoteDataSource
+import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.personalization.data.local.source.BudgetOnWidgetLocalDataSource
+import com.ataglance.walletglance.personalization.data.mapper.toLocalEntity
+import com.ataglance.walletglance.personalization.data.mapper.toRemoteEntity
+import com.ataglance.walletglance.personalization.data.remote.model.BudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.remote.source.BudgetOnWidgetRemoteDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class BudgetOnWidgetRepositoryImpl(
-    override val localSource: BudgetOnWidgetLocalDataSource,
-    override val remoteSource: BudgetOnWidgetRemoteDataSource?
+    private val localSource: BudgetOnWidgetLocalDataSource,
+    private val remoteSource: BudgetOnWidgetRemoteDataSource,
+    private val userContext: UserContext
 ) : BudgetOnWidgetRepository {
 
-    override suspend fun upsertBudgetsOnWidgetAndDeleteOther(
-        budgetsToUpsert: List<BudgetOnWidgetEntity>,
+    private suspend fun synchroniseBudgetsOnWidget() {
+        val userId = userContext.getUserId() ?: return
+
+        synchroniseData(
+            localUpdateTimeGetter = localSource::getUpdateTime,
+            remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
+            remoteDataGetter = { timestamp ->
+                remoteSource.getBudgetsOnWidgetAfterTimestamp(timestamp = timestamp, userId = userId)
+            },
+            remoteDataToLocalDataMapper = BudgetOnWidgetRemoteEntity::toLocalEntity,
+            localSynchroniser = localSource::synchroniseBudgetsOnWidget
+        )
+    }
+
+
+    override suspend fun deleteAndUpsertBudgetsOnWidget(
+        toDelete: List<BudgetOnWidgetEntity>,
+        toUpsert: List<BudgetOnWidgetEntity>
     ) {
         val timestamp = getCurrentTimestamp()
+        val budgetsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
-        localSource.getAllEntities().collect { budgetOnWidgetList ->
-            val budgetsToDelete = budgetOnWidgetList.filter { budget ->
-                budgetsToUpsert.none { it.budgetId == budget.budgetId }
-            }
-
-            localSource.deleteAndUpsertEntities(
-                entitiesToDelete = budgetsToDelete,
-                entitiesToUpsert = budgetsToUpsert,
-                timestamp = timestamp
-            )
-            remoteSource?.deleteAndUpsertEntities(
-                entitiesToDelete = budgetsToDelete,
-                entitiesToUpsert = budgetsToUpsert,
-                timestamp = timestamp
+        localSource.synchroniseBudgetsOnWidget(budgetsToSync = budgetsToSync, timestamp = timestamp)
+        userContext.getUserId()?.let { userId ->
+            remoteSource.synchroniseBudgetsOnWidget(
+                budgetsToSync = budgetsToSync.map { deleted ->
+                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
+                },
+                timestamp = timestamp,
+                userId = userId
             )
         }
     }
 
-    override suspend fun deleteAllEntities() {
+    override suspend fun deleteAllBudgetsOnWidgetLocally() {
         val timestamp = getCurrentTimestamp()
         localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
-        remoteSource?.deleteAllEntities(timestamp = timestamp)
     }
 
-    override suspend fun deleteAllEntitiesLocally() {
-        val timestamp = getCurrentTimestamp()
-        localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
+    override fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>> = flow {
+        synchroniseBudgetsOnWidget()
+        localSource.getAllBudgetsOnWidget().collect(::emit)
     }
 
 }

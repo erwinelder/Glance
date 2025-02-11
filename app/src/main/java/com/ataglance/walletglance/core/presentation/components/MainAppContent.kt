@@ -57,7 +57,7 @@ fun MainAppContent(
     val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
     val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
 
-    val widgetNamesList by personalizationViewModel.widgetNamesList.collectAsStateWithLifecycle()
+    val widgetNamesList by personalizationViewModel.widgetNames.collectAsStateWithLifecycle()
     val budgetsOnWidget by personalizationViewModel.budgetsOnWidget.collectAsStateWithLifecycle()
 
     var dimBackground by remember { mutableStateOf(false) }

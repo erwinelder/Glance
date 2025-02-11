@@ -1,10 +1,9 @@
 package com.ataglance.walletglance.budget.domain.usecase
 
 import com.ataglance.walletglance.budget.data.repository.BudgetRepository
-import com.ataglance.walletglance.budget.data.utils.getAssociationsThatAreNotInList
-import com.ataglance.walletglance.budget.data.utils.getBudgetsThatAreNotInList
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.mapper.divideIntoBudgetsAndAssociations
+import com.ataglance.walletglance.core.utils.excludeItems
 
 class SaveBudgetsUseCaseImpl(
     private val budgetRepository: BudgetRepository
@@ -13,8 +12,10 @@ class SaveBudgetsUseCaseImpl(
         val (newBudgets, newAssociations) = budgetsToSave.divideIntoBudgetsAndAssociations()
         val (originalBudgets, originalAssociations) = currentBudgets.divideIntoBudgetsAndAssociations()
 
-        val budgetsToDelete = originalBudgets.getBudgetsThatAreNotInList(newBudgets)
-        val associationsToDelete = originalAssociations.getAssociationsThatAreNotInList(newAssociations)
+        val budgetsToDelete = originalBudgets.excludeItems(newBudgets) { it.id }
+        val associationsToDelete = originalAssociations.excludeItems(newAssociations) {
+            it.budgetId to it.accountId
+        }
 
         budgetRepository.deleteAndUpsertBudgetsAndAssociations(
             budgetsToDelete = budgetsToDelete,

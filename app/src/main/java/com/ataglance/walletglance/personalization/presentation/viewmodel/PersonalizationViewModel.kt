@@ -2,14 +2,12 @@ package com.ataglance.walletglance.personalization.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
-import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.domain.utils.getItemsThatAreNotInList
-import com.ataglance.walletglance.personalization.mapper.toEntityList
-import com.ataglance.walletglance.personalization.mapper.toIntList
-import com.ataglance.walletglance.personalization.mapper.toWidgetNamesList
+import com.ataglance.walletglance.personalization.domain.usecase.GetBudgetIdsOnWidgetUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.SaveBudgetsOnWidgetUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.SaveWidgetsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,58 +15,31 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PersonalizationViewModel(
-    private val widgetRepository: WidgetRepository,
-    private val budgetOnWidgetRepository: BudgetOnWidgetRepository
+    private val saveWidgetsUseCase: SaveWidgetsUseCase,
+    private val getWidgetsUseCase: GetWidgetsUseCase,
+    private val saveBudgetsOnWidgetUseCase: SaveBudgetsOnWidgetUseCase,
+    private val getBudgetIdsOnWidgetUseCase: GetBudgetIdsOnWidgetUseCase
 ) : ViewModel() {
 
-    private val _widgetNamesList: MutableStateFlow<List<WidgetName>> = MutableStateFlow(emptyList())
-    val widgetNamesList: StateFlow<List<WidgetName>> = _widgetNamesList.asStateFlow()
+    private val _widgetNames: MutableStateFlow<List<WidgetName>> = MutableStateFlow(emptyList())
+    val widgetNames: StateFlow<List<WidgetName>> = _widgetNames.asStateFlow()
 
-    private fun fetchWidgetListFromDb() {
+    private fun updateWidgetNames(names: List<WidgetName>) {
+        _widgetNames.update { names }
+    }
+
+    private fun fetchWidgets() {
         viewModelScope.launch {
-            widgetRepository.getAllEntities().collect { widgetList ->
-                if (widgetList.isEmpty()) {
-
-                    val defaultWidgetNamesList = getDefaultWidgetNamesList()
-                    widgetRepository.upsertEntities(defaultWidgetNamesList.toEntityList())
-                    _widgetNamesList.update { defaultWidgetNamesList }
-
-                } else {
-
-                    _widgetNamesList.update {
-                        widgetList.sortedBy { it.orderNum }.toWidgetNamesList()
-                    }
-
-                }
-            }
+            getWidgetsUseCase.getAsFlow().collect(::updateWidgetNames)
         }
     }
 
-    private fun getDefaultWidgetNamesList(): List<WidgetName> {
-        return listOf(
-            WidgetName.ChosenBudgets,
-            WidgetName.TotalForPeriod,
-            WidgetName.RecentRecords,
-            WidgetName.TopExpenseCategories,
-        )
-    }
-
-    fun saveWidgetList(checkedWidgetList: List<CheckedWidget>) {
-        val newWidgetNamesList = checkedWidgetList.filter { it.isChecked }.map { it.name }
-
-        val widgetsToUpsert = newWidgetNamesList.toEntityList()
-        val widgetsToDelete = widgetNamesList.value
-            .getItemsThatAreNotInList(newWidgetNamesList)
-            .toEntityList()
+    fun saveWidgets(checkedWidgets: List<CheckedWidget>) {
+        val widgets = checkedWidgets.filter { it.isChecked }.map { it.name }
 
         viewModelScope.launch {
-            widgetRepository.deleteAndUpsertEntities(
-                toDelete = widgetsToDelete,
-                toUpsert = widgetsToUpsert
-            )
+            saveWidgetsUseCase.execute(widgetsToSave = widgets, currentWidgets = widgetNames.value)
         }
-
-        _widgetNamesList.update { newWidgetNamesList }
     }
 
 
@@ -87,6 +58,10 @@ class PersonalizationViewModel(
     private val _budgetsOnWidget: MutableStateFlow<List<Int>> = MutableStateFlow(emptyList())
     val budgetsOnWidget = _budgetsOnWidget.asStateFlow()
 
+    private fun updateBudgetsOnWidget(budgetsIds: List<Int>) {
+        _budgetsOnWidget.update { budgetsIds }
+    }
+
     fun checkBudgetOnWidget(budgetId: Int) {
         _budgetsOnWidget.update {
             it.toMutableList().apply { add(budgetId) }
@@ -99,26 +74,22 @@ class PersonalizationViewModel(
         }
     }
 
-    private fun fetchBudgetsOnWidgetFromDb() {
+    private fun fetchBudgetsOnWidget() {
         viewModelScope.launch {
-            budgetOnWidgetRepository.getAllEntities().collect { budgetOnWidgetList ->
-                _budgetsOnWidget.update { budgetOnWidgetList.toIntList() }
-            }
+            getBudgetIdsOnWidgetUseCase.getAsFlow().collect(::updateBudgetsOnWidget)
         }
     }
 
-    fun saveCurrentBudgetsOnWidgetToDb() {
-        val budgetsOnWidgetToUpsert = budgetsOnWidget.value.toEntityList()
-
+    fun saveCurrentBudgetsOnWidget() {
         viewModelScope.launch {
-            budgetOnWidgetRepository.upsertBudgetsOnWidgetAndDeleteOther(budgetsOnWidgetToUpsert)
+            saveBudgetsOnWidgetUseCase.execute(budgetsIds = budgetsOnWidget.value)
         }
     }
 
 
     init {
-        fetchWidgetListFromDb()
-        fetchBudgetsOnWidgetFromDb()
+        fetchWidgets()
+        fetchBudgetsOnWidget()
     }
 
 }

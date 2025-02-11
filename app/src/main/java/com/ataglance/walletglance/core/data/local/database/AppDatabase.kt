@@ -18,10 +18,10 @@ import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.model.LocalUpdateTime
 import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonLocalDao
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
-import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetDao
-import com.ataglance.walletglance.personalization.data.local.WidgetDao
-import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
-import com.ataglance.walletglance.personalization.data.model.WidgetEntity
+import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetLocalDao
+import com.ataglance.walletglance.personalization.data.local.dao.WidgetLocalDao
+import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
 import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 
@@ -51,8 +51,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val recordDao: RecordLocalDao
     abstract val budgetDao: BudgetLocalDao
     abstract val navigationButtonDao: NavigationButtonLocalDao
-    abstract val widgetDao: WidgetDao
-    abstract val budgetOnWidgetDao: BudgetOnWidgetDao
+    abstract val widgetDao: WidgetLocalDao
+    abstract val budgetOnWidgetDao: BudgetOnWidgetLocalDao
 
     companion object {
         @Volatile

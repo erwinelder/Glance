@@ -1,29 +1,12 @@
 package com.ataglance.walletglance.personalization.mapper
 
-import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
-
-
-fun Map<String, Any?>.toBudgetOnWidgetEntity(): BudgetOnWidgetEntity {
-    return BudgetOnWidgetEntity(
-        budgetId = (this["budgetId"] as Long).toInt()
-    )
-}
-
-fun BudgetOnWidgetEntity.toMap(timestamp: Long): HashMap<String, Any> {
-    return hashMapOf(
-        "LMT" to timestamp,
-        "budgetId" to budgetId
-    )
-}
-
+import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
 
 
 fun List<BudgetOnWidgetEntity>.toIntList(): List<Int> {
-    return this.map { it.budgetId }
+    return map { it.budgetId }
 }
 
-
-
-fun List<Int>.toEntityList(): List<BudgetOnWidgetEntity> {
-    return this.map { BudgetOnWidgetEntity(budgetId = it) }
+fun List<Int>.toBudgetOnWidgetEntities(): List<BudgetOnWidgetEntity> {
+    return map { BudgetOnWidgetEntity(budgetId = it) }
 }

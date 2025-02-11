@@ -20,6 +20,11 @@ import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.navigation.data.mapper.toMap
 import com.ataglance.walletglance.navigation.data.mapper.toNavigationButtonRemoteEntity
 import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonRemoteEntity
+import com.ataglance.walletglance.personalization.data.mapper.toBudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.mapper.toMap
+import com.ataglance.walletglance.personalization.data.mapper.toWidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.remote.model.BudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.remote.model.WidgetRemoteEntity
 import com.ataglance.walletglance.record.data.mapper.toMap
 import com.ataglance.walletglance.record.data.mapper.toRecordRemoteEntity
 import com.ataglance.walletglance.record.data.remote.model.RecordRemoteEntity
@@ -108,6 +113,26 @@ class FirestoreAdapterFactory(
             dataToEntityMapper = Map<String, Any?>::toNavigationButtonRemoteEntity,
             entityToDataMapper = NavigationButtonRemoteEntity::toMap,
             getDocumentIdentifier = { it.screenName }
+        )
+    }
+
+    fun getWidgetFirestoreAdapter(): FirestoreAdapter<WidgetRemoteEntity> {
+        return FirestoreAdapterImpl(
+            firestore = firestore,
+            collectionName = TableName.Widget.name,
+            dataToEntityMapper = Map<String, Any?>::toWidgetRemoteEntity,
+            entityToDataMapper = WidgetRemoteEntity::toMap,
+            getDocumentIdentifier = { it.name }
+        )
+    }
+
+    fun getBudgetOnWidgetFirestoreAdapter(): FirestoreAdapter<BudgetOnWidgetRemoteEntity> {
+        return FirestoreAdapterImpl(
+            firestore = firestore,
+            collectionName = TableName.BudgetOnWidget.name,
+            dataToEntityMapper = Map<String, Any?>::toBudgetOnWidgetRemoteEntity,
+            entityToDataMapper = BudgetOnWidgetRemoteEntity::toMap,
+            getDocumentIdentifier = { it.budgetId.toString() }
         )
     }
 

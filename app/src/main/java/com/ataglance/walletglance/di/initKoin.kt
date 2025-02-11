@@ -10,8 +10,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             appModule, authModule, billingModule,
             accountModule, categoryModule, recordModule, recordCreationModule,
             categoryCollectionModule, budgetModule,
-            navigationModule,
-            repositoryModule
+            navigationModule, personalizationModule
         )
     }
 }

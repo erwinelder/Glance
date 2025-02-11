@@ -2,9 +2,9 @@ package com.ataglance.walletglance.account.domain.usecase
 
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.account.data.utils.getThatAreNotInList
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.mapper.toDataModel
+import com.ataglance.walletglance.core.utils.excludeItems
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 
 class SaveAccountsUseCaseImpl(
@@ -16,7 +16,7 @@ class SaveAccountsUseCaseImpl(
         val entitiesToSave = accountsToSave.map(Account::toDataModel)
         val entitiesToDelete = currentAccounts
             .map(Account::toDataModel)
-            .getThatAreNotInList(entitiesToSave)
+            .excludeItems(entitiesToSave) { it.id }
 
         if (entitiesToDelete.isEmpty()) {
             accountRepository.deleteAndUpsertAccounts(

@@ -9,7 +9,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.domain.utils.getLocalizedStringRes
+import com.ataglance.walletglance.personalization.presentation.utils.getLocalizedStringRes
 import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckboxContainer
 

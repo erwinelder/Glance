@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.auth.data.repository
 
 import com.ataglance.walletglance.auth.data.model.UserData
-import com.ataglance.walletglance.core.mapper.toMap
-import com.ataglance.walletglance.core.mapper.toUserData
+import com.ataglance.walletglance.core.data.mapper.toUserDataMap
+import com.ataglance.walletglance.core.data.mapper.toUserData
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.google.firebase.firestore.DocumentReference
@@ -28,7 +28,7 @@ class UserRepositoryImpl(val firestore: FirebaseFirestore) : UserRepository {
     }
 
     override suspend fun saveUserPreferences(userPreferences: UserData) {
-        getUserPreferencesFirestoreRef(userPreferences.userId).set(userPreferences.toMap()).await()
+        getUserPreferencesFirestoreRef(userPreferences.userId).set(userPreferences.toUserDataMap()).await()
     }
 
     override suspend fun updateUserSubscription(userId: String, subscription: String) {

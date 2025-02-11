@@ -123,7 +123,7 @@ fun NavGraphBuilder.settingsGraph(
                 initialNavigationButtonList = navigationButtonList,
                 onSaveNavigationButtons = navViewModel::saveBottomBarNavigationButtons,
                 initialWidgetNamesList = widgetNamesList,
-                onSaveWidgetNames = personalizationViewModel::saveWidgetList,
+                onSaveWidgetNames = personalizationViewModel::saveWidgets,
                 onContinueSetupButton = {
                     if (appConfiguration.isSignedIn) {
                         navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)

@@ -22,7 +22,7 @@ class GeneralRepository(
         accountRepository.deleteAllAccountsLocally()
         categoryRepository.deleteAllCategoriesLocally()
         categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
-        widgetRepository.deleteAllEntities()
+        widgetRepository.deleteAllWidgetsLocally()
         navigationButtonRepository.deleteAllNavigationButtonsLocally()
     }
 
@@ -32,7 +32,7 @@ class GeneralRepository(
         accountRepository.deleteAllAccountsLocally()
         categoryRepository.deleteAllCategoriesLocally()
         categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
-        widgetRepository.deleteAllEntitiesLocally()
+        widgetRepository.deleteAllWidgetsLocally()
         navigationButtonRepository.deleteAllNavigationButtonsLocally()
     }
 

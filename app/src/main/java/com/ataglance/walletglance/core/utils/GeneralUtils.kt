@@ -92,6 +92,13 @@ fun <T> List<T>.moveItems(fromIndex: Int, toIndex: Int): List<T> {
 }
 
 
+fun <T, V> List<T>.excludeItems(items: List<T>, keySelector: (T) -> V): List<T> {
+    return this.filter { item ->
+        items.none { keySelector(item) == keySelector(it) }
+    }
+}
+
+
 fun Double.roundToTwoDecimals(): Double {
     return "%.2f".format(Locale.US, this).toDouble()
 }

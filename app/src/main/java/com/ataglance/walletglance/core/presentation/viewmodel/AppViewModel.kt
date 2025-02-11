@@ -48,7 +48,6 @@ import com.ataglance.walletglance.core.utils.withLongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.model.RecordsInDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.record.data.utils.filterByAccountId
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
@@ -454,9 +453,9 @@ class AppViewModel(
     // TODO-ACCOUNTS-DEPENDENCY
     fun getActiveAccountExpensesForToday(): Double {
         return accountsAndActiveOne.value.activeAccount?.id
-            ?.let {
+            ?.let { accountId ->
                 _todayRecordList.value
-                    .filterByAccountId(it)
+                    .filter { it.accountId == accountId }
                     .getTotalAmountByType(CategoryType.Expense)
             }
             ?: 0.0

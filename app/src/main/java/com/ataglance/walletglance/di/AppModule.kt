@@ -1,12 +1,20 @@
 package com.ataglance.walletglance.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
+import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 val appModule = module {
 
@@ -14,6 +22,10 @@ val appModule = module {
 
     single {
         AppDatabase.getDatabase(context = get())
+    }
+
+    single<DataStore<Preferences>> {
+        androidContext().dataStore
     }
 
     single {
@@ -24,6 +36,23 @@ val appModule = module {
 
     single {
         RemoteUpdateTimeDao(firestore = get())
+    }
+
+    /* ---------- Repositories ---------- */
+
+    single {
+        SettingsRepository(dataStore = get())
+    }
+
+    single {
+        GeneralRepository(
+            settingsRepository = get(),
+            accountRepository = get(),
+            categoryRepository = get(),
+            categoryCollectionRepository = get(),
+            widgetRepository = get(),
+            navigationButtonRepository = get()
+        )
     }
 
     /* ---------- View Models ---------- */
@@ -55,10 +84,6 @@ val appModule = module {
 
             generalRepository = get()
         )
-    }
-
-    viewModel {
-        PersonalizationViewModel(widgetRepository = get(), budgetOnWidgetRepository = get())
     }
 
 }
