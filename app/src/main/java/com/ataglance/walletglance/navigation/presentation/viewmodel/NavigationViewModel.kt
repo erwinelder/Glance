@@ -9,15 +9,12 @@ import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
-import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
-import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
+import com.ataglance.walletglance.navigation.domain.usecase.SaveNavigationButtonsUseCase
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
 import com.ataglance.walletglance.navigation.domain.utils.simpleName
-import com.ataglance.walletglance.navigation.mapper.toBottomBarNavigationButtonList
-import com.ataglance.walletglance.navigation.mapper.toDefaultNavigationButtonEntityList
-import com.ataglance.walletglance.navigation.mapper.toNavigationButtonEntityList
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +23,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NavigationViewModel(
-    private val navigationButtonRepository: NavigationButtonRepository
+    private val saveNavigationButtonsUseCase: SaveNavigationButtonsUseCase,
+    private val getNavigationButtonsUseCase: GetNavigationButtonsUseCase
 ) : ViewModel() {
 
     private val _navigationButtonList: MutableStateFlow<List<BottomBarNavigationButton>> =
@@ -41,43 +39,19 @@ class NavigationViewModel(
         )
     val navigationButtonList = _navigationButtonList.asStateFlow()
 
+    private fun updateNavigationButtons(buttons: List<BottomBarNavigationButton>) {
+        _navigationButtonList.update { buttons }
+    }
+
     private fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
-            navigationButtonRepository.getAllEntities().collect { buttons ->
-                if (buttons.isNotEmpty()) {
-                    _navigationButtonList.update {
-                        buttons.toBottomBarNavigationButtonList()
-                    }
-                } else {
-                    val defaultNavigationButtonList = getDefaultNavigationButtonList()
-
-                    navigationButtonRepository.upsertEntities(defaultNavigationButtonList)
-                    _navigationButtonList.update {
-                        defaultNavigationButtonList.toBottomBarNavigationButtonList()
-                    }
-                }
-            }
+            getNavigationButtonsUseCase.getAsFlow().collect(::updateNavigationButtons)
         }
     }
 
-    private fun getDefaultNavigationButtonList(): List<NavigationButtonEntity> {
-        return listOf(
-            BottomBarNavigationButton.Home,
-            BottomBarNavigationButton.Records,
-            BottomBarNavigationButton.CategoryStatistics,
-            BottomBarNavigationButton.Budgets,
-            BottomBarNavigationButton.Settings
-        ).toDefaultNavigationButtonEntityList()
-    }
-
-    fun saveBottomBarNavigationButtons(navigationButtonList: List<BottomBarNavigationButton>) {
-        val navigationButtonEntityList = navigationButtonList.toNavigationButtonEntityList()
-
+    fun saveBottomBarNavigationButtons(buttons: List<BottomBarNavigationButton>) {
         viewModelScope.launch {
-            navigationButtonRepository.upsertEntities(navigationButtonEntityList)
-            _navigationButtonList.update {
-                navigationButtonEntityList.toBottomBarNavigationButtonList()
-            }
+            saveNavigationButtonsUseCase.execute(buttons = buttons)
         }
     }
 

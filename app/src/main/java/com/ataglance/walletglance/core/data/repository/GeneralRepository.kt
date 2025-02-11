@@ -23,7 +23,7 @@ class GeneralRepository(
         categoryRepository.deleteAllCategoriesLocally()
         categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
         widgetRepository.deleteAllEntities()
-        navigationButtonRepository.deleteAllEntities()
+        navigationButtonRepository.deleteAllNavigationButtonsLocally()
     }
 
     @Transaction
@@ -33,7 +33,7 @@ class GeneralRepository(
         categoryRepository.deleteAllCategoriesLocally()
         categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
         widgetRepository.deleteAllEntitiesLocally()
-        navigationButtonRepository.deleteAllEntitiesLocally()
+        navigationButtonRepository.deleteAllNavigationButtonsLocally()
     }
 
 }

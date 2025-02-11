@@ -16,8 +16,8 @@ import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCo
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.model.LocalUpdateTime
-import com.ataglance.walletglance.navigation.data.local.NavigationButtonDao
-import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
+import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonLocalDao
+import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
 import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetDao
 import com.ataglance.walletglance.personalization.data.local.WidgetDao
 import com.ataglance.walletglance.personalization.data.model.BudgetOnWidgetEntity
@@ -50,7 +50,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val categoryCollectionDao: CategoryCollectionLocalDao
     abstract val recordDao: RecordLocalDao
     abstract val budgetDao: BudgetLocalDao
-    abstract val navigationButtonDao: NavigationButtonDao
+    abstract val navigationButtonDao: NavigationButtonLocalDao
     abstract val widgetDao: WidgetDao
     abstract val budgetOnWidgetDao: BudgetOnWidgetDao
 

@@ -1,6 +1,14 @@
 package com.ataglance.walletglance.navigation.data.repository
 
-import com.ataglance.walletglance.core.data.repository.BaseEntityRepository
-import com.ataglance.walletglance.navigation.data.model.NavigationButtonEntity
+import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
+import kotlinx.coroutines.flow.Flow
 
-interface NavigationButtonRepository : BaseEntityRepository<NavigationButtonEntity>
+interface NavigationButtonRepository {
+
+    suspend fun upsertNavigationButtons(buttons: List<NavigationButtonEntity>)
+
+    suspend fun deleteAllNavigationButtonsLocally()
+
+    fun getAllNavigationButtons(): Flow<List<NavigationButtonEntity>>
+
+}

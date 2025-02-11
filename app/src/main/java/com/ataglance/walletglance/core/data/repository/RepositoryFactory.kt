@@ -2,10 +2,6 @@ package com.ataglance.walletglance.core.data.repository
 
 import com.ataglance.walletglance.auth.domain.model.User
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.navigation.data.local.NavigationButtonLocalDataSource
-import com.ataglance.walletglance.navigation.data.remote.NavigationButtonRemoteDataSource
-import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
-import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepositoryImpl
 import com.ataglance.walletglance.personalization.data.local.BudgetOnWidgetLocalDataSource
 import com.ataglance.walletglance.personalization.data.local.WidgetLocalDataSource
 import com.ataglance.walletglance.personalization.data.remote.BudgetOnWidgetRemoteDataSource
@@ -26,9 +22,6 @@ class RepositoryFactory(
         if (!user.isEligibleForDataSync() || user.uid == null) return null
 
         return when (RS::class) {
-            NavigationButtonRemoteDataSource::class -> NavigationButtonRemoteDataSource(
-                userId = user.uid, firestore = firestore
-            ) as RS
             WidgetRemoteDataSource::class -> WidgetRemoteDataSource(
                 userId = user.uid, firestore = firestore
             ) as RS
@@ -37,13 +30,6 @@ class RepositoryFactory(
             ) as RS
             else -> null
         }
-    }
-
-    fun getNavigationButtonRepository(): NavigationButtonRepository {
-        return NavigationButtonRepositoryImpl(
-            localSource = NavigationButtonLocalDataSource(db.navigationButtonDao, db.localUpdateTimeDao),
-            remoteSource = createRemoteDataSource<NavigationButtonRemoteDataSource>()
-        )
     }
 
     fun getWidgetRepository(): WidgetRepository {

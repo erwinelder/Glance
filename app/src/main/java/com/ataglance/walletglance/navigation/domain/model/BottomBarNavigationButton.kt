@@ -77,4 +77,19 @@ sealed class BottomBarNavigationButton(
         )
     )
 
+
+    companion object {
+
+        fun asDefaultList(): List<BottomBarNavigationButton> {
+            return listOf(
+                Home,
+                Records,
+                CategoryStatistics,
+                Budgets,
+                Settings
+            )
+        }
+
+    }
+
 }

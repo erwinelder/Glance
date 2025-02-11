@@ -25,7 +25,6 @@ val repositoryModule = module {
             RepositoryFactory(db = get(), user = get<AuthController>().getUser(), firestore = get())
         }
 
-        scoped { get<RepositoryFactory>().getNavigationButtonRepository() }
         scoped { get<RepositoryFactory>().getWidgetRepository() }
         scoped { get<RepositoryFactory>().getBudgetOnWidgetRepository() }
         scoped {

@@ -17,6 +17,9 @@ import com.ataglance.walletglance.categoryCollection.data.mapper.toMap
 import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionCategoryRemoteAssociation
 import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionRemoteEntity
 import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.navigation.data.mapper.toMap
+import com.ataglance.walletglance.navigation.data.mapper.toNavigationButtonRemoteEntity
+import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonRemoteEntity
 import com.ataglance.walletglance.record.data.mapper.toMap
 import com.ataglance.walletglance.record.data.mapper.toRecordRemoteEntity
 import com.ataglance.walletglance.record.data.remote.model.RecordRemoteEntity
@@ -95,6 +98,16 @@ class FirestoreAdapterFactory(
             dataToEntityMapper = Map<String, Any?>::toBudgetAccountRemoteAssociation,
             entityToDataMapper = BudgetAccountRemoteAssociation::toMap,
             getDocumentIdentifier = { "${it.budgetId}-${it.accountId}" }
+        )
+    }
+
+    fun getNavigationButtonFirestoreAdapter(): FirestoreAdapter<NavigationButtonRemoteEntity> {
+        return FirestoreAdapterImpl(
+            firestore = firestore,
+            collectionName = TableName.NavigationButton.name,
+            dataToEntityMapper = Map<String, Any?>::toNavigationButtonRemoteEntity,
+            entityToDataMapper = NavigationButtonRemoteEntity::toMap,
+            getDocumentIdentifier = { it.screenName }
         )
     }
 

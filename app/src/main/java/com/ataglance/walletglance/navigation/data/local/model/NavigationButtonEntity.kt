@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.navigation.data.model
+package com.ataglance.walletglance.navigation.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
