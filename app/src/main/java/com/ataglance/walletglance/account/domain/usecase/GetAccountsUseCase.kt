@@ -12,4 +12,6 @@ interface GetAccountsUseCase {
 
     suspend fun get(id: Int): Account?
 
+    suspend fun getActive(): Account?
+
 }

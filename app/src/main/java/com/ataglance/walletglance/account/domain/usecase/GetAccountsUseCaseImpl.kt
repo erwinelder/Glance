@@ -30,4 +30,10 @@ class GetAccountsUseCaseImpl(
         return accountRepository.getAccount(id = id)?.toDomainModel()
     }
 
+    override suspend fun getActive(): Account? {
+        return accountRepository.getAllAccounts().firstOrNull()
+            ?.firstOrNull { it.isActive }
+            ?.toDomainModel()
+    }
+
 }

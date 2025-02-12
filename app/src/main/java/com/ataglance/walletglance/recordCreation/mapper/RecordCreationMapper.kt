@@ -1,15 +1,12 @@
 package com.ataglance.walletglance.recordCreation.mapper
 
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
-import com.ataglance.walletglance.record.domain.utils.findByRecordNum
 import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecord
 import com.ataglance.walletglance.recordCreation.domain.record.CreatedRecordItem
@@ -21,46 +18,8 @@ import com.ataglance.walletglance.recordCreation.utils.getTotalAmount
 import java.util.Locale
 
 
-fun List<RecordStack>.getRecordDraft(
-    isNew: Boolean,
-    recordNum: Int,
-    accountsAndActiveOne: AccountsAndActiveOne,
-    initialCategoryWithSubcategory: CategoryWithSubcategory?
-): RecordDraft {
-    return this
-        .takeUnless { isNew }
-        ?.findByRecordNum(recordNum)
-        ?.toRecordDraft(accountsAndActiveOne.accountList)
-        ?: getClearRecordDraft(
-            recordNum = recordNum,
-            account = accountsAndActiveOne.activeAccount,
-            categoryWithSubcategory = initialCategoryWithSubcategory
-        )
-}
-
-private fun getClearRecordDraft(
-    recordNum: Int,
-    account: Account?,
-    categoryWithSubcategory: CategoryWithSubcategory?
-): RecordDraft {
-    return RecordDraft(
-        general = RecordDraftGeneral(
-            isNew = true,
-            recordNum = recordNum,
-            account = account
-        ),
-        items = listOf(
-            RecordDraftItem(
-                lazyListKey = 0,
-                index = 0,
-                categoryWithSubcategory = categoryWithSubcategory
-            )
-        )
-    )
-}
-
 fun RecordStack.toRecordDraft(
-    accountList: List<Account>
+    accounts: List<Account>
 ): RecordDraft? {
     val type = this.type.toCategoryTypeOrNullIfTransfer() ?: return null
     val includeInBudgets = this.stack.firstOrNull()?.includeInBudgets ?: return null
@@ -69,7 +28,7 @@ fun RecordStack.toRecordDraft(
         general = RecordDraftGeneral(
             isNew = false,
             recordNum = this.recordNum,
-            account = accountList.findById(this.account.id),
+            account = accounts.findById(this.account.id),
             type = type,
             dateTimeState = getNewDateByRecordLongDate(this.date),
             preferences = RecordDraftPreferences(

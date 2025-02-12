@@ -1,13 +1,19 @@
 package com.ataglance.walletglance.recordCreation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryByType
+import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCategoryUseCase
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalDot
+import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteRecordUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.GetRecordDraftUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCase
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedRecord
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
@@ -18,23 +24,59 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class RecordCreationViewModel(
-    private val initialCategoryWithSubcategoryByType: CategoryWithSubcategoryByType,
-    recordDraft: RecordDraft
+    recordNum: Int?,
+    private val getRecordDraftUseCase: GetRecordDraftUseCase,
+    private val saveRecordUseCase: SaveRecordUseCase,
+    private val deleteRecordUseCase: DeleteRecordUseCase,
+    private val getLastUsedRecordCategoryUseCase: GetLastUsedRecordCategoryUseCase,
+    private val getLastRecordNumUseCase: GetLastRecordNumUseCase
 ) : ViewModel() {
 
-    private val _recordDraftGeneral: MutableStateFlow<RecordDraftGeneral> = MutableStateFlow(
-        recordDraft.general
-    )
+    init {
+        viewModelScope.launch {
+            val category = getLastUsedRecordCategoryUseCase.get(CategoryType.Expense)
+
+            defaultCategoryByType = defaultCategoryByType.putByType(
+                type = CategoryType.Expense,
+                categoryWithSubcategory = category
+            )
+
+            val recordDraft = getRecordDraftUseCase.get(
+                recordNum = recordNum, categoryWithSubcategory = category
+            )
+            _recordDraftGeneral.update { recordDraft.general }
+            _recordDraftItems.update { recordDraft.items }
+        }
+    }
+
+
+    private var defaultCategoryByType = CategoryWithSubcategoryByType()
+
+    private suspend fun getCategoryByType(type: CategoryType): CategoryWithSubcategory? {
+        return defaultCategoryByType.getByType(type = type) ?: let {
+            defaultCategoryByType = defaultCategoryByType.putByType(
+                type = type,
+                categoryWithSubcategory = getLastUsedRecordCategoryUseCase.get(type)
+            )
+            defaultCategoryByType.getByType(type = type)
+        }
+    }
+
+
+    private val _recordDraftGeneral = MutableStateFlow(RecordDraftGeneral())
     val recordDraftGeneral = _recordDraftGeneral.asStateFlow()
 
     fun selectCategoryType(type: CategoryType) {
         _recordDraftGeneral.update {
             it.copy(type = type)
         }
-        _recordDraftItems.update {
-            it.copyWithCategoryAndSubcategory(initialCategoryWithSubcategoryByType.getByType(type))
+        viewModelScope.launch {
+            _recordDraftItems.update {
+                it.copyWithCategoryAndSubcategory(getCategoryByType(type))
+            }
         }
     }
 
@@ -76,9 +118,7 @@ class RecordCreationViewModel(
     }
 
 
-    private val _recordDraftItems: MutableStateFlow<List<RecordDraftItem>> = MutableStateFlow(
-        recordDraft.items
-    )
+    private val _recordDraftItems = MutableStateFlow<List<RecordDraftItem>>(emptyList())
     val recordDraftItems = _recordDraftItems.asStateFlow()
 
     fun changeAmount(index: Int, value: String) {
@@ -185,7 +225,7 @@ class RecordCreationViewModel(
 
 
     val savingIsAllowed = combine(
-        _recordDraftGeneral, _recordDraftItems
+        recordDraftGeneral, recordDraftItems
     ) { general, items ->
         general.savingIsAllowed() && items.all { it.savingIsAllowed() }
     }.stateIn(
@@ -195,21 +235,41 @@ class RecordCreationViewModel(
     )
 
 
-    fun getRecordDraft(): RecordDraft {
+    private fun getRecordDraft(): RecordDraft {
         return RecordDraft(
             general = recordDraftGeneral.value,
             items = recordDraftItems.value
         )
     }
 
-}
 
-class RecordCreationViewModelFactory(
-    private val initialCategoryWithSubcategoryByType: CategoryWithSubcategoryByType,
-    private val recordDraft: RecordDraft
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return RecordCreationViewModel(initialCategoryWithSubcategoryByType, recordDraft) as T
+    suspend fun saveRecord() {
+        getRecordDraft().toCreatedRecord()?.let { createdRecord ->
+            saveRecordUseCase.execute(record = createdRecord)
+        }
     }
+
+    suspend fun repeatRecord() {
+        val recordNum = (getLastRecordNumUseCase.get() ?: 0) + 1
+
+        val createdRecord = getRecordDraft()
+            .run {
+                copy(
+                    general = general.copy(
+                        isNew = true,
+                        recordNum = recordNum,
+                        dateTimeState = DateTimeState()
+                    )
+                )
+            }
+            .toCreatedRecord()
+            ?: return
+
+        saveRecordUseCase.execute(record = createdRecord)
+    }
+
+    suspend fun deleteRecord() {
+        deleteRecordUseCase.execute(recordNum = recordDraftGeneral.value.recordNum)
+    }
+
 }

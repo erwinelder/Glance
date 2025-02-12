@@ -106,6 +106,14 @@ class RecordRepositoryImpl(
         localSource.getLastRecordNum().collect(::emit)
     }
 
+    override suspend fun getLastRecordsByTypeAndAccount(
+        type: Char,
+        accountId: Int
+    ): List<RecordEntity> {
+        synchroniseRecords()
+        return localSource.getLastRecordsByTypeAndAccount(type = type, accountId = accountId)
+    }
+
     override fun getRecordsForToday(): Flow<List<RecordEntity>> = flow {
         synchroniseRecords()
         localSource.getRecordsInDateRange(range = getTodayLongDateRange()).collect(::emit)

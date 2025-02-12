@@ -128,7 +128,7 @@ fun RecordsScreen(
                             includeYearToDate = includeYearToRecordDate
                         ) { recordNum ->
                             onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.RecordCreation(isNew = false, recordNum = recordNum)
+                                MainScreens.RecordCreation(recordNum = recordNum)
                             )
                         }
                     }

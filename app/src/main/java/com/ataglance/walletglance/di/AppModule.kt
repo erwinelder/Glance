@@ -71,8 +71,6 @@ val appModule = module {
             getCategoryCollectionsUseCase = get(),
 
             recordRepository = get(),
-            saveRecordUseCase = get(),
-            deleteRecordUseCase = get(),
             saveTransferUseCase = get(),
             deleteTransferUseCase = get(),
             getLastRecordNumUseCase = get(),

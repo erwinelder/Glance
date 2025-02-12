@@ -24,7 +24,6 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScr
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModelFactory
-import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
@@ -47,19 +46,19 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
+import com.ataglance.walletglance.recordCreation.mapper.getTransferDraft
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
-import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModelFactory
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModelFactory
-import com.ataglance.walletglance.recordCreation.mapper.getRecordDraft
-import com.ataglance.walletglance.recordCreation.mapper.getTransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavHost(
@@ -293,23 +292,11 @@ fun AppNavHost(
             exitTransition = { screenExitTransition(moveScreenTowardsLeft) },
             popExitTransition = { screenExitTransition(false) }
         ) { backStack ->
-            val isNew = backStack.toRoute<MainScreens.RecordCreation>().isNew
             val recordNum = backStack.toRoute<MainScreens.RecordCreation>().recordNum
 
-            val initialCategoryWithSubcategoryByType = appViewModel.getLastUsedRecordCategories()
-
-            val viewModel = viewModel<RecordCreationViewModel>(
-                factory = RecordCreationViewModelFactory(
-                    initialCategoryWithSubcategoryByType = initialCategoryWithSubcategoryByType,
-                    recordDraft = appUiState.recordStackListByDate.getRecordDraft(
-                        isNew = isNew,
-                        recordNum = recordNum,
-                        accountsAndActiveOne = appUiState.accountsAndActiveOne,
-                        initialCategoryWithSubcategory = initialCategoryWithSubcategoryByType
-                            .getByType(CategoryType.Expense)
-                    )
-                )
-            )
+            val viewModel = koinViewModel<RecordCreationViewModel> {
+                parametersOf(recordNum)
+            }
 
             val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
             val recordDraftItems by viewModel.recordDraftItems.collectAsStateWithLifecycle()
@@ -347,21 +334,21 @@ fun AppNavHost(
                 onAddDraftItemButton = viewModel::addNewDraftItem,
                 onSaveButton = {
                     coroutineScope.launch {
-                        appViewModel.saveRecord(viewModel.getRecordDraft())
+                        viewModel.saveRecord()
+                        navController.popBackStack()
                     }
-                    navController.popBackStack()
                 },
                 onRepeatButton = {
                     coroutineScope.launch {
-                        appViewModel.repeatRecord(viewModel.getRecordDraft())
+                        viewModel.repeatRecord()
+                        navController.popBackStack()
                     }
-                    navController.popBackStack()
                 },
                 onDeleteButton = {
                     coroutineScope.launch {
-                        appViewModel.deleteRecord(recordNum)
+                        viewModel.deleteRecord()
+                        navController.popBackStack()
                     }
-                    navController.popBackStack()
                 }
             )
         }

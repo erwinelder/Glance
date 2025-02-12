@@ -23,6 +23,8 @@ interface RecordRepository {
 
     fun getLastRecordNum(): Flow<Int?>
 
+    suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
+
     @Deprecated("Use getRecordsInDateRange instead")
     fun getRecordsForToday(): Flow<List<RecordEntity>>
 

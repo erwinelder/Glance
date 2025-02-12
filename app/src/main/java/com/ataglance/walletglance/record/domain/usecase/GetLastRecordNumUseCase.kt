@@ -3,5 +3,9 @@ package com.ataglance.walletglance.record.domain.usecase
 import kotlinx.coroutines.flow.Flow
 
 interface GetLastRecordNumUseCase {
-    fun execute(): Flow<Int?>
+
+    fun getAsFlow(): Flow<Int?>
+
+    suspend fun get(): Int?
+
 }

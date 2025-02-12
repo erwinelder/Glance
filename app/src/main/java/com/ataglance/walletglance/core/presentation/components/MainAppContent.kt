@@ -126,9 +126,7 @@ fun MainAppContent(
             onMakeRecordButtonClick = {
                 navViewModel.navigateToScreenMovingTowardsLeft(
                     navController = navController,
-                    screen = MainScreens.RecordCreation(
-                        isNew = true, recordNum = appConfiguration.nextRecordNum()
-                    )
+                    screen = MainScreens.RecordCreation()
                 )
             },
             bottomBarButtons = navigationButtonList

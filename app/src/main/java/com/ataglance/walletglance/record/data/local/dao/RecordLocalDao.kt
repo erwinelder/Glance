@@ -41,6 +41,34 @@ interface RecordLocalDao {
     @Query("SELECT recordNum FROM Record ORDER BY recordNum DESC LIMIT 1")
     fun getLastRecordOrderNum(): Flow<Int?>
 
+    @Query("""
+        SELECT r.*
+        FROM Record r
+        INNER JOIN (
+            SELECT recordNum
+            FROM Record
+            WHERE type = :type
+            ORDER BY date DESC
+            LIMIT 1
+        ) AS latest
+        ON r.recordNum = latest.recordNum
+    """)
+    suspend fun getLastRecordsByType(type: Char): List<RecordEntity>
+
+    @Query("""
+        SELECT r.*
+        FROM Record r
+        INNER JOIN (
+            SELECT recordNum
+            FROM Record
+            WHERE type = :type AND accountId = :accountId
+            ORDER BY date DESC
+            LIMIT 1
+        ) AS latest
+        ON r.recordNum = latest.recordNum
+    """)
+    suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
+
     @Query("SELECT * FROM Record WHERE recordNum = :recordNum")
     fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 

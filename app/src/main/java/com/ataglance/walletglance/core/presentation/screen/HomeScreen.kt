@@ -183,9 +183,7 @@ private fun CompactLayout(
                                 dateRangeWithEnum.enum == DateRangeEnum.Custom,
                                 onRecordClick = { recordNum: Int ->
                                     onNavigateToScreenMovingTowardsLeft(
-                                        MainScreens.RecordCreation(
-                                            isNew = false, recordNum = recordNum
-                                        )
+                                        MainScreens.RecordCreation(recordNum = recordNum)
                                     )
                                 },
                                 onTransferClick = { recordNum: Int ->

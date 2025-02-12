@@ -23,6 +23,8 @@ interface RecordLocalDataSource {
 
     suspend fun getLastRecordNum(): Flow<Int?>
 
+    suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
+
     suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 
     suspend fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>

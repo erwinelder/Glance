@@ -54,13 +54,9 @@ import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRan
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
 import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRecordNums
-import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteRecordUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUseCase
-import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCase
-import com.ataglance.walletglance.recordCreation.mapper.toCreatedRecord
 import com.ataglance.walletglance.recordCreation.mapper.toCreatedTransfer
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
@@ -89,8 +85,6 @@ class AppViewModel(
     private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
 
     val recordRepository: RecordRepository,
-    private val saveRecordUseCase: SaveRecordUseCase,
-    private val deleteRecordUseCase: DeleteRecordUseCase,
     private val saveTransferUseCase: SaveTransferUseCase,
     private val deleteTransferUseCase: DeleteTransferUseCase,
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
@@ -309,7 +303,7 @@ class AppViewModel(
 
     private fun fetchLastRecordNum() {
         viewModelScope.launch {
-            getLastRecordNumUseCase.execute().collect { recordNum ->
+            getLastRecordNumUseCase.getAsFlow().collect { recordNum ->
                 _lastRecordNum.update { recordNum ?: 0 }
             }
         }
@@ -508,29 +502,6 @@ class AppViewModel(
             currentBudgets = budgetsByType.value.concatenate()
         )
         fetchBudgets()
-    }
-
-
-    suspend fun saveRecord(recordDraft: RecordDraft) {
-        recordDraft.toCreatedRecord()?.let { createdRecord ->
-            saveRecordUseCase.execute(record = createdRecord)
-        }
-    }
-
-    suspend fun repeatRecord(recordDraft: RecordDraft) {
-        saveRecord(
-            recordDraft = recordDraft.copy(
-                general = recordDraft.general.copy(
-                    isNew = true,
-                    recordNum = appConfiguration.value.nextRecordNum(),
-                    dateTimeState = DateTimeState()
-                )
-            )
-        )
-    }
-
-    suspend fun deleteRecord(recordNum: Int) {
-        deleteRecordUseCase.execute(recordNum = recordNum)
     }
 
 

@@ -6,9 +6,9 @@ import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences
 
 data class RecordDraftGeneral(
-    val isNew: Boolean,
-    val recordNum: Int,
-    val account: Account?,
+    val isNew: Boolean = true,
+    val recordNum: Int = 0,
+    val account: Account? = null,
     val type: CategoryType = CategoryType.Expense,
     val dateTimeState: DateTimeState = DateTimeState(),
     val preferences: RecordDraftPreferences = RecordDraftPreferences()

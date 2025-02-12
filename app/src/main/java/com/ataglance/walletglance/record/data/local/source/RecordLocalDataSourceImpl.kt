@@ -57,6 +57,15 @@ class RecordLocalDataSourceImpl(
         return recordDao.getLastRecordOrderNum()
     }
 
+    override suspend fun getLastRecordsByTypeAndAccount(
+        type: Char,
+        accountId: Int
+    ): List<RecordEntity> {
+        return recordDao.getLastRecordsByTypeAndAccount(type = type, accountId = accountId)
+            .takeIf { it.isNotEmpty() }
+            ?: recordDao.getLastRecordsByType(type = type)
+    }
+
     override suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity> {
         return recordDao.getRecordsByRecordNum(recordNum = recordNum)
     }
