@@ -17,8 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.NotoSans
+import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
 
 @Composable

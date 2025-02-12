@@ -14,7 +14,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
-import com.ataglance.walletglance.core.presentation.Typography
+import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
 
 @Composable

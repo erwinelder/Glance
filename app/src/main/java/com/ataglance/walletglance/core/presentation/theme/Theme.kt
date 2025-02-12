@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.WindowType
-import com.ataglance.walletglance.core.presentation.Typography
 
 private val LocalColors = staticCompositionLocalOf<GlancePalette> { GlancePalette.LightDefault }
 val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
-import com.ataglance.walletglance.core.presentation.Typography
+import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.components.NavigateBackSettingsCategoryButton

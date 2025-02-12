@@ -31,7 +31,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.date.DateRangeAssets
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
