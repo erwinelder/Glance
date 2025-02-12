@@ -28,12 +28,12 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
@@ -152,9 +152,9 @@ private fun CategoryIconsGrid(
         items(items = categoryIconList, key = { it.res }) { categoryIcon ->
             val color by animateColorAsState(
                 targetValue = if (currentCategoryIcon.name == categoryIcon.name) {
-                    GlanceTheme.primary
+                    GlanceColors.primary
                 } else {
-                    GlanceTheme.onSurface
+                    GlanceColors.onSurface
                 },
                 label = "icon color"
             )

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryDangerousButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.ScreenContainer
 import kotlinx.coroutines.Job
@@ -77,7 +77,7 @@ private fun DangerousActionBlockContent(
         ) { targetMessage ->
             Text(
                 text = targetMessage,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )

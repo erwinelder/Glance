@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceTheme
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -24,7 +24,7 @@ fun PreviewContainer(
 ) {
     BoxWithConstraints {
         SharedTransitionLayout {
-            WalletGlanceTheme(
+            GlanceTheme(
                 useDeviceTheme = false,
                 lastChosenTheme = appTheme.name,
                 boxWithConstraintsScope = this@BoxWithConstraints,

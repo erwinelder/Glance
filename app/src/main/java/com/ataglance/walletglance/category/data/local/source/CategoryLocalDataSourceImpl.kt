@@ -22,7 +22,7 @@ class CategoryLocalDataSourceImpl(
     }
 
     override suspend fun upsertCategories(categories: List<CategoryEntity>, timestamp: Long) {
-        categoryDao.upsertEntities(entities = categories)
+        categoryDao.upsertCategories(categories = categories)
         saveUpdateTime(timestamp = timestamp)
     }
 
@@ -35,7 +35,7 @@ class CategoryLocalDataSourceImpl(
         categoriesToSync: EntitiesToSync<CategoryEntity>,
         timestamp: Long
     ) {
-        categoryDao.deleteAndUpsertEntities(
+        categoryDao.deleteAndUpsertCategories(
             toDelete = categoriesToSync.toDelete,
             toUpsert = categoriesToSync.toUpsert
         )

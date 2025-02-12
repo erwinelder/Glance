@@ -46,14 +46,14 @@ import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategorie
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.core.presentation.components.buttons.CloseButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -103,7 +103,7 @@ fun CategoryPicker(
             modifier = Modifier
                 .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .background(GlanceColors.surface)
                 .fillMaxWidth(
                     when {
                         WindowTypeIsCompact -> .9f
@@ -142,9 +142,9 @@ fun CategoryPicker(
                             shape = RoundedCornerShape(30),
                             colors = IconButtonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = GlanceTheme.primary.copy(.6f),
+                                contentColor = GlanceColors.primary.copy(.6f),
                                 disabledContainerColor = Color.Transparent,
-                                disabledContentColor = GlanceTheme.outline.copy(.3f)
+                                disabledContentColor = GlanceColors.outline.copy(.3f)
                             ),
                             onClick = {
                                 chosenCategoryWithSubcategories = categoryWithSubcategories
@@ -161,9 +161,9 @@ fun CategoryPicker(
                                         color = if (
                                             categoryWithSubcategories.subcategoryList.isEmpty()
                                         ) {
-                                            GlanceTheme.outline.copy(.3f)
+                                            GlanceColors.outline.copy(.3f)
                                         } else {
-                                            GlanceTheme.primary.copy(.6f)
+                                            GlanceColors.primary.copy(.6f)
                                         },
                                         shape = RoundedCornerShape(30)
                                     )
@@ -185,7 +185,7 @@ fun CategoryPicker(
             modifier = Modifier
                 .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .background(GlanceColors.surface)
                 .fillMaxWidth(
                     when {
                         WindowTypeIsCompact -> .9f

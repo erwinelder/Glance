@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.utils.takeComposableIfNotNull
 
@@ -53,8 +53,8 @@ fun GlanceTextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val textColor = GlanceTheme.onSurface
-    val containerColor = GlanceTheme.surface
+    val textColor = GlanceColors.onSurface
+    val containerColor = GlanceColors.surface
 
     var isPasswordVisible by remember {
         mutableStateOf(false.takeIf {
@@ -98,7 +98,7 @@ fun GlanceTextField(
                 focusedContainerColor = containerColor,
                 unfocusedContainerColor = containerColor,
                 disabledContainerColor = containerColor,
-                errorContainerColor = GlanceTheme.errorContainer,
+                errorContainerColor = GlanceColors.error,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
@@ -111,7 +111,7 @@ fun GlanceTextField(
                         painter = painterResource(
                             if (it) R.drawable.hide_icon else R.drawable.show_icon
                         ),
-                        tint = GlanceTheme.onSurface,
+                        tint = GlanceColors.onSurface,
                         contentDescription = if (it) "Hide password" else "Show password",
                         modifier = Modifier.size(26.dp)
                     )
@@ -125,7 +125,7 @@ fun GlanceTextField(
                         Text(
                             text = placeholderText,
                             fontSize = fontSize,
-                            color = GlanceTheme.outline,
+                            color = GlanceColors.outline,
                             fontWeight = FontWeight.Normal,
                             fontFamily = Manrope,
                             textAlign = TextAlign.Center

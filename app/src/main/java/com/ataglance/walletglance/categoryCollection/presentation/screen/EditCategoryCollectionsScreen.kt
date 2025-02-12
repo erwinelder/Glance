@@ -31,7 +31,7 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeBar
 import com.ataglance.walletglance.categoryCollection.presentation.components.EditingCategoryCollectionComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer

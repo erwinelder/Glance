@@ -26,8 +26,8 @@ import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.LocalWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
@@ -113,13 +113,13 @@ private fun GlassSurfaceContent(
                     selected = currency == uiState.selectedCurrency,
                     onClick = null,
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = GlanceTheme.primary,
-                        unselectedColor = GlanceTheme.onSurface.copy(.5f)
+                        selectedColor = GlanceColors.primary,
+                        unselectedColor = GlanceColors.outline
                     )
                 )
                 Text(
                     text = "${currency.currencyCode} - ${currency.displayName}",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 17.sp
                 )
             }

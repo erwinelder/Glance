@@ -6,7 +6,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -15,9 +15,9 @@ fun GlanceBottomSheetDialog(
     visible: Boolean,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconGradientColor: List<Color> = GlanceTheme.primaryGradientLightToDark.toList(),
+    iconGradientColor: List<Color> = GlanceColors.primaryGradient,
     title: String,
-    titleColor: Color = GlanceTheme.onBackground,
+    titleColor: Color = GlanceColors.onSurface,
     message: String,
     onDismissRequest: () -> Unit,
     bottomBlock: @Composable ((onSheetHide: () -> Unit) -> Unit)? = null

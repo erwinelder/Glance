@@ -12,9 +12,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 
 @Composable
 fun GreetingsMessage(messageRes: Int) {
@@ -27,7 +27,7 @@ fun GreetingsMessage(messageRes: Int) {
     ) {
         Text(
             text = stringResource(messageRes),
-            color = GlanceTheme.onSurface,
+            color = GlanceColors.onSurface,
             fontSize = 29.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.sp

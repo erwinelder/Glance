@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
@@ -34,16 +34,16 @@ fun SmallPrimaryButton(
     text: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    enabledGradientColor: Pair<Color, Color> = GlanceTheme.primaryGradientLightToDark,
+    enabledGradient: Pair<Color, Color> = GlanceColors.primaryGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
     val lighterGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradientColor.first else GlanceTheme.disabledGradientLightToDark.first,
+        targetValue = if (enabled) enabledGradient.first else GlanceColors.disabledGradientPair.first,
         label = "small primary button gradient lighter color"
     )
     val darkerGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradientColor.second else GlanceTheme.disabledGradientLightToDark.second,
+        targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second,
         label = "small primary button gradient darker color"
     )
 
@@ -57,9 +57,9 @@ fun SmallPrimaryButton(
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceTheme.onPrimary,
+                contentColor = GlanceColors.onPrimary,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = GlanceTheme.onPrimary
+                disabledContentColor = GlanceColors.onPrimary
             ),
             contentPadding = PaddingValues(vertical = 15.dp, horizontal = 30.dp),
             modifier = modifier

@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 
@@ -54,7 +54,7 @@ fun CategoryStatisticsItemComponent(
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_left_icon),
                         contentDescription = "go back to all categories",
-                        tint = GlanceTheme.onSurface,
+                        tint = GlanceColors.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -63,7 +63,7 @@ fun CategoryStatisticsItemComponent(
                 }
                 Text(
                     text = uiState?.category?.name ?: "---",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 19.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -73,7 +73,7 @@ fun CategoryStatisticsItemComponent(
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_right_icon),
                         contentDescription = "go to ${uiState.category.name} subcategories",
-                        tint = GlanceTheme.onSurface,
+                        tint = GlanceColors.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -91,7 +91,7 @@ fun CategoryStatisticsItemComponent(
                     ) {
                         Text(
                             text = uiState?.totalAmount ?: "---",
-                            color = GlanceTheme.onSurface,
+                            color = GlanceColors.onSurface,
                             fontSize = 18.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -99,13 +99,13 @@ fun CategoryStatisticsItemComponent(
                         )
                         Text(
                             text = uiState?.currency ?: "",
-                            color = GlanceTheme.onSurface.copy(.6f),
+                            color = GlanceColors.onSurface.copy(.6f),
                             fontSize = 17.sp
                         )
                     }
                     Text(
                         text = uiState?.percentageFormatted ?: "---",
-                        color = GlanceTheme.onSurface,
+                        color = GlanceColors.onSurface,
                         fontSize = 18.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

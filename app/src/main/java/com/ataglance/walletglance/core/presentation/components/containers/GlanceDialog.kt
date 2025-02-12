@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
 
@@ -50,7 +50,7 @@ fun GlanceDialog(
                 .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
                 .fillMaxWidth(.9f)
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .background(GlanceColors.surface)
         ) {
             content()
         }

@@ -6,11 +6,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
 fun TertiaryButton(
@@ -22,7 +24,7 @@ fun TertiaryButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = GlanceTheme.primary
+            contentColor = GlanceColors.primary
         )
     ) {
         Text(
@@ -35,8 +37,10 @@ fun TertiaryButton(
 }
 
 
-@Preview(showSystemUi = true)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun PreviewTertiaryButton() {
-    TertiaryButton(onClick = {}, text = "Apply")
+    PreviewContainer {
+        TertiaryButton(onClick = {}, text = "Apply")
+    }
 }

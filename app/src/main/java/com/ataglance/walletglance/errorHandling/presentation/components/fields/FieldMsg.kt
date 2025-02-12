@@ -8,9 +8,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidationUiState
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidationUiState
 
 @Composable
 fun FieldMsg(
@@ -19,14 +19,11 @@ fun FieldMsg(
 ) {
     val context = LocalContext.current
 
-    AnimatedContent(
-        targetState = state,
-        label = "field message"
-    ) { targetState ->
+    AnimatedContent(targetState = state) { targetState ->
         Text(
             text = "* " + context.getString(targetState.messageRes),
             fontSize = fontSize,
-            color = if (targetState.isValid) GlanceTheme.success else GlanceTheme.error,
+            color = if (targetState.isValid) GlanceColors.success else GlanceColors.error,
             fontWeight = FontWeight.Normal,
             fontFamily = Manrope,
             textAlign = TextAlign.Center

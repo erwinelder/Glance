@@ -41,7 +41,7 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScr
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartColumnUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
@@ -74,7 +74,7 @@ fun GlanceColumnChart(
             title?.let {
                 Text(
                     text = it,
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -94,7 +94,7 @@ fun GlanceColumnChart(
                         DashedLinesColumn(uiState.rowsNames.size)
                         ChartColumns(
                             columns = uiState.columns,
-                            columnsColor = columnsColor ?: GlanceTheme.primary,
+                            columnsColor = columnsColor ?: GlanceColors.primary,
                             columnPopupDetailsContent = columnPopupDetailsContent
                         )
                     }
@@ -104,7 +104,7 @@ fun GlanceColumnChart(
             bottomNote?.let {
                 Text(
                     text = it,
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
                 )
@@ -125,7 +125,7 @@ private fun LinesNamesColumn(linesNames: List<String>, graphHeight: Dp) {
         linesNames.forEach { name ->
             Text(
                 text = name,
-                color = GlanceTheme.onSurface.copy(.5f),
+                color = GlanceColors.onSurface.copy(.5f),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -142,7 +142,7 @@ private fun ColumnsNamesRow(columnsNames: List<String>) {
         columnsNames.forEach { name ->
             Text(
                 text = name,
-                color = GlanceTheme.onSurface.copy(.5f),
+                color = GlanceColors.onSurface.copy(.5f),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center,
@@ -157,7 +157,7 @@ private fun ColumnsNamesRow(columnsNames: List<String>) {
 @Composable
 private fun DashedLinesColumn(linesCount: Int) {
     val dashedPathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
-    val dashedLineColor = GlanceTheme.outline.copy(.35f)
+    val dashedLineColor = GlanceColors.outline.copy(.35f)
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -283,7 +283,7 @@ private fun ChartColumnPopupDetails(
                         .padding(horizontal = 8.dp, vertical = 16.dp)
                         .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(GlanceTheme.surface)
+                        .background(GlanceColors.surface)
                         .padding(16.dp)
                 ) {
                     content()

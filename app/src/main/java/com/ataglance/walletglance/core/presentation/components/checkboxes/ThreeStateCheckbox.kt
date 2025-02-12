@@ -25,16 +25,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.mapper.toEditingCategoriesWithSubcategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
@@ -49,12 +49,12 @@ fun ThreeStateCheckbox(
         else -> R.drawable.partly_checked_icon
     }
     val checkboxBackground by animateColorAsState(
-        targetValue = GlanceTheme.primary.copy(if (state == false) 0f else 1f),
+        targetValue = GlanceColors.primary.copy(if (state == false) 0f else 1f),
         label = "three state checkbox background color",
         animationSpec = tween(150, 0)
     )
     val checkboxBorderColor by animateColorAsState(
-        targetValue = GlanceTheme.outline.copy(if (state == false) 1f else 0f),
+        targetValue = GlanceColors.outline.copy(if (state == false) 1f else 0f),
         label = "three state checkbox border color",
         animationSpec = tween(150, 0)
     )
@@ -85,7 +85,7 @@ fun ThreeStateCheckbox(
                 Icon(
                     painter = painterResource(targetIconRes),
                     contentDescription = "",
-                    tint = GlanceTheme.background,
+                    tint = GlanceColors.background,
                     modifier = Modifier.padding(4.dp)
                 )
             }

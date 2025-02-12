@@ -22,12 +22,12 @@ class BudgetOnWidgetLocalDataSourceImpl(
     }
 
     override suspend fun upsertBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>, timestamp: Long) {
-        budgetOnWidgetDao.upsertEntities(entities = budgets)
+        budgetOnWidgetDao.upsertBudgets(budgets = budgets)
         saveUpdateTime(timestamp = timestamp)
     }
 
     override suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>, timestamp: Long) {
-        budgetOnWidgetDao.deleteEntities(entities = budgets)
+        budgetOnWidgetDao.deleteBudgets(budgets = budgets)
         saveUpdateTime(timestamp = timestamp)
     }
 
@@ -35,7 +35,7 @@ class BudgetOnWidgetLocalDataSourceImpl(
         budgetsToSync: EntitiesToSync<BudgetOnWidgetEntity>,
         timestamp: Long
     ) {
-        budgetOnWidgetDao.deleteAndUpsertEntities(
+        budgetOnWidgetDao.deleteAndUpsertBudgets(
             toDelete = budgetsToSync.toDelete,
             toUpsert = budgetsToSync.toUpsert
         )

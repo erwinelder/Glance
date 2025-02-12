@@ -23,12 +23,12 @@ class RecordLocalDataSourceImpl(
     }
 
     override suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long) {
-        recordDao.upsertEntities(entities = records)
+        recordDao.upsertRecords(records = records)
         saveUpdateTime(timestamp = timestamp)
     }
 
     override suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long) {
-        recordDao.deleteEntities(entities = records)
+        recordDao.deleteRecords(records = records)
         saveUpdateTime(timestamp = timestamp)
     }
 
@@ -41,7 +41,7 @@ class RecordLocalDataSourceImpl(
         recordsToSync: EntitiesToSync<RecordEntity>,
         timestamp: Long
     ) {
-        recordDao.deleteAndUpsertEntities(
+        recordDao.deleteAndUpsertRecords(
             toDelete = recordsToSync.toDelete,
             toUpsert = recordsToSync.toUpsert
         )

@@ -27,7 +27,7 @@ class NavigationButtonLocalDataSourceImpl(
         buttons: List<NavigationButtonEntity>,
         timestamp: Long
     ) {
-        navigationButtonDao.upsertEntities(entities = buttons)
+        navigationButtonDao.upsertButtons(buttons = buttons)
         saveUpdateTime(timestamp = timestamp)
     }
 
@@ -35,7 +35,7 @@ class NavigationButtonLocalDataSourceImpl(
         buttonsToSync: EntitiesToSync<NavigationButtonEntity>,
         timestamp: Long
     ) {
-        navigationButtonDao.deleteAndUpsertEntities(
+        navigationButtonDao.deleteAndUpsertButtons(
             toDelete = buttonsToSync.toDelete,
             toUpsert = buttonsToSync.toUpsert
         )

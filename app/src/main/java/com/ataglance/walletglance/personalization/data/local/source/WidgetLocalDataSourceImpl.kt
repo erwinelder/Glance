@@ -22,7 +22,7 @@ class WidgetLocalDataSourceImpl(
     }
 
     override suspend fun upsertWidgets(widgets: List<WidgetEntity>, timestamp: Long) {
-        widgetDao.upsertEntities(entities = widgets)
+        widgetDao.upsertWidgets(widgets = widgets)
         saveUpdateTime(timestamp = timestamp)
     }
 
@@ -35,7 +35,7 @@ class WidgetLocalDataSourceImpl(
         widgetsToSync: EntitiesToSync<WidgetEntity>,
         timestamp: Long
     ) {
-        widgetDao.deleteAndUpsertEntities(
+        widgetDao.deleteAndUpsertWidgets(
             toDelete = widgetsToSync.toDelete,
             toUpsert = widgetsToSync.toUpsert
         )

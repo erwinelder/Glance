@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
@@ -62,13 +62,13 @@ fun SettingsHomeScreen(
         ) {
             Text(
                 text = stringResource(R.string.settings),
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 30.sp,
                 fontFamily = Manrope
             )
             Text(
                 text = stringResource(R.string.version) + " 4.0",
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
                 fontFamily = Manrope

@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.core.presentation.components
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
@@ -14,11 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WalletGlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.other.AppBackground
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -32,14 +32,14 @@ fun GlanceAppComponent(
     appViewModel: AppViewModel,
     personalizationViewModel: PersonalizationViewModel
 ) {
-    val context = LocalContext.current as ComponentActivity
+    val context = LocalActivity.current as ComponentActivity
     val appConfiguration by appViewModel.appConfiguration.collectAsStateWithLifecycle()
     val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
         SharedTransitionLayout {
             themeUiState?.let { safeThemeUiState ->
-                WalletGlanceTheme(
+                GlanceTheme(
                     context = context,
                     useDeviceTheme = safeThemeUiState.useDeviceTheme,
                     chosenLightTheme = safeThemeUiState.chosenLightTheme,
@@ -52,7 +52,7 @@ fun GlanceAppComponent(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(GlanceTheme.background)
+                            .background(GlanceColors.background)
                     ) {
                         AppBackground(appTheme = appConfiguration.appTheme)
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {

@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
@@ -44,7 +44,7 @@ fun DeleteAccountScreen(
                 PrimaryButton(
                     text = stringResource(R.string.delete_account),
                     enabled = deletionIsAllowed,
-                    enabledGradientColor = GlanceTheme.errorGradientLightToDark,
+                    enabledGradient = GlanceColors.errorGradientPair,
                     onClick = onDeleteAccount
                 )
             }

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun SmallPrimaryDangerousButton(
@@ -18,7 +18,7 @@ fun SmallPrimaryDangerousButton(
         text = text,
         modifier = modifier,
         enabled = enabled,
-        enabledGradientColor = GlanceTheme.errorGradientLightToDark,
+        enabledGradient = GlanceColors.errorGradientPair,
         fontSize = fontSize,
         onClick = onClick
     )

@@ -17,14 +17,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun IconWithBackground(
     @DrawableRes iconRes: Int,
     backgroundGradient: List<Color>,
     iconDescription: String,
-    iconTint: Color = GlanceTheme.background,
+    iconTint: Color = GlanceColors.background,
     iconSize: Dp = 100.dp
 ) {
     Box(

@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun TwoStateCheckbox(
@@ -36,14 +36,14 @@ fun TwoStateCheckbox(
         false -> null
     }
     val background by animateColorAsState(
-        targetValue = GlanceTheme.primary.copy(
+        targetValue = GlanceColors.primary.copy(
             if (checked && enabled) 1f else if (checked && !enabled) .5f else 0f
         ),
         label = "two state checkbox background color",
         animationSpec = tween(150, 0)
     )
     val borderColor by animateColorAsState(
-        targetValue = GlanceTheme.outline.copy(
+        targetValue = GlanceColors.outline.copy(
             if (checked) 0f else if (enabled) 1f else .3f
         ),
         label = "two state checkbox border color",
@@ -76,7 +76,7 @@ fun TwoStateCheckbox(
                 Icon(
                     painter = painterResource(targetIconRes),
                     contentDescription = "",
-                    tint = GlanceTheme.background,
+                    tint = GlanceColors.background,
                     modifier = Modifier.padding(4.dp)
                 )
             }

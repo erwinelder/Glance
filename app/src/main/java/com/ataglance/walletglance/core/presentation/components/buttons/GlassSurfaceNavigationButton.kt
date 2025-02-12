@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
@@ -50,7 +50,7 @@ fun GlassSurfaceNavigationButton(
                 Icon(
                     painter = painterResource(R.drawable.short_arrow_left_icon),
                     contentDescription = "left arrow icon",
-                    tint = GlanceTheme.onSurface,
+                    tint = GlanceColors.onSurface,
                     modifier = Modifier.size(26.dp)
                 )
             }
@@ -61,7 +61,7 @@ fun GlassSurfaceNavigationButton(
             )
             Text(
                 text = text,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 21.sp,
                 fontFamily = Manrope,
                 textAlign = TextAlign.Start,
@@ -73,7 +73,7 @@ fun GlassSurfaceNavigationButton(
                 Icon(
                     painter = painterResource(rightIconRes),
                     contentDescription = "right arrow icon",
-                    tint = GlanceTheme.onSurface,
+                    tint = GlanceColors.onSurface,
                     modifier = Modifier.size(26.dp)
                 )
             }

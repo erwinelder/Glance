@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.RecordAccount
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -42,13 +42,13 @@ fun TransferComponent(
                     context = LocalContext.current,
                     includeYear = includeYearToDate
                 ),
-                color = GlanceTheme.outline,
+                color = GlanceColors.outline,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light
             )
             Text(
                 text = stringResource(R.string.transfer),
-                color = GlanceTheme.primary,
+                color = GlanceColors.primary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light
             )
@@ -62,7 +62,7 @@ fun TransferComponent(
                     if (recordStack.isOutTransfer()) R.string.to_account_meaning
                     else R.string.from_account_meaning
                 ),
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light
             )
@@ -83,7 +83,7 @@ fun TransferComponent(
         }
         Text(
             text = recordStack.getFormattedAmountWithSpaces(),
-            color = GlanceTheme.onSurface,
+            color = GlanceColors.onSurface,
             fontSize = 20.sp,
             fontWeight = FontWeight.Light
         )

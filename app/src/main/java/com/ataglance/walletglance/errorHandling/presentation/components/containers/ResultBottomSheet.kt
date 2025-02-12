@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
@@ -32,14 +32,14 @@ fun ResultBottomSheet(
     val coroutineScope = rememberCoroutineScope()
 
     val titleColor = if (resultState?.isSuccessful == true) {
-        GlanceTheme.success
+        GlanceColors.success
     } else {
-        GlanceTheme.error
+        GlanceColors.error
     }
     val iconGradientColor = if (resultState?.isSuccessful == true) {
-        GlanceTheme.successGradient
+        GlanceColors.successGradient
     } else {
-        GlanceTheme.errorGradient
+        GlanceColors.errorGradient
     }
 
     GlanceBottomSheet(

@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.LocalWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
 
@@ -39,14 +39,14 @@ fun GlassSurface(
             .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceTheme.glassSurfaceGradient,
+                    colors = GlanceColors.glassGradient,
                     start = Offset(0f, 1400f),
                     end = Offset(600f, 0f)
                 )
             )
             .innerShadow(
                 shape = RoundedCornerShape(cornerSize),
-                color = GlanceTheme.glassSurfaceLightAndDarkShadow.first,
+                color = GlanceColors.glassSurfaceShadow.first,
                 offsetX = -(5).dp,
                 offsetY = 5.dp,
                 blur = 13.dp,
@@ -54,7 +54,7 @@ fun GlassSurface(
             )
             .innerShadow(
                 shape = RoundedCornerShape(cornerSize),
-                color = GlanceTheme.glassSurfaceLightAndDarkShadow.second,
+                color = GlanceColors.glassSurfaceShadow.second,
                 offsetX = 5.dp,
                 offsetY = -(5).dp,
                 blur = 13.dp,
@@ -62,7 +62,7 @@ fun GlassSurface(
             )
             .border(
                 width = 2.dp,
-                color = GlanceTheme.glassSurfaceBorder,
+                color = GlanceColors.glassBorder,
                 shape = RoundedCornerShape(cornerSize)
             )
             .padding(2.dp)

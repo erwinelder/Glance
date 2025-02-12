@@ -36,8 +36,8 @@ data class CategoryStatisticsLists(
             recordStackList.forEach { recordStack ->
                 if (recordStack.isOfType(type)) {
                     recordStack.stack.forEach { stackUnit ->
-                        categoryStatsMap.increaseTotalAmountOrAddNewOne(stackUnit)
-                        subcategoriesStatsMap.increaseTotalAmountOrAddNewOne(stackUnit)
+                        categoryStatsMap.increaseTotalAmountOrAddNewOneToCategory(stackUnit)
+                        subcategoriesStatsMap.increaseTotalAmountOrAddNewOneToSubcategory(stackUnit)
                     }
                 }
             }
@@ -54,7 +54,7 @@ data class CategoryStatisticsLists(
                 }
         }
 
-        private fun MutableMap<Int, CategoriesStatsMapItem>.increaseTotalAmountOrAddNewOne(
+        private fun MutableMap<Int, CategoriesStatsMapItem>.increaseTotalAmountOrAddNewOneToCategory(
             stackUnit: RecordStackItem
         ) {
             stackUnit.categoryWithSubcategory ?: return
@@ -70,9 +70,9 @@ data class CategoryStatisticsLists(
             }
         }
 
-        private fun MutableMap<Int, MutableMap<Int, CategoriesStatsMapItem>>.increaseTotalAmountOrAddNewOne(
-            stackUnit: RecordStackItem
-        ) {
+        private fun MutableMap<Int, MutableMap<Int, CategoriesStatsMapItem>>
+                .increaseTotalAmountOrAddNewOneToSubcategory(stackUnit: RecordStackItem)
+        {
             stackUnit.categoryWithSubcategory?.subcategory ?: return
             val category = stackUnit.categoryWithSubcategory.category
             val subcategory = stackUnit.categoryWithSubcategory.subcategory

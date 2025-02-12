@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun GlanceLineChart(
@@ -36,7 +36,7 @@ fun GlanceLineChart(
         Spacer(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
-                .background(GlanceTheme.glassGradientLightToDark.first)
+                .background(GlanceColors.glassButtonGradientPair.first)
                 .fillMaxWidth()
                 .fillMaxHeight()
         )

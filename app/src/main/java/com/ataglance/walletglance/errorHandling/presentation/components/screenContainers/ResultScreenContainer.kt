@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.ScreenContainer
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessMessageWithIcon
@@ -17,7 +17,7 @@ fun ResultScreenContainer(
     message: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconBackgroundGradient: List<Color> = GlanceTheme.primaryGradientLightToDark.toList(),
+    iconBackgroundGradient: List<Color> = GlanceColors.primaryGradient,
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {

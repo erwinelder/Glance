@@ -42,8 +42,8 @@ import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
 import com.ataglance.walletglance.account.mapper.toEditAccountUiState
 import com.ataglance.walletglance.account.presentation.model.EditAccountUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
@@ -197,19 +197,19 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
         ) {
             Text(
                 text = currency,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .bounceClickEffect(onClick = onNavigateToCurrencyPickerWindow)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(GlanceTheme.surface)
+                    .background(GlanceColors.surface)
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             )
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "Right arrow icon",
-                tint = GlanceTheme.onSurface,
+                tint = GlanceColors.onSurface,
                 modifier = Modifier.size(20.dp)
             )
         }

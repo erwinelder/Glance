@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 
 @Composable
 fun DimmedBackgroundOverlay(visible: Boolean) {

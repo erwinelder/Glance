@@ -22,7 +22,7 @@ class AccountLocalDataSourceImpl(
     }
 
     override suspend fun upsertAccounts(accounts: List<AccountEntity>, timestamp: Long) {
-        accountDao.upsertEntities(entities = accounts)
+        accountDao.upsertAccounts(accounts = accounts)
         saveUpdateTime(timestamp = timestamp)
     }
 
@@ -35,7 +35,7 @@ class AccountLocalDataSourceImpl(
         accountsToSync: EntitiesToSync<AccountEntity>,
         timestamp: Long
     ) {
-        accountDao.deleteAndUpsertEntities(
+        accountDao.deleteAndUpsertAccounts(
             toDelete = accountsToSync.toDelete,
             toUpsert = accountsToSync.toUpsert
         )

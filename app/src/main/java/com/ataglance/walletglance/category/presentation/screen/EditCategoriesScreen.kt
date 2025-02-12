@@ -32,7 +32,7 @@ import com.ataglance.walletglance.category.presentation.components.EditingParent
 import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton

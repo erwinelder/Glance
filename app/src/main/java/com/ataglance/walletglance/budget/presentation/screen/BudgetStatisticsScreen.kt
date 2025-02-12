@@ -29,8 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
@@ -40,8 +40,8 @@ import com.ataglance.walletglance.category.presentation.components.CategoryBigIc
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
@@ -87,7 +87,7 @@ fun BudgetStatisticsScreen(
                     }
                     Text(
                         text = budget.name,
-                        color = GlanceTheme.onSurface,
+                        color = GlanceColors.onSurface,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
@@ -97,7 +97,7 @@ fun BudgetStatisticsScreen(
                             R.string.amount_currency_spending_limit,
                             budget.amountLimit.formatWithSpaces(), budget.currency
                         ),
-                        color = GlanceTheme.onSurface,
+                        color = GlanceColors.onSurface,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
@@ -134,11 +134,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
         derivedStateOf { (3.6 * usedPercentage).toFloat() }
     }
     val pieChartBrush = if (usedPercentage < 50.0) {
-        GlanceTheme.greenGradient.let { listOf(it.second, it.first) }
+        GlanceColors.pieChartGreenGradient.reversed()
     } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
-        GlanceTheme.yellowGradient.let { listOf(it.second, it.first) }
+        GlanceColors.pieChartYellowGradient.reversed()
     } else {
-        GlanceTheme.redGradient.let { listOf(it.second, it.first) }
+        GlanceColors.pieChartRedGradient.reversed()
     }
 
     Column(
@@ -159,7 +159,7 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
                 )
                 Text(
                     text = "${usedPercentage.toInt()}%",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -169,11 +169,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
             ) {
                 Text(
                     text = stringResource(R.string.of_limit_used),
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                 )
                 Text(
                     text = "(${totalAmount.formatWithSpaces(budget.currency)})",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 18.sp,
                 )
             }

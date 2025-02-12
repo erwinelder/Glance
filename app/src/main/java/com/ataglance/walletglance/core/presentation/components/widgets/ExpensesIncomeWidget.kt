@@ -23,16 +23,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import java.util.Locale
 
 @Composable
@@ -44,13 +44,11 @@ fun ExpensesIncomeWidget(
     val period = dateRangeWithEnum.getEnumStringRepr(LocalContext.current)
     val expensesPercentage by animateFloatAsState(
         targetValue = uiState.expensesPercentageFloat,
-        animationSpec = tween(500),
-        label = "expenses visualizer width"
+        animationSpec = tween(500)
     )
     val incomePercentage by animateFloatAsState(
         targetValue = uiState.incomePercentageFloat,
-        animationSpec = tween(500),
-        label = "income visualizer width"
+        animationSpec = tween(500)
     )
 
     WidgetComponent(
@@ -62,10 +60,10 @@ fun ExpensesIncomeWidget(
                 .fillMaxWidth()
                 .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
         ) {
-            AnimatedContent(targetState = period, label = "period") { targetPeriod ->
+            AnimatedContent(targetState = period) { targetPeriod ->
                 Text(
                     text = targetPeriod,
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 24.sp,
                     lineHeight = 30.sp,
                     fontWeight = FontWeight.Light,
@@ -75,12 +73,11 @@ fun ExpensesIncomeWidget(
             Spacer(modifier = Modifier.height(4.dp))
             AnimatedContent(
                 targetState = stringResource(R.string.total) +
-                        " ${uiState.getTotalFormatted()} $accountCurrency",
-                label = "total expenses and income for period"
+                        " ${uiState.getTotalFormatted()} $accountCurrency"
             ) { targetTotalExpensesAndIncome ->
                 Text(
                     text = targetTotalExpensesAndIncome,
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -91,7 +88,7 @@ fun ExpensesIncomeWidget(
                 percentage = uiState.incomePercentage,
                 percentageFloat = incomePercentage,
                 totalStringRow = "+ ${uiState.getIncomeTotalFormatted()} $accountCurrency",
-                gradientColorsPair = GlanceTheme.greenGradientPaleToSaturated
+                gradientColorsPair = GlanceColors.lineChartGreenGradientPair
             )
             Spacer(modifier = Modifier.height(16.dp))
             StatisticBlock(
@@ -99,7 +96,7 @@ fun ExpensesIncomeWidget(
                 percentage = uiState.expensesPercentage,
                 percentageFloat = expensesPercentage,
                 totalStringRow = "- ${uiState.getExpensesTotalFormatted()} $accountCurrency",
-                gradientColorsPair = GlanceTheme.redGradientPaleToSaturated
+                gradientColorsPair = GlanceColors.lineChartRedGradientPair
             )
         }
     }
@@ -118,24 +115,20 @@ private fun StatisticBlock(
         modifier = Modifier.fillMaxWidth()
     ) {
         AnimatedContent(
-            targetState = "${stringResource(titleRes)} ${"%.2f".format(Locale.US, percentage)}%",
-            label = "expenses or income percent for a period"
+            targetState = "${stringResource(titleRes)} ${"%.2f".format(Locale.US, percentage)}%"
         ) { targetContent ->
             Text(
                 text = targetContent,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Light
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
-        AnimatedContent(
-            targetState = totalStringRow,
-            label = "total expenses or income for a period"
-        ) { targetContent ->
+        AnimatedContent(targetState = totalStringRow) { targetContent ->
             Text(
                 text = targetContent,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Light
             )

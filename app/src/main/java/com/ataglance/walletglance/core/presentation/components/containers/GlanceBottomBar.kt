@@ -49,13 +49,14 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
+import com.ataglance.walletglance.core.presentation.components.buttons.GlanceFloatingButton
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -205,13 +206,13 @@ private fun BottomBarButtonsRow(
             .shadow(
                 elevation = 16.dp,
                 shape = RoundedCornerShape(26.dp),
-                ambientColor = GlanceTheme.onSurface
+                ambientColor = GlanceColors.onSurface
             )
             .clip(RoundedCornerShape(26.dp))
-            .background(GlanceTheme.surface)
+            .background(GlanceColors.surface)
             .border(
                 width = 1.dp,
-                color = GlanceTheme.onSurface.copy(alpha = .05f),
+                color = GlanceColors.onSurface.copy(.05f),
                 shape = RoundedCornerShape(26.dp)
             )
             .padding(vertical = 16.dp, horizontal = 4.dp)
@@ -275,7 +276,7 @@ private fun PopupButtonsList(
                         .padding(horizontal = 16.dp, vertical = 16.dp)
                         .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(GlanceTheme.surface)
+                        .background(GlanceColors.surface)
                         .padding(horizontal = 20.dp, vertical = 16.dp)
                 ) {
                     barButtons.forEach { button ->
@@ -335,14 +336,12 @@ private fun ListBarButton(
         derivedStateOf { anyScreenInHierarchyIsScreenProvider(button.screen) }
     }
     val textColor by animateColorAsState(
-        targetValue = if (isActive) GlanceTheme.primary else GlanceTheme.onSurface,
-        label = "list bar button text color"
+        targetValue = if (isActive) GlanceColors.primary else GlanceColors.onSurface
     )
 
     AnimatedContent(
         targetState = if (isActive) button.activeIconRes else button.inactiveIconRes,
-        transitionSpec = { fadeIn() togetherWith fadeOut() },
-        label = "bottom bar ${button.screen} icon"
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
     ) { buttonIconRes ->
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),

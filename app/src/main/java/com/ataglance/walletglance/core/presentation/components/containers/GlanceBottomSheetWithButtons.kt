@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryTextButton
 import com.ataglance.walletglance.core.presentation.components.dividers.BottomSheetHandle
 
@@ -24,8 +24,8 @@ fun GlanceBottomSheetWithButtons(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     onSaveButtonClick: () -> Unit,
-    backgroundColor: Color = GlanceTheme.background,
-    contentColor: Color = GlanceTheme.onBackground,
+    backgroundColor: Color = GlanceColors.background,
+    contentColor: Color = GlanceColors.onSurface,
     content: @Composable ColumnScope.() -> Unit
 ) {
     GlanceBottomSheet(

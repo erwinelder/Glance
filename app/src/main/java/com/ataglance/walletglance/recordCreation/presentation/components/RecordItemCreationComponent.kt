@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.components.CategoryField
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
@@ -97,7 +97,7 @@ private fun RecordItemCreationComponentCollapsed(
         if (recordDraftItem.note.isNotBlank()) {
             Text(
                 text = recordDraftItem.note,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light,
                 fontStyle = FontStyle.Italic,
@@ -116,20 +116,20 @@ private fun RecordItemCreationComponentCollapsed(
                 Text(
                     text = "${recordDraftItem.quantity} x",
                     fontSize = 18.sp,
-                    color = GlanceTheme.onSurface.copy(.6f),
+                    color = GlanceColors.onSurface.copy(.6f),
                     modifier = Modifier.padding(bottom = 2.dp)
                 )
             }
             Text(
                 text = recordDraftItem.getFormattedAmountOrPlaceholder(),
                 fontSize = 22.sp,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
             )
             accountCurrency?.let {
                 Text(
                     text = it,
                     fontSize = 18.sp,
-                    color = GlanceTheme.onSurface.copy(.6f),
+                    color = GlanceColors.onSurface.copy(.6f),
                     modifier = Modifier.padding(bottom = 2.dp)
                 )
             }

@@ -1,13 +1,27 @@
 package com.ataglance.walletglance.record.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
-import com.ataglance.walletglance.core.data.local.dao.BaseLocalDao
+import androidx.room.Transaction
+import androidx.room.Upsert
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface RecordLocalDao : BaseLocalDao<RecordEntity> {
+interface RecordLocalDao {
+
+    @Upsert
+    suspend fun upsertRecords(records: List<RecordEntity>)
+
+    @Delete
+    suspend fun deleteRecords(records: List<RecordEntity>)
+
+    @Transaction
+    suspend fun deleteAndUpsertRecords(toDelete: List<RecordEntity>, toUpsert: List<RecordEntity>) {
+        deleteRecords(toDelete)
+        upsertRecords(toUpsert)
+    }
 
     @Query("DELETE FROM Record")
     suspend fun deleteAllRecords()

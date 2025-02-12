@@ -19,7 +19,7 @@ class UserContext {
     }
 
 
-    var subscription = AppSubscription.Free
+    private var subscription = AppSubscription.Free
 
     fun getSubscription(): AppSubscription {
         return subscription

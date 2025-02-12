@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.NotoSans
 import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
@@ -24,11 +24,11 @@ import com.ataglance.walletglance.core.presentation.components.other.IconWithBac
 @Composable
 fun GlanceBottomSheetContentDialog(
     title: String,
-    titleColor: Color = GlanceTheme.onBackground,
+    titleColor: Color = GlanceColors.onSurface,
     message: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconGradientColor: List<Color> = GlanceTheme.primaryGradientLightToDark.toList(),
+    iconGradientColor: List<Color> = GlanceColors.primaryGradient,
     bottomBlock: @Composable (() -> Unit)? = null
 ) {
     Column(
@@ -60,7 +60,7 @@ fun GlanceBottomSheetContentDialog(
             Text(
                 text = message,
                 fontSize = 20.sp,
-                color = GlanceTheme.onBackground,
+                color = GlanceColors.onSurface,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 fontFamily = Manrope,

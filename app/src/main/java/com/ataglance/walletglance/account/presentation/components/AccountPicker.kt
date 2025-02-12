@@ -17,9 +17,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceDialog
 
 @Composable
@@ -41,7 +41,7 @@ fun AccountPicker(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .background(GlanceColors.surface)
                 .fillMaxWidth(
                     when {
                         WindowTypeIsCompact -> 1f

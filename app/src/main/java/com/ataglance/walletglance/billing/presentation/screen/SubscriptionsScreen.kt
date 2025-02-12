@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.components.buttons.TertiaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
@@ -86,14 +86,14 @@ fun SubscriptionComponent(
         GlassSurfaceContentColumnWrapper {
             Text(
                 text = uiState.name,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontFamily = Manrope,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W600
             )
             Text(
                 text = uiState.price,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontFamily = Manrope,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W600

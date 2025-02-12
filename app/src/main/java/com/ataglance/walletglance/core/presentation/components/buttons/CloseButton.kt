@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
@@ -31,14 +31,14 @@ fun CloseButton(
         Icon(
             painter = painterResource(R.drawable.close_icon),
             contentDescription = "close icon",
-            tint = GlanceTheme.outline,
+            tint = GlanceColors.outline,
             modifier = Modifier
                 .size(22.dp)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
             text = text,
-            color = GlanceTheme.outline,
+            color = GlanceColors.outline,
             fontSize = 22.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = Manrope

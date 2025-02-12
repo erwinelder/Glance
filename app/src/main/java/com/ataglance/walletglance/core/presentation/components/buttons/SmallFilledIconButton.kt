@@ -11,15 +11,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun SmallFilledIconButton(
     iconRes: Int,
     iconContendDescription: String,
-    containerColor: Color = GlanceTheme.surface,
-    contentColor: Color = GlanceTheme.onSurface,
+    containerColor: Color = GlanceColors.surface,
+    contentColor: Color = GlanceColors.onSurface,
     size: Dp = 24.dp,
     enabled: Boolean = true,
     onClick: () -> Unit = {}

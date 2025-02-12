@@ -30,13 +30,13 @@ import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.date.DateRangeAssets
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.utils.formatDateRangeForCustomDateRangeField
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.utils.formatDateRangeForCustomDateRangeField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,21 +68,7 @@ fun BoxScope.GlanceDateRangeAssetsPicker(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                    .background(GlanceTheme.background)
-                    /*.innerShadow(
-                        shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)),
-                        color = GlanceTheme.onSurface.copy(.25f),
-                        offsetX = 10.dp,
-                        offsetY = -(10).dp,
-                        blur = 20.dp
-                    )
-                    .innerShadow(
-                        shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)),
-                        color = GlanceTheme.onPrimary,
-                        offsetX = -(10).dp,
-                        offsetY = 10.dp,
-                        blur = 20.dp
-                    )*/
+                    .background(GlanceColors.background)
                     .padding(20.dp, 16.dp)
             ) {
                 DateRangeAssetComponent(DateRangeAssets.ThisWeek, currentDateRangeEnum, onDateRangeSelect)
@@ -142,11 +128,10 @@ private fun DateRangeAssetComponent(
 ) {
     val color by animateColorAsState(
         targetValue = if (dateRangeAssets.enum == currentDateRangeEnum) {
-            GlanceTheme.primary
+            GlanceColors.primary
         } else {
-            GlanceTheme.onSurface
-        },
-        label = "custom date range enum button color"
+            GlanceColors.onSurface
+        }
     )
 
     Text(
@@ -154,9 +139,8 @@ private fun DateRangeAssetComponent(
         color = color,
         fontSize = 19.sp,
         fontFamily = Manrope,
-        modifier = Modifier
-            .bounceClickEffect {
-                onSelect(dateRangeAssets.enum)
-            }
+        modifier = Modifier.bounceClickEffect {
+            onSelect(dateRangeAssets.enum)
+        }
     )
 }
