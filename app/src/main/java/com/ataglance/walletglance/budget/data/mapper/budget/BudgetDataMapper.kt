@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.budget.data.mapper
+package com.ataglance.walletglance.budget.data.mapper.budget
 
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity

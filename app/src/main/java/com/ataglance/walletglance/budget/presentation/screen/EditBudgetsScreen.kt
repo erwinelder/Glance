@@ -13,7 +13,7 @@ import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.toDomainModels
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.components.DefaultBudgetComponent
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories

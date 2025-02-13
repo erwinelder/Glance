@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.personalization.domain.usecase
+package com.ataglance.walletglance.budget.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
 

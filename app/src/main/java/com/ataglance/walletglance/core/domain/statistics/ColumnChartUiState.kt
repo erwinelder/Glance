@@ -2,9 +2,9 @@ package com.ataglance.walletglance.core.domain.statistics
 
 import android.content.Context
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.formatWithSpaces
+import com.ataglance.walletglance.core.utils.getAverage
 import com.ataglance.walletglance.core.utils.getColumnNameForColumnChart
 import kotlin.math.pow
 
@@ -18,37 +18,30 @@ data class ColumnChartUiState(
 
     companion object {
 
-        fun createAsBudgetStatistics(
-            totalAmountsByRanges: List<TotalAmountByRange>,
+        fun asAmountsByDateRanges(
+            totalAmountsByRanges: List<TotalAmountInRange>,
             rowsCount: Int,
             repeatingPeriod: RepeatingPeriod,
             context: Context
         ): ColumnChartUiState {
             val maxAmount = totalAmountsByRanges.maxOfOrNull { it.totalAmount } ?: 0.0
 
-            val rowsNumbers = getRowsNumbers(
-                rowsCount = rowsCount,
-                generalMaxAmount = maxAmount
-            )
-            val columnsNames = getColumnsNamesByRepeatingPeriod(
-                totalAmountsByRanges = totalAmountsByRanges,
-                repeatingPeriod = repeatingPeriod,
-                context = context
-            )
+            val rowsNumbers = getRowsNumbers(rowsCount = rowsCount, generalMaxAmount = maxAmount)
+            val columnsNames = totalAmountsByRanges.map { amountByRange ->
+                repeatingPeriod.getColumnNameForColumnChart(amountByRange.dateRange, context)
+            }
+
             val columnChartItemUiStateList = getColumnsUiStates(
                 totalAmountsByRanges = totalAmountsByRanges,
                 maxAmountOnGraph = rowsNumbers.getOrNull(0)?.toDouble() ?: 0.0,
                 generalMaxAmount = maxAmount
             )
 
-            val averageValue = columnChartItemUiStateList.map { it.value }
-                .fold(0.0) { acc, value -> acc + value } / columnChartItemUiStateList.size
-
             return ColumnChartUiState(
                 columns = columnChartItemUiStateList,
                 columnsNames = columnsNames,
-                rowsNames = rowsNumbers.map { it.formatWithSpaces() },
-                averageValue = averageValue
+                rowsNames = rowsNumbers.map(Int::formatWithSpaces),
+                averageValue = columnChartItemUiStateList.map { it.value }.getAverage()
             )
         }
 
@@ -70,18 +63,8 @@ data class ColumnChartUiState(
             return rowsNumbers
         }
 
-        private fun getColumnsNamesByRepeatingPeriod(
-            totalAmountsByRanges: List<TotalAmountByRange>,
-            repeatingPeriod: RepeatingPeriod,
-            context: Context
-        ): List<String> {
-            return totalAmountsByRanges.map { amountByRange ->
-                repeatingPeriod.getColumnNameForColumnChart(amountByRange.dateRange, context)
-            }
-        }
-
         private fun getColumnsUiStates(
-            totalAmountsByRanges: List<TotalAmountByRange>,
+            totalAmountsByRanges: List<TotalAmountInRange>,
             maxAmountOnGraph: Double,
             generalMaxAmount: Double
         ): List<ColumnChartColumnUiState> {

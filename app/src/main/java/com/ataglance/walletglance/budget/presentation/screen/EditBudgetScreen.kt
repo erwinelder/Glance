@@ -32,9 +32,9 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
+import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
-import com.ataglance.walletglance.budget.mapper.toDraft
-import com.ataglance.walletglance.budget.mapper.toDomainModel
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
@@ -254,13 +254,11 @@ fun EditBudgetScreenPreview(
     budgetEntity: BudgetEntity? = null,
     budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
     budgetUiState: BudgetDraft = (budgetEntity to budgetAccountAssociationList)
-        .letIfNoneIsNull { (entity, associations) ->
-            entity.toDomainModel(
-                categoryWithSubcategory = categoriesWithSubcategories.expense[0].getWithFirstSubcategory(),
-                accounts = accountList,
-                linkedAccountsIds = associations
-                    .filter { it.budgetId == entity.id }
-                    .map { it.accountId }
+        .letIfNoneIsNull { (budget, associations) ->
+            budget.toDomainModel(
+                categoryWithSubcategoriesList = categoriesWithSubcategories.expense,
+                associations = associations,
+                accounts = accountList
             )?.toDraft(accounts = accountList)
         } ?: BudgetDraft(
             isNew = true,

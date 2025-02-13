@@ -1,8 +1,9 @@
 package com.ataglance.walletglance.budget.domain.model
 
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
 import java.util.Locale
 
 data class Budget(
@@ -20,7 +21,7 @@ data class Budget(
     val linkedAccountsIds: List<Int>
 ) {
 
-    fun containsAccountId(id: Int): Boolean {
+    fun containsAccount(id: Int): Boolean {
         return linkedAccountsIds.contains(id)
     }
 
@@ -34,16 +35,8 @@ data class Budget(
         )
     }
 
-    fun addToUsedAmount(amount: Double): Budget {
-        return applyUsedAmount(usedAmount + amount)
-    }
-
-    fun subtractFromUsedAmount(amount: Double): Budget {
-        return applyUsedAmount(usedAmount - amount)
-    }
-
-    fun getTotalAmountByCurrentDateRange(): TotalAmountByRange {
-        return TotalAmountByRange(dateRange = dateRange, totalAmount = usedAmount)
+    fun getTotalAmountByCurrentDateRange(): TotalAmountInRange {
+        return TotalAmountInRange(dateRange = dateRange, totalAmount = usedAmount)
     }
 
 }

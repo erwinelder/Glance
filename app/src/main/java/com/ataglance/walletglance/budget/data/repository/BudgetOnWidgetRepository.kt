@@ -1,6 +1,6 @@
-package com.ataglance.walletglance.personalization.data.repository
+package com.ataglance.walletglance.budget.data.repository
 
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
 import kotlinx.coroutines.flow.Flow
 
 interface BudgetOnWidgetRepository {

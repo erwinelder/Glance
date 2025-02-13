@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.record.domain.usecase
 
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.domain.model.Record
 import kotlinx.coroutines.flow.Flow
 

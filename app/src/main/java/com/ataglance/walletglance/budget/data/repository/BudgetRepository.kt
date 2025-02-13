@@ -12,6 +12,8 @@ interface BudgetRepository {
         associationsToUpsert: List<BudgetAccountAssociation>,
     )
 
+    suspend fun getBudgetAndAssociations(budgetId: Int): Pair<BudgetEntity, List<BudgetAccountAssociation>>?
+
     suspend fun getAllBudgetsAndAssociations(): Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
 
 }

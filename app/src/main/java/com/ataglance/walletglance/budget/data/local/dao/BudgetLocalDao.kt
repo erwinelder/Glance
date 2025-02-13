@@ -23,6 +23,9 @@ interface BudgetLocalDao {
         upsertBudgets(toUpsert)
     }
 
+    @Query("SELECT * FROM Budget WHERE id = :id")
+    suspend fun getBudget(id: Int): BudgetEntity?
+
     @Query("SELECT * FROM Budget")
     suspend fun getAllBudgets(): List<BudgetEntity>
 
@@ -41,6 +44,9 @@ interface BudgetLocalDao {
         deleteBudgetAccountAssociations(toDelete)
         upsertBudgetAccountAssociations(toUpsert)
     }
+
+    @Query("SELECT * FROM BudgetAccountAssociation WHERE budgetId = :budgetId")
+    suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociation>
 
     @Query("SELECT * FROM BudgetAccountAssociation")
     suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociation>

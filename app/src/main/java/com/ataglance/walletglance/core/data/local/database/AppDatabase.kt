@@ -18,9 +18,9 @@ import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.model.LocalUpdateTime
 import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonLocalDao
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
-import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetLocalDao
+import com.ataglance.walletglance.budget.data.local.dao.BudgetOnWidgetLocalDao
 import com.ataglance.walletglance.personalization.data.local.dao.WidgetLocalDao
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
 import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
 import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity

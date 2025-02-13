@@ -1,12 +1,11 @@
-package com.ataglance.walletglance.budget.mapper
+package com.ataglance.walletglance.budget.mapper.budget
 
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.budget.domain.utils.findById
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudget
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
@@ -22,25 +21,36 @@ fun List<BudgetEntity>.toDomainModels(
     associations: List<BudgetAccountAssociation>,
     accounts: List<Account>
 ): List<Budget> {
-    return this.mapNotNull { budgetEntity ->
-        budgetEntity.toDomainModel(
-            categoryWithSubcategory = categoryWithSubcategoriesList
-                .getCategoryWithSubcategoryById(budgetEntity.categoryId),
-            accounts = accounts,
-            linkedAccountsIds = associations
-                .filter { it.budgetId == budgetEntity.id }
-                .map { it.accountId }
+    return this.mapNotNull { budget ->
+        budget.toDomainModel(
+            categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+            associations = associations,
+            accounts = accounts
         )
     }
 }
 
 fun BudgetEntity.toDomainModel(
+    categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
+    associations: List<BudgetAccountAssociation>,
+    accounts: List<Account>
+): Budget? {
+    val categoryWithSubcategory = categoryWithSubcategoriesList.getCategoryWithSubcategoryById(
+        id = this.categoryId
+    )
+    val linkedAccountsIds = associations.filter { it.budgetId == this.id }.map { it.accountId }
+    val linkedAccounts = accounts.filter { linkedAccountsIds.contains(it.id) }
+
+    return this.toDomainModel(
+        categoryWithSubcategory = categoryWithSubcategory, linkedAccounts = linkedAccounts
+    )
+}
+
+fun BudgetEntity.toDomainModel(
     categoryWithSubcategory: CategoryWithSubcategory?,
-    accounts: List<Account>,
-    linkedAccountsIds: List<Int>
+    linkedAccounts: List<Account>
 ): Budget? {
     val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
-    val linkedAccounts = accounts.filter { linkedAccountsIds.contains(it.id) }
     val dateRange = repeatingPeriodEnum.getLongDateRangeWithTime()
 
     return Budget(
@@ -53,8 +63,7 @@ fun BudgetEntity.toDomainModel(
         name = name,
         repeatingPeriod = repeatingPeriodEnum,
         dateRange = dateRange,
-        currentTimeWithinRangeGraphPercentage = dateRange
-            .getCurrentTimeAsGraphPercentageInThisRange(),
+        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentTimeAsGraphPercentageInThisRange(),
         currency = linkedAccounts.firstOrNull()?.currency ?: "",
         linkedAccountsIds = linkedAccounts.map { it.id }
     )
@@ -90,19 +99,19 @@ fun List<Budget>.divideIntoBudgetsAndAssociations(): Pair<List<BudgetEntity>, Li
 }
 
 
-fun BudgetsByType.toCheckedBudgetsByType(checkedBudgets: List<Budget>): CheckedBudgetsByType {
+fun BudgetsByType.toCheckedBudgetsByType(checkedBudgetsIds: List<Int>): CheckedBudgetsByType {
     return CheckedBudgetsByType(
-        daily = daily.toCheckedBudgets(checkedBudgets),
-        weekly = weekly.toCheckedBudgets(checkedBudgets),
-        monthly = monthly.toCheckedBudgets(checkedBudgets),
-        yearly = yearly.toCheckedBudgets(checkedBudgets)
+        daily = daily.toCheckedBudgets(checkedBudgetsIds),
+        weekly = weekly.toCheckedBudgets(checkedBudgetsIds),
+        monthly = monthly.toCheckedBudgets(checkedBudgetsIds),
+        yearly = yearly.toCheckedBudgets(checkedBudgetsIds)
     )
 }
 
-fun List<Budget>.toCheckedBudgets(checkedBudgets: List<Budget>): List<CheckedBudget> {
+fun List<Budget>.toCheckedBudgets(checkedBudgetsIds: List<Int>): List<CheckedBudget> {
     return this.map { budget ->
         CheckedBudget(
-            checked = checkedBudgets.findById(budget.id) != null,
+            checked = checkedBudgetsIds.contains(budget.id),
             budget = budget
         )
     }

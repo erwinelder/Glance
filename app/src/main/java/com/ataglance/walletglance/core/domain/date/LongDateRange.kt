@@ -1,6 +1,4 @@
-package com.ataglance.walletglance.core.data.model
-
-import com.ataglance.walletglance.core.utils.extractYearMonthDay
+package com.ataglance.walletglance.core.domain.date
 
 data class LongDateRange(
     val from: Long,
@@ -16,8 +14,8 @@ data class LongDateRange(
     }
 
     fun getDayWithMonthValueRangeAsString(): String {
-        return "${from.extractYearMonthDay().getDayWithMonthValueAsString()} - " +
-                to.extractYearMonthDay().getDayWithMonthValueAsString()
+        return "${YearMonthDay.fromLong(from).getDayWithMonthValueAsString()} - " +
+                YearMonthDay.fromLong(to).getDayWithMonthValueAsString()
     }
 
 }

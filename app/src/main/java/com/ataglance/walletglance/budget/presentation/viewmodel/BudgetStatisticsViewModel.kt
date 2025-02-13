@@ -1,48 +1,60 @@
 package com.ataglance.walletglance.budget.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
-import kotlinx.coroutines.flow.Flow
+import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
+import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
+import com.ataglance.walletglance.core.utils.getPrevDateRanges
+import com.ataglance.walletglance.record.domain.usecase.GetRecordsTotalAmountInDateRangesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BudgetStatisticsViewModel(
-    passedBudget: Budget?,
-    budgetUsedAmountByRangeList: Flow<List<TotalAmountByRange>>
+    budgetId: Int,
+    private val getAccountsUseCase: GetAccountsUseCase,
+    private val getBudgetsUseCase: GetBudgetsUseCase,
+    private val getRecordsTotalAmountInDateRangesUseCase: GetRecordsTotalAmountInDateRangesUseCase
 ) : ViewModel() {
-
-    private val _budgetsTotalAmountsByRanges: MutableStateFlow<List<TotalAmountByRange>> =
-        MutableStateFlow(emptyList())
-    val budgetsTotalAmountsByRanges: StateFlow<List<TotalAmountByRange>> =
-        _budgetsTotalAmountsByRanges.asStateFlow()
 
     init {
         viewModelScope.launch {
-            budgetUsedAmountByRangeList.collect { amountsByRanges ->
-                _budgetsTotalAmountsByRanges.update {
-                    passedBudget
-                        ?.let { listOf(it.getTotalAmountByCurrentDateRange()) }
-                        .orEmpty()
-                        .let { amountsByRanges.reversed() + it }
+            val accounts = getAccountsUseCase.getAll()
+            _accounts.update { accounts }
+
+            val budget = getBudgetsUseCase.get(id = budgetId, accounts = accounts)
+            _budget.update { budget }
+
+            budget?.category ?: return@launch
+
+            getRecordsTotalAmountInDateRangesUseCase
+                .getByCategoryAndAccountsAsFlow(
+                    categoryId = budget.category.id,
+                    accountsIds = budget.linkedAccountsIds,
+                    dateRangeList = budget.repeatingPeriod.getPrevDateRanges()
+                )
+                .collect { totalInRanges ->
+                    _budgetsTotalAmountsInRanges.update {
+                        totalInRanges.reversed() + budget.getTotalAmountByCurrentDateRange()
+                    }
                 }
-            }
         }
     }
 
-}
 
-data class BudgetStatisticsViewModelFactory(
-    private val budget: Budget?,
-    private val usedAmountByRangeList: Flow<List<TotalAmountByRange>>
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return BudgetStatisticsViewModel(budget, usedAmountByRangeList) as T
-    }
+    private val _budget = MutableStateFlow<Budget?>(null)
+    val budget = _budget.asStateFlow()
+
+
+    private val _accounts = MutableStateFlow<List<Account>>(emptyList())
+    val accounts = _accounts.asStateFlow()
+
+
+    private val _budgetsTotalAmountsInRanges = MutableStateFlow<List<TotalAmountInRange>>(emptyList())
+    val budgetTotalAmountsInRanges = _budgetsTotalAmountsInRanges.asStateFlow()
+
 }

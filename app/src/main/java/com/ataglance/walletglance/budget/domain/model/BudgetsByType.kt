@@ -1,12 +1,10 @@
 package com.ataglance.walletglance.budget.domain.model
 
-import com.ataglance.walletglance.budget.domain.utils.addUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.findById
 import com.ataglance.walletglance.budget.domain.utils.getFirstDateRange
 import com.ataglance.walletglance.budget.domain.utils.getMaxIdOrZero
-import com.ataglance.walletglance.budget.domain.utils.subtractUsedAmountsByRecords
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.utils.filterByBudgetsDateRange
@@ -105,48 +103,6 @@ data class BudgetsByType(
 
         recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(daily)
         val filledDailyBudgets = recordsInDateRange.let { daily.fillUsedAmountsByRecords(it) }
-
-        return this.copy(
-            daily = filledDailyBudgets,
-            weekly = filledWeeklyBudgets,
-            monthly = filledMonthlyBudgets,
-            yearly = filledYearlyBudgets
-        )
-    }
-
-    fun addUsedAmountsByRecords(records: List<Record>): BudgetsByType {
-        if (records.isEmpty()) return this
-
-        return applyRecordAmountsToBudgets(
-            records = records,
-            applyFunction = List<Budget>::addUsedAmountsByRecords
-        )
-    }
-
-    fun subtractUsedAmountsByRecords(records: List<Record>): BudgetsByType {
-        if (records.isEmpty()) return this
-
-        return applyRecordAmountsToBudgets(
-            records = records,
-            applyFunction = List<Budget>::subtractUsedAmountsByRecords
-        )
-    }
-
-    private fun applyRecordAmountsToBudgets(
-        records: List<Record>,
-        applyFunction: List<Budget>.(List<Record>) -> List<Budget>
-    ): BudgetsByType {
-        var recordsInDateRange = records.filterByBudgetsDateRange(yearly)
-        val filledYearlyBudgets = recordsInDateRange.let { yearly.applyFunction(it) }
-
-        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(monthly)
-        val filledMonthlyBudgets = recordsInDateRange.let { monthly.applyFunction(it) }
-
-        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(weekly)
-        val filledWeeklyBudgets = recordsInDateRange.let { weekly.applyFunction(it) }
-
-        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(daily)
-        val filledDailyBudgets = recordsInDateRange.let { daily.applyFunction(it) }
 
         return this.copy(
             daily = filledDailyBudgets,

@@ -2,7 +2,7 @@ package com.ataglance.walletglance.core.utils
 
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.YearMonthDayHourMinute
 import java.time.LocalDate
 

@@ -3,10 +3,13 @@ package com.ataglance.walletglance.core.data.remote
 import com.ataglance.walletglance.account.data.mapper.toAccountRemoteEntity
 import com.ataglance.walletglance.account.data.mapper.toMap
 import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
-import com.ataglance.walletglance.budget.data.mapper.toBudgetAccountRemoteAssociation
-import com.ataglance.walletglance.budget.data.mapper.toBudgetRemoteEntity
-import com.ataglance.walletglance.budget.data.mapper.toMap
+import com.ataglance.walletglance.budget.data.mapper.budget.toBudgetAccountRemoteAssociation
+import com.ataglance.walletglance.budget.data.mapper.budget.toBudgetRemoteEntity
+import com.ataglance.walletglance.budget.data.mapper.budget.toMap
+import com.ataglance.walletglance.budget.data.mapper.budgetOnWidget.toBudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.budget.data.mapper.budgetOnWidget.toMap
 import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
+import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
 import com.ataglance.walletglance.category.data.mapper.toCategoryRemoteEntity
 import com.ataglance.walletglance.category.data.mapper.toMap
@@ -20,10 +23,8 @@ import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.navigation.data.mapper.toMap
 import com.ataglance.walletglance.navigation.data.mapper.toNavigationButtonRemoteEntity
 import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonRemoteEntity
-import com.ataglance.walletglance.personalization.data.mapper.toBudgetOnWidgetRemoteEntity
 import com.ataglance.walletglance.personalization.data.mapper.toMap
 import com.ataglance.walletglance.personalization.data.mapper.toWidgetRemoteEntity
-import com.ataglance.walletglance.personalization.data.remote.model.BudgetOnWidgetRemoteEntity
 import com.ataglance.walletglance.personalization.data.remote.model.WidgetRemoteEntity
 import com.ataglance.walletglance.record.data.mapper.toMap
 import com.ataglance.walletglance.record.data.mapper.toRecordRemoteEntity

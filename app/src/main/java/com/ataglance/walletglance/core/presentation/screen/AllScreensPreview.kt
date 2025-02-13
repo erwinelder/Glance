@@ -23,7 +23,7 @@ import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenP
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
-import com.ataglance.walletglance.budget.mapper.toDomainModels
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview

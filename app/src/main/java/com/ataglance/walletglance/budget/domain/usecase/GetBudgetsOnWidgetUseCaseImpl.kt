@@ -1,0 +1,46 @@
+package com.ataglance.walletglance.budget.domain.usecase
+
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
+import com.ataglance.walletglance.budget.data.repository.BudgetRepository
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
+import com.ataglance.walletglance.budget.domain.utils.getMaxDateRange
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
+import com.ataglance.walletglance.category.domain.usecase.GetExpenseCategoriesUseCase
+import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+
+class GetBudgetsOnWidgetUseCaseImpl(
+    private val budgetRepository: BudgetRepository,
+    private val getBudgetIdsOnWidgetUseCase: GetBudgetIdsOnWidgetUseCase,
+    private val getAccountsUseCase: GetAccountsUseCase,
+    private val getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase,
+    private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase
+) : GetBudgetsOnWidgetUseCase {
+
+    override fun getAsFlow(): Flow<List<Budget>> = flow {
+        val (entities, associations) = budgetRepository.getAllBudgetsAndAssociations()
+        val categoryWithSubcategoriesList = getExpenseCategoriesUseCase.execute()
+        val accounts = getAccountsUseCase.getAll()
+
+        val budgets = entities.toDomainModels(
+            categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+            associations = associations,
+            accounts = accounts
+        )
+        val budgetsMaxDateRange = budgets.getMaxDateRange() ?: run {
+            emit(emptyList())
+            return@flow
+        }
+
+        val budgetIdsFlow = getBudgetIdsOnWidgetUseCase.getAsFlow()
+        val recordsFlow = getRecordsInDateRangeUseCase.getAsFlow(range = budgetsMaxDateRange)
+
+        combine(budgetIdsFlow, recordsFlow) { budgetIds, records ->
+            budgets.filter { it.id in budgetIds }.fillUsedAmountsByRecords(records)
+        }.collect(::emit)
+    }
+
+}

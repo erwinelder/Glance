@@ -8,18 +8,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.budget.mapper.toDraft
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreen
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
-import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModelFactory
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
@@ -29,25 +24,20 @@ fun NavGraphBuilder.budgetsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
-    isAppSetUp: Boolean,
-    budgetsByType: BudgetsByType,
-    accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories
+    isAppSetUp: Boolean
 ) {
     navigation<SettingsScreens.Budgets>(
         startDestination = BudgetsSettingsScreens.EditBudgets
     ) {
         composable<BudgetsSettingsScreens.EditBudgets> { backStack ->
-            val editBudgetsViewModel = backStack.sharedViewModel<EditBudgetsViewModel>(
-                navController = navController,
-                factory = EditBudgetsViewModelFactory(budgetsByType = budgetsByType)
+            val editBudgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(
+                navController = navController
             )
-            val editBudgetViewModel = backStack.sharedViewModel<EditBudgetViewModel>(
+            val editBudgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(
                 navController = navController
             )
 
-            val budgetsByTypeState by editBudgetsViewModel.budgetsByType
-                .collectAsStateWithLifecycle()
+            val budgetsByTypeState by editBudgetsViewModel.budgetsByType.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditBudgetsScreen(
@@ -55,18 +45,12 @@ fun NavGraphBuilder.budgetsGraph(
                 isAppSetUp = isAppSetUp,
                 budgetsByType = budgetsByTypeState,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
-                    editBudgetViewModel.applyBudget(
-                        budget = budget?.toDraft(accounts = accountList),
-                        categoryWithSubcategory = categoriesWithSubcategories.expense.getOrNull(0)
-                            ?.getWithFirstSubcategory()
-                    )
+                    editBudgetViewModel.applyBudget(budget)
                     navViewModel.navigateToScreen(navController, BudgetsSettingsScreens.EditBudget)
                 },
                 onSaveBudgetsButton = {
                     coroutineScope.launch {
-                        appViewModel.saveBudgetsToDb(
-                            budgetList = editBudgetsViewModel.getBudgetList()
-                        )
+                        editBudgetsViewModel.saveBudgets()
                         if (isAppSetUp) {
                             navController.popBackStack()
                         } else {
@@ -77,21 +61,20 @@ fun NavGraphBuilder.budgetsGraph(
             )
         }
         composable<BudgetsSettingsScreens.EditBudget> { backStack ->
-            val editBudgetsViewModel = backStack.sharedViewModel<EditBudgetsViewModel>(
-                navController = navController,
-                factory = EditBudgetsViewModelFactory(budgetsByType = budgetsByType)
+            val editBudgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(
+                navController = navController
             )
-            val editBudgetViewModel = backStack.sharedViewModel<EditBudgetViewModel>(
+            val editBudgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(
                 navController = navController
             )
 
-            val budgetUiState by editBudgetViewModel.budget.collectAsStateWithLifecycle()
+            val budget by editBudgetViewModel.budget.collectAsStateWithLifecycle()
 
             EditBudgetScreen(
                 scaffoldPadding = scaffoldPadding,
-                budget = budgetUiState,
-                accountList = accountList,
-                categoriesWithSubcategories = categoriesWithSubcategories,
+                budget = budget,
+                accountList = editBudgetViewModel.accounts,
+                categoriesWithSubcategories = editBudgetViewModel.categoriesWithSubcategories,
                 onNameChange = editBudgetViewModel::changeName,
                 onCategoryChange = editBudgetViewModel::changeCategory,
                 onAmountLimitChange = editBudgetViewModel::changeAmountLimit,
@@ -100,13 +83,12 @@ fun NavGraphBuilder.budgetsGraph(
                 onUnlinkAccount = editBudgetViewModel::unlinkWithAccount,
                 onDeleteButton = {
                     editBudgetsViewModel.deleteBudget(
-                        id = budgetUiState.id,
-                        repeatingPeriod = budgetUiState.currRepeatingPeriod
+                        id = budget.id, repeatingPeriod = budget.currRepeatingPeriod
                     )
                     navController.popBackStack()
                 },
                 onSaveButton = {
-                    editBudgetsViewModel.saveBudget(editBudgetViewModel.getBudgetUiState())
+                    editBudgetsViewModel.applyBudget(editBudgetViewModel.getBudgetDraft())
                     navController.popBackStack()
                 }
             )

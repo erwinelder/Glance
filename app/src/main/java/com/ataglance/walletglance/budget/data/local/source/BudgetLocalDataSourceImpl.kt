@@ -31,6 +31,10 @@ class BudgetLocalDataSourceImpl(
         )
     }
 
+    override suspend fun getBudget(id: Int): BudgetEntity? {
+        return budgetDao.getBudget(id = id)
+    }
+
     override suspend fun getAllBudgets(): List<BudgetEntity> {
         return budgetDao.getAllBudgets()
     }
@@ -54,6 +58,10 @@ class BudgetLocalDataSourceImpl(
             toDelete = associationsToSync.toDelete,
             toUpsert = associationsToSync.toUpsert
         )
+    }
+
+    override suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociation> {
+        return budgetDao.getBudgetAccountAssociations(budgetId = budgetId)
     }
 
     override suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociation> {

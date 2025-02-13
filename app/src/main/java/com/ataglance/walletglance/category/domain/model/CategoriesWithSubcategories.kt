@@ -39,6 +39,10 @@ data class CategoriesWithSubcategories(
         }
     }
 
+    fun getFirstCategoryWithSubcategoryByType(type: CategoryType?): CategoryWithSubcategory? {
+        return type?.let { getByTypeOrAll(it).firstOrNull()?.getWithFirstSubcategory() }
+    }
+
     fun getLastCategoryWithSubcategoryByType(type: CategoryType?): CategoryWithSubcategory? {
         return type?.let { getByTypeOrAll(it).lastOrNull()?.getWithLastSubcategory() }
     }

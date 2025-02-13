@@ -1,10 +1,8 @@
 package com.ataglance.walletglance.navigation.presentation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,7 +21,8 @@ import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
-import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModelFactory
+import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
+import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
@@ -38,10 +37,8 @@ import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.utils.getPrevDateRanges
-import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.presentation.containers.WidgetsSettingsBottomSheetContainer
+import com.ataglance.walletglance.budget.presentation.containers.BudgetsOnWidgetSettingsBottomSheet
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
@@ -52,7 +49,6 @@ import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCr
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -75,6 +71,8 @@ fun AppNavHost(
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val authController = koinInject<AuthController>()
+
+    val budgetsOnWidgetSettingsViewModel = koinViewModel<BudgetsOnWidgetSettingsViewModel>()
 
     NavHost(
         navController = navController,
@@ -99,16 +97,12 @@ fun AppNavHost(
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 widgetsUiState = widgetsUiState,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
-                onWidgetSettingsButtonClick = personalizationViewModel::openWidgetSettings,
+                onWidgetSettingsButtonClick = budgetsOnWidgetSettingsViewModel::openWidgetSettings,
                 onNavigateToScreenMovingTowardsLeft = { screen ->
                     navViewModel.navigateToScreenMovingTowardsLeft(navController, screen)
                 },
                 widgetSettingsBottomSheets = {
-                    WidgetsSettingsBottomSheetContainer(
-                        personalizationViewModel = personalizationViewModel,
-                        budgetsByType = appUiState.budgetsByType,
-                        budgetsOnWidget = widgetsUiState.budgetsOnWidget
-                    )
+                    BudgetsOnWidgetSettingsBottomSheet(viewModel = budgetsOnWidgetSettingsViewModel)
                 }
             )
         }
@@ -228,9 +222,13 @@ fun AppNavHost(
             )
         }
         composable<MainScreens.Budgets> {
+            val viewModel = koinViewModel<BudgetsViewModel>()
+
+            val budgetsByType by viewModel.budgetsByType.collectAsStateWithLifecycle()
+
             BudgetsScreen(
                 screenPadding = scaffoldPadding,
-                budgetsByType = appUiState.budgetsByType,
+                budgetsByType = budgetsByType,
                 onBudgetClick = { budget ->
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
@@ -241,48 +239,35 @@ fun AppNavHost(
         }
         composable<MainScreens.BudgetStatistics> { backStack ->
             val budgetId = backStack.toRoute<MainScreens.BudgetStatistics>().id
-            val budget by remember {
-                derivedStateOf { appUiState.budgetsByType.findById(budgetId) }
-            }
             val context = LocalContext.current
 
-            val budgetStatisticsViewModel = viewModel<BudgetStatisticsViewModel>(
-                factory = BudgetStatisticsViewModelFactory(
-                    budget = budget,
-                    usedAmountByRangeList = budget?.let {
-                        appViewModel.fetchBudgetsTotalUsedAmountsByDateRanges(
-                            budget = it,
-                            dateRanges = it.repeatingPeriod.getPrevDateRanges()
-                        )
-                    } ?: emptyFlow()
-                )
-            )
+            val viewModel = koinViewModel<BudgetStatisticsViewModel> {
+                parametersOf(budgetId)
+            }
 
-            val budgetsTotalAmountsByRanges by budgetStatisticsViewModel.budgetsTotalAmountsByRanges.collectAsState()
-            val columnChartDataUiState by remember {
+            val budget by viewModel.budget.collectAsStateWithLifecycle()
+            val budgetsAccounts by viewModel.accounts.collectAsStateWithLifecycle()
+            val budgetTotalAmountsInRanges by viewModel.budgetTotalAmountsInRanges.collectAsStateWithLifecycle()
+
+            val columnChartState by remember(budgetTotalAmountsInRanges) {
                 derivedStateOf {
                     budget?.let {
-                        ColumnChartUiState.createAsBudgetStatistics(
-                            totalAmountsByRanges = budgetsTotalAmountsByRanges,
+                        ColumnChartUiState.asAmountsByDateRanges(
+                            totalAmountsByRanges = budgetTotalAmountsInRanges,
                             rowsCount = 5,
                             repeatingPeriod = it.repeatingPeriod,
                             context = context
                         )
-                    }
+                    } ?: ColumnChartUiState()
                 }
             }
-            val budgetAccounts by remember {
-                derivedStateOf { appUiState.accountsAndActiveOne.filterByBudget(budget) }
-            }
 
-            (budget to columnChartDataUiState).letIfNoneIsNull { (budget, chartUiState) ->
-                BudgetStatisticsScreen(
-                    budget = budget,
-                    columnChartUiState = chartUiState,
-                    budgetAccounts = budgetAccounts,
-                    onBackButtonClick = navController::popBackStack
-                )
-            } ?: Text(text = "Budget not found")
+            BudgetStatisticsScreen(
+                budget = budget,
+                columnChartUiState = columnChartState,
+                budgetAccounts = budgetsAccounts,
+                onBackButtonClick = navController::popBackStack
+            )
         }
         composable<MainScreens.RecordCreation>(
             enterTransition = { screenEnterTransition() },
@@ -402,7 +387,6 @@ fun AppNavHost(
             accountList = appUiState.accountsAndActiveOne.accountList,
             categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
             categoryCollectionsUiState = appUiState.categoryCollectionsUiState,
-            budgetsByType = appUiState.budgetsByType,
             personalizationViewModel = personalizationViewModel,
             widgetNamesList = widgetsUiState.widgetNamesList
         )

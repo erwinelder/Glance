@@ -1,8 +1,8 @@
-package com.ataglance.walletglance.personalization.data.mapper
+package com.ataglance.walletglance.budget.data.mapper.budgetOnWidget
 
+import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
 import com.ataglance.walletglance.core.utils.convertToIntOrZero
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
-import com.ataglance.walletglance.personalization.data.remote.model.BudgetOnWidgetRemoteEntity
 
 
 fun BudgetOnWidgetEntity.toRemoteEntity(

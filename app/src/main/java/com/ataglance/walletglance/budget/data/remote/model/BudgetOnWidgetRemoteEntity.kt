@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.personalization.data.remote.model
+package com.ataglance.walletglance.budget.data.remote.model
 
 data class BudgetOnWidgetRemoteEntity(
     val updateTime: Long,

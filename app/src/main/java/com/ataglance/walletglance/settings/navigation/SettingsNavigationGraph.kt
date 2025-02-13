@@ -15,7 +15,6 @@ import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.authGraph
-import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.presentation.navigation.categoriesGraph
@@ -50,7 +49,6 @@ fun NavGraphBuilder.settingsGraph(
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
     categoryCollectionsUiState: CategoryCollectionsWithIdsByType,
-    budgetsByType: BudgetsByType,
     personalizationViewModel: PersonalizationViewModel,
     widgetNamesList: List<WidgetName>
 ) {
@@ -93,9 +91,6 @@ fun NavGraphBuilder.settingsGraph(
             navViewModel = navViewModel,
             appViewModel = appViewModel,
             isAppSetUp = appConfiguration.isSetUp,
-            budgetsByType = budgetsByType,
-            accountList = accountList,
-            categoriesWithSubcategories = categoriesWithSubcategories
         )
         categoriesGraph(
             navController = navController,

@@ -2,12 +2,12 @@ package com.ataglance.walletglance.core.utils
 
 import android.content.Context
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.domain.app.LongRange
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.StringDateRange
 import com.ataglance.walletglance.core.domain.date.TimeInMillisRange
@@ -401,7 +401,7 @@ fun RepeatingPeriod.getColumnNameForColumnChart(
     context: Context
 ): String {
     return when (this) {
-        RepeatingPeriod.Daily -> dateRange.from.extractYearMonthDay().getDayWithMonthValueAsString()
+        RepeatingPeriod.Daily -> YearMonthDay.fromLong(dateRange.from).getDayWithMonthValueAsString()
         RepeatingPeriod.Weekly -> dateRange.getDayWithMonthValueRangeAsString()
         RepeatingPeriod.Monthly -> dateRange.from.extractMonth().getMonthShortNameRes()
             ?.let { context.getString(it) }
@@ -415,38 +415,14 @@ fun Long.extractYear(): Int {
     return (this / 100000000).toInt()
 }
 
-
 fun Long.extractMonth(): Int {
     return (this / 1000000 - this.extractYear() * 100).toInt()
 }
 
 
-fun Long.extractYearMonthDay(): YearMonthDay {
-    val year = (this / 100000000).toInt()
-    val month = (this / 1000000 - year * 100).toInt()
-    val day = (this / 10000 - year * 10000 - month * 100).toInt()
-    return YearMonthDay(year, month, day)
-}
-
-
-fun Long.extractYearMonthDayHourMinute(): YearMonthDayHourMinute {
-    val year = (this / 100000000).toInt()
-    val month = (this / 1000000 - year * 100).toInt()
-    val day = (this / 10000 - year * 10000 - month * 100).toInt()
-    val hour = (this / 100 - year * 1000000 - month * 10000 - day * 100).toInt()
-    val minute = (this - year * 100000000 - month * 1000000 - day * 10000 - hour * 100).toInt()
-    return YearMonthDayHourMinute(year, month, day, hour, minute)
-}
-
-
-fun Long.isInRange(dateRange: LongDateRange): Boolean {
-    return this >= dateRange.from && this <= dateRange.to
-}
-
-
 fun getNewDateByRecordLongDate(recordDateLong: Long): DateTimeState {
     val calendar = Calendar.getInstance()
-    val dateSeparated = recordDateLong.extractYearMonthDayHourMinute()
+    val dateSeparated = YearMonthDayHourMinute.fromLong(recordDateLong)
 
     calendar.set(
         dateSeparated.year,
@@ -502,7 +478,7 @@ fun convertDateLongToDayMonthYear(
     context: Context,
     includeYear: Boolean = true
 ): String {
-    val dateSeparated = date.extractYearMonthDay()
+    val dateSeparated = YearMonthDay.fromLong(date)
     val monthString = dateSeparated.month.getMonthShortNameRes()?.let { context.getString(it) } ?: ""
 
     return if (includeYear) {
@@ -527,8 +503,8 @@ fun getFormattedDateFromAndToByFormatDayMonthYear(
 
 fun LongDateRange.toStringDateRange(period: RepeatingPeriod, context: Context): StringDateRange {
     return StringDateRange(
-        from = from.extractYearMonthDayHourMinute().formatByRepeatingPeriod(period, context),
-        to = to.extractYearMonthDayHourMinute().formatByRepeatingPeriod(period, context)
+        from = YearMonthDayHourMinute.fromLong(from).formatByRepeatingPeriod(period, context),
+        to = YearMonthDayHourMinute.fromLong(to).formatByRepeatingPeriod(period, context)
     )
 }
 
@@ -548,8 +524,8 @@ fun YearMonthDayHourMinute.formatByRepeatingPeriod(
 
 fun LongDateRange.asTimeInMillisRange(): TimeInMillisRange {
     return TimeInMillisRange(
-        from = from.extractYearMonthDayHourMinute().asTimeInMillis(),
-        to = to.extractYearMonthDayHourMinute().asTimeInMillis()
+        from = YearMonthDayHourMinute.fromLong(from).asTimeInMillis(),
+        to = YearMonthDayHourMinute.fromLong(to).asTimeInMillis()
     )
 }
 

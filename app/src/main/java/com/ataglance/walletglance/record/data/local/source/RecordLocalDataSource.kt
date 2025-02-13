@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.data.local.source
 
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -29,10 +29,10 @@ interface RecordLocalDataSource {
 
     suspend fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>
 
-    suspend fun getTotalAmountForBudgetInDateRange(
-        linkedAccountsIds: List<Int>,
+    suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
+        linkedAccountsIds: List<Int>,
         longDateRange: LongDateRange
-    ): Double?
+    ): Double
 
 }

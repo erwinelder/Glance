@@ -75,9 +75,6 @@ val appModule = module {
             getTodayTotalExpensesForAccountUseCase = get(),
             getRecordStacksInDateRangeUseCase = get(),
 
-            saveBudgetsUseCase = get(),
-            getBudgetsUseCase = get(),
-
             generalRepository = get()
         )
     }

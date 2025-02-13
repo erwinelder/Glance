@@ -39,7 +39,7 @@ import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimate
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.widgets.CategoriesStatisticsWidget
-import com.ataglance.walletglance.core.presentation.components.widgets.ChosenWidgetsWidget
+import com.ataglance.walletglance.core.presentation.components.widgets.ChosenBudgetsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
 import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
@@ -153,8 +153,7 @@ private fun CompactLayout(
                 WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                     when (widgetName) {
                         WidgetName.ChosenBudgets -> {
-                            ChosenWidgetsWidget(
-                                budgetList = widgetsUiState.budgetsOnWidget,
+                            ChosenBudgetsWidget(
                                 onSettingsButtonClick = {
                                     onWidgetSettingsButtonClick(WidgetName.ChosenBudgets)
                                 },
@@ -333,7 +332,6 @@ fun HomeScreenPreview(
         recordStacksByDateAndAccount = recordStackList,
 
         widgetNamesList = widgetNamesList,
-        budgetsOnWidget = budgetsOnWidget,
         expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
         compactRecordStacksByDateAndAccount = recordStackList.shrinkForCompactView(),
         categoryStatisticsLists = CategoryStatisticsLists.fromRecordStacks(recordStackList)

@@ -1,10 +1,9 @@
-package com.ataglance.walletglance.personalization.data.local.model
+package com.ataglance.walletglance.budget.data.local.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 
 @Entity(
     tableName = "BudgetOnWidget",

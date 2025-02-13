@@ -11,11 +11,6 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
 import com.ataglance.walletglance.auth.data.model.UserData
-import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
-import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
-import com.ataglance.walletglance.budget.domain.usecase.SaveBudgetsUseCase
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
@@ -27,7 +22,6 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.categoryCollection.domain.usecase.SaveCategoryCollectionsUseCase
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
@@ -35,6 +29,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
@@ -51,7 +46,6 @@ import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRan
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -79,9 +73,6 @@ class AppViewModel(
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
     private val getTodayTotalExpensesForAccountUseCase: GetTodayTotalExpensesForAccountUseCase,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
-
-    private val saveBudgetsUseCase: SaveBudgetsUseCase,
-    private val getBudgetsUseCase: GetBudgetsUseCase,
 
     val generalRepository: GeneralRepository
 ) : ViewModel() {
@@ -382,7 +373,7 @@ class AppViewModel(
             currentCategories = categoriesWithSubcategories.value.asSingleList()
         )
     }
-    
+
 
     private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsWithIdsByType())
     val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
@@ -448,35 +439,6 @@ class AppViewModel(
     }
 
 
-    private val _budgetsByType: MutableStateFlow<BudgetsByType> = MutableStateFlow(BudgetsByType())
-    val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
-
-    private fun updateBudgetsByType(budgetsByType: BudgetsByType) {
-        _budgetsByType.update { budgetsByType }
-    }
-
-    private fun fetchBudgets() {
-        viewModelScope.launch {
-            getBudgetsUseCase.getAsFlow().collect(::updateBudgetsByType)
-        }
-    }
-
-    fun fetchBudgetsTotalUsedAmountsByDateRanges(
-        budget: Budget,
-        dateRanges: List<LongDateRange>
-    ): Flow<List<TotalAmountByRange>> {
-        return recordRepository.getTotalAmountForBudgetInDateRanges(budget, dateRanges)
-    }
-
-    suspend fun saveBudgetsToDb(budgetList: List<Budget>) {
-        saveBudgetsUseCase.execute(
-            budgetsToSave = budgetList,
-            currentBudgets = budgetsByType.value.concatenate()
-        )
-        fetchBudgets()
-    }
-
-
     private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> = MutableStateFlow(
         DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
     )
@@ -526,7 +488,6 @@ class AppViewModel(
         fetchCategoryCollections()
         fetchRecordsForToday()
         fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
-        fetchBudgets()
     }
 
 

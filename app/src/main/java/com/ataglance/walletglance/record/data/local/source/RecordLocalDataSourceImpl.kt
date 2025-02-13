@@ -3,7 +3,7 @@ package com.ataglance.walletglance.record.data.local.source
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
@@ -78,17 +78,17 @@ class RecordLocalDataSourceImpl(
         )
     }
 
-    override suspend fun getTotalAmountForBudgetInDateRange(
-        linkedAccountsIds: List<Int>,
+    override suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
+        linkedAccountsIds: List<Int>,
         longDateRange: LongDateRange
-    ): Double? {
-        return recordDao.getTotalAmountForBudgetInDateRange(
-            linkedAccountsIds = linkedAccountsIds,
+    ): Double {
+        return recordDao.getTotalAmountByCategoryAndAccountsInRange(
             categoryId = categoryId,
+            linkedAccountsIds = linkedAccountsIds,
             from = longDateRange.from,
             to = longDateRange.to
-        )
+        ) ?: 0.0
     }
 
 }

@@ -2,7 +2,6 @@ package com.ataglance.walletglance.core.domain.date
 
 import android.content.Context
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.utils.extractYear
 import com.ataglance.walletglance.core.utils.getFormattedDateFromAndToByFormatDayMonthYear
 

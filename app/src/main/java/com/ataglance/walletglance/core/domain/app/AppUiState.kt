@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.core.domain.app
 
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
-import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -14,6 +13,5 @@ data class AppUiState(
     val categoriesWithSubcategories: CategoriesWithSubcategories,
     val categoryCollectionsUiState: CategoryCollectionsWithIdsByType,
     val accountsAndActiveOne: AccountsAndActiveOne,
-    val recordStackListByDate: List<RecordStack>,
-    val budgetsByType: BudgetsByType,
+    val recordStackListByDate: List<RecordStack>
 )

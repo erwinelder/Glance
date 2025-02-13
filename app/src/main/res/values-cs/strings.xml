@@ -240,6 +240,7 @@
     <string name="transfer">Převod</string>
     <string name="all_categories">Všechny kategorie</string>
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
+    <string name="budget_not_found">Rozpočet nebyl nalezen</string>
     <string name="reset_data_action">Resetovat všechna data aplikace. Váš účet nebude smazán.</string>
     <string name="reset_data_confirmation">Jste si jisti, že chcete resetovat všechna data?</string>
     <string name="delete_your_account_with_all_data">Smažte svůj účet se všemi svými daty</string>

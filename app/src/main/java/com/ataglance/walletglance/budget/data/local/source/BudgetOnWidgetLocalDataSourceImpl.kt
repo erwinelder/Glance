@@ -1,11 +1,11 @@
-package com.ataglance.walletglance.personalization.data.local.source
+package com.ataglance.walletglance.budget.data.local.source
 
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.personalization.data.local.dao.BudgetOnWidgetLocalDao
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.budget.data.local.dao.BudgetOnWidgetLocalDao
+import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
 import kotlinx.coroutines.flow.Flow
 
 class BudgetOnWidgetLocalDataSourceImpl(

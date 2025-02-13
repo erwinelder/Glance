@@ -82,13 +82,13 @@ interface RecordLocalDao {
     @Query("""
         SELECT SUM(amount) FROM Record
         WHERE includeInBudgets = 1
-            AND accountId IN (:linkedAccountsIds)
             AND (categoryId = :categoryId OR subcategoryId = :categoryId)
+            AND accountId IN (:linkedAccountsIds)
             AND date BETWEEN :from AND :to
     """)
-    suspend fun getTotalAmountForBudgetInDateRange(
-        linkedAccountsIds: List<Int>,
+    suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
+        linkedAccountsIds: List<Int>,
         from: Long,
         to: Long
     ): Double?

@@ -1,8 +1,8 @@
-package com.ataglance.walletglance.personalization.data.remote.dao
+package com.ataglance.walletglance.budget.data.remote.dao
 
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapter
-import com.ataglance.walletglance.personalization.data.remote.model.BudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
 
 class BudgetOnWidgetRemoteDao(
     private val firestoreAdapter: FirestoreAdapter<BudgetOnWidgetRemoteEntity>

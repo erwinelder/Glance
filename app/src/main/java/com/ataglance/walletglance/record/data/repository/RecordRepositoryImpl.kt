@@ -1,11 +1,9 @@
 package com.ataglance.walletglance.record.data.repository
 
 import com.ataglance.walletglance.auth.data.model.UserContext
-import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.model.LongDateRange
 import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
@@ -129,29 +127,17 @@ class RecordRepositoryImpl(
         localSource.getRecordsInDateRange(range = range).collect(::emit)
     }
 
-    override fun getTotalAmountForBudgetInDateRanges(
-        budget: Budget,
-        dateRangeList: List<LongDateRange>
-    ): Flow<List<TotalAmountByRange>> = flow {
-        val initialList = dateRangeList.map { TotalAmountByRange(it, 0.0) }
-        emit(initialList)
-
-        budget.category ?: return@flow
-
-        val budgetsAmountsByRanges = initialList.toMutableList()
-
-        dateRangeList.forEachIndexed { index, dateRange ->
-            val totalAmount = localSource.getTotalAmountForBudgetInDateRange(
-                linkedAccountsIds = budget.linkedAccountsIds,
-                categoryId = budget.category.id,
-                longDateRange = dateRange
-            )
-
-            budgetsAmountsByRanges[index] = TotalAmountByRange(
-                dateRange = dateRange, totalAmount = totalAmount ?: 0.0
-            )
-            emit(budgetsAmountsByRanges)
-        }
+    override suspend fun getTotalAmountByCategoryAndAccountsInRange(
+        categoryId: Int,
+        accountsIds: List<Int>,
+        dateRange: LongDateRange
+    ): Double {
+        synchroniseRecords()
+        return localSource.getTotalAmountByCategoryAndAccountsInRange(
+            categoryId = categoryId,
+            linkedAccountsIds = accountsIds,
+            longDateRange = dateRange
+        )
     }
 
 }

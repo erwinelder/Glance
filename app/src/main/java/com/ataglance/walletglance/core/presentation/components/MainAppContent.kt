@@ -55,10 +55,8 @@ fun MainAppContent(
     val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
     val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
-    val budgetsByType by appViewModel.budgetsByType.collectAsStateWithLifecycle()
 
     val widgetNamesList by personalizationViewModel.widgetNames.collectAsStateWithLifecycle()
-    val budgetsOnWidget by personalizationViewModel.budgetsOnWidget.collectAsStateWithLifecycle()
 
     var dimBackground by remember { mutableStateOf(false) }
     var openCustomDateRangeWindow by remember { mutableStateOf(false) }
@@ -79,14 +77,12 @@ fun MainAppContent(
                 categoriesWithSubcategories = categoriesWithSubcategories,
                 categoryCollectionsUiState = categoryCollectionsUiState,
                 accountsAndActiveOne = accountsUiState,
-                recordStackListByDate = recordStacksInDateRange.recordStacks,
-                budgetsByType = budgetsByType
+                recordStackListByDate = recordStacksInDateRange.recordStacks
             )
         }
     }
     val widgetsUiState by remember(
         widgetNamesList,
-        budgetsOnWidget,
         greetingsTitleRes,
         categoriesWithSubcategories,
         accountsUiState,
@@ -103,7 +99,6 @@ fun MainAppContent(
                 recordStacksByDateAndAccount = recordStacksByDateAndAccount,
 
                 widgetNamesList = widgetNamesList,
-                budgetsOnWidget = budgetsByType.concatenate().filter { it.id in budgetsOnWidget },
                 expensesIncomeWidgetUiState = recordStacksByDateAndAccount.getExpensesIncomeWidgetUiState(),
                 compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount.shrinkForCompactView(),
                 categoryStatisticsLists = CategoryStatisticsLists.fromRecordStacks(recordStacksByDateAndAccount)

@@ -4,10 +4,10 @@ import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.data.local.source.BudgetLocalDataSource
-import com.ataglance.walletglance.budget.data.mapper.toLocalAssociation
-import com.ataglance.walletglance.budget.data.mapper.toLocalEntity
-import com.ataglance.walletglance.budget.data.mapper.toRemoteAssociation
-import com.ataglance.walletglance.budget.data.mapper.toRemoteEntity
+import com.ataglance.walletglance.budget.data.mapper.budget.toLocalAssociation
+import com.ataglance.walletglance.budget.data.mapper.budget.toLocalEntity
+import com.ataglance.walletglance.budget.data.mapper.budget.toRemoteAssociation
+import com.ataglance.walletglance.budget.data.mapper.budget.toRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
 import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.source.BudgetRemoteDataSource
@@ -85,6 +85,18 @@ class BudgetRepositoryImpl(
                 userId = userId
             )
         }
+    }
+
+    override suspend fun getBudgetAndAssociations(
+        budgetId: Int
+    ): Pair<BudgetEntity, List<BudgetAccountAssociation>>? {
+        synchroniseBudgets()
+        synchroniseBudgetAccountAssociations()
+
+        val budget = localSource.getBudget(id = budgetId) ?: return null
+        val associations = localSource.getBudgetAccountAssociations(budgetId = budgetId)
+
+        return budget to associations
     }
 
     override suspend fun getAllBudgetsAndAssociations():

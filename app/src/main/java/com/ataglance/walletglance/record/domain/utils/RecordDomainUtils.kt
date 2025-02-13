@@ -89,15 +89,6 @@ fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<Reco
 }
 
 
-fun List<RecordStack>.getFirstByTypeAndAccountIdOrJustType(
-    type: CategoryType,
-    accountId: Int
-): RecordStack? {
-    return find { it.isExplicitlyOfType(type) && it.account.id == accountId }
-        ?: find { it.isExplicitlyOfType(type) }
-}
-
-
 fun List<RecordStack>.shrinkForCompactView(): List<RecordStack> {
     return this.map {
         if (it.isExpenseOrIncome()) it.shrinkForCompactView() else it
@@ -188,7 +179,7 @@ fun List<Record>.getTotalAmountCorrespondingToBudget(budget: Budget): Double {
         .filter {
             it.includeInBudgets &&
                     it.containsParentOrSubcategoryId(budget.category?.id) &&
-                    budget.containsAccountId(it.accountId)
+                    budget.containsAccount(it.accountId)
         }
         .fold(0.0) { total, record ->
             total + record.amount

@@ -1,7 +1,7 @@
-package com.ataglance.walletglance.personalization.domain.usecase
+package com.ataglance.walletglance.budget.domain.usecase
 
-import com.ataglance.walletglance.personalization.data.repository.BudgetOnWidgetRepository
-import com.ataglance.walletglance.personalization.mapper.toIntList
+import com.ataglance.walletglance.budget.data.repository.BudgetOnWidgetRepository
+import com.ataglance.walletglance.budget.mapper.budgetOnWidget.toIntList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

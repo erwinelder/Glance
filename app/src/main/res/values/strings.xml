@@ -241,6 +241,7 @@
     <string name="transfer">Transfer</string>
     <string name="all_categories">All categories</string>
     <string name="no_collections_of_this_type">No collections of this type</string>
+    <string name="budget_not_found">Budget not found</string>
     <string name="reset_data_action">Reset all app data. Your account will not be deleted.</string>
     <string name="reset_data_confirmation">Are you sure you want to reset all your data?</string>
     <string name="delete_your_account_with_all_data">Delete your account with all your data</string>

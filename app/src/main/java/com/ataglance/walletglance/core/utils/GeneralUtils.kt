@@ -103,25 +103,6 @@ fun Double.roundToTwoDecimals(): Double {
     return "%.2f".format(Locale.US, this).toDouble()
 }
 
-
-fun Int.formatWithSpaces(): String {
-    val numberString = this.toString()
-    var formattedNumber = ""
-
-    for ((index, char) in numberString.reversed().withIndex()) {
-
-        formattedNumber = char + formattedNumber
-
-        if (index % 3 == 2 && index != numberString.lastIndex) {
-            formattedNumber = " $formattedNumber"
-        }
-
-    }
-
-    return formattedNumber
-}
-
-
 fun Double.formatWithSpaces(additionToEnd: String? = null): String {
     val numberString = "%.2f".format(Locale.US, this)
     var formattedNumber = numberString.takeLast(3)
@@ -138,6 +119,32 @@ fun Double.formatWithSpaces(additionToEnd: String? = null): String {
     }
 
     return formattedNumber + (additionToEnd?.let { " $it" } ?: "")
+}
+
+fun List<Double>.getAverage(): Double {
+    return if (this.isEmpty()) {
+        0.0
+    } else {
+        (this.sum() / this.size).roundToTwoDecimals()
+    }
+}
+
+
+fun Int.formatWithSpaces(): String {
+    val numberString = this.toString()
+    var formattedNumber = ""
+
+    for ((index, char) in numberString.reversed().withIndex()) {
+
+        formattedNumber = char + formattedNumber
+
+        if (index % 3 == 2 && index != numberString.lastIndex) {
+            formattedNumber = " $formattedNumber"
+        }
+
+    }
+
+    return formattedNumber
 }
 
 

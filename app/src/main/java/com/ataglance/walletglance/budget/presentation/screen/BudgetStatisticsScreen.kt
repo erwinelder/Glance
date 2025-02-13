@@ -33,19 +33,20 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
+import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
@@ -53,75 +54,91 @@ import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
 
 @Composable
 fun BudgetStatisticsScreen(
-    budget: Budget,
+    budget: Budget?,
     columnChartUiState: ColumnChartUiState,
     budgetAccounts: List<Account>,
     onBackButtonClick: () -> Unit
 ) {
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        BackButtonBlock(onBackButtonClick)
+        if (budget != null) {
+            BudgetStatisticsScreenContent(
+                budget = budget,
+                columnChartUiState = columnChartUiState,
+                budgetAccounts = budgetAccounts
+            )
+        } else {
+            MessageContainer(message = stringResource(R.string.budget_not_found))
+        }
+    }
+}
+
+@Composable
+private fun BudgetStatisticsScreenContent(
+    budget: Budget,
+    columnChartUiState: ColumnChartUiState,
+    budgetAccounts: List<Account>
+) {
     val nestedScrollInterop = rememberNestedScrollInteropConnection()
     val verticalGap = 16.dp
 
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround,
+        contentPadding = PaddingValues(bottom = 8.dp),
         modifier = Modifier
+            .nestedScroll(nestedScrollInterop)
             .fillMaxSize()
+            .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
     ) {
-        BackButtonBlock(onBackButtonClick)
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround,
-            contentPadding = PaddingValues(bottom = 8.dp),
-            modifier = Modifier
-                .nestedScroll(nestedScrollInterop)
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
-        ) {
-            item { Spacer(modifier = Modifier.height(verticalGap)) }
-            item {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    budget.category?.let {
-                        CategoryBigIconComponent(category = it)
-                    }
-                    Text(
-                        text = budget.name,
-                        color = GlanceColors.onSurface,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = stringResource(
-                            R.string.amount_currency_spending_limit,
-                            budget.amountLimit.formatWithSpaces(), budget.currency
-                        ),
-                        color = GlanceColors.onSurface,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    AccountsFlowRow(accountList = budgetAccounts, maxLines = 5)
+        item { Spacer(modifier = Modifier.height(verticalGap)) }
+        item {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                budget.category?.let {
+                    CategoryBigIconComponent(category = it)
                 }
-            }
-            item { Spacer(modifier = Modifier.height(verticalGap)) }
-            item {
-                GlanceColumnChart(
-                    uiState = columnChartUiState,
-                    columnsColor = budget.category?.getColorByTheme(CurrAppTheme)?.lighter,
-                    title = stringResource(
-                        id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
+                Text(
+                    text = budget.name,
+                    color = GlanceColors.onSurface,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = stringResource(
+                        R.string.amount_currency_spending_limit,
+                        budget.amountLimit.formatWithSpaces(), budget.currency
                     ),
-                    bottomNote = "Average spending: " +
-                            columnChartUiState.averageValue.formatWithSpaces(budget.currency)
-                ) { totalAmountByPeriod ->
-                    StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
-                }
+                    color = GlanceColors.onSurface,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                AccountsFlowRow(accountList = budgetAccounts, maxLines = 5)
             }
-            item { Spacer(modifier = Modifier.height(verticalGap)) }
         }
+        item { Spacer(modifier = Modifier.height(verticalGap)) }
+        item {
+            GlanceColumnChart(
+                uiState = columnChartUiState,
+                columnsColor = budget.category?.getColorByTheme(CurrAppTheme)?.lighter,
+                title = stringResource(
+                    id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
+                ),
+                bottomNote = "Average spending: " +
+                        columnChartUiState.averageValue.formatWithSpaces(budget.currency)
+            ) { totalAmountByPeriod ->
+                StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
+            }
+        }
+        item { Spacer(modifier = Modifier.height(verticalGap)) }
     }
 }
 
@@ -233,16 +250,16 @@ fun BudgetStatisticsScreenPreview(
     val context = LocalContext.current
     val totalAmountsByRanges = budget.repeatingPeriod.getPrevDateRanges()
         .mapIndexed { index, dateRange ->
-            TotalAmountByRange(
+            TotalAmountInRange(
                 dateRange = dateRange,
                 totalAmount = totalAmounts.getOrNull(index) ?: 0.0
             )
         }
         .let { totalAmountsByRanges ->
-            listOf(TotalAmountByRange(budget.dateRange, budget.usedAmount)) + totalAmountsByRanges
+            listOf(TotalAmountInRange(budget.dateRange, budget.usedAmount)) + totalAmountsByRanges
         }
         .reversed()
-    val columnChartUiState = ColumnChartUiState.createAsBudgetStatistics(
+    val columnChartUiState = ColumnChartUiState.asAmountsByDateRanges(
         totalAmountsByRanges = totalAmountsByRanges,
         rowsCount = 5,
         repeatingPeriod = budget.repeatingPeriod,

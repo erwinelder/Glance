@@ -240,6 +240,7 @@
     <string name="transfer">Transfer</string>
     <string name="all_categories">Alle Kategorien</string>
     <string name="no_collections_of_this_type">Keine Sammlungen dieses Typs vorhanden</string>
+    <string name="budget_not_found">Budget nicht gefunden</string>
     <string name="reset_data_action">Setzen Sie alle App-Daten zurück. Ihr Konto wird nicht gelöscht.</string>
     <string name="reset_data_confirmation">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
     <string name="delete_your_account_with_all_data">Löschen Sie Ihr Konto mit allen Ihren Daten.</string>

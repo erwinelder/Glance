@@ -1,8 +1,6 @@
 package com.ataglance.walletglance.record.data.repository
 
-import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -32,9 +30,10 @@ interface RecordRepository {
 
     fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>
 
-    fun getTotalAmountForBudgetInDateRanges(
-        budget: Budget,
-        dateRangeList: List<LongDateRange>
-    ): Flow<List<TotalAmountByRange>>
+    suspend fun getTotalAmountByCategoryAndAccountsInRange(
+        categoryId: Int,
+        accountsIds: List<Int>,
+        dateRange: LongDateRange
+    ): Double
 
 }

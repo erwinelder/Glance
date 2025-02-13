@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.record.domain.usecase
 
-import com.ataglance.walletglance.core.data.model.LongDateRange
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.mapper.toDomainModels

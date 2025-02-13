@@ -1,29 +1,39 @@
 package com.ataglance.walletglance.budget.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.SaveBudgetsUseCase
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.copyDataToBudget
-import com.ataglance.walletglance.budget.mapper.toNewBudget
+import com.ataglance.walletglance.budget.mapper.budget.copyDataToBudget
+import com.ataglance.walletglance.budget.mapper.budget.toNewBudget
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class EditBudgetsViewModel(
-    passedBudgetsByType: BudgetsByType
+    private val saveBudgetsUseCase: SaveBudgetsUseCase,
+    private val getBudgetsUseCase: GetBudgetsUseCase
 ) : ViewModel() {
 
-    private val _budgetsByType: MutableStateFlow<BudgetsByType> = MutableStateFlow(
-        passedBudgetsByType
-    )
+    init {
+        viewModelScope.launch {
+            val budgetsByType = getBudgetsUseCase.getGroupedByType()
+            _budgetsByType.update { budgetsByType }
+        }
+    }
+
+
+    private val _budgetsByType = MutableStateFlow(BudgetsByType())
     val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
 
-    fun saveBudget(budgetUiState: BudgetDraft) {
+    fun applyBudget(budgetUiState: BudgetDraft) {
         val budgetsByType = budgetsByType.value
 
         val newBudgetsByType = if (budgetUiState.isNew) {
@@ -42,8 +52,11 @@ class EditBudgetsViewModel(
         _budgetsByType.update { newBudgetsByType }
     }
 
-    fun getBudgetList(): List<Budget> {
-        return budgetsByType.value.concatenate()
+
+    suspend fun saveBudgets() {
+        saveBudgetsUseCase.execute(
+            budgets = budgetsByType.value.concatenate()
+        )
     }
 
 
@@ -54,13 +67,4 @@ class EditBudgetsViewModel(
         }
     }
 
-}
-
-data class EditBudgetsViewModelFactory(
-    private val budgetsByType: BudgetsByType
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return EditBudgetsViewModel(budgetsByType) as T
-    }
 }

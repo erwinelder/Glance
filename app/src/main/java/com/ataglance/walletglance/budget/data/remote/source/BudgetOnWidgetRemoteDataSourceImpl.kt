@@ -1,10 +1,10 @@
-package com.ataglance.walletglance.personalization.data.remote.source
+package com.ataglance.walletglance.budget.data.remote.source
 
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
-import com.ataglance.walletglance.personalization.data.remote.dao.BudgetOnWidgetRemoteDao
-import com.ataglance.walletglance.personalization.data.remote.model.BudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.budget.data.remote.dao.BudgetOnWidgetRemoteDao
+import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
 
 class BudgetOnWidgetRemoteDataSourceImpl(
     private val budgetOnWidgetDao: BudgetOnWidgetRemoteDao,

@@ -1,6 +1,6 @@
-package com.ataglance.walletglance.personalization.mapper
+package com.ataglance.walletglance.budget.mapper.budgetOnWidget
 
-import com.ataglance.walletglance.personalization.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
 
 
 fun List<BudgetOnWidgetEntity>.toIntList(): List<Int> {
