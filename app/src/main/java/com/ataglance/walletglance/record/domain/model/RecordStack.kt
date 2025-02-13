@@ -18,7 +18,7 @@ data class RecordStack(
     fun isExpense() = type == RecordType.Expense
     fun isIncome() = type == RecordType.Income
     fun isOutTransfer() = type == RecordType.OutTransfer
-    private fun isInTransfer() = type == RecordType.InTransfer
+    fun isInTransfer() = type == RecordType.InTransfer
     fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
     fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
     fun isExpenseOrIncome() = isExpense() || isIncome()

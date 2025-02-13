@@ -1,7 +1,5 @@
 package com.ataglance.walletglance.record.domain.utils
 
-import androidx.annotation.StringRes
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
@@ -12,7 +10,6 @@ import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.model.RecordsTypeFilter
 
 
 fun RecordType.inverse(): RecordType {
@@ -52,28 +49,10 @@ fun Char.asRecordType(): RecordType? {
 }
 
 
-
-@StringRes fun RecordsTypeFilter.getNoRecordsMessageRes(): Int {
-    return when (this) {
-        RecordsTypeFilter.All -> R.string.you_have_no_records_in_date_range
-        RecordsTypeFilter.Expenses -> R.string.you_have_no_expenses_in_date_range
-        RecordsTypeFilter.Income -> R.string.you_have_no_income_in_date_range
-    }
-}
-
-
-
-fun List<RecordStack>.findByRecordNum(recordNum: Int): RecordStack? {
-    return this.find { it.recordNum == recordNum }
-}
-
-
-
 fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
     return this.isNotEmpty() &&
             this.first().date.extractYear() != this.last().date.extractYear()
 }
-
 
 
 fun List<RecordStack>.filterAccountId(accountId: Int): List<RecordStack> {
@@ -81,7 +60,6 @@ fun List<RecordStack>.filterAccountId(accountId: Int): List<RecordStack> {
         it.account.id == accountId
     }
 }
-
 
 
 fun List<RecordStack>.filterByCollectionType(type: CategoryCollectionType): List<RecordStack> {
@@ -93,14 +71,12 @@ fun List<RecordStack>.filterByCollectionType(type: CategoryCollectionType): List
 }
 
 
-
 fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds): List<RecordStack> {
     return this.filterByCollectionType(collection.type).let { recordStacksFilteredByType ->
         recordStacksFilteredByType.takeUnless { collection.hasLinkedCategories() }
             ?: recordStacksFilteredByType.filterByCategoriesIds(collection.categoriesIds!!)
     }
 }
-
 
 
 fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<RecordStack> {
@@ -120,7 +96,6 @@ fun List<RecordStack>.getFirstByTypeAndAccountIdOrJustType(
     return find { it.isExplicitlyOfType(type) && it.account.id == accountId }
         ?: find { it.isExplicitlyOfType(type) }
 }
-
 
 
 fun List<RecordStack>.shrinkForCompactView(): List<RecordStack> {
@@ -200,17 +175,6 @@ fun getStartAndFinalRateByAmounts(
     } else {
         startAmount / finalAmount to 1.0
     }
-}
-
-
-fun List<RecordStack>.getOutAndInTransfersByRecordNum(
-    recordNum: Int
-): Pair<RecordStack, RecordStack>? {
-    val first = this.findByRecordNum(recordNum) ?: return null
-    val second = this.findByRecordNum(
-        recordNum + if (first.isOutTransfer()) 1 else -1
-    ) ?: return null
-    return if (first.isOutTransfer()) first to second else second to first
 }
 
 

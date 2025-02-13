@@ -46,12 +46,10 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
-import com.ataglance.walletglance.recordCreation.mapper.getTransferDraft
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
-import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModelFactory
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
 import kotlinx.coroutines.flow.emptyFlow
@@ -312,10 +310,7 @@ fun AppNavHost(
                 onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(
-                        navController = navController,
-                        screen = MainScreens.TransferCreation(
-                            isNew = true, recordNum = appConfiguration.nextRecordNum()
-                        )
+                        navController = navController, screen = MainScreens.TransferCreation()
                     )
                 },
                 onIncludeInBudgetsChange = viewModel::changeIncludeInBudgets,
@@ -356,19 +351,11 @@ fun AppNavHost(
             enterTransition = { screenEnterTransition() },
             popExitTransition = { screenExitTransition(false) }
         ) { backStack ->
-            val isNew = backStack.toRoute<MainScreens.TransferCreation>().isNew
             val recordNum = backStack.toRoute<MainScreens.TransferCreation>().recordNum
 
-            val viewModel = viewModel<TransferCreationViewModel>(
-                factory = TransferCreationViewModelFactory(
-                    accountList = appUiState.accountsAndActiveOne.accountList,
-                    transferDraft = appUiState.recordStackListByDate.getTransferDraft(
-                        isNew = isNew,
-                        recordNum = recordNum,
-                        accountsAndActiveOne = appUiState.accountsAndActiveOne
-                    )
-                )
-            )
+            val viewModel = koinViewModel<TransferCreationViewModel> {
+                parametersOf(recordNum)
+            }
 
             val transferDraft by viewModel.transferDraft.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
@@ -385,21 +372,21 @@ fun AppNavHost(
                 onAmountChange = viewModel::changeAmount,
                 onSaveButton = {
                     coroutineScope.launch {
-                        appViewModel.saveTransfer(viewModel.getTransferDraft())
+                        viewModel.saveTransfer()
+                        navViewModel.popBackStackToHomeScreen(navController)
                     }
-                    navViewModel.popBackStackToHomeScreen(navController)
                 },
                 onRepeatButton = {
                     coroutineScope.launch {
-                        appViewModel.repeatTransfer(viewModel.getTransferDraft())
+                        viewModel.repeatTransfer()
+                        navViewModel.popBackStackToHomeScreen(navController)
                     }
-                    navViewModel.popBackStackToHomeScreen(navController)
                 },
                 onDeleteButton = {
                     coroutineScope.launch {
-                        appViewModel.deleteTransfer(viewModel.getSenderReceiverRecordNums())
+                        viewModel.deleteTransfer()
+                        navViewModel.popBackStackToHomeScreen(navController)
                     }
-                    navViewModel.popBackStackToHomeScreen(navController)
                 }
             )
         }

@@ -244,24 +244,26 @@ class RecordCreationViewModel(
 
 
     suspend fun saveRecord() {
-        getRecordDraft().toCreatedRecord()?.let { createdRecord ->
-            saveRecordUseCase.execute(record = createdRecord)
-        }
+        getRecordDraft()
+            .takeIf { it.savingIsAllowed() }
+            ?.toCreatedRecord()
+            ?.let { createdRecord ->
+                saveRecordUseCase.execute(record = createdRecord)
+            }
     }
 
     suspend fun repeatRecord() {
-        val recordNum = (getLastRecordNumUseCase.get() ?: 0) + 1
+        val recordDraft = getRecordDraft().takeIf { it.savingIsAllowed() } ?: return
+        val recordNum = getLastRecordNumUseCase.getNext()
 
-        val createdRecord = getRecordDraft()
-            .run {
-                copy(
-                    general = general.copy(
-                        isNew = true,
-                        recordNum = recordNum,
-                        dateTimeState = DateTimeState()
-                    )
+        val createdRecord = recordDraft
+            .copy(
+                general = recordDraft.general.copy(
+                    isNew = true,
+                    recordNum = recordNum,
+                    dateTimeState = DateTimeState()
                 )
-            }
+            )
             .toCreatedRecord()
             ?: return
 

@@ -188,9 +188,7 @@ private fun CompactLayout(
                                 },
                                 onTransferClick = { recordNum: Int ->
                                     onNavigateToScreenMovingTowardsLeft(
-                                        MainScreens.TransferCreation(
-                                            isNew = false, recordNum = recordNum
-                                        )
+                                        MainScreens.TransferCreation(recordNum = recordNum)
                                     )
                                 },
                                 onNavigateToRecordsScreen = {

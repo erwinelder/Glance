@@ -119,7 +119,7 @@ fun RecordsScreen(
                             }
                         ) { recordNum ->
                             onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.TransferCreation(isNew = false, recordNum = recordNum)
+                                MainScreens.TransferCreation(recordNum = recordNum)
                             )
                         }
                     } else {

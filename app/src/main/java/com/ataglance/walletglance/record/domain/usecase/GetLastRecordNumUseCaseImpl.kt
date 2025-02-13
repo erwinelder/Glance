@@ -16,4 +16,8 @@ class GetLastRecordNumUseCaseImpl(
         return recordRepository.getLastRecordNum().firstOrNull()
     }
 
+    override suspend fun getNext(): Int {
+        return get()?.plus(1) ?: 1
+    }
+
 }

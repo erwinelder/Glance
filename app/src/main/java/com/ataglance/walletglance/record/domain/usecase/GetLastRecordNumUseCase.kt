@@ -8,4 +8,6 @@ interface GetLastRecordNumUseCase {
 
     suspend fun get(): Int?
 
+    suspend fun getNext(): Int
+
 }

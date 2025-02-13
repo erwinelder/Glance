@@ -19,8 +19,6 @@ import com.ataglance.walletglance.budget.domain.usecase.SaveBudgetsUseCase
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
@@ -37,7 +35,6 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
@@ -52,12 +49,6 @@ import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
-import com.ataglance.walletglance.record.domain.utils.getFirstByTypeAndAccountIdOrJustType
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRecordNums
-import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUseCase
-import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCase
-import com.ataglance.walletglance.recordCreation.mapper.toCreatedTransfer
-import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.flow.Flow
@@ -85,8 +76,6 @@ class AppViewModel(
     private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
 
     val recordRepository: RecordRepository,
-    private val saveTransferUseCase: SaveTransferUseCase,
-    private val deleteTransferUseCase: DeleteTransferUseCase,
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
     private val getTodayTotalExpensesForAccountUseCase: GetTodayTotalExpensesForAccountUseCase,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
@@ -393,24 +382,7 @@ class AppViewModel(
             currentCategories = categoriesWithSubcategories.value.asSingleList()
         )
     }
-
-    fun getLastUsedRecordCategories(): CategoryWithSubcategoryByType {
-        return CategoryWithSubcategoryByType(
-            expense = getLastUsedRecordCategoryByType(CategoryType.Expense),
-            income = getLastUsedRecordCategoryByType(CategoryType.Income),
-        )
-    }
-
-    // TODO-ACCOUNTS-DEPENDENCY
-    private fun getLastUsedRecordCategoryByType(type: CategoryType): CategoryWithSubcategory? {
-        return accountsAndActiveOne.value.activeAccount?.id
-            ?.let {
-                recordStacksInDateRange.value.recordStacks.getFirstByTypeAndAccountIdOrJustType(type, it)
-            }
-            ?.stack?.firstOrNull()?.categoryWithSubcategory
-            ?: categoriesWithSubcategories.value.getLastCategoryWithSubcategoryByType(type)
-    }
-
+    
 
     private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsWithIdsByType())
     val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
@@ -502,37 +474,6 @@ class AppViewModel(
             currentBudgets = budgetsByType.value.concatenate()
         )
         fetchBudgets()
-    }
-
-
-    suspend fun saveTransfer(transferDraft: TransferDraft) {
-        transferDraft.toCreatedTransfer()?.let { createdTransfer ->
-            saveTransferUseCase.execute(transfer = createdTransfer)
-        }
-    }
-
-    suspend fun repeatTransfer(state: TransferDraft) {
-        if (!state.savingIsAllowed()) return
-
-        val nextRecordNum = appConfiguration.value.nextRecordNum()
-
-        val newMakeTransferState = state.copy(
-            sender = state.sender.copy(
-                recordNum = nextRecordNum,
-                recordId = 0
-            ),
-            receiver = state.receiver.copy(
-                recordNum = nextRecordNum + 1,
-                recordId = 0
-            ),
-            dateTimeState = DateTimeState()
-        )
-
-        saveTransfer(newMakeTransferState)
-    }
-
-    suspend fun deleteTransfer(transferUnitsRecordNums: TransferUnitsRecordNums) {
-        deleteTransferUseCase.execute(unitsRecordNums = transferUnitsRecordNums)
     }
 
 

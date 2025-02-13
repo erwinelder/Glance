@@ -6,9 +6,9 @@ import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRe
 import java.util.Locale
 
 data class TransferDraft(
-    val isNew: Boolean,
-    val sender: TransferDraftUnits,
-    val receiver: TransferDraftUnits,
+    val isNew: Boolean = true,
+    val sender: TransferDraftUnits = TransferDraftUnits(),
+    val receiver: TransferDraftUnits = TransferDraftUnits(),
     val dateTimeState: DateTimeState = DateTimeState(),
     val includeInBudgets: Boolean = true,
     val savingIsAllowed: Boolean = false

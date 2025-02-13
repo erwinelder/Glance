@@ -3,8 +3,8 @@ package com.ataglance.walletglance.recordCreation.presentation.model.transfer
 import com.ataglance.walletglance.account.domain.model.Account
 
 data class TransferDraftUnits(
-    val account: Account?,
-    val recordNum: Int,
+    val account: Account? = null,
+    val recordNum: Int = 0,
     val recordId: Int = 0,
     val amount: String = "",
     val rate: String = "1"

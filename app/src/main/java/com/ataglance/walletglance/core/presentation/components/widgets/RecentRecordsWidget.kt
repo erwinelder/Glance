@@ -25,7 +25,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordsTypeFilter
 import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
-import com.ataglance.walletglance.record.domain.utils.getNoRecordsMessageRes
+import com.ataglance.walletglance.record.presentation.utils.getNoRecordsMessageRes
 import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
 import com.ataglance.walletglance.record.presentation.components.TransferComponent
 

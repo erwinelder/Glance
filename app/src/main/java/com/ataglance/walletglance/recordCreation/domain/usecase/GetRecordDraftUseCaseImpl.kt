@@ -26,7 +26,7 @@ class GetRecordDraftUseCaseImpl(
             ?.let { getRecordStackUseCase.get(it) }
             ?.toRecordDraft(accounts = accounts)
             ?: getClearRecordDraft(
-                recordNum = getLastRecordNumUseCase.get() ?: 0,
+                recordNum = getLastRecordNumUseCase.getNext(),
                 account = accounts.firstOrNull { it.isActive },
                 categoryWithSubcategory = categoryWithSubcategory
             )

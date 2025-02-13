@@ -6,11 +6,14 @@ import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUs
 import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUseCaseImpl
 import com.ataglance.walletglance.recordCreation.domain.usecase.GetRecordDraftUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.GetRecordDraftUseCaseImpl
+import com.ataglance.walletglance.recordCreation.domain.usecase.GetTransferDraftUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.GetTransferDraftUseCaseImpl
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCaseImpl
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCase
 import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCaseImpl
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -62,6 +65,14 @@ val recordCreationModule = module {
         )
     }
 
+    single<GetTransferDraftUseCase> {
+        GetTransferDraftUseCaseImpl(
+            getRecordStackUseCase = get(),
+            getAccountsUseCase = get(),
+            getLastRecordNumUseCase = get()
+        )
+    }
+
     /* ---------- View Models ---------- */
 
     viewModel { parameters ->
@@ -71,6 +82,17 @@ val recordCreationModule = module {
             saveRecordUseCase = get(),
             deleteRecordUseCase = get(),
             getLastUsedRecordCategoryUseCase = get(),
+            getLastRecordNumUseCase = get()
+        )
+    }
+
+    viewModel { parameters ->
+        TransferCreationViewModel(
+            recordNum = parameters.get(),
+            saveTransferUseCase = get(),
+            deleteTransferUseCase = get(),
+            getTransferDraftUseCase = get(),
+            getAccountsUseCase = get(),
             getLastRecordNumUseCase = get()
         )
     }
