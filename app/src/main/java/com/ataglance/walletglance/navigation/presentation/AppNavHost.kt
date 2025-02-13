@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthController
+import com.ataglance.walletglance.budget.presentation.containers.BudgetsOnWidgetSettingsBottomSheet
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
@@ -38,7 +39,6 @@ import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.budget.presentation.containers.BudgetsOnWidgetSettingsBottomSheet
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
@@ -386,7 +386,6 @@ fun AppNavHost(
             themeUiState = themeUiState,
             accountList = appUiState.accountsAndActiveOne.accountList,
             categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
-            categoryCollectionsUiState = appUiState.categoryCollectionsUiState,
             personalizationViewModel = personalizationViewModel,
             widgetNamesList = widgetsUiState.widgetNamesList
         )

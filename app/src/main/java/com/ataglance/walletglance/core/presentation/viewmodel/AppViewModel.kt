@@ -15,13 +15,11 @@ import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategor
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
 import com.ataglance.walletglance.category.domain.utils.translateCategories
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
-import com.ataglance.walletglance.categoryCollection.domain.usecase.SaveCategoryCollectionsUseCase
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
@@ -64,9 +62,8 @@ class AppViewModel(
     private val getAccountsUseCase: GetAccountsUseCase,
 
     private val saveCategoriesUseCase: SaveCategoriesUseCase,
-    private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
 
-    private val saveCategoryCollectionsUseCase: SaveCategoryCollectionsUseCase,
     private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
 
     val recordRepository: RecordRepository,
@@ -363,7 +360,7 @@ class AppViewModel(
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            getAllCategoriesUseCase.getAsFlow().collect(::updateCategoriesWithSubcategories)
+            getCategoriesUseCase.getGroupedAsFlow().collect(::updateCategoriesWithSubcategories)
         }
     }
 
@@ -380,18 +377,10 @@ class AppViewModel(
 
     private fun fetchCategoryCollections() {
         viewModelScope.launch {
-            _categoryCollectionsUiState.update {
-                getCategoryCollectionsUseCase.get()
+            getCategoryCollectionsUseCase.getAsFlow().collect { collections ->
+                _categoryCollectionsUiState.update { collections }
             }
         }
-    }
-
-    suspend fun saveCategoryCollections(collections: List<CategoryCollectionWithIds>) {
-        saveCategoryCollectionsUseCase.execute(
-            collectionsToSave = collections,
-            currentCollections = categoryCollectionsUiState.value.concatenateLists()
-        )
-        fetchCategoryCollections()
     }
 
 

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.domain.usecase
 
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
-import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.recordCreation.domain.transfer.TransferPairRecordStacks
 import com.ataglance.walletglance.record.mapper.toRecordStack
@@ -10,11 +10,11 @@ import com.ataglance.walletglance.recordCreation.domain.transfer.TransferUnitsRe
 class GetTransferPairUseCaseImpl(
     private val recordRepository: RecordRepository,
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getAllCategoriesUseCase: GetAllCategoriesUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : GetTransferPairUseCase {
     override suspend fun execute(unitsRecordNums: TransferUnitsRecordNums): TransferPairRecordStacks? {
         val accounts = getAccountsUseCase.getAll()
-        val categories = getAllCategoriesUseCase.get()
+        val categories = getCategoriesUseCase.getGrouped()
 
         val outRecordStack = recordRepository
             .getRecordsByRecordNum(recordNum = unitsRecordNums.sender)

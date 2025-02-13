@@ -7,59 +7,38 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionsScreen
-import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.CategoryCollectionsViewModel
-import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.CategoryCollectionsViewModelFactory
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
-import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModelFactory
-import com.ataglance.walletglance.categoryCollection.domain.utils.toCollectionsWithIds
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.categoryCollectionsGraph(
     navController: NavHostController,
-    navViewModel: NavigationViewModel,
-    appViewModel: AppViewModel,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType
+    navViewModel: NavigationViewModel
 ) {
     navigation<SettingsScreens.CategoryCollections>(
         startDestination = CategoryCollectionsSettingsScreens.EditCategoryCollections
     ) {
         composable<CategoryCollectionsSettingsScreens.EditCategoryCollections> { backStack ->
-            val collectionsViewModel = backStack.sharedViewModel<CategoryCollectionsViewModel>(
-                navController = navController,
-                factory = CategoryCollectionsViewModelFactory(
-                    categoryList = categoriesWithSubcategories.asSingleList(),
-                    collectionsWithIds = categoryCollectionsWithIdsByType
-                )
-            )
-            val editCollectionViewModel = backStack
-                .sharedViewModel<EditCategoryCollectionViewModel>(
-                    navController = navController,
-                    factory = EditCategoryCollectionViewModelFactory(
-                        categoriesWithSubcategories = categoriesWithSubcategories
-                    )
-                )
+            val collectionsViewModel = backStack
+                .sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(navController)
+            val collectionViewModel = backStack
+                .sharedKoinNavViewModel<EditCategoryCollectionViewModel>(navController)
 
-            val collectionListByType by collectionsViewModel.collectionsWithCategoriesByType
-                .collectAsStateWithLifecycle()
-            val categoryCollectionType by collectionsViewModel.collectionType
-                .collectAsStateWithLifecycle()
+            val collectionsByType by collectionsViewModel.collectionsByType.collectAsStateWithLifecycle()
+            val collectionType by collectionsViewModel.collectionType.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditCategoryCollectionsScreen(
-                collectionWithCategoriesList = collectionListByType,
-                collectionType = categoryCollectionType,
+                collectionsWithCategories = collectionsByType,
+                collectionType = collectionType,
                 onCategoryTypeChange = collectionsViewModel::changeCategoryType,
                 onNavigateToEditCollectionScreen = { collectionOrNull ->
-                    editCollectionViewModel.applyCollection(
+                    collectionViewModel.applyCollection(
                         collection = collectionOrNull ?: collectionsViewModel.getNewCollection()
                     )
                     navViewModel.navigateToScreen(
@@ -69,46 +48,40 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 },
                 onSaveCollectionsButton = {
                     coroutineScope.launch {
-                        appViewModel.saveCategoryCollections(
-                            collectionsViewModel.getAllCollections().toCollectionsWithIds()
-                        )
+                        collectionsViewModel.saveCategoryCollections()
                         navController.popBackStack()
                     }
                 }
-//                onSwapCategories = viewModel::swapParentCategories
             )
         }
         composable<CategoryCollectionsSettingsScreens.EditCategoryCollection> { backStack ->
             val collectionsViewModel = backStack
-                .sharedViewModel<CategoryCollectionsViewModel>(navController = navController)
-            val editCollectionViewModel = backStack
-                .sharedViewModel<EditCategoryCollectionViewModel>(navController = navController)
+                .sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(navController)
+            val collectionViewModel = backStack
+                .sharedKoinNavViewModel<EditCategoryCollectionViewModel>(navController)
 
-            val collectionUiState by editCollectionViewModel
-                .collectionUiState.collectAsStateWithLifecycle()
-            val editingCategoriesWithSubcategories by editCollectionViewModel
-                .editingCategoriesWithSubcategories.collectAsStateWithLifecycle()
-            val expandedCategory by editCollectionViewModel
-                .expandedCategory.collectAsStateWithLifecycle()
-            val allowSaving by editCollectionViewModel
-                .allowSaving.collectAsStateWithLifecycle()
+            val collection by collectionViewModel.collectionUiState.collectAsStateWithLifecycle()
+            val editingCategoriesWithSubcategories by collectionViewModel
+                .checkedCategoriesWithSubcategories.collectAsStateWithLifecycle()
+            val expandedCategory by collectionViewModel.expandedCategory.collectAsStateWithLifecycle()
+            val allowSaving by collectionViewModel.allowSaving.collectAsStateWithLifecycle()
 
             EditCategoryCollectionScreen(
-                collection = collectionUiState,
-                editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+                collection = collection,
+                checkedCategoriesWithSubcategories = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,
-                allowDeleting = editCollectionViewModel.allowDeleting.value,
+                allowDeleting = collectionViewModel.allowDeleting.value,
                 allowSaving = allowSaving,
-                onNameChange = editCollectionViewModel::changeName,
-                onCheckedChange = editCollectionViewModel::inverseCheckedCategoryState,
-                onExpandedChange = editCollectionViewModel::inverseExpandedState,
+                onNameChange = collectionViewModel::changeName,
+                onCheckedChange = collectionViewModel::inverseCheckedCategoryState,
+                onExpandedChange = collectionViewModel::inverseExpandedState,
                 onDeleteButton = {
-                    collectionsViewModel.deleteCollection(collectionUiState)
+                    collectionsViewModel.deleteCollection(collection = collection)
                     navController.popBackStack()
                 },
                 onSaveButton = {
-                    collectionsViewModel.saveEditingCollection(
-                        editingCollection = editCollectionViewModel.getCollection()
+                    collectionsViewModel.applyCollection(
+                        collection = collectionViewModel.getCollection()
                     )
                     navController.popBackStack()
                 }

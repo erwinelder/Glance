@@ -1,7 +1,9 @@
 package com.ataglance.walletglance.di
 
 import com.ataglance.walletglance.budget.data.local.source.BudgetLocalDataSource
+import com.ataglance.walletglance.budget.data.local.source.BudgetOnWidgetLocalDataSource
 import com.ataglance.walletglance.budget.data.local.source.getBudgetLocalDataSource
+import com.ataglance.walletglance.budget.data.local.source.getBudgetOnWidgetLocalDataSource
 import com.ataglance.walletglance.budget.data.remote.dao.BudgetOnWidgetRemoteDao
 import com.ataglance.walletglance.budget.data.remote.dao.BudgetRemoteDao
 import com.ataglance.walletglance.budget.data.remote.source.BudgetOnWidgetRemoteDataSource
@@ -29,8 +31,6 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
-import com.ataglance.walletglance.budget.data.local.source.BudgetOnWidgetLocalDataSource
-import com.ataglance.walletglance.budget.data.local.source.getBudgetOnWidgetLocalDataSource
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -91,7 +91,7 @@ val budgetModule = module {
     single<GetBudgetsUseCase> {
         GetBudgetsUseCaseImpl(
             budgetRepository = get(),
-            getExpenseCategoriesUseCase = get(),
+            getCategoriesUseCase = get(),
             getAccountsUseCase = get(),
             getRecordsInDateRangeUseCase = get()
         )
@@ -110,7 +110,7 @@ val budgetModule = module {
             budgetRepository = get(),
             getBudgetIdsOnWidgetUseCase = get(),
             getAccountsUseCase = get(),
-            getExpenseCategoriesUseCase = get(),
+            getCategoriesUseCase = get(),
             getRecordsInDateRangeUseCase = get()
         )
     }
@@ -156,7 +156,7 @@ val budgetModule = module {
     viewModel {
         EditBudgetViewModel(
             getAccountsUseCase = get(),
-            getAllCategoriesUseCase = get()
+            getCategoriesUseCase = get()
         )
     }
 

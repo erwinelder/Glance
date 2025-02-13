@@ -40,7 +40,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 
 @Composable
 fun EditCategoryCollectionsScreen(
-    collectionWithCategoriesList: List<CategoryCollectionWithCategories>,
+    collectionsWithCategories: List<CategoryCollectionWithCategories>,
     collectionType: CategoryCollectionType,
     onCategoryTypeChange: (CategoryCollectionType) -> Unit,
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories?) -> Unit,
@@ -55,7 +55,7 @@ fun EditCategoryCollectionsScreen(
         },
         glassSurfaceContent = {
             GlassSurfaceContent(
-                collectionWithCategoriesList = collectionWithCategoriesList,
+                collectionWithCategoriesList = collectionsWithCategories,
                 onNavigateToEditCollectionScreen = onNavigateToEditCollectionScreen
             )
         },
@@ -204,7 +204,7 @@ fun EditCategoryCollectionsScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionsScreen(
-            collectionWithCategoriesList = collectionWithCategoriesList,
+            collectionsWithCategories = collectionWithCategoriesList,
             collectionType = CategoryCollectionType.Mixed,
             onCategoryTypeChange = {},
             onNavigateToEditCollectionScreen = {},

@@ -65,9 +65,8 @@ val appModule = module {
             getAccountsUseCase = get(),
 
             saveCategoriesUseCase = get(),
-            getAllCategoriesUseCase = get(),
+            getCategoriesUseCase = get(),
 
-            saveCategoryCollectionsUseCase = get(),
             getCategoryCollectionsUseCase = get(),
 
             recordRepository = get(),

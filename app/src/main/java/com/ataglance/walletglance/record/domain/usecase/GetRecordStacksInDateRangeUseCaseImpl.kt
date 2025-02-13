@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.domain.usecase
 
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
-import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.flow
 class GetRecordStacksInDateRangeUseCaseImpl(
     private val recordRepository: RecordRepository,
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getAllCategoriesUseCase: GetAllCategoriesUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : GetRecordStacksInDateRangeUseCase {
 
     override fun getAsFlow(range: LongDateRange): Flow<List<RecordStack>> = flow {
         val recordsFlow = recordRepository.getRecordsInDateRange(range = range)
         val accountsFlow = getAccountsUseCase.getAllAsFlow()
-        val categoriesFlow = getAllCategoriesUseCase.getAsFlow()
+        val categoriesFlow = getCategoriesUseCase.getGroupedAsFlow()
 
         combine(recordsFlow, accountsFlow, categoriesFlow) { records, accounts, categories ->
             records.toRecordStacks(accounts = accounts, categoriesWithSubcategories = categories)
@@ -30,7 +30,7 @@ class GetRecordStacksInDateRangeUseCaseImpl(
     override suspend fun get(range: LongDateRange): List<RecordStack> {
         val records = recordRepository.getRecordsInDateRange(range = range).firstOrNull().orEmpty()
         val accounts = getAccountsUseCase.getAll()
-        val categories = getAllCategoriesUseCase.get()
+        val categories = getCategoriesUseCase.getGrouped()
 
         return records.toRecordStacks(accounts = accounts, categoriesWithSubcategories = categories)
     }

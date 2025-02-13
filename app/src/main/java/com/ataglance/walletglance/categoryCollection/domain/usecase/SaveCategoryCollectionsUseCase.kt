@@ -1,10 +1,7 @@
 package com.ataglance.walletglance.categoryCollection.domain.usecase
 
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 
 interface SaveCategoryCollectionsUseCase {
-    suspend fun execute(
-        collectionsToSave: List<CategoryCollectionWithIds>,
-        currentCollections: List<CategoryCollectionWithIds>
-    )
+    suspend fun execute(collections: List<CategoryCollectionWithCategories>)
 }

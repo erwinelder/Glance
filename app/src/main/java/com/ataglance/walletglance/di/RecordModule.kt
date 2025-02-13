@@ -64,7 +64,7 @@ val recordModule = module {
         GetRecordStackUseCaseImpl(
             recordRepository = get(),
             getAccountsUseCase = get(),
-            getAllCategoriesUseCase = get()
+            getCategoriesUseCase = get()
         )
     }
 
@@ -72,7 +72,7 @@ val recordModule = module {
         GetTransferPairUseCaseImpl(
             recordRepository = get(),
             getAccountsUseCase = get(),
-            getAllCategoriesUseCase = get()
+            getCategoriesUseCase = get()
         )
     }
 
@@ -80,7 +80,7 @@ val recordModule = module {
         GetRecordStacksInDateRangeUseCaseImpl(
             recordRepository = get(),
             getAccountsUseCase = get(),
-            getAllCategoriesUseCase = get()
+            getCategoriesUseCase = get()
         )
     }
 

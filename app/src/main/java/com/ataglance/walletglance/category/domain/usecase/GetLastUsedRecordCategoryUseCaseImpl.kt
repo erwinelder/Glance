@@ -7,12 +7,12 @@ import com.ataglance.walletglance.record.domain.usecase.GetRecordStackUseCase
 
 class GetLastUsedRecordCategoryUseCaseImpl(
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getRecordStackUseCase: GetRecordStackUseCase
 ) : GetLastUsedRecordCategoryUseCase {
 
     override suspend fun get(type: CategoryType): CategoryWithSubcategory? {
-        val categories = getAllCategoriesUseCase.get()
+        val categories = getCategoriesUseCase.getGrouped()
 
         val accountId = getAccountsUseCase.getActive()?.id
             ?: return categories.getLastCategoryWithSubcategoryByType(type)

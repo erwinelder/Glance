@@ -29,7 +29,7 @@ import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.mapper.toEditingCategoriesWithSubcategories
+import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
@@ -157,9 +157,9 @@ private fun EditCategoryCollectionScreenPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         EditCategoryCollectionScreen(
             collection = collection,
-            editingCategoriesWithSubcategories =
+            checkedCategoriesWithSubcategories =
             DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-                .toEditingCategoriesWithSubcategories(collection),
+                .toCheckedCategoriesWithSubcategories(collection),
             expandedCategory = null,
             allowDeleting = true,
             allowSaving = true,

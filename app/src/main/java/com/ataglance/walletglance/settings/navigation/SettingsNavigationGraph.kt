@@ -18,7 +18,6 @@ import com.ataglance.walletglance.auth.presentation.navigation.authGraph
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
 import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.presentation.navigation.categoriesGraph
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
@@ -48,7 +47,6 @@ fun NavGraphBuilder.settingsGraph(
     themeUiState: ThemeUiState,
     accountList: List<Account>,
     categoriesWithSubcategories: CategoriesWithSubcategories,
-    categoryCollectionsUiState: CategoryCollectionsWithIdsByType,
     personalizationViewModel: PersonalizationViewModel,
     widgetNamesList: List<WidgetName>
 ) {
@@ -102,10 +100,7 @@ fun NavGraphBuilder.settingsGraph(
         )
         categoryCollectionsGraph(
             navController = navController,
-            navViewModel = navViewModel,
-            appViewModel = appViewModel,
-            categoriesWithSubcategories = categoriesWithSubcategories,
-            categoryCollectionsWithIdsByType = categoryCollectionsUiState
+            navViewModel = navViewModel
         )
         composable<SettingsScreens.Appearance> {
             AppearanceScreen(

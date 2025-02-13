@@ -6,7 +6,7 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.getMaxDateRange
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
-import com.ataglance.walletglance.category.domain.usecase.GetExpenseCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -16,13 +16,13 @@ class GetBudgetsOnWidgetUseCaseImpl(
     private val budgetRepository: BudgetRepository,
     private val getBudgetIdsOnWidgetUseCase: GetBudgetIdsOnWidgetUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase
 ) : GetBudgetsOnWidgetUseCase {
 
     override fun getAsFlow(): Flow<List<Budget>> = flow {
         val (entities, associations) = budgetRepository.getAllBudgetsAndAssociations()
-        val categoryWithSubcategoriesList = getExpenseCategoriesUseCase.execute()
+        val categoryWithSubcategoriesList = getCategoriesUseCase.getOfExpenseType()
         val accounts = getAccountsUseCase.getAll()
 
         val budgets = entities.toDomainModels(

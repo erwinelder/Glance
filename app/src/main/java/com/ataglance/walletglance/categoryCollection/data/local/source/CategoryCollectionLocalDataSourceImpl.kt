@@ -7,6 +7,7 @@ import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
+import kotlinx.coroutines.flow.Flow
 
 class CategoryCollectionLocalDataSourceImpl(
     private val categoryCollectionDao: CategoryCollectionLocalDao,
@@ -38,6 +39,10 @@ class CategoryCollectionLocalDataSourceImpl(
         )
     }
 
+    override fun getAllCategoryCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>> {
+        return categoryCollectionDao.getAllCollectionsAsFlow()
+    }
+
     override suspend fun getAllCategoryCollections(): List<CategoryCollectionEntity> {
         return categoryCollectionDao.getAllCollections()
     }
@@ -65,7 +70,13 @@ class CategoryCollectionLocalDataSourceImpl(
         )
     }
 
-    override suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation> {
+    override fun getAllCollectionCategoryAssociationsAsFlow(
+    ): Flow<List<CategoryCollectionCategoryAssociation>> {
+        return categoryCollectionDao.getAllCollectionCategoryAssociationsAsFlow()
+    }
+
+    override suspend fun getAllCollectionCategoryAssociations(
+    ): List<CategoryCollectionCategoryAssociation> {
         return categoryCollectionDao.getAllCollectionCategoryAssociations()
     }
 

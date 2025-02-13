@@ -7,10 +7,8 @@ import com.ataglance.walletglance.category.data.remote.source.CategoryRemoteData
 import com.ataglance.walletglance.category.data.remote.source.CategoryRemoteDataSourceImpl
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
 import com.ataglance.walletglance.category.data.repository.CategoryRepositoryImpl
-import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCase
-import com.ataglance.walletglance.category.domain.usecase.GetAllCategoriesUseCaseImpl
-import com.ataglance.walletglance.category.domain.usecase.GetExpenseCategoriesUseCase
-import com.ataglance.walletglance.category.domain.usecase.GetExpenseCategoriesUseCaseImpl
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCaseImpl
 import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCategoryUseCase
 import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCategoryUseCaseImpl
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
@@ -50,18 +48,14 @@ val categoryModule = module {
         SaveCategoriesUseCaseImpl(categoryRepository = get())
     }
 
-    single<GetAllCategoriesUseCase> {
-        GetAllCategoriesUseCaseImpl(categoryRepository = get())
-    }
-
-    single<GetExpenseCategoriesUseCase> {
-        GetExpenseCategoriesUseCaseImpl(categoryRepository = get())
+    single<GetCategoriesUseCase> {
+        GetCategoriesUseCaseImpl(categoryRepository = get())
     }
 
     single<GetLastUsedRecordCategoryUseCase> {
         GetLastUsedRecordCategoryUseCaseImpl(
             getAccountsUseCase = get(),
-            getAllCategoriesUseCase = get(),
+            getCategoriesUseCase = get(),
             getRecordStackUseCase = get()
         )
     }

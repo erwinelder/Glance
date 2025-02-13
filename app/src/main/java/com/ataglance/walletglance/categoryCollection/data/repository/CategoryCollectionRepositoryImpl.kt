@@ -14,6 +14,9 @@ import com.ataglance.walletglance.categoryCollection.data.remote.source.Category
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 
 class CategoryCollectionRepositoryImpl(
     private val localSource: CategoryCollectionLocalDataSource,
@@ -92,9 +95,21 @@ class CategoryCollectionRepositoryImpl(
         localSource.deleteAllCategoryCollections(timestamp = timestamp)
     }
 
-    override suspend fun getAllCollectionsAndAssociations():
-            Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>
-    {
+    override fun getAllCollectionsAndAssociationsAsFlow(
+    ): Flow<Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>> = flow {
+        synchroniseCollections()
+        synchroniseCollectionCategoryAssociations()
+
+        combine(
+            localSource.getAllCategoryCollectionsAsFlow(),
+            localSource.getAllCollectionCategoryAssociationsAsFlow()
+        ) { collections, associations ->
+            emit(collections to associations)
+        }
+    }
+
+    override suspend fun getAllCollectionsAndAssociations(
+    ): Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>> {
         synchroniseCollections()
         synchroniseCollectionCategoryAssociations()
 

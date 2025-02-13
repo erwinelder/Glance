@@ -7,6 +7,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryCollectionLocalDao {
@@ -30,6 +31,9 @@ interface CategoryCollectionLocalDao {
     }
 
     @Query("SELECT * FROM CategoryCollection")
+    fun getAllCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>>
+
+    @Query("SELECT * FROM CategoryCollection")
     suspend fun getAllCollections(): List<CategoryCollectionEntity>
 
 
@@ -51,6 +55,9 @@ interface CategoryCollectionLocalDao {
         deleteCollectionCategoryAssociations(toDelete)
         upsertCollectionCategoryAssociations(toUpsert)
     }
+
+    @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
+    fun getAllCollectionCategoryAssociationsAsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
 
     @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
     suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>

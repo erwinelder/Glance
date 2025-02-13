@@ -3,6 +3,7 @@ package com.ataglance.walletglance.categoryCollection.data.local.source
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import kotlinx.coroutines.flow.Flow
 
 interface CategoryCollectionLocalDataSource {
 
@@ -17,6 +18,8 @@ interface CategoryCollectionLocalDataSource {
         timestamp: Long
     )
 
+    fun getAllCategoryCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>>
+
     suspend fun getAllCategoryCollections(): List<CategoryCollectionEntity>
 
 
@@ -28,6 +31,8 @@ interface CategoryCollectionLocalDataSource {
         associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,
         timestamp: Long
     )
+
+    fun getAllCollectionCategoryAssociationsAsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
 
     suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>
 
