@@ -55,10 +55,9 @@ fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
 }
 
 
-fun List<RecordStack>.filterAccountId(accountId: Int): List<RecordStack> {
-    return this.filter {
-        it.account.id == accountId
-    }
+fun List<RecordStack>.filterByAccount(accountId: Int?): List<RecordStack> {
+    if (accountId == null) return this
+    return filter { it.account.id == accountId }
 }
 
 
@@ -72,9 +71,12 @@ fun List<RecordStack>.filterByCollectionType(type: CategoryCollectionType): List
 
 
 fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds): List<RecordStack> {
-    return this.filterByCollectionType(collection.type).let { recordStacksFilteredByType ->
-        recordStacksFilteredByType.takeUnless { collection.hasLinkedCategories() }
-            ?: recordStacksFilteredByType.filterByCategoriesIds(collection.categoriesIds!!)
+    return filterByCollectionType(collection.type).let { recordStacks ->
+        if (collection.categoriesIds.isNullOrEmpty()) {
+            recordStacks
+        } else {
+            recordStacks.filterByCategoriesIds(collection.categoriesIds)
+        }
     }
 }
 

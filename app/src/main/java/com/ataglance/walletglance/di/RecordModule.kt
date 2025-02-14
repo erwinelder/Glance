@@ -22,6 +22,8 @@ import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesFor
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCaseImpl
 import com.ataglance.walletglance.record.domain.usecase.GetTransferPairUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTransferPairUseCaseImpl
+import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val recordModule = module {
@@ -90,6 +92,18 @@ val recordModule = module {
 
     single<GetRecordsTotalAmountInDateRangesUseCase> {
         GetRecordsTotalAmountInDateRangesUseCaseImpl(recordRepository = get())
+    }
+
+    /* ---------- View Models ---------- */
+
+    viewModel { parameters ->
+        RecordsViewModel(
+            activeAccount = parameters.get(),
+            activeDateRange = parameters.get(),
+            defaultCollectionName = parameters.get(),
+            getCategoryCollectionsUseCase = get(),
+            getRecordStacksInDateRangeUseCase = get()
+        )
     }
 
 }

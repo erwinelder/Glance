@@ -22,11 +22,12 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeToggleButton
+import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -53,17 +54,15 @@ fun RecordsScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    collectionType: CategoryCollectionType,
-    filteredRecords: List<RecordStack>,
-    collectionList: List<CategoryCollectionWithIds>,
-    selectedCollection: CategoryCollectionWithIds,
-    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    collectionsUiState: CategoryCollectionsUiState,
+    recordStacks: List<RecordStack>,
+    onCollectionSelect: (Int) -> Unit,
     onToggleCollectionType: () -> Unit,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val includeYearToRecordDate by remember {
-        derivedStateOf { filteredRecords.containsRecordsFromDifferentYears() }
+        derivedStateOf { recordStacks.containsRecordsFromDifferentYears() }
     }
     val lazyListState = rememberLazyListState()
 
@@ -75,20 +74,20 @@ fun RecordsScreen(
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         onDateRangeChange = onDateRangeChange,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-        collectionList = collectionList,
-        selectedCollection = selectedCollection,
-        onCollectionSelect = onCollectionSelect,
+        collectionList = collectionsUiState.collections,
+        selectedCollection = collectionsUiState.activeCollection,
+        onCollectionSelect = { onCollectionSelect(it.id) },
         animatedContentLabel = "records history widget content",
-        animatedContentTargetState = Pair(filteredRecords, collectionType),
-        visibleNoDataMessage = filteredRecords.isEmpty(),
-        noDataMessageRes = when(collectionType) {
+        animatedContentTargetState = Pair(recordStacks, collectionsUiState.activeType),
+        visibleNoDataMessage = recordStacks.isEmpty(),
+        noDataMessageRes = when(collectionsUiState.activeType) {
             CategoryCollectionType.Mixed -> R.string.you_have_no_records_in_date_range
             CategoryCollectionType.Expense -> R.string.you_have_no_expenses_in_date_range
             CategoryCollectionType.Income -> R.string.you_have_no_income_in_date_range
         },
         typeToggleButton = {
             CategoryCollectionTypeToggleButton(
-                currentType = collectionType, onClick = onToggleCollectionType
+                currentType = collectionsUiState.activeType, onClick = onToggleCollectionType
             )
         },
         onNavigateToEditCollectionsScreen = {
@@ -110,7 +109,16 @@ fun RecordsScreen(
                     items = targetRecordStackListAndTypeFilter.first,
                     key = { it.recordNum }
                 ) { recordStack ->
-                    if (recordStack.isTransfer()) {
+                    if (recordStack.isNotTransfer()) {
+                        RecordStackComponent(
+                            recordStack = recordStack,
+                            includeYearToDate = includeYearToRecordDate
+                        ) { recordNum ->
+                            onNavigateToScreenMovingTowardsLeft(
+                                MainScreens.RecordCreation(recordNum = recordNum)
+                            )
+                        }
+                    } else {
                         TransferComponent(
                             recordStack = recordStack,
                             includeYearToDate = includeYearToRecordDate,
@@ -120,15 +128,6 @@ fun RecordsScreen(
                         ) { recordNum ->
                             onNavigateToScreenMovingTowardsLeft(
                                 MainScreens.TransferCreation(recordNum = recordNum)
-                            )
-                        }
-                    } else {
-                        RecordStackComponent(
-                            recordStack = recordStack,
-                            includeYearToDate = includeYearToRecordDate
-                        ) { recordNum ->
-                            onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.RecordCreation(recordNum = recordNum)
                             )
                         }
                     }
@@ -200,10 +199,12 @@ fun RecordsScreenPreview(
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onDateRangeChange = {},
             onCustomDateRangeButtonClick = {},
-            collectionType = collectionType,
-            filteredRecords = recordStackList,
-            collectionList = collectionList,
-            selectedCollection = selectedCollection,
+            collectionsUiState = CategoryCollectionsUiState(
+                collections = collectionList,
+                activeCollection = selectedCollection,
+                activeType = collectionType
+            ),
+            recordStacks = recordStackList,
             onCollectionSelect = {},
             onToggleCollectionType = {},
             onNavigateToScreenMovingTowardsLeft = {},

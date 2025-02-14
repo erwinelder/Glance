@@ -42,7 +42,6 @@ import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationVi
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
-import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModelFactory
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
@@ -109,28 +108,23 @@ fun AppNavHost(
         composable<MainScreens.Records> {
             val defaultCollectionName = stringResource(R.string.all_categories)
 
-            val viewModel = viewModel<RecordsViewModel>(
-                factory = RecordsViewModelFactory(
-                    categoryCollections = appUiState.categoryCollectionsUiState
-                        .appendDefaultCollection(name = defaultCollectionName),
-                    recordsFilteredByDateAndAccount = widgetsUiState.recordStacksByDateAndAccount
-                )
-            )
-            LaunchedEffect(widgetsUiState.compactRecordStacksByDateAndAccount) {
-                viewModel.setRecordsByDateAndAccount(
-                    widgetsUiState.compactRecordStacksByDateAndAccount
-                )
-            }
-            LaunchedEffect(appUiState.categoryCollectionsUiState) {
-                viewModel.setCategoryCollections(
-                    appUiState.categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
+            val viewModel = koinViewModel<RecordsViewModel> {
+                parametersOf(
+                    appUiState.accountsAndActiveOne.activeAccount,
+                    appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange,
+                    defaultCollectionName
                 )
             }
 
-            val collectionType by viewModel.collectionType.collectAsStateWithLifecycle()
-            val filteredRecords by viewModel.recordsByDateAccountAndCollection.collectAsStateWithLifecycle()
-            val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
-            val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
+            LaunchedEffect(appUiState.accountsAndActiveOne.activeAccount) {
+                viewModel.setActiveAccountId(appUiState.accountsAndActiveOne.activeAccount?.id ?: 0)
+            }
+            LaunchedEffect(appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange) {
+                viewModel.setActiveDateRange(appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange)
+            }
+
+            val collectionsUiState by viewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
+            val recordStacks by viewModel.filteredRecordStacks.collectAsStateWithLifecycle()
 
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
@@ -140,10 +134,8 @@ fun AppNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                collectionType = collectionType,
-                filteredRecords = filteredRecords,
-                collectionList = collectionList,
-                selectedCollection = selectedCollection,
+                collectionsUiState = collectionsUiState,
+                recordStacks = recordStacks,
                 onCollectionSelect = viewModel::selectCollection,
                 onToggleCollectionType = viewModel::toggleCollectionType,
                 onNavigateToScreenMovingTowardsLeft = { screen ->
@@ -284,7 +276,7 @@ fun AppNavHost(
             val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
             val recordDraftItems by viewModel.recordDraftItems.collectAsStateWithLifecycle()
             val savingIsAllowed by viewModel.savingIsAllowed.collectAsStateWithLifecycle()
-            val categories by viewModel.groupedCategoriesByType.collectAsStateWithLifecycle()
+            val groupedCategories by viewModel.groupedCategoriesByType.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             RecordCreationScreen(
@@ -292,7 +284,7 @@ fun AppNavHost(
                 recordDraftItems = recordDraftItems,
                 savingIsAllowed = savingIsAllowed,
                 accountList = appUiState.accountsAndActiveOne.accountList,
-                groupedCategoriesByType = categories,
+                groupedCategoriesByType = groupedCategories,
                 onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(

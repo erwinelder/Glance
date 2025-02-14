@@ -23,6 +23,7 @@ data class RecordStack(
     fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
     fun isExpenseOrIncome() = isExpense() || isIncome()
     fun isTransfer() = isOutTransfer() || isInTransfer()
+    fun isNotTransfer() = !isTransfer()
 
     fun isOfType(type: RecordType): Boolean {
         return this.type == type

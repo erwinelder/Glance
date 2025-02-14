@@ -5,6 +5,10 @@ data class LongDateRange(
     val to: Long
 ) {
 
+    fun equalsTo(other: LongDateRange): Boolean {
+        return from == other.from && to == other.to
+    }
+
     fun containsDate(date: Long): Boolean {
         return date in from..to
     }

@@ -26,7 +26,7 @@ import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
-import com.ataglance.walletglance.record.domain.utils.filterAccountId
+import com.ataglance.walletglance.record.domain.utils.filterByAccount
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
@@ -87,7 +87,7 @@ fun MainAppContent(
     ) {
         derivedStateOf {
             val recordStacksByDateAndAccount = accountsUiState.activeAccount?.id
-                ?.let { recordStacksInDateRange.recordStacks.filterAccountId(it) }
+                ?.let { recordStacksInDateRange.recordStacks.filterByAccount(it) }
                 .orEmpty()
 
             WidgetsUiState(
