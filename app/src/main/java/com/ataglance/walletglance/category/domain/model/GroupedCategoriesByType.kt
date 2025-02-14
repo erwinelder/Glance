@@ -3,18 +3,32 @@ package com.ataglance.walletglance.category.domain.model
 import com.ataglance.walletglance.category.domain.utils.fixParentOrderNums
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 
-data class CategoriesWithSubcategories(
-    val expense: List<CategoryWithSubcategories> = emptyList(),
-    val income: List<CategoryWithSubcategories> = emptyList()
+data class GroupedCategoriesByType(
+    val expense: List<GroupedCategories> = emptyList(),
+    val income: List<GroupedCategories> = emptyList()
 ) {
 
-    fun asSingleList(): List<Category> {
+    companion object {
+
+        fun fromGroupedCategories(groups: List<GroupedCategories>): GroupedCategoriesByType {
+            return groups.partition { it.category.isExpense() }.let { (expense, income) ->
+                GroupedCategoriesByType(
+                    expense = expense.sortedBy { it.category.orderNum },
+                    income = income.sortedBy { it.category.orderNum }
+                )
+            }
+        }
+
+    }
+
+
+    fun asList(): List<Category> {
         return (expense + income).flatMap { categoryWithSubcategories ->
             categoryWithSubcategories.asSingleList()
         }
     }
 
-    private fun getByTypeOrAll(type: CategoryType?): List<CategoryWithSubcategories> {
+    private fun getByTypeOrAll(type: CategoryType?): List<GroupedCategories> {
         return when (type) {
             CategoryType.Expense -> expense
             CategoryType.Income -> income
@@ -22,7 +36,7 @@ data class CategoriesWithSubcategories(
         }
     }
 
-    fun getByType(type: CategoryType): List<CategoryWithSubcategories> {
+    fun getByType(type: CategoryType): List<GroupedCategories> {
         return when (type) {
             CategoryType.Expense -> expense
             CategoryType.Income -> income
@@ -30,30 +44,30 @@ data class CategoriesWithSubcategories(
     }
 
     fun replaceListByType(
-        list: List<CategoryWithSubcategories>,
+        list: List<GroupedCategories>,
         type: CategoryType
-    ): CategoriesWithSubcategories {
+    ): GroupedCategoriesByType {
         return when (type) {
             CategoryType.Expense -> this.copy(expense = list)
             CategoryType.Income -> this.copy(income = list)
         }
     }
 
-    fun getFirstCategoryWithSubcategoryByType(type: CategoryType?): CategoryWithSubcategory? {
+    fun getFirstCategoryWithSubByType(type: CategoryType?): CategoryWithSub? {
         return type?.let { getByTypeOrAll(it).firstOrNull()?.getWithFirstSubcategory() }
     }
 
-    fun getLastCategoryWithSubcategoryByType(type: CategoryType?): CategoryWithSubcategory? {
+    fun getLastCategoryWithSubByType(type: CategoryType?): CategoryWithSub? {
         return type?.let { getByTypeOrAll(it).lastOrNull()?.getWithLastSubcategory() }
     }
 
-    fun findById(id: Int, type: CategoryType? = null): CategoryWithSubcategories? {
+    fun findById(id: Int, type: CategoryType? = null): GroupedCategories? {
         return getByTypeOrAll(type).firstOrNull { it.category.id == id }
     }
 
-    fun appendNewCategory(category: Category): CategoriesWithSubcategories {
+    fun appendNewCategory(category: Category): GroupedCategoriesByType {
         val list = getByType(category.type).toMutableList()
-        list.add(CategoryWithSubcategories(
+        list.add(GroupedCategories(
             category = category.copy(
                 orderNum = (list.maxOfOrNull { it.category.orderNum } ?: 0) + 1
             )
@@ -61,21 +75,21 @@ data class CategoriesWithSubcategories(
         return replaceListByType(list, category.type)
     }
 
-    fun replaceCategory(category: Category): CategoriesWithSubcategories {
-        val categoryWithSubcategoriesList = this.getByType(category.type).map {
-            it.takeIf { it.category.id != category.id } ?: it.copy(
+    fun replaceCategory(category: Category): GroupedCategoriesByType {
+        val groupedCategoriesList = getByType(category.type).map {
+            it.takeUnless { it.category.id == category.id } ?: it.copy(
                 category = category,
                 subcategoryList = it.changeSubcategoriesColorTo(category.color)
             )
         }
 
         return replaceListByType(
-            list = categoryWithSubcategoriesList,
+            list = groupedCategoriesList,
             type = category.type
         )
     }
 
-    fun deleteCategoryById(category: Category): CategoriesWithSubcategories {
+    fun deleteCategoryById(category: Category): GroupedCategoriesByType {
         val newList = getByType(category.type).deleteItemAndMoveOrderNum(
             predicate = { it.category.id == category.id },
             transform = { it.copy(category = it.category.copy(orderNum = it.category.orderNum - 1)) }
@@ -83,7 +97,7 @@ data class CategoriesWithSubcategories(
         return replaceListByType(newList, category.type)
     }
 
-    fun fixParentCategoriesOrderNums(): CategoriesWithSubcategories {
+    fun fixParentCategoriesOrderNums(): GroupedCategoriesByType {
         return this.copy(
             expense = expense.fixParentOrderNums(),
             income = income.fixParentOrderNums()

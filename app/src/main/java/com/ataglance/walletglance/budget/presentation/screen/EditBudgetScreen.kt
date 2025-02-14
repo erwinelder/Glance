@@ -35,9 +35,9 @@ import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
 import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryField
 import com.ataglance.walletglance.category.presentation.components.CategoryPicker
@@ -61,9 +61,9 @@ fun EditBudgetScreen(
     scaffoldPadding: PaddingValues,
     budget: BudgetDraft,
     accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
+    groupedCategoriesByType: GroupedCategoriesByType,
     onNameChange: (String) -> Unit,
-    onCategoryChange: (CategoryWithSubcategory) -> Unit,
+    onCategoryChange: (CategoryWithSub) -> Unit,
     onAmountLimitChange: (String) -> Unit,
     onRepeatingPeriodChange: (RepeatingPeriod) -> Unit,
     onLinkAccount: (Account) -> Unit,
@@ -108,7 +108,7 @@ fun EditBudgetScreen(
         )
         CategoryPicker(
             visible = showCategoryPicker,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = groupedCategoriesByType,
             type = CategoryType.Expense,
             allowChoosingParentCategory = true,
             onDismissRequest = { showCategoryPicker = false },
@@ -243,7 +243,7 @@ private fun LazyListScope.accountCheckedList(
 fun EditBudgetScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
@@ -256,14 +256,14 @@ fun EditBudgetScreenPreview(
     budgetUiState: BudgetDraft = (budgetEntity to budgetAccountAssociationList)
         .letIfNoneIsNull { (budget, associations) ->
             budget.toDomainModel(
-                categoryWithSubcategoriesList = categoriesWithSubcategories.expense,
+                groupedCategoriesList = groupedCategoriesByType.expense,
                 associations = associations,
                 accounts = accountList
             )?.toDraft(accounts = accountList)
         } ?: BudgetDraft(
             isNew = true,
             amountLimit = "4000",
-            category = categoriesWithSubcategories.expense[0].category,
+            category = groupedCategoriesByType.expense[0].category,
             name = "Food & drinks",
             linkedAccounts = accountList.subList(0, 1)
         )
@@ -273,7 +273,7 @@ fun EditBudgetScreenPreview(
             scaffoldPadding = scaffoldPadding,
             budget = budgetUiState,
             accountList = accountList,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = groupedCategoriesByType,
             onNameChange = {},
             onCategoryChange = {},
             onAmountLimitChange = {},

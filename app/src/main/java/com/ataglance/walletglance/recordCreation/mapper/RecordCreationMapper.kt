@@ -49,7 +49,7 @@ private fun RecordStackItem.toRecordDraftItem(index: Int, collapsed: Boolean): R
     return RecordDraftItem(
         lazyListKey = index,
         index = index,
-        categoryWithSubcategory = this.categoryWithSubcategory,
+        categoryWithSub = this.categoryWithSub,
         note = this.note ?: "",
         amount = "%.2f".format(
             locale = Locale.US,
@@ -82,10 +82,10 @@ private fun List<RecordDraftItem>.toCreatedRecordItems(): List<CreatedRecordItem
 }
 
 private fun RecordDraftItem.toCreatedRecordItem(): CreatedRecordItem? {
-    val categoryWithSubcategory = this.categoryWithSubcategory ?: return null
+    val categoryWithSubcategory = this.categoryWithSub ?: return null
 
     return CreatedRecordItem(
-        categoryWithSubcategory = categoryWithSubcategory,
+        categoryWithSub = categoryWithSubcategory,
         note = note.trim().takeUnless { it.isNotBlank() },
         totalAmount = this.getTotalAmount(),
         quantity = quantity.toIntOrNull()
@@ -135,8 +135,8 @@ private fun CreatedRecordItem.toRecordEntity(
         accountId = accountId,
         amount = this.totalAmount,
         quantity = this.quantity,
-        categoryId = this.categoryWithSubcategory.category.id,
-        subcategoryId = this.categoryWithSubcategory.subcategory?.id,
+        categoryId = this.categoryWithSub.category.id,
+        subcategoryId = this.categoryWithSub.subcategory?.id,
         note = this.note,
         includeInBudgets = preferences.includeInBudgets
     )

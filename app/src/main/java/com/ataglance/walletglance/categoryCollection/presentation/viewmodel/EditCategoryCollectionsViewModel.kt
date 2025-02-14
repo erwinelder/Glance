@@ -25,7 +25,7 @@ class EditCategoryCollectionsViewModel(
 
     init {
         viewModelScope.launch {
-            val categories = getCategoriesUseCase.getSimple()
+            val categories = getCategoriesUseCase.getAsList()
             val collections = getCategoryCollectionsUseCase.get().toCollectionsWithCategories(
                 allCategories = categories
             )

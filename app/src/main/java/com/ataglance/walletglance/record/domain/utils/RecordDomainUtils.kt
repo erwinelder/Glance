@@ -2,7 +2,7 @@ package com.ataglance.walletglance.record.domain.utils
 
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.utils.extractYear
@@ -82,7 +82,7 @@ fun List<RecordStack>.filterByCollection(collection: CategoryCollectionWithIds):
 fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<RecordStack> {
     return this.mapNotNull { recordStack ->
         recordStack.stack
-            .filter { it.categoryWithSubcategory?.matchIds(categoriesIds) == true }
+            .filter { it.categoryWithSub?.matchIds(categoriesIds) == true }
             .takeIf { it.isNotEmpty() }
             ?.let { recordStack.copy(stack = it) }
     }
@@ -99,7 +99,7 @@ fun RecordStack.shrinkForCompactView(): RecordStack {
     val distinctStack = this.stack.distinctByCategories(3)
 
     val stack = distinctStack.map { item ->
-        item.copy(note = item.categoryWithSubcategory?.let { this.stack.foldNotesByCategory(it) })
+        item.copy(note = item.categoryWithSub?.let { this.stack.foldNotesByCategory(it) })
     }
 
     return this.copy(stack = stack)
@@ -113,7 +113,7 @@ fun List<RecordStackItem>.distinctByCategories(maxCount: Int): List<RecordStackI
 
         this[i]
             .takeIf { item ->
-                distinctItems.none { it.matchesCategory(item.categoryWithSubcategory) }
+                distinctItems.none { it.matchesCategory(item.categoryWithSub) }
             }
             ?.let { distinctItems.add(it) }
     }
@@ -122,11 +122,11 @@ fun List<RecordStackItem>.distinctByCategories(maxCount: Int): List<RecordStackI
 }
 
 fun List<RecordStackItem>.foldNotesByCategory(
-    categoryWithSubcategory: CategoryWithSubcategory
+    categoryWithSub: CategoryWithSub
 ): String? {
     return this
         .filter {
-            it.categoryWithSubcategory?.match(categoryWithSubcategory) == true &&
+            it.categoryWithSub?.match(categoryWithSub) == true &&
                     it.note?.isNotBlank() == true
         }
         .fold("") { notes, item ->

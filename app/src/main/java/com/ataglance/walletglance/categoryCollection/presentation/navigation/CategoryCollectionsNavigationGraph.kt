@@ -68,7 +68,7 @@ fun NavGraphBuilder.categoryCollectionsGraph(
 
             EditCategoryCollectionScreen(
                 collection = collection,
-                checkedCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+                checkedGroupedCategoriesByType = editingCategoriesWithSubcategories,
                 expandedCategory = expandedCategory,
                 allowDeleting = collectionViewModel.allowDeleting.value,
                 allowSaving = allowSaving,

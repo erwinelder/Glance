@@ -7,9 +7,9 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
@@ -26,14 +26,14 @@ class EditBudgetViewModel(
     init {
         viewModelScope.launch {
             getAccountsUseCase.getAll().let { accounts = it }
-            getCategoriesUseCase.getGrouped().let { categoriesWithSubcategories = it }
+            getCategoriesUseCase.getGrouped().let { groupedCategoriesByType = it }
         }
     }
 
 
     var accounts = emptyList<Account>()
         private set
-    var categoriesWithSubcategories = CategoriesWithSubcategories()
+    var groupedCategoriesByType = GroupedCategoriesByType()
         private set
 
 
@@ -42,8 +42,8 @@ class EditBudgetViewModel(
 
     fun applyBudget(budget: Budget?) {
         val budgetDraft = budget?.toDraft(accounts = accounts) ?: let {
-            val categoryWithSubcategory = categoriesWithSubcategories
-                .getFirstCategoryWithSubcategoryByType(CategoryType.Expense)
+            val categoryWithSubcategory = groupedCategoriesByType
+                .getFirstCategoryWithSubByType(CategoryType.Expense)
             val category = categoryWithSubcategory?.category
 
             BudgetDraft(
@@ -63,11 +63,11 @@ class EditBudgetViewModel(
         }
     }
 
-    fun changeCategory(categoryWithSubcategory: CategoryWithSubcategory) {
-        val category = categoryWithSubcategory.getSubcategoryOrCategory()
+    fun changeCategory(categoryWithSub: CategoryWithSub) {
+        val category = categoryWithSub.getSubcategoryOrCategory()
         _budget.update { budget ->
             budget.copy(
-                priorityNum = categoryWithSubcategory.groupParentAndSubcategoryOrderNums(),
+                priorityNum = categoryWithSub.groupParentAndSubcategoryOrderNums(),
                 category = category,
                 name = budget.name.takeIf {
                     it.isNotBlank() && budget.name != budget.category?.name

@@ -8,8 +8,8 @@ import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudget
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
 import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
@@ -17,13 +17,13 @@ import com.ataglance.walletglance.core.utils.getRepeatingPeriodByString
 
 
 fun List<BudgetEntity>.toDomainModels(
-    categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
+    groupedCategoriesList: List<GroupedCategories>,
     associations: List<BudgetAccountAssociation>,
     accounts: List<Account>
 ): List<Budget> {
     return this.mapNotNull { budget ->
         budget.toDomainModel(
-            categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+            groupedCategoriesList = groupedCategoriesList,
             associations = associations,
             accounts = accounts
         )
@@ -31,23 +31,23 @@ fun List<BudgetEntity>.toDomainModels(
 }
 
 fun BudgetEntity.toDomainModel(
-    categoryWithSubcategoriesList: List<CategoryWithSubcategories>,
+    groupedCategoriesList: List<GroupedCategories>,
     associations: List<BudgetAccountAssociation>,
     accounts: List<Account>
 ): Budget? {
-    val categoryWithSubcategory = categoryWithSubcategoriesList.getCategoryWithSubcategoryById(
+    val categoryWithSubcategory = groupedCategoriesList.getCategoryWithSubcategoryById(
         id = this.categoryId
     )
     val linkedAccountsIds = associations.filter { it.budgetId == this.id }.map { it.accountId }
     val linkedAccounts = accounts.filter { linkedAccountsIds.contains(it.id) }
 
     return this.toDomainModel(
-        categoryWithSubcategory = categoryWithSubcategory, linkedAccounts = linkedAccounts
+        categoryWithSub = categoryWithSubcategory, linkedAccounts = linkedAccounts
     )
 }
 
 fun BudgetEntity.toDomainModel(
-    categoryWithSubcategory: CategoryWithSubcategory?,
+    categoryWithSub: CategoryWithSub?,
     linkedAccounts: List<Account>
 ): Budget? {
     val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
@@ -55,11 +55,11 @@ fun BudgetEntity.toDomainModel(
 
     return Budget(
         id = id,
-        priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
+        priorityNum = categoryWithSub?.groupParentAndSubcategoryOrderNums() ?: 0.0,
         usedAmount = 0.0,
         amountLimit = amountLimit,
         usedPercentage = 0F,
-        category = categoryWithSubcategory?.getSubcategoryOrCategory(),
+        category = categoryWithSub?.getSubcategoryOrCategory(),
         name = name,
         repeatingPeriod = repeatingPeriodEnum,
         dateRange = dateRange,

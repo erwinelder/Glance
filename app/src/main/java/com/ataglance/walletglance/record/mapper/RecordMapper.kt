@@ -3,7 +3,7 @@ package com.ataglance.walletglance.record.mapper
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
@@ -19,22 +19,22 @@ import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTran
 
 fun List<RecordEntity>.toRecordStacks(
     accounts: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories
+    groupedCategoriesByType: GroupedCategoriesByType
 ): List<RecordStack> {
     return this.groupBy { it.recordNum }
         .mapNotNull { (_, records) ->
             records.toRecordStack(
-                accounts = accounts, categoriesWithSubcategories = categoriesWithSubcategories
+                accounts = accounts, groupedCategoriesByType = groupedCategoriesByType
             )
         }
 }
 
 fun List<RecordEntity>.toRecordStack(
     accounts: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories
+    groupedCategoriesByType: GroupedCategoriesByType
 ): RecordStack? {
     val record = this.firstOrNull() ?: return null
-    val units = this.mapNotNull { it.toRecordStackUnit(categoriesWithSubcategories) }
+    val units = this.mapNotNull { it.toRecordStackUnit(groupedCategoriesByType) }
 
     val recordType = record.type.asRecordType() ?: return null
     val recordAccount = accounts.findById(record.accountId)?.toRecordAccount() ?: return null
@@ -51,10 +51,10 @@ fun List<RecordEntity>.toRecordStack(
 }
 
 fun RecordEntity.toRecordStackUnit(
-    categoriesWithSubcategories: CategoriesWithSubcategories
+    groupedCategoriesByType: GroupedCategoriesByType
 ): RecordStackItem? {
     val categoryType = type.asRecordType()?.toCategoryTypeOrNullIfTransfer() ?: return null
-    val categoryWithSubcategories = categoriesWithSubcategories.findById(
+    val categoryWithSubcategories = groupedCategoriesByType.findById(
         id = categoryId, type = categoryType
     )
 
@@ -62,7 +62,7 @@ fun RecordEntity.toRecordStackUnit(
         id = id,
         amount = amount,
         quantity = quantity,
-        categoryWithSubcategory = categoryWithSubcategories
+        categoryWithSub = categoryWithSubcategories
             ?.getWithSubcategoryWithIdOrWithoutSubcategory(id = subcategoryId),
         note = note,
         includeInBudgets = includeInBudgets
@@ -80,8 +80,8 @@ fun RecordStack.toRecordEntities(): List<RecordEntity> {
             accountId = account.id,
             amount = unit.amount,
             quantity = unit.quantity,
-            categoryId = unit.categoryWithSubcategory?.category?.id ?: 0,
-            subcategoryId = unit.categoryWithSubcategory?.subcategory?.id,
+            categoryId = unit.categoryWithSub?.category?.id ?: 0,
+            subcategoryId = unit.categoryWithSub?.subcategory?.id,
             note = unit.note,
             includeInBudgets = unit.includeInBudgets
         )

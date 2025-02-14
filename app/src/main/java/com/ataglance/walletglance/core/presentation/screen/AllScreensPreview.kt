@@ -61,7 +61,7 @@ import com.ataglance.walletglance.recordCreation.presentation.model.transfer.Tra
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
@@ -351,7 +351,7 @@ fun MainAppContentHomeScreenPreview() {
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         recordList = recordEntityList,
         budgetsOnWidget = budgetEntityList.toDomainModels(
-            categoryWithSubcategoriesList = defaultCategoriesPackage.expense,
+            groupedCategoriesList = defaultCategoriesPackage.expense,
             associations = budgetAccountAssociationList,
             accounts = accountsAndActiveOne.accountList
         ).fillUsedAmountsByRecords(recordEntityList.toDomainModels()).take(1),
@@ -451,7 +451,7 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
     val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
     val budget = budgetEntityList
         .toDomainModels(
-            categoryWithSubcategoriesList = defaultCategories.expense,
+            groupedCategoriesList = defaultCategories.expense,
             associations = budgetAccountAssociationList,
             accounts = accountList
         )
@@ -461,7 +461,7 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isBottomBarVisible = isBottomBarVisible,
-        categoriesWithSubcategories = defaultCategories,
+        groupedCategoriesByType = defaultCategories,
         accountList = accountsAndActiveOne.accountList.let { listOf(it[0], it[3]) },
         budget = budget,
         totalAmounts = listOf(4800.0, 5000.0, 4500.0, 5200.0, 4600.0),
@@ -506,7 +506,7 @@ fun MainAppContentRecordCreationScreenPreview() {
             RecordDraftItem(
                 lazyListKey = 0,
                 index = 0,
-                categoryWithSubcategory = categoriesWithSubcategories.expense[0]
+                categoryWithSub = categoriesWithSubcategories.expense[0]
                     .getWithFirstSubcategory(),
                 note = "bread",
                 amount = "42.43",
@@ -519,7 +519,7 @@ fun MainAppContentRecordCreationScreenPreview() {
     RecordCreationScreenPreview(
         appTheme = appTheme,
         accountsAndActiveOne = accountsAndActiveOne,
-        categoriesWithSubcategories = categoriesWithSubcategories,
+        groupedCategoriesByType = categoriesWithSubcategories,
         recordDraft = recordDraft
     )
 }

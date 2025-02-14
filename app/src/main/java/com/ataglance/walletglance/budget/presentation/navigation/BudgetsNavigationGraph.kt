@@ -74,7 +74,7 @@ fun NavGraphBuilder.budgetsGraph(
                 scaffoldPadding = scaffoldPadding,
                 budget = budget,
                 accountList = editBudgetViewModel.accounts,
-                categoriesWithSubcategories = editBudgetViewModel.categoriesWithSubcategories,
+                groupedCategoriesByType = editBudgetViewModel.groupedCategoriesByType,
                 onNameChange = editBudgetViewModel::changeName,
                 onCategoryChange = editBudgetViewModel::changeCategory,
                 onAmountLimitChange = editBudgetViewModel::changeAmountLimit,

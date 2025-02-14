@@ -33,7 +33,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -208,7 +208,7 @@ fun BudgetStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
@@ -237,8 +237,8 @@ fun BudgetStatisticsScreenPreview(
         amountLimit = 4000.0,
         usedAmount = 2500.0,
         usedPercentage = 62.5F,
-        category = categoriesWithSubcategories.expense[0].category,
-        name = categoriesWithSubcategories.expense[0].category.name,
+        category = groupedCategoriesByType.expense[0].category,
+        name = groupedCategoriesByType.expense[0].category.name,
         repeatingPeriod = RepeatingPeriod.Monthly,
         dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
         currentTimeWithinRangeGraphPercentage = .5f,

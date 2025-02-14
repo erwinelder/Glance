@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.record.domain.usecase
 
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.domain.utils.asChar
@@ -20,19 +20,19 @@ class GetRecordStackUseCaseImpl(
         val accounts = getAccountsUseCase.getAll()
         val categories = getCategoriesUseCase.getGrouped()
 
-        return records.toRecordStack(accounts = accounts, categoriesWithSubcategories = categories)
+        return records.toRecordStack(accounts = accounts, groupedCategoriesByType = categories)
     }
 
     override suspend fun getLastByTypeAndAccount(
         type: CategoryType,
         accountId: Int,
-        categories: CategoriesWithSubcategories
+        categories: GroupedCategoriesByType
     ): RecordStack? {
         val accounts = getAccountsUseCase.getAll()
 
         return recordRepository
             .getLastRecordsByTypeAndAccount(type = type.asChar(), accountId = accountId)
-            .toRecordStack(accounts = accounts, categoriesWithSubcategories = categories)
+            .toRecordStack(accounts = accounts, groupedCategoriesByType = categories)
     }
 
 }

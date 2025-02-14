@@ -57,8 +57,8 @@ data class CategoryStatisticsLists(
         private fun MutableMap<Int, CategoriesStatsMapItem>.increaseTotalAmountOrAddNewOneToCategory(
             stackUnit: RecordStackItem
         ) {
-            stackUnit.categoryWithSubcategory ?: return
-            val category = stackUnit.categoryWithSubcategory.category
+            stackUnit.categoryWithSub ?: return
+            val category = stackUnit.categoryWithSub.category
 
             if (this.containsKey(category.id)) {
                 this[category.id]!!.totalAmount += stackUnit.amount
@@ -73,9 +73,9 @@ data class CategoryStatisticsLists(
         private fun MutableMap<Int, MutableMap<Int, CategoriesStatsMapItem>>
                 .increaseTotalAmountOrAddNewOneToSubcategory(stackUnit: RecordStackItem)
         {
-            stackUnit.categoryWithSubcategory?.subcategory ?: return
-            val category = stackUnit.categoryWithSubcategory.category
-            val subcategory = stackUnit.categoryWithSubcategory.subcategory
+            stackUnit.categoryWithSub?.subcategory ?: return
+            val category = stackUnit.categoryWithSub.category
+            val subcategory = stackUnit.categoryWithSub.subcategory
 
             if (!this.containsKey(category.id)) {
                 this[category.id] = mutableMapOf(

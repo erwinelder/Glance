@@ -26,7 +26,7 @@ class GetBudgetsOnWidgetUseCaseImpl(
         val accounts = getAccountsUseCase.getAll()
 
         val budgets = entities.toDomainModels(
-            categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+            groupedCategoriesList = categoryWithSubcategoriesList,
             associations = associations,
             accounts = accounts
         )

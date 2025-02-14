@@ -63,7 +63,7 @@ fun RecordStackComponent(
                         )
                     }
                     RecordCategory(
-                        category = recordStackItem.categoryWithSubcategory
+                        category = recordStackItem.categoryWithSub
                             ?.getSubcategoryOrCategory()
                     )
                 }
@@ -95,14 +95,14 @@ private fun RecordStackComponentPreview() {
             RecordStackItem(
                 amount = 0.0,
                 quantity = null,
-                categoryWithSubcategory = defaultCategories.expense[0].getWithSubcategoryWithId(13),
+                categoryWithSub = defaultCategories.expense[0].getWithSubcategoryWithId(13),
                 note = "some note note note",
                 includeInBudgets = true
             ),
             RecordStackItem(
                 amount = 0.0,
                 quantity = null,
-                categoryWithSubcategory = defaultCategories.expense[1].getWithSubcategoryWithId(16),
+                categoryWithSub = defaultCategories.expense[1].getWithSubcategoryWithId(16),
                 note = "some note note note",
                 includeInBudgets = true
             ),

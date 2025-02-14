@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
@@ -164,21 +164,21 @@ private fun ExpandedLayoutContent(
 fun EditCategoryCollectionsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     collectionType: CategoryCollectionType = CategoryCollectionType.Mixed,
     categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType? = null,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories> =
         categoryCollectionsWithIdsByType?.toCollectionsWithCategories(
-            allCategories = categoriesWithSubcategories.asSingleList()
+            allCategories = groupedCategoriesByType.asList()
         )?.getByType(collectionType) ?: listOf(
             CategoryCollectionWithCategories(
                 id = 1,
                 orderNum = 1,
                 type = CategoryCollectionType.Mixed,
                 name = "Category collection collection 1",
-                categoryList = categoriesWithSubcategories.expense.let { list ->
+                categoryList = groupedCategoriesByType.expense.let { list ->
                     list.subList(0, 3).map { it.category }
                 }
             ),
@@ -187,7 +187,7 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 2,
                 type = CategoryCollectionType.Mixed,
                 name = "Collection 2",
-                categoryList = categoriesWithSubcategories.expense.let { list ->
+                categoryList = groupedCategoriesByType.expense.let { list ->
                     list.subList(3, 6).map { it.category }
                 }
             ),
@@ -196,7 +196,7 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 3,
                 type = CategoryCollectionType.Mixed,
                 name = "Category collection 3",
-                categoryList = categoriesWithSubcategories.expense.let { list ->
+                categoryList = groupedCategoriesByType.expense.let { list ->
                     list.subList(0, list.size).map { it.category }
                 }
             ),

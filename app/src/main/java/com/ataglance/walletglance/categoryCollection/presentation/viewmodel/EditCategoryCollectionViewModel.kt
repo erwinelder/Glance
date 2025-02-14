@@ -2,12 +2,12 @@ package com.ataglance.walletglance.categoryCollection.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.model.CheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.model.CheckedCategoryWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,24 +24,24 @@ class EditCategoryCollectionViewModel(
 
     init {
         viewModelScope.launch {
-            categoriesWithSubcategories = getCategoriesUseCase.getGrouped()
+            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
         }
     }
 
 
-    private var categoriesWithSubcategories = CategoriesWithSubcategories()
+    private var groupedCategoriesByType = GroupedCategoriesByType()
 
 
     private val _collectionUiState = MutableStateFlow(CategoryCollectionWithCategories())
     val collectionUiState = _collectionUiState.asStateFlow()
 
-    private val _checkedCategoriesWithSubcategories = MutableStateFlow(
-        CheckedCategoriesWithSubcategories()
+    private val _checkedGroupedCategoriesByType = MutableStateFlow(
+        CheckedGroupedCategoriesByType()
     )
-    val checkedCategoriesWithSubcategories = _checkedCategoriesWithSubcategories.asStateFlow()
+    val checkedCategoriesWithSubcategories = _checkedGroupedCategoriesByType.asStateFlow()
 
-    val expandedCategory: StateFlow<CheckedCategoryWithSubcategories?> = combine(
-        _checkedCategoriesWithSubcategories
+    val expandedCategory: StateFlow<CheckedGroupedCategories?> = combine(
+        _checkedGroupedCategoriesByType
     ) { editingCategoriesWithSubcategoriesArray ->
         editingCategoriesWithSubcategoriesArray[0].concatenateLists().find { it.expanded }
     }.stateIn(
@@ -55,8 +55,8 @@ class EditCategoryCollectionViewModel(
         _collectionUiState.update {
             collection
         }
-        _checkedCategoriesWithSubcategories.update {
-            categoriesWithSubcategories.toCheckedCategoriesWithSubcategories(collection)
+        _checkedGroupedCategoriesByType.update {
+            groupedCategoriesByType.toCheckedCategoriesWithSubcategories(collection)
         }
     }
 
@@ -65,17 +65,17 @@ class EditCategoryCollectionViewModel(
     }
 
     fun inverseCheckedCategoryState(category: Category) {
-        _checkedCategoriesWithSubcategories.update { it.inverseCheckedCategoryState(category) }
+        _checkedGroupedCategoriesByType.update { it.inverseCheckedCategoryState(category) }
     }
 
     fun inverseExpandedState(category: Category) {
-        _checkedCategoriesWithSubcategories.update { it.inverseExpandedState(category) }
+        _checkedGroupedCategoriesByType.update { it.inverseExpandedState(category) }
     }
 
 
     val allowSaving = combine(
         _collectionUiState,
-        _checkedCategoriesWithSubcategories
+        _checkedGroupedCategoriesByType
     ) { collection, editingCategoriesWithSubcategories ->
         collection.allowSaving() && editingCategoriesWithSubcategories.hasCheckedCategory()
     }.stateIn(

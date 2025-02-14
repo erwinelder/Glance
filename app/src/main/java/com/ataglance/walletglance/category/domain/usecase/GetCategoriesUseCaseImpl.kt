@@ -1,12 +1,12 @@
 package com.ataglance.walletglance.category.domain.usecase
 
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.domain.mapper.groupCategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.mapper.toCategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.mapper.group
+import com.ataglance.walletglance.category.domain.mapper.groupByType
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.category.mapper.toDomainModels
 import kotlinx.coroutines.flow.Flow
@@ -17,26 +17,26 @@ class GetCategoriesUseCaseImpl(
     private val categoryRepository: CategoryRepository
 ) : GetCategoriesUseCase {
 
-    override fun getGroupedAsFlow(): Flow<CategoriesWithSubcategories> {
+    override fun getGroupedAsFlow(): Flow<GroupedCategoriesByType> {
         return categoryRepository.getAllCategories().map { categoryEntities ->
-            categoryEntities.toDomainModels().toCategoriesWithSubcategories()
+            categoryEntities.toDomainModels().groupByType()
         }
     }
 
-    override suspend fun getGrouped(): CategoriesWithSubcategories {
+    override suspend fun getGrouped(): GroupedCategoriesByType {
         return categoryRepository.getAllCategories().firstOrNull()
             ?.toDomainModels()
-            ?.toCategoriesWithSubcategories()
-            ?: CategoriesWithSubcategories()
+            ?.groupByType()
+            ?: GroupedCategoriesByType()
     }
 
-    override suspend fun getOfExpenseType(): List<CategoryWithSubcategories> {
+    override suspend fun getOfExpenseType(): List<GroupedCategories> {
         return categoryRepository.getCategoriesByType(type = CategoryType.Expense.asChar())
             .toDomainModels()
-            .groupCategoriesWithSubcategories()
+            .group()
     }
 
-    override suspend fun getSimple(): List<Category> {
+    override suspend fun getAsList(): List<Category> {
         return categoryRepository.getAllCategories().firstOrNull()
             ?.toDomainModels()
             .orEmpty()

@@ -8,12 +8,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.settings.domain.SettingsCategories
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 
 @Composable
@@ -23,12 +23,12 @@ fun LanguageScreen(
     appLanguage: String,
     chosenLanguage: String?,
     onSelectNewLanguage: (String) -> Unit,
-    onApplyLanguageButton: (String) -> Unit,
+    onApplyLanguageButton: () -> Unit,
     onContinueButton: () -> Unit
 ) {
     val appTheme = CurrAppTheme
     val thisCategory = remember {
-        SettingsCategories(appTheme).language
+        SettingsCategory.Language(appTheme)
     }
 
     SettingsCategoryScreenContainer(
@@ -44,10 +44,9 @@ fun LanguageScreen(
             )
             SmallPrimaryButton(
                 text = stringResource(R.string.apply),
-                enabled = appLanguage != chosenLanguage
-            ) {
-                chosenLanguage?.let { onApplyLanguageButton(it) }
-            }
+                enabled = appLanguage != chosenLanguage,
+                onClick = onApplyLanguageButton
+            )
         },
         allowScroll = false,
         bottomBlock = if (!isAppSetUp) {{

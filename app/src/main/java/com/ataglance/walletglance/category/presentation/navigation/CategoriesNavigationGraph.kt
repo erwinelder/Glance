@@ -4,21 +4,17 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreen
 import com.ataglance.walletglance.category.presentation.screen.EditSubcategoriesScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
-import com.ataglance.walletglance.category.presentation.viewmodel.SetupCategoriesViewModelFactory
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
@@ -28,31 +24,20 @@ fun NavGraphBuilder.categoriesGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    appViewModel: AppViewModel,
-    isAppSetUp: Boolean,
-    categoriesWithSubcategories: CategoriesWithSubcategories
+    isAppSetUp: Boolean
 ) {
     navigation<SettingsScreens.Categories>(
         startDestination = CategoriesSettingsScreens.EditCategories
     ) {
         composable<CategoriesSettingsScreens.EditCategories> { backStack ->
-            val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
-                navController = navController,
-                factory = SetupCategoriesViewModelFactory(
-                    categoriesWithSubcategories = categoriesWithSubcategories
-                        .takeIf { it.expense.isNotEmpty() && it.income.isNotEmpty() }
-                        ?: DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-                )
-            )
-            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(
-                navController = navController
-            )
+            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
+            val categoryViewModel = backStack.sharedKoinNavViewModel<EditCategoryViewModel>(navController)
 
-            val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
+            val uiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             LaunchedEffect(true) {
-                if (categoriesUiState.categoryWithSubcategories != null) {
+                if (uiState.groupedCategories != null) {
                     categoriesViewModel.clearSubcategoryList()
                 }
             }
@@ -60,8 +45,8 @@ fun NavGraphBuilder.categoriesGraph(
             EditCategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = isAppSetUp,
-                uiState = categoriesUiState,
-                onShowCategoriesByType = categoriesViewModel::changeCategoryTypeToShow,
+                uiState = uiState,
+                onShowCategoriesByType = categoriesViewModel::changeCategoryType,
                 onNavigateToEditSubcategoriesScreen = { categoryWithSubcategories ->
                     categoriesViewModel.applySubcategoryListToEdit(categoryWithSubcategories)
                     navViewModel.navigateToScreen(
@@ -69,7 +54,7 @@ fun NavGraphBuilder.categoriesGraph(
                     )
                 },
                 onNavigateToEditCategoryScreen = { categoryOrNull ->
-                    editCategoryViewModel.applyCategory(
+                    categoryViewModel.applyCategory(
                         category = categoryOrNull ?: categoriesViewModel.getNewParentCategory()
                     )
                     navViewModel.navigateToScreen(
@@ -80,9 +65,7 @@ fun NavGraphBuilder.categoriesGraph(
                 onResetButton = categoriesViewModel::reapplyCategoryLists,
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
-                        appViewModel.saveCategories(
-                            categoryList = categoriesViewModel.getAllCategoryEntities()
-                        )
+                        categoriesViewModel.saveCategories()
                         if (isAppSetUp) {
                             navController.popBackStack()
                         } else {
@@ -93,18 +76,14 @@ fun NavGraphBuilder.categoriesGraph(
             )
         }
         composable<CategoriesSettingsScreens.EditSubcategories> { backStack ->
-            val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
-                navController = navController
-            )
-            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(
-                navController = navController
-            )
+            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
+            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
 
             val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
             EditSubcategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
-                categoryWithSubcategories = categoriesUiState.categoryWithSubcategories,
+                groupedCategories = categoriesUiState.groupedCategories,
                 onSaveButton = {
                     categoriesViewModel.saveSubcategoryList()
                     navController.popBackStack()
@@ -121,32 +100,27 @@ fun NavGraphBuilder.categoriesGraph(
             )
         }
         composable<CategoriesSettingsScreens.EditCategory> { backStack ->
-            val categoriesViewModel = backStack.sharedViewModel<EditCategoriesViewModel>(
-                navController = navController
-            )
-            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(
-                navController = navController
-            )
+            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
+            val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
 
-            val categoryUiState by editCategoryViewModel.categoryUiState
-                .collectAsStateWithLifecycle()
-            val allowDeleting by editCategoryViewModel.allowDeleting.collectAsStateWithLifecycle()
-            val allowSaving by editCategoryViewModel.allowSaving.collectAsStateWithLifecycle()
+            val categoryUiState by categoryViewModel.categoryUiState.collectAsStateWithLifecycle()
+            val allowDeleting by categoryViewModel.allowDeleting.collectAsStateWithLifecycle()
+            val allowSaving by categoryViewModel.allowSaving.collectAsStateWithLifecycle()
 
             EditCategoryScreen(
                 scaffoldPadding = scaffoldPadding,
                 category = categoryUiState,
                 allowDeleting = allowDeleting,
                 allowSaving = allowSaving,
-                onNameChange = editCategoryViewModel::changeName,
-                onCategoryColorChange = editCategoryViewModel::changeColor,
-                onIconChange = editCategoryViewModel::changeIcon,
+                onNameChange = categoryViewModel::changeName,
+                onCategoryColorChange = categoryViewModel::changeColor,
+                onIconChange = categoryViewModel::changeIcon,
                 onDeleteButton = {
-                    categoriesViewModel.deleteCategory(editCategoryViewModel.getCategory())
+                    categoriesViewModel.deleteCategory(categoryViewModel.getCategory())
                     navController.popBackStack()
                 },
                 onSaveButton = {
-                    categoriesViewModel.saveEditedCategory(editCategoryViewModel.getCategory())
+                    categoriesViewModel.saveEditedCategory(categoryViewModel.getCategory())
                     navController.popBackStack()
                 }
             )

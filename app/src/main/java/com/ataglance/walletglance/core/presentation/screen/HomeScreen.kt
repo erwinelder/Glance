@@ -25,7 +25,7 @@ import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -225,7 +225,7 @@ fun HomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
@@ -270,7 +270,7 @@ fun HomeScreenPreview(
     recordList: List<RecordEntity>? = null,
     recordStackList: List<RecordStack> = recordList?.toRecordStacks(
         accounts = accountsAndActiveOne.accountList,
-        categoriesWithSubcategories = categoriesWithSubcategories
+        groupedCategoriesByType = groupedCategoriesByType
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
@@ -283,7 +283,7 @@ fun HomeScreenPreview(
                     id = 1,
                     amount = 46.47,
                     quantity = null,
-                    categoryWithSubcategory = categoriesWithSubcategories
+                    categoryWithSub = groupedCategoriesByType
                         .expense[0].getWithFirstSubcategory(),
                     note = null,
                     includeInBudgets = true
@@ -301,7 +301,7 @@ fun HomeScreenPreview(
                     id = 1,
                     amount = 46.47,
                     quantity = null,
-                    categoryWithSubcategory = categoriesWithSubcategories
+                    categoryWithSub = groupedCategoriesByType
                         .expense[0].getWithFirstSubcategory(),
                     note = accountsAndActiveOne.accountList[1].id.toString(),
                     includeInBudgets = true
@@ -316,8 +316,8 @@ fun HomeScreenPreview(
             amountLimit = 4000.0,
             usedAmount = 2250.0,
             usedPercentage = 56.25f,
-            category = categoriesWithSubcategories.expense[0].category,
-            name = categoriesWithSubcategories.expense[0].category.name,
+            category = groupedCategoriesByType.expense[0].category,
+            name = groupedCategoriesByType.expense[0].category.name,
             repeatingPeriod = RepeatingPeriod.Monthly,
             dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
             currentTimeWithinRangeGraphPercentage = .5f,

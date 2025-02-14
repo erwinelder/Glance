@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
-import com.ataglance.walletglance.settings.domain.SettingsCategory
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun NavigateBackSettingsCategoryButton(

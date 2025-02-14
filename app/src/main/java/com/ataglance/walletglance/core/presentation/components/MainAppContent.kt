@@ -29,7 +29,7 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.Persona
 import com.ataglance.walletglance.record.domain.utils.filterAccountId
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import java.time.LocalDateTime
 
 @Composable
@@ -51,7 +51,6 @@ fun MainAppContent(
     val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
-    val categoriesWithSubcategories by appViewModel.categoriesWithSubcategories.collectAsStateWithLifecycle()
     val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
     val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
@@ -74,7 +73,6 @@ fun MainAppContent(
             AppUiState(
                 navigationButtonList = navigationButtonList,
                 dateRangeMenuUiState = dateRangeMenuUiState,
-                categoriesWithSubcategories = categoriesWithSubcategories,
                 categoryCollectionsUiState = categoryCollectionsUiState,
                 accountsAndActiveOne = accountsUiState,
                 recordStackListByDate = recordStacksInDateRange.recordStacks
@@ -84,7 +82,6 @@ fun MainAppContent(
     val widgetsUiState by remember(
         widgetNamesList,
         greetingsTitleRes,
-        categoriesWithSubcategories,
         accountsUiState,
         recordStacksInDateRange
     ) {

@@ -18,11 +18,11 @@ class GetTransferPairUseCaseImpl(
 
         val outRecordStack = recordRepository
             .getRecordsByRecordNum(recordNum = unitsRecordNums.sender)
-            .toRecordStack(accounts = accounts, categoriesWithSubcategories = categories)
+            .toRecordStack(accounts = accounts, groupedCategoriesByType = categories)
             ?: return null
         val inRecordStack = recordRepository
             .getRecordsByRecordNum(recordNum = unitsRecordNums.receiver)
-            .toRecordStack(accounts = accounts, categoriesWithSubcategories = categories)
+            .toRecordStack(accounts = accounts, groupedCategoriesByType = categories)
             ?: return null
 
         return TransferPairRecordStacks(sender = outRecordStack, receiver = inRecordStack)

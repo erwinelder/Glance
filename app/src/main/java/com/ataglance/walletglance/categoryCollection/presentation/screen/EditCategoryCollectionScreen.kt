@@ -31,12 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.presentation.model.CheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.model.CheckedCategoryWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
 import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
@@ -58,8 +58,8 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 @Composable
 fun EditCategoryCollectionScreen(
     collection: CategoryCollectionWithCategories,
-    checkedCategoriesWithSubcategories: CheckedCategoriesWithSubcategories,
-    expandedCategory: CheckedCategoryWithSubcategories?,
+    checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
+    expandedCategory: CheckedGroupedCategories?,
     allowDeleting: Boolean,
     allowSaving: Boolean,
     onNameChange: (String) -> Unit,
@@ -80,7 +80,7 @@ fun EditCategoryCollectionScreen(
         glassSurfaceContent = {
             GlassSurfaceContent(
                 collection = collection,
-                checkedCategoriesWithSubcategories = checkedCategoriesWithSubcategories,
+                checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
                 expandedCategory = expandedCategory,
                 onNameChange = onNameChange,
                 onCheckedChange = onCheckedChange,
@@ -100,8 +100,8 @@ fun EditCategoryCollectionScreen(
 @Composable
 private fun GlassSurfaceContent(
     collection: CategoryCollectionWithCategories,
-    checkedCategoriesWithSubcategories: CheckedCategoriesWithSubcategories,
-    expandedCategory: CheckedCategoryWithSubcategories?,
+    checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
+    expandedCategory: CheckedGroupedCategories?,
     onNameChange: (String) -> Unit,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
@@ -116,7 +116,7 @@ private fun GlassSurfaceContent(
             labelText = stringResource(R.string.name)
         )
         ParentCategoriesLists(
-            checkedCategoriesWithSubcategories = checkedCategoriesWithSubcategories,
+            checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
             expandedCategory = expandedCategory,
             onCheckedChange = onCheckedChange,
             onExpandedChange = onExpandedChange
@@ -131,8 +131,8 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun ParentCategoriesLists(
-    checkedCategoriesWithSubcategories: CheckedCategoriesWithSubcategories,
-    expandedCategory: CheckedCategoryWithSubcategories?,
+    checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
+    expandedCategory: CheckedGroupedCategories?,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
@@ -153,13 +153,13 @@ private fun ParentCategoriesLists(
             modifier = Modifier.fillMaxWidth()
         ) {
             categoryListItems(
-                list = checkedCategoriesWithSubcategories.expense,
+                list = checkedGroupedCategoriesByType.expense,
                 listType = CategoryType.Expense,
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
             )
             categoryListItems(
-                list = checkedCategoriesWithSubcategories.income,
+                list = checkedGroupedCategoriesByType.income,
                 listType = CategoryType.Income,
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
@@ -170,7 +170,7 @@ private fun ParentCategoriesLists(
 
 @Composable
 private fun SubcategoriesList(
-    expandedCategory: CheckedCategoryWithSubcategories?,
+    expandedCategory: CheckedGroupedCategories?,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
@@ -225,7 +225,7 @@ private fun SubcategoriesList(
 }
 
 private fun LazyListScope.categoryListItems(
-    list: List<CheckedCategoryWithSubcategories>,
+    list: List<CheckedGroupedCategories>,
     listType: CategoryType,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
@@ -322,7 +322,7 @@ private fun CollectionSubcategoryItem(
 fun EditCategoryCollectionScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     collectionWithIds: CategoryCollectionWithIds = CategoryCollectionWithIds(
@@ -334,15 +334,15 @@ fun EditCategoryCollectionScreenPreview(
     ),
 ) {
     val collection = collectionWithIds.toCategoryCollectionWithCategories(
-        allCategories = categoriesWithSubcategories.asSingleList()
+        allCategories = groupedCategoriesByType.asList()
     )
-    val editingCategoriesWithSubcategories = categoriesWithSubcategories
+    val editingCategoriesWithSubcategories = groupedCategoriesByType
         .toCheckedCategoriesWithSubcategories(collection)
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionScreen(
             collection = collection,
-            checkedCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+            checkedGroupedCategoriesByType = editingCategoriesWithSubcategories,
             expandedCategory = null,
             allowDeleting = true,
             allowSaving = collection.allowSaving() &&

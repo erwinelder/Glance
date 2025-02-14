@@ -13,17 +13,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.components.buttons.TertiaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
-import com.ataglance.walletglance.settings.domain.SettingsCategories
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 
 @Composable
@@ -35,11 +35,9 @@ fun SubscriptionsScreen(
     purchaseResultUiState: ResultUiState?,
     onResultReset: () -> Unit
 ) {
-    val thisCategory = SettingsCategories(appTheme = CurrAppTheme).manageSubscriptions
-
     Box {
         SettingsCategoryScreenContainer(
-            thisCategory = thisCategory,
+            thisCategory = SettingsCategory.ManageSubscriptions(CurrAppTheme),
             onNavigateBack = onNavigateBack,
             topBottomSpacingProportion = Pair(1f, 1f),
             mainScreenContentBlock = {

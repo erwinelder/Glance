@@ -138,7 +138,7 @@ private fun RecordItemCreationComponentCollapsed(
         Spacer(modifier = Modifier.height(4.dp))
 
         AnimatedContent(
-            targetState = recordDraftItem.categoryWithSubcategory?.getSubcategoryOrCategory(),
+            targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory(),
             label = "record draft item category"
         ) { targetCategory ->
             RecordCategory(
@@ -196,7 +196,7 @@ private fun RecordItemCreationComponentExpanded(
 
         FieldWithLabel(labelText = stringResource(R.string.category)) {
             AnimatedContent(
-                targetState = recordDraftItem.categoryWithSubcategory?.getSubcategoryOrCategory(),
+                targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory(),
                 label = "category field at the make record screen"
             ) { targetCategory ->
                 CategoryField(

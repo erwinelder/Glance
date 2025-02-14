@@ -3,7 +3,7 @@ package com.ataglance.walletglance.category.domain.model
 import androidx.compose.runtime.Stable
 
 @Stable
-data class CategoryWithSubcategory(
+data class CategoryWithSub(
     val category: Category,
     val subcategory: Category? = null
 ) {
@@ -12,9 +12,9 @@ data class CategoryWithSubcategory(
         return subcategory ?: category
     }
 
-    fun match(categoryWithSubcategory: CategoryWithSubcategory): Boolean {
-        return category.id == categoryWithSubcategory.category.id &&
-                subcategory?.id == categoryWithSubcategory.subcategory?.id
+    fun match(categoryWithSub: CategoryWithSub): Boolean {
+        return category.id == categoryWithSub.category.id &&
+                subcategory?.id == categoryWithSub.subcategory?.id
     }
 
     fun matchIds(categoriesIds: List<Int>): Boolean {

@@ -2,8 +2,8 @@ package com.ataglance.walletglance.category.domain.utils
 
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.record.domain.model.RecordType
 
 
@@ -33,12 +33,12 @@ fun List<Category>.findById(id: Int): Category? {
 }
 
 
-fun List<CategoryWithSubcategories>.getCategoryWithSubcategoryById(id: Int): CategoryWithSubcategory? {
+fun List<GroupedCategories>.getCategoryWithSubcategoryById(id: Int): CategoryWithSub? {
     this.forEach { categoryWithSubcategories ->
         categoryWithSubcategories
             .takeIf { it.category.id == id }
             ?.let {
-                return CategoryWithSubcategory(it.category)
+                return CategoryWithSub(it.category)
             }
             ?: categoryWithSubcategories.getWithSubcategoryWithId(id)
                 .let { categoryWithSubcategory ->
@@ -71,7 +71,7 @@ fun translateCategories(
 }
 
 
-fun List<CategoryWithSubcategories>.fixParentOrderNums(): List<CategoryWithSubcategories> {
+fun List<GroupedCategories>.fixParentOrderNums(): List<GroupedCategories> {
     return this.mapIndexed { index, categoryWithSubcategories ->
         categoryWithSubcategories.copy(
             category = categoryWithSubcategories.category.copy(orderNum = index + 1)

@@ -1,8 +1,5 @@
 package com.ataglance.walletglance.core.presentation.viewmodel
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
@@ -11,13 +8,7 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
 import com.ataglance.walletglance.auth.data.model.UserData
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
-import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
-import com.ataglance.walletglance.category.domain.utils.translateCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
@@ -33,7 +24,6 @@ import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutS
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
-import com.ataglance.walletglance.core.utils.getLanguageContext
 import com.ataglance.walletglance.core.utils.withLongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.model.RecordsInDateRange
@@ -42,8 +32,11 @@ import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
+import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -57,12 +50,12 @@ import kotlinx.coroutines.launch
 
 class AppViewModel(
     val settingsRepository: SettingsRepository,
+    private val applyLanguageToSystemUseCase: ApplyLanguageToSystemUseCase,
+    private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
+    private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
 
     private val saveAccountsUseCase: SaveAccountsUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
-
-    private val saveCategoriesUseCase: SaveCategoriesUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase,
 
     private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
 
@@ -80,7 +73,7 @@ class AppViewModel(
         combine(
             settingsRepository.setupStage,
             settingsRepository.userId,
-            settingsRepository.language,
+            getLanguagePreferenceUseCase.getAsFlow(),
             _appTheme,
             _lastRecordNum
         ) { setupStage, userId, language, appTheme, lastRecordNum ->
@@ -125,33 +118,13 @@ class AppViewModel(
             initialValue = null
         )
 
-    // TODO: Android context dependency
-    fun translateAndSaveCategoriesWithDefaultNames(
-        currentLangCode: String,
-        newLangCode: String,
-        context: Context
-    ) {
-        val translatedCategories = translateCategories(
-            defaultCategoriesInCurrLocale = getDefaultCategoriesByLanguage(currentLangCode, context),
-            defaultCategoriesInNewLocale = getDefaultCategoriesByLanguage(newLangCode, context),
-            currCategoryList = categoriesWithSubcategories.value.asSingleList()
-        )
-        viewModelScope.launch {
-            saveCategoriesUseCase.execute(categories = translatedCategories)
-        }
-    }
-
-    private fun getDefaultCategoriesByLanguage(langCode: String, context: Context): List<Category> {
-        val langContext = context.getLanguageContext(langCode = langCode)
-        return DefaultCategoriesPackage(langContext).getDefaultCategories().asSingleList()
-    }
-
 
     fun updateConfigurationAfterSignIn(userData: UserData) {
         viewModelScope.launch {
             setUserId(userData.userId)
+            saveLanguagePreferenceUseCase.save(userData.language)
+            applyLanguageToSystemUseCase.execute(userData.language)
         }
-        setLanguage(userData.language)
     }
 
     suspend fun getUserId(): String? {
@@ -168,25 +141,10 @@ class AppViewModel(
 
     private fun applyAppLanguage() {
         viewModelScope.launch {
-            settingsRepository.language.firstOrNull()?.let { langCode ->
-                setLanguage(langCode)
-            }
+            val langCode = getLanguagePreferenceUseCase.get()
+            saveLanguagePreferenceUseCase.save(langCode)
+            applyLanguageToSystemUseCase.execute(langCode)
         }
-    }
-
-    fun setLanguage(langCode: String) {
-        viewModelScope.launch {
-            settingsRepository.saveLanguagePreference(langCode)
-        }
-
-        /*val request = SplitInstallRequest.newBuilder()
-            .addLanguage(Locale.forLanguageTag(langCode))
-            .build()
-        val splitInstallManager = SplitInstallManagerFactory.create(context)
-        splitInstallManager.startInstall(request)*/
-
-        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
-        AppCompatDelegate.setApplicationLocales(appLocale)
     }
 
     fun setUseDeviceTheme(value: Boolean) {
@@ -349,29 +307,6 @@ class AppViewModel(
     }
 
 
-    private val _categoriesWithSubcategories = MutableStateFlow(CategoriesWithSubcategories())
-    val categoriesWithSubcategories = _categoriesWithSubcategories.asStateFlow()
-
-    private fun updateCategoriesWithSubcategories(
-        categoriesWithSubcategories: CategoriesWithSubcategories
-    ) {
-        _categoriesWithSubcategories.update { categoriesWithSubcategories }
-    }
-
-    private fun fetchCategories() {
-        viewModelScope.launch {
-            getCategoriesUseCase.getGroupedAsFlow().collect(::updateCategoriesWithSubcategories)
-        }
-    }
-
-    suspend fun saveCategories(categoryList: List<Category>) {
-        saveCategoriesUseCase.execute(
-            categoriesToSave = categoryList,
-            currentCategories = categoriesWithSubcategories.value.asSingleList()
-        )
-    }
-
-
     private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsWithIdsByType())
     val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
 
@@ -472,7 +407,6 @@ class AppViewModel(
 
     private fun fetchDataOnStart() {
         fetchAccounts()
-        fetchCategories()
         fetchLastRecordNum()
         fetchCategoryCollections()
         fetchRecordsForToday()

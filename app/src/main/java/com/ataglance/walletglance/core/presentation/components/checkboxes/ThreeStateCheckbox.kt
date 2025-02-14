@@ -157,7 +157,7 @@ private fun EditCategoryCollectionScreenPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         EditCategoryCollectionScreen(
             collection = collection,
-            checkedCategoriesWithSubcategories =
+            checkedGroupedCategoriesByType =
             DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
                 .toCheckedCategoriesWithSubcategories(collection),
             expandedCategory = null,

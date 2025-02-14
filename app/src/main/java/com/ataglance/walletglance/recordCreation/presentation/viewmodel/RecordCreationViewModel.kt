@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategoryByType
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubByType
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCategoryUseCase
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalDot
@@ -32,20 +34,24 @@ class RecordCreationViewModel(
     private val saveRecordUseCase: SaveRecordUseCase,
     private val deleteRecordUseCase: DeleteRecordUseCase,
     private val getLastUsedRecordCategoryUseCase: GetLastUsedRecordCategoryUseCase,
-    private val getLastRecordNumUseCase: GetLastRecordNumUseCase
+    private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
+            val categories = getCategoriesUseCase.getGrouped()
+            _groupedCategoriesByType.update { categories }
+
             val category = getLastUsedRecordCategoryUseCase.get(CategoryType.Expense)
 
             defaultCategoryByType = defaultCategoryByType.putByType(
                 type = CategoryType.Expense,
-                categoryWithSubcategory = category
+                categoryWithSub = category
             )
 
             val recordDraft = getRecordDraftUseCase.get(
-                recordNum = recordNum, categoryWithSubcategory = category
+                recordNum = recordNum, categoryWithSub = category
             )
             _recordDraftGeneral.update { recordDraft.general }
             _recordDraftItems.update { recordDraft.items }
@@ -53,13 +59,17 @@ class RecordCreationViewModel(
     }
 
 
-    private var defaultCategoryByType = CategoryWithSubcategoryByType()
+    private val _groupedCategoriesByType = MutableStateFlow(GroupedCategoriesByType())
+    val groupedCategoriesByType = _groupedCategoriesByType.asStateFlow()
 
-    private suspend fun getCategoryByType(type: CategoryType): CategoryWithSubcategory? {
+
+    private var defaultCategoryByType = CategoryWithSubByType()
+
+    private suspend fun getCategoryByType(type: CategoryType): CategoryWithSub? {
         return defaultCategoryByType.getByType(type = type) ?: let {
             defaultCategoryByType = defaultCategoryByType.putByType(
                 type = type,
-                categoryWithSubcategory = getLastUsedRecordCategoryUseCase.get(type)
+                categoryWithSub = getLastUsedRecordCategoryUseCase.get(type)
             )
             defaultCategoryByType.getByType(type = type)
         }
@@ -131,11 +141,11 @@ class RecordCreationViewModel(
         _recordDraftItems.update { newList }
     }
 
-    fun selectCategory(index: Int, categoryWithSubcategory: CategoryWithSubcategory) {
+    fun selectCategory(index: Int, categoryWithSub: CategoryWithSub) {
         val newList = recordDraftItems.value.toMutableList()
         if (index > newList.lastIndex) { return }
 
-        newList[index] = newList[index].copy(categoryWithSubcategory = categoryWithSubcategory)
+        newList[index] = newList[index].copy(categoryWithSub = categoryWithSub)
         _recordDraftItems.update { newList }
     }
 
@@ -187,7 +197,7 @@ class RecordCreationViewModel(
             RecordDraftItem(
                 lazyListKey = newList.maxOfOrNull { it.lazyListKey }?.plus(1) ?: 0,
                 index = newList.lastIndex + 1,
-                categoryWithSubcategory = newList.lastOrNull()?.categoryWithSubcategory,
+                categoryWithSub = newList.lastOrNull()?.categoryWithSub,
                 collapsed = false
             )
         )

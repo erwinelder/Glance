@@ -1,16 +1,16 @@
 package com.ataglance.walletglance.category.mapper
 
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.category.domain.utils.findById
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
-import com.ataglance.walletglance.category.presentation.model.CheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.model.CheckedCategoryWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 
@@ -59,9 +59,9 @@ fun List<Category>.toCheckedCategories(checkedCategoryList: List<Category>): Lis
 }
 
 
-fun CategoryWithSubcategories.toEditingCategoryWithSubcategories(
+fun GroupedCategories.toEditingCategoryWithSubcategories(
     checkedCategoryList: List<Category>
-): CheckedCategoryWithSubcategories {
+): CheckedGroupedCategories {
     val subcategoryList = subcategoryList.toCheckedCategories(checkedCategoryList)
     val (checkedSubcategories, uncheckedSubcategories) = subcategoryList.partition { it.checked }
 
@@ -77,26 +77,26 @@ fun CategoryWithSubcategories.toEditingCategoryWithSubcategories(
         checkedCategoryList.findById(category.id) != null
     }
 
-    return CheckedCategoryWithSubcategories(
+    return CheckedGroupedCategories(
         category = category,
         checked = checked,
         subcategoryList = subcategoryList
     )
 }
 
-fun List<CategoryWithSubcategories>.toEditingCategoryWithSubcategoriesList(
+fun List<GroupedCategories>.toEditingCategoryWithSubcategoriesList(
     checkedCategoryList: List<Category>
-): List<CheckedCategoryWithSubcategories> {
+): List<CheckedGroupedCategories> {
     return this.map { it.toEditingCategoryWithSubcategories(checkedCategoryList) }
 }
 
-fun CategoriesWithSubcategories.toCheckedCategoriesWithSubcategories(
+fun GroupedCategoriesByType.toCheckedCategoriesWithSubcategories(
     collection: CategoryCollectionWithCategories?
-): CheckedCategoriesWithSubcategories {
+): CheckedGroupedCategoriesByType {
     val (expenseCategories, incomeCategories) = collection?.categoryList.orEmpty()
         .partition { it.isExpense() }
 
-    return CheckedCategoriesWithSubcategories(
+    return CheckedGroupedCategoriesByType(
         expense = if (collection?.type != CategoryCollectionType.Income) {
             expense.toEditingCategoryWithSubcategoriesList(expenseCategories)
         } else {

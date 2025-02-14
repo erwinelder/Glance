@@ -12,14 +12,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheetDialog
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
-import com.ataglance.walletglance.settings.domain.SettingsCategories
 import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.components.OpenSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 import java.time.LocalDateTime
 
@@ -30,32 +30,27 @@ fun ProfileScreen(
     onNavigateToScreen: (Any) -> Unit,
     onPopBackStackAndNavigateToScreen: (Any) -> Unit
 ) {
+    val appTheme = CurrAppTheme
     val currentLocalDateTime = LocalDateTime.now()
     val greetingsTitleRes by remember(currentLocalDateTime.hour) {
         derivedStateOf {
             currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
         }
     }
-    val appTheme = CurrAppTheme
-    val categories by remember {
-        derivedStateOf { SettingsCategories(appTheme = appTheme) }
-    }
 
     var showSignOutSheet by remember { mutableStateOf(false) }
 
     Box {
         SettingsCategoryScreenContainer(
-            thisCategory = categories.profile,
+            thisCategory = SettingsCategory.Profile(appTheme),
             onNavigateBack = onNavigateBack,
             title = stringResource(greetingsTitleRes),
             mainScreenContentBlock = {
-//                NavigateToSettingsCategoryButton(categories.deleteAccount, onPopBackStackAndNavigateToScreen)
-                OpenSettingsCategoryButton(categories.signOut) {
-                    showSignOutSheet = true
-                }
-                NavigateToSettingsCategoryButton(categories.updateEmail, onPopBackStackAndNavigateToScreen)
-                NavigateToSettingsCategoryButton(categories.updatePassword, onPopBackStackAndNavigateToScreen)
-                NavigateToSettingsCategoryButton(categories.manageSubscriptions, onNavigateToScreen)
+                NavigateToSettingsCategoryButton(SettingsCategory.DeleteAccount(appTheme), onPopBackStackAndNavigateToScreen)
+                OpenSettingsCategoryButton(SettingsCategory.SignOut(appTheme)) { showSignOutSheet = true }
+                NavigateToSettingsCategoryButton(SettingsCategory.UpdateEmail(appTheme), onPopBackStackAndNavigateToScreen)
+                NavigateToSettingsCategoryButton(SettingsCategory.UpdatePassword(appTheme), onPopBackStackAndNavigateToScreen)
+                NavigateToSettingsCategoryButton(SettingsCategory.ManageSubscriptions(appTheme), onNavigateToScreen)
             }
         )
         GlanceBottomSheetDialog(

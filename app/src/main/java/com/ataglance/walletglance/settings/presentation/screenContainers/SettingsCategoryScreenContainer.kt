@@ -20,8 +20,8 @@ import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
-import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.components.NavigateBackSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun SettingsCategoryScreenContainer(

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.settings.domain
+package com.ataglance.walletglance.settings.presentation.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -8,15 +8,13 @@ import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 
-data class SettingsCategory(
+sealed class SettingsCategory(
     val screen: Any,
     @StringRes val stringRes: Int,
     @DrawableRes val iconRes: Int
-)
+) {
 
-class SettingsCategories(appTheme: AppTheme) {
-
-    val accounts = SettingsCategory(
+    data class Accounts(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Accounts,
         stringRes = R.string.accounts,
         iconRes = when (appTheme) {
@@ -25,7 +23,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val budgets = SettingsCategory(
+    data class Budgets(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Budgets,
         stringRes = R.string.budgets,
         iconRes = when (appTheme) {
@@ -34,7 +32,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val categories = SettingsCategory(
+    data class Categories(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Categories,
         stringRes = R.string.categories,
         iconRes = when (appTheme) {
@@ -43,7 +41,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val categoryCollections = SettingsCategory(
+    data class CategoryCollections(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.CategoryCollections,
         stringRes = R.string.category_collections,
         iconRes = when (appTheme) {
@@ -52,7 +50,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val appearance = SettingsCategory(
+    data class Appearance(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Appearance,
         stringRes = R.string.appearance,
         iconRes = when (appTheme) {
@@ -61,7 +59,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val colorTheme = SettingsCategory(
+    data class ColorTheme(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Appearance,
         stringRes = R.string.color_theme,
         iconRes = when (appTheme) {
@@ -70,7 +68,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val widgets = SettingsCategory(
+    data class Widgets(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Appearance,
         stringRes = R.string.widgets,
         iconRes = when (appTheme) {
@@ -79,7 +77,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val navigationButtons = SettingsCategory(
+    data class NavigationButtons(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Appearance,
         stringRes = R.string.navigation_buttons,
         iconRes = when (appTheme) {
@@ -88,7 +86,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val language = SettingsCategory(
+    data class Language(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Language,
         stringRes = R.string.language,
         iconRes = when (appTheme) {
@@ -97,7 +95,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val signIn = SettingsCategory(
+    data class SignIn(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.SignIn(SignInCase.Default.name),
         stringRes = R.string.sign_in,
         iconRes = when (appTheme) {
@@ -106,7 +104,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val profile = SettingsCategory(
+    data class Profile(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.Profile,
         stringRes = R.string.profile,
         iconRes = when (appTheme) {
@@ -115,7 +113,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val deleteAccount = SettingsCategory(
+    data class DeleteAccount(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.DeleteAccount,
         stringRes = R.string.delete_account,
         iconRes = when (appTheme) {
@@ -124,7 +122,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val signOut = SettingsCategory(
+    data class SignOut(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.Profile,
         stringRes = R.string.sign_out,
         iconRes = when (appTheme) {
@@ -133,7 +131,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val updateEmail = SettingsCategory(
+    data class UpdateEmail(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.UpdateEmail,
         stringRes = R.string.update_email,
         iconRes = when (appTheme) {
@@ -142,7 +140,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val updatePassword = SettingsCategory(
+    data class UpdatePassword(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.UpdatePassword,
         stringRes = R.string.update_password,
         iconRes = when (appTheme) {
@@ -151,7 +149,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val manageSubscriptions = SettingsCategory(
+    data class ManageSubscriptions(val appTheme: AppTheme) : SettingsCategory(
         screen = AuthScreens.ManageSubscriptions,
         stringRes = R.string.manage_subscriptions,
         iconRes = when (appTheme) {
@@ -160,7 +158,7 @@ class SettingsCategories(appTheme: AppTheme) {
         }
     )
 
-    val resetData = SettingsCategory(
+    data class ResetData(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.ResetData,
         stringRes = R.string.reset_data,
         iconRes = when (appTheme) {
@@ -170,17 +168,21 @@ class SettingsCategories(appTheme: AppTheme) {
     )
 
 
-    fun getCategories(isSignedIn: Boolean): List<SettingsCategory> {
-        return listOf(
-            if (isSignedIn) profile else signIn,
-            accounts,
-            budgets,
-            categories,
-            categoryCollections,
-            appearance,
-            language,
-            resetData
-        )
+    companion object {
+
+        fun asList(appTheme: AppTheme, isSignedIn: Boolean): List<SettingsCategory> {
+            return listOf(
+                if (isSignedIn) Profile(appTheme) else SignIn(appTheme),
+                Accounts(appTheme),
+                Budgets(appTheme),
+                Categories(appTheme),
+                CategoryCollections(appTheme),
+                Appearance(appTheme),
+                Language(appTheme),
+                ResetData(appTheme),
+            )
+        }
+
     }
 
 }

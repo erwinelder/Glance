@@ -1,7 +1,6 @@
-package com.ataglance.walletglance.settings.domain
+package com.ataglance.walletglance.settings.presentation.model
 
-data class Settings(
-    val language: String,
+data class ThemeUiState(
     val useDeviceTheme: Boolean,
     val chosenLightTheme: String,
     val chosenDarkTheme: String,

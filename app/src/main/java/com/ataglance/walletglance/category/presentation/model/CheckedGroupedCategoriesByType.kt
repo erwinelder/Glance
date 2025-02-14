@@ -3,12 +3,12 @@ package com.ataglance.walletglance.category.presentation.model
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 
-data class CheckedCategoriesWithSubcategories(
-    val expense: List<CheckedCategoryWithSubcategories> = emptyList(),
-    val income: List<CheckedCategoryWithSubcategories> = emptyList()
+data class CheckedGroupedCategoriesByType(
+    val expense: List<CheckedGroupedCategories> = emptyList(),
+    val income: List<CheckedGroupedCategories> = emptyList()
 ) {
 
-    fun concatenateLists(): List<CheckedCategoryWithSubcategories> {
+    fun concatenateLists(): List<CheckedGroupedCategories> {
         return if (expense.isNotEmpty() && income.isNotEmpty()) {
             expense + income
         } else if (income.isEmpty()) {
@@ -18,7 +18,7 @@ data class CheckedCategoriesWithSubcategories(
         }
     }
 
-    private fun getByType(type: CategoryType): List<CheckedCategoryWithSubcategories> {
+    private fun getByType(type: CategoryType): List<CheckedGroupedCategories> {
         return when (type) {
             CategoryType.Expense -> expense
             CategoryType.Income -> income
@@ -26,9 +26,9 @@ data class CheckedCategoriesWithSubcategories(
     }
 
     private fun replaceListByType(
-        list: List<CheckedCategoryWithSubcategories>,
+        list: List<CheckedGroupedCategories>,
         type: CategoryType
-    ): CheckedCategoriesWithSubcategories {
+    ): CheckedGroupedCategoriesByType {
         return when (type) {
             CategoryType.Expense -> this.copy(expense = list)
             CategoryType.Income -> this.copy(income = list)
@@ -36,7 +36,7 @@ data class CheckedCategoriesWithSubcategories(
     }
 
 
-    fun inverseCheckedCategoryState(category: Category): CheckedCategoriesWithSubcategories {
+    fun inverseCheckedCategoryState(category: Category): CheckedGroupedCategoriesByType {
         return getByType(category.type)
             .let { list ->
                 if (category.isParentCategory()) {
@@ -50,17 +50,17 @@ data class CheckedCategoriesWithSubcategories(
             }
     }
 
-    private fun List<CheckedCategoryWithSubcategories>.inverseCheckedParentCategoryState(
+    private fun List<CheckedGroupedCategories>.inverseCheckedParentCategoryState(
         category: Category
-    ): List<CheckedCategoryWithSubcategories> {
+    ): List<CheckedGroupedCategories> {
         return this.map { item ->
             item.takeIf { it.category.id != category.id } ?: item.inverseCheckedState()
         }
     }
 
-    private fun List<CheckedCategoryWithSubcategories>.inverseCheckedSubcategoryState(
+    private fun List<CheckedGroupedCategories>.inverseCheckedSubcategoryState(
         category: Category
-    ): List<CheckedCategoryWithSubcategories> {
+    ): List<CheckedGroupedCategories> {
         return this.map { item ->
             if (item.category.id != category.parentCategoryId) {
                 item
@@ -83,7 +83,7 @@ data class CheckedCategoriesWithSubcategories(
     }
 
 
-    fun inverseExpandedState(category: Category): CheckedCategoriesWithSubcategories {
+    fun inverseExpandedState(category: Category): CheckedGroupedCategoriesByType {
         return getByType(category.type).map { item ->
             item.takeIf { it.category.id != category.id } ?: item.copy(expanded = !item.expanded)
         }.let { newList ->

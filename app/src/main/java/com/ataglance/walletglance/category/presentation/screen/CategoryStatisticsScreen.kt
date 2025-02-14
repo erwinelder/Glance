@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
@@ -125,7 +125,7 @@ fun CategoryStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
@@ -154,7 +154,7 @@ fun CategoryStatisticsScreenPreview(
     recordEntityList: List<RecordEntity>? = null,
     recordStackList: List<RecordStack> = recordEntityList?.toRecordStacks(
         accounts = accountList,
-        categoriesWithSubcategories = categoriesWithSubcategories
+        groupedCategoriesByType = groupedCategoriesByType
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
@@ -167,7 +167,7 @@ fun CategoryStatisticsScreenPreview(
                     id = 1,
                     amount = 46.47,
                     quantity = null,
-                    categoryWithSubcategory = DefaultCategoriesPackage(LocalContext.current)
+                    categoryWithSub = DefaultCategoriesPackage(LocalContext.current)
                         .getDefaultCategories().expense[0].getWithFirstSubcategory(),
                     note = null,
                     includeInBudgets = true

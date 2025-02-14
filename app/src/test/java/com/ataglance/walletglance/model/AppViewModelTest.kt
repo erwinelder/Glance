@@ -103,7 +103,7 @@ class AppViewModelTest {
                         id = 1,
                         amount = startAmount,
                         quantity = null,
-                        categoryWithSubcategory = null,
+                        categoryWithSub = null,
                         note = null,
                         includeInBudgets = true
                     )
@@ -120,7 +120,7 @@ class AppViewModelTest {
                         id = 2,
                         amount = finalAmount,
                         quantity = null,
-                        categoryWithSubcategory = null,
+                        categoryWithSub = null,
                         note = null,
                         includeInBudgets = true
                     )

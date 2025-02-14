@@ -23,7 +23,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 
 @Composable
 fun ThemePickerContent(

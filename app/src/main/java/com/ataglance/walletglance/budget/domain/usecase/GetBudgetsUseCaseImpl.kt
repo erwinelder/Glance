@@ -28,7 +28,7 @@ class GetBudgetsUseCaseImpl(
 
         val budgetsByType = budgets
             .toDomainModels(
-                categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+                groupedCategoriesList = categoryWithSubcategoriesList,
                 associations = associations,
                 accounts = accounts
             )
@@ -53,7 +53,7 @@ class GetBudgetsUseCaseImpl(
         val categoryWithSubcategoriesList = getCategoriesUseCase.getOfExpenseType()
 
         return budget.toDomainModel(
-            categoryWithSubcategoriesList = categoryWithSubcategoriesList,
+            groupedCategoriesList = categoryWithSubcategoriesList,
             associations = associations,
             accounts = accounts
         )

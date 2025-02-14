@@ -22,7 +22,7 @@ import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
@@ -78,7 +78,7 @@ fun BudgetsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     budgetEntityList: List<BudgetEntity>? = null,
@@ -92,7 +92,7 @@ fun BudgetsScreenPreview(
     val budgetsByType = (budgetEntityList to budgetAccountAssociationList)
         .letIfNoneIsNull { (budgets, associations) ->
             budgets.toDomainModels(
-                categoryWithSubcategoriesList = categoriesWithSubcategories.expense,
+                groupedCategoriesList = groupedCategoriesByType.expense,
                 associations = associations,
                 accounts = accountList
             )
@@ -105,7 +105,7 @@ fun BudgetsScreenPreview(
                     amountLimit = 4000.0,
                     usedAmount = 2500.0,
                     usedPercentage = 62.5F,
-                    category = categoriesWithSubcategories.expense[0].category,
+                    category = groupedCategoriesByType.expense[0].category,
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Daily,
                     dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
@@ -121,7 +121,7 @@ fun BudgetsScreenPreview(
                     amountLimit = 4000.0,
                     usedAmount = 1000.0,
                     usedPercentage = 25F,
-                    category = categoriesWithSubcategories.expense[1].category,
+                    category = groupedCategoriesByType.expense[1].category,
                     name = "Housing",
                     repeatingPeriod = RepeatingPeriod.Weekly,
                     dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
@@ -137,7 +137,7 @@ fun BudgetsScreenPreview(
                     amountLimit = 4000.0,
                     usedAmount = 2500.0,
                     usedPercentage = 62.5F,
-                    category = categoriesWithSubcategories.expense[0].category,
+                    category = groupedCategoriesByType.expense[0].category,
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Monthly,
                     dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
@@ -151,7 +151,7 @@ fun BudgetsScreenPreview(
                     amountLimit = 4000.0,
                     usedAmount = 1000.0,
                     usedPercentage = 25F,
-                    category = categoriesWithSubcategories.expense[2].category,
+                    category = groupedCategoriesByType.expense[2].category,
                     name = "Shopping",
                     repeatingPeriod = RepeatingPeriod.Monthly,
                     dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),

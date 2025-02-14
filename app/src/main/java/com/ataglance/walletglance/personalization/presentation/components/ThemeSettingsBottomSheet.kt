@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

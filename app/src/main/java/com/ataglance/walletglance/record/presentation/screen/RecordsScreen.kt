@@ -22,7 +22,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
@@ -149,7 +149,7 @@ fun RecordsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
@@ -165,7 +165,7 @@ fun RecordsScreenPreview(
     ),
     recordList: List<RecordEntity>? = null,
     recordStackList: List<RecordStack> = recordList?.toRecordStacks(
-        accounts = accountList, categoriesWithSubcategories = categoriesWithSubcategories
+        accounts = accountList, groupedCategoriesByType = groupedCategoriesByType
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
@@ -178,7 +178,7 @@ fun RecordsScreenPreview(
                     id = 1,
                     amount = 46.47,
                     quantity = null,
-                    categoryWithSubcategory = categoriesWithSubcategories
+                    categoryWithSub = groupedCategoriesByType
                         .expense[0].getWithFirstSubcategory(),
                     note = null,
                     includeInBudgets = true

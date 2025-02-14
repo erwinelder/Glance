@@ -1,20 +1,18 @@
 package com.ataglance.walletglance.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
-import com.ataglance.walletglance.core.data.repository.SettingsRepository
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCaseImpl
 import com.google.firebase.firestore.FirebaseFirestore
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
-
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+import java.util.Locale
 
 val appModule = module {
 
@@ -24,12 +22,18 @@ val appModule = module {
         AppDatabase.getDatabase(context = get())
     }
 
-    single<DataStore<Preferences>> {
-        androidContext().dataStore
-    }
-
     single {
         FirebaseFirestore.getInstance()
+    }
+
+    single<ResourceManager> { parameters ->
+        val locale = parameters.get<String>()
+        val context = get<Context>().let {
+            it.createConfigurationContext(
+                it.resources.configuration.apply { setLocale(Locale(locale)) }
+            )
+        }
+        ResourceManagerImpl(context = context)
     }
 
     /* ---------- DAOs ---------- */
@@ -39,10 +43,6 @@ val appModule = module {
     }
 
     /* ---------- Repositories ---------- */
-
-    single {
-        SettingsRepository(dataStore = get())
-    }
 
     single {
         GeneralRepository(
@@ -55,17 +55,23 @@ val appModule = module {
         )
     }
 
+    /* ---------- Use Cases ---------- */
+
+    single<ApplyLanguageToSystemUseCase> {
+        ApplyLanguageToSystemUseCaseImpl()
+    }
+
     /* ---------- View Models ---------- */
 
     viewModel {
         AppViewModel(
             settingsRepository = get(),
+            applyLanguageToSystemUseCase = get(),
+            saveLanguagePreferenceUseCase = get(),
+            getLanguagePreferenceUseCase = get(),
 
             saveAccountsUseCase = get(),
             getAccountsUseCase = get(),
-
-            saveCategoriesUseCase = get(),
-            getCategoriesUseCase = get(),
 
             getCategoryCollectionsUseCase = get(),
 

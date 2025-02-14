@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -16,10 +14,11 @@ import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.authGraph
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
@@ -27,14 +26,16 @@ import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationVi
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreen
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreen
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
-import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModelFactory
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.context.GlobalContext
+import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
@@ -46,7 +47,6 @@ fun NavGraphBuilder.settingsGraph(
     appConfiguration: AppConfiguration,
     themeUiState: ThemeUiState,
     accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
     personalizationViewModel: PersonalizationViewModel,
     widgetNamesList: List<WidgetName>
 ) {
@@ -94,9 +94,7 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            appViewModel = appViewModel,
-            isAppSetUp = appConfiguration.isSetUp,
-            categoriesWithSubcategories = categoriesWithSubcategories
+            isAppSetUp = appConfiguration.isSetUp
         )
         categoryCollectionsGraph(
             navController = navController,
@@ -124,12 +122,12 @@ fun NavGraphBuilder.settingsGraph(
             )
         }
         composable<SettingsScreens.Language> {
-            val viewModel = viewModel<LanguageViewModel>(
-                factory = LanguageViewModelFactory(appConfiguration.langCode)
-            )
+            val viewModel = koinViewModel<LanguageViewModel> {
+                parametersOf(appConfiguration.langCode)
+            }
 
             val chosenLanguage by viewModel.langCode.collectAsState()
-            val context = LocalContext.current
+            val coroutineScope = rememberCoroutineScope()
 
             LanguageScreen(
                 isAppSetUp = appConfiguration.isSetUp,
@@ -137,13 +135,21 @@ fun NavGraphBuilder.settingsGraph(
                 appLanguage = appConfiguration.langCode,
                 chosenLanguage = chosenLanguage,
                 onSelectNewLanguage = viewModel::selectNewLanguage,
-                onApplyLanguageButton = { langCode: String ->
-                    appViewModel.translateAndSaveCategoriesWithDefaultNames(
-                        currentLangCode = appConfiguration.langCode,
-                        newLangCode = langCode,
-                        context = context
+                onApplyLanguageButton = {
+                    val koin = GlobalContext.get()
+                    val categoriesPackageCurr = DefaultCategoriesPackage(
+                        koin.get<ResourceManager> { parametersOf(appConfiguration.langCode) }
                     )
-                    appViewModel.setLanguage(langCode)
+                    val categoriesPackageNew = DefaultCategoriesPackage(
+                        koin.get<ResourceManager> { parametersOf(chosenLanguage) }
+                    )
+                    coroutineScope.launch {
+                        viewModel.translatedCategories(
+                            defaultInCurrLocale = categoriesPackageCurr.getAsList(),
+                            defaultInNewLocale = categoriesPackageNew.getAsList()
+                        )
+                        viewModel.applyLanguage()
+                    }
                 },
                 onContinueButton = {
                     navViewModel.navigateToScreen(navController, SettingsScreens.Appearance)

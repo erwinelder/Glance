@@ -27,9 +27,9 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.presentation.components.AccountPopupPicker
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -55,7 +55,7 @@ fun RecordCreationScreen(
     recordDraftItems: List<RecordDraftItem>,
     savingIsAllowed: Boolean,
     accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
+    groupedCategoriesByType: GroupedCategoriesByType,
 
     onSelectCategoryType: (CategoryType) -> Unit,
     onNavigateToTransferCreationScreen: () -> Unit,
@@ -67,7 +67,7 @@ fun RecordCreationScreen(
     onSelectAccount: (Account) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit,
     onAmountChange: (Int, String) -> Unit,
-    onSelectCategory: (Int, CategoryWithSubcategory) -> Unit,
+    onSelectCategory: (Int, CategoryWithSub) -> Unit,
     onNoteChange: (Int, String) -> Unit,
     onQuantityChange: (Int, String) -> Unit,
     onSwapItems: (Int, Int) -> Unit,
@@ -158,7 +158,7 @@ fun RecordCreationScreen(
         )
         CategoryPicker(
             visible = showCategoryPicker,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = groupedCategoriesByType,
             type = recordDraftGeneral.type,
             onDismissRequest = { showCategoryPicker = false },
             onCategoryChoose = {
@@ -278,7 +278,7 @@ fun RecordCreationScreenPreview(
             isActive = true
         )
     ),
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     recordDraft: RecordDraft = RecordDraft(
@@ -293,7 +293,7 @@ fun RecordCreationScreenPreview(
             RecordDraftItem(
                 lazyListKey = 0,
                 index = 0,
-                categoryWithSubcategory = categoriesWithSubcategories.expense[0]
+                categoryWithSub = groupedCategoriesByType.expense[0]
                     .getWithFirstSubcategory(),
                 note = "",
                 amount = "42.43",
@@ -310,7 +310,7 @@ fun RecordCreationScreenPreview(
             recordDraftItems = recordDraft.items,
             savingIsAllowed = true,
             accountList = accountsAndActiveOne.accountList,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = groupedCategoriesByType,
             onSelectCategoryType = {},
             onNavigateToTransferCreationScreen = {},
             onIncludeInBudgetsChange = {},

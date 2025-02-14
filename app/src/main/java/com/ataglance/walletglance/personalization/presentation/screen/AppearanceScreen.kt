@@ -13,9 +13,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
@@ -26,9 +26,9 @@ import com.ataglance.walletglance.personalization.presentation.viewmodel.EditNav
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditNavigationButtonsViewModelFactory
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditWidgetsViewModel
 import com.ataglance.walletglance.personalization.presentation.viewmodel.EditWidgetsViewModelFactory
-import com.ataglance.walletglance.settings.domain.SettingsCategories
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.components.OpenSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 
 @Composable
@@ -45,12 +45,7 @@ fun AppearanceScreen(
     onSaveWidgetNames: (List<CheckedWidget>) -> Unit,
     onContinueSetupButton: () -> Unit
 ) {
-    val settingsCategories = SettingsCategories(CurrAppTheme)
-    val appearanceSettingsCategories = listOf(
-        settingsCategories.colorTheme,
-        settingsCategories.widgets,
-        settingsCategories.navigationButtons
-    )
+    val appTheme = CurrAppTheme
 
     var showThemeSettingsBottomSheet by remember { mutableStateOf(false) }
 
@@ -72,19 +67,18 @@ fun AppearanceScreen(
 
     Box {
         SettingsCategoryScreenContainer(
-            thisCategory = settingsCategories.appearance,
+            thisCategory = SettingsCategory.Appearance(appTheme),
             onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
             title = stringResource(R.string.appearance_settings_category_title),
             mainScreenContentBlock = {
-                appearanceSettingsCategories.forEach { category ->
-                    OpenSettingsCategoryButton(category) {
-                        when (category) {
-                            settingsCategories.colorTheme -> showThemeSettingsBottomSheet = true
-                            settingsCategories.widgets -> showWidgetsSettingsBottomSheet = true
-                            settingsCategories.navigationButtons ->
-                                showNavigationButtonsSettingsBottomSheet = true
-                        }
-                    }
+                OpenSettingsCategoryButton(SettingsCategory.ColorTheme(appTheme)) {
+                    showThemeSettingsBottomSheet = true
+                }
+                OpenSettingsCategoryButton(SettingsCategory.Widgets(appTheme)) {
+                    showWidgetsSettingsBottomSheet = true
+                }
+                OpenSettingsCategoryButton(SettingsCategory.NavigationButtons(appTheme)) {
+                    showNavigationButtonsSettingsBottomSheet = true
                 }
             },
             bottomBlock = if (!isAppSetUp) {{

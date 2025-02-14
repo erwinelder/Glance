@@ -3,12 +3,12 @@ package com.ataglance.walletglance.category.domain.model
 import com.ataglance.walletglance.category.domain.utils.findById
 import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 
-data class CategoryWithSubcategories(
+data class GroupedCategories(
     val category: Category,
     val subcategoryList: List<Category> = emptyList()
 ) {
 
-    fun appendNewSubcategory(subcategory: Category): CategoryWithSubcategories {
+    fun appendNewSubcategory(subcategory: Category): GroupedCategories {
         val list = subcategoryList.toMutableList()
         list.add(
             subcategory.copy(
@@ -18,7 +18,7 @@ data class CategoryWithSubcategories(
         return this.copy(subcategoryList = list)
     }
 
-    fun replaceSubcategory(subcategory: Category): CategoryWithSubcategories {
+    fun replaceSubcategory(subcategory: Category): GroupedCategories {
         return this.copy(
             subcategoryList = subcategoryList.map {
                 it.takeIf { it.id != subcategory.id } ?: subcategory
@@ -26,7 +26,7 @@ data class CategoryWithSubcategories(
         )
     }
 
-    fun deleteSubcategoryById(id: Int): CategoryWithSubcategories {
+    fun deleteSubcategoryById(id: Int): GroupedCategories {
         return this.copy(
             subcategoryList = subcategoryList.deleteItemAndMoveOrderNum(
                 { it.id == id }, { it.copy(orderNum = it.orderNum - 1) }
@@ -42,32 +42,32 @@ data class CategoryWithSubcategories(
         }
     }
 
-    fun getWithSubcategoryWithIdOrWithoutSubcategory(id: Int?): CategoryWithSubcategory {
+    fun getWithSubcategoryWithIdOrWithoutSubcategory(id: Int?): CategoryWithSub {
         val subcategory = id?.let { subcategoryList.findById(it) }
-        return CategoryWithSubcategory(category, subcategory)
+        return CategoryWithSub(category, subcategory)
     }
 
-    fun getWithSubcategoryWithId(id: Int): CategoryWithSubcategory {
-        return CategoryWithSubcategory(category, subcategoryList.findById(id))
+    fun getWithSubcategoryWithId(id: Int): CategoryWithSub {
+        return CategoryWithSub(category, subcategoryList.findById(id))
     }
 
-    fun getWithFirstSubcategory(): CategoryWithSubcategory {
-        return CategoryWithSubcategory(category, subcategoryList.firstOrNull())
+    fun getWithFirstSubcategory(): CategoryWithSub {
+        return CategoryWithSub(category, subcategoryList.firstOrNull())
     }
 
-    fun getWithLastSubcategory(): CategoryWithSubcategory {
-        return CategoryWithSubcategory(category, subcategoryList.lastOrNull())
+    fun getWithLastSubcategory(): CategoryWithSub {
+        return CategoryWithSub(category, subcategoryList.lastOrNull())
     }
 
-    fun getWithoutSubcategory(): CategoryWithSubcategory {
-        return CategoryWithSubcategory(category)
+    fun getWithoutSubcategory(): CategoryWithSub {
+        return CategoryWithSub(category)
     }
 
     fun asSingleList(): List<Category> {
         return listOf(category) + subcategoryList
     }
 
-    fun fixSubcategoriesOrderNumbers(): CategoryWithSubcategories {
+    fun fixSubcategoriesOrderNumbers(): GroupedCategories {
         return this.copy(
             subcategoryList = subcategoryList.mapIndexed { index, category ->
                 category.copy(orderNum = index + 1)

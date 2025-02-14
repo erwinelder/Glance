@@ -13,7 +13,12 @@ import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCateg
 import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCategoryUseCaseImpl
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCaseImpl
+import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUseCaseImpl
+import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val categoryModule = module {
@@ -57,6 +62,23 @@ val categoryModule = module {
             getAccountsUseCase = get(),
             getCategoriesUseCase = get(),
             getRecordStackUseCase = get()
+        )
+    }
+
+    single<TranslateCategoriesUseCase> {
+        TranslateCategoriesUseCaseImpl(
+            getCategoriesUseCase = get(),
+            saveCategoriesUseCase = get()
+        )
+    }
+
+    /* ---------- View Models ---------- */
+
+    viewModel {
+        EditCategoriesViewModel(
+            defaultCategoriesPackage = DefaultCategoriesPackage(resourceManager = get()),
+            saveCategoriesUseCase = get(),
+            getCategoriesUseCase = get()
         )
     }
 

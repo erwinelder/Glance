@@ -47,8 +47,8 @@ import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreat
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
-import com.ataglance.walletglance.settings.domain.ThemeUiState
 import com.ataglance.walletglance.settings.navigation.settingsGraph
+import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -284,6 +284,7 @@ fun AppNavHost(
             val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
             val recordDraftItems by viewModel.recordDraftItems.collectAsStateWithLifecycle()
             val savingIsAllowed by viewModel.savingIsAllowed.collectAsStateWithLifecycle()
+            val categories by viewModel.groupedCategoriesByType.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             RecordCreationScreen(
@@ -291,7 +292,7 @@ fun AppNavHost(
                 recordDraftItems = recordDraftItems,
                 savingIsAllowed = savingIsAllowed,
                 accountList = appUiState.accountsAndActiveOne.accountList,
-                categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
+                groupedCategoriesByType = categories,
                 onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
                     navViewModel.navigateToScreen(
@@ -385,7 +386,6 @@ fun AppNavHost(
             appConfiguration = appConfiguration,
             themeUiState = themeUiState,
             accountList = appUiState.accountsAndActiveOne.accountList,
-            categoriesWithSubcategories = appUiState.categoriesWithSubcategories,
             personalizationViewModel = personalizationViewModel,
             widgetNamesList = widgetsUiState.widgetNamesList
         )

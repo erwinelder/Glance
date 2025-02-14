@@ -28,16 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
-import com.ataglance.walletglance.settings.domain.SettingsCategories
-import com.ataglance.walletglance.settings.domain.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun SettingsHomeScreen(
@@ -47,7 +46,7 @@ fun SettingsHomeScreen(
 ) {
     val appTheme = CurrAppTheme
     val settingsCategories = remember(appTheme, isSignedIn) {
-        SettingsCategories(appTheme).getCategories(isSignedIn = isSignedIn)
+        SettingsCategory.asList(appTheme = appTheme, isSignedIn = isSignedIn)
     }
 
     Column(

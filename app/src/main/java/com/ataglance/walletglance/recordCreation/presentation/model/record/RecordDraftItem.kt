@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.recordCreation.presentation.model.record
 
 import androidx.compose.runtime.Stable
-import com.ataglance.walletglance.category.domain.model.CategoryWithSubcategory
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.core.utils.addZeroIfDotIsAtTheBeginning
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import java.util.Locale
@@ -10,7 +10,7 @@ import java.util.Locale
 data class RecordDraftItem(
     val lazyListKey: Int,
     val index: Int,
-    val categoryWithSubcategory: CategoryWithSubcategory?,
+    val categoryWithSub: CategoryWithSub?,
     val note: String = "",
     val amount: String = "",
     val quantity: String = "",
@@ -29,7 +29,7 @@ data class RecordDraftItem(
         return amount.isNotBlank() &&
                 amount.last() != '.' &&
                 amount.addZeroIfDotIsAtTheBeginning().toDouble() != 0.0 &&
-                categoryWithSubcategory != null
+                categoryWithSub != null
     }
 
     fun getTotalAmount(): Double {

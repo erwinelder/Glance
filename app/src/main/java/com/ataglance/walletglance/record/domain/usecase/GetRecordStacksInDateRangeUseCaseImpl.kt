@@ -23,7 +23,7 @@ class GetRecordStacksInDateRangeUseCaseImpl(
         val categoriesFlow = getCategoriesUseCase.getGroupedAsFlow()
 
         combine(recordsFlow, accountsFlow, categoriesFlow) { records, accounts, categories ->
-            records.toRecordStacks(accounts = accounts, categoriesWithSubcategories = categories)
+            records.toRecordStacks(accounts = accounts, groupedCategoriesByType = categories)
         }.collect(::emit)
     }
 
@@ -32,6 +32,6 @@ class GetRecordStacksInDateRangeUseCaseImpl(
         val accounts = getAccountsUseCase.getAll()
         val categories = getCategoriesUseCase.getGrouped()
 
-        return records.toRecordStacks(accounts = accounts, categoriesWithSubcategories = categories)
+        return records.toRecordStacks(accounts = accounts, groupedCategoriesByType = categories)
     }
 }

@@ -7,10 +7,10 @@ data class DefaultCategoriesPackage(
     private val context: Context
 ) {
 
-    fun getDefaultCategories(): CategoriesWithSubcategories {
-        return CategoriesWithSubcategories(
+    fun getDefaultCategories(): GroupedCategoriesByType {
+        return GroupedCategoriesByType(
             expense = listOf(
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 1, type = CategoryType.Expense,
                         orderNum = 1, parentCategoryId = null,
@@ -35,7 +35,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 2, type = CategoryType.Expense,
                         orderNum = 2, parentCategoryId = null,
@@ -88,7 +88,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 3, type = CategoryType.Expense,
                         orderNum = 3, parentCategoryId = null,
@@ -161,7 +161,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 4, type = CategoryType.Expense,
                         orderNum = 4, parentCategoryId = null,
@@ -193,7 +193,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 5, type = CategoryType.Expense,
                         orderNum = 5, parentCategoryId = null,
@@ -239,7 +239,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 6, type = CategoryType.Expense,
                         orderNum = 6, parentCategoryId = null,
@@ -278,7 +278,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 7, type = CategoryType.Expense,
                         orderNum = 7, parentCategoryId = null,
@@ -324,7 +324,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 8, type = CategoryType.Expense,
                         orderNum = 8, parentCategoryId = null,
@@ -356,7 +356,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 9, type = CategoryType.Expense,
                         orderNum = 9, parentCategoryId = null,
@@ -416,7 +416,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 10, type = CategoryType.Expense,
                         orderNum = 10, parentCategoryId = null,
@@ -469,7 +469,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 11, type = CategoryType.Expense,
                         orderNum = 11, parentCategoryId = null,
@@ -508,7 +508,7 @@ data class DefaultCategoriesPackage(
                         )
                     )
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 12, type = CategoryType.Expense,
                         orderNum = 12, parentCategoryId = null,
@@ -556,7 +556,7 @@ data class DefaultCategoriesPackage(
                 )
             ),
             income = listOf(
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 72, type = CategoryType.Income,
                         orderNum = 1, parentCategoryId = null,
@@ -566,7 +566,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 73, type = CategoryType.Income,
                         orderNum = 2, parentCategoryId = null,
@@ -576,7 +576,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 74, type = CategoryType.Income,
                         orderNum = 3, parentCategoryId = null,
@@ -586,7 +586,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 75, type = CategoryType.Income,
                         orderNum = 4, parentCategoryId = null,
@@ -596,7 +596,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 76, type = CategoryType.Income,
                         orderNum = 5, parentCategoryId = null,
@@ -606,7 +606,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 77, type = CategoryType.Income,
                         orderNum = 6, parentCategoryId = null,
@@ -616,7 +616,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 78, type = CategoryType.Income,
                         orderNum = 7, parentCategoryId = null,
@@ -626,7 +626,7 @@ data class DefaultCategoriesPackage(
                     ),
                     subcategoryList = emptyList()
                 ),
-                CategoryWithSubcategories(
+                GroupedCategories(
                     category = Category(
                         id = 79, type = CategoryType.Income,
                         orderNum = 8, parentCategoryId = null,

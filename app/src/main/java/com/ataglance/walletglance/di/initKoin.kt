@@ -7,7 +7,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
         modules(
-            appModule, authModule, billingModule,
+            appModule, authModule, billingModule, settingsModule,
             accountModule, categoryModule, recordModule, recordCreationModule,
             categoryCollectionModule, budgetModule,
             navigationModule, personalizationModule

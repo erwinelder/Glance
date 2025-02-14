@@ -18,7 +18,7 @@ import com.ataglance.walletglance.budget.presentation.components.CheckedBudgetLi
 import com.ataglance.walletglance.budget.presentation.components.CheckedDefaultBudgetComponent
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
-import com.ataglance.walletglance.category.domain.model.CategoriesWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
@@ -85,7 +85,7 @@ private fun BudgetsOnWidgetSettingsBottomSheetContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun BudgetsOnWidgetSettingsBottomSheetPreview(
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
 ) {
@@ -97,7 +97,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 amountLimit = 4000.0,
                 usedAmount = 2500.0,
                 usedPercentage = 62.5F,
-                category = categoriesWithSubcategories.expense[0].category,
+                category = groupedCategoriesByType.expense[0].category,
                 name = "Food & drinks",
                 repeatingPeriod = RepeatingPeriod.Daily,
                 dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
@@ -113,7 +113,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 amountLimit = 4000.0,
                 usedAmount = 1000.0,
                 usedPercentage = 25F,
-                category = categoriesWithSubcategories.expense[1].category,
+                category = groupedCategoriesByType.expense[1].category,
                 name = "Housing",
                 repeatingPeriod = RepeatingPeriod.Weekly,
                 dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
@@ -129,7 +129,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 amountLimit = 4000.0,
                 usedAmount = 2500.0,
                 usedPercentage = 62.5F,
-                category = categoriesWithSubcategories.expense[0].category,
+                category = groupedCategoriesByType.expense[0].category,
                 name = "Food & drinks",
                 repeatingPeriod = RepeatingPeriod.Monthly,
                 dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
@@ -143,7 +143,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 amountLimit = 4000.0,
                 usedAmount = 1000.0,
                 usedPercentage = 25F,
-                category = categoriesWithSubcategories.expense[2].category,
+                category = groupedCategoriesByType.expense[2].category,
                 name = "Shopping",
                 repeatingPeriod = RepeatingPeriod.Monthly,
                 dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
