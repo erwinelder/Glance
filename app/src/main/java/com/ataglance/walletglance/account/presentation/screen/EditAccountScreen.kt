@@ -40,7 +40,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
 import com.ataglance.walletglance.account.mapper.toEditAccountUiState
-import com.ataglance.walletglance.account.presentation.model.EditAccountUiState
+import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
@@ -58,7 +58,7 @@ import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 @Composable
 fun EditAccountScreen(
     scaffoldPadding: PaddingValues,
-    editAccountUiState: EditAccountUiState,
+    accountDraft: AccountDraft,
     allowDeleting: Boolean,
     allowSaving: Boolean,
     onColorChange: (String) -> Unit,
@@ -83,13 +83,13 @@ fun EditAccountScreen(
             topButton = if (allowDeleting) {
                 {
                     SecondaryButton(text = stringResource(R.string.delete)) {
-                        onDeleteButton(editAccountUiState.id)
+                        onDeleteButton(accountDraft.id)
                     }
                 }
             } else null,
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    uiState = editAccountUiState,
+                    uiState = accountDraft,
                     onColorButtonClick = { showColorPicker = true },
                     onNameChange = onNameChange,
                     onNavigateToEditAccountCurrencyScreen = onNavigateToEditAccountCurrencyScreen,
@@ -120,7 +120,7 @@ fun EditAccountScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    uiState: EditAccountUiState,
+    uiState: AccountDraft,
     onColorButtonClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onNavigateToEditAccountCurrencyScreen: () -> Unit,
@@ -239,7 +239,7 @@ fun EditAccountScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountScreen(
             scaffoldPadding = scaffoldPadding,
-            editAccountUiState = editAccountUiState,
+            accountDraft = editAccountUiState,
             allowDeleting = allowDeleting,
             allowSaving = editAccountUiState.allowSaving(),
             onColorChange = {},

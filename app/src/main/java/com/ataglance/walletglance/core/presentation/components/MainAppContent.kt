@@ -46,8 +46,8 @@ fun MainAppContent(
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
     val navigationButtons by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
-    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
+    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
 
     val widgetNames by appViewModel.widgetNames.collectAsStateWithLifecycle()
@@ -67,8 +67,7 @@ fun MainAppContent(
         derivedStateOf {
             AppUiState(
                 dateRangeMenuUiState = dateRangeMenuUiState,
-                accountsAndActiveOne = accountsUiState,
-                recordStackListByDate = recordStacksInDateRange.recordStacks
+                accountsAndActiveOne = accountsUiState
             )
         }
     }
@@ -86,7 +85,6 @@ fun MainAppContent(
             WidgetsUiState(
                 greetingsTitleRes = greetingsTitleRes,
                 activeAccountExpensesForToday = appViewModel.getActiveAccountExpensesForToday(),
-                recordStacksByDateAndAccount = recordStacksByDateAndAccount,
 
                 widgetNamesList = widgetNames,
                 expensesIncomeWidgetUiState = recordStacksByDateAndAccount.getExpensesIncomeWidgetUiState(),

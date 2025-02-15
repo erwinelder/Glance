@@ -7,6 +7,8 @@ interface SaveAccountsUseCase {
 
     suspend fun execute(accountsToSave: List<Account>, currentAccounts: List<Account>)
 
+    suspend fun execute(accounts: List<Account>)
+
     suspend fun execute(accounts: List<AccountEntity>)
 
 }

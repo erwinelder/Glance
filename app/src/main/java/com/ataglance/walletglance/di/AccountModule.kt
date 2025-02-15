@@ -11,7 +11,9 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCaseImpl
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCaseImpl
+import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val accountModule = module {
@@ -48,6 +50,15 @@ val accountModule = module {
 
     single<GetAccountsUseCase> {
         GetAccountsUseCaseImpl(accountRepository = get())
+    }
+
+    /* ---------- View Models ---------- */
+
+    viewModel {
+        EditAccountsViewModel(
+            saveAccountsUseCase = get(),
+            getAccountsUseCase = get()
+        )
     }
 
 }

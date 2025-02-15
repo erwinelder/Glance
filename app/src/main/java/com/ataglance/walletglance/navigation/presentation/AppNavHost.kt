@@ -325,8 +325,7 @@ fun AppNavHost(
             navViewModel = navViewModel,
             authController = authController,
             appViewModel = appViewModel,
-            appConfiguration = appConfiguration,
-            accountList = appUiState.accountsAndActiveOne.accountList
+            appConfiguration = appConfiguration
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()

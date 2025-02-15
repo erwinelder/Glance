@@ -35,7 +35,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 fun EditAccountsScreen(
     scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
-    accountList: List<Account>,
+    accounts: List<Account>,
     onNavigateToEditAccountScreen: (Account?) -> Unit,
     onMoveAccounts: (Int, Int) -> Unit,
     onSaveButton: () -> Unit
@@ -44,7 +44,7 @@ fun EditAccountsScreen(
         topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                accountsList = accountList,
+                accountsList = accounts,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onMoveAccounts = onMoveAccounts
             )
@@ -184,7 +184,7 @@ fun EditAccountsScreenPreview(
         EditAccountsScreen(
             scaffoldPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,
-            accountList = accountList,
+            accounts = accountList,
             onNavigateToEditAccountScreen = {},
             onMoveAccounts = { _, _ -> },
             onSaveButton = {}

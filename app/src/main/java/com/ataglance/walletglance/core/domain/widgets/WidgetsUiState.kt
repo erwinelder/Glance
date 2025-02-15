@@ -8,7 +8,6 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 data class WidgetsUiState(
     @StringRes val greetingsTitleRes: Int,
     val activeAccountExpensesForToday: Double = 0.0,
-    val recordStacksByDateAndAccount: List<RecordStack> = emptyList(),
 
     val widgetNamesList: List<WidgetName> = emptyList(),
     val expensesIncomeWidgetUiState: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),

@@ -3,7 +3,7 @@ package com.ataglance.walletglance.account.mapper
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.model.EditAccountUiState
+import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import java.util.Locale
 
 
@@ -38,8 +38,8 @@ fun Account.toDataModel(): AccountEntity {
 }
 
 
-fun Account.toEditAccountUiState(): EditAccountUiState {
-    return EditAccountUiState(
+fun Account.toEditAccountUiState(): AccountDraft {
+    return AccountDraft(
         id = id,
         orderNum = orderNum,
         name = name,
@@ -53,7 +53,7 @@ fun Account.toEditAccountUiState(): EditAccountUiState {
     )
 }
 
-fun EditAccountUiState.toAccount(): Account? {
+fun AccountDraft.toAccount(): Account? {
     val balance = balance.toDoubleOrNull() ?: return null
 
     return Account(

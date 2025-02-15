@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
-import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
-import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerUiState
+import com.ataglance.walletglance.account.presentation.model.CurrencyItem
+import com.ataglance.walletglance.account.presentation.model.CurrencyPickerUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors

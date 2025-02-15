@@ -210,7 +210,7 @@ class AppViewModelTest {
             newStartAmount, newFinalAmount
         )
 
-        appViewModel.applyAccountsToUiState(accounts)
+        appViewModel.applyAccounts(accounts)
 
         val result = appViewModel.getUpdatedAccountsAfterEditedTransfer(
             uiState, recordStacks.first, recordStacks.second

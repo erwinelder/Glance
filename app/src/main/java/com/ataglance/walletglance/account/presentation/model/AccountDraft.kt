@@ -2,7 +2,7 @@ package com.ataglance.walletglance.account.presentation.model
 
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 
-data class EditAccountUiState(
+data class AccountDraft(
     val id: Int = 0,
     val orderNum: Int = 0,
     val name: String = "",

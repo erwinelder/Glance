@@ -71,7 +71,6 @@ val appModule = module {
             saveLanguagePreferenceUseCase = get(),
             getLanguagePreferenceUseCase = get(),
 
-            saveAccountsUseCase = get(),
             getAccountsUseCase = get(),
 
             recordRepository = get(),

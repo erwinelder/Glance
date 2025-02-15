@@ -10,7 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreen
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreen
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreen
@@ -18,9 +17,8 @@ import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerV
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerViewModelFactory
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
-import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModelFactory
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
@@ -30,42 +28,33 @@ fun NavGraphBuilder.accountsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    appViewModel: AppViewModel,
-    appConfiguration: AppConfiguration,
-    accountList: List<Account>
+    appConfiguration: AppConfiguration
 ) {
     navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
         composable<AccountsSettingsScreens.EditAccounts> { backStack ->
+            val accountsViewModel = backStack.sharedKoinNavViewModel<EditAccountsViewModel>(navController)
+            val accountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
 
-            val editAccountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(
-                navController = navController,
-                factory = EditAccountsViewModelFactory(accountList)
-            )
-            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
-                navController = navController
-            )
-
-            val accountsList by editAccountsViewModel.accountList.collectAsStateWithLifecycle()
+            val accounts by accountsViewModel.accounts.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditAccountsScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = appConfiguration.isSetUp,
-                accountList = accountsList,
+                accounts = accounts,
                 onNavigateToEditAccountScreen = { account ->
-                    editAccountViewModel.applyAccountData(
-                        account = account ?: editAccountsViewModel.getNewAccount()
+                    accountViewModel.applyAccount(
+                        account = account ?: accountsViewModel.getNewAccount()
                     )
                     navViewModel.navigateToScreen(
                         navController = navController, screen = AccountsSettingsScreens.EditAccount
                     )
                 },
-                onMoveAccounts = editAccountsViewModel::moveAccounts,
+                onMoveAccounts = accountsViewModel::moveAccounts,
                 onSaveButton = {
                     coroutineScope.launch {
-                        editAccountsViewModel.getAccountEntities()?.let {
-                            appViewModel.saveAccounts(it)
-                        }
+                        accountsViewModel.saveAccounts()
+
                         if (appConfiguration.isSetUp) {
                             navController.popBackStack()
                         } else {
@@ -76,46 +65,38 @@ fun NavGraphBuilder.accountsGraph(
             )
         }
         composable<AccountsSettingsScreens.EditAccount> { backStack ->
+            val accountsViewModel = backStack.sharedKoinNavViewModel<EditAccountsViewModel>(navController)
+            val accountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
 
-            val accountsViewModel = backStack.sharedViewModel<EditAccountsViewModel>(
-                navController = navController
-            )
-            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
-                navController = navController
-            )
-
-            val accountUiState by editAccountViewModel.editAccountUiState
-                .collectAsStateWithLifecycle()
+            val accountDraft by accountViewModel.accountDraft.collectAsStateWithLifecycle()
             val allowDeleting by accountsViewModel.allowDeleting.collectAsStateWithLifecycle()
-            val allowSaving by editAccountViewModel.allowSaving.collectAsStateWithLifecycle()
+            val allowSaving by accountViewModel.allowSaving.collectAsStateWithLifecycle()
 
             EditAccountScreen(
                 scaffoldPadding = scaffoldPadding,
-                editAccountUiState = accountUiState,
+                accountDraft = accountDraft,
                 allowDeleting = allowDeleting,
                 allowSaving = allowSaving,
-                onColorChange = editAccountViewModel::changeColor,
-                onNameChange = editAccountViewModel::changeName,
+                onColorChange = accountViewModel::changeColor,
+                onNameChange = accountViewModel::changeName,
                 onNavigateToEditAccountCurrencyScreen = {
                     navViewModel.navigateToScreen(
                         navController = navController,
                         screen = AccountsSettingsScreens.EditAccountCurrency(
-                            currency = accountUiState.currency
+                            currency = accountDraft.currency
                         )
                     )
                 },
-                onBalanceChange = editAccountViewModel::changeBalance,
-                onHideChange = editAccountViewModel::changeHide,
-                onHideBalanceChange = editAccountViewModel::changeHideBalance,
-                onWithoutBalanceChange = editAccountViewModel::changeWithoutBalance,
+                onBalanceChange = accountViewModel::changeBalance,
+                onHideChange = accountViewModel::changeHideStatus,
+                onHideBalanceChange = accountViewModel::changeHideBalanceStatus,
+                onWithoutBalanceChange = accountViewModel::changeWithoutBalanceStatus,
                 onDeleteButton = { accountId ->
                     navController.popBackStack()
-                    accountsViewModel.deleteAccountById(accountId)
+                    accountsViewModel.deleteAccount(id = accountId)
                 },
                 onSaveButton = {
-                    editAccountViewModel.getAccount()?.let {
-                        accountsViewModel.saveAccount(it)
-                    }
+                    accountViewModel.getAccount()?.let(accountsViewModel::applyAccount)
                     navController.popBackStack()
                 }
             )
@@ -123,19 +104,14 @@ fun NavGraphBuilder.accountsGraph(
         composable<AccountsSettingsScreens.EditAccountCurrency> { backStack ->
             val currency = backStack.toRoute<AccountsSettingsScreens.EditAccountCurrency>().currency
 
-            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(
-                navController = navController
-            )
+            val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
             val currencyPickerViewModel = viewModel<CurrencyPickerViewModel>(
-                factory = CurrencyPickerViewModelFactory(
-                    selectedCurrency = currency
-                )
+                factory = CurrencyPickerViewModelFactory(selectedCurrency = currency)
             )
 
             val uiState by currencyPickerViewModel.uiState.collectAsStateWithLifecycle()
             val currencyList by currencyPickerViewModel.currencyList.collectAsStateWithLifecycle()
-            val searchedPrompt by currencyPickerViewModel.searchedPrompt
-                .collectAsStateWithLifecycle()
+            val searchedPrompt by currencyPickerViewModel.searchedPrompt.collectAsStateWithLifecycle()
 
             CurrencyPickerScreen(
                 scaffoldPadding = scaffoldPadding,

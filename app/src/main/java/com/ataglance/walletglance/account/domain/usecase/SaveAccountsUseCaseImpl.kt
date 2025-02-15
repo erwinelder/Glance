@@ -6,6 +6,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.mapper.toDataModel
 import com.ataglance.walletglance.core.utils.excludeItems
 import com.ataglance.walletglance.record.data.repository.RecordRepository
+import kotlinx.coroutines.flow.firstOrNull
 
 class SaveAccountsUseCaseImpl(
     private val accountRepository: AccountRepository,
@@ -17,6 +18,23 @@ class SaveAccountsUseCaseImpl(
         val entitiesToDelete = currentAccounts
             .map(Account::toDataModel)
             .excludeItems(entitiesToSave) { it.id }
+
+        if (entitiesToDelete.isEmpty()) {
+            accountRepository.deleteAndUpsertAccounts(
+                toDelete = entitiesToDelete, toUpsert = entitiesToSave
+            )
+        } else {
+            recordRepository.convertRecordsToTransfers(
+                noteValues = entitiesToDelete.map { it.id.toString() }
+            )
+        }
+    }
+
+    override suspend fun execute(accounts: List<Account>) {
+        val currentAccounts = accountRepository.getAllAccounts().firstOrNull().orEmpty()
+
+        val entitiesToSave = accounts.map(Account::toDataModel)
+        val entitiesToDelete = currentAccounts.excludeItems(entitiesToSave) { it.id }
 
         if (entitiesToDelete.isEmpty()) {
             accountRepository.deleteAndUpsertAccounts(

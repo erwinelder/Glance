@@ -8,7 +8,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.SignInCase
@@ -39,8 +38,7 @@ fun NavGraphBuilder.settingsGraph(
     navViewModel: NavigationViewModel,
     authController: AuthController,
     appViewModel: AppViewModel,
-    appConfiguration: AppConfiguration,
-    accountList: List<Account>
+    appConfiguration: AppConfiguration
 ) {
     navigation<MainScreens.Settings>(startDestination = appConfiguration.settingsStartDestination) {
         composable<SettingsScreens.Start> {
@@ -71,9 +69,7 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            appViewModel = appViewModel,
-            appConfiguration = appConfiguration,
-            accountList = accountList
+            appConfiguration = appConfiguration
         )
         budgetsGraph(
             navController = navController,

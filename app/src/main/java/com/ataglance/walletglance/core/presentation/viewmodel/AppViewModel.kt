@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
-import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.category.domain.model.CategoryType
@@ -42,7 +41,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -55,7 +53,6 @@ class AppViewModel(
     private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
     private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
 
-    private val saveAccountsUseCase: SaveAccountsUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
 
     val recordRepository: RecordRepository,
@@ -155,7 +152,7 @@ class AppViewModel(
      */
     private fun updateSetupStageIfNeeded() {
         viewModelScope.launch {
-            val isSetUp = settingsRepository.setupStage.first()
+            val isSetUp = settingsRepository.setupStage.firstOrNull()
             if (isSetUp == 2) {
                 finishSetup()
             }
@@ -173,25 +170,20 @@ class AppViewModel(
     }
 
 
-    // TODO-ACCOUNTS
-    private val _accountsAndActiveOne: MutableStateFlow<AccountsAndActiveOne> = MutableStateFlow(
-        AccountsAndActiveOne()
-    )
-    val accountsAndActiveOne: StateFlow<AccountsAndActiveOne> = _accountsAndActiveOne.asStateFlow()
+    private val _accountsAndActiveOne = MutableStateFlow(AccountsAndActiveOne())
+    val accountsAndActiveOne = _accountsAndActiveOne.asStateFlow()
 
-    // TODO-ACCOUNTS
     private fun fetchAccounts() {
         viewModelScope.launch {
-            getAccountsUseCase.getAllAsFlow().collect(::applyAccountsToUiState)
+            getAccountsUseCase.getAllAsFlow().collect(::applyAccounts)
         }
     }
 
-    // TODO-ACCOUNTS
-    fun applyAccountsToUiState(accountList: List<Account>) {
-        _accountsAndActiveOne.update { uiState ->
-            uiState.copy(
+    fun applyAccounts(accountList: List<Account>) {
+        _accountsAndActiveOne.update { state ->
+            state.copy(
                 accountList = accountList,
-                activeAccount = accountList.takeIf { it.isNotEmpty() }?.firstOrNull { it.isActive }
+                activeAccount = accountList.firstOrNull { it.isActive }
             )
         }
     }
@@ -223,15 +215,6 @@ class AppViewModel(
                     .findByOrderNum(accountOrderNum)?.copy(isActive = true)
             )
         }
-    }
-
-    // TODO-ACCOUNTS
-    // TODO-RECORDS
-    suspend fun saveAccounts(accountsList: List<Account>) {
-        saveAccountsUseCase.execute(
-            accountsToSave = accountsList,
-            currentAccounts = accountsAndActiveOne.value.accountList
-        )
     }
 
 
