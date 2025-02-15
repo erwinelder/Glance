@@ -2,12 +2,12 @@ package com.ataglance.walletglance.categoryCollection.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,7 +38,7 @@ class EditCategoryCollectionViewModel(
     private val _checkedGroupedCategoriesByType = MutableStateFlow(
         CheckedGroupedCategoriesByType()
     )
-    val checkedCategoriesWithSubcategories = _checkedGroupedCategoriesByType.asStateFlow()
+    val checkedGroupedCategoriesByType = _checkedGroupedCategoriesByType.asStateFlow()
 
     val expandedCategory: StateFlow<CheckedGroupedCategories?> = combine(
         _checkedGroupedCategoriesByType
@@ -97,7 +97,7 @@ class EditCategoryCollectionViewModel(
         return collectionUiState.value.let {
             it.copy(
                 name = it.name.trim(),
-                categoryList = checkedCategoriesWithSubcategories.value.getCheckedCategories()
+                categoryList = checkedGroupedCategoriesByType.value.getCheckedCategories()
             )
         }
     }

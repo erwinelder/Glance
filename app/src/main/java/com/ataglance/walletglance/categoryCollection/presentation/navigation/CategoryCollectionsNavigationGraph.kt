@@ -61,14 +61,14 @@ fun NavGraphBuilder.categoryCollectionsGraph(
                 .sharedKoinNavViewModel<EditCategoryCollectionViewModel>(navController)
 
             val collection by collectionViewModel.collectionUiState.collectAsStateWithLifecycle()
-            val editingCategoriesWithSubcategories by collectionViewModel
-                .checkedCategoriesWithSubcategories.collectAsStateWithLifecycle()
+            val checkedGroupedCategoriesByType by collectionViewModel.checkedGroupedCategoriesByType
+                .collectAsStateWithLifecycle()
             val expandedCategory by collectionViewModel.expandedCategory.collectAsStateWithLifecycle()
             val allowSaving by collectionViewModel.allowSaving.collectAsStateWithLifecycle()
 
             EditCategoryCollectionScreen(
                 collection = collection,
-                checkedGroupedCategoriesByType = editingCategoriesWithSubcategories,
+                checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
                 expandedCategory = expandedCategory,
                 allowDeleting = collectionViewModel.allowDeleting.value,
                 allowSaving = allowSaving,

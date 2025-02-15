@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ataglance.walletglance.core.data.repository.SettingsRepository
+import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCaseImpl
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStatusUseCase
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStatusUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
@@ -14,6 +16,7 @@ import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceU
 import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCaseImpl
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
+import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -52,6 +55,10 @@ val settingsModule = module {
         ChangeAppLookPreferencesUseCaseImpl(settingsRepository = get())
     }
 
+    single<ChangeAppSetupStatusUseCase> {
+        ChangeAppSetupStatusUseCaseImpl(settingsRepository = get())
+    }
+
     /* ---------- View Models ---------- */
 
     viewModel { parameters ->
@@ -60,6 +67,13 @@ val settingsModule = module {
             applyLanguageToSystemUseCase = get(),
             saveLanguagePreferenceUseCase = get(),
             translateCategoriesUseCase = get()
+        )
+    }
+
+    viewModel {
+        ResetDataViewModel(
+            deleteAllDataLocallyUseCase = get(),
+            authController = get()
         )
     }
 

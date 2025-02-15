@@ -77,7 +77,7 @@ fun NavGraphBuilder.categoriesGraph(
         }
         composable<CategoriesSettingsScreens.EditSubcategories> { backStack ->
             val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
-            val editCategoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
+            val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
 
             val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -89,7 +89,7 @@ fun NavGraphBuilder.categoriesGraph(
                     navController.popBackStack()
                 },
                 onNavigateToEditCategoryScreen = { categoryOrNull ->
-                    editCategoryViewModel.applyCategory(
+                    categoryViewModel.applyCategory(
                         category = categoryOrNull ?: categoriesViewModel.getNewSubcategory()
                     )
                     navViewModel.navigateToScreen(

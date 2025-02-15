@@ -3,7 +3,8 @@ package com.ataglance.walletglance.di
 import android.content.Context
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
-import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCase
+import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCaseImpl
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -42,10 +43,14 @@ val appModule = module {
         RemoteUpdateTimeDao(firestore = get())
     }
 
-    /* ---------- Repositories ---------- */
+    /* ---------- Use Cases ---------- */
 
-    single {
-        GeneralRepository(
+    single<ApplyLanguageToSystemUseCase> {
+        ApplyLanguageToSystemUseCaseImpl()
+    }
+
+    single<DeleteAllDataLocallyUseCase> {
+        DeleteAllDataLocallyUseCaseImpl(
             settingsRepository = get(),
             accountRepository = get(),
             categoryRepository = get(),
@@ -53,12 +58,6 @@ val appModule = module {
             widgetRepository = get(),
             navigationButtonRepository = get()
         )
-    }
-
-    /* ---------- Use Cases ---------- */
-
-    single<ApplyLanguageToSystemUseCase> {
-        ApplyLanguageToSystemUseCaseImpl()
     }
 
     /* ---------- View Models ---------- */
@@ -79,7 +78,7 @@ val appModule = module {
 
             getWidgetsUseCase = get(),
 
-            generalRepository = get()
+            deleteAllDataLocallyUseCase = get()
         )
     }
 

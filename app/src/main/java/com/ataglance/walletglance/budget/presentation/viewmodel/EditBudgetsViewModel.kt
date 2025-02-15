@@ -11,6 +11,7 @@ import com.ataglance.walletglance.budget.mapper.budget.copyDataToBudget
 import com.ataglance.walletglance.budget.mapper.budget.toNewBudget
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class EditBudgetsViewModel(
     private val saveBudgetsUseCase: SaveBudgetsUseCase,
-    private val getBudgetsUseCase: GetBudgetsUseCase
+    private val getBudgetsUseCase: GetBudgetsUseCase,
+    private val changeAppSetupStatusUseCase: ChangeAppSetupStatusUseCase
 ) : ViewModel() {
 
     init {
@@ -33,15 +35,15 @@ class EditBudgetsViewModel(
     private val _budgetsByType = MutableStateFlow(BudgetsByType())
     val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
 
-    fun applyBudget(budgetUiState: BudgetDraft) {
+    fun applyBudget(budgetDraft: BudgetDraft) {
         val budgetsByType = budgetsByType.value
 
-        val newBudgetsByType = if (budgetUiState.isNew) {
-            budgetUiState.toNewBudget()
+        val newBudgetsByType = if (budgetDraft.isNew) {
+            budgetDraft.toNewBudget()
                 ?.let { budgetsByType.addBudget(it) }
                 ?: budgetsByType
         } else {
-            budgetsByType.concatenate().replaceById(budgetUiState).groupByType()
+            budgetsByType.concatenate().replaceById(budgetDraft).groupByType()
         }
 
         _budgetsByType.update { newBudgetsByType }
@@ -59,12 +61,16 @@ class EditBudgetsViewModel(
         )
     }
 
-
     private fun List<Budget>.replaceById(budgetDraft: BudgetDraft): List<Budget> {
         return this.map { budget ->
             budget.takeUnless { it.id == budgetDraft.id }
                 ?: budgetDraft.copyDataToBudget(budget)
         }
+    }
+
+
+    suspend fun preFinishSetup() {
+        changeAppSetupStatusUseCase.preFinishSetup()
     }
 
 }

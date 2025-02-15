@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.settings.domain.usecase
 
-import com.ataglance.walletglance.core.data.repository.SettingsRepository
+import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import kotlinx.coroutines.flow.firstOrNull
 

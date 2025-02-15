@@ -13,7 +13,6 @@ import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreen
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
@@ -23,72 +22,63 @@ fun NavGraphBuilder.budgetsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    appViewModel: AppViewModel,
     isAppSetUp: Boolean
 ) {
     navigation<SettingsScreens.Budgets>(
         startDestination = BudgetsSettingsScreens.EditBudgets
     ) {
         composable<BudgetsSettingsScreens.EditBudgets> { backStack ->
-            val editBudgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(
-                navController = navController
-            )
-            val editBudgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(
-                navController = navController
-            )
+            val budgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(navController)
+            val budgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(navController)
 
-            val budgetsByTypeState by editBudgetsViewModel.budgetsByType.collectAsStateWithLifecycle()
+            val budgetsByType by budgetsViewModel.budgetsByType.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
 
             EditBudgetsScreen(
                 scaffoldPadding = scaffoldPadding,
                 isAppSetUp = isAppSetUp,
-                budgetsByType = budgetsByTypeState,
+                budgetsByType = budgetsByType,
                 onNavigateToEditBudgetScreen = { budget: Budget? ->
-                    editBudgetViewModel.applyBudget(budget)
+                    budgetViewModel.applyBudget(budget)
                     navViewModel.navigateToScreen(navController, BudgetsSettingsScreens.EditBudget)
                 },
                 onSaveBudgetsButton = {
                     coroutineScope.launch {
-                        editBudgetsViewModel.saveBudgets()
+                        budgetsViewModel.saveBudgets()
                         if (isAppSetUp) {
                             navController.popBackStack()
                         } else {
-                            appViewModel.preFinishSetup()
+                            budgetsViewModel.preFinishSetup()
                         }
                     }
                 }
             )
         }
         composable<BudgetsSettingsScreens.EditBudget> { backStack ->
-            val editBudgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(
-                navController = navController
-            )
-            val editBudgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(
-                navController = navController
-            )
+            val budgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(navController)
+            val budgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(navController)
 
-            val budget by editBudgetViewModel.budget.collectAsStateWithLifecycle()
+            val budget by budgetViewModel.budget.collectAsStateWithLifecycle()
 
             EditBudgetScreen(
                 scaffoldPadding = scaffoldPadding,
                 budget = budget,
-                accountList = editBudgetViewModel.accounts,
-                groupedCategoriesByType = editBudgetViewModel.groupedCategoriesByType,
-                onNameChange = editBudgetViewModel::changeName,
-                onCategoryChange = editBudgetViewModel::changeCategory,
-                onAmountLimitChange = editBudgetViewModel::changeAmountLimit,
-                onRepeatingPeriodChange = editBudgetViewModel::changeRepeatingPeriod,
-                onLinkAccount = editBudgetViewModel::linkWithAccount,
-                onUnlinkAccount = editBudgetViewModel::unlinkWithAccount,
+                accountList = budgetViewModel.accounts,
+                groupedCategoriesByType = budgetViewModel.groupedCategoriesByType,
+                onNameChange = budgetViewModel::changeName,
+                onCategoryChange = budgetViewModel::changeCategory,
+                onAmountLimitChange = budgetViewModel::changeAmountLimit,
+                onRepeatingPeriodChange = budgetViewModel::changeRepeatingPeriod,
+                onLinkAccount = budgetViewModel::linkWithAccount,
+                onUnlinkAccount = budgetViewModel::unlinkWithAccount,
                 onDeleteButton = {
-                    editBudgetsViewModel.deleteBudget(
+                    budgetsViewModel.deleteBudget(
                         id = budget.id, repeatingPeriod = budget.currRepeatingPeriod
                     )
                     navController.popBackStack()
                 },
                 onSaveButton = {
-                    editBudgetsViewModel.applyBudget(editBudgetViewModel.getBudgetDraft())
+                    budgetsViewModel.applyBudget(budgetDraft = budgetViewModel.getBudgetDraft())
                     navController.popBackStack()
                 }
             )

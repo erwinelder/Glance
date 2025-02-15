@@ -27,6 +27,7 @@ import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreen
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
+import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.GlobalContext
@@ -75,7 +76,6 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            appViewModel = appViewModel,
             isAppSetUp = appConfiguration.isSetUp,
         )
         categoriesGraph(
@@ -137,13 +137,14 @@ fun NavGraphBuilder.settingsGraph(
             )
         }
         composable<SettingsScreens.ResetData> {
+            val viewModel = koinViewModel<ResetDataViewModel>()
+
             val coroutineScope = rememberCoroutineScope()
 
             ResetDataScreen(
                 onResetData = {
                     coroutineScope.launch {
-                        appViewModel.resetAppData()
-                        authController.signOut()
+                        viewModel.resetData()
                     }
                 }
             )

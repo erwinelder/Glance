@@ -150,7 +150,8 @@ val budgetModule = module {
     viewModel {
         EditBudgetsViewModel(
             saveBudgetsUseCase = get(),
-            getBudgetsUseCase = get()
+            getBudgetsUseCase = get(),
+            changeAppSetupStatusUseCase = get()
         )
     }
 

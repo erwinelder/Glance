@@ -8,14 +8,13 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.core.data.repository.GeneralRepository
-import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCase
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
@@ -30,6 +29,7 @@ import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
+import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
@@ -61,7 +61,7 @@ class AppViewModel(
 
     private val getWidgetsUseCase: GetWidgetsUseCase,
 
-    val generalRepository: GeneralRepository
+    private val deleteAllDataLocallyUseCase: DeleteAllDataLocallyUseCase,
 ) : ViewModel() {
 
     private val _appTheme: MutableStateFlow<AppTheme?> = MutableStateFlow(null)
@@ -137,9 +137,6 @@ class AppViewModel(
         _appTheme.update { appTheme }
     }
 
-    suspend fun preFinishSetup() {
-        settingsRepository.saveIsSetUpPreference(2)
-    }
     suspend fun finishSetup() {
         settingsRepository.saveIsSetUpPreference(1)
     }
@@ -159,13 +156,9 @@ class AppViewModel(
         }
     }
 
-    suspend fun resetAppData() {
-        generalRepository.resetAllData()
-    }
-
     fun deleteAllData() {
         viewModelScope.launch {
-            generalRepository.deleteAllDataLocally()
+            deleteAllDataLocallyUseCase.execute()
         }
     }
 

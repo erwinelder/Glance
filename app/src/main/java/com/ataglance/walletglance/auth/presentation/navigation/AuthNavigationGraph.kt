@@ -1,10 +1,9 @@
 package com.ataglance.walletglance.auth.presentation.navigation
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -452,7 +451,7 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthScreens.ManageSubscriptions> { backStack ->
-            val activity = LocalContext.current as? Activity
+            val activity = LocalActivity.current
 
             val billingSubscriptionManager = getKoin().getScope("session").get<BillingSubscriptionManager>()
             val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
