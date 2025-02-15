@@ -400,10 +400,10 @@ fun MainAppContentRecordsScreenPreview() {
 @Composable
 fun MainAppContentCategoryStatisticsScreenPreview() {
     val context = LocalContext.current
-    val currentCategoryType = CategoryType.Expense
+    val currentCollectionType = CategoryCollectionType.Expense
     val categoryCollectionWithIdsList = categoryCollectionsWithIdsByType
         .appendDefaultCollection(context.getString(R.string.all_categories))
-        .getByCategoryType(currentCategoryType)
+        .getByType(currentCollectionType)
 
     CategoryStatisticsScreenPreview(
         appTheme = appTheme,
@@ -411,7 +411,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
         isBottomBarVisible = isBottomBarVisible,
         accountList = accountsAndActiveOne.accountList,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
-        currentCategoryType = currentCategoryType,
+        currentCollectionType = currentCollectionType,
         parentCategory = null,
         collectionList = categoryCollectionWithIdsList,
         selectedCollection = categoryCollectionWithIdsList[0],

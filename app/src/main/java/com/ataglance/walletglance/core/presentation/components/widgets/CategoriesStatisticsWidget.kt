@@ -16,15 +16,15 @@ import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
-import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
+import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
 fun CategoriesStatisticsWidget(
-    categoryStatisticsLists: CategoryStatisticsLists,
+    categoriesStatisticsByType: CategoriesStatisticsByType,
     onNavigateToCategoriesStatisticsScreen: (Int) -> Unit,
 ) {
     WidgetWithTitleAndButtonComponent(
@@ -35,9 +35,9 @@ fun CategoriesStatisticsWidget(
     ) {
         AnimatedContent(
             targetState = Triple(
-                categoryStatisticsLists.expense.getOrNull(0),
-                categoryStatisticsLists.expense.getOrNull(1),
-                categoryStatisticsLists.expense.getOrNull(2)
+                categoriesStatisticsByType.expense.getOrNull(0),
+                categoriesStatisticsByType.expense.getOrNull(1),
+                categoriesStatisticsByType.expense.getOrNull(2)
             ),
             label = "top 3 expense categories"
         ) { (firstCategory, secondCategory, thirdCategory) ->
@@ -74,9 +74,9 @@ fun CategoriesStatisticsWidget(
 private fun CategoriesStatisticsWidgetPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         CategoriesStatisticsWidget(
-            categoryStatisticsLists = CategoryStatisticsLists(
+            categoriesStatisticsByType = CategoriesStatisticsByType(
                 expense = listOf(
-                    CategoryStatisticsElementUiState(
+                    CategoryStatistics(
                         category = Category(
                             id = 1,
                             name = "Food & Drinks",
@@ -88,7 +88,7 @@ private fun CategoriesStatisticsWidgetPreview() {
                         percentageFormatted = "50%",
                         currency = "USD"
                     ),
-                    CategoryStatisticsElementUiState(
+                    CategoryStatistics(
                         category = Category(
                             id = 2,
                             name = "Housing",

@@ -3,15 +3,11 @@ package com.ataglance.walletglance.navigation.presentation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,11 +22,9 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetS
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
-import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModelFactory
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
-import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
@@ -148,44 +142,24 @@ fun AppNavHost(
             val parentCategoryId = backStack.toRoute<MainScreens.CategoryStatistics>().parentCategoryId
             val defaultCollectionName = stringResource(R.string.all_categories)
 
-            val viewModel = viewModel<CategoryStatisticsViewModel>(
-                factory = CategoryStatisticsViewModelFactory(
-                    categoryCollections = appUiState.categoryCollectionsUiState
-                        .appendDefaultCollection(name = defaultCollectionName),
-                    recordsFilteredByDateAndAccount = widgetsUiState.recordStacksByDateAndAccount,
-                    categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
-                    parentCategoryId = parentCategoryId
+            val viewModel = koinViewModel<CategoryStatisticsViewModel> {
+                parametersOf(
+                    parentCategoryId,
+                    appUiState.accountsAndActiveOne.activeAccount,
+                    appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange,
+                    defaultCollectionName
                 )
-            )
-            LaunchedEffect(widgetsUiState.categoryStatisticsLists) {
-                viewModel.setCategoryStatisticsByAccountAndDate(widgetsUiState.categoryStatisticsLists)
-            }
-            LaunchedEffect(widgetsUiState.recordStacksByDateAndAccount) {
-                viewModel.setRecordsFilteredByDateAndAccount(
-                    recordList = widgetsUiState.recordStacksByDateAndAccount
-                )
-            }
-            LaunchedEffect(appUiState.categoryCollectionsUiState) {
-                viewModel.setCategoryCollections(
-                    appUiState.categoryCollectionsUiState.appendDefaultCollection(name = defaultCollectionName)
-                )
-            }
-            LaunchedEffect(
-                appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
-                appUiState.accountsAndActiveOne.accountList
-            ) {
-                viewModel.clearParentCategoryStatistics()
-            }
-            LaunchedEffect(true) {
-                viewModel.setParentCategoryStatistics()
-                viewModel.clearParentCategoryId()
             }
 
-            val parentCategory by viewModel.parentCategoryStatistics.collectAsStateWithLifecycle()
-            val categoryStatisticsList by viewModel.categoryStatisticsList.collectAsStateWithLifecycle()
-            val categoryType by viewModel.categoryType.collectAsStateWithLifecycle()
-            val collectionList by viewModel.currentCollectionList.collectAsStateWithLifecycle()
-            val selectedCollection by viewModel.selectedCollection.collectAsStateWithLifecycle()
+            LaunchedEffect(appUiState.accountsAndActiveOne.activeAccount) {
+                viewModel.setActiveAccountId(appUiState.accountsAndActiveOne.activeAccount?.id ?: 0)
+            }
+            LaunchedEffect(appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange) {
+                viewModel.setActiveDateRange(appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange)
+            }
+
+            val collectionsUiState by viewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
+            val groupedCategoryStatistics by viewModel.groupedCategoryStatistics.collectAsStateWithLifecycle()
 
             CategoryStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
@@ -195,21 +169,20 @@ fun AppNavHost(
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                parentCategory = parentCategory,
-                categoryStatisticsList = categoryStatisticsList,
-                currentCategoryType = categoryType,
-                collectionList = collectionList,
-                selectedCollection = selectedCollection,
+                collectionsUiState = collectionsUiState,
+                onToggleCollectionType = viewModel::toggleCollectionType,
                 onCollectionSelect = viewModel::selectCollection,
+
+                groupedCategoryStatistics = groupedCategoryStatistics,
                 onNavigateToEditCollectionsScreen = {
                     navViewModel.navigateToScreenMovingTowardsLeft(
                         navController = navController,
                         screen = CategoryCollectionsSettingsScreens.EditCategoryCollections
                     )
                 },
-                onSetCategoryType = viewModel::setCategoryType,
                 onSetParentCategory = viewModel::setParentCategoryStatistics,
                 onClearParentCategory = viewModel::clearParentCategoryStatistics,
+
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
@@ -231,33 +204,15 @@ fun AppNavHost(
         }
         composable<MainScreens.BudgetStatistics> { backStack ->
             val budgetId = backStack.toRoute<MainScreens.BudgetStatistics>().id
-            val context = LocalContext.current
 
             val viewModel = koinViewModel<BudgetStatisticsViewModel> {
                 parametersOf(budgetId)
             }
 
-            val budget by viewModel.budget.collectAsStateWithLifecycle()
-            val budgetsAccounts by viewModel.accounts.collectAsStateWithLifecycle()
-            val budgetTotalAmountsInRanges by viewModel.budgetTotalAmountsInRanges.collectAsStateWithLifecycle()
-
-            val columnChartState by remember(budgetTotalAmountsInRanges) {
-                derivedStateOf {
-                    budget?.let {
-                        ColumnChartUiState.asAmountsByDateRanges(
-                            totalAmountsByRanges = budgetTotalAmountsInRanges,
-                            rowsCount = 5,
-                            repeatingPeriod = it.repeatingPeriod,
-                            context = context
-                        )
-                    } ?: ColumnChartUiState()
-                }
-            }
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
             BudgetStatisticsScreen(
-                budget = budget,
-                columnChartUiState = columnChartState,
-                budgetAccounts = budgetsAccounts,
+                uiState = uiState,
                 onBackButtonClick = navController::popBackStack
             )
         }

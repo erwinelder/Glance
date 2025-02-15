@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.core.domain.statistics
 
-import android.content.Context
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getAverage
 import com.ataglance.walletglance.core.utils.getColumnNameForColumnChart
@@ -22,13 +22,13 @@ data class ColumnChartUiState(
             totalAmountsByRanges: List<TotalAmountInRange>,
             rowsCount: Int,
             repeatingPeriod: RepeatingPeriod,
-            context: Context
+            resourceManager: ResourceManager
         ): ColumnChartUiState {
             val maxAmount = totalAmountsByRanges.maxOfOrNull { it.totalAmount } ?: 0.0
 
             val rowsNumbers = getRowsNumbers(rowsCount = rowsCount, generalMaxAmount = maxAmount)
             val columnsNames = totalAmountsByRanges.map { amountByRange ->
-                repeatingPeriod.getColumnNameForColumnChart(amountByRange.dateRange, context)
+                repeatingPeriod.getColumnNameForColumnChart(amountByRange.dateRange, resourceManager)
             }
 
             val columnChartItemUiStateList = getColumnsUiStates(

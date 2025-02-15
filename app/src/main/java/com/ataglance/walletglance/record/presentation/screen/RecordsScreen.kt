@@ -26,7 +26,6 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
-import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeToggleButton
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -55,9 +54,10 @@ fun RecordsScreen(
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
     collectionsUiState: CategoryCollectionsUiState,
-    recordStacks: List<RecordStack>,
-    onCollectionSelect: (Int) -> Unit,
     onToggleCollectionType: () -> Unit,
+    onCollectionSelect: (Int) -> Unit,
+
+    recordStacks: List<RecordStack>,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
@@ -74,9 +74,9 @@ fun RecordsScreen(
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         onDateRangeChange = onDateRangeChange,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-        collectionList = collectionsUiState.collections,
-        selectedCollection = collectionsUiState.activeCollection,
-        onCollectionSelect = { onCollectionSelect(it.id) },
+        collectionsUiState = collectionsUiState,
+        onCollectionSelect = onCollectionSelect,
+        onToggleCollectionType = onToggleCollectionType,
         animatedContentLabel = "records history widget content",
         animatedContentTargetState = Pair(recordStacks, collectionsUiState.activeType),
         visibleNoDataMessage = recordStacks.isEmpty(),
@@ -84,11 +84,6 @@ fun RecordsScreen(
             CategoryCollectionType.Mixed -> R.string.you_have_no_records_in_date_range
             CategoryCollectionType.Expense -> R.string.you_have_no_expenses_in_date_range
             CategoryCollectionType.Income -> R.string.you_have_no_income_in_date_range
-        },
-        typeToggleButton = {
-            CategoryCollectionTypeToggleButton(
-                currentType = collectionsUiState.activeType, onClick = onToggleCollectionType
-            )
         },
         onNavigateToEditCollectionsScreen = {
             onNavigateToScreenMovingTowardsLeft(

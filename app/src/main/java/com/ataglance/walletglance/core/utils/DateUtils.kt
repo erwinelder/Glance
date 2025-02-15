@@ -13,6 +13,7 @@ import com.ataglance.walletglance.core.domain.date.StringDateRange
 import com.ataglance.walletglance.core.domain.date.TimeInMillisRange
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
 import com.ataglance.walletglance.core.domain.date.YearMonthDayHourMinute
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -398,13 +399,13 @@ private fun getLastDateRanges(
 
 fun RepeatingPeriod.getColumnNameForColumnChart(
     dateRange: LongDateRange,
-    context: Context
+    resourceManager: ResourceManager
 ): String {
     return when (this) {
         RepeatingPeriod.Daily -> YearMonthDay.fromLong(dateRange.from).getDayWithMonthValueAsString()
         RepeatingPeriod.Weekly -> dateRange.getDayWithMonthValueRangeAsString()
         RepeatingPeriod.Monthly -> dateRange.from.extractMonth().getMonthShortNameRes()
-            ?.let { context.getString(it) }
+            ?.let { resourceManager.getString(it) }
             ?: ""
         RepeatingPeriod.Yearly -> dateRange.from.extractYear().toString()
     }

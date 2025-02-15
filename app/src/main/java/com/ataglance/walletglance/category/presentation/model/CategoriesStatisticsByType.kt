@@ -1,20 +1,21 @@
 package com.ataglance.walletglance.category.presentation.model
 
-import com.ataglance.walletglance.category.domain.model.CategoriesStatsMapItem
+import com.ataglance.walletglance.category.domain.model.CategoriesStatsItem
 import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 
-data class CategoryStatisticsLists(
-    val expense: List<CategoryStatisticsElementUiState> = emptyList(),
-    val income: List<CategoryStatisticsElementUiState> = emptyList()
+data class CategoriesStatisticsByType(
+    val expense: List<CategoryStatistics> = emptyList(),
+    val income: List<CategoryStatistics> = emptyList()
 ) {
 
     companion object {
 
-        fun fromRecordStacks(recordStacks: List<RecordStack>): CategoryStatisticsLists {
-            return CategoryStatisticsLists(
+        fun fromRecordStacks(recordStacks: List<RecordStack>): CategoriesStatisticsByType {
+            return CategoriesStatisticsByType(
                 expense = getCategoryStatisticsByType(
                     recordStackList = recordStacks,
                     type = RecordType.Expense,
@@ -29,9 +30,9 @@ data class CategoryStatisticsLists(
         private fun getCategoryStatisticsByType(
             recordStackList: List<RecordStack>,
             type: RecordType,
-        ): List<CategoryStatisticsElementUiState> {
-            val categoryStatsMap = mutableMapOf<Int, CategoriesStatsMapItem>()
-            val subcategoriesStatsMap = mutableMapOf<Int, MutableMap<Int, CategoriesStatsMapItem>>()
+        ): List<CategoryStatistics> {
+            val categoryStatsMap = mutableMapOf<Int, CategoriesStatsItem>()
+            val subcategoriesStatsMap = mutableMapOf<Int, MutableMap<Int, CategoriesStatsItem>>()
 
             recordStackList.forEach { recordStack ->
                 if (recordStack.isOfType(type)) {
@@ -44,17 +45,19 @@ data class CategoryStatisticsLists(
 
             val accountCurrency = recordStackList.firstOrNull()?.account?.currency ?: ""
             val totalAmount = categoryStatsMap.values.sumOf { it.totalAmount }
+
             return categoryStatsMap.values.sortedByDescending { it.totalAmount }
                 .map { statsMapItem ->
-                    statsMapItem.toCategoryStatisticsElementUiState(
+                    CategoryStatistics.fromStatsMap(
                         accountCurrency = accountCurrency,
                         allCategoriesTotalAmount = totalAmount,
+                        categoriesStatsItem = statsMapItem,
                         subcategoriesStatistics = subcategoriesStatsMap[statsMapItem.category.id]
                     )
                 }
         }
 
-        private fun MutableMap<Int, CategoriesStatsMapItem>.increaseTotalAmountOrAddNewOneToCategory(
+        private fun MutableMap<Int, CategoriesStatsItem>.increaseTotalAmountOrAddNewOneToCategory(
             stackUnit: RecordStackItem
         ) {
             stackUnit.categoryWithSub ?: return
@@ -63,14 +66,14 @@ data class CategoryStatisticsLists(
             if (this.containsKey(category.id)) {
                 this[category.id]!!.totalAmount += stackUnit.amount
             } else {
-                this[category.id] = CategoriesStatsMapItem(
+                this[category.id] = CategoriesStatsItem(
                     category = category,
                     totalAmount = stackUnit.amount
                 )
             }
         }
 
-        private fun MutableMap<Int, MutableMap<Int, CategoriesStatsMapItem>>
+        private fun MutableMap<Int, MutableMap<Int, CategoriesStatsItem>>
                 .increaseTotalAmountOrAddNewOneToSubcategory(stackUnit: RecordStackItem)
         {
             stackUnit.categoryWithSub?.subcategory ?: return
@@ -79,7 +82,7 @@ data class CategoryStatisticsLists(
 
             if (!this.containsKey(category.id)) {
                 this[category.id] = mutableMapOf(
-                    subcategory.id to CategoriesStatsMapItem(subcategory, stackUnit.amount)
+                    subcategory.id to CategoriesStatsItem(subcategory, stackUnit.amount)
                 )
                 return
             }
@@ -87,7 +90,7 @@ data class CategoryStatisticsLists(
             if (this[category.id]!!.containsKey(subcategory.id)) {
                 this[category.id]!![subcategory.id]!!.totalAmount += stackUnit.amount
             } else {
-                this[category.id]!![subcategory.id] = CategoriesStatsMapItem(
+                this[category.id]!![subcategory.id] = CategoriesStatsItem(
                     category = subcategory,
                     totalAmount = stackUnit.amount
                 )
@@ -97,15 +100,25 @@ data class CategoryStatisticsLists(
     }
 
 
-    fun getByType(type: CategoryType): List<CategoryStatisticsElementUiState> {
+    fun getByType(type: CategoryType): List<CategoryStatistics> {
         return when (type) {
             CategoryType.Expense -> expense
             CategoryType.Income -> income
         }
     }
 
-    fun getItemByParentCategoryId(id: Int): CategoryStatisticsElementUiState? {
-        return (expense + income).find { it.category.id == id }
+    fun getByType(type: CategoryCollectionType): List<CategoryStatistics> {
+        return when (type) {
+            CategoryCollectionType.Expense -> expense
+            CategoryCollectionType.Income -> income
+            else -> emptyList()
+        }
+    }
+
+    fun getParentStatsIfSubStatsPresent(id: Int): CategoryStatistics? {
+        return (expense + income)
+            .find { it.category.id == id }
+            ?.takeIf { it.subcategoriesStatistics != null }
     }
 
 }

@@ -16,6 +16,7 @@ import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCaseI
 import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUseCaseImpl
 import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import org.koin.core.module.dsl.viewModel
@@ -73,6 +74,17 @@ val categoryModule = module {
     }
 
     /* ---------- View Models ---------- */
+
+    viewModel { parameters ->
+        CategoryStatisticsViewModel(
+            initialCategoryId = parameters.get(),
+            activeAccount = parameters.get(),
+            activeDateRange = parameters.get(),
+            defaultCollectionName = parameters.get(),
+            getCategoryCollectionsUseCase = get(),
+            getRecordStacksInDateRangeUseCase = get()
+        )
+    }
 
     viewModel {
         EditCategoriesViewModel(

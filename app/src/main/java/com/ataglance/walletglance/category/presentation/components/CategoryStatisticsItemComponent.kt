@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsElementUiState
+import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
@@ -28,7 +28,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.GlassS
 
 @Composable
 fun CategoryStatisticsItemComponent(
-    uiState: CategoryStatisticsElementUiState?,
+    uiState: CategoryStatistics?,
     showLeftArrow: Boolean = false,
     enableClick: Boolean? = null,
     onClick: () -> Unit = {}
@@ -38,7 +38,7 @@ fun CategoryStatisticsItemComponent(
         onClick = onClick,
         clickEnabled = enableClick == null &&
                 uiState != null && (
-                    uiState.subcategoriesStatisticsUiState != null || showLeftArrow
+                    uiState.subcategoriesStatistics != null || showLeftArrow
                 ) || enableClick == true,
         filledWidth = 1f,
         paddingValues = PaddingValues(24.dp, 16.dp)
@@ -69,7 +69,7 @@ fun CategoryStatisticsItemComponent(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
-                if (uiState?.subcategoriesStatisticsUiState != null && !showLeftArrow) {
+                if (uiState?.subcategoriesStatistics != null && !showLeftArrow) {
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_right_icon),
                         contentDescription = "go to ${uiState.category.name} subcategories",

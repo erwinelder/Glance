@@ -1,7 +1,5 @@
 package com.ataglance.walletglance.core.utils
 
-import android.content.Context
-import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -103,6 +101,15 @@ fun Double.roundToTwoDecimals(): Double {
     return "%.2f".format(Locale.US, this).toDouble()
 }
 
+fun Float.roundToTwoDecimals(): Float {
+    return "%.2f".format(Locale.US, this).toFloat()
+}
+
+fun Float.roundToTwoDecimals(suffix: String): String {
+    return "%.2f".format(Locale.US, this) + suffix
+}
+
+
 fun Double.formatWithSpaces(additionToEnd: String? = null): String {
     val numberString = "%.2f".format(Locale.US, this)
     var formattedNumber = numberString.takeLast(3)
@@ -190,14 +197,6 @@ val PaddingValues.top: Dp
 
 val PaddingValues.bottom: Dp
     get() = calculateBottomPadding()
-
-
-
-fun Context.getLanguageContext(langCode: String): Context {
-    return createConfigurationContext(
-        Configuration().apply { setLocale(Locale(langCode)) }
-    )
-}
 
 
 fun Uri.extractOobCode(): String? {

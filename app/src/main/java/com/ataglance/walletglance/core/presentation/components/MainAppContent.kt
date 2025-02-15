@@ -11,7 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
@@ -51,7 +51,6 @@ fun MainAppContent(
     val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
-    val categoryCollectionsUiState by appViewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
     val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
 
@@ -73,7 +72,6 @@ fun MainAppContent(
             AppUiState(
                 navigationButtonList = navigationButtonList,
                 dateRangeMenuUiState = dateRangeMenuUiState,
-                categoryCollectionsUiState = categoryCollectionsUiState,
                 accountsAndActiveOne = accountsUiState,
                 recordStackListByDate = recordStacksInDateRange.recordStacks
             )
@@ -98,7 +96,7 @@ fun MainAppContent(
                 widgetNamesList = widgetNamesList,
                 expensesIncomeWidgetUiState = recordStacksByDateAndAccount.getExpensesIncomeWidgetUiState(),
                 compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount.shrinkForCompactView(),
-                categoryStatisticsLists = CategoryStatisticsLists.fromRecordStacks(recordStacksByDateAndAccount)
+                categoriesStatisticsByType = CategoriesStatisticsByType.fromRecordStacks(recordStacksByDateAndAccount)
             )
         }
     }

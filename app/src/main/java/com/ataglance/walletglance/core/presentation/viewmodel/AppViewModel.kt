@@ -9,8 +9,6 @@ import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findByOrderNum
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
-import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.core.data.repository.GeneralRepository
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
@@ -56,8 +54,6 @@ class AppViewModel(
 
     private val saveAccountsUseCase: SaveAccountsUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
-
-    private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
 
     val recordRepository: RecordRepository,
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
@@ -307,18 +303,6 @@ class AppViewModel(
     }
 
 
-    private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsWithIdsByType())
-    val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
-
-    private fun fetchCategoryCollections() {
-        viewModelScope.launch {
-            getCategoryCollectionsUseCase.getAsFlow().collect { collections ->
-                _categoryCollectionsUiState.update { collections }
-            }
-        }
-    }
-
-
     private val _todayRecordList: MutableStateFlow<List<RecordEntity>> = MutableStateFlow(
         emptyList()
     )
@@ -408,7 +392,6 @@ class AppViewModel(
     private fun fetchDataOnStart() {
         fetchAccounts()
         fetchLastRecordNum()
-        fetchCategoryCollections()
         fetchRecordsForToday()
         fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }

@@ -128,7 +128,8 @@ val budgetModule = module {
             budgetId = parameters.get(),
             getAccountsUseCase = get(),
             getBudgetsUseCase = get(),
-            getRecordsTotalAmountInDateRangesUseCase = get()
+            getRecordsTotalAmountInDateRangesUseCase = get(),
+            resourceManager = get()
         )
     }
 

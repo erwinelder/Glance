@@ -56,17 +56,17 @@ import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun RowScope.CategoryCollectionPicker(
     collectionList: List<CategoryCollectionWithIds>,
     selectedCollection: CategoryCollectionWithIds,
-    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    onCollectionSelect: (Int) -> Unit,
     onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
@@ -174,7 +174,7 @@ private fun PickerButton(
 private fun PopupContent(
     collectionList: List<CategoryCollectionWithIds>,
     selectedCollection: CategoryCollectionWithIds,
-    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    onCollectionSelect: (Int) -> Unit,
     expandedState: MutableTransitionState<Boolean>,
     onExpandedChange: (Boolean) -> Unit,
     selectedColor: Color,
@@ -236,7 +236,7 @@ private fun PopupContent(
                     modifier = Modifier
                         .bounceClickEffect {
                             onExpandedChange(false)
-                            onCollectionSelect(collection)
+                            onCollectionSelect(collection.id)
                         }
                         .shadow(
                             elevation = 0.dp,

@@ -6,6 +6,7 @@ import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BudgetsViewModel(
@@ -15,7 +16,7 @@ class BudgetsViewModel(
     init {
         viewModelScope.launch {
             getBudgetsUseCase.getGroupedByTypeAsFlow().collect { budgetsByType ->
-                _budgetsByType.value = budgetsByType
+                _budgetsByType.update { budgetsByType }
             }
         }
     }

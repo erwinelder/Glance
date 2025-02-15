@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.core.domain.widgets
 
 import androidx.annotation.StringRes
-import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.domain.model.RecordStack
 
@@ -13,5 +13,5 @@ data class WidgetsUiState(
     val widgetNamesList: List<WidgetName> = emptyList(),
     val expensesIncomeWidgetUiState: ExpensesIncomeWidgetUiState = ExpensesIncomeWidgetUiState(),
     val compactRecordStacksByDateAndAccount: List<RecordStack> = emptyList(),
-    val categoryStatisticsLists: CategoryStatisticsLists = CategoryStatisticsLists()
+    val categoriesStatisticsByType: CategoriesStatisticsByType = CategoriesStatisticsByType()
 )

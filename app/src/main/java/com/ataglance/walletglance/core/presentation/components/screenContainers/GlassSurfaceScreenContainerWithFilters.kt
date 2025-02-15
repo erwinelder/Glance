@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.components.AccountsFilterBar
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionPickerContainer
+import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.components.containers.DateFilterBar
@@ -36,16 +36,19 @@ import com.ataglance.walletglance.core.presentation.components.containers.Messag
 @Composable
 fun <S> GlassSurfaceScreenContainerWithFilters(
     screenPadding: PaddingValues,
+
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
+
     currentDateRangeEnum: DateRangeEnum,
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    collectionList: List<CategoryCollectionWithIds>,
-    selectedCollection: CategoryCollectionWithIds,
-    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
-    typeToggleButton: @Composable () -> Unit,
+
+    collectionsUiState: CategoryCollectionsUiState,
+    onCollectionSelect: (Int) -> Unit,
+    onToggleCollectionType: () -> Unit,
+
     animatedContentLabel: String,
     animatedContentTargetState: S,
     visibleNoDataMessage: Boolean,
@@ -83,10 +86,11 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
             onCustomDateRangeButtonClick = onCustomDateRangeButtonClick
         )
         CategoryCollectionPickerContainer(
-            collectionList = collectionList,
-            selectedCollection = selectedCollection,
+            collectionList = collectionsUiState.collections,
+            activeCollection = collectionsUiState.activeCollection,
             onCollectionSelect = onCollectionSelect,
-            typeToggleButton = typeToggleButton,
+            activeType = collectionsUiState.activeType,
+            onTypeToggle = onToggleCollectionType,
             onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
             onDimBackgroundChange = onDimBackgroundChange
         )

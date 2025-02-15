@@ -42,9 +42,6 @@ class RecordsViewModel(
     }
 
 
-    private var collectionsByType = CategoryCollectionsWithIdsByType()
-
-
     private val _activeAccountId = MutableStateFlow(activeAccount?.id)
 
     fun setActiveAccountId(id: Int) {
@@ -60,6 +57,8 @@ class RecordsViewModel(
         _activeDateRange.update { dateRange }
     }
 
+
+    private var collectionsByType = CategoryCollectionsWithIdsByType()
 
     private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsUiState())
     val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
@@ -100,8 +99,8 @@ class RecordsViewModel(
         _recordsInDateRange,
         _activeAccountId,
         _categoryCollectionsUiState
-    ) { stacks, accountId, collectionsUiState ->
-        stacks.filterByAccount(accountId).filterByCollection(collectionsUiState.activeCollection)
+    ) { stacks, accountId, collectionsState ->
+        stacks.filterByAccount(accountId).filterByCollection(collectionsState.activeCollection)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),

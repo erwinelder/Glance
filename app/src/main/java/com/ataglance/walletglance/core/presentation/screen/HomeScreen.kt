@@ -27,7 +27,7 @@ import com.ataglance.walletglance.account.presentation.components.AccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.presentation.model.CategoryStatisticsLists
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -197,7 +197,7 @@ private fun CompactLayout(
                         }
                         WidgetName.TopExpenseCategories -> {
                             CategoriesStatisticsWidget(
-                                categoryStatisticsLists = widgetsUiState.categoryStatisticsLists,
+                                categoriesStatisticsByType = widgetsUiState.categoriesStatisticsByType,
                                 onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
                                     onNavigateToScreenMovingTowardsLeft(
                                         MainScreens.CategoryStatistics(parentCategoryId)
@@ -334,7 +334,7 @@ fun HomeScreenPreview(
         widgetNamesList = widgetNamesList,
         expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
         compactRecordStacksByDateAndAccount = recordStackList.shrinkForCompactView(),
-        categoryStatisticsLists = CategoryStatisticsLists.fromRecordStacks(recordStackList)
+        categoriesStatisticsByType = CategoriesStatisticsByType.fromRecordStacks(recordStackList)
     )
 
     PreviewWithMainScaffoldContainer(

@@ -33,8 +33,9 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.budget.presentation.model.BudgetStatisticsScreenUiState
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
@@ -45,6 +46,7 @@ import com.ataglance.walletglance.core.presentation.components.charts.GlanceSing
 import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
@@ -54,9 +56,7 @@ import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
 
 @Composable
 fun BudgetStatisticsScreen(
-    budget: Budget?,
-    columnChartUiState: ColumnChartUiState,
-    budgetAccounts: List<Account>,
+    uiState: BudgetStatisticsScreenUiState,
     onBackButtonClick: () -> Unit
 ) {
     Column(
@@ -64,11 +64,11 @@ fun BudgetStatisticsScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         BackButtonBlock(onBackButtonClick)
-        if (budget != null) {
+        if (uiState.budget != null) {
             BudgetStatisticsScreenContent(
-                budget = budget,
-                columnChartUiState = columnChartUiState,
-                budgetAccounts = budgetAccounts
+                budget = uiState.budget,
+                columnChartUiState = uiState.columnChartUiState,
+                budgetAccounts = uiState.accounts
             )
         } else {
             MessageContainer(message = stringResource(R.string.budget_not_found))
@@ -248,6 +248,7 @@ fun BudgetStatisticsScreenPreview(
     totalAmounts: List<Double> = (0..5).map { 5000.0 / (it + 1) }
 ) {
     val context = LocalContext.current
+    val resourceManager = ResourceManagerImpl(context)
     val totalAmountsByRanges = budget.repeatingPeriod.getPrevDateRanges()
         .mapIndexed { index, dateRange ->
             TotalAmountInRange(
@@ -263,14 +264,16 @@ fun BudgetStatisticsScreenPreview(
         totalAmountsByRanges = totalAmountsByRanges,
         rowsCount = 5,
         repeatingPeriod = budget.repeatingPeriod,
-        context = context
+        resourceManager = resourceManager
     )
 
     PreviewContainer(appTheme = appTheme) {
         BudgetStatisticsScreen(
-            budget = budget,
-            columnChartUiState = columnChartUiState,
-            budgetAccounts = accountList,
+            uiState = BudgetStatisticsScreenUiState(
+                budget = budget,
+                columnChartUiState = columnChartUiState,
+                accounts = accountList
+            ),
             onBackButtonClick = {}
         )
     }
