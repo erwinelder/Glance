@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,21 +23,51 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.util.Locale
 
 @Composable
 fun ExpensesIncomeWidget(
+    activeAccount: Account?,
+    dateRangeWithEnum: DateRangeWithEnum
+) {
+    val viewModel = koinViewModel<ExpensesIncomeWidgetViewModel> {
+        parametersOf(activeAccount, dateRangeWithEnum.dateRange)
+    }
+
+    LaunchedEffect(activeAccount) {
+        activeAccount?.id?.let(viewModel::setActiveAccountId)
+    }
+    LaunchedEffect(dateRangeWithEnum.dateRange) {
+        viewModel.setActiveDateRange(dateRangeWithEnum.dateRange)
+    }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ExpensesIncomeWidgetContent(
+        uiState = uiState,
+        dateRangeWithEnum = dateRangeWithEnum,
+        accountCurrency = activeAccount?.currency ?: "???"
+    )
+}
+
+@Composable
+fun ExpensesIncomeWidgetContent(
     uiState: ExpensesIncomeWidgetUiState,
     dateRangeWithEnum: DateRangeWithEnum,
     accountCurrency: String
@@ -147,7 +178,7 @@ private fun StatisticBlock(
 @Composable
 private fun ExpensesIncomeWidgetPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        ExpensesIncomeWidget(
+        ExpensesIncomeWidgetContent(
             uiState = ExpensesIncomeWidgetUiState(
                 incomeTotal = 1000.0,
                 expensesTotal = 500.0,

@@ -25,7 +25,6 @@ import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatis
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
-import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
@@ -33,6 +32,7 @@ import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
@@ -54,7 +54,7 @@ fun AppNavHost(
     moveScreenTowardsLeft: Boolean,
     appConfiguration: AppConfiguration,
     appUiState: AppUiState,
-    widgetsUiState: WidgetsUiState,
+    widgetNames: List<WidgetName>,
     openCustomDateRangeWindow: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
@@ -79,12 +79,12 @@ fun AppNavHost(
                 scaffoldPadding = scaffoldPadding,
                 isAppThemeSetUp = appConfiguration.appTheme != null,
                 accountsAndActiveOne = appUiState.accountsAndActiveOne,
-                onTopBarAccountClick = appViewModel::applyActiveAccountByOrderNum,
+                onTopBarAccountClick = appViewModel::applyActiveAccount,
                 dateRangeWithEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum,
                 onDateRangeChange = appViewModel::selectDateRange,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                widgetsUiState = widgetsUiState,
+                widgetNames = widgetNames,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
                 onWidgetSettingsButtonClick = budgetsOnWidgetSettingsViewModel::openWidgetSettings,
                 onNavigateToScreenMovingTowardsLeft = { screen ->
@@ -118,8 +118,8 @@ fun AppNavHost(
 
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                accountList = appUiState.accountsAndActiveOne.accountList,
-                onAccountClick = appViewModel::applyActiveAccountByOrderNum,
+                accountList = appUiState.accountsAndActiveOne.accounts,
+                onAccountClick = appViewModel::applyActiveAccount,
                 currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
@@ -159,8 +159,8 @@ fun AppNavHost(
 
             CategoryStatisticsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
-                accountList = appUiState.accountsAndActiveOne.accountList,
-                onAccountClick = appViewModel::applyActiveAccountByOrderNum,
+                accountList = appUiState.accountsAndActiveOne.accounts,
+                onAccountClick = appViewModel::applyActiveAccount,
                 currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onDateRangeChange = appViewModel::selectDateRange,
@@ -234,7 +234,7 @@ fun AppNavHost(
                 recordDraftGeneral = recordDraftGeneral,
                 recordDraftItems = recordDraftItems,
                 savingIsAllowed = savingIsAllowed,
-                accountList = appUiState.accountsAndActiveOne.accountList,
+                accountList = appUiState.accountsAndActiveOne.accounts,
                 groupedCategoriesByType = groupedCategories,
                 onSelectCategoryType = viewModel::selectCategoryType,
                 onNavigateToTransferCreationScreen = {
@@ -291,7 +291,7 @@ fun AppNavHost(
 
             TransferCreationScreen(
                 transferDraft = transferDraft,
-                accountList = appUiState.accountsAndActiveOne.accountList,
+                accountList = appUiState.accountsAndActiveOne.accounts,
                 onNavigateBack = navController::popBackStack,
                 onSelectNewDate = viewModel::selectNewDate,
                 onSelectNewTime = viewModel::selectNewTime,

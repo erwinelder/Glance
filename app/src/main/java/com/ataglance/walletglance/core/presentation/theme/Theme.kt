@@ -7,6 +7,8 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -25,21 +27,21 @@ private val LocalAppTheme = compositionLocalOf { AppTheme.LightDefault }
 @OptIn(ExperimentalSharedTransitionApi::class)
 private val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GlanceTheme(
     context: ComponentActivity? = null,
     useDeviceTheme: Boolean = true,
-    chosenLightTheme: String = AppTheme.LightDefault.name,
-    chosenDarkTheme: String = AppTheme.DarkDefault.name,
-    lastChosenTheme: String = AppTheme.LightDefault.name,
+    chosenLightTheme: AppTheme = AppTheme.LightDefault,
+    chosenDarkTheme: AppTheme = AppTheme.DarkDefault,
+    lastChosenTheme: AppTheme = AppTheme.LightDefault,
     isDeviceIsDarkTheme: Boolean = isSystemInDarkTheme(),
     setIsDarkTheme: (AppTheme) -> Unit = {},
     boxWithConstraintsScope: BoxWithConstraintsScope,
     sharedTransitionScope: SharedTransitionScope,
     content: @Composable () -> Unit
 ) {
-    val appThemeString = if (useDeviceTheme) {
+    val appTheme = if (useDeviceTheme) {
         if (!isDeviceIsDarkTheme) {
             chosenLightTheme
         } else {
@@ -47,10 +49,6 @@ fun GlanceTheme(
         }
     } else {
         lastChosenTheme
-    }
-    val appTheme = when (appThemeString) {
-        AppTheme.DarkDefault.name -> AppTheme.DarkDefault
-        else -> AppTheme.LightDefault
     }
 
     setIsDarkTheme(appTheme)
@@ -75,7 +73,8 @@ fun GlanceTheme(
         LocalColors provides glanceColors,
         LocalWindowType provides windowType,
         LocalAppTheme provides appTheme,
-        LocalSharedTransitionScope provides sharedTransitionScope
+        LocalSharedTransitionScope provides sharedTransitionScope,
+        LocalRippleConfiguration provides null
     ) {
         MaterialTheme(typography = Typography, content = content)
     }

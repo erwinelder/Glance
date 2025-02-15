@@ -23,26 +23,23 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.components.AccountCard
+import com.ataglance.walletglance.account.presentation.containers.ActiveAccountCardContainer
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
+import com.ataglance.walletglance.category.presentation.components.CategoriesStatisticsWidget
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.domain.widgets.WidgetsUiState
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.widgets.CategoriesStatisticsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ChosenBudgetsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
-import com.ataglance.walletglance.core.presentation.components.widgets.RecentRecordsWidget
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
@@ -56,9 +53,8 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
-import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.mapper.toRecordStacks
+import com.ataglance.walletglance.record.presentation.components.RecentRecordsWidget
 
 @Composable
 fun HomeScreen(
@@ -70,7 +66,7 @@ fun HomeScreen(
     onDateRangeChange: (DateRangeEnum) -> Unit,
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
-    widgetsUiState: WidgetsUiState,
+    widgetNames: List<WidgetName>,
     onChangeHideActiveAccountBalance: () -> Unit,
     onWidgetSettingsButtonClick: (WidgetName) -> Unit,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
@@ -80,7 +76,7 @@ fun HomeScreen(
         topBar = {
             StartAnimatedContainer(visible = isAppThemeSetUp) {
                 AppMainTopBar(
-                    accountList = accountsAndActiveOne.accountList,
+                    accountList = accountsAndActiveOne.accounts,
                     currentDateRangeEnum = dateRangeWithEnum.enum,
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -97,7 +93,7 @@ fun HomeScreen(
             accountsAndActiveOne = accountsAndActiveOne,
             dateRangeWithEnum = dateRangeWithEnum,
             onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
-            widgetsUiState = widgetsUiState,
+            widgetNames = widgetNames,
             onWidgetSettingsButtonClick = onWidgetSettingsButtonClick,
             onNavigateToScreenMovingTowardsLeft = onNavigateToScreenMovingTowardsLeft,
             widgetSettingsBottomSheets = widgetSettingsBottomSheets
@@ -112,7 +108,7 @@ private fun CompactLayout(
     accountsAndActiveOne: AccountsAndActiveOne,
     dateRangeWithEnum: DateRangeWithEnum,
     onChangeHideActiveAccountBalance: () -> Unit,
-    widgetsUiState: WidgetsUiState,
+    widgetNames: List<WidgetName>,
     onWidgetSettingsButtonClick: (WidgetName) -> Unit,
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
     widgetSettingsBottomSheets: @Composable BoxScope.() -> Unit
@@ -132,7 +128,7 @@ private fun CompactLayout(
         ) {
             item {
                 StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 50) {
-                    GreetingsMessage(widgetsUiState.greetingsTitleRes)
+                    GreetingsMessage()
                 }
             }
             item {
@@ -140,16 +136,13 @@ private fun CompactLayout(
                     visible = isAppThemeSetUp && accountsAndActiveOne.activeAccount != null,
                     delayMillis = 100
                 ) {
-                    if (accountsAndActiveOne.activeAccount != null) {
-                        AccountCard(
-                            account = accountsAndActiveOne.activeAccount,
-                            todayExpenses = widgetsUiState.activeAccountExpensesForToday,
-                            onHideBalanceButton = onChangeHideActiveAccountBalance
-                        )
-                    }
+                    ActiveAccountCardContainer(
+                        activeAccount = accountsAndActiveOne.activeAccount,
+                        onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance
+                    )
                 }
             }
-            itemsIndexed(items = widgetsUiState.widgetNamesList) { index, widgetName ->
+            itemsIndexed(items = widgetNames) { index, widgetName ->
                 WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                     when (widgetName) {
                         WidgetName.ChosenBudgets -> {
@@ -169,17 +162,14 @@ private fun CompactLayout(
                         }
                         WidgetName.TotalForPeriod -> {
                             ExpensesIncomeWidget(
-                                uiState = widgetsUiState.expensesIncomeWidgetUiState,
-                                dateRangeWithEnum = dateRangeWithEnum,
-                                accountCurrency = accountsAndActiveOne.activeAccount?.currency ?: ""
+                                activeAccount = accountsAndActiveOne.activeAccount,
+                                dateRangeWithEnum = dateRangeWithEnum
                             )
                         }
                         WidgetName.RecentRecords -> {
                             RecentRecordsWidget(
-                                recordStackList = widgetsUiState.compactRecordStacksByDateAndAccount,
-                                accountList = accountsAndActiveOne.accountList,
-                                isCustomDateRange =
-                                dateRangeWithEnum.enum == DateRangeEnum.Custom,
+                                accountsAndActiveOne = accountsAndActiveOne,
+                                dateRangeWithEnum = dateRangeWithEnum,
                                 onRecordClick = { recordNum: Int ->
                                     onNavigateToScreenMovingTowardsLeft(
                                         MainScreens.RecordCreation(recordNum = recordNum)
@@ -197,7 +187,8 @@ private fun CompactLayout(
                         }
                         WidgetName.TopExpenseCategories -> {
                             CategoriesStatisticsWidget(
-                                categoriesStatisticsByType = widgetsUiState.categoriesStatisticsByType,
+                                activeAccount = accountsAndActiveOne.activeAccount,
+                                activeDateRange = dateRangeWithEnum.dateRange,
                                 onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
                                     onNavigateToScreenMovingTowardsLeft(
                                         MainScreens.CategoryStatistics(parentCategoryId)
@@ -229,7 +220,7 @@ fun HomeScreenPreview(
         LocalContext.current
     ).getDefaultCategories(),
     accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
-        accountList = listOf(
+        accounts = listOf(
             Account(
                 id = 1,
                 orderNum = 1,
@@ -269,14 +260,14 @@ fun HomeScreenPreview(
     ),
     recordList: List<RecordEntity>? = null,
     recordStackList: List<RecordStack> = recordList?.toRecordStacks(
-        accounts = accountsAndActiveOne.accountList,
+        accounts = accountsAndActiveOne.accounts,
         groupedCategoriesByType = groupedCategoriesByType
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
             date = getTodayDateLong(),
             type = RecordType.Expense,
-            account = accountsAndActiveOne.accountList[0].toRecordAccount(),
+            account = accountsAndActiveOne.accounts[0].toRecordAccount(),
             totalAmount = 42.43,
             stack = listOf(
                 RecordStackItem(
@@ -294,7 +285,7 @@ fun HomeScreenPreview(
             recordNum = 2,
             date = getTodayDateLong(),
             type = RecordType.OutTransfer,
-            account = accountsAndActiveOne.accountList[0].toRecordAccount(),
+            account = accountsAndActiveOne.accounts[0].toRecordAccount(),
             totalAmount = 42.43,
             stack = listOf(
                 RecordStackItem(
@@ -303,7 +294,7 @@ fun HomeScreenPreview(
                     quantity = null,
                     categoryWithSub = groupedCategoriesByType
                         .expense[0].getWithFirstSubcategory(),
-                    note = accountsAndActiveOne.accountList[1].id.toString(),
+                    note = accountsAndActiveOne.accounts[1].id.toString(),
                     includeInBudgets = true
                 )
             )
@@ -326,16 +317,6 @@ fun HomeScreenPreview(
         )
     )
 ) {
-    val widgetUiState = WidgetsUiState(
-        greetingsTitleRes = R.string.greetings_title_afternoon,
-        activeAccountExpensesForToday = 0.0,
-
-        widgetNamesList = widgetNamesList,
-        expensesIncomeWidgetUiState = recordStackList.getExpensesIncomeWidgetUiState(),
-        compactRecordStacksByDateAndAccount = recordStackList.shrinkForCompactView(),
-        categoriesStatisticsByType = CategoriesStatisticsByType.fromRecordStacks(recordStackList)
-    )
-
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
         isBottomBarVisible = isBottomBarVisible,
@@ -350,7 +331,7 @@ fun HomeScreenPreview(
             onDateRangeChange = {},
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},
-            widgetsUiState = widgetUiState,
+            widgetNames = widgetNamesList,
             onChangeHideActiveAccountBalance = {},
             onWidgetSettingsButtonClick = {},
             onNavigateToScreenMovingTowardsLeft = {},

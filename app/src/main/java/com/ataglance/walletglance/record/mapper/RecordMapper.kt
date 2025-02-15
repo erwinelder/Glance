@@ -4,16 +4,12 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.utils.asChar
 import com.ataglance.walletglance.record.domain.utils.asRecordType
-import com.ataglance.walletglance.record.domain.utils.getTotalAmountByType
-import com.ataglance.walletglance.record.domain.utils.getTotalPercentages
 import com.ataglance.walletglance.record.domain.utils.toCategoryTypeOrNullIfTransfer
 
 
@@ -108,21 +104,5 @@ fun RecordEntity.toDomainModel(): Record? {
         subcategoryId = subcategoryId,
         note = note,
         includeInBudgets = includeInBudgets
-    )
-}
-
-
-fun List<RecordStack>.getExpensesIncomeWidgetUiState(): ExpensesIncomeWidgetUiState {
-    val expensesTotal = this.getTotalAmountByType(CategoryType.Expense)
-    val incomeTotal = this.getTotalAmountByType(CategoryType.Income)
-    val (expensesPercentage, incomePercentage) = getTotalPercentages(expensesTotal, incomeTotal)
-
-    return ExpensesIncomeWidgetUiState(
-        expensesTotal = expensesTotal,
-        incomeTotal = incomeTotal,
-        expensesPercentage = expensesPercentage,
-        incomePercentage = incomePercentage,
-        expensesPercentageFloat = expensesPercentage.toFloat() / 100F,
-        incomePercentageFloat = incomePercentage.toFloat() / 100F
     )
 }

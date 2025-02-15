@@ -31,11 +31,6 @@ fun List<Account>.findById(id: Int): Account? {
 }
 
 
-fun List<Account>.findByOrderNum(orderNum: Int): Account? {
-    return this.find { it.orderNum == orderNum }
-}
-
-
 fun List<Account>.makeSureThereIsOnlyOneActiveAccount(): List<Account> {
     return this.takeIf { list ->
         list.filter { it.isActive }.size == 1

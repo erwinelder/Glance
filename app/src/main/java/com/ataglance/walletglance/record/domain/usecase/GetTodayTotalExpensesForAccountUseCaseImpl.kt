@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.firstOrNull
 class GetTodayTotalExpensesForAccountUseCaseImpl(
     private val recordRepository: RecordRepository
 ) : GetTodayTotalExpensesForAccountUseCase {
-    override suspend fun execute(accountId: Int): Double {
+    override suspend fun get(accountId: Int): Double {
         return recordRepository
             .getRecordsInDateRange(range = getTodayLongDateRange()).firstOrNull()
             ?.filter { it.accountId == accountId }

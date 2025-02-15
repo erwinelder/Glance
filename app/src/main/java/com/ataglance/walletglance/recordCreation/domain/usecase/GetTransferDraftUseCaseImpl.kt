@@ -25,7 +25,7 @@ class GetTransferDraftUseCaseImpl(
             ?: getClearTransferDraft(
                 recordNum = recordNum ?: getLastRecordNumUseCase.getNext(),
                 accountsAndActiveOne = AccountsAndActiveOne(
-                    accountList = accounts,
+                    accounts = accounts,
                     activeAccount = accounts.firstOrNull { it.isActive }
                 )
             )
@@ -51,7 +51,7 @@ class GetTransferDraftUseCaseImpl(
             ),
             receiver = TransferDraftUnits(
                 account = accountsAndActiveOne.activeAccount?.let {
-                    accountsAndActiveOne.accountList.getOtherFrom(it)
+                    accountsAndActiveOne.accounts.getOtherFrom(it)
                 },
                 recordNum = recordNum + 1
             )

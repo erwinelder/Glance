@@ -5,9 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
-import com.ataglance.walletglance.account.domain.utils.findByOrderNum
+import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.auth.data.model.UserData
-import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -23,15 +22,10 @@ import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.withLongDateRange
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.data.model.RecordsInDateRange
-import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
-import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
-import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
 import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStatusUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
@@ -52,46 +46,49 @@ class AppViewModel(
     private val applyLanguageToSystemUseCase: ApplyLanguageToSystemUseCase,
     private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
     private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
+    private val changeAppSetupStatusUseCase: ChangeAppSetupStatusUseCase,
 
     private val getAccountsUseCase: GetAccountsUseCase,
-
-    val recordRepository: RecordRepository,
-    private val getTodayTotalExpensesForAccountUseCase: GetTodayTotalExpensesForAccountUseCase,
-    private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
-
     private val getWidgetsUseCase: GetWidgetsUseCase,
-
     private val deleteAllDataLocallyUseCase: DeleteAllDataLocallyUseCase,
 ) : ViewModel() {
 
+    init {
+        applyAppLanguage()
+        updateSetupStageIfNeeded()
+        fetchAppThemeConfiguration()
+        fetchAccounts()
+        fetchWidgets()
+    }
+
+
     private val _appTheme: MutableStateFlow<AppTheme?> = MutableStateFlow(null)
-    val appConfiguration: StateFlow<AppConfiguration> =
-        combine(
-            settingsRepository.setupStage,
-            settingsRepository.userId,
-            getLanguagePreferenceUseCase.getAsFlow(),
-            _appTheme
-        ) { setupStage, userId, language, appTheme ->
-            AppConfiguration(
-                isSetUp = setupStage == 1,
-                isSignedIn = userId != null,
-                mainStartDestination = when(setupStage) {
-                    1 -> MainScreens.Home
-                    0 -> MainScreens.Settings
-                    else -> MainScreens.FinishSetup
-                },
-                settingsStartDestination = when (setupStage) {
-                    1 -> SettingsScreens.SettingsHome
-                    else -> SettingsScreens.Start
-                },
-                langCode = language,
-                appTheme = appTheme
-            )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = AppConfiguration()
+    val appConfiguration = combine(
+        settingsRepository.setupStage,
+        settingsRepository.userId,
+        getLanguagePreferenceUseCase.getAsFlow(),
+        _appTheme
+    ) { setupStage, userId, language, appTheme ->
+        AppConfiguration(
+            isSetUp = setupStage == 1,
+            isSignedIn = userId != null,
+            mainStartDestination = when(setupStage) {
+                1 -> MainScreens.Home
+                0 -> MainScreens.Settings
+                else -> MainScreens.FinishSetup
+            },
+            settingsStartDestination = when (setupStage) {
+                1 -> SettingsScreens.SettingsHome
+                else -> SettingsScreens.Start
+            },
+            langCode = language,
+            appTheme = appTheme
         )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = AppConfiguration()
+    )
 
     private val _appThemeConfiguration = MutableStateFlow<AppThemeConfiguration?>(null)
     val appThemeConfiguration = _appThemeConfiguration.asStateFlow()
@@ -138,7 +135,7 @@ class AppViewModel(
     }
 
     suspend fun finishSetup() {
-        settingsRepository.saveIsSetUpPreference(1)
+        changeAppSetupStatusUseCase.finishSetup()
     }
 
     /**
@@ -149,10 +146,7 @@ class AppViewModel(
      */
     private fun updateSetupStageIfNeeded() {
         viewModelScope.launch {
-            val isSetUp = settingsRepository.setupStage.firstOrNull()
-            if (isSetUp == 2) {
-                finishSetup()
-            }
+            changeAppSetupStatusUseCase.updateSetupStageInNeeded()
         }
     }
 
@@ -172,20 +166,19 @@ class AppViewModel(
         }
     }
 
-    fun applyAccounts(accountList: List<Account>) {
+    fun applyAccounts(accounts: List<Account>) {
         _accountsAndActiveOne.update { state ->
             state.copy(
-                accountList = accountList,
-                activeAccount = accountList.firstOrNull { it.isActive }
+                accounts = accounts,
+                activeAccount = accounts.firstOrNull { it.isActive }
             )
         }
     }
 
-    // TODO-ACCOUNTS
     fun onChangeHideActiveAccountBalance() {
         _accountsAndActiveOne.update {
             it.copy(
-                accountList = it.accountList.map { account ->
+                accounts = it.accounts.map { account ->
                     if (account.isActive) {
                         account.copy(hideBalance = !account.hideBalance)
                     } else {
@@ -197,60 +190,12 @@ class AppViewModel(
         }
     }
 
-    // TODO-ACCOUNTS
-    fun applyActiveAccountByOrderNum(accountOrderNum: Int) {
-        _accountsAndActiveOne.update {
-            it.copy(
-                accountList = accountsAndActiveOne.value.accountList.map { account ->
-                    account.copy(isActive = account.orderNum == accountOrderNum)
-                },
-                activeAccount = accountsAndActiveOne.value.accountList
-                    .findByOrderNum(accountOrderNum)?.copy(isActive = true)
+    fun applyActiveAccount(accountId: Int) {
+        _accountsAndActiveOne.update { state ->
+            state.copy(
+                accounts = state.accounts.map { it.copy(isActive = it.id == accountId) },
+                activeAccount = state.accounts.findById(accountId)?.copy(isActive = true)
             )
-        }
-    }
-
-
-    private val _todayRecordList: MutableStateFlow<List<RecordEntity>> = MutableStateFlow(
-        emptyList()
-    )
-
-    private fun fetchRecordsForToday() {
-        viewModelScope.launch {
-            recordRepository.getRecordsForToday().collect { recordList ->
-                _todayRecordList.update { recordList }
-            }
-        }
-    }
-
-    // TODO-ACCOUNTS-DEPENDENCY
-    fun getActiveAccountExpensesForToday(): Double {
-        return accountsAndActiveOne.value.activeAccount?.id
-            ?.let { accountId ->
-                _todayRecordList.value
-                    .filter { it.accountId == accountId }
-                    .getTotalAmountByType(CategoryType.Expense)
-            }
-            ?: 0.0
-    }
-
-    suspend fun getActiveAccountExpensesForTodayT(): Double {
-        return accountsAndActiveOne.value.activeAccount?.id?.let {
-            getTodayTotalExpensesForAccountUseCase.execute(accountId = it)
-        } ?: 0.0
-    }
-
-
-    private val _recordStacksInDateRange = MutableStateFlow(RecordsInDateRange())
-    val recordStacksInDateRange = _recordStacksInDateRange.asStateFlow()
-
-    private fun fetchRecordsInDateRange(longDateRange: LongDateRange) {
-        viewModelScope.launch {
-            getRecordStacksInDateRangeUseCase.getAsFlow(range = longDateRange).collect { recordStacks ->
-                _recordStacksInDateRange.update {
-                    it.copy(dateRange = longDateRange, recordStacks = recordStacks)
-                }
-            }
         }
     }
 
@@ -258,7 +203,7 @@ class AppViewModel(
     private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> = MutableStateFlow(
         DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
     )
-    val dateRangeMenuUiState: StateFlow<DateRangeMenuUiState> = _dateRangeMenuUiState.asStateFlow()
+    val dateRangeMenuUiState = _dateRangeMenuUiState.asStateFlow()
 
     fun selectDateRange(dateRangeEnum: DateRangeEnum) {
         val currDateRangeWithEnum = dateRangeMenuUiState.value.dateRangeWithEnum
@@ -272,7 +217,6 @@ class AppViewModel(
                 dateRangeWithEnum = dateRangeEnum.withLongDateRange(currDateRangeWithEnum)
             )
         }
-        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
 
     fun selectCustomDateRange(pastDateMillis: Long?, futureDateMillis: Long?) {
@@ -293,7 +237,6 @@ class AppViewModel(
                 )
             )
         }
-        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }
 
 
@@ -306,17 +249,6 @@ class AppViewModel(
                 _widgetNames.update { it }
             }
         }
-    }
-
-
-    init {
-        applyAppLanguage()
-        updateSetupStageIfNeeded()
-        fetchAppThemeConfiguration()
-        fetchAccounts()
-        fetchRecordsForToday()
-        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
-        fetchWidgets()
     }
 
 }

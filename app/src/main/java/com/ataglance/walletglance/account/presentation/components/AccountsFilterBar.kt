@@ -39,7 +39,7 @@ fun AccountsFilterBar(
                 outerPadding = PaddingValues(horizontal = 3.dp),
                 adjustStyleByActiveStatus = true,
                 showBalance = false,
-                onClick = { onAccountClick(account.orderNum) }
+                onClick = { onAccountClick(account.id) }
             )
         }
         item {

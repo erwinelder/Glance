@@ -23,7 +23,6 @@ import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManage
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
-import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -84,7 +83,6 @@ class MainActivity : AppCompatActivity() {
 
                 val userSessionScope by userSessionScopeState
 
-                val navViewModel = userSessionScope.get<NavigationViewModel>()
                 val appViewModel = userSessionScope.get<AppViewModel>()
 
                 LaunchedEffect(true) {
@@ -93,7 +91,6 @@ class MainActivity : AppCompatActivity() {
 
                 GlanceAppComponent(
                     navController = navController,
-                    navViewModel = navViewModel,
                     appViewModel = appViewModel
                 )
             }

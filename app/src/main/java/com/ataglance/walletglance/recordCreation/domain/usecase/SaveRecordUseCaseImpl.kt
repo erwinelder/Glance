@@ -34,7 +34,7 @@ class SaveRecordUseCaseImpl(
             toDelete = dataAfterRecordOperation.recordsDelete,
             toUpsert = dataAfterRecordOperation.recordsToUpsert
         )
-        saveAccountsUseCase.execute(accounts = dataAfterRecordOperation.accountsToUpsert)
+        saveAccountsUseCase.saveDataModels(accounts = dataAfterRecordOperation.accountsToUpsert)
     }
 
     private suspend fun getDataAfterNewRecord(record: CreatedRecord): DataAfterRecordOperation? {

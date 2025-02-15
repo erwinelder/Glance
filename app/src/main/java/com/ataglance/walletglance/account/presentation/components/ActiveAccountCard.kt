@@ -30,18 +30,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import java.util.Locale
 
 @Composable
-fun AccountCard(
+fun ActiveAccountCard(
     account: Account,
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
@@ -220,7 +220,7 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
 @Composable
 private fun AccountCardPreview() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
-        AccountCard(
+        ActiveAccountCard(
             account = Account(
                 color = AccountColors.Blue,
                 withoutBalance = true

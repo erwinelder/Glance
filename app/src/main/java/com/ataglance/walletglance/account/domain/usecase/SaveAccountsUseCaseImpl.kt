@@ -13,24 +13,7 @@ class SaveAccountsUseCaseImpl(
     private val recordRepository: RecordRepository
 ) : SaveAccountsUseCase {
 
-    override suspend fun execute(accountsToSave: List<Account>, currentAccounts: List<Account>) {
-        val entitiesToSave = accountsToSave.map(Account::toDataModel)
-        val entitiesToDelete = currentAccounts
-            .map(Account::toDataModel)
-            .excludeItems(entitiesToSave) { it.id }
-
-        if (entitiesToDelete.isEmpty()) {
-            accountRepository.deleteAndUpsertAccounts(
-                toDelete = entitiesToDelete, toUpsert = entitiesToSave
-            )
-        } else {
-            recordRepository.convertRecordsToTransfers(
-                noteValues = entitiesToDelete.map { it.id.toString() }
-            )
-        }
-    }
-
-    override suspend fun execute(accounts: List<Account>) {
+    override suspend fun saveDomainModels(accounts: List<Account>) {
         val currentAccounts = accountRepository.getAllAccounts().firstOrNull().orEmpty()
 
         val entitiesToSave = accounts.map(Account::toDataModel)
@@ -47,7 +30,7 @@ class SaveAccountsUseCaseImpl(
         }
     }
 
-    override suspend fun execute(accounts: List<AccountEntity>) {
+    override suspend fun saveDataModels(accounts: List<AccountEntity>) {
         accountRepository.upsertAccounts(accounts = accounts)
     }
 

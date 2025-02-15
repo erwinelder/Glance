@@ -260,7 +260,7 @@ private fun GlassSurfaceContent(
 fun RecordCreationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
-        accountList = listOf(
+        accounts = listOf(
             Account(
                 id = 1, color = AccountColors.Pink,
                 name = "Main account",
@@ -309,7 +309,7 @@ fun RecordCreationScreenPreview(
             recordDraftGeneral = recordDraft.general,
             recordDraftItems = recordDraft.items,
             savingIsAllowed = true,
-            accountList = accountsAndActiveOne.accountList,
+            accountList = accountsAndActiveOne.accounts,
             groupedCategoriesByType = groupedCategoriesByType,
             onSelectCategoryType = {},
             onNavigateToTransferCreationScreen = {},

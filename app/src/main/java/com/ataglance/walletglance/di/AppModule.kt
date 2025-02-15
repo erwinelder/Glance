@@ -8,6 +8,7 @@ import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCas
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
 import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCaseImpl
 import com.google.firebase.firestore.FirebaseFirestore
@@ -69,16 +70,19 @@ val appModule = module {
             applyLanguageToSystemUseCase = get(),
             saveLanguagePreferenceUseCase = get(),
             getLanguagePreferenceUseCase = get(),
+            changeAppSetupStatusUseCase = get(),
 
             getAccountsUseCase = get(),
-
-            recordRepository = get(),
-            getTodayTotalExpensesForAccountUseCase = get(),
-            getRecordStacksInDateRangeUseCase = get(),
-
             getWidgetsUseCase = get(),
-
             deleteAllDataLocallyUseCase = get()
+        )
+    }
+
+    viewModel { parameters ->
+        ExpensesIncomeWidgetViewModel(
+            activeAccount = parameters.get(),
+            activeDateRange = parameters.get(),
+            getRecordStacksInDateRangeUseCase = get()
         )
     }
 

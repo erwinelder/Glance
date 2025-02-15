@@ -5,7 +5,6 @@ import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
-import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.local.source.RecordLocalDataSource
 import com.ataglance.walletglance.record.data.mapper.toLocalEntity
@@ -110,11 +109,6 @@ class RecordRepositoryImpl(
     ): List<RecordEntity> {
         synchroniseRecords()
         return localSource.getLastRecordsByTypeAndAccount(type = type, accountId = accountId)
-    }
-
-    override fun getRecordsForToday(): Flow<List<RecordEntity>> = flow {
-        synchroniseRecords()
-        localSource.getRecordsInDateRange(range = getTodayLongDateRange()).collect(::emit)
     }
 
     override suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity> {

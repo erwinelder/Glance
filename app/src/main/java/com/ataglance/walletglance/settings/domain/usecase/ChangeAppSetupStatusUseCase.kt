@@ -6,4 +6,6 @@ interface ChangeAppSetupStatusUseCase {
 
     suspend fun finishSetup()
 
+    suspend fun updateSetupStageInNeeded()
+
 }

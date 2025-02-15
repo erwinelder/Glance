@@ -115,7 +115,7 @@ private val accountList = listOf(
     ),
 )
 private val accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
-    accountList = accountList,
+    accounts = accountList,
     activeAccount = accountList.find { it.isActive } ?: accountList.first()
 )
 private val dateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
@@ -157,7 +157,7 @@ private val recordEntityList = listOf(
         quantity = null,
         categoryId = 3,
         subcategoryId = 24,
-        note = accountsAndActiveOne.accountList[1].id.toString(),
+        note = accountsAndActiveOne.accounts[1].id.toString(),
         includeInBudgets = true
     ),
     RecordEntity(
@@ -243,7 +243,7 @@ private val recordEntityList = listOf(
         recordNum = 9,
         date = YearMonthDay(2024, 6, 4).concatenate(),
         type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.accountList[1].id,
+        accountId = accountsAndActiveOne.accounts[1].id,
         amount = 450.41,
         quantity = null,
         categoryId = 9,
@@ -352,7 +352,7 @@ fun MainAppContentHomeScreenPreview() {
         budgetsOnWidget = budgetEntityList.toDomainModels(
             groupedCategoriesList = defaultCategoriesPackage.expense,
             associations = budgetAccountAssociationList,
-            accounts = accountsAndActiveOne.accountList
+            accounts = accountsAndActiveOne.accounts
         ).fillUsedAmountsByRecords(recordEntityList.toDomainModels()).take(1),
         widgetNamesList = listOf(
             WidgetName.TotalForPeriod,
@@ -380,7 +380,7 @@ fun MainAppContentRecordsScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsAndActiveOne.accountList,
+        accountList = accountsAndActiveOne.accounts,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         collectionType = collectionType,
@@ -408,7 +408,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
         isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsAndActiveOne.accountList,
+        accountList = accountsAndActiveOne.accounts,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
         currentCollectionType = currentCollectionType,
         parentCategory = null,
@@ -433,7 +433,7 @@ fun MainAppContentBudgetsScreenPreview() {
         isBottomBarVisible = isBottomBarVisible,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsAndActiveOne.accountList,
+        accountList = accountsAndActiveOne.accounts,
         recordList = recordEntityList
     )
 }
@@ -461,7 +461,7 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
         isAppSetUp = isAppSetUp,
         isBottomBarVisible = isBottomBarVisible,
         groupedCategoriesByType = defaultCategories,
-        accountList = accountsAndActiveOne.accountList.let { listOf(it[0], it[3]) },
+        accountList = accountsAndActiveOne.accounts.let { listOf(it[0], it[3]) },
         budget = budget,
         totalAmounts = listOf(4800.0, 5000.0, 4500.0, 5200.0, 4600.0),
     )
@@ -532,7 +532,7 @@ fun MainAppContentRecordCreationScreenPreview() {
 )
 @Composable
 fun MainAppContentTransferCreationScreenPreview() {
-    val accountList = accountsAndActiveOne.accountList
+    val accountList = accountsAndActiveOne.accounts
     val transferDraft = TransferDraft(
         isNew = true,
         sender = TransferDraftUnits(
@@ -602,7 +602,7 @@ fun MainAppContentEditAccountsScreenPreview() {
     EditAccountsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        accountList = accountsAndActiveOne.accountList
+        accountList = accountsAndActiveOne.accounts
     )
 }
 
@@ -618,7 +618,7 @@ fun MainAppContentEditAccountScreenPreview() {
     EditAccountScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        account = accountsAndActiveOne.accountList.first()
+        account = accountsAndActiveOne.accounts.first()
     )
 }
 
@@ -651,7 +651,7 @@ fun MainAppContentEditBudgetsScreenPreview() {
         isAppSetUp = isAppSetUp,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsAndActiveOne.accountList
+        accountList = accountsAndActiveOne.accounts
     )
 }
 
@@ -667,7 +667,7 @@ fun MainAppContentEditBudgetScreenPreview() {
     EditBudgetScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        accountList = accountsAndActiveOne.accountList,
+        accountList = accountsAndActiveOne.accounts,
         budgetEntity = budgetEntityList.first(),
         budgetAccountAssociationList = budgetAccountAssociationList
     )

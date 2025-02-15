@@ -4,6 +4,6 @@ import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 
 data class AppUiState(
-    val dateRangeMenuUiState: DateRangeMenuUiState,
-    val accountsAndActiveOne: AccountsAndActiveOne
+    val accountsAndActiveOne: AccountsAndActiveOne,
+    val dateRangeMenuUiState: DateRangeMenuUiState
 )
