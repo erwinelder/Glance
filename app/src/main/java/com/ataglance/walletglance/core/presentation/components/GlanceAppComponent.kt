@@ -38,7 +38,7 @@ fun GlanceAppComponent(
                     chosenLightTheme = themeConfiguration.chosenLightTheme,
                     chosenDarkTheme = themeConfiguration.chosenDarkTheme,
                     lastChosenTheme = themeConfiguration.lastChosenTheme,
-                    setIsDarkTheme = appViewModel::updateAppThemeState,
+                    setAppTheme = appViewModel::setAppTheme,
                     boxWithConstraintsScope = this@BoxWithConstraints,
                     sharedTransitionScope = this@SharedTransitionLayout
                 ) {

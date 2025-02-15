@@ -8,8 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -26,14 +24,12 @@ import com.ataglance.walletglance.core.utils.extractOobCode
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.context.GlobalContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,24 +39,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavHostController
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
 
-    private val userSessionScopeState = mutableStateOf(
-        getKoin().getOrCreateScope("session", named("userSession"))
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setupSplashScreen()
 
-        billingSubscriptionManager = userSessionScopeState.value.get<BillingSubscriptionManager>()
-
-        val coroutineScope = CoroutineScope(Dispatchers.IO)
-
-        coroutineScope.launch {
-            authController.userState.collect {
-                reinitializeUserScopeAndItsDependencies()
-            }
-        }
+        billingSubscriptionManager = GlobalContext.get().get()
 
         super.onCreate(savedInstanceState)
+
+//        val coroutineScope = CoroutineScope(Dispatchers.IO)
 
         /*coroutineScope.launch {
             billingSubscriptionManager.newPurchase.collect { purchaseResult ->
@@ -81,9 +67,7 @@ class MainActivity : AppCompatActivity() {
                     handleDeepLink(intent)
                 }
 
-                val userSessionScope by userSessionScopeState
-
-                val appViewModel = userSessionScope.get<AppViewModel>()
+                val appViewModel = koinViewModel<AppViewModel>()
 
                 LaunchedEffect(true) {
                     appViewModel.getUserId()?.let { authController.fetchUserDataAndUpdateUser(it) }
@@ -95,14 +79,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-    }
-
-    private fun reinitializeUserScopeAndItsDependencies() {
-        getKoin().getScopeOrNull(scopeId = "session")?.close()
-        val scope = getKoin().getOrCreateScope(scopeId = "session", named("userSession"))
-        userSessionScopeState.value = scope
-
-        billingSubscriptionManager = userSessionScopeState.value.get<BillingSubscriptionManager>()
     }
 
     private fun setupSplashScreen() {

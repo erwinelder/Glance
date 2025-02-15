@@ -11,7 +11,7 @@ import com.ataglance.walletglance.budget.mapper.budget.copyDataToBudget
 import com.ataglance.walletglance.budget.mapper.budget.toNewBudget
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStatusUseCase
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class EditBudgetsViewModel(
     private val saveBudgetsUseCase: SaveBudgetsUseCase,
     private val getBudgetsUseCase: GetBudgetsUseCase,
-    private val changeAppSetupStatusUseCase: ChangeAppSetupStatusUseCase
+    private val changeAppSetupStageUseCase: ChangeAppSetupStageUseCase
 ) : ViewModel() {
 
     init {
@@ -70,7 +70,7 @@ class EditBudgetsViewModel(
 
 
     suspend fun preFinishSetup() {
-        changeAppSetupStatusUseCase.preFinishSetup()
+        changeAppSetupStageUseCase.preFinishSetup()
     }
 
 }

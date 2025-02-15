@@ -36,7 +36,7 @@ fun GlanceTheme(
     chosenDarkTheme: AppTheme = AppTheme.DarkDefault,
     lastChosenTheme: AppTheme = AppTheme.LightDefault,
     isDeviceIsDarkTheme: Boolean = isSystemInDarkTheme(),
-    setIsDarkTheme: (AppTheme) -> Unit = {},
+    setAppTheme: (AppTheme) -> Unit = {},
     boxWithConstraintsScope: BoxWithConstraintsScope,
     sharedTransitionScope: SharedTransitionScope,
     content: @Composable () -> Unit
@@ -51,7 +51,7 @@ fun GlanceTheme(
         lastChosenTheme
     }
 
-    setIsDarkTheme(appTheme)
+    setAppTheme(appTheme)
 
     val glanceColors = when (appTheme) {
         AppTheme.LightDefault -> GlancePalette.LightDefault

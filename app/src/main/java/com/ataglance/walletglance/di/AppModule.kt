@@ -65,12 +65,14 @@ val appModule = module {
 
     viewModel {
         AppViewModel(
-            settingsRepository = get(),
             getAppThemeConfigurationUseCase = get(),
             applyLanguageToSystemUseCase = get(),
             saveLanguagePreferenceUseCase = get(),
             getLanguagePreferenceUseCase = get(),
-            changeAppSetupStatusUseCase = get(),
+            changeAppSetupStageUseCase = get(),
+            getStartDestinationsBySetupStageUseCase = get(),
+            saveUserIdPreferenceUseCase = get(),
+            getUserIdPreferenceUseCase = get(),
 
             getAccountsUseCase = get(),
             getWidgetsUseCase = get(),

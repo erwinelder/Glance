@@ -3,9 +3,9 @@ package com.ataglance.walletglance.settings.domain.usecase
 import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import kotlinx.coroutines.flow.firstOrNull
 
-class ChangeAppSetupStatusUseCaseImpl(
+class ChangeAppSetupStageUseCaseImpl(
     private val settingsRepository: SettingsRepository
-) : ChangeAppSetupStatusUseCase {
+) : ChangeAppSetupStageUseCase {
 
     override suspend fun preFinishSetup() {
         settingsRepository.saveIsSetUpPreference(2)
