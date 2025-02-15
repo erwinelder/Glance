@@ -21,12 +21,8 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreen
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
-import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
+import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreen
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
@@ -41,14 +37,10 @@ fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    navigationButtonList: List<BottomBarNavigationButton>,
     authController: AuthController,
     appViewModel: AppViewModel,
     appConfiguration: AppConfiguration,
-    themeUiState: ThemeUiState,
-    accountList: List<Account>,
-    personalizationViewModel: PersonalizationViewModel,
-    widgetNamesList: List<WidgetName>
+    accountList: List<Account>
 ) {
     navigation<MainScreens.Settings>(startDestination = appConfiguration.settingsStartDestination) {
         composable<SettingsScreens.Start> {
@@ -100,18 +92,10 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             navViewModel = navViewModel
         )
-        composable<SettingsScreens.Appearance> {
-            AppearanceScreen(
+        composable<SettingsScreens.Personalisation> {
+            PersonalisationScreen(
                 isAppSetUp = appConfiguration.isSetUp,
-                themeUiState = themeUiState,
                 onNavigateBack = navController::popBackStack,
-                onChooseLightTheme = appViewModel::chooseLightTheme,
-                onChooseDarkTheme = appViewModel::chooseDarkTheme,
-                onSetUseDeviceTheme = appViewModel::setUseDeviceTheme,
-                initialNavigationButtonList = navigationButtonList,
-                onSaveNavigationButtons = navViewModel::saveBottomBarNavigationButtons,
-                initialWidgetNamesList = widgetNamesList,
-                onSaveWidgetNames = personalizationViewModel::saveWidgets,
                 onContinueSetupButton = {
                     if (appConfiguration.isSignedIn) {
                         navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
@@ -152,7 +136,7 @@ fun NavGraphBuilder.settingsGraph(
                     }
                 },
                 onContinueButton = {
-                    navViewModel.navigateToScreen(navController, SettingsScreens.Appearance)
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Personalisation)
                 }
             )
         }

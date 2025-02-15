@@ -48,7 +48,7 @@ import com.ataglance.walletglance.core.domain.date.YearMonthDay
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.presentation.screen.AppearanceScreenPreview
+import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenPreview
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
@@ -61,7 +61,6 @@ import com.ataglance.walletglance.recordCreation.presentation.model.transfer.Tra
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
-import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
@@ -762,16 +761,10 @@ fun MainAppContentEditCategoryCollectionScreenPreview() {
 )
 @Composable
 fun MainAppContentAppearanceScreenPreview() {
-    AppearanceScreenPreview(
+    PersonalisationScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
-        themeUiState = ThemeUiState(
-            useDeviceTheme = true,
-            chosenLightTheme = AppTheme.LightDefault.name,
-            chosenDarkTheme = AppTheme.DarkDefault.name,
-            lastChosenTheme = appTheme.name
-        )
+        isBottomBarVisible = isBottomBarVisible
     )
 }
 

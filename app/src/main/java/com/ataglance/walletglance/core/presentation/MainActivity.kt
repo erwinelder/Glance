@@ -24,7 +24,6 @@ import com.ataglance.walletglance.core.presentation.components.GlanceAppComponen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -88,8 +87,6 @@ class MainActivity : AppCompatActivity() {
                 val navViewModel = userSessionScope.get<NavigationViewModel>()
                 val appViewModel = userSessionScope.get<AppViewModel>()
 
-                val personalizationViewModel = userSessionScope.get<PersonalizationViewModel>()
-
                 LaunchedEffect(true) {
                     appViewModel.getUserId()?.let { authController.fetchUserDataAndUpdateUser(it) }
                 }
@@ -97,8 +94,7 @@ class MainActivity : AppCompatActivity() {
                 GlanceAppComponent(
                     navController = navController,
                     navViewModel = navViewModel,
-                    appViewModel = appViewModel,
-                    personalizationViewModel = personalizationViewModel
+                    appViewModel = appViewModel
                 )
             }
         }

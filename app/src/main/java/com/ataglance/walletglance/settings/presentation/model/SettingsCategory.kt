@@ -51,7 +51,7 @@ sealed class SettingsCategory(
     )
 
     data class Appearance(val appTheme: AppTheme) : SettingsCategory(
-        screen = SettingsScreens.Appearance,
+        screen = SettingsScreens.Personalisation,
         stringRes = R.string.appearance,
         iconRes = when (appTheme) {
             AppTheme.LightDefault -> R.drawable.appearance_light_default_icon
@@ -60,7 +60,7 @@ sealed class SettingsCategory(
     )
 
     data class ColorTheme(val appTheme: AppTheme) : SettingsCategory(
-        screen = SettingsScreens.Appearance,
+        screen = SettingsScreens.Personalisation,
         stringRes = R.string.color_theme,
         iconRes = when (appTheme) {
             AppTheme.LightDefault -> R.drawable.color_theme_light_default_icon
@@ -69,7 +69,7 @@ sealed class SettingsCategory(
     )
 
     data class Widgets(val appTheme: AppTheme) : SettingsCategory(
-        screen = SettingsScreens.Appearance,
+        screen = SettingsScreens.Personalisation,
         stringRes = R.string.widgets,
         iconRes = when (appTheme) {
             AppTheme.LightDefault -> R.drawable.widgets_light_default_icon
@@ -78,7 +78,7 @@ sealed class SettingsCategory(
     )
 
     data class NavigationButtons(val appTheme: AppTheme) : SettingsCategory(
-        screen = SettingsScreens.Appearance,
+        screen = SettingsScreens.Personalisation,
         stringRes = R.string.navigation_buttons,
         iconRes = when (appTheme) {
             AppTheme.LightDefault -> R.drawable.navigation_buttons_light_default_icon

@@ -4,4 +4,5 @@ import com.ataglance.walletglance.personalization.domain.model.WidgetName
 
 interface SaveWidgetsUseCase {
     suspend fun execute(widgetsToSave: List<WidgetName>, currentWidgets: List<WidgetName>)
+    suspend fun execute(widgets: List<WidgetName>)
 }

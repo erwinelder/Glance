@@ -26,7 +26,7 @@ sealed interface SettingsScreens {
     data object CategoryCollections : SettingsScreens
 
     @Serializable
-    data object Appearance : SettingsScreens
+    data object Personalisation : SettingsScreens
 
     @Serializable
     data object Language : SettingsScreens

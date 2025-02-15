@@ -33,7 +33,6 @@ import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreen
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreen
@@ -41,7 +40,6 @@ import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCre
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
 import com.ataglance.walletglance.settings.navigation.settingsGraph
-import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -53,10 +51,8 @@ fun AppNavHost(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
-    personalizationViewModel: PersonalizationViewModel,
     moveScreenTowardsLeft: Boolean,
     appConfiguration: AppConfiguration,
-    themeUiState: ThemeUiState,
     appUiState: AppUiState,
     widgetsUiState: WidgetsUiState,
     openCustomDateRangeWindow: Boolean,
@@ -327,14 +323,10 @@ fun AppNavHost(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            navigationButtonList = appUiState.navigationButtonList,
             authController = authController,
             appViewModel = appViewModel,
             appConfiguration = appConfiguration,
-            themeUiState = themeUiState,
-            accountList = appUiState.accountsAndActiveOne.accountList,
-            personalizationViewModel = personalizationViewModel,
-            widgetNamesList = widgetsUiState.widgetNamesList
+            accountList = appUiState.accountsAndActiveOne.accountList
         )
         composable<MainScreens.FinishSetup> {
             val coroutineScope = rememberCoroutineScope()

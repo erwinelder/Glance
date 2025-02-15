@@ -5,6 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.core.data.repository.SettingsRepository
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCase
+import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCaseImpl
+import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
+import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
@@ -38,6 +42,14 @@ val settingsModule = module {
 
     single<GetLanguagePreferenceUseCase> {
         GetLanguagePreferenceUseCaseImpl(settingsRepository = get())
+    }
+
+    single<GetAppThemeConfigurationUseCase> {
+        GetAppThemeConfigurationUseCaseImpl(settingsRepository = get())
+    }
+
+    single<ChangeAppLookPreferencesUseCase> {
+        ChangeAppLookPreferencesUseCaseImpl(settingsRepository = get())
     }
 
     /* ---------- View Models ---------- */

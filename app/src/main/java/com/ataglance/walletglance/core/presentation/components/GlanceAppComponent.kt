@@ -17,24 +17,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.ataglance.walletglance.core.presentation.components.other.AppBackground
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.GlanceTheme
-import com.ataglance.walletglance.core.presentation.components.other.AppBackground
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GlanceAppComponent(
     navController: NavHostController,
     navViewModel: NavigationViewModel,
-    appViewModel: AppViewModel,
-    personalizationViewModel: PersonalizationViewModel
+    appViewModel: AppViewModel
 ) {
     val context = LocalActivity.current as ComponentActivity
     val appConfiguration by appViewModel.appConfiguration.collectAsStateWithLifecycle()
-    val themeUiState by appViewModel.themeUiState.collectAsStateWithLifecycle()
+    val themeUiState by appViewModel.appThemeConfiguration.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
         SharedTransitionLayout {
@@ -42,9 +40,9 @@ fun GlanceAppComponent(
                 GlanceTheme(
                     context = context,
                     useDeviceTheme = safeThemeUiState.useDeviceTheme,
-                    chosenLightTheme = safeThemeUiState.chosenLightTheme,
-                    chosenDarkTheme = safeThemeUiState.chosenDarkTheme,
-                    lastChosenTheme = safeThemeUiState.lastChosenTheme,
+                    chosenLightTheme = safeThemeUiState.chosenLightTheme.name,
+                    chosenDarkTheme = safeThemeUiState.chosenDarkTheme.name,
+                    lastChosenTheme = safeThemeUiState.lastChosenTheme.name,
                     setIsDarkTheme = appViewModel::updateAppThemeState,
                     boxWithConstraintsScope = this@BoxWithConstraints,
                     sharedTransitionScope = this@SharedTransitionLayout
@@ -58,11 +56,9 @@ fun GlanceAppComponent(
                         CompositionLocalProvider(LocalRippleConfiguration provides null) {
                             MainAppContent(
                                 appConfiguration = appConfiguration,
-                                themeUiState = safeThemeUiState,
                                 navController = navController,
                                 navViewModel = navViewModel,
-                                appViewModel = appViewModel,
-                                personalizationViewModel = personalizationViewModel
+                                appViewModel = appViewModel
                             )
                         }
                     }

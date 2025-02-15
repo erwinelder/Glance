@@ -25,21 +25,17 @@ import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import com.ataglance.walletglance.record.domain.utils.filterByAccount
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 import com.ataglance.walletglance.record.mapper.getExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import java.time.LocalDateTime
 
 @Composable
 fun MainAppContent(
     appConfiguration: AppConfiguration,
-    themeUiState: ThemeUiState,
     navController: NavHostController,
     navViewModel: NavigationViewModel,
-    appViewModel: AppViewModel,
-    personalizationViewModel: PersonalizationViewModel
+    appViewModel: AppViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isBottomBarVisible by remember(appConfiguration.isSetUp, navBackStackEntry) {
@@ -48,13 +44,13 @@ fun MainAppContent(
         }
     }
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
-    val navigationButtonList by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
+    val navigationButtons by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
 
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
     val recordStacksInDateRange by appViewModel.recordStacksInDateRange.collectAsStateWithLifecycle()
 
-    val widgetNamesList by personalizationViewModel.widgetNames.collectAsStateWithLifecycle()
+    val widgetNames by appViewModel.widgetNames.collectAsStateWithLifecycle()
 
     var dimBackground by remember { mutableStateOf(false) }
     var openCustomDateRangeWindow by remember { mutableStateOf(false) }
@@ -70,7 +66,6 @@ fun MainAppContent(
     val appUiState by remember {
         derivedStateOf {
             AppUiState(
-                navigationButtonList = navigationButtonList,
                 dateRangeMenuUiState = dateRangeMenuUiState,
                 accountsAndActiveOne = accountsUiState,
                 recordStackListByDate = recordStacksInDateRange.recordStacks
@@ -78,7 +73,7 @@ fun MainAppContent(
         }
     }
     val widgetsUiState by remember(
-        widgetNamesList,
+        widgetNames,
         greetingsTitleRes,
         accountsUiState,
         recordStacksInDateRange
@@ -93,7 +88,7 @@ fun MainAppContent(
                 activeAccountExpensesForToday = appViewModel.getActiveAccountExpensesForToday(),
                 recordStacksByDateAndAccount = recordStacksByDateAndAccount,
 
-                widgetNamesList = widgetNamesList,
+                widgetNamesList = widgetNames,
                 expensesIncomeWidgetUiState = recordStacksByDateAndAccount.getExpensesIncomeWidgetUiState(),
                 compactRecordStacksByDateAndAccount = recordStacksByDateAndAccount.shrinkForCompactView(),
                 categoriesStatisticsByType = CategoriesStatisticsByType.fromRecordStacks(recordStacksByDateAndAccount)
@@ -119,17 +114,15 @@ fun MainAppContent(
                     screen = MainScreens.RecordCreation()
                 )
             },
-            bottomBarButtons = navigationButtonList
+            bottomBarButtons = navigationButtons
         ) { scaffoldPadding ->
             AppNavHost(
                 navController = navController,
                 scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
                 appViewModel = appViewModel,
-                personalizationViewModel = personalizationViewModel,
                 moveScreenTowardsLeft = moveScreenTowardsLeft,
                 appConfiguration = appConfiguration,
-                themeUiState = themeUiState,
                 appUiState = appUiState,
                 widgetsUiState = widgetsUiState,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,

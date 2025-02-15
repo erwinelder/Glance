@@ -23,17 +23,20 @@ import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.withLongDateRange
+import com.ataglance.walletglance.personalization.domain.model.WidgetName
+import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.model.RecordsInDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
+import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
-import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -47,6 +50,7 @@ import kotlinx.coroutines.launch
 
 class AppViewModel(
     val settingsRepository: SettingsRepository,
+    private val getAppThemeConfigurationUseCase: GetAppThemeConfigurationUseCase,
     private val applyLanguageToSystemUseCase: ApplyLanguageToSystemUseCase,
     private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
     private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
@@ -57,6 +61,8 @@ class AppViewModel(
     val recordRepository: RecordRepository,
     private val getTodayTotalExpensesForAccountUseCase: GetTodayTotalExpensesForAccountUseCase,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
+
+    private val getWidgetsUseCase: GetWidgetsUseCase,
 
     val generalRepository: GeneralRepository
 ) : ViewModel() {
@@ -90,24 +96,16 @@ class AppViewModel(
             initialValue = AppConfiguration()
         )
 
-    val themeUiState: StateFlow<ThemeUiState?> =
-        combine(
-            settingsRepository.useDeviceTheme,
-            settingsRepository.chosenLightTheme,
-            settingsRepository.chosenDarkTheme,
-            settingsRepository.lastChosenTheme
-        ) { useDeviceTheme, chosenLightTheme, chosenDarkTheme, lastChosenTheme ->
-            ThemeUiState(
-                useDeviceTheme = useDeviceTheme,
-                chosenLightTheme = chosenLightTheme,
-                chosenDarkTheme = chosenDarkTheme,
-                lastChosenTheme = lastChosenTheme
-            )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
-        )
+    private val _appThemeConfiguration = MutableStateFlow<AppThemeConfiguration?>(null)
+    val appThemeConfiguration = _appThemeConfiguration.asStateFlow()
+
+    private fun fetchAppThemeConfiguration() {
+        viewModelScope.launch {
+            getAppThemeConfigurationUseCase.getAsFlow().collect {
+                _appThemeConfiguration.update { it }
+            }
+        }
+    }
 
 
     fun updateConfigurationAfterSignIn(userData: UserData) {
@@ -138,61 +136,8 @@ class AppViewModel(
         }
     }
 
-    fun setUseDeviceTheme(value: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.saveUseDeviceThemePreference(value)
-        }
-    }
-
-    fun chooseLightTheme(theme: String) {
-        val state = themeUiState.value
-
-        viewModelScope.launch {
-
-            /* !!!
-                Now it setting up useDeviceTheme to false when any theme is chosen
-                (when user clicks on the preview theme element on the SetupAppearanceScreen or settings AppearanceScreen)
-                because currently there are only 2 themes (Light and Dark) to choose between.
-                When there are more themes of light or dark versions, it is necessary to remove this block of code
-                that unsets useDeviceTheme preference so user can specify which theme they want to use as light and which as a dark one.
-            !!! */
-            if (state?.useDeviceTheme == true) {
-                settingsRepository.saveUseDeviceThemePreference(false)
-            }
-
-            settingsRepository.saveChosenLightThemePreference(theme)
-            settingsRepository.saveLastChosenThemePreference(theme)
-        }
-    }
-
-    fun chooseDarkTheme(theme: String) {
-        val state = themeUiState.value
-
-        viewModelScope.launch {
-
-            /* !!!
-                Now it setting up useDeviceTheme to false when any theme is chosen
-                (when user clicks on the preview theme element on the SetupAppearanceScreen or settings AppearanceScreen)
-                because currently there are only 2 themes (Light and Dark) to choose between.
-                When there are more themes of light or dark versions, it is necessary to remove this block of code
-                that unsets useDeviceTheme preference so user can specify which theme they want to use as light and which as a dark one.
-            !!! */
-            if (state?.useDeviceTheme == true) {
-                settingsRepository.saveUseDeviceThemePreference(false)
-            }
-
-            settingsRepository.saveChosenDarkThemePreference(theme)
-            settingsRepository.saveLastChosenThemePreference(theme)
-        }
-    }
-
     fun updateAppThemeState(appTheme: AppTheme) {
-        _appTheme.update {
-            when (appTheme) {
-                AppTheme.LightDefault -> AppTheme.LightDefault
-                AppTheme.DarkDefault -> AppTheme.DarkDefault
-            }
-        }
+        _appTheme.update { appTheme }
     }
 
     suspend fun preFinishSetup() {
@@ -376,17 +321,26 @@ class AppViewModel(
     }
 
 
-    private fun fetchDataOnStart() {
-        fetchAccounts()
-        fetchRecordsForToday()
-        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
+    private val _widgetNames: MutableStateFlow<List<WidgetName>> = MutableStateFlow(emptyList())
+    val widgetNames: StateFlow<List<WidgetName>> = _widgetNames.asStateFlow()
+
+    private fun fetchWidgets() {
+        viewModelScope.launch {
+            getWidgetsUseCase.getAsFlow().collect {
+                _widgetNames.update { it }
+            }
+        }
     }
 
 
     init {
         applyAppLanguage()
         updateSetupStageIfNeeded()
-        fetchDataOnStart()
+        fetchAppThemeConfiguration()
+        fetchAccounts()
+        fetchRecordsForToday()
+        fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
+        fetchWidgets()
     }
 
 }

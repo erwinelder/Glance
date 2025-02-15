@@ -5,19 +5,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.settings.presentation.model.ThemeUiState
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemeSettingsBottomSheet(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    themeUiState: ThemeUiState,
-    onSetUseDeviceTheme: (Boolean) -> Unit,
-    onChooseLightTheme: (String) -> Unit,
-    onChooseDarkTheme: (String) -> Unit
+    appThemeConfiguration: AppThemeConfiguration,
+    onChooseLightTheme: (AppTheme) -> Unit,
+    onChooseDarkTheme: (AppTheme) -> Unit,
+    onSetUseDeviceTheme: (Boolean) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val backgroundColor by animateColorAsState(
@@ -34,7 +35,7 @@ fun ThemeSettingsBottomSheet(
             onChooseLightTheme = onChooseLightTheme,
             onChooseDarkTheme = onChooseDarkTheme,
             onSetUseDeviceTheme = onSetUseDeviceTheme,
-            themeUiState = themeUiState
+            appThemeConfiguration = appThemeConfiguration
         )
     }
 }

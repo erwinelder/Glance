@@ -66,6 +66,7 @@ val appModule = module {
     viewModel {
         AppViewModel(
             settingsRepository = get(),
+            getAppThemeConfigurationUseCase = get(),
             applyLanguageToSystemUseCase = get(),
             saveLanguagePreferenceUseCase = get(),
             getLanguagePreferenceUseCase = get(),
@@ -73,12 +74,11 @@ val appModule = module {
             saveAccountsUseCase = get(),
             getAccountsUseCase = get(),
 
-            getCategoryCollectionsUseCase = get(),
-
             recordRepository = get(),
-            getLastRecordNumUseCase = get(),
             getTodayTotalExpensesForAccountUseCase = get(),
             getRecordStacksInDateRangeUseCase = get(),
+
+            getWidgetsUseCase = get(),
 
             generalRepository = get()
         )
