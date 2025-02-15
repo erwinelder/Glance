@@ -27,7 +27,6 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.model.RecordsInDateRange
 import com.ataglance.walletglance.record.data.repository.RecordRepository
 import com.ataglance.walletglance.record.data.utils.getTotalAmountByType
-import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetTodayTotalExpensesForAccountUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
@@ -56,7 +55,6 @@ class AppViewModel(
     private val getAccountsUseCase: GetAccountsUseCase,
 
     val recordRepository: RecordRepository,
-    private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
     private val getTodayTotalExpensesForAccountUseCase: GetTodayTotalExpensesForAccountUseCase,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase,
 
@@ -64,15 +62,13 @@ class AppViewModel(
 ) : ViewModel() {
 
     private val _appTheme: MutableStateFlow<AppTheme?> = MutableStateFlow(null)
-    private val _lastRecordNum: MutableStateFlow<Int> = MutableStateFlow(0)
     val appConfiguration: StateFlow<AppConfiguration> =
         combine(
             settingsRepository.setupStage,
             settingsRepository.userId,
             getLanguagePreferenceUseCase.getAsFlow(),
-            _appTheme,
-            _lastRecordNum
-        ) { setupStage, userId, language, appTheme, lastRecordNum ->
+            _appTheme
+        ) { setupStage, userId, language, appTheme ->
             AppConfiguration(
                 isSetUp = setupStage == 1,
                 isSignedIn = userId != null,
@@ -86,8 +82,7 @@ class AppViewModel(
                     else -> SettingsScreens.Start
                 },
                 langCode = language,
-                appTheme = appTheme,
-                lastRecordNum = lastRecordNum
+                appTheme = appTheme
             )
         }.stateIn(
             scope = viewModelScope,
@@ -229,14 +224,6 @@ class AppViewModel(
     fun deleteAllData() {
         viewModelScope.launch {
             generalRepository.deleteAllDataLocally()
-        }
-    }
-
-    private fun fetchLastRecordNum() {
-        viewModelScope.launch {
-            getLastRecordNumUseCase.getAsFlow().collect { recordNum ->
-                _lastRecordNum.update { recordNum ?: 0 }
-            }
         }
     }
 
@@ -391,7 +378,6 @@ class AppViewModel(
 
     private fun fetchDataOnStart() {
         fetchAccounts()
-        fetchLastRecordNum()
         fetchRecordsForToday()
         fetchRecordsInDateRange(dateRangeMenuUiState.value.getLongDateRange())
     }

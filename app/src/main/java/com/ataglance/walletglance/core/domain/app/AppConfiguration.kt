@@ -9,10 +9,5 @@ data class AppConfiguration(
     val mainStartDestination: MainScreens = MainScreens.Home,
     val settingsStartDestination: SettingsScreens = SettingsScreens.Start,
     val langCode: String = AppLanguage.English.languageCode,
-    val appTheme: AppTheme? = null,
-    val lastRecordNum: Int = 0,
-) {
-    fun nextRecordNum(): Int {
-        return lastRecordNum + 1
-    }
-}
+    val appTheme: AppTheme? = null
+)
