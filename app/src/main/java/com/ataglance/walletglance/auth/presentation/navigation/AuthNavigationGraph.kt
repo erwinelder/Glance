@@ -27,28 +27,23 @@ import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreen
 import com.ataglance.walletglance.auth.presentation.utils.getAuthNavGraphStartDestination
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModelFactory
-import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.billing.presentation.screen.SubscriptionsScreen
 import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
-import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModelFactory
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.core.utils.takeActionIf
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.mapper.toUiState
 import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreen
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
-import org.koin.compose.getKoin
 
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     authController: AuthController,
-    appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
     navigation<SettingsScreens.Auth>(
@@ -65,12 +60,12 @@ fun NavGraphBuilder.authGraph(
                 viewModel.resetAllFieldsExceptEmail()
             }
 
-            val coroutineScope = rememberCoroutineScope()
-
             val emailState by viewModel.emailState.collectAsStateWithLifecycle()
             val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
             val signInIsAllowed by viewModel.signInIsAllowed.collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            val coroutineScope = rememberCoroutineScope()
 
             SignInScreen(
                 emailState = emailState,
@@ -83,33 +78,18 @@ fun NavGraphBuilder.authGraph(
                         val result = authController.signIn(
                             email = emailState.fieldText, password = passwordState.fieldText
                         )
-
                         when (result) {
-                            is ResultData.Success -> {
-                                if (authController.emailIsVerified()) {
+                            is Result.Success -> {
+                                if (result.success == null) {
                                     navViewModel.popBackStackAndNavigateToResultSuccessScreen(
                                         navController = navController,
                                         screenType = case.toAuthResultSuccessScreenType()
                                     )
-                                    result.data?.userId?.let {
-                                        authController.setUserId(it)
-                                    }
                                 } else {
-                                    val verificationResult = authController.sendEmailVerificationEmail()
-                                    viewModel.setResultState(verificationResult.toUiState())
-                                    if (verificationResult is Result.Success) {
-                                        result.data?.userId?.let {
-                                            authController.setUserId(it)
-                                            appViewModel.setUserId(it)
-                                        }
-                                    }
+                                    viewModel.setResultState(result.success.toUiState())
                                 }
-
-                                result.data?.let(appViewModel::updateConfigurationAfterSignIn)
                             }
-                            is ResultData.Error -> {
-                                viewModel.setResultState(result.toUiState())
-                            }
+                            is Result.Error -> viewModel.setResultState(result.error.toUiState())
                         }
                     }
                 },
@@ -155,22 +135,12 @@ fun NavGraphBuilder.authGraph(
                 signUpIsAllowed = signUpIsAllowed,
                 onCreateNewUserWithEmailAndPassword = { email, password ->
                     coroutineScope.launch {
-                        val userCreationResult = authController.createNewUser(
+                        val result = authController.createNewUser(
                             email = email,
                             password = password,
                             appLanguageCode = appConfiguration.langCode
                         )
-                        if (userCreationResult is ResultData.Error) {
-                            viewModel.setResultState(userCreationResult.toUiState())
-                            return@launch
-                        }
-
-                        val verificationResult = authController.sendEmailVerificationEmail()
-                        if (verificationResult is Result.Success) {
-                            appViewModel.setUserId((userCreationResult as ResultData.Success).data)
-                            authController.setUserId(userCreationResult.data)
-                        }
-                        viewModel.setResultState(verificationResult.toUiState())
+                        viewModel.setResultState(result.toUiState())
                     }
                 },
                 onNavigateToSignInScreen = {
@@ -191,7 +161,6 @@ fun NavGraphBuilder.authGraph(
                 onSignOut = {
                     coroutineScope.launch {
                         authController.signOut()
-                        appViewModel.resetUserId()
                         navController.popBackStack()
                     }
                 },
@@ -212,12 +181,12 @@ fun NavGraphBuilder.authGraph(
                 viewModel.resetAllFieldsExceptEmail()
             }
 
-            val coroutineScope = rememberCoroutineScope()
-
             val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
             val newEmailState by viewModel.newEmailState.collectAsStateWithLifecycle()
             val emailUpdateIsAllowed by viewModel.emailUpdateIsAllowed.collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            val coroutineScope = rememberCoroutineScope()
 
             UpdateEmailScreen(
                 passwordState = passwordState,
@@ -228,8 +197,7 @@ fun NavGraphBuilder.authGraph(
                 onUpdateEmailButtonClick = {
                     coroutineScope.launch {
                         val result = authController.requestEmailUpdate(
-                            password = passwordState.fieldText,
-                            newEmail = newEmailState.fieldText
+                            password = passwordState.fieldText, newEmail = newEmailState.fieldText
                         )
                         viewModel.setResultState(result.toUiState())
                     }
@@ -247,8 +215,6 @@ fun NavGraphBuilder.authGraph(
                 viewModel.resetAllFieldsExceptEmail()
             }
 
-            val coroutineScope = rememberCoroutineScope()
-
             val currentPasswordState by viewModel.passwordState.collectAsStateWithLifecycle()
             val newPasswordState by viewModel.newPasswordState.collectAsStateWithLifecycle()
             val newPasswordConfirmationState by viewModel.newPasswordConfirmationState
@@ -256,6 +222,8 @@ fun NavGraphBuilder.authGraph(
             val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed
                 .collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            val coroutineScope = rememberCoroutineScope()
 
             UpdatePasswordScreen(
                 currentPasswordState = currentPasswordState,
@@ -278,9 +246,7 @@ fun NavGraphBuilder.authGraph(
                                     screenType = AuthResultSuccessScreenType.PasswordUpdate
                                 )
                             }
-                            is Result.Error -> {
-                                viewModel.setResultState(result.toUiState())
-                            }
+                            is Result.Error -> viewModel.setResultState(result.toUiState())
                         }
                     }
                 },
@@ -303,11 +269,11 @@ fun NavGraphBuilder.authGraph(
                 viewModel.resetAllFieldsExceptEmail()
             }
 
-            val coroutineScope = rememberCoroutineScope()
-
             val emailState by viewModel.emailState.collectAsStateWithLifecycle()
             val emailIsValid by viewModel.emailIsValid.collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            val coroutineScope = rememberCoroutineScope()
 
             RequestPasswordResetScreen(
                 emailState = emailState,
@@ -315,7 +281,7 @@ fun NavGraphBuilder.authGraph(
                 requestIsAllowed = emailIsValid,
                 onRequestPasswordResetButtonClick = {
                     coroutineScope.launch {
-                        val result = authController.requestPasswordReset(emailState.fieldText)
+                        val result = authController.requestPasswordReset(email = emailState.fieldText)
                         viewModel.setResultState(result.toUiState())
                     }
                 },
@@ -333,12 +299,9 @@ fun NavGraphBuilder.authGraph(
             LaunchedEffect(true) {
                 viewModel.resetAllFieldsExceptEmail()
             }
-
             LaunchedEffect(obbCode) {
                 viewModel.setObbCode(obbCode)
             }
-
-            val coroutineScope = rememberCoroutineScope()
 
             val newPasswordState by viewModel.newPasswordState.collectAsStateWithLifecycle()
             val newPasswordConfirmationState by viewModel.newPasswordConfirmationState
@@ -346,6 +309,8 @@ fun NavGraphBuilder.authGraph(
             val passwordUpdateIsAllowed by viewModel.passwordResetIsAllowed
                 .collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            val coroutineScope = rememberCoroutineScope()
 
             ResetPasswordScreen(
                 newPasswordState = newPasswordState,
@@ -365,9 +330,7 @@ fun NavGraphBuilder.authGraph(
                                     screenType = AuthResultSuccessScreenType.PasswordUpdate
                                 )
                             }
-                            is Result.Error -> {
-                                viewModel.setResultState(result.toUiState())
-                            }
+                            is Result.Error -> viewModel.setResultState(result.toUiState())
                         }
                     }
                 },
@@ -384,11 +347,11 @@ fun NavGraphBuilder.authGraph(
                 viewModel.resetAllFieldsExceptEmail()
             }
 
-            val coroutineScope = rememberCoroutineScope()
-
             val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
             val deletionIsAllowed by viewModel.signInIsAllowed.collectAsStateWithLifecycle()
             val resultState by viewModel.resultState.collectAsStateWithLifecycle()
+
+            val coroutineScope = rememberCoroutineScope()
 
             DeleteAccountScreen(
                 passwordState = passwordState,
@@ -436,34 +399,32 @@ fun NavGraphBuilder.authGraph(
                 isAppSetUp = appConfiguration.isSetUp
             )
 
+            val coroutineScope = rememberCoroutineScope()
+
             AuthResultSuccessScreen(
                 screenState = screenState,
                 onContinueButtonClick = {
-                    if (screenState.type == AuthResultSuccessScreenType.AccountDeletion) {
-                        appViewModel.deleteAllData()
-                        authController.resetUser()
+                    coroutineScope.launch {
+                        if (screenState.type == AuthResultSuccessScreenType.AccountDeletion) {
+                            authController.resetUser()
+                            authController.deleteAllLocalData()
+                        }
+                        navViewModel.popBackStackAndNavigateToScreen(
+                            navController = navController,
+                            screen = screenState.getNextScreenNavigateTo()
+                        )
                     }
-                    navViewModel.popBackStackAndNavigateToScreen(
-                        navController = navController,
-                        screen = screenState.getNextScreenNavigateTo()
-                    )
                 }
             )
         }
         composable<AuthScreens.ManageSubscriptions> { backStack ->
-            val activity = LocalActivity.current
-
-            val billingSubscriptionManager = getKoin().getScope("session").get<BillingSubscriptionManager>()
-            val viewModel = backStack.sharedViewModel<SubscriptionViewModel>(
-                navController = navController,
-                factory = SubscriptionViewModelFactory(
-                    billingSubscriptionManager = billingSubscriptionManager
-                )
-            )
+            val viewModel = backStack.sharedKoinNavViewModel<SubscriptionViewModel>(navController)
 
             val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()
             val availableSubscriptions by viewModel.availableSubscriptions.collectAsStateWithLifecycle()
             val purchaseResult by viewModel.purchaseResult.collectAsStateWithLifecycle()
+
+            val activity = LocalActivity.current
 
             SubscriptionsScreen(
                 onNavigateBack = navController::popBackStack,

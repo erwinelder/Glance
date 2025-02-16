@@ -6,6 +6,10 @@ class UserContext {
 
     private var userId: String? = null
 
+    fun isSignedIn(): Boolean {
+        return userId != null
+    }
+
     fun getUserId(): String? {
         return userId
     }
@@ -27,6 +31,16 @@ class UserContext {
 
     fun setSubscription(subscription: AppSubscription) {
         this.subscription = subscription
+    }
+
+    fun resetSubscription() {
+        subscription = AppSubscription.Free
+    }
+
+
+    fun resetUser() {
+        resetUserId()
+        resetSubscription()
     }
 
 }

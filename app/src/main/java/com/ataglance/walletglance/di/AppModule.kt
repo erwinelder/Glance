@@ -71,12 +71,10 @@ val appModule = module {
             getLanguagePreferenceUseCase = get(),
             changeAppSetupStageUseCase = get(),
             getStartDestinationsBySetupStageUseCase = get(),
-            saveUserIdPreferenceUseCase = get(),
             getUserIdPreferenceUseCase = get(),
 
             getAccountsUseCase = get(),
-            getWidgetsUseCase = get(),
-            deleteAllDataLocallyUseCase = get()
+            getWidgetsUseCase = get()
         )
     }
 

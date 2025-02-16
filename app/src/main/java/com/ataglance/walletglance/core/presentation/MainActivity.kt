@@ -19,7 +19,6 @@ import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.GlobalContext
 
 class MainActivity : AppCompatActivity() {
@@ -67,16 +65,11 @@ class MainActivity : AppCompatActivity() {
                     handleDeepLink(intent)
                 }
 
-                val appViewModel = koinViewModel<AppViewModel>()
-
                 LaunchedEffect(true) {
-                    appViewModel.getUserId()?.let { authController.fetchUserDataAndUpdateUser(it) }
+                    authController.fetchUserDataAndUpdateUser()
                 }
 
-                GlanceAppComponent(
-                    navController = navController,
-                    appViewModel = appViewModel
-                )
+                GlanceAppComponent(navController = navController)
             }
         }
     }

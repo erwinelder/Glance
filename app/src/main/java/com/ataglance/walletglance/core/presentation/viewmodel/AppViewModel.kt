@@ -5,14 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCase
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
@@ -29,7 +27,6 @@ import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceU
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetUserIdPreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
-import com.ataglance.walletglance.settings.domain.usecase.SaveUserIdPreferenceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -45,13 +42,11 @@ class AppViewModel(
     private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
     private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
     private val changeAppSetupStageUseCase: ChangeAppSetupStageUseCase,
-    private val getStartDestinationsBySetupStageUseCase: GetStartDestinationsBySetupStageUseCase,
-    private val saveUserIdPreferenceUseCase: SaveUserIdPreferenceUseCase,
-    private val getUserIdPreferenceUseCase: GetUserIdPreferenceUseCase,
+    getStartDestinationsBySetupStageUseCase: GetStartDestinationsBySetupStageUseCase,
+    getUserIdPreferenceUseCase: GetUserIdPreferenceUseCase,
 
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getWidgetsUseCase: GetWidgetsUseCase,
-    private val deleteAllDataLocallyUseCase: DeleteAllDataLocallyUseCase,
+    private val getWidgetsUseCase: GetWidgetsUseCase
 ) : ViewModel() {
 
     init {
@@ -115,34 +110,6 @@ class AppViewModel(
     suspend fun finishSetup() {
         changeAppSetupStageUseCase.finishSetup()
     }
-
-    fun deleteAllData() {
-        viewModelScope.launch {
-            deleteAllDataLocallyUseCase.execute()
-        }
-    }
-
-
-    fun updateConfigurationAfterSignIn(userData: UserData) {
-        viewModelScope.launch {
-            setUserId(userData.userId)
-            saveLanguagePreferenceUseCase.save(userData.language)
-            applyLanguageToSystemUseCase.execute(userData.language)
-        }
-    }
-
-    suspend fun getUserId(): String? {
-        return getUserIdPreferenceUseCase.get()
-    }
-
-    suspend fun setUserId(userId: String) {
-        saveUserIdPreferenceUseCase.save(userId)
-    }
-
-    suspend fun resetUserId() {
-        saveUserIdPreferenceUseCase.save("")
-    }
-
 
 
     private val _accountsAndActiveOne = MutableStateFlow(AccountsAndActiveOne())

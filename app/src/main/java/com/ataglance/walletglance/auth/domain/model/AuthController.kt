@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.auth.domain.model
 
+import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
@@ -13,17 +14,21 @@ import com.ataglance.walletglance.auth.domain.usecase.SetNewPasswordUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SignInUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SignOutUseCase
 import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCase
-import com.ataglance.walletglance.auth.domain.usecase.UserEmailIsVerifiedUseCase
 import com.ataglance.walletglance.billing.domain.model.AppSubscription
+import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCase
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
+import com.ataglance.walletglance.errorHandling.domain.model.result.AuthSuccess
+import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.GetUserIdPreferenceUseCase
+import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
+import com.ataglance.walletglance.settings.domain.usecase.SaveUserIdPreferenceUseCase
 
 class AuthController(
+    private val userContext: UserContext,
+
     private val getUserEmailUseCase: GetUserEmailUseCase,
-    private val userEmailIsVerifiedUseCase: UserEmailIsVerifiedUseCase,
     private val applyOobCodeUseCase: ApplyOobCodeUseCase,
     private val createNewUserUseCase: CreateNewUserUseCase,
     private val signInUseCase: SignInUseCase,
@@ -34,47 +39,48 @@ class AuthController(
     private val requestPasswordResetUseCase: RequestPasswordResetUseCase,
     private val setNewPasswordUseCase: SetNewPasswordUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val signOutUseCase: SignOutUseCase,
+
+    private val saveUserIdPreferenceUseCase: SaveUserIdPreferenceUseCase,
+    private val getUserIdPreferenceUseCase: GetUserIdPreferenceUseCase,
+    private val applyLanguageToSystemUseCase: ApplyLanguageToSystemUseCase,
+    private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
+    private val deleteAllDataLocallyUseCase: DeleteAllDataLocallyUseCase
 ) {
 
-    private val _userState: MutableStateFlow<User> = MutableStateFlow(User())
-    val userState = _userState.asStateFlow()
-
-    fun getUser(): User = userState.value
-
-    fun setUserId(userId: String) {
-        _userState.update { it.copy(uid = userId) }
+    private suspend fun saveUserId(userId: String) {
+        userContext.setUserId(userId)
+        saveUserIdPreferenceUseCase.save(userId)
     }
 
     fun setUserSubscription(subscription: AppSubscription) {
-        _userState.update { it.copy(subscription = subscription) }
+        userContext.setSubscription(subscription)
     }
 
-    private fun setUserByData(userData: UserData) {
-        _userState.update {
-            User(
-                uid = userData.userId,
-                subscription = userData.subscription
-            )
-        }
+    private fun setUserData(userData: UserData) {
+        userContext.setUserId(userData.userId)
+        userContext.setSubscription(userData.subscription)
     }
 
-    suspend fun fetchUserDataAndUpdateUser(uid: String) {
-        val userData = getUserDataUseCase.execute(uid).getDataIfSuccess() ?: return
-        setUserByData(userData)
+    suspend fun fetchUserDataAndUpdateUser() {
+        val userId = getUserIdPreferenceUseCase.get() ?: return
+        fetchUserDataAndUpdateUser(userId)
+    }
+
+    suspend fun fetchUserDataAndUpdateUser(userId: String) {
+        val userData = getUserDataUseCase.get(userId).getDataIfSuccess() ?: return
+        setUserData(userData)
     }
 
     fun resetUser() {
-        _userState.update { User() }
+        userContext.resetUser()
     }
 
-    fun isSignedIn(): Boolean = getUser().isSignedIn()
+    fun isSignedIn(): Boolean = userContext.isSignedIn()
 
-    fun getUserId(): String? = getUser().uid
+    fun getUserId(): String? = userContext.getUserId()
 
     fun getEmail(): String = getUserEmailUseCase.execute() ?: ""
-
-    fun emailIsVerified(): Boolean = userEmailIsVerifiedUseCase.execute()
 
 
     suspend fun applyOobCode(obbCode: String): Boolean {
@@ -85,33 +91,35 @@ class AuthController(
         email: String,
         password: String,
         appLanguageCode: String
-    ): ResultData<String, AuthError> {
+    ): Result<AuthSuccess, AuthError> {
         return when (val result = createNewUserUseCase.execute(email, password, appLanguageCode)) {
+            is ResultData.Success -> sendEmailVerificationEmail()
+            is ResultData.Error -> Result.Error(result.error)
+        }
+    }
+
+    suspend fun signIn(email: String, password: String): Result<AuthSuccess?, AuthError> {
+        val userInstance = when (val result = signInUseCase.execute(email, password)) {
+            is ResultData.Success -> result.data
+            is ResultData.Error -> return Result.Error(result.error)
+        }
+
+        return when (val result = getUserDataUseCase.get(userInstance.uid)) {
             is ResultData.Success -> {
-                ResultData.Success(result.data)
+                saveLanguagePreferenceUseCase.save(result.data.language)
+                applyLanguageToSystemUseCase.execute(result.data.language)
+                if (userInstance.isEmailVerified) {
+                    saveUserId(result.data.userId)
+                    Result.Success(null)
+                } else {
+                    sendEmailVerificationEmail()
+                }
             }
-            is ResultData.Error -> ResultData.Error(result.error)
+            is ResultData.Error -> Result.Error(result.error)
         }
     }
 
-    suspend fun signIn(
-        email: String,
-        password: String
-    ): ResultData<UserData?, AuthError> {
-        val userInstanceResult = signInUseCase.execute(email, password)
-        val userInstance = userInstanceResult.getDataIfSuccess()
-            ?: return ResultData.Error((userInstanceResult as ResultData.Error).error)
-
-//        setUserId(userInstance.uid)
-
-        return if (userInstance.isEmailVerified) {
-            getUserDataUseCase.execute(userInstance.uid)
-        } else {
-            ResultData.Success(null)
-        }
-    }
-
-    suspend fun sendEmailVerificationEmail(): AuthResult {
+    private suspend fun sendEmailVerificationEmail(): AuthResult {
         return sendEmailVerificationEmailUseCase.execute()
     }
 
@@ -131,7 +139,8 @@ class AuthController(
         return setNewPasswordUseCase.execute(obbCode, newPassword)
     }
 
-    fun signOut() {
+    suspend fun signOut() {
+        saveUserIdPreferenceUseCase.save("")
         signOutUseCase.execute()
         resetUser()
     }
@@ -143,6 +152,10 @@ class AuthController(
 //            resetUser()
 //        }
         return result
+    }
+
+    suspend fun deleteAllLocalData() {
+        deleteAllDataLocallyUseCase.execute()
     }
 
 }

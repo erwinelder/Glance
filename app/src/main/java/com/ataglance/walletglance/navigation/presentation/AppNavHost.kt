@@ -324,7 +324,6 @@ fun AppNavHost(
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
             authController = authController,
-            appViewModel = appViewModel,
             appConfiguration = appConfiguration
         )
         composable<MainScreens.FinishSetup> {

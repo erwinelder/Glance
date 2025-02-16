@@ -5,30 +5,30 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.AuthSuccess
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
 
 
 fun Result<AuthSuccess, AuthError>.toUiState(): ResultUiState {
     return when (this) {
-        is Result.Success -> ResultUiState(
-            isSuccessful = true,
-            titleRes = this.success.asTitleRes(),
-            messageRes = this.success.asMessageRes()
-        )
-        is Result.Error -> ResultUiState(
-            isSuccessful = false,
-            titleRes = this.error.asTitleRes(),
-            messageRes = this.error.asMessageRes()
-        )
+        is Result.Success -> success.toUiState()
+        is Result.Error -> error.toUiState()
     }
 }
 
-fun ResultData.Error<*, AuthError>.toUiState(): ResultUiState {
+
+fun AuthSuccess.toUiState(): ResultUiState {
+    return ResultUiState(
+        isSuccessful = true,
+        titleRes = this.asTitleRes(),
+        messageRes = this.asMessageRes()
+    )
+}
+
+fun AuthError.toUiState(): ResultUiState {
     return ResultUiState(
         isSuccessful = false,
-        titleRes = this.error.asTitleRes(),
-        messageRes = this.error.asMessageRes()
+        titleRes = this.asTitleRes(),
+        messageRes = this.asMessageRes()
     )
 }
 

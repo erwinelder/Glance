@@ -37,33 +37,6 @@ import org.koin.dsl.module
 
 val authModule = module {
 
-    /* ---------- Repositories ---------- */
-
-    single<UserRepository> { UserRepositoryImpl(firestore = get()) }
-
-    /* ---------- Use Cases ---------- */
-
-    single<GetUserEmailUseCase> { GetUserEmailUseCaseImpl(auth = get()) }
-    single<UserEmailIsVerifiedUseCase> { UserEmailIsVerifiedUseCaseImpl(auth = get()) }
-    single<ApplyOobCodeUseCase> { ApplyOobCodeUseCaseImpl(auth = get()) }
-    single<CreateNewUserUseCase> { CreateNewUserUseCaseImpl(auth = get(), userRepository = get()) }
-    single<SignInUseCase> { SignInUseCaseImpl(auth = get()) }
-    single<ReauthenticateUseCase> { ReauthenticateUseCaseImpl(auth = get()) }
-    single<GetUserDataUseCase> {
-        GetUserDataUseCaseImpl(userRepository = get())
-    }
-    single<SendEmailVerificationEmailUseCase> {
-        SendEmailVerificationEmailUseCaseImpl(auth = get())
-    }
-    single<RequestEmailUpdateUseCase> { RequestEmailUpdateUseCaseImpl(auth = get()) }
-    single<UpdatePasswordUseCase> { UpdatePasswordUseCaseImpl(reauthenticateUseCase = get()) }
-    single<RequestPasswordResetUseCase> { RequestPasswordResetUseCaseImpl(auth = get()) }
-    single<SetNewPasswordUseCase> { SetNewPasswordUseCaseImpl(auth = get()) }
-    single<DeleteUserUseCase> {
-        DeleteUserUseCaseImpl(userRepository = get(), reauthenticateUseCase = get())
-    }
-    single<SignOutUseCase> { SignOutUseCaseImpl(auth = get()) }
-
     /* ---------- Other ---------- */
 
     single {
@@ -71,9 +44,14 @@ val authModule = module {
     }
 
     single {
+        UserContext()
+    }
+
+    single {
         AuthController(
+            userContext = get(),
+
             getUserEmailUseCase = get(),
-            userEmailIsVerifiedUseCase = get(),
             applyOobCodeUseCase = get(),
             createNewUserUseCase = get(),
             signInUseCase = get(),
@@ -84,12 +62,63 @@ val authModule = module {
             requestPasswordResetUseCase = get(),
             setNewPasswordUseCase = get(),
             deleteUserUseCase = get(),
-            signOutUseCase = get()
+            signOutUseCase = get(),
+
+            saveUserIdPreferenceUseCase = get(),
+            getUserIdPreferenceUseCase = get(),
+            applyLanguageToSystemUseCase = get(),
+            saveLanguagePreferenceUseCase = get(),
+            deleteAllDataLocallyUseCase = get()
         )
     }
 
-    single {
-        UserContext()
+    /* ---------- Repositories ---------- */
+
+    single<UserRepository> { UserRepositoryImpl(firestore = get()) }
+
+    /* ---------- Use Cases ---------- */
+
+    single<GetUserEmailUseCase> {
+        GetUserEmailUseCaseImpl(auth = get())
+    }
+    single<UserEmailIsVerifiedUseCase> {
+        UserEmailIsVerifiedUseCaseImpl(auth = get())
+    }
+    single<ApplyOobCodeUseCase> {
+        ApplyOobCodeUseCaseImpl(auth = get())
+    }
+    single<CreateNewUserUseCase> {
+        CreateNewUserUseCaseImpl(auth = get(), userRepository = get())
+    }
+    single<SignInUseCase> {
+        SignInUseCaseImpl(auth = get())
+    }
+    single<ReauthenticateUseCase> {
+        ReauthenticateUseCaseImpl(auth = get())
+    }
+    single<GetUserDataUseCase> {
+        GetUserDataUseCaseImpl(userRepository = get())
+    }
+    single<SendEmailVerificationEmailUseCase> {
+        SendEmailVerificationEmailUseCaseImpl(auth = get())
+    }
+    single<RequestEmailUpdateUseCase> {
+        RequestEmailUpdateUseCaseImpl(auth = get())
+    }
+    single<UpdatePasswordUseCase> {
+        UpdatePasswordUseCaseImpl(reauthenticateUseCase = get())
+    }
+    single<RequestPasswordResetUseCase> {
+        RequestPasswordResetUseCaseImpl(auth = get())
+    }
+    single<SetNewPasswordUseCase> {
+        SetNewPasswordUseCaseImpl(auth = get())
+    }
+    single<DeleteUserUseCase> {
+        DeleteUserUseCaseImpl(userRepository = get(), reauthenticateUseCase = get())
+    }
+    single<SignOutUseCase> {
+        SignOutUseCaseImpl(auth = get())
     }
 
 }

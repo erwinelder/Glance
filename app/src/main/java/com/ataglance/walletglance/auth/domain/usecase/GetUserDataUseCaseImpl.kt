@@ -8,7 +8,7 @@ import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 class GetUserDataUseCaseImpl(
     private val userRepository: UserRepository
 ) : GetUserDataUseCase {
-    override suspend fun execute(userId: String): ResultData<UserData, AuthError> {
+    override suspend fun get(userId: String): ResultData<UserData, AuthError> {
         return userRepository.getUserData(userId)
     }
 }

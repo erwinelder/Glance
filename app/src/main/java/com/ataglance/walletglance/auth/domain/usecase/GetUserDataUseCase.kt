@@ -5,5 +5,5 @@ import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 
 interface GetUserDataUseCase {
-    suspend fun execute(userId: String): ResultData<UserData, AuthError>
+    suspend fun get(userId: String): ResultData<UserData, AuthError>
 }

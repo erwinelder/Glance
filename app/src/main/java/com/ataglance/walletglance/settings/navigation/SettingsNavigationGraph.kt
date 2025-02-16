@@ -19,7 +19,6 @@ import com.ataglance.walletglance.categoryCollection.presentation.navigation.cat
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreen
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
@@ -38,7 +37,6 @@ fun NavGraphBuilder.settingsGraph(
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
     authController: AuthController,
-    appViewModel: AppViewModel,
     appConfiguration: AppConfiguration
 ) {
     navigation<MainScreens.Settings>(startDestination = appConfiguration.settingsStartDestination) {
@@ -63,7 +61,6 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             navViewModel = navViewModel,
             authController = authController,
-            appViewModel = appViewModel,
             appConfiguration = appConfiguration
         )
         accountsGraph(
