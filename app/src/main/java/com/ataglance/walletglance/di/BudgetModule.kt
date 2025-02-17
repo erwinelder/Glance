@@ -40,17 +40,15 @@ val budgetModule = module {
 
     single {
         BudgetRemoteDao(
-            budgetFirestoreAdapter = FirestoreAdapterFactory(firestore = get())
-                .getBudgetFirestoreAdapter(),
-            associationFirestoreAdapter = FirestoreAdapterFactory(firestore = get())
+            budgetFirestoreAdapter = get<FirestoreAdapterFactory>().getBudgetFirestoreAdapter(),
+            associationFirestoreAdapter = get<FirestoreAdapterFactory>()
                 .getBudgetAccountAssociationFirestoreAdapter()
         )
     }
 
     single {
         BudgetOnWidgetRemoteDao(
-            firestoreAdapter = FirestoreAdapterFactory(firestore = get())
-                .getBudgetOnWidgetFirestoreAdapter()
+            firestoreAdapter = get<FirestoreAdapterFactory>().getBudgetOnWidgetFirestoreAdapter()
         )
     }
 
@@ -75,7 +73,7 @@ val budgetModule = module {
     /* ---------- Repositories ---------- */
 
     single<BudgetRepository> {
-        BudgetRepositoryImpl(localSource = get(), remoteSource = get(), userContext = get())
+        BudgetRepositoryImpl(localSource = get(), remoteSource = get(), syncHelper = get())
     }
 
     single<BudgetOnWidgetRepository> {

@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.navigation.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
@@ -15,11 +16,11 @@ import kotlinx.coroutines.flow.flow
 class NavigationButtonRepositoryImpl(
     private val localSource: NavigationButtonLocalDataSource,
     private val remoteSource: NavigationButtonRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : NavigationButtonRepository {
 
     private suspend fun synchroniseNavigationButtons() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.NavigationButton) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getUpdateTime,
@@ -37,7 +38,7 @@ class NavigationButtonRepositoryImpl(
         val timestamp = getCurrentTimestamp()
 
         localSource.upsertNavigationButtons(buttons = buttons, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.NavigationButton) { userId ->
             remoteSource.upsertNavigationButtons(
                 buttons = buttons.map {
                     it.toRemoteEntity(updateTime = timestamp, deleted = false)

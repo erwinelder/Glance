@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.categoryCollection.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import com.ataglance.walletglance.categoryCollection.data.local.source.CategoryCollectionLocalDataSource
@@ -11,7 +10,9 @@ import com.ataglance.walletglance.categoryCollection.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionCategoryRemoteAssociation
 import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionRemoteEntity
 import com.ataglance.walletglance.categoryCollection.data.remote.source.CategoryCollectionRemoteDataSource
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.flow.Flow
@@ -21,11 +22,14 @@ import kotlinx.coroutines.flow.flow
 class CategoryCollectionRepositoryImpl(
     private val localSource: CategoryCollectionLocalDataSource,
     private val remoteSource: CategoryCollectionRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : CategoryCollectionRepository {
 
     private suspend fun synchroniseCollections() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(
+            TableName.CategoryCollection,
+            TableName.CategoryCollectionCategoryAssociation
+        ) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getCategoryCollectionUpdateTime,
@@ -39,7 +43,10 @@ class CategoryCollectionRepositoryImpl(
     }
 
     private suspend fun synchroniseCollectionCategoryAssociations() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(
+            TableName.CategoryCollection,
+            TableName.CategoryCollectionCategoryAssociation
+        ) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getCollectionCategoryAssociationUpdateTime,
@@ -76,7 +83,10 @@ class CategoryCollectionRepositoryImpl(
             associationsToSync = associationsToSync,
             timestamp = timestamp
         )
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(
+            TableName.CategoryCollection,
+            TableName.CategoryCollectionCategoryAssociation
+        ) { userId ->
             remoteSource.synchroniseCollectionsAndAssociations(
                 collectionsToSync = collectionsToSync.map { deleted ->
                     toRemoteEntity(updateTime = timestamp, deleted = deleted)

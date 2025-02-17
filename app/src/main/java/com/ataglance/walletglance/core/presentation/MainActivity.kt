@@ -32,7 +32,6 @@ import org.koin.core.context.GlobalContext
 class MainActivity : AppCompatActivity() {
 
     private val auth: FirebaseAuth by inject()
-    private val firestore: FirebaseFirestore by inject()
     private val authController: AuthController by inject()
     private lateinit var navController: NavHostController
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
@@ -150,8 +149,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeFirebaseDebugger() {
         if (BuildConfig.DEBUG) {
-            auth.useEmulator("10.0.2.2", 9099)
+            val firestore: FirebaseFirestore by inject()
             firestore.useEmulator("10.0.2.2", 8080)
+            auth.useEmulator("10.0.2.2", 9099)
         }
     }
 

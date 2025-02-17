@@ -12,7 +12,7 @@ class RemoteUpdateTimeDao(
 ) {
 
     suspend fun updateTime(entity: RemoteUpdateTime, userId: String) {
-        firestore.collection("user_data")
+        firestore.collection("UserData")
             .document(userId)
             .collection("UpdateTime")
             .document(entity.tableName)
@@ -27,7 +27,7 @@ class RemoteUpdateTimeDao(
     }
 
     suspend fun getUpdateTime(tableName: String, userId: String): Long? {
-        return firestore.collection("user_data")
+        return firestore.collection("UserData")
             .document(userId)
             .collection("UpdateTime")
             .document(tableName)

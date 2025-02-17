@@ -22,8 +22,7 @@ val navigationModule = module {
 
     single {
         NavigationButtonRemoteDao(
-            firestoreAdapter = FirestoreAdapterFactory(firestore = get())
-                .getNavigationButtonFirestoreAdapter()
+            firestoreAdapter = get<FirestoreAdapterFactory>().getNavigationButtonFirestoreAdapter()
         )
     }
 
@@ -41,7 +40,7 @@ val navigationModule = module {
 
     single<NavigationButtonRepository> {
         NavigationButtonRepositoryImpl(
-            localSource = get(), remoteSource = get(), userContext = get()
+            localSource = get(), remoteSource = get(), syncHelper = get()
         )
     }
 

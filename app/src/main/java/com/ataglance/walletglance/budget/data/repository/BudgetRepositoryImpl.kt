@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.budget.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.data.local.source.BudgetLocalDataSource
@@ -11,18 +10,20 @@ import com.ataglance.walletglance.budget.data.mapper.budget.toRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
 import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.source.BudgetRemoteDataSource
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 
 class BudgetRepositoryImpl(
     private val localSource: BudgetLocalDataSource,
     private val remoteSource: BudgetRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : BudgetRepository {
 
     private suspend fun synchroniseBudgets() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.Budget) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getBudgetUpdateTime,
@@ -36,7 +37,7 @@ class BudgetRepositoryImpl(
     }
 
     private suspend fun synchroniseBudgetAccountAssociations() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.BudgetOnWidget) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getBudgetAccountAssociationUpdateTime,
@@ -73,7 +74,7 @@ class BudgetRepositoryImpl(
             associationsToSync = associationsToSync,
             timestamp = timestamp
         )
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Budget, TableName.BudgetAccountAssociation) { userId ->
             remoteSource.synchroniseBudgetsAndAssociations(
                 budgetsToSync = budgetsToSync.map { deleted ->
                     toRemoteEntity(updateTime = timestamp, deleted = deleted)
@@ -99,9 +100,8 @@ class BudgetRepositoryImpl(
         return budget to associations
     }
 
-    override suspend fun getAllBudgetsAndAssociations():
-            Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
-    {
+    override suspend fun getAllBudgetsAndAssociations(
+    ): Pair<List<BudgetEntity>, List<BudgetAccountAssociation>> {
         synchroniseBudgets()
         synchroniseBudgetAccountAssociations()
 

@@ -23,7 +23,7 @@ val accountModule = module {
 
     single {
         AccountRemoteDao(
-            firestoreAdapter = FirestoreAdapterFactory(firestore = get()).getAccountFirestoreAdapter()
+            firestoreAdapter = get<FirestoreAdapterFactory>().getAccountFirestoreAdapter()
         )
     }
 
@@ -40,7 +40,11 @@ val accountModule = module {
     /* ---------- Repositories ---------- */
 
     single<AccountRepository> {
-        AccountRepositoryImpl(localSource = get(), remoteSource = get(), userContext = get())
+        AccountRepositoryImpl(
+            localSource = get(),
+            remoteSource = get(),
+            syncHelper = get()
+        )
     }
 
     /* ---------- Use Cases ---------- */

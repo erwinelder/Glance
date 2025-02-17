@@ -1,13 +1,14 @@
 package com.ataglance.walletglance.category.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.data.local.source.CategoryLocalDataSource
 import com.ataglance.walletglance.category.data.mapper.toLocalEntity
 import com.ataglance.walletglance.category.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.category.data.remote.model.CategoryRemoteEntity
 import com.ataglance.walletglance.category.data.remote.source.CategoryRemoteDataSource
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.flow.Flow
@@ -16,11 +17,11 @@ import kotlinx.coroutines.flow.flow
 class CategoryRepositoryImpl(
     val localSource: CategoryLocalDataSource,
     val remoteSource: CategoryRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : CategoryRepository {
 
     private suspend fun synchroniseCategories() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.Category) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getUpdateTime,
@@ -37,7 +38,7 @@ class CategoryRepositoryImpl(
         val timestamp = getCurrentTimestamp()
 
         localSource.upsertCategories(categories = categories, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Category) { userId ->
             remoteSource.upsertCategories(
                 categories = categories.map {
                     it.toRemoteEntity(updateTime = timestamp, deleted = false)
@@ -56,7 +57,7 @@ class CategoryRepositoryImpl(
         val categoriesToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseCategories(categoriesToSync = categoriesToSync, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Category) { userId ->
             remoteSource.synchroniseCategories(
                 categoriesToSync = categoriesToSync.map { deleted ->
                     toRemoteEntity(updateTime = timestamp, deleted = deleted)

@@ -38,6 +38,14 @@ class UserContext {
     }
 
 
+    fun isEligibleForDataSync(): Boolean {
+        return isSignedIn() && subscription != AppSubscription.Free
+    }
+
+    fun getUserIdIfEligibleForDataSync(): String? {
+        return if (isEligibleForDataSync()) userId else null
+    }
+
     fun resetUser() {
         resetUserId()
         resetSubscription()

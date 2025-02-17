@@ -1,8 +1,6 @@
 package com.ataglance.walletglance.di
 
 import com.ataglance.walletglance.auth.data.model.UserContext
-import com.ataglance.walletglance.auth.data.repository.UserRepository
-import com.ataglance.walletglance.auth.data.repository.UserRepositoryImpl
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCaseImpl
@@ -32,16 +30,11 @@ import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCase
 import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.UserEmailIsVerifiedUseCase
 import com.ataglance.walletglance.auth.domain.usecase.UserEmailIsVerifiedUseCaseImpl
-import com.google.firebase.auth.FirebaseAuth
 import org.koin.dsl.module
 
 val authModule = module {
 
     /* ---------- Other ---------- */
-
-    single {
-        FirebaseAuth.getInstance()
-    }
 
     single {
         UserContext()
@@ -71,10 +64,6 @@ val authModule = module {
             deleteAllDataLocallyUseCase = get()
         )
     }
-
-    /* ---------- Repositories ---------- */
-
-    single<UserRepository> { UserRepositoryImpl(firestore = get()) }
 
     /* ---------- Use Cases ---------- */
 

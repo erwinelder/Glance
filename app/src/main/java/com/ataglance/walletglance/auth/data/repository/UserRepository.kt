@@ -8,7 +8,7 @@ interface UserRepository {
 
     suspend fun getUserData(userId: String): ResultData<UserData, AuthError>
 
-    suspend fun saveUserPreferences(userPreferences: UserData)
+    suspend fun saveUserData(userData: UserData)
 
     suspend fun updateUserSubscription(userId: String, subscription: String)
 

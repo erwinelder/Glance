@@ -33,7 +33,7 @@ val recordModule = module {
 
     single {
         RecordRemoteDao(
-            firestoreAdapter = FirestoreAdapterFactory(firestore = get()).getRecordFirestoreAdapter()
+            firestoreAdapter = get<FirestoreAdapterFactory>().getRecordFirestoreAdapter()
         )
     }
 
@@ -50,7 +50,7 @@ val recordModule = module {
     /* ---------- Repositories ---------- */
 
     single<RecordRepository> {
-        RecordRepositoryImpl(localSource = get(), remoteSource = get(), userContext = get())
+        RecordRepositoryImpl(localSource = get(), remoteSource = get(), syncHelper = get())
     }
 
     /* ---------- Use Cases ---------- */

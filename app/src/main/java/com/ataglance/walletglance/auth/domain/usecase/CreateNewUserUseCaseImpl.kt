@@ -29,7 +29,7 @@ class CreateNewUserUseCaseImpl(
                 language = appLanguageCode,
                 subscription = AppSubscription.Free
             )
-            userRepository.saveUserPreferences(userPreferences)
+            userRepository.saveUserData(userPreferences)
 
             ResultData.Success(firebaseUser.uid)
         } catch (e: Exception) {

@@ -23,9 +23,9 @@ val categoryCollectionModule = module {
 
     single {
         CategoryCollectionRemoteDao(
-            categoryCollectionFirestoreAdapter = FirestoreAdapterFactory(firestore = get())
+            categoryCollectionFirestoreAdapter = get<FirestoreAdapterFactory>()
                 .getCategoryCollectionFirestoreAdapter(),
-            associationFirestoreAdapter = FirestoreAdapterFactory(firestore = get())
+            associationFirestoreAdapter = get<FirestoreAdapterFactory>()
                 .getCollectionCategoryAssociationFirestoreAdapter()
         )
     }
@@ -49,7 +49,7 @@ val categoryCollectionModule = module {
         CategoryCollectionRepositoryImpl(
             localSource = get(),
             remoteSource = get(),
-            userContext = get()
+            syncHelper = get()
         )
     }
 

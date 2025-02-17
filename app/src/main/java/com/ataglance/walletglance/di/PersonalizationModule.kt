@@ -22,7 +22,7 @@ val personalizationModule = module {
 
     single {
         WidgetRemoteDao(
-            firestoreAdapter = FirestoreAdapterFactory(firestore = get()).getWidgetFirestoreAdapter()
+            firestoreAdapter = get<FirestoreAdapterFactory>().getWidgetFirestoreAdapter()
         )
     }
 
@@ -39,7 +39,7 @@ val personalizationModule = module {
     /* ---------- Repositories ---------- */
 
     single<WidgetRepository> {
-        WidgetRepositoryImpl(localSource = get(), remoteSource = get(), userContext = get())
+        WidgetRepositoryImpl(localSource = get(), remoteSource = get(), syncHelper = get())
     }
 
     /* ---------- Use Cases ---------- */

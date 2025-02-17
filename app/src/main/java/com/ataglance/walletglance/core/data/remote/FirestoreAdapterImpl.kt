@@ -18,7 +18,7 @@ class FirestoreAdapterImpl <T> (
 ) : FirestoreAdapter<T> {
 
     private fun getUserFirestoreRef(userId: String): DocumentReference {
-        return firestore.collection("user_data").document(userId)
+        return firestore.collection("UserData").document(userId)
     }
 
     private fun getCollectionRef(userId: String): CollectionReference {

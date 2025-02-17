@@ -1,7 +1,8 @@
 package com.ataglance.walletglance.record.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
@@ -17,11 +18,11 @@ import kotlinx.coroutines.flow.flow
 class RecordRepositoryImpl(
     private val localSource: RecordLocalDataSource,
     private val remoteSource: RecordRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : RecordRepository {
 
     private suspend fun synchroniseRecords() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.Record) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getUpdateTime,
@@ -38,7 +39,7 @@ class RecordRepositoryImpl(
         val timestamp = getCurrentTimestamp()
 
         localSource.upsertRecords(records = records, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
             remoteSource.upsertRecords(
                 records = records.map {
                     it.toRemoteEntity(updateTime = timestamp, deleted = false)
@@ -53,7 +54,7 @@ class RecordRepositoryImpl(
         val timestamp = getCurrentTimestamp()
 
         localSource.deleteRecords(records = records, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
             remoteSource.upsertRecords(
                 records = records.map {
                     it.toRemoteEntity(updateTime = timestamp, deleted = true)
@@ -72,7 +73,7 @@ class RecordRepositoryImpl(
         val recordsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseRecords(recordsToSync = recordsToSync, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
             remoteSource.synchroniseRecords(
                 recordsToSync = recordsToSync.map { deleted ->
                     toRemoteEntity(updateTime = timestamp, deleted = deleted)
@@ -91,7 +92,7 @@ class RecordRepositoryImpl(
     override suspend fun convertRecordsToTransfers(noteValues: List<String>) {
         val timestamp = getCurrentTimestamp()
         localSource.convertTransfersToRecords(noteValues, timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
             remoteSource.convertTransfersToRecords(
                 noteValues = noteValues, timestamp = timestamp, userId = userId
             )

@@ -1,7 +1,8 @@
 package com.ataglance.walletglance.personalization.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
@@ -16,11 +17,11 @@ import kotlinx.coroutines.flow.flow
 class WidgetRepositoryImpl(
     private val localSource: WidgetLocalDataSource,
     private val remoteSource: WidgetRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : WidgetRepository {
 
     private suspend fun synchroniseWidgets() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.Widget) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getUpdateTime,
@@ -38,7 +39,7 @@ class WidgetRepositoryImpl(
         val timestamp = getCurrentTimestamp()
 
         localSource.upsertWidgets(widgets = widgets, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Widget) { userId ->
             remoteSource.upsertWidgets(
                 widgets = widgets.map {
                     it.toRemoteEntity(updateTime = timestamp, deleted = false)
@@ -57,7 +58,7 @@ class WidgetRepositoryImpl(
         val widgetsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseWidgets(widgetsToSync = widgetsToSync, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.Widget) { userId ->
             remoteSource.synchroniseWidgets(
                 widgetsToSync = widgetsToSync.map { deleted ->
                     toRemoteEntity(updateTime = timestamp, deleted = deleted)
