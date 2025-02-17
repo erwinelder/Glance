@@ -11,6 +11,8 @@ interface WidgetRepository {
 
     suspend fun deleteAllWidgetsLocally()
 
-    fun getAllWidgets(): Flow<List<WidgetEntity>>
+    fun getAllWidgetsFlow(): Flow<List<WidgetEntity>>
+
+    suspend fun getAllWidgets(): List<WidgetEntity>
 
 }

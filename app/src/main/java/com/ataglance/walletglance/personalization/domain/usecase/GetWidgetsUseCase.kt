@@ -4,5 +4,5 @@ import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import kotlinx.coroutines.flow.Flow
 
 interface GetWidgetsUseCase {
-    fun getAsFlow(): Flow<List<WidgetName>>
+    fun getFlow(): Flow<List<WidgetName>>
 }

@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.flow
 class GetNavigationButtonsUseCaseImpl(
     private val navigationButtonRepository: NavigationButtonRepository
 ) : GetNavigationButtonsUseCase {
-    override fun getAsFlow(): Flow<List<BottomBarNavigationButton>> = flow {
-        navigationButtonRepository.getAllNavigationButtons().collect { entities ->
+    override fun getFlow(): Flow<List<BottomBarNavigationButton>> = flow {
+        navigationButtonRepository.getAllNavigationButtonsFlow().collect { entities ->
             if (entities.isNotEmpty()) {
 
                 emit(entities.toDomainModels())

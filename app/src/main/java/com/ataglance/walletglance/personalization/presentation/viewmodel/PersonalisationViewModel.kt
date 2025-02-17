@@ -47,7 +47,7 @@ class PersonalisationViewModel(
 
     private fun fetchAppThemeConfiguration() {
         viewModelScope.launch {
-            getAppThemeConfigurationUseCase.getAsFlow().let {
+            getAppThemeConfigurationUseCase.getFlow().let {
                 _appThemeConfiguration.update { it }
             }
         }
@@ -84,7 +84,7 @@ class PersonalisationViewModel(
 
     private fun fetchWidgets() {
         viewModelScope.launch {
-            getWidgetsUseCase.getAsFlow().collect { widgets ->
+            getWidgetsUseCase.getFlow().collect { widgets ->
                 _widgets.update {
                     widgets.map { widgetName ->
                         CheckedWidget(widgetName, widgetName in widgets)
@@ -133,7 +133,7 @@ class PersonalisationViewModel(
 
     private fun fetchNavButtons() {
         viewModelScope.launch {
-            getNavigationButtonsUseCase.getAsFlow().collect {
+            getNavigationButtonsUseCase.getFlow().collect {
                 _navButtons.update { it.subList(1, it.lastIndex) }
             }
         }

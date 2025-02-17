@@ -20,7 +20,7 @@ class GetBudgetsOnWidgetUseCaseImpl(
     private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase
 ) : GetBudgetsOnWidgetUseCase {
 
-    override fun getAsFlow(): Flow<List<Budget>> = flow {
+    override fun getFlow(): Flow<List<Budget>> = flow {
         val (entities, associations) = budgetRepository.getAllBudgetsAndAssociations()
         val categoryWithSubcategoriesList = getCategoriesUseCase.getOfExpenseType()
         val accounts = getAccountsUseCase.getAll()
@@ -35,10 +35,10 @@ class GetBudgetsOnWidgetUseCaseImpl(
             return@flow
         }
 
-        val budgetIdsFlow = getBudgetIdsOnWidgetUseCase.getAsFlow()
-        val recordsFlow = getRecordsInDateRangeUseCase.getAsFlow(range = budgetsMaxDateRange)
-
-        combine(budgetIdsFlow, recordsFlow) { budgetIds, records ->
+        combine(
+            getBudgetIdsOnWidgetUseCase.getFlow(),
+            getRecordsInDateRangeUseCase.getFlow(range = budgetsMaxDateRange)
+        ) { budgetIds, records ->
             budgets.filter { it.id in budgetIds }.fillUsedAmountsByRecords(records)
         }.collect(::emit)
     }

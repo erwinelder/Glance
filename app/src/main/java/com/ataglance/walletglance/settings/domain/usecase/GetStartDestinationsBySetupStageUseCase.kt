@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetStartDestinationsBySetupStageUseCase {
 
-    fun getAsFlow(): Flow<Pair<MainScreens, SettingsScreens>>
+    fun getFlow(): Flow<Pair<MainScreens, SettingsScreens>>
 
     suspend fun get(): Pair<MainScreens, SettingsScreens>
 

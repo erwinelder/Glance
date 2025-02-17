@@ -18,7 +18,7 @@ interface CategoryCollectionLocalDataSource {
         timestamp: Long
     )
 
-    fun getAllCategoryCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>>
+    fun getAllCategoryCollectionsFlow(): Flow<List<CategoryCollectionEntity>>
 
     suspend fun getAllCategoryCollections(): List<CategoryCollectionEntity>
 
@@ -32,7 +32,7 @@ interface CategoryCollectionLocalDataSource {
         timestamp: Long
     )
 
-    fun getAllCollectionCategoryAssociationsAsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
+    fun getAllCollectionCategoryAssociationsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
 
     suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>
 

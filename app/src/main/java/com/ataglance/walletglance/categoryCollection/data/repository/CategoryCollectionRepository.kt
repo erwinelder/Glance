@@ -15,7 +15,7 @@ interface CategoryCollectionRepository {
 
     suspend fun deleteAllCategoryCollectionsLocally()
 
-    fun getAllCollectionsAndAssociationsAsFlow(
+    fun getAllCollectionsAndAssociationsFlow(
     ): Flow<Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>>
 
     suspend fun getAllCollectionsAndAssociations(

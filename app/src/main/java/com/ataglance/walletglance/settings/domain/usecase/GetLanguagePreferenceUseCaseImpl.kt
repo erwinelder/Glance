@@ -9,7 +9,7 @@ class GetLanguagePreferenceUseCaseImpl(
     private val settingsRepository: SettingsRepository
 ) : GetLanguagePreferenceUseCase {
 
-    override fun getAsFlow(): Flow<String> {
+    override fun getFlow(): Flow<String> {
         return settingsRepository.language
     }
 

@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetBudgetsOnWidgetUseCase {
 
-    fun getAsFlow(): Flow<List<Budget>>
+    fun getFlow(): Flow<List<Budget>>
 
 }

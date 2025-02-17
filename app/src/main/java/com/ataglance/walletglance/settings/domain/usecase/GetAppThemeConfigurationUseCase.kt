@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetAppThemeConfigurationUseCase {
 
-    fun getAsFlow(): Flow<AppThemeConfiguration>
+    fun getFlow(): Flow<AppThemeConfiguration>
 
 }

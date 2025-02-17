@@ -65,8 +65,8 @@ class AppViewModel(
 
     private fun fetchAppThemeConfiguration() {
         viewModelScope.launch {
-            getAppThemeConfigurationUseCase.getAsFlow().collect {
-                _appThemeConfiguration.update { it }
+            getAppThemeConfigurationUseCase.getFlow().collect { themeConfiguration ->
+                _appThemeConfiguration.update { themeConfiguration }
             }
         }
     }
@@ -80,9 +80,9 @@ class AppViewModel(
 
 
     val appConfiguration = combine(
-        getStartDestinationsBySetupStageUseCase.getAsFlow(),
-        getUserIdPreferenceUseCase.getAsFlow(),
-        getLanguagePreferenceUseCase.getAsFlow(),
+        getStartDestinationsBySetupStageUseCase.getFlow(),
+        getUserIdPreferenceUseCase.getFlow(),
+        getLanguagePreferenceUseCase.getFlow(),
         _appTheme
     ) { startDestinations, userId, language, appTheme ->
         AppConfiguration(
@@ -117,7 +117,7 @@ class AppViewModel(
 
     private fun fetchAccounts() {
         viewModelScope.launch {
-            getAccountsUseCase.getAllAsFlow().collect { accounts ->
+            getAccountsUseCase.getAllFlow().collect { accounts ->
                 _accountsAndActiveOne.update {
                     AccountsAndActiveOne.fromAccounts(accounts = accounts)
                 }
@@ -195,7 +195,7 @@ class AppViewModel(
 
     private fun fetchWidgets() {
         viewModelScope.launch {
-            getWidgetsUseCase.getAsFlow().collect {
+            getWidgetsUseCase.getFlow().collect {
                 _widgetNames.update { it }
             }
         }

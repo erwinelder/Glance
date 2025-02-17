@@ -6,7 +6,6 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.mapper.toDataModel
 import com.ataglance.walletglance.core.utils.excludeItems
 import com.ataglance.walletglance.record.data.repository.RecordRepository
-import kotlinx.coroutines.flow.firstOrNull
 
 class SaveAccountsUseCaseImpl(
     private val accountRepository: AccountRepository,
@@ -14,7 +13,7 @@ class SaveAccountsUseCaseImpl(
 ) : SaveAccountsUseCase {
 
     override suspend fun saveDomainModels(accounts: List<Account>) {
-        val currentAccounts = accountRepository.getAllAccounts().firstOrNull().orEmpty()
+        val currentAccounts = accountRepository.getAllAccounts()
 
         val entitiesToSave = accounts.map(Account::toDataModel)
         val entitiesToDelete = currentAccounts.excludeItems(entitiesToSave) { it.id }

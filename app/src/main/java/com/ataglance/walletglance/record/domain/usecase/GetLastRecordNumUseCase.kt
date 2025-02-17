@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetLastRecordNumUseCase {
 
-    fun getAsFlow(): Flow<Int?>
+    fun getFlow(): Flow<Int?>
 
     suspend fun get(): Int?
 

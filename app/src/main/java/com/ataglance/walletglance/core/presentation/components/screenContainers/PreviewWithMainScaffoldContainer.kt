@@ -30,7 +30,7 @@ fun PreviewWithMainScaffoldContainer(
         SharedTransitionLayout {
             GlanceTheme(
                 useDeviceTheme = false,
-                lastChosenTheme = appTheme.name,
+                lastChosenTheme = appTheme,
                 boxWithConstraintsScope = this@BoxWithConstraints,
                 sharedTransitionScope = this@SharedTransitionLayout
             ) {

@@ -57,10 +57,7 @@ val navigationModule = module {
     /* ---------- View Models ---------- */
 
     viewModel {
-        NavigationViewModel(
-            saveNavigationButtonsUseCase = get(),
-            getNavigationButtonsUseCase = get()
-        )
+        NavigationViewModel(getNavigationButtonsUseCase = get())
     }
 
 }

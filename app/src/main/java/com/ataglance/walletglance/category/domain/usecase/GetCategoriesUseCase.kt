@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetCategoriesUseCase {
 
-    fun getGroupedAsFlow(): Flow<GroupedCategoriesByType>
+    fun getGroupedFlow(): Flow<GroupedCategoriesByType>
 
     suspend fun getGrouped(): GroupedCategoriesByType
 

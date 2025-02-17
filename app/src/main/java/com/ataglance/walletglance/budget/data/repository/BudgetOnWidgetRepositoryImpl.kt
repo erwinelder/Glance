@@ -1,17 +1,20 @@
 package com.ataglance.walletglance.budget.data.repository
 
 import com.ataglance.walletglance.auth.data.model.UserContext
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.utils.synchroniseData
-import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
 import com.ataglance.walletglance.budget.data.local.source.BudgetOnWidgetLocalDataSource
 import com.ataglance.walletglance.budget.data.mapper.budgetOnWidget.toLocalEntity
 import com.ataglance.walletglance.budget.data.mapper.budgetOnWidget.toRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.source.BudgetOnWidgetRemoteDataSource
+import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class BudgetOnWidgetRepositoryImpl(
     private val localSource: BudgetOnWidgetLocalDataSource,
@@ -58,9 +61,16 @@ class BudgetOnWidgetRepositoryImpl(
         localSource.deleteAllBudgetsOnWidget(timestamp = timestamp)
     }
 
-    override fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>> = flow {
+    override fun getAllBudgetsOnWidgetFlow(): Flow<List<BudgetOnWidgetEntity>> = flow {
+        coroutineScope {
+            launch { synchroniseBudgetsOnWidget() }
+            localSource.getAllBudgetsOnWidget().collect(::emit)
+        }
+    }
+
+    override suspend fun getAllBudgetsOnWidget(): List<BudgetOnWidgetEntity> {
         synchroniseBudgetsOnWidget()
-        localSource.getAllBudgetsOnWidget().collect(::emit)
+        return localSource.getAllBudgetsOnWidget().firstOrNull().orEmpty()
     }
 
 }

@@ -29,7 +29,7 @@ class BudgetStatisticsViewModel(
             budget?.category ?: return@launch
 
             getRecordsTotalAmountInDateRangesUseCase
-                .getByCategoryAndAccountsAsFlow(
+                .getByCategoryAndAccountsFlow(
                     categoryId = budget.category.id,
                     accountsIds = budget.linkedAccountsIds,
                     dateRangeList = budget.repeatingPeriod.getPrevDateRanges()

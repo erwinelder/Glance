@@ -5,21 +5,18 @@ import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.mapper.toDomainModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class GetAccountsUseCaseImpl(
     private val accountRepository: AccountRepository
 ) : GetAccountsUseCase {
 
-    override fun getAllAsFlow(): Flow<List<Account>> {
-        return accountRepository.getAllAccounts().map { it.map(AccountEntity::toDomainModel) }
+    override fun getAllFlow(): Flow<List<Account>> {
+        return accountRepository.getAllAccountsFlow().map { it.map(AccountEntity::toDomainModel) }
     }
 
     override suspend fun getAll(): List<Account> {
-        return accountRepository.getAllAccounts().firstOrNull()
-            ?.map(AccountEntity::toDomainModel)
-            .orEmpty()
+        return accountRepository.getAllAccounts().map(AccountEntity::toDomainModel)
     }
 
     override suspend fun get(ids: List<Int>): List<Account> {
@@ -31,9 +28,7 @@ class GetAccountsUseCaseImpl(
     }
 
     override suspend fun getActive(): Account? {
-        return accountRepository.getAllAccounts().firstOrNull()
-            ?.firstOrNull { it.isActive }
-            ?.toDomainModel()
+        return accountRepository.getAllAccounts().firstOrNull { it.isActive }?.toDomainModel()
     }
 
 }

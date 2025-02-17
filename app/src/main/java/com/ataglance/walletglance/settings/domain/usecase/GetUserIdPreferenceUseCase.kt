@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetUserIdPreferenceUseCase {
 
-    fun getAsFlow(): Flow<String?>
+    fun getFlow(): Flow<String?>
 
     suspend fun get(): String?
 

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetAccountsUseCase {
 
-    fun getAllAsFlow(): Flow<List<Account>>
+    fun getAllFlow(): Flow<List<Account>>
     suspend fun getAll(): List<Account>
 
     suspend fun get(ids: List<Int>): List<Account>

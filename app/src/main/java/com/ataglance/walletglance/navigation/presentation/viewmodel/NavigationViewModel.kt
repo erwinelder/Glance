@@ -11,7 +11,6 @@ import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
-import com.ataglance.walletglance.navigation.domain.usecase.SaveNavigationButtonsUseCase
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
 import com.ataglance.walletglance.navigation.domain.utils.simpleName
@@ -23,7 +22,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NavigationViewModel(
-    private val saveNavigationButtonsUseCase: SaveNavigationButtonsUseCase,
     private val getNavigationButtonsUseCase: GetNavigationButtonsUseCase
 ) : ViewModel() {
 
@@ -45,13 +43,7 @@ class NavigationViewModel(
 
     private fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
-            getNavigationButtonsUseCase.getAsFlow().collect(::updateNavigationButtons)
-        }
-    }
-
-    fun saveBottomBarNavigationButtons(buttons: List<BottomBarNavigationButton>) {
-        viewModelScope.launch {
-            saveNavigationButtonsUseCase.execute(buttons = buttons)
+            getNavigationButtonsUseCase.getFlow().collect(::updateNavigationButtons)
         }
     }
 

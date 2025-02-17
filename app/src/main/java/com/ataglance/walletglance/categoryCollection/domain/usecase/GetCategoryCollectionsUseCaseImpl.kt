@@ -10,9 +10,9 @@ class GetCategoryCollectionsUseCaseImpl(
     private val categoryCollectionRepository: CategoryCollectionRepository
 ) : GetCategoryCollectionsUseCase {
 
-    override fun getAsFlow(): Flow<CategoryCollectionsWithIdsByType> {
+    override fun getFlow(): Flow<CategoryCollectionsWithIdsByType> {
         return categoryCollectionRepository
-            .getAllCollectionsAndAssociationsAsFlow()
+            .getAllCollectionsAndAssociationsFlow()
             .map { it.groupByType() }
     }
 

@@ -9,6 +9,6 @@ interface NavigationButtonRepository {
 
     suspend fun deleteAllNavigationButtonsLocally()
 
-    fun getAllNavigationButtons(): Flow<List<NavigationButtonEntity>>
+    fun getAllNavigationButtonsFlow(): Flow<List<NavigationButtonEntity>>
 
 }

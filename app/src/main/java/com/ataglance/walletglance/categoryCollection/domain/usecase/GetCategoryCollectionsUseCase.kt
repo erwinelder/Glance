@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetCategoryCollectionsUseCase {
 
-    fun getAsFlow(): Flow<CategoryCollectionsWithIdsByType>
+    fun getFlow(): Flow<CategoryCollectionsWithIdsByType>
 
     suspend fun get(): CategoryCollectionsWithIdsByType
 

@@ -8,7 +8,7 @@ class GetUserIdPreferenceUseCaseImpl(
     private val settingsRepository: SettingsRepository
 ) : GetUserIdPreferenceUseCase {
 
-    override fun getAsFlow(): Flow<String?> {
+    override fun getFlow(): Flow<String?> {
         return settingsRepository.userId
     }
 

@@ -41,7 +41,7 @@ class RecentRecordsWidgetViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _recordsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
-        getRecordStacksInDateRangeUseCase.getAsFlow(range = dateRange)
+        getRecordStacksInDateRangeUseCase.getFlow(range = dateRange)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),

@@ -5,6 +5,6 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 import kotlinx.coroutines.flow.Flow
 
 interface GetRecordStacksInDateRangeUseCase {
-    fun getAsFlow(range: LongDateRange): Flow<List<RecordStack>>
+    fun getFlow(range: LongDateRange): Flow<List<RecordStack>>
     suspend fun get(range: LongDateRange): List<RecordStack>
 }

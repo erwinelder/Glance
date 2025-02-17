@@ -19,13 +19,17 @@ interface RecordRepository {
 
     suspend fun convertRecordsToTransfers(noteValues: List<String>)
 
-    fun getLastRecordNum(): Flow<Int?>
+    fun getLastRecordNumFlow(): Flow<Int?>
+
+    suspend fun getLastRecordNum(): Int?
 
     suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
 
     suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 
-    fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>
+    fun getRecordsInDateRangeFlow(range: LongDateRange): Flow<List<RecordEntity>>
+
+    suspend fun getRecordsInDateRange(range: LongDateRange): List<RecordEntity>
 
     suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,

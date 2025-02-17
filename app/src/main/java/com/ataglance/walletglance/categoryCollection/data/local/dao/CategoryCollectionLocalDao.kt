@@ -31,7 +31,7 @@ interface CategoryCollectionLocalDao {
     }
 
     @Query("SELECT * FROM CategoryCollection")
-    fun getAllCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>>
+    fun getAllCollectionsFlow(): Flow<List<CategoryCollectionEntity>>
 
     @Query("SELECT * FROM CategoryCollection")
     suspend fun getAllCollections(): List<CategoryCollectionEntity>
@@ -57,7 +57,7 @@ interface CategoryCollectionLocalDao {
     }
 
     @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
-    fun getAllCollectionCategoryAssociationsAsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
+    fun getAllCollectionCategoryAssociationsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
 
     @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
     suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>

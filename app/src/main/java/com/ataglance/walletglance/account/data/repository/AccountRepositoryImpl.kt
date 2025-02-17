@@ -11,8 +11,11 @@ import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class AccountRepositoryImpl(
     private val localSource: AccountLocalDataSource,
@@ -74,9 +77,16 @@ class AccountRepositoryImpl(
         localSource.deleteAllAccounts(timestamp = timestamp)
     }
 
-    override fun getAllAccounts(): Flow<List<AccountEntity>> = flow {
+    override fun getAllAccountsFlow(): Flow<List<AccountEntity>> = flow {
+        coroutineScope {
+            launch { syncDataFromRemote() }
+            localSource.getAllAccounts().collect(::emit)
+        }
+    }
+
+    override suspend fun getAllAccounts(): List<AccountEntity> {
         syncDataFromRemote()
-        localSource.getAllAccounts().collect(::emit)
+        return localSource.getAllAccounts().firstOrNull().orEmpty()
     }
 
     override suspend fun getAccounts(ids: List<Int>): List<AccountEntity> {

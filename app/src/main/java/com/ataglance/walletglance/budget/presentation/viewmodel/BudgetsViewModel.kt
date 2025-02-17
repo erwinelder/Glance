@@ -15,7 +15,7 @@ class BudgetsViewModel(
 
     init {
         viewModelScope.launch {
-            getBudgetsUseCase.getGroupedByTypeAsFlow().collect { budgetsByType ->
+            getBudgetsUseCase.getGroupedByTypeFlow().collect { budgetsByType ->
                 _budgetsByType.update { budgetsByType }
             }
         }

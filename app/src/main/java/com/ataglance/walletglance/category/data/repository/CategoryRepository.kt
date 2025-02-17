@@ -14,7 +14,9 @@ interface CategoryRepository {
 
     suspend fun deleteAllCategoriesLocally()
 
-    fun getAllCategories(): Flow<List<CategoryEntity>>
+    fun getAllCategoriesFlow(): Flow<List<CategoryEntity>>
+
+    suspend fun getAllCategories(): List<CategoryEntity>
 
     suspend fun getCategoriesByType(type: Char): List<CategoryEntity>
 

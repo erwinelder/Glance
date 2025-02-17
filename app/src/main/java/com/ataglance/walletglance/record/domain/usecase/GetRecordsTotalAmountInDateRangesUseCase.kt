@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetRecordsTotalAmountInDateRangesUseCase {
 
-    fun getByCategoryAndAccountsAsFlow(
+    fun getByCategoryAndAccountsFlow(
         categoryId: Int,
         accountsIds: List<Int>,
         dateRangeList: List<LongDateRange>

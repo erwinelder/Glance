@@ -10,8 +10,10 @@ import com.ataglance.walletglance.navigation.data.mapper.toLocalEntity
 import com.ataglance.walletglance.navigation.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonRemoteEntity
 import com.ataglance.walletglance.navigation.data.remote.source.NavigationButtonRemoteDataSource
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class NavigationButtonRepositoryImpl(
     private val localSource: NavigationButtonLocalDataSource,
@@ -54,9 +56,11 @@ class NavigationButtonRepositoryImpl(
         localSource.deleteAllNavigationButtons(timestamp = timestamp)
     }
 
-    override fun getAllNavigationButtons(): Flow<List<NavigationButtonEntity>> = flow {
-        synchroniseNavigationButtons()
-        localSource.getAllNavigationButtons().collect(::emit)
+    override fun getAllNavigationButtonsFlow(): Flow<List<NavigationButtonEntity>> = flow {
+        coroutineScope {
+            launch { synchroniseNavigationButtons() }
+            localSource.getAllNavigationButtons().collect(::emit)
+        }
     }
 
 }

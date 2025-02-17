@@ -12,8 +12,11 @@ import com.ataglance.walletglance.record.data.mapper.toLocalEntity
 import com.ataglance.walletglance.record.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.record.data.remote.model.RecordRemoteEntity
 import com.ataglance.walletglance.record.data.remote.source.RecordRemoteDataSource
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class RecordRepositoryImpl(
     private val localSource: RecordLocalDataSource,
@@ -99,9 +102,16 @@ class RecordRepositoryImpl(
         }
     }
 
-    override fun getLastRecordNum(): Flow<Int?> = flow {
+    override fun getLastRecordNumFlow(): Flow<Int?> = flow {
+        coroutineScope {
+            launch { synchroniseRecords() }
+            localSource.getLastRecordNum().collect(::emit)
+        }
+    }
+
+    override suspend fun getLastRecordNum(): Int? {
         synchroniseRecords()
-        localSource.getLastRecordNum().collect(::emit)
+        return localSource.getLastRecordNum().firstOrNull()
     }
 
     override suspend fun getLastRecordsByTypeAndAccount(
@@ -117,9 +127,16 @@ class RecordRepositoryImpl(
         return localSource.getRecordsByRecordNum(recordNum = recordNum)
     }
 
-    override fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>> = flow {
+    override fun getRecordsInDateRangeFlow(range: LongDateRange): Flow<List<RecordEntity>> = flow {
+        coroutineScope {
+            launch { synchroniseRecords() }
+            localSource.getRecordsInDateRange(range = range).collect(::emit)
+        }
+    }
+
+    override suspend fun getRecordsInDateRange(range: LongDateRange): List<RecordEntity> {
         synchroniseRecords()
-        localSource.getRecordsInDateRange(range = range).collect(::emit)
+        return localSource.getRecordsInDateRange(range = range).firstOrNull().orEmpty()
     }
 
     override suspend fun getTotalAmountByCategoryAndAccountsInRange(

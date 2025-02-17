@@ -39,8 +39,8 @@ class CategoryCollectionLocalDataSourceImpl(
         )
     }
 
-    override fun getAllCategoryCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>> {
-        return categoryCollectionDao.getAllCollectionsAsFlow()
+    override fun getAllCategoryCollectionsFlow(): Flow<List<CategoryCollectionEntity>> {
+        return categoryCollectionDao.getAllCollectionsFlow()
     }
 
     override suspend fun getAllCategoryCollections(): List<CategoryCollectionEntity> {
@@ -70,9 +70,9 @@ class CategoryCollectionLocalDataSourceImpl(
         )
     }
 
-    override fun getAllCollectionCategoryAssociationsAsFlow(
+    override fun getAllCollectionCategoryAssociationsFlow(
     ): Flow<List<CategoryCollectionCategoryAssociation>> {
-        return categoryCollectionDao.getAllCollectionCategoryAssociationsAsFlow()
+        return categoryCollectionDao.getAllCollectionCategoryAssociationsFlow()
     }
 
     override suspend fun getAllCollectionCategoryAssociations(

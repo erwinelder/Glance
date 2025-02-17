@@ -11,8 +11,11 @@ import com.ataglance.walletglance.personalization.data.mapper.toLocalEntity
 import com.ataglance.walletglance.personalization.data.mapper.toRemoteEntity
 import com.ataglance.walletglance.personalization.data.remote.model.WidgetRemoteEntity
 import com.ataglance.walletglance.personalization.data.remote.source.WidgetRemoteDataSource
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class WidgetRepositoryImpl(
     private val localSource: WidgetLocalDataSource,
@@ -74,9 +77,16 @@ class WidgetRepositoryImpl(
         localSource.deleteAllWidgets(timestamp = timestamp)
     }
 
-    override fun getAllWidgets(): Flow<List<WidgetEntity>> = flow {
+    override fun getAllWidgetsFlow(): Flow<List<WidgetEntity>> = flow {
+        coroutineScope {
+            launch { synchroniseWidgets() }
+            localSource.getAllWidgets().collect(::emit)
+        }
+    }
+
+    override suspend fun getAllWidgets(): List<WidgetEntity> {
         synchroniseWidgets()
-        localSource.getAllWidgets().collect(::emit)
+        return localSource.getAllWidgets().firstOrNull().orEmpty()
     }
 
 }

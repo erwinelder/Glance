@@ -11,8 +11,8 @@ class GetWidgetsUseCaseImpl(
     private val widgetRepository: WidgetRepository
 ) : GetWidgetsUseCase {
 
-    override fun getAsFlow(): Flow<List<WidgetName>> = flow {
-        widgetRepository.getAllWidgets().collect { entities ->
+    override fun getFlow(): Flow<List<WidgetName>> = flow {
+        widgetRepository.getAllWidgetsFlow().collect { entities ->
             if (entities.isEmpty()) {
 
                 val defaultWidgetNamesList = getDefaultWidgetNames()

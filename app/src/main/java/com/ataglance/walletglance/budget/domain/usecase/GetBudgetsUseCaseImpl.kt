@@ -21,7 +21,7 @@ class GetBudgetsUseCaseImpl(
     private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase
 ) : GetBudgetsUseCase {
 
-    override fun getGroupedByTypeAsFlow(): Flow<BudgetsByType> = flow {
+    override fun getGroupedByTypeFlow(): Flow<BudgetsByType> = flow {
         val (budgets, associations) = budgetRepository.getAllBudgetsAndAssociations()
         val categoryWithSubcategoriesList = getCategoriesUseCase.getOfExpenseType()
         val accounts = getAccountsUseCase.getAll()
@@ -38,13 +38,13 @@ class GetBudgetsUseCaseImpl(
             emit(BudgetsByType())
             return@flow
         }
-        getRecordsInDateRangeUseCase.getAsFlow(range = budgetsMaxDateRange).collect { records ->
+        getRecordsInDateRangeUseCase.getFlow(range = budgetsMaxDateRange).collect { records ->
             emit(budgetsByType.fillUsedAmountsByRecords(records))
         }
     }
 
     override suspend fun getGroupedByType(): BudgetsByType {
-        return getGroupedByTypeAsFlow().firstOrNull() ?: BudgetsByType()
+        return getGroupedByTypeFlow().firstOrNull() ?: BudgetsByType()
     }
 
     override suspend fun get(id: Int, accounts: List<Account>): Budget? {

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetBudgetsUseCase {
 
-    fun getGroupedByTypeAsFlow(): Flow<BudgetsByType>
+    fun getGroupedByTypeFlow(): Flow<BudgetsByType>
 
     suspend fun getGroupedByType(): BudgetsByType
 

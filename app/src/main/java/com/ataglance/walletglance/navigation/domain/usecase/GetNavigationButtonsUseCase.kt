@@ -4,5 +4,5 @@ import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationBut
 import kotlinx.coroutines.flow.Flow
 
 interface GetNavigationButtonsUseCase {
-    fun getAsFlow(): Flow<List<BottomBarNavigationButton>>
+    fun getFlow(): Flow<List<BottomBarNavigationButton>>
 }

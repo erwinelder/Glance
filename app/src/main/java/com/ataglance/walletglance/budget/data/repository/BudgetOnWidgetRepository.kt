@@ -12,6 +12,8 @@ interface BudgetOnWidgetRepository {
 
     suspend fun deleteAllBudgetsOnWidgetLocally()
 
-    fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>>
+    fun getAllBudgetsOnWidgetFlow(): Flow<List<BudgetOnWidgetEntity>>
+
+    suspend fun getAllBudgetsOnWidget(): List<BudgetOnWidgetEntity>
 
 }

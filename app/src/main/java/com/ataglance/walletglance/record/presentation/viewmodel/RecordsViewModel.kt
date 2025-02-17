@@ -33,7 +33,7 @@ class RecordsViewModel(
     init {
         viewModelScope.launch {
 
-            getCategoryCollectionsUseCase.getAsFlow().collect { collections ->
+            getCategoryCollectionsUseCase.getFlow().collect { collections ->
                 collectionsByType = collections
                 setCategoryCollections(collections = collections)
             }
@@ -88,7 +88,7 @@ class RecordsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _recordsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
-        getRecordStacksInDateRangeUseCase.getAsFlow(range = dateRange)
+        getRecordStacksInDateRangeUseCase.getFlow(range = dateRange)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),

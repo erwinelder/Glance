@@ -11,7 +11,7 @@ class GetStartDestinationsBySetupStageUseCaseImpl(
     private val settingsRepository: SettingsRepository
 ) : GetStartDestinationsBySetupStageUseCase {
 
-    override fun getAsFlow(): Flow<Pair<MainScreens, SettingsScreens>> = flow {
+    override fun getFlow(): Flow<Pair<MainScreens, SettingsScreens>> = flow {
         settingsRepository.setupStage.collect { setupStage ->
             val mainStartDestination = when(setupStage) {
                 1 -> MainScreens.Home

@@ -11,8 +11,11 @@ import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class CategoryRepositoryImpl(
     val localSource: CategoryLocalDataSource,
@@ -73,9 +76,16 @@ class CategoryRepositoryImpl(
         localSource.deleteAllCategories(timestamp = timestamp)
     }
 
-    override fun getAllCategories(): Flow<List<CategoryEntity>> = flow {
+    override fun getAllCategoriesFlow(): Flow<List<CategoryEntity>> = flow {
+        coroutineScope {
+            launch { synchroniseCategories() }
+            localSource.getAllCategories().collect(::emit)
+        }
+    }
+
+    override suspend fun getAllCategories(): List<CategoryEntity> {
         synchroniseCategories()
-        localSource.getAllCategories().collect(::emit)
+        return localSource.getAllCategories().firstOrNull().orEmpty()
     }
 
     override suspend fun getCategoriesByType(type: Char): List<CategoryEntity> {
