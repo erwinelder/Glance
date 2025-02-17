@@ -117,6 +117,11 @@ val CurrAppTheme: AppTheme
     @ReadOnlyComposable
     get() = LocalAppTheme.current
 
+val CurrWindowType: WindowType
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalWindowType.current
+
 val WindowTypeIsCompact: Boolean
     @Composable
     @ReadOnlyComposable

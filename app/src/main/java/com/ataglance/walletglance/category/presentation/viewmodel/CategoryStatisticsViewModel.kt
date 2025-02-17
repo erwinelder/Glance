@@ -6,8 +6,10 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.model.GroupedCategoryStatistics
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
+import com.ataglance.walletglance.categoryCollection.domain.utils.toggleExpenseIncome
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
@@ -41,6 +43,7 @@ class CategoryStatisticsViewModel(
                 setCategoryCollections(collections = collections)
             }
 
+            // TODO: Issue: code is never reached because of the collect method above
             setParentCategoryStatistics(initialCategoryId)
 
         }
@@ -69,7 +72,9 @@ class CategoryStatisticsViewModel(
 
     private var collectionsByType = CategoryCollectionsWithIdsByType()
 
-    private val _categoryCollectionsUiState = MutableStateFlow(CategoryCollectionsUiState())
+    private val _categoryCollectionsUiState = MutableStateFlow(
+        CategoryCollectionsUiState(activeType = CategoryCollectionType.Expense)
+    )
     val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
 
     private fun setCategoryCollections(collections: CategoryCollectionsWithIdsByType) {
@@ -82,8 +87,10 @@ class CategoryStatisticsViewModel(
 
     fun toggleCollectionType() {
         _categoryCollectionsUiState.update {
-            it.toggleCollectionType(
-                collectionsByType = collectionsByType, defaultCollectionName = defaultCollectionName
+            it.changeCollectionType(
+                type = it.activeType.toggleExpenseIncome(),
+                collectionsByType = collectionsByType,
+                defaultCollectionName = defaultCollectionName
             )
         }
     }

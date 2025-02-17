@@ -27,9 +27,9 @@ import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 
 @Composable
 fun ThemePickerContent(
-    onSetUseDeviceTheme: (Boolean) -> Unit,
     onChooseLightTheme: (AppTheme) -> Unit,
     onChooseDarkTheme: (AppTheme) -> Unit,
+    onSetUseDeviceTheme: (Boolean) -> Unit,
     appThemeConfiguration: AppThemeConfiguration
 ) {
     Column(

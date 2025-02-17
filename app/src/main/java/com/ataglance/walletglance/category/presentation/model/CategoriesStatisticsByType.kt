@@ -115,6 +115,10 @@ data class CategoriesStatisticsByType(
         }
     }
 
+    fun getExpenseIfNotEmptyOrIncome(): List<CategoryStatistics> {
+        return expense.ifEmpty { income }
+    }
+
     fun getParentStatsIfSubStatsPresent(id: Int): CategoryStatistics? {
         return (expense + income)
             .find { it.category.id == id }

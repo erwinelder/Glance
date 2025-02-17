@@ -21,6 +21,7 @@ import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatis
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val categoryModule = module {
@@ -95,9 +96,11 @@ val categoryModule = module {
         )
     }
 
-    viewModel {
+    viewModel { parameters ->
         EditCategoriesViewModel(
-            defaultCategoriesPackage = DefaultCategoriesPackage(resourceManager = get()),
+            defaultCategoriesPackage = DefaultCategoriesPackage(
+                resourceManager = get { parametersOf(parameters.get<String>()) }
+            ),
             saveCategoriesUseCase = get(),
             getCategoriesUseCase = get()
         )

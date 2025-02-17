@@ -14,6 +14,13 @@ fun CategoryCollectionType.toggle(): CategoryCollectionType {
     }
 }
 
+fun CategoryCollectionType.toggleExpenseIncome(): CategoryCollectionType {
+    return when (this) {
+        CategoryCollectionType.Expense -> CategoryCollectionType.Income
+        else -> CategoryCollectionType.Expense
+    }
+}
+
 
 fun Char.asCategoryCollectionType(): CategoryCollectionType {
     return when (this) {

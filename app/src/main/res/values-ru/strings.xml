@@ -241,6 +241,7 @@
     <string name="all_categories">Все категории</string>
     <string name="no_collections_of_this_type">Нет коллекций данного типа</string>
     <string name="budget_not_found">Бюджет не найден</string>
+    <string name="no_preferences">Нет настроек</string>
     <string name="reset_data_action">Сбросить все данные приложения. Ваш аккаунт не будет удален.</string>
     <string name="reset_data_confirmation">Вы уверены, что хотите сбросить все данные?</string>
     <string name="delete_your_account_with_all_data">Удалите свой аккаунт со всеми данными</string>

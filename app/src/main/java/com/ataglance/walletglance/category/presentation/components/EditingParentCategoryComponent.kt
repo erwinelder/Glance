@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun EditingParentCategoryComponent(
@@ -53,7 +53,7 @@ fun EditingParentCategoryComponent(
             )
             .border(
                 width = 1.dp,
-                color = GlanceColors.outlineSemiTransparent,
+                color = GlanceColors.glassGradientOnGlassBorder,
                 shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
             .padding(start = 15.dp, end = 15.dp, top = 12.dp, bottom = 12.dp)

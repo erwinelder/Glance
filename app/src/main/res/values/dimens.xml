@@ -15,7 +15,7 @@
 
     <dimen name="widget_corner_size">38dp</dimen>
     <dimen name="widget_content_padding">18dp</dimen>
-    <dimen name="account_card_corner_size">28dp</dimen>
+    <dimen name="account_card_corner_size">30dp</dimen>
     <dimen name="record_corner_size">26dp</dimen>
 
     <dimen name="dialog_corner_size">30dp</dimen>

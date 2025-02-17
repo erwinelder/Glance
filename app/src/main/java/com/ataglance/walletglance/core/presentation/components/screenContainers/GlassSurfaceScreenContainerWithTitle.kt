@@ -12,10 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
-import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Typography
 
 @Composable
 fun GlassSurfaceScreenContainerWithTitle(
@@ -30,7 +30,7 @@ fun GlassSurfaceScreenContainerWithTitle(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
+                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
                 .weight(2f)
         ) {
             Text(

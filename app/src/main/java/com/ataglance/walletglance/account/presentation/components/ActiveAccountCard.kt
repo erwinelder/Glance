@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,35 +30,57 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.presentation.viewmodel.ActiveAccountCardViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
 
 @Composable
 fun ActiveAccountCard(
+    activeAccount: Account?,
+    onChangeHideActiveAccountBalance: () -> Unit,
+) {
+    val viewModel = koinViewModel<ActiveAccountCardViewModel>()
+
+    LaunchedEffect(activeAccount) {
+        activeAccount?.id?.let(viewModel::applyActiveAccount)
+    }
+
+    val todayExpenses by viewModel.todayTotalExpenses.collectAsStateWithLifecycle()
+
+    if (activeAccount != null) {
+        ActiveAccountCardContent(
+            account = activeAccount,
+            todayExpenses = todayExpenses,
+            onHideBalanceButton = onChangeHideActiveAccountBalance
+        )
+    }
+}
+
+@Composable
+fun ActiveAccountCardContent(
     account: Account,
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
 ) {
     val accountAndOnAccountColor = account.color.getColorAndColorOnByTheme(CurrAppTheme)
     val accountColorLighter by animateColorAsState(
-        targetValue = accountAndOnAccountColor.first.lighter,
-        label = "account background lighter"
+        targetValue = accountAndOnAccountColor.first.lighter
     )
     val accountColorDarker by animateColorAsState(
-        targetValue = accountAndOnAccountColor.first.darker,
-        label = "account background darker"
+        targetValue = accountAndOnAccountColor.first.darker
     )
     val onAccountColor by animateColorAsState(
-        targetValue = accountAndOnAccountColor.second,
-        label = "account color"
+        targetValue = accountAndOnAccountColor.second
     )
 
     Column(
@@ -76,22 +99,15 @@ fun ActiveAccountCard(
                     end = Offset(40f, -100f)
                 )
             )
-            .fillMaxWidth(
-                when {
-                    WindowTypeIsCompact -> .9f
-                    WindowTypeIsMedium -> .6f
-                    else -> .42f
-                }
-            )
-            .padding(horizontal = 18.dp, vertical = 18.dp)
+            .fillMaxWidth(FilledWidthByScreenType(.9f, .6f, .42f).getByType(CurrWindowType))
+            .padding(horizontal = 22.dp, vertical = 18.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth(.96f)
         ) {
             AnimatedContent(
-                targetState = account.name,
-                label = "account name"
+                targetState = account.name
             ) { targetContent ->
                 Text(
                     text = targetContent,
@@ -131,12 +147,10 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
 
     Column(
         horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         AnimatedContent(
-            targetState = account.withoutBalance,
-            label = "account balance or currency label"
+            targetState = account.withoutBalance
         ) { targetState ->
             Text(
                 text = if (targetState) {
@@ -153,8 +167,7 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
             modifier = Modifier.horizontalScroll(scrollState)
         ) {
             AnimatedContent(
-                targetState = account.getFormattedBalanceBeforeDecimalSeparator(),
-                label = "account balance before decimal separator"
+                targetState = account.getFormattedBalanceBeforeDecimalSeparator()
             ) { targetContent ->
                 Text(
                     text = targetContent,
@@ -164,8 +177,7 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                 )
             }
             AnimatedContent(
-                targetState = account.getFormattedBalanceAfterDecimalSeparator(),
-                label = "account balance after decimal separator"
+                targetState = account.getFormattedBalanceAfterDecimalSeparator()
             ) { targetContent ->
                 Text(
                     text = targetContent,
@@ -176,8 +188,7 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
                 )
             }
             AnimatedContent(
-                targetState = account.currency to account.withoutBalance,
-                label = "account currency"
+                targetState = account.currency to account.withoutBalance
             ) { currencyAndWithoutBalanceSetting ->
                 Text(
                     text = currencyAndWithoutBalanceSetting.first,
@@ -205,8 +216,7 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
                 "%.2f".format(Locale.US, todayExpenses),
                 currency
             )
-        },
-        label = "account today statistics"
+        }
     ) { targetContent ->
         Text(
             text = targetContent,
@@ -220,12 +230,13 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
 @Composable
 private fun AccountCardPreview() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
-        ActiveAccountCard(
+        ActiveAccountCardContent(
             account = Account(
                 color = AccountColors.Blue,
-                withoutBalance = true
+                balance = 5160.0,
+                withoutBalance = false
             ),
-            todayExpenses = 0.0
+            todayExpenses = 160.0
         )
     }
 }

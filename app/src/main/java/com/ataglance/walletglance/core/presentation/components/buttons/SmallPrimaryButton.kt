@@ -18,16 +18,17 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun SmallPrimaryButton(
@@ -51,7 +52,7 @@ fun SmallPrimaryButton(
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.96f, enabled)
     ) {
-        Shadow(enabled, lighterGradientColor, fontSize, text)
+//        Shadow(enabled, lighterGradientColor, fontSize, text)
         Button(
             onClick = onClick,
             enabled = enabled,
@@ -104,7 +105,7 @@ private fun Shadow(enabled: Boolean, enabledColor: Color, buttonFontSize: TextUn
     )
 }
 
-@Preview(showSystemUi = true)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun PreviewPrimarySmallButton() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {

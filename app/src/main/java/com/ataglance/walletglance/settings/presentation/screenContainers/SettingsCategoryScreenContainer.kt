@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.settings.presentation.components.NavigateBackSettingsCategoryButton
@@ -53,7 +53,7 @@ fun SettingsCategoryScreenContainer(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
+                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
                 .weight(topBottomSpacingProportion.first)
         ) {
             title?.let {
@@ -69,7 +69,7 @@ fun SettingsCategoryScreenContainer(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = columnModifier
-                .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
+                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
         ) {
             mainScreenContentBlock()
         }

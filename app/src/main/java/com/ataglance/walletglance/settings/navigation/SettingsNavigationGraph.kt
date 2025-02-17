@@ -79,7 +79,7 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            isAppSetUp = appConfiguration.isSetUp
+            appConfiguration = appConfiguration
         )
         categoryCollectionsGraph(
             navController = navController,

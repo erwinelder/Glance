@@ -18,8 +18,8 @@ import com.ataglance.walletglance.budget.presentation.components.CheckedBudgetLi
 import com.ataglance.walletglance.budget.presentation.components.CheckedDefaultBudgetComponent
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
@@ -64,13 +64,13 @@ private fun BudgetsOnWidgetSettingsBottomSheetContent(
 ) {
     CheckedBudgetListsByPeriodComponent(budgetsByType = checkedBudgetsByType) { checkedBudget ->
         val alpha by animateFloatAsState(
-            targetValue = if (limitIsReached || checkedBudget.checked) 1f else 0.5f
+            targetValue = if (!limitIsReached || checkedBudget.checked) 1f else 0.5f
         )
         CheckedDefaultBudgetComponent(
             budget = checkedBudget.budget,
             modifier = Modifier.alpha(alpha),
             checked = checkedBudget.checked,
-            checkedEnabled = limitIsReached || checkedBudget.checked
+            checkedEnabled = !limitIsReached || checkedBudget.checked
         ) {
             if (checkedBudget.checked) {
                 onUncheckBudget(checkedBudget.budget.id)
@@ -154,7 +154,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
         )
     )
         .toCheckedBudgetsByType(listOf(1, 2))
-    val limitIsReached = false
+    val limitIsReached = true
 
     PreviewContainer {
         BudgetsOnWidgetSettingsBottomSheetContent(

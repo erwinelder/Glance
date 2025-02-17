@@ -16,10 +16,8 @@ data class CategoryCollectionsUiState(
         defaultCollectionName: String
     ): CategoryCollectionsUiState {
         return copy(
-            collections = collections.getByType(activeType),
-            activeCollection = CategoryCollectionWithIds(
-                type = activeType, name = defaultCollectionName
-            )
+            collections = collections.appendDefaultCollection(defaultCollectionName).getByType(activeType),
+            activeCollection = CategoryCollectionWithIds(type = activeType, name = defaultCollectionName)
         )
     }
 
@@ -29,7 +27,19 @@ data class CategoryCollectionsUiState(
     ): CategoryCollectionsUiState {
         val type = activeType.toggle()
         return copy(
-            collections = collectionsByType.getByType(type),
+            collections = collectionsByType.appendDefaultCollection(defaultCollectionName).getByType(type),
+            activeCollection = CategoryCollectionWithIds(type = type, name = defaultCollectionName),
+            activeType = type
+        )
+    }
+
+    fun changeCollectionType(
+        type: CategoryCollectionType,
+        collectionsByType: CategoryCollectionsWithIdsByType,
+        defaultCollectionName: String
+    ): CategoryCollectionsUiState {
+        return copy(
+            collections = collectionsByType.appendDefaultCollection(defaultCollectionName).getByType(type),
             activeCollection = CategoryCollectionWithIds(type = type, name = defaultCollectionName),
             activeType = type
         )

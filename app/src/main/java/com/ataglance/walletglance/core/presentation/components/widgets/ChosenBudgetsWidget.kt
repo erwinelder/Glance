@@ -46,10 +46,7 @@ private fun ChosenBudgetsWidgetContent(
         onSettingsButtonClick = onSettingsButtonClick,
         onBottomNavigationButtonClick = onNavigateToBudgetsScreen
     ) {
-        AnimatedContent(
-            targetState = budgets,
-            label = "chosen budgets on widget"
-        ) { chosenBudgets ->
+        AnimatedContent(targetState = budgets) { chosenBudgets ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)

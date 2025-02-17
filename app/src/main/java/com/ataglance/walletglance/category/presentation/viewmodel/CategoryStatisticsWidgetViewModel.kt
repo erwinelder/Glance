@@ -3,7 +3,6 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsWidgetUiState
 import com.ataglance.walletglance.core.domain.date.LongDateRange
@@ -56,7 +55,7 @@ class CategoryStatisticsWidgetViewModel(
     ) { stacks, accountId ->
         CategoriesStatisticsByType
             .fromRecordStacks(recordStacks = stacks.filterByAccount(accountId))
-            .getByType(CategoryType.Expense)
+            .getExpenseIfNotEmptyOrIncome()
             .let(CategoriesStatisticsWidgetUiState::fromStatistics)
     }.stateIn(
         scope = viewModelScope,

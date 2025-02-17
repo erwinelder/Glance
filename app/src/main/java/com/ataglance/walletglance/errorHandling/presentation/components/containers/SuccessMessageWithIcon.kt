@@ -12,10 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
-import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Typography
 
 @Composable
 fun SuccessMessageWithIcon(
@@ -38,7 +38,7 @@ fun SuccessMessageWithIcon(
             style = Typography.titleLarge,
             color = GlanceColors.onSurface,
             modifier = Modifier
-                .fillMaxWidth(FilledWidthByScreenType().getByType(LocalWindowType.current))
+                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
         )
     }
 }

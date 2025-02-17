@@ -14,24 +14,29 @@ import com.ataglance.walletglance.category.presentation.screen.EditCategoryScree
 import com.ataglance.walletglance.category.presentation.screen.EditSubcategoriesScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.navigation.SettingsScreens
 import kotlinx.coroutines.launch
+import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.categoriesGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    isAppSetUp: Boolean
+    appConfiguration: AppConfiguration
 ) {
     navigation<SettingsScreens.Categories>(
         startDestination = CategoriesSettingsScreens.EditCategories
     ) {
         composable<CategoriesSettingsScreens.EditCategories> { backStack ->
-            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
-            val categoryViewModel = backStack.sharedKoinNavViewModel<EditCategoryViewModel>(navController)
+            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(
+                navController = navController,
+                parameters = { parametersOf(appConfiguration.langCode) }
+            )
+            val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
 
             val uiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
             val coroutineScope = rememberCoroutineScope()
@@ -44,7 +49,7 @@ fun NavGraphBuilder.categoriesGraph(
 
             EditCategoriesScreen(
                 scaffoldPadding = scaffoldPadding,
-                isAppSetUp = isAppSetUp,
+                isAppSetUp = appConfiguration.isSetUp,
                 uiState = uiState,
                 onShowCategoriesByType = categoriesViewModel::changeCategoryType,
                 onNavigateToEditSubcategoriesScreen = { categoryWithSubcategories ->
@@ -66,7 +71,7 @@ fun NavGraphBuilder.categoriesGraph(
                 onSaveAndFinishSetupButton = {
                     coroutineScope.launch {
                         categoriesViewModel.saveCategories()
-                        if (isAppSetUp) {
+                        if (appConfiguration.isSetUp) {
                             navController.popBackStack()
                         } else {
                             navViewModel.navigateToScreen(navController, SettingsScreens.Budgets)
@@ -76,7 +81,10 @@ fun NavGraphBuilder.categoriesGraph(
             )
         }
         composable<CategoriesSettingsScreens.EditSubcategories> { backStack ->
-            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
+            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(
+                navController = navController,
+                parameters = { parametersOf(appConfiguration.langCode) }
+            )
             val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
 
             val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
@@ -100,16 +108,19 @@ fun NavGraphBuilder.categoriesGraph(
             )
         }
         composable<CategoriesSettingsScreens.EditCategory> { backStack ->
-            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(navController)
+            val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(
+                navController = navController,
+                parameters = { parametersOf(appConfiguration.langCode) }
+            )
             val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
 
-            val categoryUiState by categoryViewModel.categoryUiState.collectAsStateWithLifecycle()
+            val category by categoryViewModel.category.collectAsStateWithLifecycle()
             val allowDeleting by categoryViewModel.allowDeleting.collectAsStateWithLifecycle()
             val allowSaving by categoryViewModel.allowSaving.collectAsStateWithLifecycle()
 
             EditCategoryScreen(
                 scaffoldPadding = scaffoldPadding,
-                category = categoryUiState,
+                category = category,
                 allowDeleting = allowDeleting,
                 allowSaving = allowSaving,
                 onNameChange = categoryViewModel::changeName,

@@ -26,13 +26,13 @@ import com.ataglance.walletglance.account.presentation.model.CurrencyItem
 import com.ataglance.walletglance.account.presentation.model.CurrencyPickerUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import java.util.Currency
 
 @Composable
@@ -58,8 +58,7 @@ fun CurrencyPickerScreen(
                     onValueChange = onSearchPromptChange,
                     placeholderText = "\"${targetCurrencyCode}\"",
                     modifier = Modifier.fillMaxWidth(
-                        FilledWidthByScreenType(compact = .86f)
-                            .getByType(LocalWindowType.current)
+                        FilledWidthByScreenType(compact = .86f).getByType(CurrWindowType)
                     ),
                     fontSize = 20.sp,
                     cornerSize = 17.dp

@@ -195,8 +195,8 @@ class AppViewModel(
 
     private fun fetchWidgets() {
         viewModelScope.launch {
-            getWidgetsUseCase.getFlow().collect {
-                _widgetNames.update { it }
+            getWidgetsUseCase.getFlow().collect { widgets ->
+                _widgetNames.update { widgets }
             }
         }
     }

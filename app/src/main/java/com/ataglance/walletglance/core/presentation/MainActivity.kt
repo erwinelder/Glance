@@ -19,6 +19,7 @@ import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
+import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.GlobalContext
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private val authController: AuthController by inject()
     private lateinit var navController: NavHostController
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
+
+    private lateinit var appViewModel: AppViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setupSplashScreen()
@@ -58,17 +62,20 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()
+                appViewModel = koinViewModel<AppViewModel>()
 
                 LaunchedEffect(true) {
                     navController.currentBackStackEntryFlow.first()
                     handleDeepLink(intent)
                 }
-
                 LaunchedEffect(true) {
                     authController.fetchUserDataAndUpdateUser()
                 }
 
-                GlanceAppComponent(navController = navController)
+                GlanceAppComponent(
+                    navController = navController,
+                    appViewModel = appViewModel
+                )
             }
         }
     }
@@ -76,9 +83,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupSplashScreen() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                false
-            //                appViewModel.themeUiState.value == null ||
-//                        appViewModel.appConfiguration.value.appTheme == null
+                appViewModel.appConfiguration.value.appTheme == null
             }
         }
     }

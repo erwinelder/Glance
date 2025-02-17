@@ -242,6 +242,7 @@
     <string name="all_categories">Todas las categorías</string>
     <string name="no_collections_of_this_type">No hay colecciones de este tipo</string>
     <string name="budget_not_found">Presupuesto no encontrado</string>
+    <string name="no_preferences">Sin preferencias</string>
     <string name="reset_data_action">Restablecer todos los datos de la aplicación. Tu cuenta no será eliminada.</string>
     <string name="reset_data_confirmation">¿Está seguro de que desea restablecer todos sus datos?</string>
     <string name="delete_your_account_with_all_data">Elimina tu cuenta con todos tus datos</string>

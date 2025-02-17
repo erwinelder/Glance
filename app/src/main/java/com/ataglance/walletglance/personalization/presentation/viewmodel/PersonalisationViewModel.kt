@@ -47,8 +47,8 @@ class PersonalisationViewModel(
 
     private fun fetchAppThemeConfiguration() {
         viewModelScope.launch {
-            getAppThemeConfigurationUseCase.getFlow().let {
-                _appThemeConfiguration.update { it }
+            getAppThemeConfigurationUseCase.getFlow().collect { themeConfiguration ->
+                _appThemeConfiguration.update { themeConfiguration }
             }
         }
     }
@@ -133,15 +133,17 @@ class PersonalisationViewModel(
 
     private fun fetchNavButtons() {
         viewModelScope.launch {
-            getNavigationButtonsUseCase.getFlow().collect {
-                _navButtons.update { it.subList(1, it.lastIndex) }
+            getNavigationButtonsUseCase.getFlow().collect { navButtons ->
+                _navButtons.update {
+                    navButtons.takeIf { it.size > 1 }?.subList(1, navButtons.lastIndex) ?: navButtons
+                }
             }
         }
     }
 
     fun swapNavButtons(fromIndex: Int, toIndex: Int) {
         _navButtons.update {
-            it.moveItems(fromIndex, toIndex)
+            it.takeIf { it.size >= 2 }?.moveItems(fromIndex, toIndex) ?: it
         }
     }
 

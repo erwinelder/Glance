@@ -86,7 +86,7 @@ fun RecentRecordsWidgetContent(
     ) {
         AnimatedContent(targetState = uiState) { state ->
             Box(
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.TopCenter,
                 modifier = Modifier.height(370.dp)
             ) {
                 RecordStackList(
@@ -119,7 +119,6 @@ private fun RecordStackList(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-//            .height(370.dp)
             .verticalScroll(ScrollState(0), enabled = false)
     ) {
         for (recordStack in recordStackList) {

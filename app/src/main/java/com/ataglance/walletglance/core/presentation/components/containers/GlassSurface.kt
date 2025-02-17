@@ -21,10 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
-import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun GlassSurface(
@@ -35,7 +34,7 @@ fun GlassSurface(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(filledWidths.getByType(LocalWindowType.current))
+            .fillMaxWidth(filledWidths.getByType(CurrWindowType))
             .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
@@ -44,7 +43,7 @@ fun GlassSurface(
                     end = Offset(600f, 0f)
                 )
             )
-            .innerShadow(
+            /*.innerShadow(
                 shape = RoundedCornerShape(cornerSize),
                 color = GlanceColors.glassSurfaceShadow.first,
                 offsetX = -(5).dp,
@@ -59,7 +58,7 @@ fun GlassSurface(
                 offsetY = -(5).dp,
                 blur = 13.dp,
                 spread = 3.dp
-            )
+            )*/
             .border(
                 width = 2.dp,
                 color = GlanceColors.glassBorder,

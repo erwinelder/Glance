@@ -77,7 +77,7 @@ val recordCreationModule = module {
 
     viewModel { parameters ->
         RecordCreationViewModel(
-            recordNum = parameters.get(),
+            recordNum = parameters.getOrNull(),
             getRecordDraftUseCase = get(),
             saveRecordUseCase = get(),
             deleteRecordUseCase = get(),

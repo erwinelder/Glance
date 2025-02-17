@@ -25,10 +25,9 @@ class EditAccountsViewModel(
 
     init {
         viewModelScope.launch {
-            _accounts.update {
-                getAccountsUseCase.getAll().takeIf { it.isNotEmpty() }
-                    ?: listOf(Account(id = 1, orderNum = 1))
-            }
+            val accounts = getAccountsUseCase.getAll().takeIf { it.isNotEmpty() }
+                ?: listOf(Account(id = 1, orderNum = 1))
+            _accounts.update { accounts }
         }
     }
 

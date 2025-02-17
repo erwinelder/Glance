@@ -45,7 +45,7 @@ class EditCategoryCollectionsViewModel(
     private val _collectionsWithCategories = MutableStateFlow(CategoryCollectionsWithCategories())
 
 
-    private val _collectionType = MutableStateFlow(CategoryCollectionType.Expense)
+    private val _collectionType = MutableStateFlow(CategoryCollectionType.Mixed)
     val collectionType = _collectionType.asStateFlow()
 
     fun changeCategoryType(type: CategoryCollectionType) {

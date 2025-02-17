@@ -202,7 +202,7 @@ fun AppNavHost(
             val budgetId = backStack.toRoute<MainScreens.BudgetStatistics>().id
 
             val viewModel = koinViewModel<BudgetStatisticsViewModel> {
-                parametersOf(budgetId)
+                parametersOf(budgetId, appConfiguration.langCode)
             }
 
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()

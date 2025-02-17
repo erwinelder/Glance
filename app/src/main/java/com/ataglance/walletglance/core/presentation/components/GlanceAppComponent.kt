@@ -18,12 +18,13 @@ import com.ataglance.walletglance.core.presentation.components.other.AppBackgrou
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.GlanceTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun GlanceAppComponent(navController: NavHostController) {
-    val appViewModel = koinViewModel<AppViewModel>()
+fun GlanceAppComponent(
+    navController: NavHostController,
+    appViewModel: AppViewModel
+) {
     val context = LocalActivity.current as ComponentActivity
     val appThemeConfiguration by appViewModel.appThemeConfiguration.collectAsStateWithLifecycle()
     val appConfiguration by appViewModel.appConfiguration.collectAsStateWithLifecycle()

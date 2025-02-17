@@ -241,6 +241,7 @@
     <string name="all_categories">Всі категорії</string>
     <string name="no_collections_of_this_type">Немає колекцій цього типу</string>
     <string name="budget_not_found">Бюджет не знайдено</string>
+    <string name="no_preferences">Немає налаштувань</string>
     <string name="reset_data_action">Скинути всі дані додатка. Ваш акаунт не буде видалено.</string>
     <string name="reset_data_confirmation">Ви впевнені, що хочете скинути всі дані?</string>
     <string name="delete_your_account_with_all_data">Видаліть свій акаунт разом із усіма даними</string>

@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun PrimaryButton(
@@ -60,7 +60,7 @@ fun PrimaryButton(
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.97f, enabled)
     ) {
-        Shadow(enabled, buttonLighterColor)
+//        Shadow(enabled, buttonLighterColor)
         Button(
             onClick = onClick,
             enabled = enabled,

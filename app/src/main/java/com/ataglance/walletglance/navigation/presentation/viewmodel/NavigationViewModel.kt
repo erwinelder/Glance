@@ -37,13 +37,11 @@ class NavigationViewModel(
         )
     val navigationButtonList = _navigationButtonList.asStateFlow()
 
-    private fun updateNavigationButtons(buttons: List<BottomBarNavigationButton>) {
-        _navigationButtonList.update { buttons }
-    }
-
     private fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
-            getNavigationButtonsUseCase.getFlow().collect(::updateNavigationButtons)
+            getNavigationButtonsUseCase.getFlow().collect { buttons ->
+                _navigationButtonList.update { buttons }
+            }
         }
     }
 

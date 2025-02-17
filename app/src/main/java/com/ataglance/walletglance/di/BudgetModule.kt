@@ -32,6 +32,7 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewMo
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val budgetModule = module {
@@ -127,7 +128,7 @@ val budgetModule = module {
             getAccountsUseCase = get(),
             getBudgetsUseCase = get(),
             getRecordsTotalAmountInDateRangesUseCase = get(),
-            resourceManager = get()
+            resourceManager = get { parametersOf(parameters.get<String>()) }
         )
     }
 

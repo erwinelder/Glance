@@ -23,7 +23,7 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.containers.ActiveAccountCardContainer
+import com.ataglance.walletglance.account.presentation.components.ActiveAccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
@@ -136,7 +136,7 @@ private fun CompactLayout(
                     visible = isAppThemeSetUp && accountsAndActiveOne.activeAccount != null,
                     delayMillis = 100
                 ) {
-                    ActiveAccountCardContainer(
+                    ActiveAccountCard(
                         activeAccount = accountsAndActiveOne.activeAccount,
                         onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance
                     )

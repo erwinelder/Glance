@@ -70,7 +70,7 @@ interface RecordLocalDao {
     suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
 
     @Query("SELECT * FROM Record WHERE recordNum = :recordNum")
-    fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
+    suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 
     @Query("""    
         SELECT * FROM Record

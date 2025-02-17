@@ -28,6 +28,8 @@ class BudgetsOnWidgetSettingsViewModel(
             getBudgetsUseCase.getGroupedByTypeFlow().collect { budgetsByType ->
                 _budgetsByType.update { budgetsByType }
             }
+        }
+        viewModelScope.launch {
             getBudgetIdsOnWidgetUseCase.getFlow().collect { budgetsIds ->
                 _budgetsOnWidget.update { budgetsIds }
             }
@@ -49,7 +51,7 @@ class BudgetsOnWidgetSettingsViewModel(
 
     private val _budgetsByType = MutableStateFlow(BudgetsByType())
 
-    private val _budgetsOnWidget: MutableStateFlow<List<Int>> = MutableStateFlow(emptyList())
+    private val _budgetsOnWidget = MutableStateFlow<List<Int>>(emptyList())
 
     fun checkBudgetOnWidget(budgetId: Int) {
         _budgetsOnWidget.update {

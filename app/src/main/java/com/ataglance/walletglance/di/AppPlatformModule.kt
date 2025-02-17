@@ -22,7 +22,7 @@ val appPlatformModule = module {
         FirestoreAdapterFactoryImpl(firestore = get())
     }
 
-    single<ResourceManager> { parameters ->
+    factory<ResourceManager> { parameters ->
         val locale = parameters.get<String>()
         val context = get<Context>().let {
             it.createConfigurationContext(
