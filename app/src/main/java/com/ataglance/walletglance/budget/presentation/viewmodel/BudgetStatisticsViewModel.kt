@@ -38,7 +38,7 @@ class BudgetStatisticsViewModel(
                     _uiState.update {
                         BudgetStatisticsScreenUiState(
                             budget = budget,
-                            accounts = accounts,
+                            accounts = accounts.filter { it.id in budget.linkedAccountsIds },
                             columnChartUiState = ColumnChartUiState.asAmountsByDateRanges(
                                 totalAmountsByRanges = totalInRanges,
                                 rowsCount = 5,
