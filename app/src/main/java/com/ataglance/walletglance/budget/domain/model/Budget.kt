@@ -3,7 +3,6 @@ package com.ataglance.walletglance.budget.domain.model
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
 import java.util.Locale
 
 data class Budget(
@@ -33,10 +32,6 @@ data class Budget(
                 100 / amountLimit * amount
             ).toFloat()
         )
-    }
-
-    fun getTotalAmountByCurrentDateRange(): TotalAmountInRange {
-        return TotalAmountInRange(dateRange = dateRange, totalAmount = usedAmount)
     }
 
 }

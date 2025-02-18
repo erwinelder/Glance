@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.budget.mapper.budget
 
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.utils.filterByBudgetAccounts
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.model.Budget
@@ -8,8 +9,8 @@ import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudget
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
-import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
 import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
@@ -89,10 +90,7 @@ fun List<Budget>.divideIntoBudgetsAndAssociations(): Pair<List<BudgetEntity>, Li
     val budgetList = this.toDataModels()
     val associationList = this.flatMap { budget ->
         budget.linkedAccountsIds.map { accountId ->
-            BudgetAccountAssociation(
-                budgetId = budget.id,
-                accountId = accountId
-            )
+            BudgetAccountAssociation(budgetId = budget.id, accountId = accountId)
         }
     }
     return budgetList to associationList
@@ -127,7 +125,7 @@ fun Budget.toDraft(accounts: List<Account>): BudgetDraft {
         name = name,
         currRepeatingPeriod = repeatingPeriod,
         newRepeatingPeriod = repeatingPeriod,
-        linkedAccounts = accounts.filter { linkedAccountsIds.contains(it.id) }
+        linkedAccounts = accounts.filterByBudgetAccounts(this)
     )
 }
 

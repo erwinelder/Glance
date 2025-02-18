@@ -322,7 +322,7 @@ fun RepeatingPeriod.getLongDateRangeWithTime(): LongDateRange {
 
 
 fun RepeatingPeriod.getPrevDateRanges(
-    topRangeIndex: Long = 1,
+    topRangeIndex: Long = 0,
     lowRangeIndex: Long = this.getDefaultRangesCount() - 1L
 ): List<LongDateRange> {
     val stepsRange = LongRange(topRangeIndex, lowRangeIndex)

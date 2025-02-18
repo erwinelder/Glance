@@ -10,7 +10,7 @@ class GetRecordsTotalAmountInDateRangesUseCaseImpl(
     private val recordRepository: RecordRepository
 ) : GetRecordsTotalAmountInDateRangesUseCase {
 
-    override fun getByCategoryAndAccountsFlow(
+    override fun getFlowByCategoryAndAccounts(
         categoryId: Int,
         accountsIds: List<Int>,
         dateRangeList: List<LongDateRange>

@@ -47,6 +47,11 @@ class GetBudgetsUseCaseImpl(
         return getGroupedByTypeFlow().firstOrNull() ?: BudgetsByType()
     }
 
+    override suspend fun get(id: Int): Budget? {
+        val accounts = getAccountsUseCase.getAll()
+        return get(id = id, accounts = accounts)
+    }
+
     override suspend fun get(id: Int, accounts: List<Account>): Budget? {
         val (budget, associations) = budgetRepository.getBudgetAndAssociations(budgetId = id)
             ?: return null

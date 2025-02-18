@@ -3,6 +3,7 @@ package com.ataglance.walletglance.account.domain.utils
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.model.CurrencyItem
+import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.core.utils.roundToTwoDecimals
@@ -115,4 +116,9 @@ fun Pair<Account, Account>.returnAmountToFirstBalanceAndUpdateSecondBalance(
                 .roundToTwoDecimals()
         )
     )
+}
+
+
+fun List<Account>.filterByBudgetAccounts(budget: Budget): List<Account> {
+    return filter { it.id in budget.linkedAccountsIds }
 }

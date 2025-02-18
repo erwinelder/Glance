@@ -11,6 +11,8 @@ interface GetBudgetsUseCase {
 
     suspend fun getGroupedByType(): BudgetsByType
 
+    suspend fun get(id: Int): Budget?
+
     suspend fun get(id: Int, accounts: List<Account>): Budget?
 
 }

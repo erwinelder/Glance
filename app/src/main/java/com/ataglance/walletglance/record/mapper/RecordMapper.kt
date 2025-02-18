@@ -97,7 +97,7 @@ fun RecordEntity.toDomainModel(): Record? {
         recordNum = recordNum,
         date = date,
         type = type,
-        accountId = id,
+        accountId = accountId,
         amount = amount,
         quantity = quantity,
         categoryId = categoryId,

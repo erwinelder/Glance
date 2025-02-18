@@ -256,9 +256,6 @@ fun BudgetStatisticsScreenPreview(
                 totalAmount = totalAmounts.getOrNull(index) ?: 0.0
             )
         }
-        .let { totalAmountsByRanges ->
-            listOf(TotalAmountInRange(budget.dateRange, budget.usedAmount)) + totalAmountsByRanges
-        }
         .reversed()
     val columnChartUiState = ColumnChartUiState.asAmountsByDateRanges(
         totalAmountsByRanges = totalAmountsByRanges,
