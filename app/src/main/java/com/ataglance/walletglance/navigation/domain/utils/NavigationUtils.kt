@@ -19,7 +19,7 @@ fun NavDestination?.fromRoute(): String {
 
 fun NavBackStackEntry?.fromRoute(): String {
     return this?.destination?.route
-        ?.substringBefore('/')?.substringAfterLast('.') ?: ""
+        ?.substringBefore('/')?.substringAfterLast('.')?.substringBefore("?") ?: ""
 }
 
 
@@ -48,9 +48,12 @@ fun NavDestination?.currentScreenIs(screen: Any): Boolean {
 
 
 fun NavBackStackEntry?.currentScreenIs(screen: Any): Boolean {
-    return this?.fromRoute() == screen::class.simpleName() ||
-            (this?.fromRoute() == SettingsScreens.SettingsHome::class.simpleName() &&
-                    screen::class.simpleName() == MainScreens.Settings::class.simpleName())
+    val screenSimpleName = screen::class.simpleName()
+    val fromRoute = this?.fromRoute()
+
+    return fromRoute == screenSimpleName ||
+            (fromRoute == SettingsScreens.SettingsHome::class.simpleName() &&
+                    screenSimpleName == MainScreens.Settings::class.simpleName())
 }
 
 
@@ -101,5 +104,5 @@ fun NavBackStackEntry?.anyScreenInHierarchyIs(screen: Any): Boolean {
 
 
 fun KClass<out Any>.simpleName(): String? {
-    return this.simpleName?.substringAfterLast('$')
+    return this.simpleName?.substringAfterLast('$')?.substringBefore("(")
 }
