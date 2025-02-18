@@ -9,7 +9,7 @@ import com.ataglance.walletglance.core.utils.excludeItems
 class SaveCategoryCollectionsUseCaseImpl(
     private val categoryCollectionRepository: CategoryCollectionRepository
 ) : SaveCategoryCollectionsUseCase {
-    override suspend fun execute(collections: List<CategoryCollectionWithCategories>) {
+    override suspend fun save(collections: List<CategoryCollectionWithCategories>) {
         val (currCollections, currAssociations) = categoryCollectionRepository
             .getAllCollectionsAndAssociations()
         val (newCollections, newAssociations) = collections

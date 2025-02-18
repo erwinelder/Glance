@@ -3,8 +3,8 @@ package com.ataglance.walletglance.record.data.local.source
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
@@ -22,9 +22,10 @@ class RecordLocalDataSourceImpl(
         updateTimeDao.saveUpdateTime(tableName = TableName.Record.name, timestamp = timestamp)
     }
 
-    override suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long) {
-        recordDao.upsertRecords(records = records)
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long): List<RecordEntity> {
+        return recordDao.upsertRecords(records = records).also {
+            saveUpdateTime(timestamp = timestamp)
+        }
     }
 
     override suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long) {
@@ -40,12 +41,13 @@ class RecordLocalDataSourceImpl(
     override suspend fun synchroniseRecords(
         recordsToSync: EntitiesToSync<RecordEntity>,
         timestamp: Long
-    ) {
-        recordDao.deleteAndUpsertRecords(
+    ): List<RecordEntity> {
+        return recordDao.deleteAndUpsertRecords(
             toDelete = recordsToSync.toDelete,
             toUpsert = recordsToSync.toUpsert
-        )
-        saveUpdateTime(timestamp = timestamp)
+        ).also {
+            saveUpdateTime(timestamp = timestamp)
+        }
     }
 
     override suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long) {

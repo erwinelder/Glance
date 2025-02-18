@@ -9,7 +9,7 @@ class SaveWidgetsUseCaseImpl(
     private val widgetRepository: WidgetRepository
 ) : SaveWidgetsUseCase {
 
-    override suspend fun execute(widgetsToSave: List<WidgetName>, currentWidgets: List<WidgetName>) {
+    override suspend fun save(widgetsToSave: List<WidgetName>, currentWidgets: List<WidgetName>) {
         val entitiesToUpsert = widgetsToSave.toDataModels()
         val entitiesToDelete = currentWidgets
             .excludeItems(widgetsToSave) { it.name }
@@ -21,7 +21,7 @@ class SaveWidgetsUseCaseImpl(
         )
     }
 
-    override suspend fun execute(widgets: List<WidgetName>) {
+    override suspend fun save(widgets: List<WidgetName>) {
         val currentWidgets = widgetRepository.getAllWidgets()
 
         val entitiesToUpsert = widgets.toDataModels()

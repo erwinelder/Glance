@@ -3,6 +3,6 @@ package com.ataglance.walletglance.personalization.domain.usecase
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 
 interface SaveWidgetsUseCase {
-    suspend fun execute(widgetsToSave: List<WidgetName>, currentWidgets: List<WidgetName>)
-    suspend fun execute(widgets: List<WidgetName>)
+    suspend fun save(widgetsToSave: List<WidgetName>, currentWidgets: List<WidgetName>)
+    suspend fun save(widgets: List<WidgetName>)
 }

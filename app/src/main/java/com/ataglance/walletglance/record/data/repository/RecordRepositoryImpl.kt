@@ -41,10 +41,10 @@ class RecordRepositoryImpl(
     override suspend fun upsertRecords(records: List<RecordEntity>) {
         val timestamp = getCurrentTimestamp()
 
-        localSource.upsertRecords(records = records, timestamp = timestamp)
+        val upsertedRecords = localSource.upsertRecords(records = records, timestamp = timestamp)
         syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
             remoteSource.upsertRecords(
-                records = records.map {
+                records = upsertedRecords.map {
                     it.toRemoteEntity(updateTime = timestamp, deleted = false)
                 },
                 timestamp = timestamp,
@@ -75,12 +75,13 @@ class RecordRepositoryImpl(
         val timestamp = getCurrentTimestamp()
         val recordsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
-        localSource.synchroniseRecords(recordsToSync = recordsToSync, timestamp = timestamp)
+        val upsertedRecords = localSource.synchroniseRecords(
+            recordsToSync = recordsToSync, timestamp = timestamp
+        )
         syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
             remoteSource.synchroniseRecords(
-                recordsToSync = recordsToSync.map { deleted ->
-                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
-                },
+                recordsToSync = recordsToSync.copy(toUpsert = upsertedRecords)
+                    .map { deleted -> toRemoteEntity(updateTime = timestamp, deleted = deleted) },
                 timestamp = timestamp,
                 userId = userId
             )

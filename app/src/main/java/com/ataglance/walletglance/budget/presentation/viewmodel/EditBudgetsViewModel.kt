@@ -39,9 +39,7 @@ class EditBudgetsViewModel(
         val budgetsByType = budgetsByType.value
 
         val newBudgetsByType = if (budgetDraft.isNew) {
-            budgetDraft.toNewBudget()
-                ?.let { budgetsByType.addBudget(it) }
-                ?: budgetsByType
+            budgetDraft.toNewBudget()?.let { budgetsByType.addBudget(it) } ?: budgetsByType
         } else {
             budgetsByType.concatenate().replaceById(budgetDraft).groupByType()
         }
@@ -56,7 +54,7 @@ class EditBudgetsViewModel(
 
 
     suspend fun saveBudgets() {
-        saveBudgetsUseCase.execute(
+        saveBudgetsUseCase.save(
             budgets = budgetsByType.value.concatenate()
         )
     }

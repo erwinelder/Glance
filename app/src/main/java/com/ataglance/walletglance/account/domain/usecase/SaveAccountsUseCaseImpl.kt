@@ -18,11 +18,10 @@ class SaveAccountsUseCaseImpl(
         val entitiesToSave = accounts.map(Account::toDataModel)
         val entitiesToDelete = currentAccounts.excludeItems(entitiesToSave) { it.id }
 
-        if (entitiesToDelete.isEmpty()) {
-            accountRepository.deleteAndUpsertAccounts(
-                toDelete = entitiesToDelete, toUpsert = entitiesToSave
-            )
-        } else {
+        accountRepository.deleteAndUpsertAccounts(
+            toDelete = entitiesToDelete, toUpsert = entitiesToSave
+        )
+        if (entitiesToDelete.isNotEmpty()) {
             recordRepository.convertRecordsToTransfers(
                 noteValues = entitiesToDelete.map { it.id.toString() }
             )

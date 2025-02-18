@@ -8,7 +8,7 @@ import com.ataglance.walletglance.core.utils.excludeItems
 class SaveBudgetsUseCaseImpl(
     private val budgetRepository: BudgetRepository
 ) : SaveBudgetsUseCase {
-    override suspend fun execute(budgets: List<Budget>) {
+    override suspend fun save(budgets: List<Budget>) {
         val (originalBudgets, originalAssociations) = budgetRepository.getAllBudgetsAndAssociations()
         val (newBudgets, newAssociations) = budgets.divideIntoBudgetsAndAssociations()
 

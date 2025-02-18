@@ -90,7 +90,7 @@ class EditCategoryCollectionsViewModel(
 
 
     suspend fun saveCategoryCollections() {
-        saveCategoryCollectionsUseCase.execute(
+        saveCategoryCollectionsUseCase.save(
             collections = _collectionsWithCategories.value.concatenateLists()
         )
     }

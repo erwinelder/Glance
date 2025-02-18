@@ -110,7 +110,7 @@ class PersonalisationViewModel(
 
     private suspend fun saveWidgets() {
         val widgets = widgets.value.filter { it.isChecked }.map { it.name }
-        saveWidgetsUseCase.execute(widgets = widgets)
+        saveWidgetsUseCase.save(widgets = widgets)
     }
 
     fun saveWidgetsAndCloseSettings() {
@@ -148,7 +148,7 @@ class PersonalisationViewModel(
     }
 
     private suspend fun saveNavButtons() {
-        saveNavigationButtonsUseCase.execute(buttons = navButtons.value)
+        saveNavigationButtonsUseCase.save(buttons = navButtons.value)
     }
 
     fun saveNavButtonsAndCloseSettings() {

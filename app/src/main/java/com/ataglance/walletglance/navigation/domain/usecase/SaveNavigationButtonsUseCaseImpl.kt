@@ -7,7 +7,7 @@ import com.ataglance.walletglance.navigation.mapper.toDataModels
 class SaveNavigationButtonsUseCaseImpl(
     private val navigationButtonRepository: NavigationButtonRepository
 ) : SaveNavigationButtonsUseCase {
-    override suspend fun execute(buttons: List<BottomBarNavigationButton>) {
+    override suspend fun save(buttons: List<BottomBarNavigationButton>) {
         navigationButtonRepository.upsertNavigationButtons(
             buttons = buttons.toDataModels()
         )

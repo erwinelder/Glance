@@ -11,13 +11,16 @@ interface RecordLocalDataSource {
 
     suspend fun saveUpdateTime(timestamp: Long)
 
-    suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long)
+    suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long): List<RecordEntity>
 
     suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long)
 
     suspend fun deleteAllRecords(timestamp: Long)
 
-    suspend fun synchroniseRecords(recordsToSync: EntitiesToSync<RecordEntity>, timestamp: Long)
+    suspend fun synchroniseRecords(
+        recordsToSync: EntitiesToSync<RecordEntity>,
+        timestamp: Long
+    ): List<RecordEntity>
 
     suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long)
 

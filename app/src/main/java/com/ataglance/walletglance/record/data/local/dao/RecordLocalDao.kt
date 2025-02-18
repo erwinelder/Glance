@@ -2,6 +2,8 @@ package com.ataglance.walletglance.record.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -11,16 +13,32 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RecordLocalDao {
 
+    suspend fun upsertRecords(records: List<RecordEntity>): List<RecordEntity> {
+        val (toInsert, toUpdate) = records.partition { it.id == 0 }
+        upsertUpdateRecords(toUpdate)
+        val insertedIds = insertRecords(toInsert).toMutableList()
+
+        return records.mapIndexed { index, record ->
+            record.takeIf { it.id != 0 } ?: record.copy(id = insertedIds[index].toInt())
+        }
+    }
+
     @Upsert
-    suspend fun upsertRecords(records: List<RecordEntity>)
+    suspend fun upsertUpdateRecords(toUpsert: List<RecordEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecords(records: List<RecordEntity>): List<Long>
 
     @Delete
     suspend fun deleteRecords(records: List<RecordEntity>)
 
     @Transaction
-    suspend fun deleteAndUpsertRecords(toDelete: List<RecordEntity>, toUpsert: List<RecordEntity>) {
+    suspend fun deleteAndUpsertRecords(
+        toDelete: List<RecordEntity>,
+        toUpsert: List<RecordEntity>
+    ): List<RecordEntity> {
         deleteRecords(toDelete)
-        upsertRecords(toUpsert)
+        return upsertRecords(toUpsert)
     }
 
     @Query("DELETE FROM Record")

@@ -94,7 +94,7 @@ class EditAccountsViewModel(
 
 
     val allowDeleting = combine(_accounts) { accounts ->
-        accounts.size > 1
+        accounts[0].size > 1
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
