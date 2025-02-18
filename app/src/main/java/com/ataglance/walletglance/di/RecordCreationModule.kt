@@ -89,7 +89,7 @@ val recordCreationModule = module {
 
     viewModel { parameters ->
         TransferCreationViewModel(
-            recordNum = parameters.get(),
+            recordNum = parameters.getOrNull(),
             saveTransferUseCase = get(),
             deleteTransferUseCase = get(),
             getTransferDraftUseCase = get(),
