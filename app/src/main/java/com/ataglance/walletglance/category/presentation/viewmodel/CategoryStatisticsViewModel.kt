@@ -3,10 +3,11 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.mapper.toCategoryCollectionType
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.model.GroupedCategoryStatistics
-import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.categoryCollection.domain.utils.toggleExpenseIncome
@@ -27,7 +28,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoryStatisticsViewModel(
-    initialCategoryId: Int,
+    initialCategoryId: Int?,
+    initialCategoryType: CategoryType,
     activeAccount: Account?,
     activeDateRange: LongDateRange,
     private val defaultCollectionName: String,
@@ -43,11 +45,11 @@ class CategoryStatisticsViewModel(
                 setCategoryCollections(collections = collections)
             }
 
-            // TODO: Issue: code is never reached because of the collect method above
-            setParentCategoryStatistics(initialCategoryId)
-
         }
     }
+
+
+    private var initialParentCategoryId: Int? = initialCategoryId
 
 
     private val _activeAccountId = MutableStateFlow(activeAccount?.id)
@@ -73,7 +75,7 @@ class CategoryStatisticsViewModel(
     private var collectionsByType = CategoryCollectionsWithIdsByType()
 
     private val _categoryCollectionsUiState = MutableStateFlow(
-        CategoryCollectionsUiState(activeType = CategoryCollectionType.Expense)
+        CategoryCollectionsUiState(activeType = initialCategoryType.toCategoryCollectionType())
     )
     val categoryCollectionsUiState = _categoryCollectionsUiState.asStateFlow()
 
@@ -92,6 +94,9 @@ class CategoryStatisticsViewModel(
                 collectionsByType = collectionsByType,
                 defaultCollectionName = defaultCollectionName
             )
+        }
+        if (_parentCategoryStatistics.value != null) {
+            clearParentCategoryStatistics()
         }
     }
 
@@ -117,9 +122,17 @@ class CategoryStatisticsViewModel(
         _activeAccountId,
         _categoryCollectionsUiState
     ) { stacks, accountId, collectionsState ->
-        stacks.filterByAccount(accountId).filterByCollection(collectionsState.activeCollection).let {
-            CategoriesStatisticsByType.fromRecordStacks(it)
+        val statistics = stacks.filterByAccount(accountId)
+            .filterByCollection(collectionsState.activeCollection)
+            .let { CategoriesStatisticsByType.fromRecordStacks(it) }
+
+        initialParentCategoryId?.let { id ->
+            statistics.getParentStatsIfSubStatsPresent(id)?.let { statistics ->
+                _parentCategoryStatistics.update { statistics }
+            }
         }
+
+        statistics
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -129,22 +142,16 @@ class CategoryStatisticsViewModel(
 
     private val _parentCategoryStatistics = MutableStateFlow<CategoryStatistics?>(null)
 
-    private fun setParentCategoryStatistics(parentCategoryId: Int?) {
-        if (parentCategoryId == null) return
-
-        statisticsByType.value.getParentStatsIfSubStatsPresent(parentCategoryId)?.let {
-            _parentCategoryStatistics.update { it }
-        }
-    }
-
     fun setParentCategoryStatistics(statistics: CategoryStatistics) {
         if (statistics.subcategoriesStatistics != null) {
             _parentCategoryStatistics.update { statistics }
+            initialParentCategoryId = null
         }
     }
 
     fun clearParentCategoryStatistics() {
         _parentCategoryStatistics.update { null }
+        initialParentCategoryId = null
     }
 
 
@@ -160,7 +167,7 @@ class CategoryStatisticsViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
+        started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = GroupedCategoryStatistics()
     )
 

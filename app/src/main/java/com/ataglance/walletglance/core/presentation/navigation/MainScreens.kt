@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.presentation.navigation
 
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import kotlinx.serialization.Serializable
 
 sealed interface MainScreens {
@@ -11,7 +12,10 @@ sealed interface MainScreens {
     data object Records : MainScreens
 
     @Serializable
-    data class CategoryStatistics(val parentCategoryId: Int) : MainScreens
+    data class CategoryStatistics(
+        val parentCategoryId: Int? = null,
+        val type: String = CategoryType.Expense.name
+    ) : MainScreens
 
     @Serializable
     data object Budgets : MainScreens

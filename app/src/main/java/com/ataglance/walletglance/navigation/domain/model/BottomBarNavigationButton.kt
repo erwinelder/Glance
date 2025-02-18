@@ -39,7 +39,7 @@ sealed class BottomBarNavigationButton(
     )
 
     data object CategoryStatistics : BottomBarNavigationButton(
-        screen = MainScreens.CategoryStatistics(0),
+        screen = MainScreens.CategoryStatistics(),
         screenNameRes = R.string.statistics,
         inactiveIconRes = DrawableResByTheme(
             lightDefault = R.drawable.statistics_light_inactive,

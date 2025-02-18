@@ -189,10 +189,14 @@ private fun CompactLayout(
                             CategoriesStatisticsWidget(
                                 activeAccount = accountsAndActiveOne.activeAccount,
                                 activeDateRange = dateRangeWithEnum.dateRange,
-                                onNavigateToCategoriesStatisticsScreen = { parentCategoryId ->
-                                    onNavigateToScreenMovingTowardsLeft(
-                                        MainScreens.CategoryStatistics(parentCategoryId)
-                                    )
+                                onNavigateToCategoriesStatisticsScreen = { categoryId, type ->
+                                    if (type != null) {
+                                        onNavigateToScreenMovingTowardsLeft(
+                                            MainScreens.CategoryStatistics(
+                                                parentCategoryId = categoryId, type = type.name
+                                            )
+                                        )
+                                    }
                                 }
                             )
                         }

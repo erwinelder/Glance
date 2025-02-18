@@ -19,6 +19,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsWidgetUiState
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsWidgetViewModel
@@ -34,7 +35,7 @@ import org.koin.core.parameter.parametersOf
 fun CategoriesStatisticsWidget(
     activeAccount: Account?,
     activeDateRange: LongDateRange,
-    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit
+    onNavigateToCategoriesStatisticsScreen: (Int?, CategoryType?) -> Unit
 ) {
     val viewModel = koinViewModel<CategoryStatisticsWidgetViewModel> {
         parametersOf(activeAccount, activeDateRange)
@@ -58,12 +59,12 @@ fun CategoriesStatisticsWidget(
 @Composable
 fun CategoriesStatisticsWidgetContent(
     uiState: CategoriesStatisticsWidgetUiState,
-    onNavigateToCategoriesStatisticsScreen: (Int) -> Unit
+    onNavigateToCategoriesStatisticsScreen: (Int?, CategoryType?) -> Unit
 ) {
     WidgetWithTitleAndButtonComponent(
         title = stringResource(R.string.categories),
         onBottomNavigationButtonClick = {
-            onNavigateToCategoriesStatisticsScreen(0)
+            onNavigateToCategoriesStatisticsScreen(null, uiState.getType())
         }
     ) {
         AnimatedContent(targetState = uiState) { state ->
@@ -76,13 +77,19 @@ fun CategoriesStatisticsWidgetContent(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     CategoryStatisticsItemComponent(state.top1Category, enableClick = true) {
-                        state.top1Category?.category?.id?.let(onNavigateToCategoriesStatisticsScreen)
+                        state.top1Category?.category?.let { category ->
+                            onNavigateToCategoriesStatisticsScreen(category.id, category.type)
+                        }
                     }
                     CategoryStatisticsItemComponent(state.top2Category, enableClick = true) {
-                        state.top2Category?.category?.id?.let(onNavigateToCategoriesStatisticsScreen)
+                        state.top2Category?.category?.let { category ->
+                            onNavigateToCategoriesStatisticsScreen(category.id, category.type)
+                        }
                     }
                     CategoryStatisticsItemComponent(state.top3Category, enableClick = true) {
-                        state.top3Category?.category?.id?.let(onNavigateToCategoriesStatisticsScreen)
+                        state.top3Category?.category?.let { category ->
+                            onNavigateToCategoriesStatisticsScreen(category.id, category.type)
+                        }
                     }
                 }
                 if (state.isEmpty()) {
@@ -127,7 +134,7 @@ private fun CategoriesStatisticsWidgetPreview() {
                     currency = "USD"
                 ),
             ),
-            onNavigateToCategoriesStatisticsScreen = {}
+            onNavigateToCategoriesStatisticsScreen = { _, _ -> }
         )
     }
 }

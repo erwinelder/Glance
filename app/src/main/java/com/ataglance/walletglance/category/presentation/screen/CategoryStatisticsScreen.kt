@@ -183,7 +183,7 @@ fun CategoryStatisticsScreenPreview(
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
         isBottomBarVisible = isBottomBarVisible,
-        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.CategoryStatistics(0)) }
+        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.CategoryStatistics()) }
     ) { scaffoldPadding ->
         CategoryStatisticsScreen(
             scaffoldAppScreenPadding = scaffoldPadding,

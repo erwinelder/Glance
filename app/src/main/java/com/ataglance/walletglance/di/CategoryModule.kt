@@ -79,7 +79,8 @@ val categoryModule = module {
 
     viewModel { parameters ->
         CategoryStatisticsViewModel(
-            initialCategoryId = parameters.get(),
+            initialCategoryId = parameters.getOrNull(),
+            initialCategoryType = parameters.get(),
             activeAccount = parameters.get(),
             activeDateRange = parameters.get(),
             defaultCollectionName = parameters.get(),

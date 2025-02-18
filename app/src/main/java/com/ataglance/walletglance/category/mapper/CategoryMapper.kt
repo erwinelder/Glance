@@ -4,6 +4,7 @@ import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.utils.asChar
@@ -13,6 +14,14 @@ import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCate
 import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
+
+
+fun CategoryType.toCategoryCollectionType(): CategoryCollectionType {
+    return when (this) {
+        CategoryType.Expense -> CategoryCollectionType.Expense
+        CategoryType.Income -> CategoryCollectionType.Income
+    }
+}
 
 
 fun CategoryEntity.toDomainModel(): Category? {

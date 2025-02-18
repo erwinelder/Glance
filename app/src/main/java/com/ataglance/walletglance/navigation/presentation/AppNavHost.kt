@@ -20,6 +20,7 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
@@ -136,11 +137,13 @@ fun AppNavHost(
         }
         composable<MainScreens.CategoryStatistics> { backStack ->
             val parentCategoryId = backStack.toRoute<MainScreens.CategoryStatistics>().parentCategoryId
+            val categoryType = backStack.toRoute<MainScreens.CategoryStatistics>().type
             val defaultCollectionName = stringResource(R.string.all_categories)
 
             val viewModel = koinViewModel<CategoryStatisticsViewModel> {
                 parametersOf(
                     parentCategoryId,
+                    CategoryType.valueOf(categoryType),
                     appUiState.accountsAndActiveOne.activeAccount,
                     appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange,
                     defaultCollectionName
