@@ -214,7 +214,7 @@ val MIGRATION_10_11 = object : Migration(10, 11) {
     override fun migrate(db: SupportSQLiteDatabase) {
 
         db.execSQL("""
-            CREATE TABLE IF NOT EXISTS TableUpdateTime (
+            CREATE TABLE IF NOT EXISTS local_update_time (
                 tableName TEXT PRIMARY KEY NOT NULL,
                 timestamp INTEGER NOT NULL
             )
@@ -222,7 +222,7 @@ val MIGRATION_10_11 = object : Migration(10, 11) {
 
         tableNames.forEach { tableName ->
             db.execSQL("""
-                INSERT INTO TableUpdateTime (tableName, timestamp)
+                INSERT INTO local_update_time (tableName, timestamp)
                 VALUES ('$tableName', $timestamp)
             """.trimIndent())
         }
