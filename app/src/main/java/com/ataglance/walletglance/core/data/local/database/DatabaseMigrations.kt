@@ -229,3 +229,42 @@ val MIGRATION_10_11 = object : Migration(10, 11) {
 
     }
 }
+
+val MIGRATION_11_12 = object : Migration(11, 12) {
+
+    val timestamp: Long = getCurrentTimestamp()
+    val tableNames: List<String> = listOf(
+        TableName.Account.name,
+        TableName.Category.name,
+        TableName.CategoryCollection.name,
+        TableName.CategoryCollectionCategoryAssociation.name,
+        TableName.Record.name,
+        TableName.Budget.name,
+        TableName.BudgetAccountAssociation.name,
+        TableName.NavigationButton.name,
+        TableName.Widget.name,
+        TableName.BudgetOnWidget.name
+    )
+
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("""
+            DROP TABLE IF EXISTS TableUpdateTime
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS local_update_time (
+                tableName TEXT PRIMARY KEY NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+
+        tableNames.forEach { tableName ->
+            db.execSQL("""
+                INSERT INTO local_update_time (tableName, timestamp)
+                VALUES ('$tableName', $timestamp)
+            """.trimIndent())
+        }
+
+    }
+}
