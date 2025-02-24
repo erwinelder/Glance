@@ -5,6 +5,11 @@ import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 
 interface BudgetRepository {
 
+    suspend fun deleteBudgetsAndAssociations(
+        budgets: List<BudgetEntity>,
+        associations: List<BudgetAccountAssociation>
+    )
+
     suspend fun deleteAndUpsertBudgetsAndAssociations(
         budgetsToDelete: List<BudgetEntity>,
         budgetsToUpsert: List<BudgetEntity>,

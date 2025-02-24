@@ -26,6 +26,6 @@ class DeleteRecordUseCaseImpl(
             ?: return
 
         recordRepository.deleteRecords(records = recordStack.toRecordEntities())
-        saveAccountsUseCase.saveDataModels(accounts = updatedAccounts)
+        saveAccountsUseCase.upsert(accounts = updatedAccounts)
     }
 }

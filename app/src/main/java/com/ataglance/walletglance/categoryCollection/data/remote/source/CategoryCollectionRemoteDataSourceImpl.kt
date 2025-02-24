@@ -61,6 +61,19 @@ class CategoryCollectionRemoteDataSourceImpl(
     }
 
 
+    override suspend fun upsertCollectionsAndAssociations(
+        collections: List<CategoryCollectionRemoteEntity>,
+        associations: List<CategoryCollectionCategoryRemoteAssociation>,
+        timestamp: Long,
+        userId: String
+    ) {
+        categoryCollectionDao.upsertCollectionsAndAssociations(
+            collections = collections, associations = associations, userId = userId
+        )
+        saveCategoryCollectionUpdateTime(timestamp = timestamp, userId = userId)
+        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp, userId = userId)
+    }
+
     override suspend fun synchroniseCollectionsAndAssociations(
         collectionsToSync: EntitiesToSync<CategoryCollectionRemoteEntity>,
         associationsToSync: EntitiesToSync<CategoryCollectionCategoryRemoteAssociation>,

@@ -22,16 +22,41 @@ class RecordRemoteDao(
         )
     }
 
+    suspend fun deleteRecordsByAccounts(
+        accountIds: List<Int>,
+        timestamp: Long,
+        userId: String,
+        ttl: Int = 4
+    ) {
+        val querySize = firestoreAdapter.processCollectionDocumentsInBatch(
+            userId = userId,
+            whereInField = "accountId",
+            whereInValues = accountIds.map { it.toString() },
+            documentDataTransform = { documentData ->
+                documentData
+                    .let(firestoreAdapter::mapDataToEntity)
+                    .copy(updateTime = timestamp, deleted = true)
+                    .let(firestoreAdapter::mapEntityToData)
+            }
+        )
+
+        if (querySize == 500 && ttl > 0) {
+            deleteRecordsByAccounts(
+                accountIds = accountIds, timestamp = timestamp, userId = userId, ttl = ttl - 1
+            )
+        }
+    }
+
     suspend fun convertTransfersToRecords(
         noteValues: List<String>,
         timestamp: Long,
-        userId: String
+        userId: String,
+        ttl: Int = 4
     ) {
-        firestoreAdapter.processCollectionDocumentsInBatch(
+        val querySize = firestoreAdapter.processCollectionDocumentsInBatch(
             userId = userId,
             whereInField = "note",
             whereInValues = noteValues,
-            queryLimit = 500,
             documentDataTransform = { documentData ->
                 documentData
                     .let(firestoreAdapter::mapDataToEntity)
@@ -40,11 +65,11 @@ class RecordRemoteDao(
             }
         )
 
-        /*if (querySize == 500) {
-            convertTransfersToRecordsT(
-                noteValues = noteValues, timestamp = timestamp, userId = userId
+        if (querySize == 500 && ttl > 0) {
+            convertTransfersToRecords(
+                noteValues = noteValues, timestamp = timestamp, userId = userId, ttl = ttl - 1
             )
-        }*/
+        }
     }
 
     suspend fun getRecordsAfterTimestamp(

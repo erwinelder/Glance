@@ -22,7 +22,7 @@ interface RecordLocalDataSource {
         timestamp: Long
     ): List<RecordEntity>
 
-    suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long)
+    suspend fun deleteRecordsByAccounts(accountIds: List<Int>, timestamp: Long)
 
     suspend fun getLastRecordNum(): Flow<Int?>
 

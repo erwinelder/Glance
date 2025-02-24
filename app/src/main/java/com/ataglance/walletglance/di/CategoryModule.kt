@@ -53,7 +53,11 @@ val categoryModule = module {
     /* ---------- Use Cases ---------- */
 
     single<SaveCategoriesUseCase> {
-        SaveCategoriesUseCaseImpl(categoryRepository = get())
+        SaveCategoriesUseCaseImpl(
+            categoryRepository = get(),
+            deleteCollectionsAndAssociationsByCategoriesUseCase = get(),
+            deleteBudgetsByCategoriesUseCase = get()
+        )
     }
 
     single<GetCategoriesUseCase> {

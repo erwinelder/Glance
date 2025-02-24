@@ -50,7 +50,11 @@ val accountModule = module {
     /* ---------- Use Cases ---------- */
 
     single<SaveAccountsUseCase> {
-        SaveAccountsUseCaseImpl(accountRepository = get(), recordRepository = get())
+        SaveAccountsUseCaseImpl(
+            accountRepository = get(),
+            recordRepository = get(),
+            deleteBudgetAccountAssociationsByAccountsUseCase = get()
+        )
     }
 
     single<GetAccountsUseCase> {

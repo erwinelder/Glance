@@ -50,8 +50,9 @@ class RecordLocalDataSourceImpl(
         }
     }
 
-    override suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long) {
-        recordDao.convertTransfersToRecords(noteValues = noteValues)
+    override suspend fun deleteRecordsByAccounts(accountIds: List<Int>, timestamp: Long) {
+        recordDao.deleteRecordsByAccounts(accountIds = accountIds)
+        recordDao.convertTransfersToRecords(noteValues = accountIds.map { it.toString() })
         saveUpdateTime(timestamp = timestamp)
     }
 

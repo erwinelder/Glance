@@ -17,7 +17,7 @@ interface RecordRepository {
 
     suspend fun deleteAllRecordsLocally()
 
-    suspend fun convertRecordsToTransfers(noteValues: List<String>)
+    suspend fun deleteRecordsByAccounts(accountIds: List<Int>)
 
     fun getLastRecordNumFlow(): Flow<Int?>
 

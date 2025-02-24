@@ -89,7 +89,7 @@ class EditAccountsViewModel(
             ?.makeSureActiveAccountIsVisibleOne()
             ?: return
 
-        saveAccountsUseCase.saveDomainModels(accounts = accounts)
+        saveAccountsUseCase.save(accounts = accounts)
     }
 
 

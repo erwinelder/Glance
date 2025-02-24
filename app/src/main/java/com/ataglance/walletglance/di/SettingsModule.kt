@@ -1,9 +1,5 @@
 package com.ataglance.walletglance.di
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCaseImpl
@@ -23,19 +19,10 @@ import com.ataglance.walletglance.settings.domain.usecase.SaveUserIdPreferenceUs
 import com.ataglance.walletglance.settings.domain.usecase.SaveUserIdPreferenceUseCaseImpl
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
 import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 val settingsModule = module {
-
-    /* ---------- Other ---------- */
-
-    single<DataStore<Preferences>> {
-        androidContext().dataStore
-    }
 
     /* ---------- Repositories ---------- */
 

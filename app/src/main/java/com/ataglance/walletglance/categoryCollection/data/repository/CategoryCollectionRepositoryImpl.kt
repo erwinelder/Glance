@@ -28,10 +28,7 @@ class CategoryCollectionRepositoryImpl(
 ) : CategoryCollectionRepository {
 
     private suspend fun synchroniseCollections() {
-        val userId = syncHelper.getUserIdForSync(
-            TableName.CategoryCollection,
-            TableName.CategoryCollectionCategoryAssociation
-        ) ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.CategoryCollection) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getCategoryCollectionUpdateTime,
@@ -45,10 +42,8 @@ class CategoryCollectionRepositoryImpl(
     }
 
     private suspend fun synchroniseCollectionCategoryAssociations() {
-        val userId = syncHelper.getUserIdForSync(
-            TableName.CategoryCollection,
-            TableName.CategoryCollectionCategoryAssociation
-        ) ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.CategoryCollectionCategoryAssociation)
+            ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getCollectionCategoryAssociationUpdateTime,
@@ -65,6 +60,36 @@ class CategoryCollectionRepositoryImpl(
         )
     }
 
+
+    override suspend fun deleteCollectionsAndAssociations(
+        collections: List<CategoryCollectionEntity>,
+        associations: List<CategoryCollectionCategoryAssociation>
+    ) {
+        val timestamp = getCurrentTimestamp()
+        localSource.deleteCollectionsAndAssociations(
+            collections = collections, associations = associations, timestamp = timestamp
+        )
+        syncHelper.tryToSyncToRemote(
+            TableName.CategoryCollection,
+            TableName.CategoryCollectionCategoryAssociation
+        ) { userId ->
+            remoteSource.upsertCollectionsAndAssociations(
+                collections = collections.map {
+                    it.toRemoteEntity(updateTime = timestamp, deleted = true)
+                },
+                associations = associations.map {
+                    it.toRemoteAssociation(updateTime = timestamp, deleted = true)
+                },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
+    }
+
+    override suspend fun deleteAllCategoryCollectionsLocally() {
+        val timestamp = getCurrentTimestamp()
+        localSource.deleteAllCategoryCollections(timestamp = timestamp)
+    }
 
     override suspend fun deleteAndUpsertCollectionsAndAssociations(
         collectionsToDelete: List<CategoryCollectionEntity>,
@@ -100,11 +125,6 @@ class CategoryCollectionRepositoryImpl(
                 userId = userId
             )
         }
-    }
-
-    override suspend fun deleteAllCategoryCollectionsLocally() {
-        val timestamp = getCurrentTimestamp()
-        localSource.deleteAllCategoryCollections(timestamp = timestamp)
     }
 
     override fun getAllCollectionsAndAssociationsFlow(

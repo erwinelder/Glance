@@ -31,9 +31,7 @@ val billingModule = module {
     /* ---------- View Models ---------- */
 
     viewModel {
-        SubscriptionViewModel(
-            billingSubscriptionManager = get()
-        )
+        SubscriptionViewModel(billingSubscriptionManager = get())
     }
 
 }

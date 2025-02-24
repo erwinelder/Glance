@@ -93,12 +93,13 @@ class RecordRepositoryImpl(
         localSource.deleteAllRecords(timestamp = timestamp)
     }
 
-    override suspend fun convertRecordsToTransfers(noteValues: List<String>) {
+    override suspend fun deleteRecordsByAccounts(accountIds: List<Int>) {
         val timestamp = getCurrentTimestamp()
-        localSource.convertTransfersToRecords(noteValues, timestamp)
+
+        localSource.deleteRecordsByAccounts(accountIds = accountIds, timestamp = timestamp)
         syncHelper.tryToSyncToRemote(TableName.Record) { userId ->
-            remoteSource.convertTransfersToRecords(
-                noteValues = noteValues, timestamp = timestamp, userId = userId
+            remoteSource.deleteRecordsByAccounts(
+                accountIds = accountIds, timestamp = timestamp, userId = userId
             )
         }
     }

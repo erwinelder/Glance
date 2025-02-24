@@ -33,6 +33,15 @@ class CategoryCollectionRemoteDao(
     }
 
 
+    suspend fun upsertCollectionsAndAssociations(
+        collections: List<CategoryCollectionRemoteEntity>,
+        associations: List<CategoryCollectionCategoryRemoteAssociation>,
+        userId: String
+    ) {
+        categoryCollectionFirestoreAdapter.upsertEntities(entities = collections, userId = userId)
+        associationFirestoreAdapter.upsertEntities(entities = associations, userId = userId)
+    }
+
     suspend fun synchroniseCollectionsAndAssociations(
         collectionsToSync: EntitiesToSync<CategoryCollectionRemoteEntity>,
         associationsToSync: EntitiesToSync<CategoryCollectionCategoryRemoteAssociation>,

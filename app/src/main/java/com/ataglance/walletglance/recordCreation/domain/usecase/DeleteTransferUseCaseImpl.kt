@@ -31,6 +31,6 @@ class DeleteTransferUseCaseImpl(
         val updatedAccounts = listOf(senderAccount, receiverAccount)
 
         recordRepository.deleteRecords(records = records)
-        saveAccountsUseCase.saveDataModels(accounts = updatedAccounts)
+        saveAccountsUseCase.upsert(accounts = updatedAccounts)
     }
 }

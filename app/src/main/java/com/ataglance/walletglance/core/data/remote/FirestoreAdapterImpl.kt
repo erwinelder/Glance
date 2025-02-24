@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.core.data.remote
 
-import androidx.annotation.IntRange
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -71,10 +70,12 @@ class FirestoreAdapterImpl <T> (
     }
 
 
+    @Deprecated("Unstable API")
     override suspend fun softDeleteAllEntities(timestamp: Long, userId: String) {
         softDeleteEntitiesInBatches(timestamp = timestamp, userId = userId)
     }
 
+    @Deprecated("Unstable API")
     override suspend fun deleteAllEntities(userId: String) {
         deleteEntitiesInBatches(userId = userId)
     }
@@ -116,6 +117,7 @@ class FirestoreAdapterImpl <T> (
 
     override suspend fun getEntitiesAfterTimestamp(timestamp: Long, userId: String): List<T> {
         return getCollectionRef(userId)
+            .whereNotEqualTo("deleted", true)
             .whereGreaterThan("updateTime", timestamp)
             .get().await().documents
             .toEntityList()
@@ -126,12 +128,12 @@ class FirestoreAdapterImpl <T> (
         userId: String,
         whereInField: String?,
         whereInValues: List<String>?,
-        @IntRange(from = 1, to = 500) queryLimit: Long,
         documentDataTransform: (EntityMap) -> EntityMap
     ): Int {
         val batch = firestore.batch()
 
         val querySnapshot = getCollectionRef(userId = userId)
+            .whereNotEqualTo("deleted", true)
             .run {
                 if (whereInField != null && whereInValues != null) {
                     whereIn(whereInField, whereInValues)
@@ -139,7 +141,7 @@ class FirestoreAdapterImpl <T> (
                     this
                 }
             }
-            .limit(queryLimit)
+            .limit(500)
             .get().await()
 
         querySnapshot.forEach { queryDocument ->

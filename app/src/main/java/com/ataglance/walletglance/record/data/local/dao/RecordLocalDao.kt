@@ -44,6 +44,9 @@ interface RecordLocalDao {
     @Query("DELETE FROM Record")
     suspend fun deleteAllRecords()
 
+    @Query("DELETE FROM Record WHERE accountId IN (:accountIds)")
+    suspend fun deleteRecordsByAccounts(accountIds: List<Int>)
+
     @Query(
         """
         UPDATE Record

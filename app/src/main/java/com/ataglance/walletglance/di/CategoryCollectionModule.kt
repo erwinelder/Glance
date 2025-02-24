@@ -7,6 +7,8 @@ import com.ataglance.walletglance.categoryCollection.data.remote.source.Category
 import com.ataglance.walletglance.categoryCollection.data.remote.source.CategoryCollectionRemoteDataSourceImpl
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepository
 import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionRepositoryImpl
+import com.ataglance.walletglance.categoryCollection.domain.usecase.DeleteCategoryCollectionsAndAssociationsByCategoriesUseCase
+import com.ataglance.walletglance.categoryCollection.domain.usecase.DeleteCategoryCollectionsAndAssociationsByCategoriesUseCaseImpl
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCaseImpl
 import com.ataglance.walletglance.categoryCollection.domain.usecase.SaveCategoryCollectionsUseCase
@@ -37,10 +39,7 @@ val categoryCollectionModule = module {
     }
 
     single<CategoryCollectionRemoteDataSource> {
-        CategoryCollectionRemoteDataSourceImpl(
-            categoryCollectionDao = get(),
-            updateTimeDao = get()
-        )
+        CategoryCollectionRemoteDataSourceImpl(categoryCollectionDao = get(), updateTimeDao = get())
     }
 
     /* ---------- Repositories ---------- */
@@ -61,6 +60,12 @@ val categoryCollectionModule = module {
 
     single<GetCategoryCollectionsUseCase> {
         GetCategoryCollectionsUseCaseImpl(categoryCollectionRepository = get())
+    }
+
+    single<DeleteCategoryCollectionsAndAssociationsByCategoriesUseCase> {
+        DeleteCategoryCollectionsAndAssociationsByCategoriesUseCaseImpl(
+            categoryCollectionRepository = get()
+        )
     }
 
     /* ---------- View Models ---------- */

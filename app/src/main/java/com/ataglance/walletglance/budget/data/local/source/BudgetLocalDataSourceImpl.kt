@@ -29,6 +29,10 @@ class BudgetLocalDataSourceImpl(
             toDelete = budgetsToSync.toDelete,
             toUpsert = budgetsToSync.toUpsert
         )
+        saveBudgetUpdateTime(timestamp = timestamp)
+        if (budgetsToSync.toDelete.isNotEmpty()) {
+            saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
+        }
     }
 
     override suspend fun getBudget(id: Int): BudgetEntity? {
@@ -58,6 +62,7 @@ class BudgetLocalDataSourceImpl(
             toDelete = associationsToSync.toDelete,
             toUpsert = associationsToSync.toUpsert
         )
+        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
     }
 
     override suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociation> {
@@ -68,6 +73,12 @@ class BudgetLocalDataSourceImpl(
         return budgetDao.getAllBudgetAccountAssociations()
     }
 
+
+    override suspend fun deleteBudgets(budgets: List<BudgetEntity>, timestamp: Long) {
+        budgetDao.deleteBudgets(budgets = budgets)
+        saveBudgetUpdateTime(timestamp = timestamp)
+        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
+    }
 
     override suspend fun synchroniseBudgetsAndAssociations(
         budgetsToSync: EntitiesToSync<BudgetEntity>,
@@ -80,6 +91,8 @@ class BudgetLocalDataSourceImpl(
             associationsToDelete = associationsToSync.toDelete,
             associationsToUpsert = associationsToSync.toUpsert
         )
+        saveBudgetUpdateTime(timestamp = timestamp)
+        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
     }
 
 }

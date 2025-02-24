@@ -54,6 +54,19 @@ class BudgetRemoteDataSourceImpl(
     }
 
 
+    override suspend fun upsertBudgetsAndAssociations(
+        budgets: List<BudgetRemoteEntity>,
+        associations: List<BudgetAccountRemoteAssociation>,
+        timestamp: Long,
+        userId: String
+    ) {
+        budgetDao.upsertBudgetsAndAssociations(
+            budgets = budgets, associations = associations, userId = userId
+        )
+        saveBudgetUpdateTime(timestamp = timestamp, userId = userId)
+        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp, userId = userId)
+    }
+
     override suspend fun synchroniseBudgetsAndAssociations(
         budgetsToSync: EntitiesToSync<BudgetRemoteEntity>,
         associationsToSync: EntitiesToSync<BudgetAccountRemoteAssociation>,

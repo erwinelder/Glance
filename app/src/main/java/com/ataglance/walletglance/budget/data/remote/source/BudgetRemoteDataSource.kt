@@ -26,6 +26,13 @@ interface BudgetRemoteDataSource {
     ): EntitiesToSync<BudgetAccountRemoteAssociation>
 
 
+    suspend fun upsertBudgetsAndAssociations(
+        budgets: List<BudgetRemoteEntity>,
+        associations: List<BudgetAccountRemoteAssociation>,
+        timestamp: Long,
+        userId: String
+    )
+
     suspend fun synchroniseBudgetsAndAssociations(
         budgetsToSync: EntitiesToSync<BudgetRemoteEntity>,
         associationsToSync: EntitiesToSync<BudgetAccountRemoteAssociation>,

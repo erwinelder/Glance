@@ -1,13 +1,14 @@
 package com.ataglance.walletglance.budget.data.repository
 
-import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
 import com.ataglance.walletglance.budget.data.local.source.BudgetOnWidgetLocalDataSource
 import com.ataglance.walletglance.budget.data.mapper.budgetOnWidget.toLocalEntity
 import com.ataglance.walletglance.budget.data.mapper.budgetOnWidget.toRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
 import com.ataglance.walletglance.budget.data.remote.source.BudgetOnWidgetRemoteDataSource
+import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseData
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.coroutineScope
@@ -19,11 +20,11 @@ import kotlinx.coroutines.launch
 class BudgetOnWidgetRepositoryImpl(
     private val localSource: BudgetOnWidgetLocalDataSource,
     private val remoteSource: BudgetOnWidgetRemoteDataSource,
-    private val userContext: UserContext
+    private val syncHelper: DataSyncHelper
 ) : BudgetOnWidgetRepository {
 
     private suspend fun synchroniseBudgetsOnWidget() {
-        val userId = userContext.getUserId() ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.BudgetOnWidget) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getUpdateTime,
@@ -37,6 +38,19 @@ class BudgetOnWidgetRepositoryImpl(
     }
 
 
+    override suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>) {
+        val timestamp = getCurrentTimestamp()
+
+        localSource.deleteBudgetsOnWidget(budgets = budgets, timestamp = timestamp)
+        syncHelper.tryToSyncToRemote(TableName.BudgetOnWidget) { userId ->
+            remoteSource.upsertBudgetsOnWidget(
+                budgets = budgets.map { it.toRemoteEntity(updateTime = timestamp, deleted = true) },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
+    }
+
     override suspend fun deleteAndUpsertBudgetsOnWidget(
         toDelete: List<BudgetOnWidgetEntity>,
         toUpsert: List<BudgetOnWidgetEntity>
@@ -45,7 +59,7 @@ class BudgetOnWidgetRepositoryImpl(
         val budgetsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
 
         localSource.synchroniseBudgetsOnWidget(budgetsToSync = budgetsToSync, timestamp = timestamp)
-        userContext.getUserId()?.let { userId ->
+        syncHelper.tryToSyncToRemote(TableName.BudgetOnWidget) { userId ->
             remoteSource.synchroniseBudgetsOnWidget(
                 budgetsToSync = budgetsToSync.map { deleted ->
                     toRemoteEntity(updateTime = timestamp, deleted = deleted)

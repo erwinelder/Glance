@@ -28,7 +28,7 @@ class SaveTransferUseCaseImpl(
         } ?: return
 
         recordRepository.upsertRecords(records = dataAfterRecordOperation.recordsToUpsert)
-        saveAccountsUseCase.saveDataModels(accounts = dataAfterRecordOperation.accountsToUpsert)
+        saveAccountsUseCase.upsert(accounts = dataAfterRecordOperation.accountsToUpsert)
     }
 
     private fun getDataAfterNewTransfer(transfer: CreatedTransfer): DataAfterRecordOperation {

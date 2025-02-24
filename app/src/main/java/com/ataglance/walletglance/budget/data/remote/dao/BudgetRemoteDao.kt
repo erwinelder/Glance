@@ -33,6 +33,15 @@ class BudgetRemoteDao(
     }
 
 
+    suspend fun upsertBudgetsAndAssociations(
+        budgets: List<BudgetRemoteEntity>,
+        associations: List<BudgetAccountRemoteAssociation>,
+        userId: String
+    ) {
+        budgetFirestoreAdapter.upsertEntities(entities = budgets, userId = userId)
+        associationFirestoreAdapter.upsertEntities(entities = associations, userId = userId)
+    }
+
     suspend fun synchroniseBudgetsAndAssociations(
         budgetsToSync: EntitiesToSync<BudgetRemoteEntity>,
         associationsToSync: EntitiesToSync<BudgetAccountRemoteAssociation>,

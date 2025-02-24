@@ -37,7 +37,7 @@ class BudgetRepositoryImpl(
     }
 
     private suspend fun synchroniseBudgetAccountAssociations() {
-        val userId = syncHelper.getUserIdForSync(TableName.BudgetOnWidget) ?: return
+        val userId = syncHelper.getUserIdForSync(TableName.BudgetAccountAssociation) ?: return
 
         synchroniseData(
             localUpdateTimeGetter = localSource::getBudgetAccountAssociationUpdateTime,
@@ -54,6 +54,27 @@ class BudgetRepositoryImpl(
         )
     }
 
+
+    override suspend fun deleteBudgetsAndAssociations(
+        budgets: List<BudgetEntity>,
+        associations: List<BudgetAccountAssociation>
+    ) {
+        val timestamp = getCurrentTimestamp()
+
+        localSource.deleteBudgets(budgets = budgets, timestamp = timestamp)
+        syncHelper.tryToSyncToRemote(TableName.Budget, TableName.BudgetAccountAssociation) { userId ->
+            remoteSource.upsertBudgetsAndAssociations(
+                budgets = budgets.map {
+                    it.toRemoteEntity(updateTime = timestamp, deleted = true)
+                },
+                associations = associations.map {
+                    it.toRemoteAssociation(updateTime = timestamp, deleted = true)
+                },
+                timestamp = timestamp,
+                userId = userId
+            )
+        }
+    }
 
     override suspend fun deleteAndUpsertBudgetsAndAssociations(
         budgetsToDelete: List<BudgetEntity>,

@@ -37,6 +37,7 @@ class CategoryCollectionLocalDataSourceImpl(
             toDelete = collectionsToSync.toDelete,
             toUpsert = collectionsToSync.toUpsert
         )
+        saveCategoryCollectionUpdateTime(timestamp = timestamp)
     }
 
     override fun getAllCategoryCollectionsFlow(): Flow<List<CategoryCollectionEntity>> {
@@ -68,6 +69,7 @@ class CategoryCollectionLocalDataSourceImpl(
             toDelete = associationsToSync.toDelete,
             toUpsert = associationsToSync.toUpsert
         )
+        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp)
     }
 
     override fun getAllCollectionCategoryAssociationsFlow(
@@ -81,6 +83,17 @@ class CategoryCollectionLocalDataSourceImpl(
     }
 
 
+    override suspend fun deleteCollectionsAndAssociations(
+        collections: List<CategoryCollectionEntity>,
+        associations: List<CategoryCollectionCategoryAssociation>,
+        timestamp: Long
+    ) {
+        categoryCollectionDao.deleteCollectionCategoryAssociations(associations = associations)
+        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp)
+        categoryCollectionDao.deleteCollections(collections = collections)
+        saveCategoryCollectionUpdateTime(timestamp = timestamp)
+    }
+
     override suspend fun synchroniseCollectionsAndAssociations(
         collectionsToSync: EntitiesToSync<CategoryCollectionEntity>,
         associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,
@@ -92,6 +105,8 @@ class CategoryCollectionLocalDataSourceImpl(
             associationsToDelete = associationsToSync.toDelete,
             associationsToUpsert = associationsToSync.toUpsert
         )
+        saveCategoryCollectionUpdateTime(timestamp = timestamp)
+        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp)
     }
 
 }

@@ -37,6 +37,12 @@ interface CategoryCollectionLocalDataSource {
     suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>
 
 
+    suspend fun deleteCollectionsAndAssociations(
+        collections: List<CategoryCollectionEntity>,
+        associations: List<CategoryCollectionCategoryAssociation>,
+        timestamp: Long
+    )
+
     suspend fun synchroniseCollectionsAndAssociations(
         collectionsToSync: EntitiesToSync<CategoryCollectionEntity>,
         associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,

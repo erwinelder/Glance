@@ -1,7 +1,5 @@
 package com.ataglance.walletglance.core.data.remote
 
-import androidx.annotation.IntRange
-
 typealias EntityMap = Map<String, Any?>
 
 interface FirestoreAdapter <T> {
@@ -16,8 +14,10 @@ interface FirestoreAdapter <T> {
     suspend fun synchroniseEntities(toDelete: List<T>, toUpsert: List<T>, userId: String)
 
 
+    @Deprecated("Unstable API")
     suspend fun softDeleteAllEntities(timestamp: Long, userId: String)
 
+    @Deprecated("Unstable API")
     suspend fun deleteAllEntities(userId: String)
 
 
@@ -28,7 +28,6 @@ interface FirestoreAdapter <T> {
         userId: String,
         whereInField: String? = null,
         whereInValues: List<String>? = null,
-        @IntRange(from = 1, to = 500) queryLimit: Long = 500,
         documentDataTransform: (EntityMap) -> EntityMap
     ): Int
 

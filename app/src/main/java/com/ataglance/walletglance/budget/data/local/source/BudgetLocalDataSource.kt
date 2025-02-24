@@ -31,6 +31,8 @@ interface BudgetLocalDataSource {
     suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociation>
 
 
+    suspend fun deleteBudgets(budgets: List<BudgetEntity>, timestamp: Long)
+
     suspend fun synchroniseBudgetsAndAssociations(
         budgetsToSync: EntitiesToSync<BudgetEntity>,
         associationsToSync: EntitiesToSync<BudgetAccountAssociation>,

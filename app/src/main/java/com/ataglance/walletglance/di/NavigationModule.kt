@@ -40,7 +40,9 @@ val navigationModule = module {
 
     single<NavigationButtonRepository> {
         NavigationButtonRepositoryImpl(
-            localSource = get(), remoteSource = get(), syncHelper = get()
+            localSource = get(),
+            remoteSource = get(),
+            syncHelper = get()
         )
     }
 

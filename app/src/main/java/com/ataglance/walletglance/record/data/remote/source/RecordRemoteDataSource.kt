@@ -17,7 +17,7 @@ interface RecordRemoteDataSource {
         userId: String
     )
 
-    suspend fun convertTransfersToRecords(noteValues: List<String>, timestamp: Long, userId: String)
+    suspend fun deleteRecordsByAccounts(accountIds: List<Int>, timestamp: Long, userId: String)
 
     suspend fun getRecordsAfterTimestamp(
         timestamp: Long,

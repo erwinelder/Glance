@@ -39,13 +39,16 @@ class RecordRemoteDataSourceImpl(
         saveUpdateTime(timestamp = timestamp, userId = userId)
     }
 
-    override suspend fun convertTransfersToRecords(
-        noteValues: List<String>,
+    override suspend fun deleteRecordsByAccounts(
+        accountIds: List<Int>,
         timestamp: Long,
         userId: String
     ) {
+        recordDao.deleteRecordsByAccounts(
+            accountIds = accountIds, timestamp = timestamp, userId = userId
+        )
         recordDao.convertTransfersToRecords(
-            noteValues = noteValues, timestamp = timestamp, userId = userId
+            noteValues = accountIds.map { it.toString() }, timestamp = timestamp, userId = userId
         )
         saveUpdateTime(timestamp = timestamp, userId = userId)
     }

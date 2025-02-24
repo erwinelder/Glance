@@ -14,6 +14,14 @@ import com.ataglance.walletglance.budget.data.repository.BudgetOnWidgetRepositor
 import com.ataglance.walletglance.budget.data.repository.BudgetOnWidgetRepositoryImpl
 import com.ataglance.walletglance.budget.data.repository.BudgetRepository
 import com.ataglance.walletglance.budget.data.repository.BudgetRepositoryImpl
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetAccountAssociationsByAccountsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetAccountAssociationsByAccountsUseCaseImpl
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetsAndAssociationsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetsAndAssociationsUseCaseImpl
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetsByCategoriesUseCase
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetsByCategoriesUseCaseImpl
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetsOnWidgetByBudgetsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.DeleteBudgetsOnWidgetByBudgetsUseCaseImpl
 import com.ataglance.walletglance.budget.domain.usecase.GetBudgetIdsOnWidgetUseCase
 import com.ataglance.walletglance.budget.domain.usecase.GetBudgetIdsOnWidgetUseCaseImpl
 import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsOnWidgetUseCase
@@ -78,13 +86,34 @@ val budgetModule = module {
     }
 
     single<BudgetOnWidgetRepository> {
-        BudgetOnWidgetRepositoryImpl(localSource = get(), remoteSource = get(), userContext = get())
+        BudgetOnWidgetRepositoryImpl(localSource = get(), remoteSource = get(), syncHelper = get())
     }
 
     /* ---------- Use Cases ---------- */
 
     single<SaveBudgetsUseCase> {
         SaveBudgetsUseCaseImpl(budgetRepository = get())
+    }
+
+    single<DeleteBudgetsAndAssociationsUseCase> {
+        DeleteBudgetsAndAssociationsUseCaseImpl(
+            budgetRepository = get(),
+            deleteBudgetsOnWidgetByBudgetsUseCase = get()
+        )
+    }
+
+    single<DeleteBudgetsByCategoriesUseCase> {
+        DeleteBudgetsByCategoriesUseCaseImpl(
+            budgetRepository = get(),
+            deleteBudgetsAndAssociationsUseCase = get()
+        )
+    }
+
+    single<DeleteBudgetAccountAssociationsByAccountsUseCase> {
+        DeleteBudgetAccountAssociationsByAccountsUseCaseImpl(
+            budgetRepository = get(),
+            deleteBudgetsAndAssociationsUseCase = get()
+        )
     }
 
     single<GetBudgetsUseCase> {
@@ -98,6 +127,10 @@ val budgetModule = module {
 
     single<SaveBudgetsOnWidgetUseCase> {
         SaveBudgetsOnWidgetUseCaseImpl(budgetOnWidgetRepository = get())
+    }
+
+    single<DeleteBudgetsOnWidgetByBudgetsUseCase> {
+        DeleteBudgetsOnWidgetByBudgetsUseCaseImpl(budgetOnWidgetRepository = get())
     }
 
     single<GetBudgetIdsOnWidgetUseCase> {

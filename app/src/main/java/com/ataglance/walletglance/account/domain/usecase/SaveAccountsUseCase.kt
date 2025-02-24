@@ -5,8 +5,8 @@ import com.ataglance.walletglance.account.domain.model.Account
 
 interface SaveAccountsUseCase {
 
-    suspend fun saveDomainModels(accounts: List<Account>)
+    suspend fun save(accounts: List<Account>)
 
-    suspend fun saveDataModels(accounts: List<AccountEntity>)
+    suspend fun upsert(accounts: List<AccountEntity>)
 
 }

@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface BudgetOnWidgetRepository {
 
+    suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>)
+
     suspend fun deleteAndUpsertBudgetsOnWidget(
         toDelete: List<BudgetOnWidgetEntity>,
         toUpsert: List<BudgetOnWidgetEntity>
