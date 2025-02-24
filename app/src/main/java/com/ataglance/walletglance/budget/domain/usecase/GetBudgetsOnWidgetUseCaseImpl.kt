@@ -8,9 +8,12 @@ import com.ataglance.walletglance.budget.domain.utils.getMaxDateRange
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsInDateRangeUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class GetBudgetsOnWidgetUseCaseImpl(
     private val budgetRepository: BudgetRepository,
@@ -20,26 +23,32 @@ class GetBudgetsOnWidgetUseCaseImpl(
     private val getRecordsInDateRangeUseCase: GetRecordsInDateRangeUseCase
 ) : GetBudgetsOnWidgetUseCase {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getFlow(): Flow<List<Budget>> = flow {
         val (entities, associations) = budgetRepository.getAllBudgetsAndAssociations()
         val categoryWithSubcategoriesList = getCategoriesUseCase.getOfExpenseType()
         val accounts = getAccountsUseCase.getAll()
 
-        val budgets = entities.toDomainModels(
+        val allBudgets = entities.toDomainModels(
             groupedCategoriesList = categoryWithSubcategoriesList,
             associations = associations,
             accounts = accounts
         )
-        val budgetsMaxDateRange = budgets.getMaxDateRange() ?: run {
-            emit(emptyList())
-            return@flow
+
+        val budgetsOnWidget = getBudgetIdsOnWidgetUseCase.getFlow().map { budgetIds ->
+            allBudgets.filter { it.id in budgetIds }
         }
 
-        combine(
-            getBudgetIdsOnWidgetUseCase.getFlow(),
-            getRecordsInDateRangeUseCase.getFlow(range = budgetsMaxDateRange)
-        ) { budgetIds, records ->
-            budgets.filter { it.id in budgetIds }.fillUsedAmountsByRecords(records)
+        val recordsInDateRange = budgetsOnWidget.flatMapConcat {
+            it.getMaxDateRange()
+                ?.let { range ->
+                    getRecordsInDateRangeUseCase.getFlow(range = range)
+                }
+                ?: flow { emit(emptyList()) }
+        }
+
+        combine(budgetsOnWidget, recordsInDateRange) { budgets, records ->
+            budgets.fillUsedAmountsByRecords(records)
         }.collect(::emit)
     }
 
