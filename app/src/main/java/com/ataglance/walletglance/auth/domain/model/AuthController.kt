@@ -148,9 +148,9 @@ class AuthController(
     suspend fun deleteAccount(password: String): AuthResult {
         val result = deleteUserUseCase.execute(password)
 
-//        if (result is Result.Success) {
-//            resetUser()
-//        }
+        if (result is Result.Success) {
+            resetUser()
+        }
         return result
     }
 

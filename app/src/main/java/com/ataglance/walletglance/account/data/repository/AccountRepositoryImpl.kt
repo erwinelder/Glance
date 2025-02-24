@@ -9,11 +9,10 @@ import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSo
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
@@ -23,10 +22,10 @@ class AccountRepositoryImpl(
     private val syncHelper: DataSyncHelper
 ) : AccountRepository {
 
-    private suspend fun syncDataFromRemote() {
+    private suspend fun synchroniseAccounts() {
         val userId = syncHelper.getUserIdForSync(TableName.Account) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
             remoteDataGetter = { timestamp ->
@@ -79,23 +78,23 @@ class AccountRepositoryImpl(
 
     override fun getAllAccountsFlow(): Flow<List<AccountEntity>> = flow {
         coroutineScope {
-            launch { syncDataFromRemote() }
-            localSource.getAllAccounts().collect(::emit)
+            launch { synchroniseAccounts() }
+            localSource.getAllAccountsFlow().collect(::emit)
         }
     }
 
     override suspend fun getAllAccounts(): List<AccountEntity> {
-        syncDataFromRemote()
-        return localSource.getAllAccounts().firstOrNull().orEmpty()
+        synchroniseAccounts()
+        return localSource.getAllAccounts()
     }
 
     override suspend fun getAccounts(ids: List<Int>): List<AccountEntity> {
-        syncDataFromRemote()
+        synchroniseAccounts()
         return localSource.getAccounts(ids = ids)
     }
 
     override suspend fun getAccount(id: Int): AccountEntity? {
-        syncDataFromRemote()
+        synchroniseAccounts()
         return localSource.getAccount(id = id)
     }
 

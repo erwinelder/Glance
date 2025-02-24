@@ -9,7 +9,7 @@ import com.ataglance.walletglance.category.data.remote.source.CategoryRemoteData
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +26,7 @@ class CategoryRepositoryImpl(
     private suspend fun synchroniseCategories() {
         val userId = syncHelper.getUserIdForSync(TableName.Category) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
             remoteDataGetter = { timestamp ->

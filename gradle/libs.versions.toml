@@ -28,8 +28,9 @@ firebase = "33.9.0"
 # Koin
 koin = "4.0.0"
 # Utilities
+kotlinxDateTime = "0.6.2"
+kotlinxSerializationJson = "1.7.3"
 gson = "2.10.1"
-kotlinxSerializationJson = "1.6.3"
 # Test
 rules = "1.6.1"
 runner = "1.6.2"
@@ -37,9 +38,9 @@ androidxTestCoreKtx = "1.6.1"
 espressoCore = "3.6.1"
 junit = "4.13.2"
 junitKtx = "1.2.1"
-junitJupiter = "5.10.2"
+junitJupiter = "5.11.4"
 junitVersion = "1.2.1"
-kotlinxCoroutinesTest = "1.8.0"
+kotlinxCoroutinesTest = "1.10.1"
 uiTestManifest = "1.7.8"
 # Mockito
 mockitoCore = "5.11.0"
@@ -48,7 +49,7 @@ mockk = "1.13.10"
 androidGradlePlugin = "8.8.1"
 ksp = "2.1.0-1.0.29"
 googleServices = "4.4.2"
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 
 [libraries]
 # Core
@@ -102,6 +103,7 @@ koin-compose = { group = "io.insert-koin", name = "koin-compose" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
 koin-compose-viewmodel-navigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation" }
 # Utilities
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDateTime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 # Test

@@ -7,6 +7,7 @@ import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 class AccountLocalDataSourceImpl(
     private val accountDao: AccountLocalDao,
@@ -42,8 +43,12 @@ class AccountLocalDataSourceImpl(
         saveUpdateTime(timestamp = timestamp)
     }
 
-    override fun getAllAccounts(): Flow<List<AccountEntity>> {
+    override fun getAllAccountsFlow(): Flow<List<AccountEntity>> {
         return accountDao.getAllAccounts()
+    }
+
+    override suspend fun getAllAccounts(): List<AccountEntity> {
+        return accountDao.getAllAccounts().firstOrNull().orEmpty()
     }
 
     override suspend fun getAccounts(ids: List<Int>): List<AccountEntity> {

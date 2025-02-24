@@ -1,9 +1,6 @@
-package com.ataglance.walletglance.core.utils
+package com.ataglance.walletglance.core.domain.date
 
-import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.core.domain.date.YearMonthDayHourMinute
+import com.ataglance.walletglance.core.utils.asTimestamp
 import java.time.LocalDate
 
 data class LocalDateRange(

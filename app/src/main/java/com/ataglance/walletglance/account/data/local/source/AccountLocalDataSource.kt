@@ -16,7 +16,9 @@ interface AccountLocalDataSource {
 
     suspend fun synchroniseAccounts(accountsToSync: EntitiesToSync<AccountEntity>, timestamp: Long)
 
-    fun getAllAccounts(): Flow<List<AccountEntity>>
+    fun getAllAccountsFlow(): Flow<List<AccountEntity>>
+
+    suspend fun getAllAccounts(): List<AccountEntity>
 
     suspend fun getAccounts(ids: List<Int>): List<AccountEntity>
 

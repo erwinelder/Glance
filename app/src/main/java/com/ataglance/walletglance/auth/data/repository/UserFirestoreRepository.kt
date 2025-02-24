@@ -11,34 +11,34 @@ import kotlinx.coroutines.tasks.await
 
 class UserFirestoreRepository(val firestore: FirebaseFirestore) : UserRepository {
 
-    private fun getUserPreferencesFirestoreRef(userId: String): DocumentReference {
+    private fun getUsersPreferencesFirestoreRef(userId: String): DocumentReference {
         return firestore.collection("UsersPreferences").document(userId)
     }
 
-    private fun getUserDataFirestoreRef(userId: String): DocumentReference {
+    private fun getUsersDataFirestoreRef(userId: String): DocumentReference {
         return firestore.collection("UsersData").document(userId)
     }
 
 
     override suspend fun getUserData(userId: String): ResultData<UserData, AuthError> {
-        getUserPreferencesFirestoreRef(userId).get().await()
+        getUsersPreferencesFirestoreRef(userId).get().await()
             ?.data?.toUserData(userId = userId)
             ?.let { return ResultData.Success(it) }
             ?: return ResultData.Error(AuthError.UserNotFound)
     }
 
     override suspend fun saveUserData(userData: UserData) {
-        getUserPreferencesFirestoreRef(userData.userId).set(userData.toUserDataMap()).await()
+        getUsersPreferencesFirestoreRef(userData.userId).set(userData.toUserDataMap()).await()
     }
 
     override suspend fun updateUserSubscription(userId: String, subscription: String) {
-        getUserPreferencesFirestoreRef(userId).update("subscription", subscription).await()
+        getUsersPreferencesFirestoreRef(userId).update("subscription", subscription).await()
     }
 
     override suspend fun deleteAllUserData(userId: String) {
         firestore.runBatch { batch ->
-            batch.delete(getUserDataFirestoreRef(userId))
-            batch.delete(getUserPreferencesFirestoreRef(userId))
+            batch.delete(getUsersDataFirestoreRef(userId))
+            batch.delete(getUsersPreferencesFirestoreRef(userId))
         }.await()
     }
 

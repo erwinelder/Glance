@@ -13,7 +13,7 @@ import com.ataglance.walletglance.budget.data.remote.source.BudgetRemoteDataSour
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 
 class BudgetRepositoryImpl(
@@ -25,7 +25,7 @@ class BudgetRepositoryImpl(
     private suspend fun synchroniseBudgets() {
         val userId = syncHelper.getUserIdForSync(TableName.Budget) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getBudgetUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getBudgetUpdateTime(userId = userId) },
             remoteDataGetter = { timestamp ->
@@ -39,7 +39,7 @@ class BudgetRepositoryImpl(
     private suspend fun synchroniseBudgetAccountAssociations() {
         val userId = syncHelper.getUserIdForSync(TableName.BudgetAccountAssociation) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getBudgetAccountAssociationUpdateTime,
             remoteUpdateTimeGetter = {
                 remoteSource.getBudgetAccountAssociationUpdateTime(userId = userId)

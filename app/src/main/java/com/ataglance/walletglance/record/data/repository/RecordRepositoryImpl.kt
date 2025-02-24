@@ -3,7 +3,7 @@ package com.ataglance.walletglance.record.data.repository
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
@@ -27,7 +27,7 @@ class RecordRepositoryImpl(
     private suspend fun synchroniseRecords() {
         val userId = syncHelper.getUserIdForSync(TableName.Record) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
             remoteDataGetter = { timestamp ->

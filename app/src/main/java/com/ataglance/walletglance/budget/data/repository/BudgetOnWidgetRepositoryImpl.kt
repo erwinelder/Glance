@@ -9,7 +9,7 @@ import com.ataglance.walletglance.budget.data.remote.source.BudgetOnWidgetRemote
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +26,7 @@ class BudgetOnWidgetRepositoryImpl(
     private suspend fun synchroniseBudgetsOnWidget() {
         val userId = syncHelper.getUserIdForSync(TableName.BudgetOnWidget) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
             remoteDataGetter = { timestamp ->

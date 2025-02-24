@@ -2,7 +2,7 @@ package com.ataglance.walletglance.navigation.data.repository
 
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseData
+import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
 import com.ataglance.walletglance.navigation.data.local.source.NavigationButtonLocalDataSource
@@ -24,7 +24,7 @@ class NavigationButtonRepositoryImpl(
     private suspend fun synchroniseNavigationButtons() {
         val userId = syncHelper.getUserIdForSync(TableName.NavigationButton) ?: return
 
-        synchroniseData(
+        synchroniseDataFromRemote(
             localUpdateTimeGetter = localSource::getUpdateTime,
             remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
             remoteDataGetter = { timestamp ->
