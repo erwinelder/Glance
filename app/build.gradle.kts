@@ -15,7 +15,7 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 67
+        versionCode = 68
         versionName = "4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

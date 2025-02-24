@@ -39,7 +39,7 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
         WidgetEntity::class,
         BudgetOnWidgetEntity::class
     ],
-    version = 11,
+    version = 12,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
