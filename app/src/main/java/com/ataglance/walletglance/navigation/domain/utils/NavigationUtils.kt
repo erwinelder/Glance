@@ -1,14 +1,15 @@
 package com.ataglance.walletglance.navigation.domain.utils
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.presentation.navigation.AccountsSettingsScreens
-import com.ataglance.walletglance.category.presentation.navigation.CategoriesSettingsScreens
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.account.domain.navigation.AccountsSettingsScreens
+import com.ataglance.walletglance.category.domain.navigation.CategoriesSettingsScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlin.reflect.KClass
 
 
@@ -50,6 +51,11 @@ fun NavDestination?.currentScreenIs(screen: Any): Boolean {
 fun NavBackStackEntry?.currentScreenIs(screen: Any): Boolean {
     val screenSimpleName = screen::class.simpleName()
     val fromRoute = this?.fromRoute()
+
+    Log.d(
+        "NavigationUtils",
+        "currentScreenIs: className: ${screen::class.simpleName}, screenSimpleName: $screenSimpleName, fromRoute: $fromRoute"
+    )
 
     return fromRoute == screenSimpleName ||
             (fromRoute == SettingsScreens.SettingsHome::class.simpleName() &&

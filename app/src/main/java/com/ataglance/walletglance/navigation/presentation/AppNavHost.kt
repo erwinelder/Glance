@@ -23,12 +23,12 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreen
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsViewModel
-import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
+import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -40,7 +40,7 @@ import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreat
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreen
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
-import com.ataglance.walletglance.settings.navigation.settingsGraph
+import com.ataglance.walletglance.settings.presentation.navigation.settingsGraph
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel

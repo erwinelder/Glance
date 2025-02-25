@@ -7,13 +7,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionsScreen
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.categoryCollectionsGraph(

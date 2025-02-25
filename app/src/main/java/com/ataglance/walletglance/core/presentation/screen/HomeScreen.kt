@@ -40,7 +40,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.core.presentation.components.widgets.ChosenBudgetsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime

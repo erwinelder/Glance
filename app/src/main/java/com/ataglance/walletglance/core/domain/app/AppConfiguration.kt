@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.core.domain.app
 
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 
 data class AppConfiguration(
     val isSetUp: Boolean = false,

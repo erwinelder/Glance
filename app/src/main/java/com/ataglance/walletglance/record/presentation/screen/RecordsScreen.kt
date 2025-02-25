@@ -27,12 +27,12 @@ import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
-import com.ataglance.walletglance.categoryCollection.presentation.navigation.CategoryCollectionsSettingsScreens
+import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity

@@ -32,7 +32,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity

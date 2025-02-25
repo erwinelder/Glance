@@ -8,13 +8,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsOneOf
 import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
 import com.ataglance.walletglance.navigation.domain.utils.simpleName
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

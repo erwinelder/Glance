@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope

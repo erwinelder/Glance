@@ -37,7 +37,7 @@ import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.mapper.toUiState
 import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreen
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.authGraph(

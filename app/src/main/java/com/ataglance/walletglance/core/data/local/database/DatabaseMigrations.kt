@@ -261,7 +261,7 @@ val MIGRATION_11_12 = object : Migration(11, 12) {
 
         tableNames.forEach { tableName ->
             db.execSQL("""
-                INSERT INTO local_update_time (tableName, timestamp)
+                REPLACE INTO local_update_time (tableName, timestamp)
                 VALUES ('$tableName', $timestamp)
             """.trimIndent())
         }

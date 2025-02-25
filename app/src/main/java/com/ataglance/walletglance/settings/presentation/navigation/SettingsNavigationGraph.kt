@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.settings.navigation
+package com.ataglance.walletglance.settings.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.collectAsState
@@ -17,10 +17,11 @@ import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesP
 import com.ataglance.walletglance.category.presentation.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreen
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreen
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen

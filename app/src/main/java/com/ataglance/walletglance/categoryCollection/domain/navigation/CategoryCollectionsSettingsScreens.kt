@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.categoryCollection.presentation.navigation
+package com.ataglance.walletglance.categoryCollection.domain.navigation
 
 import kotlinx.serialization.Serializable
 

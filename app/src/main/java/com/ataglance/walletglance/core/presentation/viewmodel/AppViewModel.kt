@@ -11,7 +11,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
 import com.ataglance.walletglance.core.utils.getCalendarEndLong
 import com.ataglance.walletglance.core.utils.getCalendarStartLong

@@ -16,7 +16,7 @@ import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.presentation.components.pickers.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.components.screenContainers.MainScaffold
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
 import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs

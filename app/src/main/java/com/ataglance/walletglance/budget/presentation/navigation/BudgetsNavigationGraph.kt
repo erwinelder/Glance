@@ -9,13 +9,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.domain.navigation.BudgetsSettingsScreens
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreen
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreen
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.budgetsGraph(

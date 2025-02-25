@@ -5,9 +5,9 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.enumValueOrNull
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 
 data class AuthResultSuccessScreenState(
     val type: AuthResultSuccessScreenType,

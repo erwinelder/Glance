@@ -56,7 +56,7 @@ import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeO
 import com.ataglance.walletglance.core.presentation.components.buttons.GlanceFloatingButton
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
-import com.ataglance.walletglance.core.presentation.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

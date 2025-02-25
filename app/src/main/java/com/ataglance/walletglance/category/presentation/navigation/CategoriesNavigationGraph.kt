@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ataglance.walletglance.category.domain.navigation.CategoriesSettingsScreens
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreen
 import com.ataglance.walletglance.category.presentation.screen.EditSubcategoriesScreen
@@ -18,7 +19,7 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 

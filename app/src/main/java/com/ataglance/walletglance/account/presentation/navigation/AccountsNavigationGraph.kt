@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.ataglance.walletglance.account.domain.navigation.AccountsSettingsScreens
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreen
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreen
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreen
@@ -21,7 +22,7 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.accountsGraph(

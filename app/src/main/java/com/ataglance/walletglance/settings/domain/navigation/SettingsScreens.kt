@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.settings.navigation
+package com.ataglance.walletglance.settings.domain.navigation
 
 import kotlinx.serialization.Serializable
 
