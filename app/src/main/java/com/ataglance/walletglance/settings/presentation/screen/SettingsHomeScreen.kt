@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
@@ -96,7 +96,7 @@ private fun CompactLayout(
     settingsCategories: List<SettingsCategory>,
     onNavigateToScreen: (Any) -> Unit
 ) {
-    val gap = 20.dp
+    val gap = 16.dp
     val scrollState = rememberScrollState(initial = 1800)
     
     val categories by remember(settingsCategories) {

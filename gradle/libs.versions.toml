@@ -47,7 +47,7 @@ mockitoCore = "5.11.0"
 mockk = "1.13.10"
 # Plugins
 androidGradlePlugin = "8.8.1"
-ksp = "2.1.0-1.0.29"
+ksp = "2.1.10-1.0.30"
 googleServices = "4.4.2"
 kotlin = "2.1.10"
 

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.auth.presentation.utils
 
 import com.ataglance.walletglance.auth.domain.model.SignInCase
-import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 
 fun getAuthNavGraphStartDestination(
     isSignedIn: Boolean,

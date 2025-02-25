@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.settings.domain.navigation
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
 sealed interface SettingsScreens {
@@ -7,6 +8,7 @@ sealed interface SettingsScreens {
     @Serializable
     data object Start : SettingsScreens
 
+    @Keep
     @Serializable
     data object Auth : SettingsScreens
 

@@ -7,11 +7,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
-import com.ataglance.walletglance.auth.presentation.navigation.AuthScreens
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
-import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsOneOf
+import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsAnyOf
 import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
 import com.ataglance.walletglance.navigation.domain.utils.simpleName
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
@@ -86,7 +86,7 @@ class NavigationViewModel(
         isSetUp: Boolean,
         navBackStackEntry: NavBackStackEntry?
     ): Boolean {
-        return isSetUp && navBackStackEntry.currentScreenIsOneOf(
+        return isSetUp && navBackStackEntry.currentScreenIsAnyOf(
             MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(),
             MainScreens.Budgets, SettingsScreens.SettingsHome
         )

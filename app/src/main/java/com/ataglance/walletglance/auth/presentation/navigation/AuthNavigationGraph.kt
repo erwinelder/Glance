@@ -14,6 +14,7 @@ import com.ataglance.walletglance.auth.domain.mapper.toAuthResultSuccessScreenTy
 import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.presentation.model.AuthResultSuccessScreenState
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreen
 import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreen

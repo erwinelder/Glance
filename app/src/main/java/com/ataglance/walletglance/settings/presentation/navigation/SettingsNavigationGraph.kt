@@ -40,7 +40,9 @@ fun NavGraphBuilder.settingsGraph(
     authController: AuthController,
     appConfiguration: AppConfiguration
 ) {
-    navigation<MainScreens.Settings>(startDestination = appConfiguration.settingsStartDestination) {
+    navigation<MainScreens.Settings>(
+        startDestination = appConfiguration.settingsStartDestination
+    ) {
         composable<SettingsScreens.Start> {
             StartSetupScreen(
                 isAppThemeSetUp = appConfiguration.appTheme != null,

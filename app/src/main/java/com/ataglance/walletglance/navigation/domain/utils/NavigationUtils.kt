@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.navigation.domain.utils
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
@@ -14,15 +13,13 @@ import kotlin.reflect.KClass
 
 
 fun NavDestination?.fromRoute(): String {
-    return this?.route?.substringBefore('/')?.substringAfterLast('.') ?: ""
+    return this?.route?.substringBefore('/')?.substringAfterLast('.')?.substringBefore('?') ?: ""
 }
-
 
 fun NavBackStackEntry?.fromRoute(): String {
     return this?.destination?.route
         ?.substringBefore('/')?.substringAfterLast('.')?.substringBefore("?") ?: ""
 }
-
 
 fun NavBackStackEntry?.fromMainScreen(): MainScreens {
     this.fromRoute().let {
@@ -47,50 +44,28 @@ fun NavDestination?.currentScreenIs(screen: Any): Boolean {
     return this?.fromRoute() == screen::class.simpleName()
 }
 
-
 fun NavBackStackEntry?.currentScreenIs(screen: Any): Boolean {
     val screenSimpleName = screen::class.simpleName()
     val fromRoute = this?.fromRoute()
-
-    Log.d(
-        "NavigationUtils",
-        "currentScreenIs: className: ${screen::class.simpleName}, screenSimpleName: $screenSimpleName, fromRoute: $fromRoute"
-    )
 
     return fromRoute == screenSimpleName ||
             (fromRoute == SettingsScreens.SettingsHome::class.simpleName() &&
                     screenSimpleName == MainScreens.Settings::class.simpleName())
 }
 
-
-fun NavBackStackEntry?.currentScreenIsOneOf(vararg screens: Any): Boolean {
+fun NavBackStackEntry?.currentScreenIsAnyOf(vararg screens: Any): Boolean {
     this ?: return false
-
-    screens.forEach { screen ->
-        if (this.currentScreenIs(screen)) {
-            return true
-        }
-    }
-    return false
+    return screens.any { this.currentScreenIs(it) }
 }
-
 
 fun NavBackStackEntry?.currentScreenIsNoneOf(vararg screens: Any): Boolean {
     this ?: return false
-
-    screens.forEach { screen ->
-        if (this.currentScreenIs(screen)) {
-            return false
-        }
-    }
-    return true
+    return screens.none { this.currentScreenIs(it) }
 }
 
-
 fun NavBackStackEntry?.anyScreenInHierarchyIs(screen: Any): Boolean {
-    return this?.destination?.hierarchy?.any {
-        it.currentScreenIs(screen)
-    } == true
+    this ?: return false
+    return this.destination.hierarchy.any { it.currentScreenIs(screen) }
 }
 
 

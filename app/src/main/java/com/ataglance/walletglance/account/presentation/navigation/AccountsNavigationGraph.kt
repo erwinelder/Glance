@@ -31,7 +31,9 @@ fun NavGraphBuilder.accountsGraph(
     navViewModel: NavigationViewModel,
     appConfiguration: AppConfiguration
 ) {
-    navigation<SettingsScreens.Accounts>(startDestination = AccountsSettingsScreens.EditAccounts) {
+    navigation<SettingsScreens.Accounts>(
+        startDestination = AccountsSettingsScreens.EditAccounts
+    ) {
         composable<AccountsSettingsScreens.EditAccounts> { backStack ->
             val accountsViewModel = backStack.sharedKoinNavViewModel<EditAccountsViewModel>(navController)
             val accountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
