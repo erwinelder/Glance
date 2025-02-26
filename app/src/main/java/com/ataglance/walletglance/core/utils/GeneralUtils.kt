@@ -1,12 +1,55 @@
 package com.ataglance.walletglance.core.utils
 
+import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import java.util.Locale
 import kotlin.enums.enumEntries
+
+
+fun takeActionIf(condition: Boolean, action: () -> Unit): (() -> Unit)? {
+    return if (condition) {
+        action
+    } else {
+        null
+    }
+}
+
+fun <T, R> takeActionIf(condition: Boolean, action: (T) -> R): ((T) -> R)? {
+    return if (condition) {
+        action
+    } else {
+        null
+    }
+}
+
+fun takeComposableIf(
+    condition: Boolean,
+    composable: @Composable () -> Unit
+): (@Composable () -> Unit)? {
+    return if (condition) {
+        composable
+    } else {
+        null
+    }
+}
+
+fun <T> takeComposableIfNotNull(
+    nullableItem: T?,
+    composableGetter: @Composable (T) -> Unit
+): (@Composable () -> Unit)? {
+    return if (nullableItem != null) {
+        {
+            composableGetter(nullableItem)
+        }
+    } else {
+        null
+    }
+}
 
 
 fun <A, B> Pair<A?, B?>.takeIfNoneIsNull(): Pair<A, B>? {
@@ -47,21 +90,23 @@ fun <T> List<T>.moveItems(fromIndex: Int, toIndex: Int): List<T> {
 }
 
 
-fun Int.formatWithSpaces(): String {
-    val numberString = this.toString()
-    var formattedNumber = ""
-
-    for ((index, char) in numberString.reversed().withIndex()) {
-
-        formattedNumber = char + formattedNumber
-
-        if (index % 3 == 2 && index != numberString.lastIndex) {
-            formattedNumber = " $formattedNumber"
-        }
-
+fun <T, V> List<T>.excludeItems(items: List<T>, keySelector: (T) -> V): List<T> {
+    return this.filter { item ->
+        items.none { keySelector(item) == keySelector(it) }
     }
+}
 
-    return formattedNumber
+
+fun Double.roundToTwoDecimals(): Double {
+    return "%.2f".format(Locale.US, this).toDouble()
+}
+
+fun Float.roundToTwoDecimals(): Float {
+    return "%.2f".format(Locale.US, this).toFloat()
+}
+
+fun Float.roundToTwoDecimals(suffix: String): String {
+    return "%.2f".format(Locale.US, this) + suffix
 }
 
 
@@ -81,6 +126,32 @@ fun Double.formatWithSpaces(additionToEnd: String? = null): String {
     }
 
     return formattedNumber + (additionToEnd?.let { " $it" } ?: "")
+}
+
+fun List<Double>.getAverage(): Double {
+    return if (this.isEmpty()) {
+        0.0
+    } else {
+        (this.sum() / this.size).roundToTwoDecimals()
+    }
+}
+
+
+fun Int.formatWithSpaces(): String {
+    val numberString = this.toString()
+    var formattedNumber = ""
+
+    for ((index, char) in numberString.reversed().withIndex()) {
+
+        formattedNumber = char + formattedNumber
+
+        if (index % 3 == 2 && index != numberString.lastIndex) {
+            formattedNumber = " $formattedNumber"
+        }
+
+    }
+
+    return formattedNumber
 }
 
 
@@ -106,7 +177,6 @@ inline fun <reified T : Enum<T>> enumValueOrNull(name: String): T? {
 
 
 
-
 operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingValues {
     return PaddingValues(
         start = this.start + paddingValues.start,
@@ -127,3 +197,47 @@ val PaddingValues.top: Dp
 
 val PaddingValues.bottom: Dp
     get() = calculateBottomPadding()
+
+
+fun Uri.extractOobCode(): String? {
+    return getQueryParameter("oobCode")?.takeIf { it.isNotEmpty() }
+}
+
+
+fun Any.convertToIntOrNull(): Int? {
+    return when (this) {
+        is Int -> this
+        is Double -> this.toInt()
+        is Float -> this.toInt()
+        is Long -> this.toInt()
+        else -> null
+    }
+}
+
+fun Any?.convertToIntOrZero(): Int {
+    return this?.convertToIntOrNull() ?: 0
+}
+
+
+fun Any.convertToDoubleOrNull(): Double? {
+    return when (this) {
+        is Int -> this.toDouble()
+        is Double -> this
+        is Float -> this.toDouble()
+        is Long -> this.toDouble()
+        else -> null
+    }
+}
+
+fun Any?.convertToDoubleOrZero(): Double {
+    return this?.convertToDoubleOrNull() ?: 0.0
+}
+
+
+fun Any.convertToCharOrNull(): Char? {
+    return when (this) {
+        is Char -> this
+        is String -> this.firstOrNull()
+        else -> null
+    }
+}

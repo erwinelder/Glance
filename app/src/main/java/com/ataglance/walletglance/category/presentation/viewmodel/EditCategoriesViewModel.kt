@@ -1,62 +1,84 @@
 package com.ataglance.walletglance.category.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.category.data.mapper.toCategoryEntityList
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
-import com.ataglance.walletglance.category.utils.toCategoryColorWithName
+import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
+import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.model.SetupCategoriesUiState
 import com.ataglance.walletglance.core.utils.moveItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class EditCategoriesViewModel(
-    private val passedCategoriesWithSubcategories: CategoriesWithSubcategories
+    defaultCategoriesPackage: DefaultCategoriesPackage,
+    private val saveCategoriesUseCase: SaveCategoriesUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<SetupCategoriesUiState> = MutableStateFlow(
-        SetupCategoriesUiState(categoriesWithSubcategories = passedCategoriesWithSubcategories)
-    )
+
+    init {
+        viewModelScope.launch {
+            val categories = getCategoriesUseCase.getGrouped()
+                .takeIf { it.expense.isNotEmpty() && it.income.isNotEmpty() }
+                ?: defaultCategoriesPackage.get()
+
+            initialGroupedCategoriesByType = categories
+            _uiState.update {
+                it.copy(groupedCategoriesByType = categories)
+            }
+        }
+    }
+
+    private var initialGroupedCategoriesByType = GroupedCategoriesByType()
+
+
+    private val _uiState = MutableStateFlow(SetupCategoriesUiState())
     val uiState: StateFlow<SetupCategoriesUiState> = _uiState.asStateFlow()
 
-
-    fun changeCategoryTypeToShow(categoryType: CategoryType) {
-        _uiState.update { it.copy(categoryType = categoryType) }
+    fun changeCategoryType(categoryType: CategoryType) {
+        _uiState.update {
+            it.copy(categoryType = categoryType)
+        }
     }
 
     fun reapplyCategoryLists() {
-        _uiState.update { it.copy(
-            categoryWithSubcategories = null,
-            categoriesWithSubcategories = passedCategoriesWithSubcategories,
-        ) }
+        _uiState.update {
+            it.copy(
+                groupedCategories = null,
+                groupedCategoriesByType = initialGroupedCategoriesByType,
+            )
+        }
     }
 
-    fun applySubcategoryListToEdit(categoryWithSubcategories: CategoryWithSubcategories) {
+    fun applySubcategoryListToEdit(groupedCategories: GroupedCategories) {
         _uiState.update {
-            it.copy(categoryWithSubcategories = categoryWithSubcategories)
+            it.copy(groupedCategories = groupedCategories)
         }
     }
 
     fun clearSubcategoryList() {
         _uiState.update {
-            it.copy(categoryWithSubcategories = null)
+            it.copy(groupedCategories = null)
         }
     }
 
     fun moveParentCategories(firstIndex: Int, secondIndex: Int) {
-        val categoryWithSubcategoriesList = uiState.value.categoriesWithSubcategories
+        val categoryWithSubcategoriesList = uiState.value.groupedCategoriesByType
             .getByType(uiState.value.categoryType)
             .moveItems(firstIndex, secondIndex)
 
         _uiState.update {
             it.copy(
-                categoriesWithSubcategories = it.categoriesWithSubcategories.replaceListByType(
+                groupedCategoriesByType = it.groupedCategoriesByType.replaceListByType(
                     list = categoryWithSubcategoriesList,
                     type = uiState.value.categoryType
                 )
@@ -65,13 +87,13 @@ class EditCategoriesViewModel(
     }
 
     fun moveSubcategories(firstIndex: Int, secondIndex: Int) {
-        val categoryWithSubcategories = uiState.value.categoryWithSubcategories ?: return
+        val categoryWithSubcategories = uiState.value.groupedCategories ?: return
         val subcategoryList = categoryWithSubcategories.subcategoryList
             .moveItems(firstIndex, secondIndex)
 
         _uiState.update {
             it.copy(
-                categoryWithSubcategories = categoryWithSubcategories.copy(
+                groupedCategories = categoryWithSubcategories.copy(
                     subcategoryList = subcategoryList
                 )
             )
@@ -84,41 +106,41 @@ class EditCategoriesViewModel(
             parentCategoryId = null,
             name = "",
             icon = CategoryIcon.Other,
-            colorWithName = CategoryColors.GrayDefault.toCategoryColorWithName()
+            color = CategoryColor.GrayDefault
         )
     }
 
     fun getNewSubcategory(): Category {
-        val parentCategory = uiState.value.categoryWithSubcategories?.category ?: Category()
+        val parentCategory = uiState.value.groupedCategories?.category ?: Category()
 
         return Category(
             type = uiState.value.categoryType,
             parentCategoryId = parentCategory.id,
             name = "",
             icon = parentCategory.icon,
-            colorWithName = parentCategory.colorWithName
+            color = parentCategory.color
         )
     }
 
     fun saveSubcategoryList() {
         val state = uiState.value
-        state.categoryWithSubcategories ?: return
+        state.groupedCategories ?: return
 
-        val categoryWithSubcategoriesList = state.categoriesWithSubcategories
+        val categoryWithSubcategoriesList = state.groupedCategoriesByType
             .getByType(state.categoryType)
             .map { item ->
-                item.takeIf { it.category.id != state.categoryWithSubcategories.category.id }
-                    ?: state.categoryWithSubcategories.fixSubcategoriesOrderNumbers()
+                item.takeIf { it.category.id != state.groupedCategories.category.id }
+                    ?: state.groupedCategories.fixSubcategoriesOrderNumbers()
             }
 
-        val newCategoriesWithSubcategories = state.categoriesWithSubcategories.replaceListByType(
+        val newCategoriesWithSubcategories = state.groupedCategoriesByType.replaceListByType(
             list = categoryWithSubcategoriesList,
             type = state.categoryType
         )
         _uiState.update {
             it.copy(
-                categoryWithSubcategories = null,
-                categoriesWithSubcategories = newCategoriesWithSubcategories
+                groupedCategories = null,
+                groupedCategoriesByType = newCategoriesWithSubcategories
             )
         }
     }
@@ -126,7 +148,7 @@ class EditCategoriesViewModel(
     fun deleteCategory(category: Category) {
         if (!category.canBeDeleted()) return
 
-        if (uiState.value.categoryWithSubcategories == null) {
+        if (uiState.value.groupedCategories == null) {
             deleteParentCategory(category)
         } else {
             deleteSubcategoryById(category.id)
@@ -136,7 +158,7 @@ class EditCategoriesViewModel(
     private fun deleteParentCategory(category: Category) {
         _uiState.update {
             it.copy(
-                categoriesWithSubcategories = it.categoriesWithSubcategories
+                groupedCategoriesByType = it.groupedCategoriesByType
                     .deleteCategoryById(category)
             )
         }
@@ -145,7 +167,7 @@ class EditCategoriesViewModel(
     private fun deleteSubcategoryById(id: Int) {
         _uiState.update {
             it.copy(
-                categoryWithSubcategories = it.categoryWithSubcategories?.deleteSubcategoryById(id)
+                groupedCategories = it.groupedCategories?.deleteSubcategoryById(id)
             )
         }
     }
@@ -156,67 +178,12 @@ class EditCategoriesViewModel(
         }
     }
 
-    fun getAllCategoryEntities(): List<CategoryEntity> {
-        return uiState.value.categoriesWithSubcategories
+
+    suspend fun saveCategories() {
+        val categories = uiState.value.groupedCategoriesByType
             .fixParentCategoriesOrderNums()
-            .concatenateAsCategoryList()
-            .toCategoryEntityList()
-    }
-
-}
-
-data class SetupCategoriesViewModelFactory(
-    private val categoriesWithSubcategories: CategoriesWithSubcategories
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return EditCategoriesViewModel(categoriesWithSubcategories) as T
-    }
-}
-
-
-data class SetupCategoriesUiState(
-    val categoryType: CategoryType = CategoryType.Expense,
-    val categoryWithSubcategories: CategoryWithSubcategories? = null,
-    val categoriesWithSubcategories: CategoriesWithSubcategories = CategoriesWithSubcategories()
-) {
-
-    private fun getNewCategoryId(): Int {
-        return ((categoriesWithSubcategories.concatenateAsCategoryList() +
-                (categoryWithSubcategories?.subcategoryList ?: emptyList()))
-            .maxOfOrNull { it.id } ?: 0) + 1
-    }
-
-    fun saveCategory(category: Category): SetupCategoriesUiState {
-        return if (categoryWithSubcategories == null) {
-            saveParentCategory(category)
-        } else {
-            saveSubcategory(category)
-        }
-    }
-
-    private fun saveParentCategory(category: Category): SetupCategoriesUiState {
-        return this.copy(
-            categoriesWithSubcategories = if (category.id == 0) {
-                categoriesWithSubcategories.appendNewCategory(
-                    category = category.copy(id = getNewCategoryId())
-                )
-            } else {
-                categoriesWithSubcategories.replaceCategory(category)
-            }
-        )
-    }
-
-    private fun saveSubcategory(category: Category): SetupCategoriesUiState {
-        return this.copy(
-            categoryWithSubcategories = if (category.id == 0) {
-                categoryWithSubcategories?.appendNewSubcategory(
-                    subcategory = category.copy(id = getNewCategoryId())
-                )
-            } else {
-                categoryWithSubcategories?.replaceSubcategory(category)
-            }
-        )
+            .asList()
+        saveCategoriesUseCase.save(categories = categories)
     }
 
 }

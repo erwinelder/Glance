@@ -36,28 +36,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.EditAccountUiState
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
+import com.ataglance.walletglance.account.mapper.toEditAccountUiState
+import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun EditAccountScreen(
     scaffoldPadding: PaddingValues,
-    editAccountUiState: EditAccountUiState,
+    accountDraft: AccountDraft,
     allowDeleting: Boolean,
     allowSaving: Boolean,
     onColorChange: (String) -> Unit,
@@ -76,19 +77,19 @@ fun EditAccountScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             fillGlassSurface = false,
             topButton = if (allowDeleting) {
                 {
                     SecondaryButton(text = stringResource(R.string.delete)) {
-                        onDeleteButton(editAccountUiState.id)
+                        onDeleteButton(accountDraft.id)
                     }
                 }
             } else null,
             glassSurfaceContent = {
                 GlassSurfaceContent(
-                    uiState = editAccountUiState,
+                    uiState = accountDraft,
                     onColorButtonClick = { showColorPicker = true },
                     onNameChange = onNameChange,
                     onNavigateToEditAccountCurrencyScreen = onNavigateToEditAccountCurrencyScreen,
@@ -108,7 +109,7 @@ fun EditAccountScreen(
         )
         ColorPicker(
             visible = showColorPicker,
-            colorList = AccountPossibleColors().asColorWithNameList(CurrAppTheme),
+            colorList = getAccountColorsWithNames(CurrAppTheme),
             onColorClick = onColorChange,
             onPickerClose = {
                 showColorPicker = false
@@ -119,7 +120,7 @@ fun EditAccountScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    uiState: EditAccountUiState,
+    uiState: AccountDraft,
     onColorButtonClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onNavigateToEditAccountCurrencyScreen: () -> Unit,
@@ -196,19 +197,19 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
         ) {
             Text(
                 text = currency,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .bounceClickEffect(onClick = onNavigateToCurrencyPickerWindow)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(GlanceTheme.surface)
+                    .background(GlanceColors.surface)
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             )
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "Right arrow icon",
-                tint = GlanceTheme.onSurface,
+                tint = GlanceColors.onSurface,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -222,27 +223,23 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
 fun EditAccountScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     account: Account = Account(
         id = 1,
         orderNum = 1,
         name = "Main USD",
         currency = "USD",
         balance = 112.13,
-        color = AccountPossibleColors().default.toAccountColorWithName(),
+        color = AccountColors.Default,
         isActive = false
     ),
     allowDeleting: Boolean = false,
 ) {
     val editAccountUiState = account.toEditAccountUiState()
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountScreen(
             scaffoldPadding = scaffoldPadding,
-            editAccountUiState = editAccountUiState,
+            accountDraft = editAccountUiState,
             allowDeleting = allowDeleting,
             allowSaving = editAccountUiState.allowSaving(),
             onColorChange = {},

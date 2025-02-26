@@ -1,23 +1,25 @@
 package com.ataglance.walletglance.account.data.repository
 
-import com.ataglance.walletglance.account.data.local.dao.AccountDao
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import kotlinx.coroutines.flow.Flow
 
-class AccountRepository(
-    private val dao: AccountDao
-) {
+interface AccountRepository {
 
-    suspend fun upsertAccounts(accountList: List<AccountEntity>) {
-        dao.upsertAccounts(accountList)
-    }
+    suspend fun upsertAccounts(accounts: List<AccountEntity>)
 
-    suspend fun deleteAllAccounts() {
-        dao.deleteAllAccounts()
-    }
+    suspend fun deleteAndUpsertAccounts(
+        toDelete: List<AccountEntity>,
+        toUpsert: List<AccountEntity>
+    )
 
-    fun getAllAccounts(): Flow<List<AccountEntity>> {
-        return dao.getAllAccounts()
-    }
+    suspend fun deleteAllAccountsLocally()
+
+    fun getAllAccountsFlow(): Flow<List<AccountEntity>>
+
+    suspend fun getAllAccounts(): List<AccountEntity>
+
+    suspend fun getAccounts(ids: List<Int>): List<AccountEntity>
+
+    suspend fun getAccount(id: Int): AccountEntity?
 
 }

@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -66,7 +66,7 @@ fun AccountNameWithCurrencyComposable(
                     onClick?.let { it() }
                 }
                 .clip(RoundedCornerShape(roundedCornerSize + 1.dp))
-                .background(GlanceTheme.onSurface.copy(.15f))
+                .background(GlanceColors.accountSemiTransparentBackground)
                 .padding(2.dp)
         ) {
             Row(
@@ -111,7 +111,7 @@ fun AccountNameWithCurrencyComposable(
                         .clip(RoundedCornerShape(roundedCornerSize))
                         .background(
                             if (account?.color?.name == AccountColors.Default.name) {
-                                GlanceTheme.background.copy(.07f)
+                                GlanceColors.background.copy(.07f)
                             } else {
                                 Color.White.copy(.09f)
                             }

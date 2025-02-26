@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun TextDivider(
@@ -30,11 +30,11 @@ fun TextDivider(
             modifier = Modifier
                 .weight(1f)
                 .height(2.dp)
-                .background(GlanceTheme.outline.copy(.5f))
+                .background(GlanceColors.outlineSemiTransparent)
         )
         Text(
             text = stringResource(textRes),
-            color = GlanceTheme.outline,
+            color = GlanceColors.outline,
             fontSize = 17.sp,
             fontWeight = FontWeight.W500,
             modifier = Modifier
@@ -45,7 +45,7 @@ fun TextDivider(
             modifier = Modifier
                 .weight(1f)
                 .height(2.dp)
-                .background(GlanceTheme.outline.copy(.5f))
+                .background(GlanceColors.outlineSemiTransparent)
         )
     }
 }

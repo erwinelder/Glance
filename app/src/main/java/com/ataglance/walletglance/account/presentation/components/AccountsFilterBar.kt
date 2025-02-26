@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 
 @Composable
 fun AccountsFilterBar(
@@ -39,7 +39,7 @@ fun AccountsFilterBar(
                 outerPadding = PaddingValues(horizontal = 3.dp),
                 adjustStyleByActiveStatus = true,
                 showBalance = false,
-                onClick = { onAccountClick(account.orderNum) }
+                onClick = { onAccountClick(account.id) }
             )
         }
         item {

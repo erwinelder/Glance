@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -41,15 +41,15 @@ fun GlassSurfaceOnGlassSurface(
     localModifier = localModifier
         .background(
             brush = Brush.linearGradient(
-                colors = GlanceTheme.onGlassSurfaceGradient,
+                colors = GlanceColors.glassGradientOnGlass,
                 start = Offset(75f, 200f),
                 end = Offset(100f, 0f)
             )
         )
         .border(
-            1.dp,
-            GlanceTheme.onGlassSurfaceBorder,
-            RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
+            width = 1.dp,
+            color = GlanceColors.glassGradientOnGlassBorder,
+            shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
         )
         .padding(paddingValues)
 

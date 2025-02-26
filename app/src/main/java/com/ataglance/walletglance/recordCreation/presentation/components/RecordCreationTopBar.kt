@@ -1,27 +1,37 @@
 package com.ataglance.walletglance.recordCreation.presentation.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.components.CategoryTypeToggleButton
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.ButtonWithPopupContent
 import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckboxWithText
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences
 
 @Composable
@@ -53,12 +63,8 @@ fun RecordCreationTopBar(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
             }
-            PreferencesButton(
-                animationTransformOrigin = if (showCategoryTypeButton) {
-                    TransformOrigin(.7f, 0f)
-                } else {
-                    TransformOrigin(.5f, 0f)
-                },
+            RecordPreferencesButton(
+                animationTransformOrigin = TransformOrigin(.5f, 0f),
                 showTransferButton = showTransferButton,
                 onNavigateToTransferCreationScreen = onNavigateToTransferCreationScreen,
                 showIncludeInBudgetsButton = currentCategoryType == CategoryType.Expense,
@@ -71,48 +77,91 @@ fun RecordCreationTopBar(
 }
 
 @Composable
-private fun PreferencesButton(
+private fun RecordPreferencesButton(
     animationTransformOrigin: TransformOrigin,
     showTransferButton: Boolean,
     onNavigateToTransferCreationScreen: () -> Unit,
     showIncludeInBudgetsButton: Boolean,
     preferences: RecordDraftPreferences,
-    onIncludeInBudgetsChange: (Boolean) -> Unit,
+    onIncludeInBudgetsChange: (Boolean) -> Unit
 ) {
     ButtonWithPopupContent(
         buttonText = stringResource(R.string.preferences),
-        contentPadding = PaddingValues(
-            start = 24.dp, end = 24.dp,
-            top = if (showTransferButton) 4.dp else 20.dp,
-            bottom = if (showIncludeInBudgetsButton) 20.dp else 4.dp
-        ),
+        contentPadding = PaddingValues(horizontal = 24.dp),
         animationTransformOrigin = animationTransformOrigin
     ) { onDismissRequest ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (showTransferButton) {
-                NavigationTextArrowButton(
-                    text = stringResource(R.string.make_transfer),
-                    onClick = {
-                        onDismissRequest()
-                        onNavigateToTransferCreationScreen()
-                    }
-                )
-            }
-            if (showIncludeInBudgetsButton) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    TwoStateCheckboxWithText(
-                        text = stringResource(R.string.include_in_budgets),
-                        checked = preferences.includeInBudgets,
-                        checkboxSize = 24.dp,
-                        onClick = onIncludeInBudgetsChange
-                    )
+        RecordPreferencesWindowContent(
+            onDismissRequest = onDismissRequest,
+            showTransferButton = showTransferButton,
+            onNavigateToTransferCreationScreen = onNavigateToTransferCreationScreen,
+            showIncludeInBudgetsButton = showIncludeInBudgetsButton,
+            preferences = preferences,
+            onIncludeInBudgetsChange = onIncludeInBudgetsChange
+        )
+    }
+}
+
+@Composable
+private fun RecordPreferencesWindowContent(
+    onDismissRequest: () -> Unit,
+    showTransferButton: Boolean,
+    onNavigateToTransferCreationScreen: () -> Unit,
+    showIncludeInBudgetsButton: Boolean,
+    preferences: RecordDraftPreferences,
+    onIncludeInBudgetsChange: (Boolean) -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        if (showTransferButton) {
+            NavigationTextArrowButton(
+                text = stringResource(R.string.make_transfer),
+                onClick = {
+                    onDismissRequest()
+                    onNavigateToTransferCreationScreen()
                 }
-            }
+            )
+        }
+        if (showIncludeInBudgetsButton) {
+            TwoStateCheckboxWithText(
+                text = stringResource(R.string.include_in_budgets),
+                checked = preferences.includeInBudgets,
+                checkboxSize = 24.dp,
+                onClick = onIncludeInBudgetsChange,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        }
+        if (!showTransferButton && !showIncludeInBudgetsButton) {
+            Text(
+                text = stringResource(R.string.no_preferences),
+                color = GlanceColors.onSurface.copy(.6f),
+                fontSize = 16.sp,
+                fontFamily = Manrope,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun RecordPreferencesWindowContentPreview() {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        Box(
+            modifier = Modifier
+                .border(1.dp, GlanceColors.onSurface.copy(.6f))
+                .padding(horizontal = 24.dp)
+        ) {
+            RecordPreferencesWindowContent(
+                onDismissRequest = {},
+                showTransferButton = true,
+                onNavigateToTransferCreationScreen = {},
+                showIncludeInBudgetsButton = false,
+                preferences = RecordDraftPreferences(includeInBudgets = true),
+                onIncludeInBudgetsChange = {}
+            )
         }
     }
 }

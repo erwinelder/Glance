@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 @Composable
@@ -41,7 +41,7 @@ fun ScreenNameWithIconComponent(
         Text(
             text = screenName,
             fontSize = 18.sp,
-            color = if (showAsActive) GlanceTheme.primary else GlanceTheme.onSurface,
+            color = if (showAsActive) GlanceColors.primary else GlanceColors.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

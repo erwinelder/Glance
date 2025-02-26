@@ -28,36 +28,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
-import com.ataglance.walletglance.core.presentation.components.buttons.GlassSurfaceNavigationButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.navigation.utils.isScreen
-import com.ataglance.walletglance.settings.domain.SettingsCategories
-import com.ataglance.walletglance.settings.domain.SettingsCategory
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.theme.Typography
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.navigation.domain.utils.isScreen
+import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun SettingsHomeScreen(
     scaffoldPadding: PaddingValues,
-    onNavigateToScreen: (SettingsScreens) -> Unit
+    isSignedIn: Boolean,
+    onNavigateToScreen: (Any) -> Unit
 ) {
     val appTheme = CurrAppTheme
-    val settingsCategories = remember(appTheme) {
-        SettingsCategories(appTheme).let {
-            listOf(
-                it.accounts,
-                it.budgets,
-                it.categories,
-                it.categoryCollections,
-                it.appearance,
-                it.language,
-                it.resetData
-            )
-        }
+    val settingsCategories = remember(appTheme, isSignedIn) {
+        SettingsCategory.asList(appTheme = appTheme, isSignedIn = isSignedIn)
     }
 
     Column(
@@ -72,13 +62,12 @@ fun SettingsHomeScreen(
         ) {
             Text(
                 text = stringResource(R.string.settings),
-                color = GlanceTheme.onSurface,
-                fontSize = 30.sp,
-                fontFamily = Manrope
+                color = GlanceColors.onSurface,
+                style = Typography.titleMedium
             )
             Text(
-                text = stringResource(R.string.version) + " 3.0.1",
-                color = GlanceTheme.onSurface,
+                text = stringResource(R.string.version) + " 4.0",
+                color = GlanceColors.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
                 fontFamily = Manrope
@@ -105,9 +94,9 @@ fun SettingsHomeScreen(
 private fun CompactLayout(
     scaffoldPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
-    onNavigateToScreen: (SettingsScreens) -> Unit
+    onNavigateToScreen: (Any) -> Unit
 ) {
-    val gap = 20.dp
+    val gap = 16.dp
     val scrollState = rememberScrollState(initial = 1800)
     
     val categories by remember(settingsCategories) {
@@ -123,13 +112,9 @@ private fun CompactLayout(
             .padding(horizontal = 24.dp)
     ) {
         categories.forEach { category ->
-            GlassSurfaceNavigationButton(
-                textRes = category.stringRes,
-                imageRes = category.iconRes,
-                showRightIconInsteadOfLeft = true,
-                onClick = {
-                    onNavigateToScreen(category.screen)
-                }
+            NavigateToSettingsCategoryButton(
+                category = category,
+                onNavigateToScreen = onNavigateToScreen
             )
         }
         BottomSpacer(scaffoldPadding.calculateBottomPadding())
@@ -140,7 +125,7 @@ private fun CompactLayout(
 private fun ExpandedLayout(
     scaffoldPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
-    onNavigateToScreen: (SettingsScreens) -> Unit
+    onNavigateToScreen: (Any) -> Unit
 ) {
     val lazyGridState = rememberLazyGridState()
 
@@ -157,14 +142,7 @@ private fun ExpandedLayout(
             item { BottomSpacer(scaffoldPadding.calculateBottomPadding()) }
         }
         items(items = settingsCategories) { category ->
-            GlassSurfaceNavigationButton(
-                textRes = category.stringRes,
-                imageRes = category.iconRes,
-                showRightIconInsteadOfLeft = true,
-                onClick = {
-                    onNavigateToScreen(category.screen)
-                }
-            )
+            NavigateToSettingsCategoryButton(category = category, onNavigateToScreen = onNavigateToScreen)
         }
     }
 }
@@ -185,18 +163,17 @@ fun BottomSpacer(scaffoldBottomPadding: Dp) {
 fun SettingsHomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
         anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Settings) },
         currentScreenIsScreenProvider = { false }
     ) { scaffoldPadding ->
         SettingsHomeScreen(
             scaffoldPadding = scaffoldPadding,
+            isSignedIn = false,
             onNavigateToScreen = {}
         )
     }

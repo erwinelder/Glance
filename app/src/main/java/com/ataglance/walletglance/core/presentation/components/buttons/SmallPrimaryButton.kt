@@ -18,32 +18,33 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun SmallPrimaryButton(
     text: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    enabledGradientColor: Pair<Color, Color> = GlanceTheme.primaryGradientLightToDark,
+    enabledGradient: Pair<Color, Color> = GlanceColors.primaryGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
     val lighterGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradientColor.first else GlanceTheme.disabledGradientLightToDark.first,
+        targetValue = if (enabled) enabledGradient.first else GlanceColors.disabledGradientPair.first,
         label = "small primary button gradient lighter color"
     )
     val darkerGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradientColor.second else GlanceTheme.disabledGradientLightToDark.second,
+        targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second,
         label = "small primary button gradient darker color"
     )
 
@@ -51,15 +52,15 @@ fun SmallPrimaryButton(
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.96f, enabled)
     ) {
-        Shadow(enabled, lighterGradientColor, fontSize, text)
+//        Shadow(enabled, lighterGradientColor, fontSize, text)
         Button(
             onClick = onClick,
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceTheme.onPrimary,
+                contentColor = GlanceColors.onPrimary,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = GlanceTheme.onPrimary
+                disabledContentColor = GlanceColors.onPrimary
             ),
             contentPadding = PaddingValues(vertical = 15.dp, horizontal = 30.dp),
             modifier = modifier
@@ -104,7 +105,7 @@ private fun Shadow(enabled: Boolean, enabledColor: Color, buttonFontSize: TextUn
     )
 }
 
-@Preview(showSystemUi = true)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun PreviewPrimarySmallButton() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {

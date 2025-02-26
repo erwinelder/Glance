@@ -16,9 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
 
 @Composable
@@ -26,7 +26,7 @@ fun CategoryBigIconComponent(category: Category) {
     Icon(
         painter = painterResource(category.icon.res),
         contentDescription = "category ${category.name} icon",
-        tint = GlanceTheme.surface,
+        tint = GlanceColors.surface,
         modifier = Modifier
             .shadow(
                 elevation = 16.dp,

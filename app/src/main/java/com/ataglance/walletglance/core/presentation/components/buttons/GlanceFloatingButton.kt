@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.components.containers
+package com.ataglance.walletglance.core.presentation.components.buttons
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -29,24 +29,21 @@ fun GlanceFloatingButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.Transparent,
-            contentColor = GlanceTheme.onSurface,
+            contentColor = GlanceColors.onSurface,
             disabledContentColor = Color.Transparent,
-            disabledContainerColor = GlanceTheme.onSurface
+            disabledContainerColor = GlanceColors.onSurface
         ),
         modifier = Modifier
             .bounceClickEffect()
             .shadow(
                 elevation = 12.dp,
                 shape = RoundedCornerShape(38),
-                spotColor = GlanceTheme.primaryGradientLightToDark.first
+                spotColor = GlanceColors.primary
             )
             .clip(RoundedCornerShape(38))
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(
-                        GlanceTheme.primaryGradientLightToDark.second,
-                        GlanceTheme.primaryGradientLightToDark.first
-                    ),
+                    colors = GlanceColors.primaryGradient.reversed(),
                     start = Offset(75f, 210f),
                     end = Offset(95f, -10f)
                 )
@@ -56,7 +53,7 @@ fun GlanceFloatingButton(
         Icon(
             painter = painterResource(iconRes),
             contentDescription = "make record",
-            tint = GlanceTheme.onPrimary,
+            tint = GlanceColors.onPrimary,
             modifier = Modifier.size(24.dp)
         )
     }

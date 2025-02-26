@@ -12,33 +12,36 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
-import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
-import com.ataglance.walletglance.core.utils.getTodayDateLong
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.utils.formatDateLongAsDayMonthYear
+import com.ataglance.walletglance.core.utils.getCurrentDateLong
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
 
 @Composable
 fun RecordStackComponent(
     recordStack: RecordStack,
-    includeYearToDate: Boolean,
+    includeYearInDate: Boolean,
+    resourceManager: ResourceManager,
     onRecordClick: (Int) -> Unit
 ) {
     GlassSurfaceOnGlassSurface(onClick = { onRecordClick(recordStack.recordNum) }) {
         // date
         Text(
-            text = convertDateLongToDayMonthYear(
-                date = recordStack.date,
-                context = LocalContext.current,
-                includeYear = includeYearToDate
+            text = recordStack.date.formatDateLongAsDayMonthYear(
+                resourceManager = resourceManager,
+                includeYear = includeYearInDate
             ),
-            color = GlanceTheme.outline,
+            color = GlanceColors.outline,
             fontSize = 16.sp
         )
         // note with category
@@ -53,7 +56,7 @@ fun RecordStackComponent(
                     if (!recordStackItem.note.isNullOrEmpty()) {
                         Text(
                             text = recordStackItem.note,
-                            color = GlanceTheme.onSurface.copy(.8f),
+                            color = GlanceColors.onSurface.copy(.8f),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Light,
                             fontStyle = FontStyle.Italic,
@@ -62,7 +65,7 @@ fun RecordStackComponent(
                         )
                     }
                     RecordCategory(
-                        category = recordStackItem.categoryWithSubcategory
+                        category = recordStackItem.categoryWithSub
                             ?.getSubcategoryOrCategory()
                     )
                 }
@@ -71,7 +74,7 @@ fun RecordStackComponent(
         // amount
         Text(
             text = recordStack.getFormattedAmountWithSpaces(),
-            color = GlanceTheme.onSurface,
+            color = GlanceColors.onSurface,
             fontSize = 20.sp,
             fontWeight = FontWeight.Light
         )
@@ -86,7 +89,7 @@ private fun RecordStackComponentPreview() {
     val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
     val recordStack = RecordStack(
         recordNum = 1,
-        date = getTodayDateLong(),
+        date = getCurrentDateLong(),
         type = RecordType.Expense,
         account = Account().toRecordAccount(),
         totalAmount = 516.41,
@@ -94,14 +97,14 @@ private fun RecordStackComponentPreview() {
             RecordStackItem(
                 amount = 0.0,
                 quantity = null,
-                categoryWithSubcategory = defaultCategories.expense[0].getWithSubcategoryWithId(13),
+                categoryWithSub = defaultCategories.expense[0].getWithSubcategoryWithId(13),
                 note = "some note note note",
                 includeInBudgets = true
             ),
             RecordStackItem(
                 amount = 0.0,
                 quantity = null,
-                categoryWithSubcategory = defaultCategories.expense[1].getWithSubcategoryWithId(16),
+                categoryWithSub = defaultCategories.expense[1].getWithSubcategoryWithId(16),
                 note = "some note note note",
                 includeInBudgets = true
             ),
@@ -111,7 +114,8 @@ private fun RecordStackComponentPreview() {
     PreviewContainer {
         RecordStackComponent(
             recordStack = recordStack,
-            includeYearToDate = false,
+            includeYearInDate = false,
+            resourceManager = ResourceManagerImpl(LocalContext.current),
             onRecordClick = {}
         )
     }

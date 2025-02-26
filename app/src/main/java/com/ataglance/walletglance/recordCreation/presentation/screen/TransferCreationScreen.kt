@@ -25,24 +25,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountPicker
 import com.ataglance.walletglance.account.presentation.components.SmallAccount
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.BackButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraftSenderReceiver
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
 
 @Composable
 fun TransferCreationScreen(
@@ -68,7 +67,7 @@ fun TransferCreationScreen(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             fillGlassSurface = false,
             topButton = {
                 BackButton(onNavigateBack)
@@ -102,7 +101,7 @@ fun TransferCreationScreen(
         )
         CustomDatePicker(
             openDialog = showDatePicker,
-            initialTimeInMillis = transferDraft.dateTimeState.calendar.timeInMillis,
+            initialTimeInMillis = transferDraft.dateTimeState.getTimeInMillis(),
             onOpenDateDialogChange = {
                 showDatePicker = it
             },
@@ -233,22 +232,22 @@ fun TransferCreationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     accountList: List<Account> = listOf(
         Account(
-            id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(),
+            id = 1, color = AccountColors.Pink,
             name = "Main account"
         ),
         Account(
-            id = 2, color = AccountPossibleColors().blue.toAccountColorWithName(),
+            id = 2, color = AccountColors.Blue,
             name = "Czech Local Card", currency = "CZK"
         )
     ),
     transferDraft: TransferDraft = TransferDraft(
         isNew = true,
-        sender = TransferDraftSenderReceiver(
+        sender = TransferDraftUnits(
             account = accountList[0],
             recordNum = 0,
             amount = "300.0",
         ),
-        receiver = TransferDraftSenderReceiver(
+        receiver = TransferDraftUnits(
             account = accountList[1],
             recordNum = 0,
             amount = "100.0",

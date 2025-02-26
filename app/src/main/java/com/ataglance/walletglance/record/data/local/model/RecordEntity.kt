@@ -5,8 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.utils.asChar
+import com.ataglance.walletglance.record.domain.model.RecordType
+import com.ataglance.walletglance.record.domain.utils.asChar
 
 @Entity(
     tableName = "Record",
@@ -35,15 +35,11 @@ data class RecordEntity(
     val includeInBudgets: Boolean
 ) {
 
-    private fun isExpense() = type == RecordType.Expense.asChar()
-    private fun isIncome() = type == RecordType.Income.asChar()
-    private fun isOutTransfer() = type == RecordType.OutTransfer.asChar()
-    private fun isInTransfer() = type == RecordType.InTransfer.asChar()
+    fun isExpense() = type == RecordType.Expense.asChar()
+    fun isIncome() = type == RecordType.Income.asChar()
+    fun isOutTransfer() = type == RecordType.OutTransfer.asChar()
+    fun isInTransfer() = type == RecordType.InTransfer.asChar()
     fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
     fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
-
-    fun containsParentOrSubcategoryId(id: Int?): Boolean {
-        return categoryId == id || subcategoryId == id
-    }
 
 }

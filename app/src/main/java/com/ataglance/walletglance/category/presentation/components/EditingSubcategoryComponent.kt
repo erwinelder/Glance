@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -41,15 +41,15 @@ fun EditingSubcategoryComponent(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceTheme.onGlassSurfaceGradient,
+                    colors = GlanceColors.glassGradientOnGlass,
                     start = Offset(50f, 190f),
                     end = Offset(100f, 0f)
                 )
             )
             .border(
-                1.dp,
-                GlanceTheme.outlineVariant,
-                RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
+                width = 1.dp,
+                color = GlanceColors.glassGradientOnGlassBorder,
+                shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
             .padding(start = 15.dp, end = 15.dp, top = 12.dp, bottom = 12.dp)
     ) {
@@ -60,7 +60,7 @@ fun EditingSubcategoryComponent(
             CategoryIconComponent(category)
             Text(
                 text = category.name,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 19.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

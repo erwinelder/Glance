@@ -26,18 +26,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountColors
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -60,7 +60,7 @@ fun EditingAccountComponent(
                 onAccountClick(account)
             }
             .clip(RoundedCornerShape(26.dp))
-            .background(GlanceTheme.onSurface.copy(alpha = .2f))
+            .background(GlanceColors.accountSemiTransparentBackground)
             .padding(2.dp)
     ) {
         Row(
@@ -116,7 +116,7 @@ fun EditingAccountComponent(
                         tint = if (upButtonEnabled) {
                             onAccountColor
                         } else {
-                            GlanceTheme.outline.copy(.5f)
+                            GlanceColors.outlineSemiTransparent
                         }
                     )
                 }
@@ -131,7 +131,7 @@ fun EditingAccountComponent(
                         tint = if (downButtonEnabled) {
                             onAccountColor
                         } else {
-                            GlanceTheme.outline.copy(.5f)
+                            GlanceColors.outlineSemiTransparent
                         }
                     )
                 }
@@ -144,7 +144,7 @@ fun EditingAccountComponent(
 private fun TextWithLabel(
     labelText: String,
     text: String,
-    color: Color = GlanceTheme.onSurface,
+    color: Color = GlanceColors.onSurface,
     labelFontSize: TextUnit = 16.sp,
     textFontSize: TextUnit = 20.sp,
 ) {
@@ -167,7 +167,7 @@ private fun TextWithLabel(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun MediumAccountSetupPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
@@ -175,7 +175,7 @@ private fun MediumAccountSetupPreview() {
             account = Account(
                 balance = 516.41,
                 name = "Main USD",
-                color = AccountColors.Default.toAccountColorWithName(),
+                color = AccountColors.Default,
                 withoutBalance = false
             ),
             onAccountClick = {},

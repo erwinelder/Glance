@@ -1,13 +1,14 @@
 package com.ataglance.walletglance.categoryCollection.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.category.domain.EditingCategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.EditingCategoryWithSubcategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
+import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,24 +16,32 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class EditCategoryCollectionViewModel(
-    private val categoriesWithSubcategories: CategoriesWithSubcategories
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
-    private val _collectionUiState: MutableStateFlow<CategoryCollectionWithCategories> =
-        MutableStateFlow(CategoryCollectionWithCategories())
-    val collectionUiState: StateFlow<CategoryCollectionWithCategories> =
-        _collectionUiState.asStateFlow()
+    init {
+        viewModelScope.launch {
+            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
+        }
+    }
 
-    private val _editingCategoriesWithSubcategories:
-            MutableStateFlow<EditingCategoriesWithSubcategories> =
-        MutableStateFlow(EditingCategoriesWithSubcategories())
-    val editingCategoriesWithSubcategories: StateFlow<EditingCategoriesWithSubcategories> =
-        _editingCategoriesWithSubcategories.asStateFlow()
 
-    val expandedCategory: StateFlow<EditingCategoryWithSubcategories?> = combine(
-        _editingCategoriesWithSubcategories
+    private var groupedCategoriesByType = GroupedCategoriesByType()
+
+
+    private val _collectionUiState = MutableStateFlow(CategoryCollectionWithCategories())
+    val collectionUiState = _collectionUiState.asStateFlow()
+
+    private val _checkedGroupedCategoriesByType = MutableStateFlow(
+        CheckedGroupedCategoriesByType()
+    )
+    val checkedGroupedCategoriesByType = _checkedGroupedCategoriesByType.asStateFlow()
+
+    val expandedCategory: StateFlow<CheckedGroupedCategories?> = combine(
+        _checkedGroupedCategoriesByType
     ) { editingCategoriesWithSubcategoriesArray ->
         editingCategoriesWithSubcategoriesArray[0].concatenateLists().find { it.expanded }
     }.stateIn(
@@ -41,30 +50,13 @@ class EditCategoryCollectionViewModel(
         initialValue = null
     )
 
-    val allowSaving: StateFlow<Boolean> = combine(
-        _collectionUiState,
-        _editingCategoriesWithSubcategories
-    ) { collection, editingCategoriesWithSubcategories ->
-        collection.allowSaving() && editingCategoriesWithSubcategories.hasCheckedCategory()
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false
-    )
-
-    private val _allowDeleting: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val allowDeleting: StateFlow<Boolean> = _allowDeleting.asStateFlow()
-
 
     fun applyCollection(collection: CategoryCollectionWithCategories) {
         _collectionUiState.update {
             collection
         }
-        _allowDeleting.update {
-            collection.orderNum != 0
-        }
-        _editingCategoriesWithSubcategories.update {
-            categoriesWithSubcategories.toEditingCategoriesWithSubcategories(collection)
+        _checkedGroupedCategoriesByType.update {
+            groupedCategoriesByType.toCheckedCategoriesWithSubcategories(collection)
         }
     }
 
@@ -73,29 +65,41 @@ class EditCategoryCollectionViewModel(
     }
 
     fun inverseCheckedCategoryState(category: Category) {
-        _editingCategoriesWithSubcategories.update { it.inverseCheckedCategoryState(category) }
+        _checkedGroupedCategoriesByType.update { it.inverseCheckedCategoryState(category) }
     }
 
     fun inverseExpandedState(category: Category) {
-        _editingCategoriesWithSubcategories.update { it.inverseExpandedState(category) }
+        _checkedGroupedCategoriesByType.update { it.inverseExpandedState(category) }
     }
+
+
+    val allowSaving = combine(
+        _collectionUiState,
+        _checkedGroupedCategoriesByType
+    ) { collection, editingCategoriesWithSubcategories ->
+        collection.allowSaving() && editingCategoriesWithSubcategories.hasCheckedCategory()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = false
+    )
+
+    val allowDeleting = combine(_collectionUiState) { collection ->
+        collection[0].orderNum != 0
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = false
+    )
+
 
     fun getCollection(): CategoryCollectionWithCategories {
         return collectionUiState.value.let {
             it.copy(
                 name = it.name.trim(),
-                categoryList = editingCategoriesWithSubcategories.value.getCheckedCategories()
+                categoryList = checkedGroupedCategoriesByType.value.getCheckedCategories()
             )
         }
     }
 
-}
-
-data class EditCategoryCollectionViewModelFactory(
-    private val categoriesWithSubcategories: CategoriesWithSubcategories
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return EditCategoryCollectionViewModel(categoriesWithSubcategories) as T
-    }
 }

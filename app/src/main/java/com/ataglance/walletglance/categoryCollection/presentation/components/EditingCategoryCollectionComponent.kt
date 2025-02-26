@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -39,9 +39,9 @@ fun EditingCategoryCollectionComponent(
     val categoriesWithUniqueIcons = collection.categoryList
         ?.groupBy { it.icon }
         ?.flatMap { (_, categories) ->
-            categories.distinctBy { it.colorWithName }
+            categories.distinctBy { it.color }
         }
-        ?: emptyList()
+        .orEmpty()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,15 +51,15 @@ fun EditingCategoryCollectionComponent(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceTheme.onGlassSurfaceGradient,
+                    colors = GlanceColors.glassGradientOnGlass,
                     start = Offset(50f, 190f),
                     end = Offset(100f, 0f)
                 )
             )
             .border(
-                1.dp,
-                GlanceTheme.outlineVariant,
-                RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
+                width = 1.dp,
+                color = GlanceColors.glassGradientOnGlassBorder,
+                shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
@@ -69,7 +69,7 @@ fun EditingCategoryCollectionComponent(
         ) {
             Text(
                 text = collection.name,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -78,7 +78,7 @@ fun EditingCategoryCollectionComponent(
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "right arrow",
-                tint = GlanceTheme.onSurface,
+                tint = GlanceColors.onSurface,
                 modifier = Modifier.size(12.dp, 20.dp)
             )
         }

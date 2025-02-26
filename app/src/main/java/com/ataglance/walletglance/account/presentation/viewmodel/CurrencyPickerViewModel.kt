@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.account.utils.toSortedCurrencyItemList
+import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
+import com.ataglance.walletglance.account.presentation.model.CurrencyItem
+import com.ataglance.walletglance.account.presentation.model.CurrencyPickerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,42 +18,42 @@ import java.util.Currency
 
 class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
 
-    private val _searchedPrompt: MutableStateFlow<String> = MutableStateFlow("")
-    val searchedPrompt: StateFlow<String> = _searchedPrompt.asStateFlow()
+    private val _searchedPrompt = MutableStateFlow("")
+    val searchedPrompt = _searchedPrompt.asStateFlow()
 
     private val _currencyList: MutableStateFlow<List<CurrencyItem>> = MutableStateFlow(
         Currency.getAvailableCurrencies().toSortedCurrencyItemList()
     )
-    val currencyList: StateFlow<List<CurrencyItem>> = searchedPrompt
-        .combine(_currencyList) { prompt, list ->
-            if (prompt.isBlank()) {
-                list
-            } else {
-                list.filter { it.doesMatchSearchQuery(prompt) }
-            }
+
+    val currencyList: StateFlow<List<CurrencyItem>> = searchedPrompt.combine(
+        _currencyList
+    ) { prompt, list ->
+        if (prompt.isBlank()) {
+            list
+        } else {
+            list.filter { it.doesMatchSearchQuery(prompt) }
         }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            _currencyList.value
-        )
+    }
+    .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = _currencyList.value
+    )
 
-    private val _uiState: MutableStateFlow<CurrencyPickerUiState> =
-        MutableStateFlow(
-            selectedCurrency?.let {
-                try {
-                    CurrencyPickerUiState(selectedCurrency = CurrencyItem(Currency.getInstance(it)))
-                } catch (e: Exception) {
-                    Log.e(
-                        e.toString(),
-                        "Error in CurrencyPickerViewModel: passed currency code is not valid"
-                    )
-                    null
-                }
-            } ?: CurrencyPickerUiState(selectedCurrency = currencyList.value.firstOrNull())
-        )
-
-    val uiState: StateFlow<CurrencyPickerUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<CurrencyPickerUiState> = MutableStateFlow(
+        selectedCurrency?.let {
+            try {
+                CurrencyPickerUiState(selectedCurrency = CurrencyItem(Currency.getInstance(it)))
+            } catch (e: Exception) {
+                Log.e(
+                    e.toString(),
+                    "Error in CurrencyPickerViewModel: passed currency code is not valid"
+                )
+                null
+            }
+        } ?: CurrencyPickerUiState(selectedCurrency = currencyList.value.firstOrNull())
+    )
+    val uiState = _uiState.asStateFlow()
 
     fun selectCurrency(currency: CurrencyItem) {
         _uiState.update { it.copy(selectedCurrency = currency) }
@@ -70,30 +72,5 @@ data class CurrencyPickerViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return CurrencyPickerViewModel(selectedCurrency) as T
-    }
-}
-
-data class CurrencyPickerUiState(
-    val isSearching: Boolean = false,
-    val selectedCurrency: CurrencyItem?
-)
-
-data class CurrencyItem(
-    val currencyCode: String,
-    val displayName: String
-) {
-    constructor(currency: Currency) : this(currency.currencyCode, currency.displayName)
-
-    fun doesMatchSearchQuery(query: String): Boolean {
-        val matchingCombinations = listOf(
-            "$currencyCode $displayName",
-            "$currencyCode$displayName",
-            currencyCode,
-            displayName
-        )
-
-        return matchingCombinations.any {
-            it.contains(query, ignoreCase = true)
-        }
     }
 }

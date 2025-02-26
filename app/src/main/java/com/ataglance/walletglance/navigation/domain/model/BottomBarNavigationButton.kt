@@ -3,7 +3,7 @@ package com.ataglance.walletglance.navigation.domain.model
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
-import com.ataglance.walletglance.core.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 
 sealed class BottomBarNavigationButton(
     val screen: MainScreens,
@@ -39,7 +39,7 @@ sealed class BottomBarNavigationButton(
     )
 
     data object CategoryStatistics : BottomBarNavigationButton(
-        screen = MainScreens.CategoryStatistics(0),
+        screen = MainScreens.CategoryStatistics(),
         screenNameRes = R.string.statistics,
         inactiveIconRes = DrawableResByTheme(
             lightDefault = R.drawable.statistics_light_inactive,
@@ -76,5 +76,20 @@ sealed class BottomBarNavigationButton(
             darkDefault = R.drawable.settings_dark_active
         )
     )
+
+
+    companion object {
+
+        fun asDefaultList(): List<BottomBarNavigationButton> {
+            return listOf(
+                Home,
+                Records,
+                CategoryStatistics,
+                Budgets,
+                Settings
+            )
+        }
+
+    }
 
 }

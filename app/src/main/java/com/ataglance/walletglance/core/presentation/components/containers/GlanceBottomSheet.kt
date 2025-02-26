@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.presentation.components.containers
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -8,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.dividers.BottomSheetHandle
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,12 +18,12 @@ fun GlanceBottomSheet(
     visible: Boolean,
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
-    backgroundColor: Color = GlanceTheme.background,
-    contentColor: Color = GlanceTheme.onBackground,
+    backgroundColor: Color = GlanceColors.background,
+    contentColor: Color = GlanceColors.onSurface,
     dragHandle: @Composable () -> Unit = {
         BottomSheetHandle()
     },
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     if (visible) {
         ModalBottomSheet(

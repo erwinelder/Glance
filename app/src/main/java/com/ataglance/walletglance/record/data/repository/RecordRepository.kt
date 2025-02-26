@@ -1,58 +1,40 @@
 package com.ataglance.walletglance.record.data.repository
 
-import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
 import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.record.data.local.dao.RecordDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.core.utils.getTodayLongDateRange
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
 
-class RecordRepository(
-    private val dao: RecordDao
-) {
+interface RecordRepository {
 
-    fun getLastRecordNum(): Flow<Int?> {
-        return dao.getLastRecordOrderNum()
-    }
+    suspend fun upsertRecords(records: List<RecordEntity>)
 
-    fun getAllRecords(): Flow<List<RecordEntity>> {
-        return dao.getAllRecords()
-    }
+    suspend fun deleteRecords(records: List<RecordEntity>)
 
-    fun getRecordsForToday(): Flow<List<RecordEntity>> {
-        val todayDateRange = getTodayLongDateRange()
-        return dao.getRecordsInDateRange(todayDateRange.from, todayDateRange.to)
-    }
+    suspend fun deleteAndUpsertRecords(
+        toDelete: List<RecordEntity>,
+        toUpsert: List<RecordEntity>
+    )
 
-    fun getRecordsInDateRange(longDateRange: LongDateRange): Flow<List<RecordEntity>> {
-        return dao.getRecordsInDateRange(longDateRange.from, longDateRange.to)
-    }
+    suspend fun deleteAllRecordsLocally()
 
-    fun getTotalAmountForBudgetInDateRanges(
-        budget: Budget,
-        dateRangeList: List<LongDateRange>
-    ): Flow<List<TotalAmountByRange>> = flow {
-        val initialList = dateRangeList.map { TotalAmountByRange(it, 0.0) }
-        emit(initialList)
+    suspend fun deleteRecordsByAccounts(accountIds: List<Int>)
 
-        budget.category ?: return@flow
+    fun getLastRecordNumFlow(): Flow<Int?>
 
-        val budgetsAmountsByRanges = initialList.toMutableList()
+    suspend fun getLastRecordNum(): Int?
 
-        dateRangeList.forEachIndexed { index, dateRange ->
-            val totalAmount = dao.getTotalAmountForBudgetInDateRange(
-                linkedAccountsIds = budget.linkedAccountsIds,
-                categoryId = budget.category.id,
-                from = dateRange.from,
-                to = dateRange.to
-            ).firstOrNull() ?: 0.0
+    suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
 
-            budgetsAmountsByRanges[index] = TotalAmountByRange(dateRange, totalAmount)
-            emit(budgetsAmountsByRanges)
-        }
-    }
+    suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
+
+    fun getRecordsInDateRangeFlow(range: LongDateRange): Flow<List<RecordEntity>>
+
+    suspend fun getRecordsInDateRange(range: LongDateRange): List<RecordEntity>
+
+    suspend fun getTotalAmountByCategoryAndAccountsInRange(
+        categoryId: Int,
+        accountsIds: List<Int>,
+        dateRange: LongDateRange
+    ): Double
 
 }

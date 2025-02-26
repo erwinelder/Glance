@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun NavigationTextArrowButton(
@@ -37,13 +37,14 @@ fun NavigationTextArrowButton(
             Icon(
                 painter = painterResource(R.drawable.short_arrow_left_icon),
                 contentDescription = "short left arrow",
+                tint = GlanceColors.primary,
                 modifier = Modifier.size(iconSize)
             )
             Spacer(modifier = Modifier.width(4.dp))
         }
         Text(
             text = text,
-            color = GlanceTheme.primary,
+            color = GlanceColors.primary,
             fontSize = fontSize,
             fontWeight = FontWeight.Normal,
             fontFamily = Manrope
@@ -53,6 +54,7 @@ fun NavigationTextArrowButton(
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "short right arrow",
+                tint = GlanceColors.primary,
                 modifier = Modifier.size(iconSize)
             )
         }

@@ -1,21 +1,20 @@
 package com.ataglance.walletglance.model
 
-import com.ataglance.walletglance.account.data.repository.AccountRepository
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.budget.data.repository.BudgetAndBudgetAccountAssociationRepository
+import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.category.data.repository.CategoryRepository
-import com.ataglance.walletglance.category.domain.color.CategoryColors
-import com.ataglance.walletglance.category.utils.fixOrderNumbers
-import com.ataglance.walletglance.categoryCollection.data.repository.CategoryCollectionAndCollectionCategoryAssociationRepository
-import com.ataglance.walletglance.core.data.preferences.SettingsRepository
-import com.ataglance.walletglance.core.data.repository.GeneralRepository
+import com.ataglance.walletglance.category.data.utils.fixOrderNumbers
+import com.ataglance.walletglance.category.domain.model.CategoryColor
+import com.ataglance.walletglance.settings.data.repository.SettingsRepository
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.record.data.repository.RecordRepository
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.recordAndAccount.data.repository.RecordAndAccountRepository
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransfer
+import com.ataglance.walletglance.recordCreation.domain.transfer.CreatedTransferUnit
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,12 +33,12 @@ class AppViewModelTest {
             settingsRepository = Mockito.mock(SettingsRepository::class.java),
             accountRepository = Mockito.mock(AccountRepository::class.java),
             categoryRepository = Mockito.mock(CategoryRepository::class.java),
-            categoryCollectionAndCollectionCategoryAssociationRepository = Mockito.mock(
+            categoryCollectionAndAssociationRepository = Mockito.mock(
                 CategoryCollectionAndCollectionCategoryAssociationRepository::class.java
             ),
             recordRepository = Mockito.mock(RecordRepository::class.java),
             recordAndAccountRepository = Mockito.mock(RecordAndAccountRepository::class.java),
-            budgetAndBudgetAccountAssociationRepository = Mockito.mock(
+            budgetAndAssociationRepository = Mockito.mock(
                 BudgetAndBudgetAccountAssociationRepository::class.java
             ),
             generalRepository = Mockito.mock(GeneralRepository::class.java)
@@ -63,16 +62,25 @@ class AppViewModelTest {
         toAccount: Account,
         startAmount: Double,
         finalAmount: Double,
-    ): MadeTransferState {
-        return MadeTransferState(
-            recordIdFrom = fromAccount.id,
-            recordIdTo = toAccount.id,
-            recordStatus = MakeRecordStatus.Edit,
-            fromAccount = fromAccount,
-            toAccount = toAccount,
-            startAmount = startAmount,
-            finalAmount = finalAmount,
-            recordNum = 1
+    ): CreatedTransfer {
+        return CreatedTransfer(
+            isNew = true,
+            sender = CreatedTransferUnit(
+                account = fromAccount,
+                recordNum = 1,
+                recordId = 1,
+                amount = startAmount,
+                rate = 1.0,
+            ),
+            receiver = CreatedTransferUnit(
+                account = toAccount,
+                recordNum = 2,
+                recordId = 2,
+                amount = finalAmount,
+                rate = 1.0,
+            ),
+            dateTimeState = DateTimeState(),
+            includeInBudgets = true,
         )
     }
 
@@ -94,7 +102,7 @@ class AppViewModelTest {
                         id = 1,
                         amount = startAmount,
                         quantity = null,
-                        categoryWithSubcategory = null,
+                        categoryWithSub = null,
                         note = null,
                         includeInBudgets = true
                     )
@@ -111,7 +119,7 @@ class AppViewModelTest {
                         id = 2,
                         amount = finalAmount,
                         quantity = null,
-                        categoryWithSubcategory = null,
+                        categoryWithSub = null,
                         note = null,
                         includeInBudgets = true
                     )
@@ -201,7 +209,7 @@ class AppViewModelTest {
             newStartAmount, newFinalAmount
         )
 
-        appViewModel.applyAccountListToUiState(accounts)
+        appViewModel.applyAccounts(accounts)
 
         val result = appViewModel.getUpdatedAccountsAfterEditedTransfer(
             uiState, recordStacks.first, recordStacks.second
@@ -283,112 +291,112 @@ class AppViewModelTest {
             CategoryEntity(
                 id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 2, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 13, type = '-', orderNum = 3, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 14, type = '-', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
 
             CategoryEntity(
                 id = 15, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 16, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 17, type = '-', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 3, type = '+', orderNum = 1, parentCategoryId = null,
                 name = "category 3", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 31, type = '+', orderNum = 4, parentCategoryId = 3,
                 name = "category 31", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 32, type = '+', orderNum = 4, parentCategoryId = 3,
                 name = "category 32", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
         )
         val expectedCategoryList = listOf(
             CategoryEntity(
                 id = 1, type = '-', orderNum = 1, parentCategoryId = null,
                 name = "category 1", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 2, type = '-', orderNum = 2, parentCategoryId = null,
                 name = "category 2", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 13, type = '-', orderNum = 1, parentCategoryId = 1,
                 name = "subcategory 11", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
             CategoryEntity(
                 id = 14, type = '-', orderNum = 2, parentCategoryId = 1,
                 name = "subcategory 12", iconName = "",
-                colorName = CategoryColors.Olive.name.name
+                colorName = CategoryColor.Olive.name.name
             ),
 
             CategoryEntity(
                 id = 15, type = '-', orderNum = 1, parentCategoryId = 2,
                 name = "subcategory 21", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 16, type = '-', orderNum = 2, parentCategoryId = 2,
                 name = "subcategory 22", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 17, type = '-', orderNum = 3, parentCategoryId = 2,
                 name = "subcategory 23", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 3, type = '+', orderNum = 1, parentCategoryId = null,
                 name = "category 3", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
 
             CategoryEntity(
                 id = 31, type = '+', orderNum = 1, parentCategoryId = 3,
                 name = "category 31", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
             CategoryEntity(
                 id = 32, type = '+', orderNum = 2, parentCategoryId = 3,
                 name = "category 32", iconName = "",
-                colorName = CategoryColors.Camel.name.name
+                colorName = CategoryColor.Camel.name.name
             ),
         )
 

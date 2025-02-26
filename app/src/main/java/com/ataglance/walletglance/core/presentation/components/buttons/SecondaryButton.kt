@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -42,16 +42,16 @@ fun SecondaryButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = GlanceTheme.surface.copy(.08f),
-            contentColor = GlanceTheme.primary,
+            containerColor = GlanceColors.surface.copy(.08f),
+            contentColor = GlanceColors.primary,
             disabledContainerColor = Color.Transparent,
-            disabledContentColor = GlanceTheme.outline
+            disabledContentColor = GlanceColors.outline
         ),
         shape = RoundedCornerShape(dimensionResource(R.dimen.large_button_corners)),
         border = BorderStroke(
             2.dp,
-            if (enabled) GlanceTheme.primary
-            else GlanceTheme.outline
+            if (enabled) GlanceColors.primary
+            else GlanceColors.outline
         ),
         contentPadding = PaddingValues(vertical = 18.dp),
         modifier = modifier

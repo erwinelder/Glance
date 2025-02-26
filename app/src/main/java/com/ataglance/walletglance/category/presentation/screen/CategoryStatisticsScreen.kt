@@ -16,29 +16,31 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.CategoryStatisticsElementUiState
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.components.CategoryStatisticsItemComponent
-import com.ataglance.walletglance.category.presentation.components.CategoryTypeToggleButton
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
+import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
+import com.ataglance.walletglance.category.presentation.model.GroupedCategoryStatistics
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainerWithFilterBars
-import com.ataglance.walletglance.core.utils.getTodayDateLong
-import com.ataglance.walletglance.navigation.utils.isScreen
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.utils.getCurrentDateLong
+import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.data.mapper.toRecordStackList
-import com.ataglance.walletglance.record.domain.RecordStack
-import com.ataglance.walletglance.record.domain.RecordStackItem
-import com.ataglance.walletglance.record.domain.RecordType
-import com.ataglance.walletglance.record.utils.filterByCollection
+import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
+import com.ataglance.walletglance.record.domain.utils.filterByCollection
+import com.ataglance.walletglance.record.mapper.toRecordStacks
 
 @Composable
 fun CategoryStatisticsScreen(
@@ -49,19 +51,18 @@ fun CategoryStatisticsScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    parentCategory: CategoryStatisticsElementUiState?,
-    categoryStatisticsList: List<CategoryStatisticsElementUiState>,
-    currentCategoryType: CategoryType,
-    collectionList: List<CategoryCollectionWithIds>,
-    selectedCollection: CategoryCollectionWithIds,
-    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
+    collectionsUiState: CategoryCollectionsUiState,
+    onToggleCollectionType: () -> Unit,
+    onCollectionSelect: (Int) -> Unit,
+
+    groupedCategoryStatistics: GroupedCategoryStatistics,
     onNavigateToEditCollectionsScreen: () -> Unit,
-    onSetCategoryType: (CategoryType) -> Unit,
-    onSetParentCategory: (CategoryStatisticsElementUiState) -> Unit,
+    onSetParentCategory: (CategoryStatistics) -> Unit,
     onClearParentCategory: () -> Unit,
+
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    GlassSurfaceContainerWithFilterBars(
+    GlassSurfaceScreenContainerWithFilters(
         screenPadding = scaffoldAppScreenPadding,
         accountList = accountList,
         onAccountClick = onAccountClick,
@@ -69,24 +70,21 @@ fun CategoryStatisticsScreen(
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         onDateRangeChange = onDateRangeChange,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-        collectionList = collectionList,
-        selectedCollection = selectedCollection,
+        collectionsUiState = collectionsUiState,
         onCollectionSelect = onCollectionSelect,
-        typeToggleButton = {
-            CategoryTypeToggleButton(currentType = currentCategoryType, onClick = onSetCategoryType)
-        },
+        onToggleCollectionType = onToggleCollectionType,
         animatedContentLabel = "all categories statistics",
-        animatedContentTargetState = Pair(categoryStatisticsList, parentCategory),
-        visibleNoDataMessage = categoryStatisticsList.isEmpty(),
+        animatedContentTargetState = groupedCategoryStatistics,
+        visibleNoDataMessage = groupedCategoryStatistics.subcategories.isEmpty(),
         noDataMessageRes = R.string.no_data_for_the_selected_filter,
         onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
         onDimBackgroundChange = onDimBackgroundChange
-    ) { (categoryList, parentCategory) ->
+    ) { groupedStatistics ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-            parentCategory?.let {
+            groupedStatistics.parentCategory?.let {
                 Spacer(modifier = Modifier.height(16.dp))
                 CategoryStatisticsItemComponent(
                     uiState = it,
@@ -102,7 +100,10 @@ fun CategoryStatisticsScreen(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(items = categoryList, key = { it.category.id }) { category ->
+                items(
+                    items = groupedStatistics.subcategories,
+                    key = { it.category.id }
+                ) { category ->
                     CategoryStatisticsItemComponent(uiState = category) {
                         onSetParentCategory(category)
                     }
@@ -122,9 +123,8 @@ fun CategoryStatisticsScreen(
 fun CategoryStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
@@ -133,7 +133,7 @@ fun CategoryStatisticsScreenPreview(
     ),
     currentDateRangeEnum: DateRangeEnum = DateRangeEnum.ThisMonth,
     isCustomDateRangeWindowOpened: Boolean = false,
-    currentCategoryType: CategoryType = CategoryType.Expense,
+    currentCollectionType: CategoryCollectionType = CategoryCollectionType.Expense,
     collectionList: List<CategoryCollectionWithIds> = listOf(
         CategoryCollectionWithIds(
             id = 1,
@@ -151,13 +151,13 @@ fun CategoryStatisticsScreenPreview(
         categoriesIds = null
     ),
     recordEntityList: List<RecordEntity>? = null,
-    recordStackList: List<RecordStack> = recordEntityList?.toRecordStackList(
-        accountList = accountList,
-        categoriesWithSubcategories = categoriesWithSubcategories
+    recordStackList: List<RecordStack> = recordEntityList?.toRecordStacks(
+        accounts = accountList,
+        groupedCategoriesByType = groupedCategoriesByType
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
-            date = getTodayDateLong(),
+            date = getCurrentDateLong(),
             type = RecordType.Expense,
             account = accountList[0].toRecordAccount(),
             totalAmount = 42.43,
@@ -166,7 +166,7 @@ fun CategoryStatisticsScreenPreview(
                     id = 1,
                     amount = 46.47,
                     quantity = null,
-                    categoryWithSubcategory = DefaultCategoriesPackage(LocalContext.current)
+                    categoryWithSub = DefaultCategoriesPackage(LocalContext.current)
                         .getDefaultCategories().expense[0].getWithFirstSubcategory(),
                     note = null,
                     includeInBudgets = true
@@ -174,17 +174,16 @@ fun CategoryStatisticsScreenPreview(
             )
         )
     ),
-    parentCategory: CategoryStatisticsElementUiState? = null
+    parentCategory: CategoryStatistics? = null
 ) {
-    val categoryStatisticsLists = categoriesWithSubcategories.getStatistics(
-        recordStackList = recordStackList.filterByCollection(selectedCollection)
-    ).getByType(currentCategoryType)
+    val categoriesStatisticsByType = CategoriesStatisticsByType
+        .fromRecordStacks(recordStackList.filterByCollection(selectedCollection))
+        .getByType(currentCollectionType)
 
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
         isBottomBarVisible = isBottomBarVisible,
-        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.CategoryStatistics(0)) }
+        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.CategoryStatistics()) }
     ) { scaffoldPadding ->
         CategoryStatisticsScreen(
             scaffoldAppScreenPadding = scaffoldPadding,
@@ -194,16 +193,23 @@ fun CategoryStatisticsScreenPreview(
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onDateRangeChange = {},
             onCustomDateRangeButtonClick = {},
-            currentCategoryType = currentCategoryType,
-            parentCategory = parentCategory,
-            categoryStatisticsList = categoryStatisticsLists,
-            collectionList = collectionList,
-            selectedCollection = selectedCollection,
-            onNavigateToEditCollectionsScreen = {},
+
+            collectionsUiState = CategoryCollectionsUiState(
+                collections = collectionList,
+                activeType = currentCollectionType,
+                activeCollection = selectedCollection
+            ),
+            onToggleCollectionType = {},
             onCollectionSelect = {},
-            onSetCategoryType = {},
+
+            groupedCategoryStatistics = GroupedCategoryStatistics(
+                parentCategory = parentCategory,
+                subcategories = categoriesStatisticsByType
+            ),
+            onNavigateToEditCollectionsScreen = {},
             onSetParentCategory = {},
             onClearParentCategory = {},
+
             onDimBackgroundChange = {}
         )
     }

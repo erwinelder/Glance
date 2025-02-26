@@ -3,13 +3,8 @@ package com.ataglance.walletglance.category.presentation.screen
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,29 +20,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.color.CategoryPossibleColors
-import com.ataglance.walletglance.category.domain.icons.CategoryIcon
-import com.ataglance.walletglance.category.domain.icons.CategoryPossibleIcons
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryColor
+import com.ataglance.walletglance.category.domain.model.CategoryIcon
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -64,14 +58,14 @@ fun EditCategoryScreen(
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
     val categoryIconList by remember {
-        derivedStateOf { CategoryPossibleIcons().asList() }
+        derivedStateOf { CategoryIcon.getAll() }
     }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             topButton = if (allowDeleting) {
                 {
@@ -100,7 +94,7 @@ fun EditCategoryScreen(
         )
         ColorPicker(
             visible = showColorPicker,
-            colorList = CategoryPossibleColors().asColorWithNameList(CurrAppTheme),
+            colorList = CategoryColor.asColorWithNameList(CurrAppTheme),
             onColorClick = onCategoryColorChange,
             onPickerClose = {
                 showColorPicker = false
@@ -117,14 +111,7 @@ private fun GlassSurfaceContent(
     categoryIconList: List<CategoryIcon>,
     onColorButtonClick: () -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.field_gap)),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .padding(start = 12.dp, end = 12.dp, top = 24.dp)
-    ) {
+    GlassSurfaceContentColumnWrapper {
         TextFieldWithLabel(
             text = category.name,
             placeholderText = stringResource(R.string.category_name),
@@ -165,9 +152,9 @@ private fun CategoryIconsGrid(
         items(items = categoryIconList, key = { it.res }) { categoryIcon ->
             val color by animateColorAsState(
                 targetValue = if (currentCategoryIcon.name == categoryIcon.name) {
-                    GlanceTheme.primary
+                    GlanceColors.primary
                 } else {
-                    GlanceTheme.onSurface
+                    GlanceColors.onSurface
                 },
                 label = "icon color"
             )
@@ -191,22 +178,18 @@ private fun CategoryIconsGrid(
 fun EditCategoryScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
 ) {
-    val category = categoriesWithSubcategories.expense[0].category
+    val category = groupedCategoriesByType.expense[0].category
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditCategoryScreen(
             scaffoldPadding = scaffoldPadding,
             category = category,
             allowDeleting = false,
-            allowSaving = category.allowSaving(),
+            allowSaving = category.savingIsAllowed(),
             onNameChange = {},
             onCategoryColorChange = {},
             onIconChange = {},

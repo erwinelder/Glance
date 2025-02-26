@@ -16,6 +16,13 @@
     <string name="chosen_budgets">Chosen budgets</string>
 
     <!-- Buttons -->
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_out">Sign out</string>
+    <string name="send_email">Send email</string>
+    <string name="update_email">Update email</string>
+    <string name="reset_password">Reset password</string>
+    <string name="update_password">Update password</string>
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
@@ -53,20 +60,43 @@
     <string name="categories">Categories</string>
     <string name="category_collections">Category collections</string>
     <string name="appearance">Appearance</string>
+    <string name="appearance_settings_category_title">Personalize your app’s look</string>
     <string name="color_theme">Color theme</string>
     <string name="navigation_buttons">Navigation buttons</string>
     <string name="widgets">Widgets</string>
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
+    <string name="profile">Profile</string>
+    <string name="delete_account">Delete account</string>
+    <string name="manage_subscriptions">Manage subscriptions</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
     <string name="finish">Finish</string>
     <string name="_import">Import</string>
-    <string name="import_data">Import data</string>
     <string name="start_setup">Start setup</string>
+    <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="create_new_account">Create a new account</string>
+    <string name="update_your_email">Update your email</string>
+    <string name="update_your_password">Update your password</string>
+    <string name="request_password_reset">Request password reset</string>
+    <string name="reset_your_password">Reset your password</string>
+    <string name="welcome_back_to_glance">Welcome back to Glance!</string>
+    <string name="welcome_to_glance">Welcome to Glance!</string>
+    <string name="continue_to_app">Continue to app</string>
+    <string name="continue_as_guest">Continue as guest</string>
+    <string name="continue_setup">Continue setup</string>
+    <string name="choose_app_language">Choose app language</string>
 
     <!-- Fields -->
+    <string name="email">E-mail</string>
+    <string name="current_email">Current e-mail</string>
+    <string name="new_email">New e-mail</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="new_password_confirmation">New password confirmation</string>
     <string name="use_device_theme">Use device theme</string>
     <string name="color">Color</string>
     <string name="name">Name</string>
@@ -95,6 +125,56 @@
     <string name="limit">Limit</string>
     <string name="budget_limit">Budget limit</string>
     <string name="repeating_period">Repeating period</string>
+
+    <!-- Field validation -->
+    <string name="required_field">required field</string>
+    <string name="is_valid">is valid</string>
+    <string name="not_valid_email">not a valid email</string>
+    <string name="at_least_8_chars">at least 8 characters</string>
+    <string name="at_least_1_spec_char">at least 1 special character</string>
+    <string name="at_least_1_digit">at least 1 digit</string>
+    <string name="at_least_1_uppercase_letter">at least 1 uppercase letter</string>
+    <string name="at_least_1_lowercase_letter">at least 1 lowercase letter</string>
+    <string name="passwords_do_match">Passwords do match</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+
+    <!-- Auth error handling -->
+    <string name="all_set">All set!</string>
+    <string name="oops">Oops!</string>
+    <string name="user_already_exists_error">User already exists</string>
+    <string name="user_not_created_error">User creation failed</string>
+    <string name="user_data_not_saved_error">User data was not saved</string>
+    <string name="user_not_found_error">User not found</string>
+    <string name="user_not_signed_in_error">User is not signed in</string>
+    <string name="invalid_email_error">Invalid email</string>
+    <string name="invalid_code_error">Invalid code</string>
+    <string name="wrong_credentials_error">Wrong credentials</string>
+    <string name="sign_in_error">Error during sign in</string>
+    <string name="reauthentication_error">Error during reauthentication</string>
+    <string name="sign_up_email_verification_error">An error occurred while sending the verification email</string>
+    <string name="email_for_password_reset_error">An error occurred while sending the email for password reset</string>
+    <string name="password_update_success">Password has been updated successfully</string>
+    <string name="password_updated">Password updated!</string>
+    <string name="password_reset_error">Password reset failed</string>
+    <string name="update_password_error">Error during updating password</string>
+    <string name="email_sent">Email sent!</string>
+    <string name="sign_up_email_verification_sent">A verification email for sign-up has been sent. Please follow the link in the email to complete your registration.</string>
+    <string name="update_email_email_verification_sent">A verification email to update your email address has been sent. Please follow the link in the email to complete the update.</string>
+    <string name="email_update_success">Email has been updated successfully</string>
+    <string name="email_verification_error">Email verification failed</string>
+    <string name="reset_password_email_sent">An email for password reset has been sent. Please follow the link in the email.</string>
+    <string name="sign_out_of_your_account">Sign out of your account? You will need to sign in again to access your data.</string>
+    <string name="account_deleted">Account deleted!</string>
+    <string name="your_account_has_been_deleted_successfully">Your account has been deleted successfully</string>
+    <string name="deleting_user_account_error">An error occurred while deleting user account</string>
+    <string name="deleting_user_data_error">An error occurred while deleting user data</string>
+
+    <!-- Billing error handling -->
+    <string name="subscribed_successfully">Subscribed successfully</string>
+    <string name="thank_you_for_subscribing">Thank you for subscribing to Glance! Enjoy unlocked features.</string>
+    <string name="purchase_was_cancelled">Purchase was cancelled</string>
+    <string name="no_network">No network connection</string>
+    <string name="subscription_purchase_error">An error occurred while handling the purchase</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>
@@ -152,7 +232,6 @@
 
     <!-- Other -->
     <string name="hello">Hello</string>
-    <string name="or">or</string>
     <string name="version">Version</string>
     <string name="expense">Expense</string>
     <string name="expenses">Expenses</string>
@@ -162,13 +241,21 @@
     <string name="transfer">Transfer</string>
     <string name="all_categories">All categories</string>
     <string name="no_collections_of_this_type">No collections of this type</string>
-    <string name="reset_data_description">Reset all app data, including accounts, records, categories, and settings.</string>
-    <string name="reset_data_warning">Are you sure you want to reset all your data?</string>
+    <string name="budget_not_found">Budget not found</string>
+    <string name="no_preferences">No preferences</string>
+    <string name="reset_data_action">Reset all app data. Your account will not be deleted.</string>
+    <string name="reset_data_confirmation">Are you sure you want to reset all your data?</string>
+    <string name="delete_your_account_with_all_data">Delete your account with all your data</string>
     <string name="you_have_no_records_in_date_range">You have no records in this period</string>
     <string name="you_have_no_expenses_in_date_range">You have no expenses in this period</string>
     <string name="you_have_no_income_in_date_range">You have no income in this period</string>
     <string name="no_data_for_the_selected_filter">No data for the selected filter</string>
     <string name="you_have_no_budgets_yet">You have no budgets yet</string>
+    <string name="follow_link_in_email">Please follow the link in the email</string>
+
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">All basic app features</string>
+    <string name="cloud_data_sync">Cloud data synchronisation</string>
 
 
 

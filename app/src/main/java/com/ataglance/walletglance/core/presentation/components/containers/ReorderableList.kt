@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.modifiers.dragAndDropReordering
-import com.ataglance.walletglance.core.utils.draggableItems
-import com.ataglance.walletglance.core.utils.rememberDragDropState
+import com.ataglance.walletglance.core.presentation.utils.draggableItems
+import com.ataglance.walletglance.core.presentation.utils.rememberDragDropState
 
 @Composable
 fun <T> ReorderableList(

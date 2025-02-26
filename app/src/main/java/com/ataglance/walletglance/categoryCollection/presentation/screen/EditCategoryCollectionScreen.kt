@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,37 +26,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.CheckedCategory
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.domain.EditingCategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.EditingCategoryWithSubcategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
+import com.ataglance.walletglance.category.presentation.model.CheckedCategory
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.ThreeStateCheckbox
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionScreen(
     collection: CategoryCollectionWithCategories,
-    editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
-    expandedCategory: EditingCategoryWithSubcategories?,
+    checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
+    expandedCategory: CheckedGroupedCategories?,
     allowDeleting: Boolean,
     allowSaving: Boolean,
     onNameChange: (String) -> Unit,
@@ -66,7 +68,7 @@ fun EditCategoryCollectionScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topButton = if (allowDeleting) {
             {
                 SecondaryButton(
@@ -78,7 +80,7 @@ fun EditCategoryCollectionScreen(
         glassSurfaceContent = {
             GlassSurfaceContent(
                 collection = collection,
-                editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+                checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
                 expandedCategory = expandedCategory,
                 onNameChange = onNameChange,
                 onCheckedChange = onCheckedChange,
@@ -98,22 +100,14 @@ fun EditCategoryCollectionScreen(
 @Composable
 private fun GlassSurfaceContent(
     collection: CategoryCollectionWithCategories,
-    editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
-    expandedCategory: EditingCategoryWithSubcategories?,
+    checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
+    expandedCategory: CheckedGroupedCategories?,
     onNameChange: (String) -> Unit,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = 20.dp,
-                end = 20.dp,
-                top = dimensionResource(R.dimen.field_gap)
-            )
+    GlassSurfaceContentColumnWrapper(
+        paddingValues = PaddingValues(start = 16.dp, end = 16.dp, top = 20.dp)
     ) {
         TextFieldWithLabel(
             text = collection.name,
@@ -122,7 +116,7 @@ private fun GlassSurfaceContent(
             labelText = stringResource(R.string.name)
         )
         ParentCategoriesLists(
-            editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+            checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
             expandedCategory = expandedCategory,
             onCheckedChange = onCheckedChange,
             onExpandedChange = onExpandedChange
@@ -137,8 +131,8 @@ private fun GlassSurfaceContent(
 
 @Composable
 private fun ParentCategoriesLists(
-    editingCategoriesWithSubcategories: EditingCategoriesWithSubcategories,
-    expandedCategory: EditingCategoryWithSubcategories?,
+    checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
+    expandedCategory: CheckedGroupedCategories?,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
@@ -159,13 +153,13 @@ private fun ParentCategoriesLists(
             modifier = Modifier.fillMaxWidth()
         ) {
             categoryListItems(
-                list = editingCategoriesWithSubcategories.expense,
+                list = checkedGroupedCategoriesByType.expense,
                 listType = CategoryType.Expense,
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
             )
             categoryListItems(
-                list = editingCategoriesWithSubcategories.income,
+                list = checkedGroupedCategoriesByType.income,
                 listType = CategoryType.Income,
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
@@ -176,7 +170,7 @@ private fun ParentCategoriesLists(
 
 @Composable
 private fun SubcategoriesList(
-    expandedCategory: EditingCategoryWithSubcategories?,
+    expandedCategory: CheckedGroupedCategories?,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
 ) {
@@ -231,7 +225,7 @@ private fun SubcategoriesList(
 }
 
 private fun LazyListScope.categoryListItems(
-    list: List<EditingCategoryWithSubcategories>,
+    list: List<CheckedGroupedCategories>,
     listType: CategoryType,
     onCheckedChange: (Category) -> Unit,
     onExpandedChange: (Category) -> Unit
@@ -323,13 +317,12 @@ private fun CollectionSubcategoryItem(
 
 
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun EditCategoryCollectionScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     collectionWithIds: CategoryCollectionWithIds = CategoryCollectionWithIds(
@@ -341,18 +334,15 @@ fun EditCategoryCollectionScreenPreview(
     ),
 ) {
     val collection = collectionWithIds.toCategoryCollectionWithCategories(
-        allCategories = categoriesWithSubcategories.concatenateAsCategoryList()
+        allCategories = groupedCategoriesByType.asList()
     )
-    val editingCategoriesWithSubcategories = categoriesWithSubcategories
-        .toEditingCategoriesWithSubcategories(collection)
+    val editingCategoriesWithSubcategories = groupedCategoriesByType
+        .toCheckedCategoriesWithSubcategories(collection)
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionScreen(
             collection = collection,
-            editingCategoriesWithSubcategories = editingCategoriesWithSubcategories,
+            checkedGroupedCategoriesByType = editingCategoriesWithSubcategories,
             expandedCategory = null,
             allowDeleting = true,
             allowSaving = collection.allowSaving() &&

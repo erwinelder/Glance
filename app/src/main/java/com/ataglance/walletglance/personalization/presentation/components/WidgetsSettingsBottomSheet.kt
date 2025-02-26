@@ -13,7 +13,7 @@ import com.ataglance.walletglance.core.presentation.components.containers.Reorde
 fun WidgetsSettingsBottomSheet(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    widgetList: List<CheckedWidget>,
+    widgets: List<CheckedWidget>,
     onWidgetCheckedStateChange: (WidgetName, Boolean) -> Unit,
     onMoveWidgets: (Int, Int) -> Unit
 ) {
@@ -25,7 +25,7 @@ fun WidgetsSettingsBottomSheet(
         onDismissRequest = onDismissRequest
     ) {
         ReorderableListStyled(
-            list = widgetList,
+            list = widgets,
             itemKey = { _, item -> item.name },
             onMoveItems = onMoveWidgets
         ) { item ->

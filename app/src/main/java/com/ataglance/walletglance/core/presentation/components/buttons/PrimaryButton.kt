@@ -23,33 +23,32 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 
 @Composable
 fun PrimaryButton(
     text: String,
     enabled: Boolean = true,
     fontSize: TextUnit = 18.sp,
-    enabledGradientColor: Pair<Color, Color> = GlanceTheme.primaryGradientLightToDark,
+    enabledGradient: Pair<Color, Color> = GlanceColors.primaryGradientPair,
     onClick: () -> Unit = {}
 ) {
     val buttonLighterColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradientColor.first else GlanceTheme.disabledGradientLightToDark.first,
-        label = "PrimaryButton container color"
+        targetValue = if (enabled) enabledGradient.first else GlanceColors.disabledGradientPair.first
     )
     val buttonDarkerColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradientColor.second else GlanceTheme.disabledGradientLightToDark.second,
-        label = "PrimaryButton container color"
+        targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second
     )
     val modifier = if (WindowTypeIsCompact) {
         Modifier.fillMaxWidth(.82f)
@@ -61,15 +60,15 @@ fun PrimaryButton(
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.97f, enabled)
     ) {
-        Shadow(enabled, buttonLighterColor)
+//        Shadow(enabled, buttonLighterColor)
         Button(
             onClick = onClick,
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceTheme.onPrimary,
+                contentColor = GlanceColors.onPrimary,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = GlanceTheme.onPrimary,
+                disabledContentColor = GlanceColors.onPrimary,
             ),
             contentPadding = PaddingValues(vertical = 18.dp),
             modifier = modifier
@@ -102,7 +101,7 @@ private fun Shadow(enabled: Boolean, enabledColor: Color) {
         targetValue = if (enabled) {
             enabledColor
         } else {
-            GlanceTheme.outline
+            GlanceColors.outline
         },
         label = "primary button shadow color"
     )
@@ -121,7 +120,7 @@ private fun Shadow(enabled: Boolean, enabledColor: Color) {
 }
 
 
-@Preview(showSystemUi = true)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun PreviewPrimaryButton() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {

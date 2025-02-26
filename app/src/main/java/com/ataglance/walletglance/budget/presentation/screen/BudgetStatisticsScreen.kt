@@ -29,24 +29,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountsFlowRow
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.domain.model.TotalAmountByRange
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.budget.presentation.model.BudgetStatisticsScreenUiState
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.components.CategoryBigIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
 import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
@@ -54,75 +56,89 @@ import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
 
 @Composable
 fun BudgetStatisticsScreen(
+    uiState: BudgetStatisticsScreenUiState,
+    onBackButtonClick: () -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        BackButtonBlock(onBackButtonClick)
+        if (uiState.budget != null) {
+            BudgetStatisticsScreenContent(
+                budget = uiState.budget,
+                columnChartUiState = uiState.columnChartUiState,
+                budgetAccounts = uiState.accounts
+            )
+        } else {
+            MessageContainer(message = stringResource(R.string.budget_not_found))
+        }
+    }
+}
+
+@Composable
+private fun BudgetStatisticsScreenContent(
     budget: Budget,
     columnChartUiState: ColumnChartUiState,
-    budgetAccounts: List<Account>,
-    onBackButtonClick: () -> Unit
+    budgetAccounts: List<Account>
 ) {
     val nestedScrollInterop = rememberNestedScrollInteropConnection()
     val verticalGap = 16.dp
 
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround,
+        contentPadding = PaddingValues(bottom = 8.dp),
         modifier = Modifier
+            .nestedScroll(nestedScrollInterop)
             .fillMaxSize()
+            .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
     ) {
-        BackButtonBlock(onBackButtonClick)
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround,
-            contentPadding = PaddingValues(bottom = 8.dp),
-            modifier = Modifier
-                .nestedScroll(nestedScrollInterop)
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
-        ) {
-            item { Spacer(modifier = Modifier.height(verticalGap)) }
-            item {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    budget.category?.let {
-                        CategoryBigIconComponent(category = it)
-                    }
-                    Text(
-                        text = budget.name,
-                        color = GlanceTheme.onSurface,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = stringResource(
-                            R.string.amount_currency_spending_limit,
-                            budget.amountLimit.formatWithSpaces(), budget.currency
-                        ),
-                        color = GlanceTheme.onSurface,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    AccountsFlowRow(accountList = budgetAccounts, maxLines = 5)
+        item { Spacer(modifier = Modifier.height(verticalGap)) }
+        item {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                budget.category?.let {
+                    CategoryBigIconComponent(category = it)
                 }
-            }
-            item { Spacer(modifier = Modifier.height(verticalGap)) }
-            item {
-                GlanceColumnChart(
-                    uiState = columnChartUiState,
-                    columnsColor = budget.category?.getColorByTheme(CurrAppTheme)?.lighter,
-                    title = stringResource(
-                        id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
+                Text(
+                    text = budget.name,
+                    color = GlanceColors.onSurface,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = stringResource(
+                        R.string.amount_currency_spending_limit,
+                        budget.amountLimit.formatWithSpaces(), budget.currency
                     ),
-                    bottomNote = "Average spending: " +
-                            columnChartUiState.averageValue.formatWithSpaces(budget.currency)
-                ) { totalAmountByPeriod ->
-                    StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
-                }
+                    color = GlanceColors.onSurface,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                AccountsFlowRow(accountList = budgetAccounts, maxLines = 5)
             }
-            item { Spacer(modifier = Modifier.height(verticalGap)) }
         }
+        item { Spacer(modifier = Modifier.height(verticalGap)) }
+        item {
+            GlanceColumnChart(
+                uiState = columnChartUiState,
+                columnsColor = budget.category?.getColorByTheme(CurrAppTheme)?.lighter,
+                title = stringResource(
+                    id = budget.repeatingPeriod.getSpendingInRecentStringRes(), budget.currency
+                ),
+                bottomNote = "Average spending: " +
+                        columnChartUiState.averageValue.formatWithSpaces(budget.currency)
+            ) { totalAmountByPeriod ->
+                StatisticByPeriodDetailsPopupContent(budget, totalAmountByPeriod)
+            }
+        }
+        item { Spacer(modifier = Modifier.height(verticalGap)) }
     }
 }
 
@@ -135,11 +151,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
         derivedStateOf { (3.6 * usedPercentage).toFloat() }
     }
     val pieChartBrush = if (usedPercentage < 50.0) {
-        GlanceTheme.greenGradient.let { listOf(it.second, it.first) }
+        GlanceColors.pieChartGreenGradient.reversed()
     } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
-        GlanceTheme.yellowGradient.let { listOf(it.second, it.first) }
+        GlanceColors.pieChartYellowGradient.reversed()
     } else {
-        GlanceTheme.redGradient.let { listOf(it.second, it.first) }
+        GlanceColors.pieChartRedGradient.reversed()
     }
 
     Column(
@@ -160,7 +176,7 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
                 )
                 Text(
                     text = "${usedPercentage.toInt()}%",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -170,11 +186,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
             ) {
                 Text(
                     text = stringResource(R.string.of_limit_used),
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                 )
                 Text(
                     text = "(${totalAmount.formatWithSpaces(budget.currency)})",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 18.sp,
                 )
             }
@@ -191,9 +207,8 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
 fun BudgetStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     isBottomBarVisible: Boolean = true,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
@@ -203,7 +218,7 @@ fun BudgetStatisticsScreenPreview(
             name = "Main USD",
             currency = "USD",
             balance = 112.13,
-            color = AccountPossibleColors().default.toAccountColorWithName(),
+            color = AccountColors.Default,
             isActive = false
         ),
         Account(
@@ -212,7 +227,7 @@ fun BudgetStatisticsScreenPreview(
             name = "Local Card CZK",
             currency = "CZK",
             balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            color = AccountColors.Pink,
             isActive = false
         ),
     ),
@@ -222,8 +237,8 @@ fun BudgetStatisticsScreenPreview(
         amountLimit = 4000.0,
         usedAmount = 2500.0,
         usedPercentage = 62.5F,
-        category = categoriesWithSubcategories.expense[0].category,
-        name = categoriesWithSubcategories.expense[0].category.name,
+        category = groupedCategoriesByType.expense[0].category,
+        name = groupedCategoriesByType.expense[0].category.name,
         repeatingPeriod = RepeatingPeriod.Monthly,
         dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
         currentTimeWithinRangeGraphPercentage = .5f,
@@ -233,29 +248,29 @@ fun BudgetStatisticsScreenPreview(
     totalAmounts: List<Double> = (0..5).map { 5000.0 / (it + 1) }
 ) {
     val context = LocalContext.current
+    val resourceManager = ResourceManagerImpl(context)
     val totalAmountsByRanges = budget.repeatingPeriod.getPrevDateRanges()
         .mapIndexed { index, dateRange ->
-            TotalAmountByRange(
+            TotalAmountInRange(
                 dateRange = dateRange,
                 totalAmount = totalAmounts.getOrNull(index) ?: 0.0
             )
         }
-        .let { totalAmountsByRanges ->
-            listOf(TotalAmountByRange(budget.dateRange, budget.usedAmount)) + totalAmountsByRanges
-        }
         .reversed()
-    val columnChartUiState = ColumnChartUiState.createAsBudgetStatistics(
+    val columnChartUiState = ColumnChartUiState.asAmountsByDateRanges(
         totalAmountsByRanges = totalAmountsByRanges,
         rowsCount = 5,
         repeatingPeriod = budget.repeatingPeriod,
-        context = context
+        resourceManager = resourceManager
     )
 
     PreviewContainer(appTheme = appTheme) {
         BudgetStatisticsScreen(
-            budget = budget,
-            columnChartUiState = columnChartUiState,
-            budgetAccounts = accountList,
+            uiState = BudgetStatisticsScreenUiState(
+                budget = budget,
+                columnChartUiState = columnChartUiState,
+                accounts = accountList
+            ),
             onBackButtonClick = {}
         )
     }

@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.innerShadow
 
 @Composable
@@ -33,16 +33,10 @@ fun GlanceSwitch(
     height: Dp = 30.dp,
 ) {
     val offset by animateDpAsState(
-        targetValue = if (checked) width - height else 0.dp,
-        label = "switch toggle offset"
+        targetValue = if (checked) width - height else 0.dp
     )
     val background by animateColorAsState(
-        targetValue = if (checked) {
-            GlanceTheme.primary
-        } else {
-            GlanceTheme.surface
-        },
-        label = "switch background"
+        targetValue = if (checked) GlanceColors.primary else GlanceColors.surface
     )
 
     Row(
@@ -52,7 +46,7 @@ fun GlanceSwitch(
             .size(width, height)
             .clip(RoundedCornerShape(height))
             .background(background)
-            .border(1.dp, GlanceTheme.outline.copy(.4f), CircleShape)
+            .border(1.dp, GlanceColors.outline.copy(.4f), CircleShape)
             .innerShadow(
                 shape = RoundedCornerShape(50)
             )
@@ -68,7 +62,7 @@ fun GlanceSwitch(
                     ambientColor = Color.Black
                 )
                 .clip(RoundedCornerShape(50))
-                .background(GlanceTheme.onPrimary)
+                .background(GlanceColors.onPrimary)
         )
     }
 }

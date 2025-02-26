@@ -9,15 +9,14 @@ plugins {
 
 android {
     namespace = "com.ataglance.walletglance"
-    compileSdk = 34
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.ataglance.walletglance"
-        minSdk = 28
-        targetSdk = 34
-        versionCode = 63
-        versionName = "3.0.1"
-        resourceConfigurations += arrayOf("en", "cs", "de", "ru", "es", "uk")
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = 79
+        versionName = "4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,26 +38,42 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
             ndk {
                 debugSymbolLevel = "SYMBOL_TABLE"
             }
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+
+        java {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
+        }
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+
     bundle {
         language {
             enableSplit = false
         }
     }
+
+    androidResources {
+        localeFilters += listOf("en", "es", "cs", "de", "ru", "uk")
+    }
+
     buildFeatures {
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -74,69 +89,81 @@ tasks.withType<Test> {
 }
 
 dependencies {
-
+    // Core
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.animation)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.core.splashscreen)
+    // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Compose & Navigation
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.animation)
+    implementation(libs.androidx.foundation)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
+    debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
+    // Google Play Services
     implementation(libs.app.update)
     implementation(libs.app.update.ktx)
-    implementation(libs.review)
-    implementation(libs.review.ktx)
     implementation(libs.asset.delivery)
     implementation(libs.asset.delivery.ktx)
     implementation(libs.feature.delivery)
     implementation(libs.feature.delivery.ktx)
-    implementation(libs.gson)
-    implementation(libs.test.core.ktx)
-    implementation(libs.kotlinx.serialization.json)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
-
+    implementation(libs.review)
+    implementation(libs.review.ktx)
+    implementation(libs.google.billing)
+    implementation(libs.google.billing.ktx)
     // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.junit.ktx)
-    testImplementation(libs.junit.jupiter)
-    androidTestImplementation(libs.junit.jupiter)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-
+    implementation(libs.androidx.room.runtime)
     // DataStore
     implementation(libs.androidx.datastore.preferences)
-
     // Firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.analytics)
-
-    // SplashScreen
-    implementation(libs.androidx.core.splashscreen)
-
+    testImplementation(libs.firebase.auth.ktx)
+    testImplementation(libs.firebase.firestore.ktx)
+    // Koin
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compat)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.viewmodel.navigation)
+    // Utilities
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
     // Testing
-    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.junit.jupiter.params)
+    implementation(libs.test.core.ktx)
+    testImplementation(libs.kotlinx.coroutines.test)
+    // Mockito
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockk)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.mockk.agent)
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.rules)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.mockk.android)
 }

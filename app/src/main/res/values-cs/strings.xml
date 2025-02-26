@@ -15,6 +15,13 @@
     <string name="chosen_budgets">Vybrané rozpočty</string>
 
     <!-- Buttons -->
+    <string name="sign_in">Přihlásit se</string>
+    <string name="sign_up">Zaregistrovat se</string>
+    <string name="sign_out">Odhlásit se</string>
+    <string name="send_email">Odeslat e-mail</string>
+    <string name="update_email">Aktualizovat e-mail</string>
+    <string name="reset_password">Obnovit heslo</string>
+    <string name="update_password">Aktualizovat heslo</string>
     <string name="create">Vytvořit</string>
     <string name="save">Uložit</string>
     <string name="apply">Použít</string>
@@ -52,20 +59,43 @@
     <string name="categories">Kategorie</string>
     <string name="category_collections">Kolekce kategorií</string>
     <string name="appearance">Vzhled</string>
+    <string name="appearance_settings_category_title">Přizpůsobte vzhled aplikace</string>
     <string name="color_theme">Barevný motiv</string>
     <string name="navigation_buttons">Navigační tlačítka</string>
     <string name="widgets">Widgety</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
+    <string name="profile">Profil</string>
+    <string name="delete_account">Smazat účet</string>
+    <string name="manage_subscriptions">Spravovat předplatná</string>
 
     <!-- Setting up -->
     <string name="start">Start</string>
     <string name="finish">Dokončit</string>
     <string name="_import">Import</string>
-    <string name="import_data">Importovat data</string>
     <string name="start_setup">Začít nastavení</string>
+    <string name="sign_in_to_your_account">Přihlaste se ke svému účtu</string>
+    <string name="create_new_account">Vytvořte nový účet</string>
+    <string name="update_your_email">Aktualizujte svůj e-mail</string>
+    <string name="update_your_password">Aktualizujte své heslo</string>
+    <string name="request_password_reset">Požádat o resetování hesla</string>
+    <string name="reset_your_password">Obnovte své heslo</string>
+    <string name="welcome_back_to_glance">Vítejte zpět v Glance!</string>
+    <string name="welcome_to_glance">Vítejte v Glance!</string>
+    <string name="continue_to_app">Pokračovat do aplikace</string>
+    <string name="continue_as_guest">Pokračovat jako host</string>
+    <string name="continue_setup">Pokračovat v nastavení</string>
+    <string name="choose_app_language">Vyberte jazyk aplikace</string>
 
     <!-- Fields -->
+    <string name="email">E-mail</string>
+    <string name="current_email">Aktuální e-mail</string>
+    <string name="new_email">Nový e-mail</string>
+    <string name="password">Heslo</string>
+    <string name="confirm_password">Potvrzení hesla</string>
+    <string name="current_password">Aktuální heslo</string>
+    <string name="new_password">Nové heslo</string>
+    <string name="new_password_confirmation">Potvrzení nového hesla</string>
     <string name="use_device_theme">Použít téma zařízení</string>
     <string name="color">Barva</string>
     <string name="name">Název</string>
@@ -94,6 +124,56 @@
     <string name="limit">Limit</string>
     <string name="budget_limit">Rozpočtový limit</string>
     <string name="repeating_period">Opakovaný interval</string>
+
+    <!-- Field validation -->
+    <string name="required_field">povinné pole</string>
+    <string name="is_valid">je platné</string>
+    <string name="not_valid_email">neplatný email</string>
+    <string name="at_least_8_chars">alespoň 8 znaků</string>
+    <string name="at_least_1_spec_char">alespoň 1 speciální znak</string>
+    <string name="at_least_1_digit">alespoň 1 číslice</string>
+    <string name="at_least_1_uppercase_letter">alespoň 1 velké písmeno</string>
+    <string name="at_least_1_lowercase_letter">alespoň 1 malé písmeno</string>
+    <string name="passwords_do_match">Hesla se shodují</string>
+    <string name="passwords_do_not_match">Hesla se neshodují</string>
+
+    <!-- Auth error handling -->
+    <string name="all_set">Vše připraveno!</string>
+    <string name="oops">Jejda!</string>
+    <string name="user_already_exists_error">Uživatel již existuje</string>
+    <string name="user_not_created_error">Vytvoření uživatele se nezdařilo</string>
+    <string name="user_data_not_saved_error">Uživatelská data nebyla uložena</string>
+    <string name="user_not_found_error">Uživatel nebyl nalezen</string>
+    <string name="user_not_signed_in_error">Uživatel není přihlášen</string>
+    <string name="invalid_email_error">Neplatný e-mail</string>
+    <string name="invalid_code_error">Neplatný kód</string>
+    <string name="wrong_credentials_error">Špatné přihlašovací údaje</string>
+    <string name="sign_in_error">Chyba během přihlášení</string>
+    <string name="reauthentication_error">Chyba během opětovného ověření</string>
+    <string name="sign_up_email_verification_error">Při odesílání ověřovacího e-mailu došlo k chybě</string>
+    <string name="email_for_password_reset_error">Při odesílání e-mailu pro obnovení hesla došlo k chybě</string>
+    <string name="password_update_success">Heslo bylo úspěšně aktualizováno</string>
+    <string name="password_updated">Heslo aktualizováno!</string>
+    <string name="password_reset_error">Resetování hesla se nezdařilo</string>
+    <string name="update_password_error">Chyba během aktualizace hesla</string>
+    <string name="email_sent">E-mail odeslán!</string>
+    <string name="sign_up_email_verification_sent">Ověřovací e-mail pro registraci byl odeslán. Postupujte prosím podle odkazu v e-mailu a dokončete svou registraci.</string>
+    <string name="update_email_email_verification_sent">Ověřovací e-mail pro aktualizaci vaší e-mailové adresy byl odeslán. Postupujte prosím podle odkazu v e-mailu, abyste dokončili aktualizaci.</string>
+    <string name="email_update_success">E-mail byl úspěšně aktualizován</string>
+    <string name="email_verification_error">Ověření e-mailu se nezdařilo</string>
+    <string name="reset_password_email_sent">E-mail pro obnovení hesla byl odeslán. Postupujte prosím podle odkazu v e-mailu.</string>
+    <string name="sign_out_of_your_account">Odhlásit se ze svého účtu? Budete se muset znovu přihlásit, abyste získali přístup k vašim datům.</string>
+    <string name="account_deleted">Účet smazán!</string>
+    <string name="your_account_has_been_deleted_successfully">Váš účet byl úspěšně smazán</string>
+    <string name="deleting_user_account_error">Při mazání uživatelského účtu došlo k chybě</string>
+    <string name="deleting_user_data_error">Při mazání uživatelských dat došlo k chybě</string>
+
+    <!-- Billing error handling -->
+    <string name="subscribed_successfully">Předplatné úspěšně aktivováno</string>
+    <string name="thank_you_for_subscribing">Děkujeme, že jste si předplatili Glance! Užijte si odemčené funkce.</string>
+    <string name="purchase_was_cancelled">Nákup byl zrušen</string>
+    <string name="no_network">Žádné připojení k síti</string>
+    <string name="subscription_purchase_error">Při zpracování nákupu došlo k chybě</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>
@@ -151,7 +231,6 @@
 
     <!-- Other -->
     <string name="hello">Ahoj</string>
-    <string name="or">nebo</string>
     <string name="version">Verze</string>
     <string name="expense">Výdaj</string>
     <string name="expenses">Výdaje</string>
@@ -161,13 +240,21 @@
     <string name="transfer">Převod</string>
     <string name="all_categories">Všechny kategorie</string>
     <string name="no_collections_of_this_type">Nejsou žádné kolekce tohoto typu</string>
-    <string name="reset_data_description">Resetovat všechna data aplikace, včetně účtů, záznamů, kategorií a nastavení.</string>
-    <string name="reset_data_warning">Jste si jisti, že chcete resetovat všechna data?</string>
+    <string name="budget_not_found">Rozpočet nebyl nalezen</string>
+    <string name="no_preferences">Žádné předvolby</string>
+    <string name="reset_data_action">Resetovat všechna data aplikace. Váš účet nebude smazán.</string>
+    <string name="reset_data_confirmation">Jste si jisti, že chcete resetovat všechna data?</string>
+    <string name="delete_your_account_with_all_data">Smažte svůj účet se všemi svými daty</string>
     <string name="you_have_no_records_in_date_range">Nemáte žádné záznamy v tomto období</string>
     <string name="you_have_no_expenses_in_date_range">Nemáte žádné výdaje v tomto období</string>
     <string name="you_have_no_income_in_date_range">Nemáte žádné příjmy v tomto období</string>
     <string name="no_data_for_the_selected_filter">Žádná data pro vybraný filtr</string>
     <string name="you_have_no_budgets_yet">Ještě nemáte žádné rozpočty</string>
+    <string name="follow_link_in_email">Postupujte prosím podle odkazu v e-mailu</string>
+
+    <!-- Subscriptions benefits -->
+    <string name="all_basic_app_features">Všechny základní funkce aplikace</string>
+    <string name="cloud_data_sync">Synchronizace dat v cloudu</string>
 
 
 

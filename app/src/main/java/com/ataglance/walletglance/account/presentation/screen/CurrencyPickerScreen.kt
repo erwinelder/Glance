@@ -21,18 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyItem
-import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerUiState
-import com.ataglance.walletglance.account.utils.toSortedCurrencyItemList
+import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
+import com.ataglance.walletglance.account.presentation.model.CurrencyItem
+import com.ataglance.walletglance.account.presentation.model.CurrencyPickerUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.LocalWindowType
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import java.util.Currency
 
 @Composable
@@ -46,7 +46,7 @@ fun CurrencyPickerScreen(
     onSaveButtonClick: (String) -> Unit,
 ) {
 
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topPadding = scaffoldPadding.calculateTopPadding(),
         topButton = {
             AnimatedContent(
@@ -58,8 +58,7 @@ fun CurrencyPickerScreen(
                     onValueChange = onSearchPromptChange,
                     placeholderText = "\"${targetCurrencyCode}\"",
                     modifier = Modifier.fillMaxWidth(
-                        FilledWidthByScreenType(compact = .86f)
-                            .getByScreenType(LocalWindowType.current)
+                        FilledWidthByScreenType(compact = .86f).getByType(CurrWindowType)
                     ),
                     fontSize = 20.sp,
                     cornerSize = 17.dp
@@ -113,13 +112,13 @@ private fun GlassSurfaceContent(
                     selected = currency == uiState.selectedCurrency,
                     onClick = null,
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = GlanceTheme.primary,
-                        unselectedColor = GlanceTheme.onSurface.copy(.5f)
+                        selectedColor = GlanceColors.primary,
+                        unselectedColor = GlanceColors.outline
                     )
                 )
                 Text(
                     text = "${currency.currencyCode} - ${currency.displayName}",
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 17.sp
                 )
             }
@@ -133,13 +132,9 @@ private fun GlassSurfaceContent(
 @Composable
 fun CurrencyPickerScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
+    isAppSetUp: Boolean = true
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         CurrencyPickerScreen(
             scaffoldPadding = scaffoldPadding,
             currencyPickerUiState = CurrencyPickerUiState(

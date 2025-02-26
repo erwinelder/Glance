@@ -22,31 +22,31 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.EditingSubcategoryComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditSubcategoriesScreen(
     scaffoldPadding: PaddingValues,
-    categoryWithSubcategories: CategoryWithSubcategories?,
+    groupedCategories: GroupedCategories?,
     onSaveButton: () -> Unit,
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topPadding = scaffoldPadding.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                subcategoryList = categoryWithSubcategories?.subcategoryList ?: emptyList(),
+                subcategoryList = groupedCategories?.subcategoryList.orEmpty(),
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )
@@ -167,18 +167,14 @@ private fun ExpandedLayout(
 fun EditSubcategoriesScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditSubcategoriesScreen(
             scaffoldPadding = scaffoldPadding,
-            categoryWithSubcategories = categoriesWithSubcategories.expense[2],
+            groupedCategories = groupedCategoriesByType.expense[2],
             onSaveButton = {},
             onNavigateToEditCategoryScreen = {},
             onSwapCategories = { _, _ -> }

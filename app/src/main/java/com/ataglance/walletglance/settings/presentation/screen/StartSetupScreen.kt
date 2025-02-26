@@ -35,9 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -54,8 +56,9 @@ fun StartSetupScreen(
         StartAnimatedContainer(isAppThemeSetUp, 200) {
             Text(
                 text = stringResource(R.string.app_name),
-                color = GlanceTheme.onBackground,
+                color = GlanceColors.onSurface,
                 fontSize = 15.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.ExtraBold,
                 letterSpacing = -(.5).sp
             )
@@ -64,8 +67,9 @@ fun StartSetupScreen(
         StartAnimatedContainer(isAppThemeSetUp) {
             Text(
                 text = stringResource(R.string.hello) + "!",
-                color = GlanceTheme.onBackground,
+                color = GlanceColors.onSurface,
                 fontSize = 55.sp,
+                fontFamily = NotoSans,
                 fontWeight = FontWeight.ExtraBold,
                 letterSpacing = -(1).sp
             )
@@ -87,14 +91,14 @@ private fun StartButton(onClick: () -> Unit = {}) {
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.97f)
     ) {
-        StartButtonShadow(GlanceTheme.primaryGradientLightToDark.first)
+        StartButtonShadow(GlanceColors.primaryGradientPair.first)
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceTheme.onPrimary,
+                contentColor = GlanceColors.onPrimary,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = GlanceTheme.onPrimary,
+                disabledContentColor = GlanceColors.onPrimary,
             ),
             contentPadding = PaddingValues(22.dp),
             modifier = Modifier
@@ -102,10 +106,7 @@ private fun StartButton(onClick: () -> Unit = {}) {
                 .clip(RoundedCornerShape(30.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(
-                            GlanceTheme.primaryGradientLightToDark.second,
-                            GlanceTheme.primaryGradientLightToDark.first
-                        ),
+                        colors = GlanceColors.primaryGradient.reversed(),
                         start = Offset(-25f, 101f),
                         end = Offset(124f, 30f)
                     )
@@ -140,13 +141,9 @@ private fun StartButtonShadow(color: Color) {
 @Composable
 fun StartSetupScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
+    isAppSetUp: Boolean = true
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         StartSetupScreen(
             isAppThemeSetUp = true,
             onManualSetupButton = {}

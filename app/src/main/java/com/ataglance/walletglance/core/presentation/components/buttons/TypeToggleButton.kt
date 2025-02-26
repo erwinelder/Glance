@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -30,7 +30,7 @@ fun TypeToggleButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = GlanceTheme.onPrimary,
+            contentColor = GlanceColors.onPrimary,
         ),
         shape = RoundedCornerShape(50),
         modifier = Modifier
@@ -38,19 +38,14 @@ fun TypeToggleButton(
             .clip(RoundedCornerShape(50))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceTheme.primaryGradientLightToDark
-                        .toList()
-                        .reversed(),
+                    colors = GlanceColors.primaryGradient.reversed(),
                     start = Offset(75f, 210f),
                     end = Offset(95f, -10f)
                 )
             )
             .border(1.dp, Color.Transparent, RoundedCornerShape(50))
     ) {
-        AnimatedContent(
-            targetState = text,
-            label = "toggle button text"
-        ) { targetText ->
+        AnimatedContent(targetState = text) { targetText ->
             Text(
                 text = targetText,
                 fontSize = fontSize,

@@ -23,9 +23,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun EditingParentCategoryComponent(
@@ -46,15 +46,15 @@ fun EditingParentCategoryComponent(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceTheme.onGlassSurfaceGradient,
+                    colors = GlanceColors.glassGradientOnGlass,
                     start = Offset(50f, 190f),
                     end = Offset(100f, 0f)
                 )
             )
             .border(
-                1.dp,
-                GlanceTheme.outlineVariant,
-                RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
+                width = 1.dp,
+                color = GlanceColors.glassGradientOnGlassBorder,
+                shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
             .padding(start = 15.dp, end = 15.dp, top = 12.dp, bottom = 12.dp)
     ) {
@@ -68,7 +68,7 @@ fun EditingParentCategoryComponent(
             CategoryIconComponent(category)
             Text(
                 text = category.name,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -79,7 +79,7 @@ fun EditingParentCategoryComponent(
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "right arrow",
-                tint = GlanceTheme.onSurface,
+                tint = GlanceColors.onSurface,
                 modifier = Modifier
                     .size(12.dp, 20.dp)
             )

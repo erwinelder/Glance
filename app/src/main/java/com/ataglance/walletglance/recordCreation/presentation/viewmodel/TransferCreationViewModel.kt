@@ -1,37 +1,58 @@
 package com.ataglance.walletglance.recordCreation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.utils.getOtherFrom
+import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
+import com.ataglance.walletglance.account.domain.utils.getOtherFrom
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.domain.transfer.TransferSenderReceiverRecordNums
+import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteTransferUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.GetTransferDraftUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.SaveTransferUseCase
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedTransfer
+import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class TransferCreationViewModel(
-    private val accountList: List<Account>,
-    initialTransferDraft: TransferDraft
+    recordNum: Int?,
+    private val saveTransferUseCase: SaveTransferUseCase,
+    private val deleteTransferUseCase: DeleteTransferUseCase,
+    private val getTransferDraftUseCase: GetTransferDraftUseCase,
+    private val getAccountsUseCase: GetAccountsUseCase,
+    private val getLastRecordNumUseCase: GetLastRecordNumUseCase
 ) : ViewModel() {
 
-    private val _transferDraft: MutableStateFlow<TransferDraft> = MutableStateFlow(
-        initialTransferDraft
-    )
-    val transferDraft: StateFlow<TransferDraft> = _transferDraft.asStateFlow()
+    init {
+        viewModelScope.launch {
+            accountList = getAccountsUseCase.getAll()
+
+            val transferDraft = getTransferDraftUseCase.get(recordNum)
+            _transferDraft.update { transferDraft }
+        }
+    }
+
+
+    private var accountList: List<Account> = listOf()
+
+
+    private val _transferDraft = MutableStateFlow(TransferDraft())
+    val transferDraft = _transferDraft.asStateFlow()
 
 
     fun selectNewDate(selectedDateMillis: Long) {
         _transferDraft.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
+            it.copy(dateTimeState = it.dateTimeState.applyNewDate(selectedDateMillis))
         }
     }
 
     fun selectNewTime(hour: Int, minute: Int) {
         _transferDraft.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
+            it.copy(dateTimeState = it.dateTimeState.applyNewTime(hour, minute))
         }
     }
 
@@ -103,22 +124,42 @@ class TransferCreationViewModel(
         }
     }
 
-    fun getTransferDraft(): TransferDraft {
-        return transferDraft.value
+
+    suspend fun saveTransfer() {
+        transferDraft.value
+            .takeIf { it.savingIsAllowed }
+            ?.toCreatedTransfer()
+            ?.let { createdTransfer ->
+                saveTransferUseCase.execute(transfer = createdTransfer)
+            }
     }
 
-    fun getSenderReceiverRecordNums(): TransferSenderReceiverRecordNums {
-        return transferDraft.value.getSenderReceiverRecordNums()
+    suspend fun repeatTransfer() {
+        val transferDraft = transferDraft.value.takeIf { it.savingIsAllowed } ?: return
+        val recordNum = getLastRecordNumUseCase.getNext()
+
+        val createdTransfer = transferDraft
+            .copy(
+                sender = transferDraft.sender.copy(
+                    recordNum = recordNum,
+                    recordId = 0
+                ),
+                receiver = transferDraft.receiver.copy(
+                    recordNum = recordNum + 1,
+                    recordId = 0
+                ),
+                dateTimeState = DateTimeState.fromCurrentTime()
+            )
+            .toCreatedTransfer()
+            ?: return
+
+        saveTransferUseCase.execute(transfer = createdTransfer)
     }
 
-}
-
-class TransferCreationViewModelFactory(
-    private val accountList: List<Account>,
-    private val transferDraft: TransferDraft
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TransferCreationViewModel(accountList, transferDraft) as T
+    suspend fun deleteTransfer() {
+        deleteTransferUseCase.execute(
+            unitsRecordNums = transferDraft.value.getSenderReceiverRecordNums()
+        )
     }
+
 }

@@ -2,7 +2,7 @@ package com.ataglance.walletglance.account.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.account.domain.color.AccountColorName
+import com.ataglance.walletglance.account.domain.model.color.AccountColorName
 
 @Entity(tableName = "Account")
 data class AccountEntity(

@@ -2,9 +2,11 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.EditAccountUiState
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.mapper.toAccount
+import com.ataglance.walletglance.account.mapper.toEditAccountUiState
+import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalNegative
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,61 +18,54 @@ import kotlinx.coroutines.flow.update
 
 class EditAccountViewModel : ViewModel() {
 
-    private val _editAccountUiState: MutableStateFlow<EditAccountUiState> = MutableStateFlow(
-        EditAccountUiState()
-    )
-    val editAccountUiState = _editAccountUiState.asStateFlow()
+    private val _accountDraft = MutableStateFlow(AccountDraft())
+    val accountDraft = _accountDraft.asStateFlow()
 
-    val allowSaving: StateFlow<Boolean> = combine(_editAccountUiState) { editAccountUiStateArray ->
-        editAccountUiStateArray[0].allowSaving()
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false
-    )
-
-
-    fun applyAccountData(account: Account) {
-        _editAccountUiState.update { account.toEditAccountUiState() }
+    fun applyAccount(account: Account) {
+        _accountDraft.update { account.toEditAccountUiState() }
     }
 
     fun changeColor(colorName: String) {
-        _editAccountUiState.update {
-            it.copy(color = AccountPossibleColors().getByName(colorName))
+        _accountDraft.update {
+            it.copy(color = AccountColors.fromName(colorName))
         }
     }
 
     fun changeName(value: String) {
-        _editAccountUiState.update {
+        _accountDraft.update {
             it.copy(name = value)
         }
     }
+
     fun changeCurrency(value: String) {
-        _editAccountUiState.update {
+        _accountDraft.update {
             it.copy(currency = value)
         }
     }
+
     fun changeBalance(value: String) {
-        _editAccountUiState.update {
-            it.copy(
-                balance = value.takeIf { value.isNumberWithDecimalOptionalNegative() } ?: return
-            )
+        val balance = value.takeIf { value.isNumberWithDecimalOptionalNegative() } ?: return
+        _accountDraft.update {
+            it.copy(balance = balance)
         }
     }
-    fun changeHide(value: Boolean) {
-        _editAccountUiState.update {
+
+    fun changeHideStatus(value: Boolean) {
+        _accountDraft.update {
             it.copy(hide = value)
         }
     }
-    fun changeHideBalance(value: Boolean) {
-        if (editAccountUiState.value.withoutBalance) return
 
-        _editAccountUiState.update {
+    fun changeHideBalanceStatus(value: Boolean) {
+        if (accountDraft.value.withoutBalance) return
+
+        _accountDraft.update {
             it.copy(hideBalance = value)
         }
     }
-    fun changeWithoutBalance(value: Boolean) {
-        _editAccountUiState.update {
+
+    fun changeWithoutBalanceStatus(value: Boolean) {
+        _accountDraft.update {
             it.copy(
                 hideBalance = false,
                 withoutBalance = value
@@ -79,7 +74,16 @@ class EditAccountViewModel : ViewModel() {
     }
 
     fun getAccount(): Account? {
-        return editAccountUiState.value.toAccount()
+        return accountDraft.value.toAccount()
     }
+
+
+    val allowSaving: StateFlow<Boolean> = combine(_accountDraft) { draft ->
+        draft[0].allowSaving()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = false
+    )
 
 }

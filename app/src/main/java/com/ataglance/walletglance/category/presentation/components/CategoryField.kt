@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -39,14 +39,14 @@ fun CategoryField(
         modifier = Modifier
             .bounceClickEffect(.97f, onClick = onClick)
             .clip(RoundedCornerShape(cornerSize))
-            .background(GlanceTheme.surface)
+            .background(GlanceColors.surface)
             .padding(top = 2.dp, bottom = 2.dp, start = 2.dp, end = 8.dp)
     ) {
         category?.let {
             Icon(
                 painter = painterResource(category.icon.res),
                 contentDescription = category.name + " icon",
-                tint = GlanceTheme.surface,
+                tint = GlanceColors.surface,
                 modifier = Modifier
                     .shadow(
                         elevation = 6.dp,
@@ -61,7 +61,7 @@ fun CategoryField(
         }
         Text(
             text = category?.name ?: "???",
-            color = if (category != null) GlanceTheme.onSurface else GlanceTheme.surface,
+            color = if (category != null) GlanceColors.onSurface else GlanceColors.surface,
             fontSize = fontSize,
             fontWeight = FontWeight.Light,
             maxLines = 1,

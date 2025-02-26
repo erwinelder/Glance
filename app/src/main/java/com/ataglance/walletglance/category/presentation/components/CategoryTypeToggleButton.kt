@@ -4,8 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.utils.toggle
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.utils.toggle
 import com.ataglance.walletglance.core.presentation.components.buttons.TypeToggleButton
 
 @Composable

@@ -20,32 +20,31 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.components.EditingAccountComponent
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditAccountsScreen(
     scaffoldPadding: PaddingValues,
     isAppSetUp: Boolean,
-    accountList: List<Account>,
+    accounts: List<Account>,
     onNavigateToEditAccountScreen: (Account?) -> Unit,
     onMoveAccounts: (Int, Int) -> Unit,
     onSaveButton: () -> Unit
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
-                accountsList = accountList,
+                accountsList = accounts,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onMoveAccounts = onMoveAccounts
             )
@@ -160,7 +159,6 @@ private fun ExpandedLayout(
 fun EditAccountsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
     accountList: List<Account> = listOf(
         Account(
             id = 1,
@@ -168,7 +166,7 @@ fun EditAccountsScreenPreview(
             name = "Main USD",
             currency = "USD",
             balance = 112.13,
-            color = AccountPossibleColors().default.toAccountColorWithName(),
+            color = AccountColors.Default,
             isActive = false
         ),
         Account(
@@ -177,19 +175,16 @@ fun EditAccountsScreenPreview(
             name = "Local Card CZK",
             currency = "CZK",
             balance = 1412.13,
-            color = AccountPossibleColors().pink.toAccountColorWithName(),
+            color = AccountColors.Pink,
             isActive = false
         ),
     ),
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountsScreen(
             scaffoldPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,
-            accountList = accountList,
+            accounts = accountList,
             onNavigateToEditAccountScreen = {},
             onMoveAccounts = { _, _ -> },
             onSaveButton = {}

@@ -1,37 +1,60 @@
 package com.ataglance.walletglance.budget.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
+import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
+import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.mapper.budget.toDraft
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class EditBudgetViewModel : ViewModel() {
+class EditBudgetViewModel(
+    private val getAccountsUseCase: GetAccountsUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
+) : ViewModel() {
 
-    private val _budget: MutableStateFlow<EditingBudgetUiState> =
-        MutableStateFlow(EditingBudgetUiState())
-    val budget: StateFlow<EditingBudgetUiState> = _budget.asStateFlow()
+    init {
+        viewModelScope.launch {
+            getAccountsUseCase.getAll().let { accounts = it }
+            getCategoriesUseCase.getGrouped().let { groupedCategoriesByType = it }
+        }
+    }
 
-    fun applyBudget(
-        budget: EditingBudgetUiState?,
-        categoryWithSubcategory: CategoryWithSubcategory? = null,
-        newBudgetName: String = ""
-    ) {
-        val category = categoryWithSubcategory?.category
 
-        _budget.update {
-            budget ?: EditingBudgetUiState(
+    var accounts = emptyList<Account>()
+        private set
+    var groupedCategoriesByType = GroupedCategoriesByType()
+        private set
+
+
+    private val _budget = MutableStateFlow(BudgetDraft())
+    val budget = _budget.asStateFlow()
+
+    fun applyBudget(budget: Budget?) {
+        val budgetDraft = budget?.toDraft(accounts = accounts) ?: let {
+            val categoryWithSubcategory = groupedCategoriesByType
+                .getFirstCategoryWithSubByType(CategoryType.Expense)
+            val category = categoryWithSubcategory?.category
+
+            BudgetDraft(
                 isNew = true,
                 priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
                 category = category,
-                name = newBudgetName.takeIf { it.isNotBlank() } ?: category?.name ?: ""
+                name = category?.name ?: ""
             )
         }
+
+        _budget.update { budgetDraft }
     }
 
     fun changeRepeatingPeriod(repeatingPeriod: RepeatingPeriod) {
@@ -40,11 +63,11 @@ class EditBudgetViewModel : ViewModel() {
         }
     }
 
-    fun changeCategory(categoryWithSubcategory: CategoryWithSubcategory) {
-        val category = categoryWithSubcategory.getSubcategoryOrCategory()
+    fun changeCategory(categoryWithSub: CategoryWithSub) {
+        val category = categoryWithSub.getSubcategoryOrCategory()
         _budget.update { budget ->
             budget.copy(
-                priorityNum = categoryWithSubcategory.groupParentAndSubcategoryOrderNums(),
+                priorityNum = categoryWithSub.groupParentAndSubcategoryOrderNums(),
                 category = category,
                 name = budget.name.takeIf {
                     it.isNotBlank() && budget.name != budget.category?.name
@@ -86,7 +109,7 @@ class EditBudgetViewModel : ViewModel() {
         }
     }
 
-    fun getBudgetUiState(): EditingBudgetUiState {
+    fun getBudgetDraft(): BudgetDraft {
         return budget.value
     }
 

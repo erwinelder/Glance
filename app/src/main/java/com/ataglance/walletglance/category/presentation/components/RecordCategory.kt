@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -43,7 +43,7 @@ fun RecordCategory(
             Icon(
                 painter = painterResource(category.icon.res),
                 contentDescription = category.name + " icon",
-                tint = GlanceTheme.surface,
+                tint = GlanceColors.surface,
                 modifier = Modifier
                     .shadow(
                         elevation = 6.dp,
@@ -57,7 +57,7 @@ fun RecordCategory(
             )
             Text(
                 text = category.name,
-                color = GlanceTheme.onSurface,
+                color = GlanceColors.onSurface,
                 fontSize = fontSize,
                 fontWeight = FontWeight.Light,
                 maxLines = 1,

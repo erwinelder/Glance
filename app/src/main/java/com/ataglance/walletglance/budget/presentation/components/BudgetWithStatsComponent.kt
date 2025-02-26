@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -28,10 +27,11 @@ import com.ataglance.walletglance.category.presentation.components.CategoryIconC
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.toStringDateRange
 
@@ -39,6 +39,7 @@ import com.ataglance.walletglance.core.utils.toStringDateRange
 fun BudgetWithStatsComponent(
     budget: Budget,
     onClick: (Budget) -> Unit,
+    resourceManager: ResourceManager,
     showDateRangeLabels: Boolean = false
 ) {
     GlassSurfaceOnGlassSurface(
@@ -58,7 +59,7 @@ fun BudgetWithStatsComponent(
                 }
                 Text(
                     text = budget.name,
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 19.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -67,7 +68,7 @@ fun BudgetWithStatsComponent(
                 Icon(
                     painter = painterResource(R.drawable.short_arrow_right_icon),
                     contentDescription = "right arrow icon",
-                    tint = GlanceTheme.onSurface,
+                    tint = GlanceColors.onSurface,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -81,7 +82,7 @@ fun BudgetWithStatsComponent(
                 ) {
                     Text(
                         text = budget.usedAmount.formatWithSpaces(),
-                        color = GlanceTheme.onSurface,
+                        color = GlanceColors.onSurface,
                         fontSize = 18.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -93,7 +94,7 @@ fun BudgetWithStatsComponent(
                     ) {
                         Text(
                             text = budget.amountLimit.formatWithSpaces(),
-                            color = GlanceTheme.onSurface,
+                            color = GlanceColors.onSurface,
                             fontSize = 18.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -101,7 +102,7 @@ fun BudgetWithStatsComponent(
                         )
                         Text(
                             text = budget.currency,
-                            color = GlanceTheme.onSurface.copy(.6f),
+                            color = GlanceColors.onSurface.copy(.6f),
                             fontSize = 17.sp
                         )
                     }
@@ -129,7 +130,8 @@ fun BudgetWithStatsComponent(
                 if (showDateRangeLabels) {
                     DateRangeLabels(
                         dateRange = budget.dateRange,
-                        repeatingPeriod = budget.repeatingPeriod
+                        repeatingPeriod = budget.repeatingPeriod,
+                        resourceManager = resourceManager
                     )
                 }
             }
@@ -138,11 +140,14 @@ fun BudgetWithStatsComponent(
 }
 
 @Composable
-private fun DateRangeLabels(dateRange: LongDateRange, repeatingPeriod: RepeatingPeriod) {
-    val context = LocalContext.current
+private fun DateRangeLabels(
+    dateRange: LongDateRange,
+    repeatingPeriod: RepeatingPeriod,
+    resourceManager: ResourceManager
+) {
     val stringDateRange by remember {
         derivedStateOf {
-            dateRange.toStringDateRange(period = repeatingPeriod, context = context)
+            dateRange.toStringDateRange(period = repeatingPeriod, resourceManager = resourceManager)
         }
     }
 
@@ -152,14 +157,14 @@ private fun DateRangeLabels(dateRange: LongDateRange, repeatingPeriod: Repeating
     ) {
         Text(
             text = stringDateRange.from,
-            color = GlanceTheme.onSurface,
+            color = GlanceColors.onSurface,
             fontSize = 17.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Text(
             text = stringDateRange.to,
-            color = GlanceTheme.onSurface,
+            color = GlanceColors.onSurface,
             fontSize = 17.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

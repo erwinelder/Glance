@@ -11,7 +11,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
 fun MessageContainer(message: String) {
@@ -23,7 +24,7 @@ fun MessageContainer(message: String) {
     ) {
         Text(
             text = message,
-            color = GlanceTheme.onSurface.copy(.6f),
+            color = GlanceColors.onSurface.copy(.6f),
             fontSize = 18.sp,
             textAlign = TextAlign.Center
         )

@@ -5,18 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.ataglance.walletglance.core.navigation.MainScreens
-import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
-import com.ataglance.walletglance.navigation.data.repository.NavigationRepository
-import com.ataglance.walletglance.navigation.domain.mapper.toBottomBarNavigationButtonList
-import com.ataglance.walletglance.navigation.domain.mapper.toDefaultNavigationButtonEntityList
-import com.ataglance.walletglance.navigation.domain.mapper.toNavigationButtonEntityList
+import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
+import com.ataglance.walletglance.auth.domain.model.SignInCase
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
-import com.ataglance.walletglance.navigation.utils.currentScreenIsNoneOf
-import com.ataglance.walletglance.navigation.utils.currentScreenIsOneOf
-import com.ataglance.walletglance.navigation.utils.fromMainScreen
-import com.ataglance.walletglance.navigation.utils.simpleName
-import com.ataglance.walletglance.settings.navigation.SettingsScreens
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
+import com.ataglance.walletglance.navigation.domain.utils.currentScreenIsAnyOf
+import com.ataglance.walletglance.navigation.domain.utils.fromMainScreen
+import com.ataglance.walletglance.navigation.domain.utils.simpleName
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NavigationViewModel(
-    private val navigationRepository: NavigationRepository
+    private val getNavigationButtonsUseCase: GetNavigationButtonsUseCase
 ) : ViewModel() {
 
     private val _navigationButtonList: MutableStateFlow<List<BottomBarNavigationButton>> =
@@ -39,42 +37,10 @@ class NavigationViewModel(
         )
     val navigationButtonList = _navigationButtonList.asStateFlow()
 
-    fun fetchBottomBarNavigationButtons() {
+    private fun fetchBottomBarNavigationButtons() {
         viewModelScope.launch {
-            navigationRepository.getNavigationButtonsSorted().collect { buttons ->
-                if (buttons.isNotEmpty()) {
-                    _navigationButtonList.update {
-                        buttons.toBottomBarNavigationButtonList()
-                    }
-                } else {
-                    val defaultNavigationButtonList = getDefaultNavigationButtonList()
-
-                    navigationRepository.upsertNavigationButtons(defaultNavigationButtonList)
-                    _navigationButtonList.update {
-                        defaultNavigationButtonList.toBottomBarNavigationButtonList()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun getDefaultNavigationButtonList(): List<NavigationButtonEntity> {
-        return listOf(
-            BottomBarNavigationButton.Home,
-            BottomBarNavigationButton.Records,
-            BottomBarNavigationButton.CategoryStatistics,
-            BottomBarNavigationButton.Budgets,
-            BottomBarNavigationButton.Settings
-        ).toDefaultNavigationButtonEntityList()
-    }
-
-    fun saveBottomBarNavigationButtons(navigationButtonList: List<BottomBarNavigationButton>) {
-        val navigationButtonEntityList = navigationButtonList.toNavigationButtonEntityList()
-
-        viewModelScope.launch {
-            navigationRepository.upsertNavigationButtons(navigationButtonEntityList)
-            _navigationButtonList.update {
-                navigationButtonEntityList.toBottomBarNavigationButtonList()
+            getNavigationButtonsUseCase.getFlow().collect { buttons ->
+                _navigationButtonList.update { buttons }
             }
         }
     }
@@ -86,6 +52,12 @@ class NavigationViewModel(
     private fun setMoveScreensTowardsLeft(value: Boolean) {
         _moveScreensTowardsLeft.update { value }
     }
+
+
+    init {
+        fetchBottomBarNavigationButtons()
+    }
+
 
     private fun changeMoveScreensTowardsLeft(currentScreen: MainScreens, nextScreen: MainScreens) {
         setMoveScreensTowardsLeft(needToMoveScreensTowardsLeft(currentScreen, nextScreen))
@@ -110,28 +82,22 @@ class NavigationViewModel(
     }
 
 
-    fun shouldDisplaySetupProgressTopBar(
-        isSetUp: Boolean,
-        navBackStackEntry: NavBackStackEntry?
-    ): Boolean {
-        return !isSetUp && navBackStackEntry.currentScreenIsNoneOf(
-            SettingsScreens.Start, MainScreens.FinishSetup
-        )
-    }
-
-
     fun shouldDisplayBottomNavigationBar(
         isSetUp: Boolean,
         navBackStackEntry: NavBackStackEntry?
     ): Boolean {
-        return isSetUp && navBackStackEntry.currentScreenIsOneOf(
-            MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(0),
+        return isSetUp && navBackStackEntry.currentScreenIsAnyOf(
+            MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(),
             MainScreens.Budgets, SettingsScreens.SettingsHome
         )
     }
 
 
-    fun navigateToScreenAndPopUp(
+    fun popBackStackToHomeScreen(navController: NavController) {
+        navController.popBackStack(MainScreens.Home, false)
+    }
+
+    fun navigateToScreenPoppingToStartDestination(
         navController: NavController,
         navBackStackEntry: NavBackStackEntry?,
         screenNavigateTo: MainScreens
@@ -145,16 +111,6 @@ class NavigationViewModel(
         }
     }
 
-    fun navigateToScreenMovingTowardsLeft(
-        navController: NavController,
-        screen: Any
-    ) {
-        setMoveScreensTowardsLeft(true)
-        navController.navigate(screen) {
-            launchSingleTop = true
-        }
-    }
-
     fun navigateToScreen(
         navController: NavController,
         screen: Any
@@ -162,6 +118,37 @@ class NavigationViewModel(
         navController.navigate(screen) {
             launchSingleTop = true
         }
+    }
+
+    fun popBackStackAndNavigateToScreen(
+        navController: NavController,
+        screen: Any
+    ) {
+        navController.popBackStack()
+        navigateToScreen(navController, screen)
+    }
+
+    fun navigateToScreenMovingTowardsLeft(
+        navController: NavController,
+        screen: Any
+    ) {
+        setMoveScreensTowardsLeft(true)
+        navigateToScreen(navController, screen)
+    }
+
+    fun navigateToSignInScreen(
+        navController: NavController,
+        signInCase: SignInCase
+    ) {
+        navigateToScreen(navController, AuthScreens.SignIn(signInCase.name))
+    }
+
+    fun popBackStackAndNavigateToResultSuccessScreen(
+        navController: NavController,
+        screenType: AuthResultSuccessScreenType
+    ) {
+        navController.popBackStack()
+        navigateToScreen(navController, AuthScreens.ResultSuccess(screenType.name))
     }
 
 }

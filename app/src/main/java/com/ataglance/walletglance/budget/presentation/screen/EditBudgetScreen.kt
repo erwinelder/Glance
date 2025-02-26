@@ -27,18 +27,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.account.domain.color.AccountPossibleColors
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
-import com.ataglance.walletglance.account.utils.toAccountColorWithName
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.budget.domain.mapper.toBudget
-import com.ataglance.walletglance.budget.domain.model.EditingBudgetUiState
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
+import com.ataglance.walletglance.budget.mapper.budget.toDraft
+import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.CategoryField
 import com.ataglance.walletglance.category.presentation.components.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -46,23 +46,24 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
 import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckbox
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
 import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.components.pickers.PopupFloatingPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.utils.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.core.utils.takeComposableIf
 
 @Composable
 fun EditBudgetScreen(
     scaffoldPadding: PaddingValues,
-    budget: EditingBudgetUiState,
+    budget: BudgetDraft,
     accountList: List<Account>,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
+    groupedCategoriesByType: GroupedCategoriesByType,
     onNameChange: (String) -> Unit,
-    onCategoryChange: (CategoryWithSubcategory) -> Unit,
+    onCategoryChange: (CategoryWithSub) -> Unit,
     onAmountLimitChange: (String) -> Unit,
     onRepeatingPeriodChange: (RepeatingPeriod) -> Unit,
     onLinkAccount: (Account) -> Unit,
@@ -76,15 +77,15 @@ fun EditBudgetScreen(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceContainer(
+        GlassSurfaceScreenContainer(
             topPadding = scaffoldPadding.calculateTopPadding(),
             fillGlassSurface = false,
-            topButton = if (!budget.isNew) { {
+            topButton = takeComposableIf(!budget.isNew) {
                 SecondaryButton(
                     text = stringResource(R.string.delete),
                     onClick = onDeleteButton
                 )
-            } } else null,
+            },
             glassSurfaceContent = {
                 GlassSurfaceContent(
                     budget = budget,
@@ -107,7 +108,7 @@ fun EditBudgetScreen(
         )
         CategoryPicker(
             visible = showCategoryPicker,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = groupedCategoriesByType,
             type = CategoryType.Expense,
             allowChoosingParentCategory = true,
             onDismissRequest = { showCategoryPicker = false },
@@ -118,7 +119,7 @@ fun EditBudgetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    budget: EditingBudgetUiState,
+    budget: BudgetDraft,
     accountList: List<Account>,
     onNameChange: (String) -> Unit,
     onCategoryFieldClick: () -> Unit,
@@ -204,7 +205,7 @@ private fun GlassSurfaceContent(
 }
 
 private fun LazyListScope.accountCheckedList(
-    budget: EditingBudgetUiState,
+    budget: BudgetDraft,
     accountList: List<Account>,
     onAccountCheck: (Account) -> Unit,
     onAccountUncheck: (Account) -> Unit,
@@ -242,43 +243,37 @@ private fun LazyListScope.accountCheckedList(
 fun EditBudgetScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     accountList: List<Account> = listOf(
-        Account(id = 1, color = AccountPossibleColors().pink.toAccountColorWithName(), name = "Main account"),
-        Account(id = 2, color = AccountPossibleColors().blue.toAccountColorWithName()),
-        Account(id = 3, color = AccountPossibleColors().default.toAccountColorWithName(), currency = "CZK"),
+        Account(id = 1, color = AccountColors.Pink, name = "Main account"),
+        Account(id = 2, color = AccountColors.Blue),
+        Account(id = 3, color = AccountColors.Default, currency = "CZK"),
     ),
     budgetEntity: BudgetEntity? = null,
     budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
-    budgetUiState: EditingBudgetUiState = (budgetEntity to budgetAccountAssociationList)
-        .letIfNoneIsNull { (entity, associations) ->
-            entity.toBudget(
-                categoryWithSubcategory = categoriesWithSubcategories.expense[0].getWithFirstSubcategory(),
-                linkedAccountsIds = associations
-                    .filter { it.budgetId == entity.id }
-                    .map { it.accountId },
-                accountList = accountList
-            )?.toBudgetUiState(accountList)
-        } ?: EditingBudgetUiState(
+    budgetUiState: BudgetDraft = (budgetEntity to budgetAccountAssociationList)
+        .letIfNoneIsNull { (budget, associations) ->
+            budget.toDomainModel(
+                groupedCategoriesList = groupedCategoriesByType.expense,
+                associations = associations,
+                accounts = accountList
+            )?.toDraft(accounts = accountList)
+        } ?: BudgetDraft(
             isNew = true,
             amountLimit = "4000",
-            category = categoriesWithSubcategories.expense[0].category,
+            category = groupedCategoriesByType.expense[0].category,
             name = "Food & drinks",
             linkedAccounts = accountList.subList(0, 1)
         )
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditBudgetScreen(
             scaffoldPadding = scaffoldPadding,
             budget = budgetUiState,
             accountList = accountList,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = groupedCategoriesByType,
             onNameChange = {},
             onCategoryChange = {},
             onAmountLimitChange = {},

@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.account.domain.Account
+import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 
 @OptIn(ExperimentalLayoutApi::class)

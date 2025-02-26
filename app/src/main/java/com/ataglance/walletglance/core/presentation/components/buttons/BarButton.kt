@@ -18,8 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
@@ -31,27 +31,27 @@ fun BarButton(
 ) {
     val containerColorLighter by animateColorAsState(
         targetValue = if (active) {
-            GlanceTheme.primaryGradientLightToDark.first
+            GlanceColors.primaryGradientPair.first
         } else {
-            GlanceTheme.glassGradientLightToDark.first
+            GlanceColors.glassButtonGradientPair.first
         },
         animationSpec = tween(300),
         label = "BarButton container lighter color"
     )
     val containerColorDarker by animateColorAsState(
         targetValue = if (active) {
-            GlanceTheme.primaryGradientLightToDark.second
+            GlanceColors.primaryGradientPair.second
         } else {
-            GlanceTheme.glassGradientLightToDark.second
+            GlanceColors.glassButtonGradientPair.second
         },
         animationSpec = tween(300),
         label = "BarButton container darker color"
     )
     val contentColor by animateColorAsState(
         targetValue = if (active) {
-            GlanceTheme.onPrimary
+            GlanceColors.onPrimary
         } else {
-            GlanceTheme.primary
+            GlanceColors.primary
         },
         animationSpec = tween(300),
         label = "BarButton content color"
@@ -60,7 +60,7 @@ fun BarButton(
         targetValue = if (active) {
             Color.Transparent
         } else {
-            GlanceTheme.onGlassSurfaceBorder
+            GlanceColors.glassGradientOnGlassBorder
         },
         animationSpec = tween(300),
         label = "BarButton border color"

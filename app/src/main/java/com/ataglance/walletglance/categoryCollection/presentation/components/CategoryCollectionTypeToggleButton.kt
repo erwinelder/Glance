@@ -3,7 +3,7 @@ package com.ataglance.walletglance.categoryCollection.presentation.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.core.presentation.components.buttons.TypeToggleButton
 
 @Composable

@@ -6,7 +6,7 @@ data class FilledWidthByScreenType(
     val expanded: Float = .44f
 ) {
 
-    fun getByScreenType(windowType: WindowType): Float {
+    fun getByType(windowType: WindowType): Float {
         return when (windowType) {
             WindowType.Compact -> compact
             WindowType.Medium -> medium

@@ -23,30 +23,30 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionType
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithCategories
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionsWithIdsByType
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeBar
 import com.ataglance.walletglance.categoryCollection.presentation.components.EditingCategoryCollectionComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionsScreen(
-    collectionWithCategoriesList: List<CategoryCollectionWithCategories>,
+    collectionsWithCategories: List<CategoryCollectionWithCategories>,
     collectionType: CategoryCollectionType,
     onCategoryTypeChange: (CategoryCollectionType) -> Unit,
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories?) -> Unit,
     onSaveCollectionsButton: () -> Unit,
 ) {
-    GlassSurfaceContainer(
+    GlassSurfaceScreenContainer(
         topBar = {
             CategoryCollectionTypeBar(
                 currentType = collectionType,
@@ -55,7 +55,7 @@ fun EditCategoryCollectionsScreen(
         },
         glassSurfaceContent = {
             GlassSurfaceContent(
-                collectionWithCategoriesList = collectionWithCategoriesList,
+                collectionWithCategoriesList = collectionsWithCategories,
                 onNavigateToEditCollectionScreen = onNavigateToEditCollectionScreen
             )
         },
@@ -164,22 +164,21 @@ private fun ExpandedLayoutContent(
 fun EditCategoryCollectionsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isSetupProgressTopBarVisible: Boolean = false,
-    categoriesWithSubcategories: CategoriesWithSubcategories = DefaultCategoriesPackage(
+    groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
     collectionType: CategoryCollectionType = CategoryCollectionType.Mixed,
     categoryCollectionsWithIdsByType: CategoryCollectionsWithIdsByType? = null,
     collectionWithCategoriesList: List<CategoryCollectionWithCategories> =
         categoryCollectionsWithIdsByType?.toCollectionsWithCategories(
-            allCategories = categoriesWithSubcategories.concatenateAsCategoryList()
+            allCategories = groupedCategoriesByType.asList()
         )?.getByType(collectionType) ?: listOf(
             CategoryCollectionWithCategories(
                 id = 1,
                 orderNum = 1,
                 type = CategoryCollectionType.Mixed,
                 name = "Category collection collection 1",
-                categoryList = categoriesWithSubcategories.expense.let { list ->
+                categoryList = groupedCategoriesByType.expense.let { list ->
                     list.subList(0, 3).map { it.category }
                 }
             ),
@@ -188,7 +187,7 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 2,
                 type = CategoryCollectionType.Mixed,
                 name = "Collection 2",
-                categoryList = categoriesWithSubcategories.expense.let { list ->
+                categoryList = groupedCategoriesByType.expense.let { list ->
                     list.subList(3, 6).map { it.category }
                 }
             ),
@@ -197,18 +196,15 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 3,
                 type = CategoryCollectionType.Mixed,
                 name = "Category collection 3",
-                categoryList = categoriesWithSubcategories.expense.let { list ->
+                categoryList = groupedCategoriesByType.expense.let { list ->
                     list.subList(0, list.size).map { it.category }
                 }
             ),
         )
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isSetupProgressTopBarVisible = isSetupProgressTopBarVisible,
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionsScreen(
-            collectionWithCategoriesList = collectionWithCategoriesList,
+            collectionsWithCategories = collectionWithCategoriesList,
             collectionType = CategoryCollectionType.Mixed,
             onCategoryTypeChange = {},
             onNavigateToEditCollectionScreen = {},

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
@@ -47,7 +47,7 @@ fun BasicDefaultBudgetComponent(
                 }
                 Text(
                     text = budget.name,
-                    color = GlanceTheme.onSurface,
+                    color = GlanceColors.onSurface,
                     fontSize = 20.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -62,7 +62,7 @@ fun BasicDefaultBudgetComponent(
             ) {
                 Text(
                     text = stringResource(R.string.limit) + ":",
-                    color = GlanceTheme.outline,
+                    color = GlanceColors.outline,
                     fontSize = 18.sp
                 )
                 Row(
@@ -71,7 +71,7 @@ fun BasicDefaultBudgetComponent(
                 ) {
                     Text(
                         text = budget.amountLimit.formatWithSpaces(),
-                        color = GlanceTheme.onSurface,
+                        color = GlanceColors.onSurface,
                         fontSize = 20.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -79,7 +79,7 @@ fun BasicDefaultBudgetComponent(
                     )
                     Text(
                         text = budget.currency,
-                        color = GlanceTheme.onSurface.copy(.6f),
+                        color = GlanceColors.onSurface.copy(.6f),
                         fontSize = 19.sp
                     )
                 }

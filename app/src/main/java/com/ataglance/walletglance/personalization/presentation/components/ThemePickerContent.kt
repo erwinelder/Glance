@@ -23,14 +23,14 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.settings.domain.ThemeUiState
+import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 
 @Composable
 fun ThemePickerContent(
+    onChooseLightTheme: (AppTheme) -> Unit,
+    onChooseDarkTheme: (AppTheme) -> Unit,
     onSetUseDeviceTheme: (Boolean) -> Unit,
-    onChooseLightTheme: (String) -> Unit,
-    onChooseDarkTheme: (String) -> Unit,
-    themeUiState: ThemeUiState
+    appThemeConfiguration: AppThemeConfiguration
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -43,7 +43,7 @@ fun ThemePickerContent(
             horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             ThemeReprElement(
-                onClick = { onChooseLightTheme(AppTheme.LightDefault.name) },
+                onClick = { onChooseLightTheme(AppTheme.LightDefault) },
                 firstAccountColor = Color(8, 8, 8),
                 primaryColor = Color(177, 100, 145),
                 backgroundColor = Color(240, 240, 240),
@@ -51,7 +51,7 @@ fun ThemePickerContent(
                 borderColor = Color(195, 195, 195)
             )
             ThemeReprElement(
-                onClick = { onChooseDarkTheme(AppTheme.DarkDefault.name) },
+                onClick = { onChooseDarkTheme(AppTheme.DarkDefault) },
                 firstAccountColor = Color(235, 235, 235),
                 primaryColor = Color(177, 94, 139),
                 backgroundColor = Color(25, 25, 25),
@@ -60,7 +60,7 @@ fun ThemePickerContent(
             )
         }
         SwitchWithLabel(
-            checked = themeUiState.useDeviceTheme,
+            checked = appThemeConfiguration.useDeviceTheme,
             onCheckedChange = onSetUseDeviceTheme,
             labelText = stringResource(R.string.use_device_theme)
         )

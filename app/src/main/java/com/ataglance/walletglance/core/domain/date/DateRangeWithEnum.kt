@@ -1,49 +1,54 @@
 package com.ataglance.walletglance.core.domain.date
 
-import android.content.Context
-import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.utils.extractYear
-import com.ataglance.walletglance.core.utils.getFormattedDateFromAndToByFormatDayMonthYear
+import com.ataglance.walletglance.core.utils.getLocalDateRangeByMonth
+import com.ataglance.walletglance.core.utils.getMonthFullNameRes
 
 data class DateRangeWithEnum(
     val enum: DateRangeEnum,
     val dateRange: LongDateRange
 ) {
 
-    fun getEnumStringRepr(context: Context): String {
+    companion object {
+
+        fun fromEnum(enum: DateRangeEnum, currentRange: LongDateRange? = null): DateRangeWithEnum {
+            val dateRange = when (enum) {
+                DateRangeEnum.ThisWeek -> LocalDateRange.asThisWeek()
+                DateRangeEnum.SevenDays -> LocalDateRange.asSevenDays()
+                DateRangeEnum.ThisMonth -> LocalDateRange.asThisMonth()
+                DateRangeEnum.LastMonth -> LocalDateRange.asLastMonth()
+                DateRangeEnum.ThisYear -> LocalDateRange.asThisYear()
+                DateRangeEnum.LastYear -> LocalDateRange.asLastYear()
+                else -> enum.getLocalDateRangeByMonth(dateRange = currentRange)
+            }
+
+            return DateRangeWithEnum(enum = enum, dateRange = dateRange.toLongDateRange())
+        }
+
+    }
+
+
+    fun getEnumStringRepr(resourceManager: ResourceManager): String {
         return when(enum) {
-            DateRangeEnum.ThisMonth -> context.getString(DateRangeAssets.ThisMonth.nameRes)
-            DateRangeEnum.LastMonth -> context.getString(DateRangeAssets.LastMonth.nameRes)
-            DateRangeEnum.ThisWeek -> context.getString(DateRangeAssets.ThisWeek.nameRes)
-            DateRangeEnum.SevenDays -> context.getString(DateRangeAssets.SevenDays.nameRes)
-            DateRangeEnum.ThisYear -> context.getString(DateRangeAssets.ThisYear.nameRes)
-            DateRangeEnum.LastYear -> context.getString(DateRangeAssets.LastYear.nameRes)
+            DateRangeEnum.ThisMonth -> resourceManager.getString(DateRangeAssets.ThisMonth.nameRes)
+            DateRangeEnum.LastMonth -> resourceManager.getString(DateRangeAssets.LastMonth.nameRes)
+            DateRangeEnum.ThisWeek -> resourceManager.getString(DateRangeAssets.ThisWeek.nameRes)
+            DateRangeEnum.SevenDays -> resourceManager.getString(DateRangeAssets.SevenDays.nameRes)
+            DateRangeEnum.ThisYear -> resourceManager.getString(DateRangeAssets.ThisYear.nameRes)
+            DateRangeEnum.LastYear -> resourceManager.getString(DateRangeAssets.LastYear.nameRes)
             DateRangeEnum.January, DateRangeEnum.February, DateRangeEnum.March,
             DateRangeEnum.April, DateRangeEnum.May, DateRangeEnum.June,
             DateRangeEnum.July, DateRangeEnum.August, DateRangeEnum.September,
             DateRangeEnum.October, DateRangeEnum.November, DateRangeEnum.December ->
-                getFormattedMonth(context)
-            DateRangeEnum.Custom -> getFormattedDateFromAndToByFormatDayMonthYear(
-                dateRange.from, dateRange.to, context
-            )
+                getFormattedMonth(resourceManager)
+            DateRangeEnum.Custom -> dateRange.formatAsDayMonthYear(resourceManager)
         }
     }
 
-    private fun getFormattedMonth(context: Context): String {
-        return when (enum) {
-            DateRangeEnum.January -> context.getString(R.string.january_full)
-            DateRangeEnum.February -> context.getString(R.string.february_full)
-            DateRangeEnum.March -> context.getString(R.string.march_full)
-            DateRangeEnum.April -> context.getString(R.string.april_full)
-            DateRangeEnum.May -> context.getString(R.string.may_full)
-            DateRangeEnum.June -> context.getString(R.string.june_full)
-            DateRangeEnum.July -> context.getString(R.string.july_full)
-            DateRangeEnum.August -> context.getString(R.string.august_full)
-            DateRangeEnum.September -> context.getString(R.string.september_full)
-            DateRangeEnum.October -> context.getString(R.string.october_full)
-            DateRangeEnum.November -> context.getString(R.string.november_full)
-            else -> context.getString(R.string.december_full)
-        } + " ${dateRange.from.extractYear()}"
+    private fun getFormattedMonth(resourceManager: ResourceManager): String {
+        val monthName = enum.getMonthFullNameRes()?.let { resourceManager.getString(it) } ?: ""
+        return "$monthName ${dateRange.from.extractYear()}"
     }
 
 }

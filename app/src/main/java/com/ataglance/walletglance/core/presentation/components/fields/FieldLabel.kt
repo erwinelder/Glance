@@ -6,8 +6,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.Manrope
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun FieldLabel(
@@ -17,7 +17,7 @@ fun FieldLabel(
     Text(
         text = text,
         fontSize = fontSize,
-        color = GlanceTheme.outline,
+        color = GlanceColors.outline,
         fontWeight = FontWeight.Normal,
         fontFamily = Manrope,
         textAlign = TextAlign.Center

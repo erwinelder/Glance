@@ -9,14 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.categoryCollection.domain.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 
 @Composable
 fun CategoryCollectionPickerContainer(
     collectionList: List<CategoryCollectionWithIds>,
-    selectedCollection: CategoryCollectionWithIds,
-    onCollectionSelect: (CategoryCollectionWithIds) -> Unit,
-    typeToggleButton: @Composable () -> Unit,
+    activeCollection: CategoryCollectionWithIds,
+    onCollectionSelect: (Int) -> Unit,
+    activeType: CategoryCollectionType,
+    onTypeToggle: () -> Unit,
     onNavigateToEditCollectionsScreen: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
@@ -27,11 +29,11 @@ fun CategoryCollectionPickerContainer(
     ) {
         CategoryCollectionPicker(
             collectionList = collectionList,
-            selectedCollection = selectedCollection,
+            selectedCollection = activeCollection,
             onCollectionSelect = onCollectionSelect,
             onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
             onDimBackgroundChange = onDimBackgroundChange
         )
-        typeToggleButton()
+        CategoryCollectionTypeToggleButton(currentType = activeType, onClick = onTypeToggle)
     }
 }

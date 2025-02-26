@@ -39,39 +39,39 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.CategoriesWithSubcategories
-import com.ataglance.walletglance.category.domain.Category
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategories
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
-import com.ataglance.walletglance.category.domain.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.WindowTypeIsMedium
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.core.presentation.components.buttons.CloseButton
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun CategoryPicker(
     visible: Boolean,
-    categoriesWithSubcategories: CategoriesWithSubcategories,
+    groupedCategoriesByType: GroupedCategoriesByType,
     type: CategoryType,
     allowChoosingParentCategory: Boolean = false,
     onDismissRequest: () -> Unit,
-    onCategoryChoose: (CategoryWithSubcategory) -> Unit
+    onCategoryChoose: (CategoryWithSub) -> Unit
 ) {
     val parentCategoryListState = rememberLazyListState()
     val subcategoryListState = rememberLazyListState()
-    var chosenCategoryWithSubcategories: CategoryWithSubcategories? by remember {
+    var chosenGroupedCategories: GroupedCategories? by remember {
         mutableStateOf(null)
     }
     var subcategoryList: List<Category> by remember { mutableStateOf(emptyList()) }
-    chosenCategoryWithSubcategories?.subcategoryList?.takeIf { it.isNotEmpty() }
+    chosenGroupedCategories?.subcategoryList?.takeIf { it.isNotEmpty() }
         ?.let { subcategoryList = it }
 
     AnimatedVisibility(
@@ -83,8 +83,8 @@ fun CategoryPicker(
             modifier = Modifier
                 .clickable {
                     onDismissRequest()
-                    if (chosenCategoryWithSubcategories != null) {
-                        chosenCategoryWithSubcategories = null
+                    if (chosenGroupedCategories != null) {
+                        chosenGroupedCategories = null
                     }
                 }
                 .fillMaxSize()
@@ -92,7 +92,7 @@ fun CategoryPicker(
         )
     }
     AnimatedVisibility(
-        visible = visible && chosenCategoryWithSubcategories == null,
+        visible = visible && chosenGroupedCategories == null,
         enter = dialogSlideFromBottomTransition,
         exit = dialogSlideToBottomTransition
     ) {
@@ -103,7 +103,7 @@ fun CategoryPicker(
             modifier = Modifier
                 .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .background(GlanceColors.surface)
                 .fillMaxWidth(
                     when {
                         WindowTypeIsCompact -> .9f
@@ -113,7 +113,7 @@ fun CategoryPicker(
                 )
         ) {
             items(
-                items = categoriesWithSubcategories.getByType(type),
+                items = groupedCategoriesByType.getByType(type),
                 key = { it.category.id }
             ) { categoryWithSubcategories ->
                 if (categoryWithSubcategories.category.orderNum != 1) {
@@ -128,10 +128,10 @@ fun CategoryPicker(
                             categoryWithSubcategories.subcategoryList.isNotEmpty() &&
                                 !allowChoosingParentCategory
                         ) {
-                            chosenCategoryWithSubcategories = categoryWithSubcategories
+                            chosenGroupedCategories = categoryWithSubcategories
                         } else {
                             onCategoryChoose(
-                                CategoryWithSubcategory(categoryWithSubcategories.category)
+                                CategoryWithSub(categoryWithSubcategories.category)
                             )
                             onDismissRequest()
                         }
@@ -142,12 +142,12 @@ fun CategoryPicker(
                             shape = RoundedCornerShape(30),
                             colors = IconButtonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = GlanceTheme.primary.copy(.6f),
+                                contentColor = GlanceColors.primary.copy(.6f),
                                 disabledContainerColor = Color.Transparent,
-                                disabledContentColor = GlanceTheme.outline.copy(.3f)
+                                disabledContentColor = GlanceColors.outline.copy(.3f)
                             ),
                             onClick = {
-                                chosenCategoryWithSubcategories = categoryWithSubcategories
+                                chosenGroupedCategories = categoryWithSubcategories
                             },
                             modifier = Modifier.bounceClickEffect()
                         ) {
@@ -161,9 +161,9 @@ fun CategoryPicker(
                                         color = if (
                                             categoryWithSubcategories.subcategoryList.isEmpty()
                                         ) {
-                                            GlanceTheme.outline.copy(.3f)
+                                            GlanceColors.outline.copy(.3f)
                                         } else {
-                                            GlanceTheme.primary.copy(.6f)
+                                            GlanceColors.primary.copy(.6f)
                                         },
                                         shape = RoundedCornerShape(30)
                                     )
@@ -176,7 +176,7 @@ fun CategoryPicker(
         }
     }
     AnimatedVisibility(
-        visible = visible && chosenCategoryWithSubcategories != null,
+        visible = visible && chosenGroupedCategories != null,
         enter = dialogSlideFromBottomTransition,
         exit = dialogSlideToBottomTransition
     ) {
@@ -185,7 +185,7 @@ fun CategoryPicker(
             modifier = Modifier
                 .padding(top = 84.dp, bottom = dimensionResource(R.dimen.screen_vertical_padding))
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
-                .background(GlanceTheme.surfaceVariant.copy(1f))
+                .background(GlanceColors.surface)
                 .fillMaxWidth(
                     when {
                         WindowTypeIsCompact -> .9f
@@ -212,13 +212,13 @@ fun CategoryPicker(
                     }
                     Row {
                         CategoryListItem(category) { subcategory ->
-                            chosenCategoryWithSubcategories?.category?.let { parentCategory ->
+                            chosenGroupedCategories?.category?.let { parentCategory ->
                                 onCategoryChoose(
-                                    CategoryWithSubcategory(parentCategory, subcategory)
+                                    CategoryWithSub(parentCategory, subcategory)
                                 )
                                 onDismissRequest()
-                                if (chosenCategoryWithSubcategories != null) {
-                                    chosenCategoryWithSubcategories = null
+                                if (chosenGroupedCategories != null) {
+                                    chosenGroupedCategories = null
                                 }
                             }
                         }
@@ -226,7 +226,7 @@ fun CategoryPicker(
                 }
             }
             SmallDivider(filledWidth = .6f)
-            CloseButton(onClick = { chosenCategoryWithSubcategories = null })
+            CloseButton(onClick = { chosenGroupedCategories = null })
         }
     }
 }
@@ -259,7 +259,7 @@ private fun CategoryPickerPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         CategoryPicker(
             visible = true,
-            categoriesWithSubcategories = categoriesWithSubcategories,
+            groupedCategoriesByType = categoriesWithSubcategories,
             type = CategoryType.Expense,
             allowChoosingParentCategory = true,
             onDismissRequest = {},

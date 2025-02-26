@@ -1,33 +1,18 @@
 package com.ataglance.walletglance.personalization.data.repository
 
-import androidx.room.Transaction
-import com.ataglance.walletglance.personalization.data.local.dao.WidgetDao
 import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
 import kotlinx.coroutines.flow.Flow
 
-class WidgetRepository(
-    private val dao: WidgetDao
-) {
+interface WidgetRepository {
 
-    suspend fun upsertWidgets(widgetList: List<WidgetEntity>) {
-        dao.upsertWidgets(widgetList)
-    }
+    suspend fun upsertWidgets(widgets: List<WidgetEntity>)
 
-    @Transaction
-    suspend fun deleteAndUpsertWidgets(
-        widgetListToDelete: List<WidgetEntity>,
-        widgetListToUpsert: List<WidgetEntity>,
-    ) {
-        if (widgetListToDelete.isNotEmpty()) {
-            dao.deleteWidgets(widgetListToDelete)
-        }
-        if (widgetListToUpsert.isNotEmpty()) {
-            dao.upsertWidgets(widgetListToUpsert)
-        }
-    }
+    suspend fun deleteAndUpsertWidgets(toDelete: List<WidgetEntity>, toUpsert: List<WidgetEntity>)
 
-    fun getAllWidgets(): Flow<List<WidgetEntity>> {
-        return dao.getAllWidgets()
-    }
+    suspend fun deleteAllWidgetsLocally()
+
+    fun getAllWidgetsFlow(): Flow<List<WidgetEntity>>
+
+    suspend fun getAllWidgets(): List<WidgetEntity>
 
 }

@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
-import com.ataglance.walletglance.core.presentation.components.containers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 
 @Composable
 fun GlanceSingleValuePieChart(
@@ -59,7 +59,7 @@ private fun Preview() {
             ) {
                 GlanceSingleValuePieChart(
                     percentage = 50f * 3.6f,
-                    brush = GlanceTheme.primaryGradientLightToDark.toList(),
+                    brush = GlanceColors.primaryGradient,
                     size = 90.dp
                 )
             }

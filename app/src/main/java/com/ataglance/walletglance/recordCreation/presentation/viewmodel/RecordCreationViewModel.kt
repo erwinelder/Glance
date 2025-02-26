@@ -1,16 +1,24 @@
 package com.ataglance.walletglance.recordCreation.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.account.domain.Account
-import com.ataglance.walletglance.category.domain.CategoryType
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategory
-import com.ataglance.walletglance.category.domain.CategoryWithSubcategoryByType
+import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.model.CategoryWithSubByType
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
+import com.ataglance.walletglance.category.domain.usecase.GetLastUsedRecordCategoryUseCase
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalDot
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftItem
+import com.ataglance.walletglance.record.domain.usecase.GetLastRecordNumUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.DeleteRecordUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.GetRecordDraftUseCase
+import com.ataglance.walletglance.recordCreation.domain.usecase.SaveRecordUseCase
+import com.ataglance.walletglance.recordCreation.mapper.toCreatedRecord
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.utils.copyWithCategoryAndSubcategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,23 +26,67 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class RecordCreationViewModel(
-    private val initialCategoryWithSubcategoryByType: CategoryWithSubcategoryByType,
-    recordDraft: RecordDraft
+    recordNum: Int?,
+    private val getRecordDraftUseCase: GetRecordDraftUseCase,
+    private val saveRecordUseCase: SaveRecordUseCase,
+    private val deleteRecordUseCase: DeleteRecordUseCase,
+    private val getLastUsedRecordCategoryUseCase: GetLastUsedRecordCategoryUseCase,
+    private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
-    private val _recordDraftGeneral: MutableStateFlow<RecordDraftGeneral> = MutableStateFlow(
-        recordDraft.general
-    )
+    init {
+        viewModelScope.launch {
+            val categories = getCategoriesUseCase.getGrouped()
+            _groupedCategoriesByType.update { categories }
+
+            val category = getLastUsedRecordCategoryUseCase.get(CategoryType.Expense)
+
+            defaultCategoryByType = defaultCategoryByType.putByType(
+                type = CategoryType.Expense,
+                categoryWithSub = category
+            )
+
+            val recordDraft = getRecordDraftUseCase.get(
+                recordNum = recordNum, categoryWithSub = category
+            )
+            _recordDraftGeneral.update { recordDraft.general }
+            _recordDraftItems.update { recordDraft.items }
+        }
+    }
+
+
+    private val _groupedCategoriesByType = MutableStateFlow(GroupedCategoriesByType())
+    val groupedCategoriesByType = _groupedCategoriesByType.asStateFlow()
+
+
+    private var defaultCategoryByType = CategoryWithSubByType()
+
+    private suspend fun getCategoryByType(type: CategoryType): CategoryWithSub? {
+        return defaultCategoryByType.getByType(type = type) ?: let {
+            defaultCategoryByType = defaultCategoryByType.putByType(
+                type = type,
+                categoryWithSub = getLastUsedRecordCategoryUseCase.get(type)
+            )
+            defaultCategoryByType.getByType(type = type)
+        }
+    }
+
+
+    private val _recordDraftGeneral = MutableStateFlow(RecordDraftGeneral())
     val recordDraftGeneral = _recordDraftGeneral.asStateFlow()
 
     fun selectCategoryType(type: CategoryType) {
         _recordDraftGeneral.update {
             it.copy(type = type)
         }
-        _recordDraftItems.update {
-            it.copyWithCategoryAndSubcategory(initialCategoryWithSubcategoryByType.getByType(type))
+        viewModelScope.launch {
+            _recordDraftItems.update {
+                it.copyWithCategoryAndSubcategory(getCategoryByType(type))
+            }
         }
     }
 
@@ -48,13 +100,13 @@ class RecordCreationViewModel(
 
     fun selectDate(selectedDateMillis: Long) {
         _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
+            it.copy(dateTimeState = it.dateTimeState.applyNewDate(selectedDateMillis))
         }
     }
 
     fun selectTime(hour: Int, minute: Int) {
         _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
+            it.copy(dateTimeState = it.dateTimeState.applyNewTime(hour, minute))
         }
     }
 
@@ -76,9 +128,7 @@ class RecordCreationViewModel(
     }
 
 
-    private val _recordDraftItems: MutableStateFlow<List<RecordDraftItem>> = MutableStateFlow(
-        recordDraft.items
-    )
+    private val _recordDraftItems = MutableStateFlow<List<RecordDraftItem>>(emptyList())
     val recordDraftItems = _recordDraftItems.asStateFlow()
 
     fun changeAmount(index: Int, value: String) {
@@ -91,11 +141,11 @@ class RecordCreationViewModel(
         _recordDraftItems.update { newList }
     }
 
-    fun selectCategory(index: Int, categoryWithSubcategory: CategoryWithSubcategory) {
+    fun selectCategory(index: Int, categoryWithSub: CategoryWithSub) {
         val newList = recordDraftItems.value.toMutableList()
         if (index > newList.lastIndex) { return }
 
-        newList[index] = newList[index].copy(categoryWithSubcategory = categoryWithSubcategory)
+        newList[index] = newList[index].copy(categoryWithSub = categoryWithSub)
         _recordDraftItems.update { newList }
     }
 
@@ -147,7 +197,7 @@ class RecordCreationViewModel(
             RecordDraftItem(
                 lazyListKey = newList.maxOfOrNull { it.lazyListKey }?.plus(1) ?: 0,
                 index = newList.lastIndex + 1,
-                categoryWithSubcategory = newList.lastOrNull()?.categoryWithSubcategory,
+                categoryWithSub = newList.lastOrNull()?.categoryWithSub,
                 collapsed = false
             )
         )
@@ -185,7 +235,7 @@ class RecordCreationViewModel(
 
 
     val savingIsAllowed = combine(
-        _recordDraftGeneral, _recordDraftItems
+        recordDraftGeneral, recordDraftItems
     ) { general, items ->
         general.savingIsAllowed() && items.all { it.savingIsAllowed() }
     }.stateIn(
@@ -195,21 +245,43 @@ class RecordCreationViewModel(
     )
 
 
-    fun getRecordDraft(): RecordDraft {
+    private fun getRecordDraft(): RecordDraft {
         return RecordDraft(
             general = recordDraftGeneral.value,
             items = recordDraftItems.value
         )
     }
 
-}
 
-class RecordCreationViewModelFactory(
-    private val initialCategoryWithSubcategoryByType: CategoryWithSubcategoryByType,
-    private val recordDraft: RecordDraft
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return RecordCreationViewModel(initialCategoryWithSubcategoryByType, recordDraft) as T
+    suspend fun saveRecord() {
+        getRecordDraft()
+            .takeIf { it.savingIsAllowed() }
+            ?.toCreatedRecord()
+            ?.let { createdRecord ->
+                saveRecordUseCase.execute(record = createdRecord)
+            }
     }
+
+    suspend fun repeatRecord() {
+        val recordDraft = getRecordDraft().takeIf { it.savingIsAllowed() } ?: return
+        val recordNum = getLastRecordNumUseCase.getNext()
+
+        val createdRecord = recordDraft
+            .copy(
+                general = recordDraft.general.copy(
+                    isNew = true,
+                    recordNum = recordNum,
+                    dateTimeState = DateTimeState.fromCurrentTime()
+                )
+            )
+            .toCreatedRecord()
+            ?: return
+
+        saveRecordUseCase.execute(record = createdRecord)
+    }
+
+    suspend fun deleteRecord() {
+        deleteRecordUseCase.execute(recordNum = recordDraftGeneral.value.recordNum)
+    }
+
 }

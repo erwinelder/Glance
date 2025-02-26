@@ -7,11 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckboxContainer
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.domain.utils.getLocalizedStringRes
-import com.ataglance.walletglance.core.presentation.GlanceTheme
-import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckboxContainer
+import com.ataglance.walletglance.personalization.presentation.utils.getLocalizedStringRes
 
 @Composable
 fun RowScope.CheckedWidgetComponent(
@@ -28,7 +28,7 @@ fun RowScope.CheckedWidgetComponent(
         Text(
             text = stringResource(widget.name.getLocalizedStringRes()),
             fontSize = 20.sp,
-            color = GlanceTheme.onSurface,
+            color = GlanceColors.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
