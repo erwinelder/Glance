@@ -26,14 +26,16 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
-import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryCollectionsSettingsScreens
+import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.utils.getTodayDateLong
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -47,6 +49,7 @@ import com.ataglance.walletglance.record.presentation.components.TransferCompone
 @Composable
 fun RecordsScreen(
     scaffoldAppScreenPadding: PaddingValues,
+    resourceManager: ResourceManager,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
@@ -107,7 +110,8 @@ fun RecordsScreen(
                     if (recordStack.isNotTransfer()) {
                         RecordStackComponent(
                             recordStack = recordStack,
-                            includeYearToDate = includeYearToRecordDate
+                            includeYearInDate = includeYearToRecordDate,
+                            resourceManager = resourceManager
                         ) { recordNum ->
                             onNavigateToScreenMovingTowardsLeft(
                                 MainScreens.RecordCreation(recordNum = recordNum)
@@ -117,6 +121,7 @@ fun RecordsScreen(
                         TransferComponent(
                             recordStack = recordStack,
                             includeYearToDate = includeYearToRecordDate,
+                            resourceManager = resourceManager,
                             secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
                                 accountList.findById(it)?.toRecordAccount()
                             }
@@ -163,7 +168,7 @@ fun RecordsScreenPreview(
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
-            date = getTodayDateLong(),
+            date = getCurrentDateLong(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -188,6 +193,7 @@ fun RecordsScreenPreview(
     ) { scaffoldPadding ->
         RecordsScreen(
             scaffoldAppScreenPadding = scaffoldPadding,
+            resourceManager = ResourceManagerImpl(LocalContext.current),
             accountList = accountList,
             onAccountClick = {},
             currentDateRangeEnum = currentDateRangeEnum,

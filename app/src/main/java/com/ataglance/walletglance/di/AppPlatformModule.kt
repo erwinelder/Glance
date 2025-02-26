@@ -23,12 +23,16 @@ val appPlatformModule = module {
     }
 
     factory<ResourceManager> { parameters ->
-        val locale = parameters.get<String>()
-        val context = get<Context>().let {
-            it.createConfigurationContext(
-                it.resources.configuration.apply { setLocale(Locale(locale)) }
-            )
+        val locale = parameters.getOrNull<String>()
+
+        val context = get<Context>().let { context ->
+            locale?.let {
+                context.createConfigurationContext(
+                    context.resources.configuration.apply { setLocale(Locale(locale)) }
+                )
+            } ?: context
         }
+
         ResourceManagerImpl(context = context)
     }
 

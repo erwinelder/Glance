@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -25,13 +24,14 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
-import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.toStringDateRange
 
@@ -39,6 +39,7 @@ import com.ataglance.walletglance.core.utils.toStringDateRange
 fun BudgetWithStatsComponent(
     budget: Budget,
     onClick: (Budget) -> Unit,
+    resourceManager: ResourceManager,
     showDateRangeLabels: Boolean = false
 ) {
     GlassSurfaceOnGlassSurface(
@@ -129,7 +130,8 @@ fun BudgetWithStatsComponent(
                 if (showDateRangeLabels) {
                     DateRangeLabels(
                         dateRange = budget.dateRange,
-                        repeatingPeriod = budget.repeatingPeriod
+                        repeatingPeriod = budget.repeatingPeriod,
+                        resourceManager = resourceManager
                     )
                 }
             }
@@ -138,11 +140,14 @@ fun BudgetWithStatsComponent(
 }
 
 @Composable
-private fun DateRangeLabels(dateRange: LongDateRange, repeatingPeriod: RepeatingPeriod) {
-    val context = LocalContext.current
+private fun DateRangeLabels(
+    dateRange: LongDateRange,
+    repeatingPeriod: RepeatingPeriod,
+    resourceManager: ResourceManager
+) {
     val stringDateRange by remember {
         derivedStateOf {
-            dateRange.toStringDateRange(period = repeatingPeriod, context = context)
+            dateRange.toStringDateRange(period = repeatingPeriod, resourceManager = resourceManager)
         }
     }
 

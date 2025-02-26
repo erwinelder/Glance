@@ -46,13 +46,13 @@ class TransferCreationViewModel(
 
     fun selectNewDate(selectedDateMillis: Long) {
         _transferDraft.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
+            it.copy(dateTimeState = it.dateTimeState.applyNewDate(selectedDateMillis))
         }
     }
 
     fun selectNewTime(hour: Int, minute: Int) {
         _transferDraft.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
+            it.copy(dateTimeState = it.dateTimeState.applyNewTime(hour, minute))
         }
     }
 
@@ -148,7 +148,7 @@ class TransferCreationViewModel(
                     recordNum = recordNum + 1,
                     recordId = 0
                 ),
-                dateTimeState = DateTimeState()
+                dateTimeState = DateTimeState.fromCurrentTime()
             )
             .toCreatedTransfer()
             ?: return

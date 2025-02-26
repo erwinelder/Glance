@@ -100,13 +100,13 @@ class RecordCreationViewModel(
 
     fun selectDate(selectedDateMillis: Long) {
         _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewDate(selectedDateMillis))
+            it.copy(dateTimeState = it.dateTimeState.applyNewDate(selectedDateMillis))
         }
     }
 
     fun selectTime(hour: Int, minute: Int) {
         _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.getNewTime(hour, minute))
+            it.copy(dateTimeState = it.dateTimeState.applyNewTime(hour, minute))
         }
     }
 
@@ -271,7 +271,7 @@ class RecordCreationViewModel(
                 general = recordDraft.general.copy(
                     isNew = true,
                     recordNum = recordNum,
-                    dateTimeState = DateTimeState()
+                    dateTimeState = DateTimeState.fromCurrentTime()
                 )
             )
             .toCreatedRecord()

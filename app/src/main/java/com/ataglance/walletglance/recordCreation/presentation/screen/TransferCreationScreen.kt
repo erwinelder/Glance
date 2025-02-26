@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountPicker
 import com.ataglance.walletglance.account.presentation.components.SmallAccount
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -39,9 +39,9 @@ import com.ataglance.walletglance.core.presentation.components.pickers.CustomDat
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
-import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
 
 @Composable
 fun TransferCreationScreen(
@@ -101,7 +101,7 @@ fun TransferCreationScreen(
         )
         CustomDatePicker(
             openDialog = showDatePicker,
-            initialTimeInMillis = transferDraft.dateTimeState.calendar.timeInMillis,
+            initialTimeInMillis = transferDraft.dateTimeState.getTimeInMillis(),
             onOpenDateDialogChange = {
                 showDatePicker = it
             },

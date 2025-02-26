@@ -22,15 +22,17 @@ import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.budget.presentation.components.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
@@ -40,6 +42,7 @@ import com.ataglance.walletglance.record.mapper.toDomainModels
 @Composable
 fun BudgetsScreen(
     screenPadding: PaddingValues,
+    resourceManager: ResourceManager,
     budgetsByType: BudgetsByType,
     onBudgetClick: (Budget) -> Unit
 ) {
@@ -62,7 +65,9 @@ fun BudgetsScreen(
                 )
             } else {
                 BudgetListsByPeriodComponent(budgetsByType) { budget ->
-                    BudgetWithStatsComponent(budget = budget, onClick = onBudgetClick)
+                    BudgetWithStatsComponent(
+                        budget = budget, onClick = onBudgetClick, resourceManager = resourceManager
+                    )
                 }
             }
         }
@@ -169,6 +174,7 @@ fun BudgetsScreenPreview(
     ) { scaffoldPadding ->
         BudgetsScreen(
             screenPadding = scaffoldPadding,
+            resourceManager = ResourceManagerImpl(LocalContext.current),
             budgetsByType = budgetsByType,
             onBudgetClick = {}
         )

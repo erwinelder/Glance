@@ -117,9 +117,7 @@ fun NavGraphBuilder.settingsGraph(
                 onSelectNewLanguage = viewModel::selectNewLanguage,
                 onApplyLanguageButton = {
                     val koin = GlobalContext.get()
-                    val categoriesPackageCurr = DefaultCategoriesPackage(
-                        koin.get<ResourceManager> { parametersOf(appConfiguration.langCode) }
-                    )
+                    val categoriesPackageCurr = DefaultCategoriesPackage(koin.get<ResourceManager>())
                     val categoriesPackageNew = DefaultCategoriesPackage(
                         koin.get<ResourceManager> { parametersOf(chosenLanguage) }
                     )

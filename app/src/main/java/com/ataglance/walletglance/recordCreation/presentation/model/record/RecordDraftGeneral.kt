@@ -10,7 +10,7 @@ data class RecordDraftGeneral(
     val recordNum: Int = 0,
     val account: Account? = null,
     val type: CategoryType = CategoryType.Expense,
-    val dateTimeState: DateTimeState = DateTimeState(),
+    val dateTimeState: DateTimeState = DateTimeState.fromCurrentTime(),
     val preferences: RecordDraftPreferences = RecordDraftPreferences()
 ) {
 

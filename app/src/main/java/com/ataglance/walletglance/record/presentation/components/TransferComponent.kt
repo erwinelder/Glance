@@ -11,17 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.RecordAccount
+import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.utils.convertDateLongToDayMonthYear
+import com.ataglance.walletglance.core.utils.formatDateLongAsDayMonthYear
 import com.ataglance.walletglance.record.domain.model.RecordStack
 
 @Composable
@@ -29,6 +29,7 @@ fun TransferComponent(
     recordStack: RecordStack,
     secondAccount: RecordAccount?,
     includeYearToDate: Boolean,
+    resourceManager: ResourceManager,
     onTransferClick: (Int) -> Unit
 ) {
     GlassSurfaceOnGlassSurface(onClick = { onTransferClick(recordStack.recordNum) }) {
@@ -37,9 +38,8 @@ fun TransferComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = convertDateLongToDayMonthYear(
-                    date = recordStack.date,
-                    context = LocalContext.current,
+                text = recordStack.date.formatDateLongAsDayMonthYear(
+                    resourceManager = resourceManager,
                     includeYear = includeYearToDate
                 ),
                 color = GlanceColors.outline,

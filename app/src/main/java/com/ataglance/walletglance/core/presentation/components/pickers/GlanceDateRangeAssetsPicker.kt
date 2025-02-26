@@ -30,13 +30,13 @@ import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.date.DateRangeAssets
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.domain.date.TimeInMillisRange
 import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
 import com.ataglance.walletglance.core.presentation.components.fields.DateField
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.utils.formatDateRangeForCustomDateRangeField
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,10 +104,10 @@ fun BoxScope.GlanceDateRangeAssetsPicker(
                     DateRangeAssetComponent(DateRangeAssets.December, currentDateRangeEnum, onDateRangeSelect)
                 }
                 DateField(
-                    formattedDate = formatDateRangeForCustomDateRangeField(
+                    formattedDate = TimeInMillisRange.from(
                         dateRangePickerState.selectedStartDateMillis,
                         dateRangePickerState.selectedEndDateMillis
-                    ),
+                    )?.formatDateRangeByTimeInMillis() ?: "??? - ???",
                     onClick = onCustomDateRangeFieldClick
                 )
                 SmallDivider()

@@ -26,9 +26,10 @@ import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatis
 import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -98,6 +99,7 @@ fun AppNavHost(
         }
         composable<MainScreens.Records> {
             val defaultCollectionName = stringResource(R.string.all_categories)
+            val resourceManager = koinInject<ResourceManager>()
 
             val viewModel = koinViewModel<RecordsViewModel> {
                 parametersOf(
@@ -119,6 +121,7 @@ fun AppNavHost(
 
             RecordsScreen(
                 scaffoldAppScreenPadding = scaffoldPadding,
+                resourceManager = resourceManager,
                 accountList = appUiState.accountsAndActiveOne.accounts,
                 onAccountClick = appViewModel::applyActiveAccount,
                 currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
@@ -186,12 +189,14 @@ fun AppNavHost(
             )
         }
         composable<MainScreens.Budgets> {
+            val resourceManager = koinInject<ResourceManager>()
             val viewModel = koinViewModel<BudgetsViewModel>()
 
             val budgetsByType by viewModel.budgetsByType.collectAsStateWithLifecycle()
 
             BudgetsScreen(
                 screenPadding = scaffoldPadding,
+                resourceManager = resourceManager,
                 budgetsByType = budgetsByType,
                 onBudgetClick = { budget ->
                     navViewModel.navigateToScreenMovingTowardsLeft(

@@ -42,10 +42,10 @@ import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCat
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
+import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
-import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
 import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenPreview
@@ -118,7 +118,7 @@ private val accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
     accounts = accountList,
     activeAccount = accountList.find { it.isActive } ?: accountList.first()
 )
-private val dateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
+private val dateRangeMenuUiState = DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth)
 private const val isCustomDateRangeWindowOpened = false
 private val recordEntityList = listOf(
     RecordEntity(
@@ -499,7 +499,7 @@ fun MainAppContentRecordCreationScreenPreview() {
             recordNum = 1,
             account = accountsAndActiveOne.activeAccount,
             type = CategoryType.Expense,
-            dateTimeState = DateTimeState()
+            dateTimeState = DateTimeState.fromCurrentTime()
         ),
         items = listOf(
             RecordDraftItem(

@@ -33,7 +33,7 @@ import com.ataglance.walletglance.core.presentation.components.dividers.BigDivid
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.utils.getTodayDateLong
+import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -157,7 +157,7 @@ fun CategoryStatisticsScreenPreview(
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
-            date = getTodayDateLong(),
+            date = getCurrentDateLong(),
             type = RecordType.Expense,
             account = accountList[0].toRecordAccount(),
             totalAmount = 42.43,

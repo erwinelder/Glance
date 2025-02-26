@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,11 +30,14 @@ import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.components.widgets.WidgetWithTitleAndButtonComponent
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordsTypeFilter
 import com.ataglance.walletglance.record.presentation.model.RecentRecordsWidgetUiState
 import com.ataglance.walletglance.record.presentation.utils.getNoRecordsMessageRes
 import com.ataglance.walletglance.record.presentation.viewmodel.RecentRecordsWidgetViewModel
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -45,6 +49,7 @@ fun RecentRecordsWidget(
     onTransferClick: (Int) -> Unit,
     onNavigateToRecordsScreen: () -> Unit
 ) {
+    val resourceManager = koinInject<ResourceManager>()
     val viewModel = koinViewModel<RecentRecordsWidgetViewModel> {
         parametersOf(accountsAndActiveOne.activeAccount, dateRangeWithEnum.dateRange)
     }
@@ -62,6 +67,7 @@ fun RecentRecordsWidget(
         uiState = uiState,
         accountList = accountsAndActiveOne.accounts,
         isCustomDateRange = dateRangeWithEnum.enum == DateRangeEnum.Custom,
+        resourceManager = resourceManager,
         onRecordClick = onRecordClick,
         onTransferClick = onTransferClick,
         onNavigateToRecordsScreen = onNavigateToRecordsScreen
@@ -73,6 +79,7 @@ fun RecentRecordsWidgetContent(
     uiState: RecentRecordsWidgetUiState,
     accountList: List<Account>,
     isCustomDateRange: Boolean,
+    resourceManager: ResourceManager,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit,
     onNavigateToRecordsScreen: () -> Unit
@@ -92,7 +99,8 @@ fun RecentRecordsWidgetContent(
                 RecordStackList(
                     recordStackList = state.asList(),
                     accountList = accountList,
-                    includeYearToRecordDate = includeYearToRecordDate,
+                    includeYearInRecordDate = includeYearToRecordDate,
+                    resourceManager = resourceManager,
                     onRecordClick = onRecordClick,
                     onTransferClick = onTransferClick
                 )
@@ -110,7 +118,8 @@ fun RecentRecordsWidgetContent(
 private fun RecordStackList(
     recordStackList: List<RecordStack>,
     accountList: List<Account>,
-    includeYearToRecordDate: Boolean,
+    includeYearInRecordDate: Boolean,
+    resourceManager: ResourceManager,
     onRecordClick: (Int) -> Unit,
     onTransferClick: (Int) -> Unit
 ) {
@@ -125,13 +134,15 @@ private fun RecordStackList(
             if (recordStack.isExpenseOrIncome()) {
                 RecordStackComponent(
                     recordStack = recordStack,
-                    includeYearToDate = includeYearToRecordDate,
+                    includeYearInDate = includeYearInRecordDate,
+                    resourceManager = resourceManager,
                     onRecordClick = onRecordClick
                 )
             } else {
                 TransferComponent(
                     recordStack = recordStack,
-                    includeYearToDate = includeYearToRecordDate,
+                    includeYearToDate = includeYearInRecordDate,
+                    resourceManager = resourceManager,
                     secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
                         accountList.findById(it)?.toRecordAccount()
                     },
@@ -156,6 +167,7 @@ private fun RecordHistoryWidgetPreview() {
                 uiState = RecentRecordsWidgetUiState(),
                 accountList = listOf(),
                 isCustomDateRange = false,
+                resourceManager = ResourceManagerImpl(LocalContext.current),
                 onRecordClick = {},
                 onTransferClick = {},
                 onNavigateToRecordsScreen = {}

@@ -9,7 +9,7 @@ data class TransferDraft(
     val isNew: Boolean = true,
     val sender: TransferDraftUnits = TransferDraftUnits(),
     val receiver: TransferDraftUnits = TransferDraftUnits(),
-    val dateTimeState: DateTimeState = DateTimeState(),
+    val dateTimeState: DateTimeState = DateTimeState.fromCurrentTime(),
     val includeInBudgets: Boolean = true,
     val savingIsAllowed: Boolean = false
 ) {

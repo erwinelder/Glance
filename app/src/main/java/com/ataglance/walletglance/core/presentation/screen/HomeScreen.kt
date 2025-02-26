@@ -33,6 +33,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
@@ -40,11 +41,9 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.core.presentation.components.widgets.ChosenBudgetsWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.bottom
-import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
+import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.utils.getTodayDateLong
 import com.ataglance.walletglance.core.utils.plus
 import com.ataglance.walletglance.core.utils.top
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
@@ -254,7 +253,7 @@ fun HomeScreenPreview(
             isActive = true
         )
     ),
-    dateRangeMenuUiState: DateRangeMenuUiState = DateRangeEnum.ThisMonth.getDateRangeMenuUiState(),
+    dateRangeMenuUiState: DateRangeMenuUiState = DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth),
     isCustomDateRangeWindowOpened: Boolean = false,
     widgetNamesList: List<WidgetName> = listOf(
         WidgetName.ChosenBudgets,
@@ -269,7 +268,7 @@ fun HomeScreenPreview(
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
-            date = getTodayDateLong(),
+            date = getCurrentDateLong(),
             type = RecordType.Expense,
             account = accountsAndActiveOne.accounts[0].toRecordAccount(),
             totalAmount = 42.43,
@@ -287,7 +286,7 @@ fun HomeScreenPreview(
         ),
         RecordStack(
             recordNum = 2,
-            date = getTodayDateLong(),
+            date = getCurrentDateLong(),
             type = RecordType.OutTransfer,
             account = accountsAndActiveOne.accounts[0].toRecordAccount(),
             totalAmount = 42.43,

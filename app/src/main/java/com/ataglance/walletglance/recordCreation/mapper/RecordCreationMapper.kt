@@ -3,7 +3,7 @@ package com.ataglance.walletglance.recordCreation.mapper
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.category.domain.utils.asChar
-import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
@@ -30,7 +30,7 @@ fun RecordStack.toRecordDraft(
             recordNum = this.recordNum,
             account = accounts.findById(this.account.id),
             type = type,
-            dateTimeState = getNewDateByRecordLongDate(this.date),
+            dateTimeState = DateTimeState.fromTimestamp(this.date),
             preferences = RecordDraftPreferences(
                 includeInBudgets = includeInBudgets
             )
@@ -70,7 +70,7 @@ fun RecordDraft.toCreatedRecord(): CreatedRecord? {
         recordNum = this.general.recordNum,
         account = account,
         type = this.general.type,
-        dateTimeState = this.general.dateTimeState,
+        dateLong = this.general.dateTimeState.dateLong,
         preferences = this.general.preferences,
         items = items,
         totalAmount = items.getTotalAmount()
@@ -98,7 +98,7 @@ fun CreatedRecord.toRecordEntities(): List<RecordEntity> {
     return this.items.map { item ->
         item.toRecordEntity(
             recordNum = this.recordNum,
-            dateLong = this.dateTimeState.dateLong,
+            dateLong = this.dateLong,
             type = this.type.asChar(),
             accountId = this.account.id,
             preferences = this.preferences
@@ -111,7 +111,7 @@ fun CreatedRecord.toRecordEntitiesWithOldIds(recordStack: RecordStack): List<Rec
         item.toRecordEntity(
             id = recordStack.stack.getOrNull(index)?.id ?: 0,
             recordNum = recordStack.recordNum,
-            dateLong = this.dateTimeState.dateLong,
+            dateLong = this.dateLong,
             type = this.type.asChar(),
             accountId = this.account.id,
             preferences = this.preferences

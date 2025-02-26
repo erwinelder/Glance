@@ -12,9 +12,9 @@ import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
-import com.ataglance.walletglance.core.utils.getCurrentTimeAsGraphPercentageInThisRange
+import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.utils.enumValueOrNull
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.utils.getRepeatingPeriodByString
 
 
 fun List<BudgetEntity>.toDomainModels(
@@ -51,7 +51,7 @@ fun BudgetEntity.toDomainModel(
     categoryWithSub: CategoryWithSub?,
     linkedAccounts: List<Account>
 ): Budget? {
-    val repeatingPeriodEnum = getRepeatingPeriodByString(repeatingPeriod) ?: return null
+    val repeatingPeriodEnum = enumValueOrNull<RepeatingPeriod>(repeatingPeriod) ?: return null
     val dateRange = repeatingPeriodEnum.getLongDateRangeWithTime()
 
     return Budget(

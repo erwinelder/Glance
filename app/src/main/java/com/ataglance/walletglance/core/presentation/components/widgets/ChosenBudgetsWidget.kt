@@ -14,6 +14,8 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.components.BudgetWithStatsComponent
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetViewModel
 import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -22,12 +24,14 @@ fun ChosenBudgetsWidget(
     onNavigateToBudgetsScreen: () -> Unit,
     onNavigateToBudgetStatisticsScreen: (Int) -> Unit
 ) {
+    val resourceManager = koinInject<ResourceManager>()
     val viewModel = koinViewModel<BudgetsOnWidgetViewModel>()
 
     val budgets by viewModel.budgets.collectAsStateWithLifecycle()
 
     ChosenBudgetsWidgetContent(
         budgets = budgets,
+        resourceManager = resourceManager,
         onSettingsButtonClick = onSettingsButtonClick,
         onNavigateToBudgetsScreen = onNavigateToBudgetsScreen,
         onNavigateToBudgetStatisticsScreen = onNavigateToBudgetStatisticsScreen
@@ -37,6 +41,7 @@ fun ChosenBudgetsWidget(
 @Composable
 private fun ChosenBudgetsWidgetContent(
     budgets: List<Budget>,
+    resourceManager: ResourceManager,
     onSettingsButtonClick: () -> Unit,
     onNavigateToBudgetsScreen: () -> Unit,
     onNavigateToBudgetStatisticsScreen: (Int) -> Unit
@@ -58,6 +63,7 @@ private fun ChosenBudgetsWidgetContent(
                             onClick = {
                                 onNavigateToBudgetStatisticsScreen(it.id)
                             },
+                            resourceManager = resourceManager,
                             showDateRangeLabels = true
                         )
                     }

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.core.domain.date
 
-import com.ataglance.walletglance.core.utils.month
-import java.util.Calendar
+import com.ataglance.walletglance.core.utils.toTimeInMillis
+import kotlinx.datetime.LocalDateTime
 
 data class YearMonthDayHourMinute(
     val year: Int,
@@ -30,10 +30,7 @@ data class YearMonthDayHourMinute(
     }
 
     fun asTimeInMillis(): Long {
-        Calendar.getInstance().apply {
-            set(year, month, day, hour, minute)
-            return timeInMillis
-        }
+        return LocalDateTime(year, month, day, hour, minute).toTimeInMillis()
     }
 
 }

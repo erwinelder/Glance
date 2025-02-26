@@ -35,8 +35,11 @@ import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiStat
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import java.util.Locale
@@ -46,6 +49,7 @@ fun ExpensesIncomeWidget(
     activeAccount: Account?,
     dateRangeWithEnum: DateRangeWithEnum
 ) {
+    val resourceManager = koinInject<ResourceManager>()
     val viewModel = koinViewModel<ExpensesIncomeWidgetViewModel> {
         parametersOf(activeAccount, dateRangeWithEnum.dateRange)
     }
@@ -62,7 +66,8 @@ fun ExpensesIncomeWidget(
     ExpensesIncomeWidgetContent(
         uiState = uiState,
         dateRangeWithEnum = dateRangeWithEnum,
-        accountCurrency = activeAccount?.currency ?: "???"
+        accountCurrency = activeAccount?.currency ?: "???",
+        resourceManager = resourceManager
     )
 }
 
@@ -70,9 +75,10 @@ fun ExpensesIncomeWidget(
 fun ExpensesIncomeWidgetContent(
     uiState: ExpensesIncomeWidgetUiState,
     dateRangeWithEnum: DateRangeWithEnum,
-    accountCurrency: String
+    accountCurrency: String,
+    resourceManager: ResourceManager
 ) {
-    val period = dateRangeWithEnum.getEnumStringRepr(LocalContext.current)
+    val period = dateRangeWithEnum.getEnumStringRepr(resourceManager)
     val expensesPercentage by animateFloatAsState(
         targetValue = uiState.expensesPercentageFloat,
         animationSpec = tween(500)
@@ -191,7 +197,8 @@ private fun ExpensesIncomeWidgetPreview() {
                 enum = DateRangeEnum.ThisMonth,
                 dateRange = LongDateRange(0, 0)
             ),
-            accountCurrency = "USD"
+            accountCurrency = "USD",
+            resourceManager = ResourceManagerImpl(LocalContext.current)
         )
     }
 }

@@ -2,7 +2,7 @@ package com.ataglance.walletglance.recordCreation.mapper
 
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.findById
-import com.ataglance.walletglance.core.utils.getNewDateByRecordLongDate
+import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
@@ -37,7 +37,7 @@ fun TransferPairRecordStacks.toTransferDraft(accounts: List<Account>): TransferD
         isNew = false,
         sender = sender,
         receiver = receiver,
-        dateTimeState = getNewDateByRecordLongDate(this.sender.date),
+        dateTimeState = DateTimeState.fromTimestamp(this.sender.date),
         includeInBudgets = this.sender.stack.firstOrNull()?.includeInBudgets ?: true,
         savingIsAllowed = sender.savingIsAllowed() && receiver.savingIsAllowed()
     )
@@ -52,7 +52,7 @@ fun TransferDraft.toCreatedTransfer(): CreatedTransfer? {
         isNew = isNew,
         sender = sender,
         receiver = receiver,
-        dateTimeState = dateTimeState,
+        dateLong = dateTimeState.dateLong,
         includeInBudgets = includeInBudgets
     )
 }
@@ -77,7 +77,7 @@ fun CreatedTransfer.toRecordEntityPair(): Pair<RecordEntity, RecordEntity> {
         RecordEntity(
             id = sender.recordId,
             recordNum = sender.recordNum,
-            date = dateTimeState.dateLong,
+            date = dateLong,
             type = RecordType.OutTransfer.asChar(),
             amount = sender.amount,
             quantity = null,
@@ -90,7 +90,7 @@ fun CreatedTransfer.toRecordEntityPair(): Pair<RecordEntity, RecordEntity> {
         RecordEntity(
             id = receiver.recordId,
             recordNum = receiver.recordNum,
-            date = dateTimeState.dateLong,
+            date = dateLong,
             type = RecordType.InTransfer.asChar(),
             amount = receiver.amount,
             quantity = null,

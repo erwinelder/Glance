@@ -23,14 +23,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
+import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.components.AccountPopupPicker
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.components.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
@@ -42,12 +42,12 @@ import com.ataglance.walletglance.core.presentation.components.pickers.CustomDat
 import com.ataglance.walletglance.core.presentation.components.pickers.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordCreationTopBar
 import com.ataglance.walletglance.recordCreation.presentation.components.RecordItemCreationComponent
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
+import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 
 @Composable
 fun RecordCreationScreen(
@@ -139,7 +139,7 @@ fun RecordCreationScreen(
         )
         CustomDatePicker(
             openDialog = showDatePicker,
-            initialTimeInMillis = recordDraftGeneral.dateTimeState.calendar.timeInMillis,
+            initialTimeInMillis = recordDraftGeneral.dateTimeState.getTimeInMillis(),
             onOpenDateDialogChange = { showDatePicker = it },
             onConfirmButton = { timeInMillis ->
                 onSelectDate(timeInMillis)
@@ -287,7 +287,7 @@ fun RecordCreationScreenPreview(
             recordNum = 1,
             account = accountsAndActiveOne.activeAccount,
             type = CategoryType.Expense,
-            dateTimeState = DateTimeState()
+            dateTimeState = DateTimeState.fromCurrentTime()
         ),
         items = listOf(
             RecordDraftItem(

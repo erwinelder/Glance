@@ -12,11 +12,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.utils.convertCalendarMillisToLongWithoutSpecificTime
-import com.ataglance.walletglance.core.utils.getCalendarEndLong
-import com.ataglance.walletglance.core.utils.getCalendarStartLong
-import com.ataglance.walletglance.core.utils.getDateRangeMenuUiState
-import com.ataglance.walletglance.core.utils.withLongDateRange
+import com.ataglance.walletglance.core.utils.timeInMillisToTimestampWithoutSpecificTime
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
@@ -150,8 +146,8 @@ class AppViewModel(
     }
 
 
-    private val _dateRangeMenuUiState: MutableStateFlow<DateRangeMenuUiState> = MutableStateFlow(
-        DateRangeEnum.ThisMonth.getDateRangeMenuUiState()
+    private val _dateRangeMenuUiState = MutableStateFlow(
+        DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth)
     )
     val dateRangeMenuUiState = _dateRangeMenuUiState.asStateFlow()
 
@@ -161,10 +157,9 @@ class AppViewModel(
         if (currDateRangeWithEnum.enum == dateRangeEnum) return
 
         _dateRangeMenuUiState.update {
-            it.copy(
-                startCalendarDateMillis = dateRangeEnum.getCalendarStartLong(currDateRangeWithEnum),
-                endCalendarDateMillis = dateRangeEnum.getCalendarEndLong(currDateRangeWithEnum),
-                dateRangeWithEnum = dateRangeEnum.withLongDateRange(currDateRangeWithEnum)
+            DateRangeMenuUiState.fromEnum(
+                enum = dateRangeEnum,
+                currentRange = currDateRangeWithEnum.dateRange
             )
         }
     }
@@ -181,8 +176,8 @@ class AppViewModel(
                 dateRangeWithEnum = DateRangeWithEnum(
                     enum = DateRangeEnum.Custom,
                     dateRange = LongDateRange(
-                        from = convertCalendarMillisToLongWithoutSpecificTime(pastDateMillis),
-                        to = convertCalendarMillisToLongWithoutSpecificTime(futureDateMillis) + 2359
+                        from = timeInMillisToTimestampWithoutSpecificTime(pastDateMillis),
+                        to = timeInMillisToTimestampWithoutSpecificTime(futureDateMillis) + 2359
                     )
                 )
             )
