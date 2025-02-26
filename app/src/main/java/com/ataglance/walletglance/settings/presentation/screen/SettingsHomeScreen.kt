@@ -33,6 +33,7 @@ import com.ataglance.walletglance.core.presentation.components.screenContainers.
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
@@ -62,8 +63,7 @@ fun SettingsHomeScreen(
             Text(
                 text = stringResource(R.string.settings),
                 color = GlanceColors.onSurface,
-                fontSize = 30.sp,
-                fontFamily = Manrope
+                style = Typography.titleMedium
             )
             Text(
                 text = stringResource(R.string.version) + " 4.0",

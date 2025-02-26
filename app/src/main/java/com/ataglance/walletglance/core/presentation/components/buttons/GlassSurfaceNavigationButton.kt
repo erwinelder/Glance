@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun GlassSurfaceNavigationButton(
@@ -36,7 +35,7 @@ fun GlassSurfaceNavigationButton(
 ) {
     GlassSurface(
         filledWidths = filledWidths,
-        cornerSize = dimensionResource(R.dimen.settings_category_plate_corner_size),
+        cornerSize = 26.dp,
         modifier = Modifier.bounceClickEffect(.98f, onClick = onClick)
     ) {
         Row(
@@ -51,18 +50,18 @@ fun GlassSurfaceNavigationButton(
                     painter = painterResource(R.drawable.short_arrow_left_icon),
                     contentDescription = "left arrow icon",
                     tint = GlanceColors.onSurface,
-                    modifier = Modifier.size(26.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = "$text icon",
-                modifier = Modifier.size(46.dp)
+                modifier = Modifier.size(36.dp)
             )
             Text(
                 text = text,
                 color = GlanceColors.onSurface,
-                fontSize = 21.sp,
+                fontSize = 19.sp,
                 fontFamily = Manrope,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
@@ -74,7 +73,7 @@ fun GlassSurfaceNavigationButton(
                     painter = painterResource(rightIconRes),
                     contentDescription = "right arrow icon",
                     tint = GlanceColors.onSurface,
-                    modifier = Modifier.size(26.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }

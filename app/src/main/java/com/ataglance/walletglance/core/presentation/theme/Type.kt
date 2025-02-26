@@ -39,9 +39,17 @@ val Typography = Typography(
         fontWeight = FontWeight.W900,
         textAlign = TextAlign.Center,
     ),
+    titleMedium = TextStyle(
+        fontFamily = NotoSans,
+        fontSize = 32.sp,
+        lineHeight = 40.sp,
+        letterSpacing = 0.sp,
+        fontWeight = FontWeight.W700,
+        textAlign = TextAlign.Center,
+    ),
     bodyLarge = TextStyle(
         fontFamily = Manrope,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.W400,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
