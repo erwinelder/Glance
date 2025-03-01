@@ -15,8 +15,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
@@ -49,6 +54,32 @@ fun IconWithBackground(
             contentDescription = iconDescription,
             tint = iconTint,
             modifier = Modifier.size(iconSize)
+        )
+    }
+}
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+private fun IconWithBackgroundLightDefaultPreview() {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        IconWithBackground(
+            iconRes = R.drawable.success_large_icon,
+            backgroundGradient = GlanceColors.primaryGradient,
+            iconDescription = ""
+        )
+    }
+}
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+private fun IconWithBackgroundDarkDefaultPreview() {
+
+    PreviewContainer(appTheme = AppTheme.DarkDefault) {
+        IconWithBackground(
+            iconRes = R.drawable.success_large_icon,
+            backgroundGradient = GlanceColors.primaryGradient,
+            iconDescription = ""
         )
     }
 }
