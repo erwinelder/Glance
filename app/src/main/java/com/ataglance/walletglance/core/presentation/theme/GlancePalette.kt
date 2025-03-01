@@ -70,7 +70,7 @@ sealed class GlancePalette(
         primary = Color(165, 93, 135),
         primaryGradient = listOf(
             Color(182, 103, 149),
-            Color(130, 75, 108)
+            Color(117, 68, 98)
         ),
         onPrimary = Color(255, 255, 255),
 
@@ -151,7 +151,7 @@ sealed class GlancePalette(
         primary = Color(154, 92, 128),
         primaryGradient = listOf(
             Color(168, 90, 133),
-            Color(117, 62, 92, 255)
+            Color(105, 55, 82)
         ),
         onPrimary = Color(231, 212, 225),
 
