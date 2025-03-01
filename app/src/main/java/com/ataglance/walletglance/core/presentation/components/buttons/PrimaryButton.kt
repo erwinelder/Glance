@@ -51,7 +51,7 @@ fun PrimaryButton(
         targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second
     )
     val modifier = if (WindowTypeIsCompact) {
-        Modifier.fillMaxWidth(.82f)
+        Modifier.fillMaxWidth(.84f)
     } else {
         Modifier.width(400.dp)
     }
@@ -70,7 +70,7 @@ fun PrimaryButton(
                 disabledContainerColor = Color.Transparent,
                 disabledContentColor = GlanceColors.onPrimary,
             ),
-            contentPadding = PaddingValues(vertical = 18.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
             modifier = modifier
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.large_button_corners)))
                 .background(

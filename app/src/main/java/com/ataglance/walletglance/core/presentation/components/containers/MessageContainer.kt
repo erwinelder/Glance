@@ -11,8 +11,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun MessageContainer(message: String) {
@@ -25,7 +25,7 @@ fun MessageContainer(message: String) {
         Text(
             text = message,
             color = GlanceColors.onSurface.copy(.6f),
-            fontSize = 18.sp,
+            fontSize = 17.sp,
             textAlign = TextAlign.Center
         )
     }
@@ -36,6 +36,6 @@ fun MessageContainer(message: String) {
 @Composable
 private fun Preview() {
     PreviewContainer {
-        MessageContainer(message = "There is no data message")
+        MessageContainer(message = "Oops, it looks like there is no data")
     }
 }

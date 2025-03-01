@@ -16,7 +16,7 @@ fun TextFieldWithLabelAndErrorMsg(
     placeholderText: String = "",
     isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
-    fontSize: TextUnit = 22.sp,
+    fontSize: TextUnit = 20.sp,
     cornerSize: Dp = 15.dp,
     labelText: String = "Label",
 ) {

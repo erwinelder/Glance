@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun SecondaryButton(
@@ -33,7 +33,7 @@ fun SecondaryButton(
     onClick: () -> Unit
 ) {
     val modifier = if (WindowTypeIsCompact) {
-        Modifier.fillMaxWidth(.82f)
+        Modifier.fillMaxWidth(.84f)
     } else {
         Modifier.width(400.dp)
     }
@@ -53,7 +53,7 @@ fun SecondaryButton(
             if (enabled) GlanceColors.primary
             else GlanceColors.outline
         ),
-        contentPadding = PaddingValues(vertical = 18.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         modifier = modifier
             .bounceClickEffect(.97f)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.large_button_corners)))

@@ -33,7 +33,7 @@ class BudgetStatisticsViewModel(
                 .getFlowByCategoryAndAccounts(
                     categoryId = budget.category.id,
                     accountsIds = budget.linkedAccountsIds,
-                    dateRangeList = budget.repeatingPeriod.getPrevDateRanges().reversed()
+                    dateRangeList = budget.repeatingPeriod.getPrevDateRanges()
                 )
                 .collect { totalInRanges ->
                     _uiState.update {

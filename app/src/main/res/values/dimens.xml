@@ -7,7 +7,7 @@
     <dimen name="buttons_gap">20dp</dimen>
     <dimen name="nav_widget_gap">10dp</dimen>
     <dimen name="big_spacer_line_height">4dp</dimen>
-    <dimen name="large_button_corners">26dp</dimen>
+    <dimen name="large_button_corners">23dp</dimen>
     <dimen name="medium_button_corners">22dp</dimen>
 
     <dimen name="field_corners">18dp</dimen>

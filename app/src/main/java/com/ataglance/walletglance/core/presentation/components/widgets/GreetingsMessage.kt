@@ -12,10 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
@@ -44,9 +47,16 @@ fun GreetingsMessageContent(message: String) {
         Text(
             text = message,
             color = GlanceColors.onSurface,
-            fontSize = 29.sp,
-            fontWeight = FontWeight.Medium,
-            letterSpacing = 0.sp
+            style = Typography.titleMedium
         )
+    }
+}
+
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+fun GreetingsMessagePreview(modifier: Modifier = Modifier) {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        GreetingsMessageContent(message = "Good afternoon!")
     }
 }

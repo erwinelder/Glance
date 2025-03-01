@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
@@ -68,7 +70,7 @@ sealed class GlancePalette(
         primary = Color(165, 93, 135),
         primaryGradient = listOf(
             Color(182, 103, 149),
-            Color(109, 63, 90)
+            Color(130, 75, 108)
         ),
         onPrimary = Color(255, 255, 255),
 
@@ -149,7 +151,7 @@ sealed class GlancePalette(
         primary = Color(154, 92, 128),
         primaryGradient = listOf(
             Color(168, 90, 133),
-            Color(88, 47, 70)
+            Color(117, 62, 92, 255)
         ),
         onPrimary = Color(231, 212, 225),
 
@@ -228,7 +230,7 @@ sealed class GlancePalette(
 
 }
 
-@Preview
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun PreviewColors() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
@@ -257,6 +259,7 @@ private fun PreviewColors() {
                     }
                 }
             }
+            PrimaryButton(text = "Save and continue")
         }
     }
 }

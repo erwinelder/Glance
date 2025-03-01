@@ -47,7 +47,7 @@ fun GlanceTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
-    fontSize: TextUnit = 22.sp,
+    fontSize: TextUnit = 20.sp,
     padding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
     cornerSize: Dp = 15.dp
 ) {
@@ -113,7 +113,7 @@ fun GlanceTextField(
                         ),
                         tint = GlanceColors.onSurface,
                         contentDescription = if (it) "Hide password" else "Show password",
-                        modifier = Modifier.size(26.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             },

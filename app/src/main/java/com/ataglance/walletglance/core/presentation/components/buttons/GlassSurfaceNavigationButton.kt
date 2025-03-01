@@ -61,7 +61,7 @@ fun GlassSurfaceNavigationButton(
             Text(
                 text = text,
                 color = GlanceColors.onSurface,
-                fontSize = 19.sp,
+                fontSize = 20.sp,
                 fontFamily = Manrope,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
