@@ -66,7 +66,7 @@ fun SettingsHomeScreen(
                 style = Typography.titleMedium
             )
             Text(
-                text = stringResource(R.string.version) + " 4.0",
+                text = stringResource(R.string.version) + " 4.1",
                 color = GlanceColors.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
