@@ -11,6 +11,7 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.utils.filterByAccount
 import com.ataglance.walletglance.record.domain.utils.filterByCollection
+import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -100,7 +101,10 @@ class RecordsViewModel(
         _activeAccountId,
         _categoryCollectionsUiState
     ) { stacks, accountId, collectionsState ->
-        stacks.filterByAccount(accountId).filterByCollection(collectionsState.activeCollection)
+        stacks
+            .filterByAccount(accountId)
+            .filterByCollection(collectionsState.activeCollection)
+            .shrinkForCompactView()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),

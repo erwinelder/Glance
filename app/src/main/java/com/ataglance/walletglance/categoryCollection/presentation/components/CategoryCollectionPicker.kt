@@ -14,6 +14,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -134,6 +135,7 @@ private fun PickerButton(
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
         modifier = Modifier
             .bounceClickEffect()
+            .border(1.dp, GlanceColors.glassGradientOnGlassBorder, RoundedCornerShape(40))
             .clip(RoundedCornerShape(40))
             .background(
                 brush = Brush.linearGradient(
