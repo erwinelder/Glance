@@ -2,7 +2,6 @@ package com.ataglance.walletglance.record.domain.utils
 
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.utils.extractYear
@@ -92,25 +91,15 @@ fun List<RecordStack>.filterByCategoriesIds(categoriesIds: List<Int>): List<Reco
 
 
 fun List<RecordStack>.shrinkForCompactView(): List<RecordStack> {
-    return this.map {
-        if (it.isExpenseOrIncome()) it.shrinkForCompactView() else it
+    return map {
+        if (it.isExpenseOrIncome()) it.shrinkToCompactView() else it
     }
-}
-
-fun RecordStack.shrinkForCompactView(): RecordStack {
-    val distinctStack = this.stack.distinctByCategories(3)
-
-    val stack = distinctStack.map { item ->
-        item.copy(note = item.categoryWithSub?.let { this.stack.foldNotesByCategory(it) })
-    }
-
-    return this.copy(stack = stack)
 }
 
 fun List<RecordStackItem>.distinctByCategories(maxCount: Int): List<RecordStackItem> {
     val distinctItems = mutableListOf<RecordStackItem>()
 
-    for (i in this.indices) {
+    for (i in indices) {
         if (distinctItems.size >= maxCount) { break }
 
         this[i]
@@ -121,20 +110,6 @@ fun List<RecordStackItem>.distinctByCategories(maxCount: Int): List<RecordStackI
     }
 
     return distinctItems
-}
-
-fun List<RecordStackItem>.foldNotesByCategory(
-    categoryWithSub: CategoryWithSub
-): String? {
-    return this
-        .filter {
-            it.categoryWithSub?.match(categoryWithSub) == true &&
-                    it.note?.isNotBlank() == true
-        }
-        .fold("") { notes, item ->
-            notes + if (notes.isNotBlank()) { ", " } else { "" } + item.note
-        }
-        .takeIf { it.isNotBlank() }
 }
 
 

@@ -3,7 +3,9 @@ package com.ataglance.walletglance.record.domain.model
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.model.RecordAccount
 import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.core.utils.formatWithSpaces
+import com.ataglance.walletglance.record.domain.utils.distinctByCategories
 
 @Stable
 data class RecordStack(
@@ -39,6 +41,28 @@ data class RecordStack(
 
     fun getFormattedAmountWithSpaces(): String {
         return "%c %s %s".format(getSign(), totalAmount.formatWithSpaces(), account.currency)
+    }
+
+
+    fun shrinkToCompactView(): RecordStack {
+        val stack = stack.distinctByCategories(3).map { item ->
+            item.copy(note = item.categoryWithSub?.let { stack.foldNotesByCategory(it) })
+        }
+
+        return copy(stack = stack)
+    }
+
+    private fun List<RecordStackItem>.foldNotesByCategory(
+        categoryWithSub: CategoryWithSub
+    ): String? {
+        return this
+            .filter {
+                it.categoryWithSub?.match(categoryWithSub) == true && it.note?.isNotBlank() == true
+            }
+            .map { it.note }
+            .distinct()
+            .joinToString()
+            .takeIf { it.isNotBlank() }
     }
 
 }
