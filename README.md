@@ -24,6 +24,9 @@ Create budgets for a specific period and a category and choose which accounts to
 • Personalization
 Choose which widgets to display and in what order on the app's home screen. Reorder navigation buttons in the app's bottom bar to match your preferences. Select static light or dark theme, or turn on automatic theme switching depending on your system.
 
+• User Accounts
+Create and manage your user account within Glance. Or use the app without an account.
+
 ![App screenshot 1](https://play-lh.googleusercontent.com/M56kduFqdULrHcc1Uwl0bZNFCtrimT98B1ZZvj9RzpJX5Ug5ESpx7hDf_LOhjodQMeI=w1052-h592)
 ![App screenshot 2](https://play-lh.googleusercontent.com/kfZZxfabdeoAzcBY7tAXeX6njS6Nk5oCnOKK4aHF0W9OIPokOuUhGWdqzQvHf5MJ4tE=w1052-h592)
 ![App screenshot 3](https://play-lh.googleusercontent.com/vGuohJUbqSb-ut8Jv6sqWJtMb3asCLGnFYqioHlj6mSdxXzZWg7EUv8nyVjCZ-9OAdo=w1052-h592)
