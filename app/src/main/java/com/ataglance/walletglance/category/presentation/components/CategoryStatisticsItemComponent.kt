@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun CategoryStatisticsItemComponent(
@@ -64,7 +64,7 @@ fun CategoryStatisticsItemComponent(
                 Text(
                     text = uiState?.category?.name ?: "---",
                     color = GlanceColors.onSurface,
-                    fontSize = 19.sp,
+                    fontSize = 18.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
@@ -122,7 +122,6 @@ fun CategoryStatisticsItemComponent(
         }
     }
 }
-
 
 
 @Preview(device = Devices.PIXEL_7_PRO)

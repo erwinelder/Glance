@@ -1,7 +1,14 @@
 package com.ataglance.walletglance.account.presentation.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -41,8 +47,10 @@ import com.ataglance.walletglance.core.presentation.components.buttons.SmallFill
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
+import kotlin.math.roundToInt
 
 @Composable
 fun ActiveAccountCard(
@@ -57,12 +65,31 @@ fun ActiveAccountCard(
 
     val todayExpenses by viewModel.todayTotalExpenses.collectAsStateWithLifecycle()
 
-    if (activeAccount != null) {
-        ActiveAccountCardContent(
-            account = activeAccount,
-            todayExpenses = todayExpenses,
-            onHideBalanceButton = onChangeHideActiveAccountBalance
-        )
+    AnimatedContent(
+        targetState = activeAccount,
+        transitionSpec = {
+            (scaleIn(initialScale = .6f, animationSpec = spring(stiffness = 220f)) +
+                    fadeIn(animationSpec = spring(stiffness = 110f)) +
+                    slideInVertically(animationSpec = spring(stiffness = 220f)) {
+                        (-it * 0.2).roundToInt()
+                    }
+            ).togetherWith(
+                scaleOut(targetScale = .6f, animationSpec = spring(stiffness = 220f)) +
+                        fadeOut(animationSpec = spring(stiffness = 110f)) +
+                        slideOutVertically(animationSpec = spring(stiffness = 220f)) {
+                            (it * 0.2).roundToInt()
+                        }
+            )
+        },
+        modifier = Modifier.padding(bottom = 16.dp)
+    ) { account ->
+        if (account != null) {
+            ActiveAccountCardContent(
+                account = account,
+                todayExpenses = todayExpenses,
+                onHideBalanceButton = onChangeHideActiveAccountBalance
+            )
+        }
     }
 }
 
@@ -72,29 +99,15 @@ fun ActiveAccountCardContent(
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
 ) {
-    val accountAndOnAccountColor = account.color.getColorAndColorOnByTheme(CurrAppTheme)
-    val accountColorLighter by animateColorAsState(
-        targetValue = accountAndOnAccountColor.first.lighter
-    )
-    val accountColorDarker by animateColorAsState(
-        targetValue = accountAndOnAccountColor.first.darker
-    )
-    val onAccountColor by animateColorAsState(
-        targetValue = accountAndOnAccountColor.second
-    )
+    val (accountColor, onAccountColor) = account.color.getColorAndColorOnByTheme(CurrAppTheme)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
-            .shadow(
-                elevation = 25.dp,
-                shape = RoundedCornerShape(dimensionResource(R.dimen.account_card_corner_size)),
-                spotColor = accountColorDarker
-            )
             .clip(RoundedCornerShape(dimensionResource(R.dimen.account_card_corner_size)))
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(accountColorDarker, accountColorLighter),
+                    colors = accountColor.asListDarkToLight(),
                     start = Offset(-30f, 230f),
                     end = Offset(40f, -100f)
                 )
@@ -106,18 +119,14 @@ fun ActiveAccountCardContent(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth(.96f)
         ) {
-            AnimatedContent(
-                targetState = account.name
-            ) { targetContent ->
-                Text(
-                    text = targetContent,
-                    fontSize = 20.sp,
-                    color = onAccountColor,
-                    fontWeight = FontWeight.ExtraLight,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = account.name,
+                fontSize = 20.sp,
+                color = onAccountColor,
+                fontWeight = FontWeight.ExtraLight,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -149,58 +158,46 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxWidth()
     ) {
-        AnimatedContent(
-            targetState = account.withoutBalance
-        ) { targetState ->
-            Text(
-                text = if (targetState) {
-                    stringResource(R.string.currency)
-                } else {
-                    stringResource(R.string.balance)
-                },
-                fontSize = 16.sp,
-                color = onAccountColor.copy(.5f)
-            )
-        }
+        Text(
+            text = if (account.withoutBalance) {
+                stringResource(R.string.currency)
+            } else {
+                stringResource(R.string.balance)
+            },
+            fontSize = 16.sp,
+            color = onAccountColor.copy(.5f),
+            fontFamily = Manrope
+        )
         Row(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier.horizontalScroll(scrollState)
         ) {
-            AnimatedContent(
-                targetState = account.getFormattedBalanceBeforeDecimalSeparator()
-            ) { targetContent ->
-                Text(
-                    text = targetContent,
-                    color = onAccountColor,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            AnimatedContent(
-                targetState = account.getFormattedBalanceAfterDecimalSeparator()
-            ) { targetContent ->
-                Text(
-                    text = targetContent,
-                    color = onAccountColor,
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 33.sp
-                )
-            }
-            AnimatedContent(
-                targetState = account.currency to account.withoutBalance
-            ) { currencyAndWithoutBalanceSetting ->
-                Text(
-                    text = currencyAndWithoutBalanceSetting.first,
-                    color = onAccountColor,
-                    fontSize = if (currencyAndWithoutBalanceSetting.second) 30.sp else 22.sp,
-                    lineHeight = 35.sp,
-                    fontWeight = if (currencyAndWithoutBalanceSetting.second) FontWeight.Bold
-                        else FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(start = if (account.withoutBalance) 0.dp else 10.dp)
-                )
-            }
+            Text(
+                text = account.getFormattedBalanceBeforeDecimalSeparator(),
+                color = onAccountColor,
+                fontSize = 30.sp,
+                letterSpacing = 1.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Manrope
+            )
+            Text(
+                text = account.getFormattedBalanceAfterDecimalSeparator(),
+                color = onAccountColor,
+                fontSize = 19.sp,
+                lineHeight = 33.sp,
+                letterSpacing = .7.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Manrope
+            )
+            Text(
+                text = account.currency,
+                color = onAccountColor,
+                fontSize = if (account.withoutBalance) 30.sp else 22.sp,
+                lineHeight = 35.sp,
+                fontWeight = if (account.withoutBalance) FontWeight.Bold else FontWeight.Normal,
+                fontFamily = Manrope,
+                modifier = Modifier.padding(start = if (account.withoutBalance) 0.dp else 10.dp)
+            )
         }
     }
 }

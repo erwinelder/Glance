@@ -25,7 +25,7 @@ fun GlanceLineChart(
     percentage: Float,
     brushColors: List<Color>,
     shadowColor: Color,
-    height: Dp = 16.dp
+    height: Dp = 12.dp
 ) {
     Box(
         contentAlignment = Alignment.CenterStart,

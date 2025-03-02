@@ -60,7 +60,7 @@ fun BudgetWithStatsComponent(
                 Text(
                     text = budget.name,
                     color = GlanceColors.onSurface,
-                    fontSize = 19.sp,
+                    fontSize = 18.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
@@ -111,8 +111,7 @@ fun BudgetWithStatsComponent(
                     GlanceLineChart(
                         percentage = budget.usedPercentage / 100,
                         brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
-                        shadowColor = it.getIconSolidColorByTheme(CurrAppTheme),
-                        height = 12.dp
+                        shadowColor = it.getIconSolidColorByTheme(CurrAppTheme)
                     )
                 }
             }

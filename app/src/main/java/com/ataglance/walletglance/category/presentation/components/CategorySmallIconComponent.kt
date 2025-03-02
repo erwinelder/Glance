@@ -13,11 +13,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 
 @Composable
 fun CategoryIconComponent(category: Category) {
@@ -33,7 +33,7 @@ fun CategoryIconComponent(category: Category) {
             )
             .clip(RoundedCornerShape(30))
             .background(category.getIconSolidColorByTheme(CurrAppTheme))
-            .size(32.dp)
+            .size(28.dp)
             .padding(5.dp)
     )
 }
@@ -43,5 +43,5 @@ fun CategoryIconComponent(category: Category) {
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun CategoryIconComponentPreview() {
-    RecordsScreenPreview(appTheme = AppTheme.LightDefault)
+    EditBudgetsScreenPreview(appTheme = AppTheme.LightDefault)
 }

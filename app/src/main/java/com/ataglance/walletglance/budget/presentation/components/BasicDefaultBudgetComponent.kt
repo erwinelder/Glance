@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
@@ -32,11 +32,11 @@ fun BasicDefaultBudgetComponent(
         onClick = { onClick(budget) },
         clickEnabled = clickEnabled,
         filledWidth = 1f,
-        paddingValues = PaddingValues(24.dp, 16.dp),
+        paddingValues = PaddingValues(22.dp, 14.dp),
         modifier = modifier
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -48,7 +48,7 @@ fun BasicDefaultBudgetComponent(
                 Text(
                     text = budget.name,
                     color = GlanceColors.onSurface,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
@@ -63,7 +63,7 @@ fun BasicDefaultBudgetComponent(
                 Text(
                     text = stringResource(R.string.limit) + ":",
                     color = GlanceColors.outline,
-                    fontSize = 18.sp
+                    fontSize = 16.sp
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -72,7 +72,7 @@ fun BasicDefaultBudgetComponent(
                     Text(
                         text = budget.amountLimit.formatWithSpaces(),
                         color = GlanceColors.onSurface,
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)

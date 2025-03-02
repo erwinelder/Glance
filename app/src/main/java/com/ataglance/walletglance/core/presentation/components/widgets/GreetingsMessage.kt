@@ -10,11 +10,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.ataglance.walletglance.R
+import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
@@ -42,7 +41,7 @@ fun GreetingsMessageContent(message: String) {
         horizontalArrangement = if (WindowTypeIsCompact) Arrangement.Start else Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth(if (!WindowTypeIsExpanded) .84f else .42f)
-            .padding(top = dimensionResource(R.dimen.nav_widget_gap))
+            .padding(top = 8.dp)
     ) {
         Text(
             text = message,

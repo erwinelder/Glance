@@ -17,8 +17,8 @@ class ActiveAccountCardViewModel(
 
     fun applyActiveAccount(accountId: Int) {
         viewModelScope.launch {
-            getTodayTotalExpensesForAccountUseCase.get(accountId = accountId).let {
-                _todayTotalExpenses.update { it }
+            getTodayTotalExpensesForAccountUseCase.get(accountId = accountId).let { total ->
+                _todayTotalExpenses.update { total }
             }
         }
     }
