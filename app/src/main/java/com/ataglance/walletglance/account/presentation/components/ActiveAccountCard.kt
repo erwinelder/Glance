@@ -81,6 +81,7 @@ fun ActiveAccountCard(
                         }
             )
         },
+        contentKey = { it?.id },
         modifier = Modifier.padding(bottom = 16.dp)
     ) { account ->
         if (account != null) {
@@ -172,23 +173,31 @@ private fun BalanceRow(account: Account, onAccountColor: Color) {
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier.horizontalScroll(scrollState)
         ) {
-            Text(
-                text = account.getFormattedBalanceBeforeDecimalSeparator(),
-                color = onAccountColor,
-                fontSize = 30.sp,
-                letterSpacing = 1.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = Manrope
-            )
-            Text(
-                text = account.getFormattedBalanceAfterDecimalSeparator(),
-                color = onAccountColor,
-                fontSize = 19.sp,
-                lineHeight = 33.sp,
-                letterSpacing = .7.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = Manrope
-            )
+            AnimatedContent(
+                targetState = account.getFormattedBalanceBeforeDecimalSeparator()
+            ) { balanceBeforeDecimalSeparator ->
+                Text(
+                    text = balanceBeforeDecimalSeparator,
+                    color = onAccountColor,
+                    fontSize = 30.sp,
+                    letterSpacing = 1.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Manrope
+                )
+            }
+            AnimatedContent(
+                targetState = account.getFormattedBalanceAfterDecimalSeparator()
+            ) { balanceAfterDecimalSeparator ->
+                Text(
+                    text = balanceAfterDecimalSeparator,
+                    color = onAccountColor,
+                    fontSize = 19.sp,
+                    lineHeight = 33.sp,
+                    letterSpacing = .7.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Manrope
+                )
+            }
             Text(
                 text = account.currency,
                 color = onAccountColor,
