@@ -23,7 +23,7 @@ data class TransferDraft(
     }
 
     fun getSenderReceiverRecordNums(): TransferUnitsRecordNums {
-        return TransferUnitsRecordNums(sender.recordNum, receiver.recordId)
+        return TransferUnitsRecordNums(sender.recordNum, receiver.recordNum)
     }
 
     fun getAccount(isSender: Boolean): Account? {
