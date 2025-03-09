@@ -49,10 +49,13 @@ fun List<RecordEntity>.toRecordStack(
 fun RecordEntity.toRecordStackUnit(
     groupedCategoriesByType: GroupedCategoriesByType
 ): RecordStackItem? {
-    val categoryType = type.asRecordType()?.toCategoryTypeOrNullIfTransfer() ?: return null
-    val categoryWithSubcategories = groupedCategoriesByType.findById(
-        id = categoryId, type = categoryType
-    )
+    val categoryWithSubcategories = type.asRecordType()
+        ?.toCategoryTypeOrNullIfTransfer()
+        ?.let { categoryType ->
+            groupedCategoriesByType.findById(
+                id = categoryId, type = categoryType
+            )
+        }
 
     return RecordStackItem(
         id = id,

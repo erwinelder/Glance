@@ -20,12 +20,12 @@ import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.utils.getCurrentLocalDateTime
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
-import java.time.LocalDateTime
 
 @Composable
 fun GreetingsMessage() {
-    val currentLocalDateTime = LocalDateTime.now()
+    val currentLocalDateTime = getCurrentLocalDateTime()
     val greetingsTitleRes by remember(currentLocalDateTime.hour) {
         derivedStateOf {
             currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
@@ -54,7 +54,7 @@ fun GreetingsMessageContent(message: String) {
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun GreetingsMessagePreview(modifier: Modifier = Modifier) {
+fun GreetingsMessagePreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         GreetingsMessageContent(message = "Good afternoon!")
     }

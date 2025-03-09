@@ -29,7 +29,7 @@ firebase = "33.10.0"
 koin = "4.0.0"
 # Utilities
 kotlinxDateTime = "0.6.2"
-kotlinxSerializationJson = "1.7.3"
+kotlinxSerializationJson = "1.8.0"
 gson = "2.10.1"
 # Test
 rules = "1.6.1"
@@ -46,8 +46,8 @@ uiTestManifest = "1.7.8"
 mockitoCore = "5.11.0"
 mockk = "1.13.10"
 # Plugins
-androidGradlePlugin = "8.8.2"
-ksp = "2.1.10-1.0.30"
+androidGradlePlugin = "8.9.0"
+ksp = "2.1.10-1.0.31"
 googleServices = "4.4.2"
 kotlin = "2.1.10"
 
