@@ -149,7 +149,7 @@
     <string name="invalid_email_error">Invalid email</string>
     <string name="invalid_code_error">Invalid code</string>
     <string name="wrong_credentials_error">Wrong credentials</string>
-    <string name="sign_in_error">Error during sign in</string>
+    <string name="sign_in_error">Error while signing in</string>
     <string name="reauthentication_error">Error during reauthentication</string>
     <string name="sign_up_email_verification_error">An error occurred while sending the verification email</string>
     <string name="email_for_password_reset_error">An error occurred while sending the email for password reset</string>
