@@ -8,9 +8,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory

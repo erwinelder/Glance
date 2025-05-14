@@ -5,16 +5,16 @@ import com.android.billingclient.api.ProductDetails
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
 
-fun ResultData<ProductDetails, BillingError>.toUiState(): ResultUiState {
+fun ResultData<ProductDetails, BillingError>.toResultState(): ResultState {
     return when (this) {
-        is ResultData.Success -> ResultUiState(
+        is ResultData.Success -> ResultState(
             isSuccessful = true,
             titleRes = R.string.subscribed_successfully,
             messageRes = R.string.thank_you_for_subscribing
         )
-        is ResultData.Error -> ResultUiState(
+        is ResultData.Error -> ResultState(
             isSuccessful = false,
             titleRes = this.error.asTitleRes(),
             messageRes = this.error.asMessageRes()

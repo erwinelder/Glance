@@ -15,11 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 
 sealed class GlancePalette(
     val primary: Color,
@@ -28,6 +28,7 @@ sealed class GlancePalette(
     val onPrimary: Color,
 
     val glassGradient: List<Color>,
+    val glassGradientPair: Pair<Color, Color> = Pair(glassGradient[0], glassGradient[1]),
     val glassBorder: Color,
     val glassSurfaceShadow: Pair<Color, Color>,
 
@@ -247,9 +248,9 @@ private fun PreviewColors() {
                         .fillMaxWidth()
                         .padding(vertical = 32.dp)
                 ) {
-                    IconWithBackground(
+                    LargePrimaryIcon(
                         iconRes = R.drawable.error_large_icon,
-                        backgroundGradient = GlanceColors.errorGradient,
+                        gradientColor = GlanceColors.errorGradient,
                         iconDescription = ""
                     )
                     GlassSurfaceOnGlassSurface {

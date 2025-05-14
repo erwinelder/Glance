@@ -120,7 +120,7 @@ class NavigationViewModel(
         }
     }
 
-    fun popBackStackAndNavigateToScreen(
+    fun popBackStackAndNavigate(
         navController: NavController,
         screen: Any
     ) {
@@ -149,6 +149,19 @@ class NavigationViewModel(
     ) {
         navController.popBackStack()
         navigateToScreen(navController, AuthScreens.ResultSuccess(screenType.name))
+    }
+
+    fun <N : Any> navigateAndPopUpTo(
+        navController: NavController,
+        screenToNavigateTo: N,
+        inclusive: Boolean = true
+    ) {
+        navController.navigate(screenToNavigateTo) {
+            launchSingleTop = true
+            popUpTo(0) {
+                this.inclusive = inclusive
+            }
+        }
     }
 
 }

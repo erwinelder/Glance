@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -48,12 +48,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-
-        java {
-            toolchain {
-                languageVersion.set(JavaLanguageVersion.of(17))
-            }
-        }
     }
 
     kotlinOptions {
@@ -82,10 +76,6 @@ android {
         }
     }
 
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
 
 dependencies {
@@ -124,8 +114,16 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
-    // DataStore
+    // Preferences
+    implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.multiplatform.settings)
+    implementation(libs.androidx.security.crypto)
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
@@ -166,4 +164,8 @@ dependencies {
     testImplementation(libs.mockk)
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

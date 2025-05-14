@@ -20,7 +20,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceDialog
+import com.ataglance.walletglance.core.presentation.component.container.GlanceDialog
 
 @Composable
 fun AccountPicker(

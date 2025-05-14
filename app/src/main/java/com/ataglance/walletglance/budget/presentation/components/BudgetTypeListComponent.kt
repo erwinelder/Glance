@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
+import com.ataglance.walletglance.core.presentation.component.dividers.TextDivider
 import com.ataglance.walletglance.core.utils.asStringRes
 
 @Composable

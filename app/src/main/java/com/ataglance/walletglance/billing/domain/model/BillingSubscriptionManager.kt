@@ -16,7 +16,7 @@ import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.UserContext
 import com.ataglance.walletglance.billing.domain.mapper.getProductDetails
 import com.ataglance.walletglance.billing.domain.mapper.getProductsDetails
 import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
@@ -96,7 +96,7 @@ class BillingSubscriptionManager(
     private fun updateUserSubscription(
         productDetails: ProductDetails
     ): ResultData<Unit, BillingError> {
-        val userId = userContext.getUserId() ?: return ResultData.Error(BillingError.UserNotSignedIn)
+        val userId = userContext.getUserIdOld() ?: return ResultData.Error(BillingError.UserNotSignedIn)
 
         coroutineScope.launch {
             updateUserSubscriptionUseCase.execute(

@@ -21,8 +21,8 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetS
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 

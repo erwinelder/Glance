@@ -44,16 +44,16 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.components.checkboxes.ThreeStateCheckbox
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
+import com.ataglance.walletglance.core.presentation.component.checkboxes.ThreeStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.dividers.BigDivider
+import com.ataglance.walletglance.core.presentation.component.dividers.TextDivider
+import com.ataglance.walletglance.core.presentation.component.fields.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionScreen(

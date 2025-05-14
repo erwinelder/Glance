@@ -6,8 +6,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.containers.DangerousActionBlock
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.container.DangerousActionBlock
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun ResetDataScreen(onResetData: () -> Unit) {

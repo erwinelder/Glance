@@ -27,8 +27,8 @@ import com.ataglance.walletglance.category.presentation.components.CategoryIconC
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.charts.GlanceLineChart
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors

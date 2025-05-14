@@ -1,30 +1,64 @@
 package com.ataglance.walletglance.billing.presentation.screen
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
+import com.ataglance.walletglance.billing.presentation.viewmodel.SubscriptionViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.TertiaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurface
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.dividers.BigDivider
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
+
+@Composable
+fun SubscriptionsScreenWrapper(
+    navController: NavHostController,
+    backStack: NavBackStackEntry
+) {
+    val viewModel = backStack.sharedKoinNavViewModel<SubscriptionViewModel>(navController)
+
+    val activeSubscriptions by viewModel.activeSubscriptions.collectAsStateWithLifecycle()
+    val availableSubscriptions by viewModel.availableSubscriptions.collectAsStateWithLifecycle()
+    val purchaseResult by viewModel.purchaseResult.collectAsStateWithLifecycle()
+
+    val activity = LocalActivity.current
+
+    SubscriptionsScreen(
+        onNavigateBack = navController::popBackStack,
+        activeSubscriptions = activeSubscriptions,
+        availableSubscriptions = availableSubscriptions,
+        onStartPurchase = { subscription ->
+            activity?.let {
+                viewModel.startPurchase(activity = it, subscription = subscription)
+            }
+        },
+        purchaseResultState = purchaseResult,
+        onResultReset = viewModel::resetPurchaseResult
+    )
+}
 
 @Composable
 fun SubscriptionsScreen(
@@ -32,7 +66,7 @@ fun SubscriptionsScreen(
     activeSubscriptions: List<SubscriptionUiState>,
     availableSubscriptions: List<SubscriptionUiState>,
     onStartPurchase: (SubscriptionUiState) -> Unit,
-    purchaseResultUiState: ResultUiState?,
+    purchaseResultState: ResultState?,
     onResultReset: () -> Unit
 ) {
     Box {
@@ -54,7 +88,7 @@ fun SubscriptionsScreen(
                 )
             }
         )
-        ResultBottomSheet(resultState = purchaseResultUiState, onDismissRequest = onResultReset)
+        ResultBottomSheet(resultState = purchaseResultState, onDismissRequest = onResultReset)
     }
 }
 
@@ -136,7 +170,7 @@ fun PreviewSubscriptionScreen(
                 )
             ),
             onStartPurchase = {},
-            purchaseResultUiState = null,
+            purchaseResultState = null,
             onResultReset = {}
         )
     }

@@ -26,6 +26,9 @@
     <string name="save">Зберегти</string>
     <string name="apply">Застосувати</string>
     <string name="confirm">Підтвердити</string>
+    <string name="check">Перевірити</string>
+    <string name="check_verification">Перевірити підтвердження</string>
+    <string name="verify">Підтвердити</string>
     <string name="cancel">Скасувати</string>
     <string name="_continue">Продовжити</string>
     <string name="save_and_continue">Зберегти та продовжити</string>
@@ -86,6 +89,7 @@
     <string name="continue_as_guest">Продовжити як гість</string>
     <string name="continue_setup">Продовжити налаштування</string>
     <string name="choose_app_language">Виберіть мову застосунку</string>
+    <string name="email_verification">Підтвердження електронної пошти</string>
 
     <!-- Fields -->
     <string name="email">Електронна пошта</string>
@@ -128,7 +132,9 @@
     <!-- Field validation -->
     <string name="required_field">обов’язкове поле</string>
     <string name="is_valid">є дійсним</string>
-    <string name="not_valid_email">некоректна електронна пошта</string>
+    <string name="is_not_valid">недійсне</string>
+    <string name="too_short">занадто коротко</string>
+    <string name="too_long">занадто довго</string>
     <string name="at_least_8_chars">щонайменше 8 символів</string>
     <string name="at_least_1_spec_char">щонайменше 1 спеціальний символ</string>
     <string name="at_least_1_digit">щонайменше 1 цифра</string>
@@ -137,7 +143,13 @@
     <string name="passwords_do_match">Паролі співпадають</string>
     <string name="passwords_do_not_match">Паролі не співпадають</string>
 
-    <!-- Auth error handling -->
+    <!-- Loaders -->
+    <string name="verifying_your_credentials_loader">Перевірка ваших облікових даних…</string>
+    <string name="creating_your_identity_loader">Створення вашої ідентичності…</string>
+    <string name="checking_email_verification_loader">Перевірка підтвердження електронної пошти…</string>
+    <string name="finishing_your_registration_loader">Завершення вашої реєстрації…</string>
+
+    <!-- Auth -->
     <string name="all_set">Все готово!</string>
     <string name="oops">Ой!</string>
     <string name="user_already_exists_error">Користувач вже існує</string>
@@ -156,8 +168,10 @@
     <string name="password_updated">Пароль оновлено!</string>
     <string name="password_reset_error">Скидання пароля не вдалося</string>
     <string name="update_password_error">Помилка під час оновлення пароля</string>
+    <string name="verify_email">Підтвердьте пошту</string>
+    <string name="verify_email_description">Підтвердьте свою електронну пошту, щоб завершити реєстрацію.</string>
     <string name="email_sent">Лист надіслано!</string>
-    <string name="sign_up_email_verification_sent">Лист для підтвердження реєстрації було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити реєстрацію.</string>
+    <string name="sign_up_email_verification_sent_description">Лист для підтвердження реєстрації було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити реєстрацію.</string>
     <string name="update_email_email_verification_sent">Лист для підтвердження оновлення вашої електронної пошти було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити оновлення.</string>
     <string name="email_update_success">Електронну пошту успішно оновлено</string>
     <string name="email_verification_error">Підтвердження електронної пошти не вдалося</string>

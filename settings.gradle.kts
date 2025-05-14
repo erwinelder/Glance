@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Glance"
+rootProject.name = "GlanciMobile"
 include(":app")
  

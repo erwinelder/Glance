@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.auth.domain.model
 
-import com.ataglance.walletglance.auth.data.model.UserContext
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
@@ -49,17 +48,17 @@ class AuthController(
 ) {
 
     private suspend fun saveUserId(userId: String) {
-        userContext.setUserId(userId)
+        userContext.setUserIdOld(userId)
         saveUserIdPreferenceUseCase.save(userId)
     }
 
     fun setUserSubscription(subscription: AppSubscription) {
-        userContext.setSubscription(subscription)
+        userContext.setSubscriptionOld(subscription)
     }
 
     private fun setUserData(userData: UserData) {
-        userContext.setUserId(userData.userId)
-        userContext.setSubscription(userData.subscription)
+        userContext.setUserIdOld(userData.userId)
+        userContext.setSubscriptionOld(userData.subscription)
     }
 
     suspend fun fetchUserDataAndUpdateUser() {
@@ -76,9 +75,9 @@ class AuthController(
         userContext.resetUser()
     }
 
-    fun isSignedIn(): Boolean = userContext.isSignedIn()
+    fun isSignedIn(): Boolean = userContext.isSignedInOld()
 
-    fun getUserId(): String? = userContext.getUserId()
+    fun getUserId(): String? = userContext.getUserIdOld()
 
     fun getEmail(): String = getUserEmailUseCase.execute() ?: ""
 

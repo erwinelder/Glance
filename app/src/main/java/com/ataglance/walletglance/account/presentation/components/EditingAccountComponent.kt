@@ -37,7 +37,7 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable

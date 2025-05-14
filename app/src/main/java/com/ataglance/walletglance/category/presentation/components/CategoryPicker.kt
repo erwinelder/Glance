@@ -51,9 +51,9 @@ import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
-import com.ataglance.walletglance.core.presentation.components.buttons.CloseButton
-import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.button.CloseButton
+import com.ataglance.walletglance.core.presentation.component.dividers.SmallDivider
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable

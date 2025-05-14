@@ -26,10 +26,10 @@ import com.ataglance.walletglance.account.presentation.components.EditingAccount
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditAccountsScreen(

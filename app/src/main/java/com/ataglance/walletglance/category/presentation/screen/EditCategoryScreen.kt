@@ -26,23 +26,23 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.component.button.ColorButton
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.fields.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.pickers.ColorPicker
+import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable
 fun EditCategoryScreen(
@@ -86,9 +86,9 @@ fun EditCategoryScreen(
             },
             primaryBottomButton = {
                 PrimaryButton(
-                    onClick = onSaveButton,
                     text = stringResource(R.string.save),
-                    enabled = allowSaving
+                    enabled = allowSaving,
+                    onClick = onSaveButton
                 )
             }
         )

@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
+import com.ataglance.walletglance.core.presentation.component.fields.GlanceTextField
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable

@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.core.data.model
 
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.UserContext
 
 class DataSyncHelper(
     private val syncTablesContext: SyncTablesContext,

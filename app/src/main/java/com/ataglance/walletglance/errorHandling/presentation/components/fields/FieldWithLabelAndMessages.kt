@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
+import com.ataglance.walletglance.core.presentation.component.fields.FieldLabel
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 
 @Composable

@@ -13,6 +13,8 @@ import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreen
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.FinishSignUpScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreenPreview
@@ -825,6 +827,34 @@ fun MainAppContentSignInScreenPreview() {
 @Composable
 fun MainAppContentSignUpScreenPreview() {
     SignUpScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "EmailVerificationScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentEmailVerificationScreenPreview() {
+    EmailVerificationScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "FinishSignUpScreen",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+fun MainAppContentFinishSignUpScreenPreview() {
+    FinishSignUpScreenPreview(
         appTheme = appTheme
     )
 }

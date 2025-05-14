@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.components.other.IconWithBackground
+import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Typography
@@ -28,9 +28,9 @@ fun SuccessMessageWithIcon(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        IconWithBackground(
+        LargePrimaryIcon(
             iconRes = iconRes,
-            backgroundGradient = iconBackgroundGradient,
+            gradientColor = iconBackgroundGradient,
             iconDescription = iconDescription
         )
         Text(

@@ -32,11 +32,11 @@ import com.ataglance.walletglance.category.presentation.components.EditingParent
 import com.ataglance.walletglance.category.presentation.model.SetupCategoriesUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.utils.takeComposableIf
 

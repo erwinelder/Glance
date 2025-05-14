@@ -1,22 +1,24 @@
 package com.ataglance.walletglance.auth.domain.validation
 
+import com.ataglance.walletglance.core.utils.asList
 import com.ataglance.walletglance.errorHandling.domain.model.validation.UserDataValidation
 import com.ataglance.walletglance.errorHandling.domain.model.validation.ValidationResult
 
 typealias UserDataValidationResult = ValidationResult<UserDataValidation>
 
-class UserDataValidator {
+object UserDataValidator {
 
-    fun validateRequiredFieldIsNotEmpty(value: String): List<UserDataValidationResult> {
-        return listOf(value.requireNotEmpty())
+    fun isValidName(name: String): Boolean {
+        return validateName(name).none { it is ValidationResult.Error }
     }
 
-    private fun takeRequiredFieldValidationIsNotEmptyIfError(
-        value: String
-    ): List<UserDataValidationResult>? {
-        return validateRequiredFieldIsNotEmpty(value).takeIf {
-            it.first() is ValidationResult.Error
-        }
+    fun validateName(name: String): List<UserDataValidationResult> {
+        name.atLeastNumberOfChars(2).takeIfError()?.let { return listOf(it) }
+        name.atMostNumberOfChars(30).takeIfError()?.let { return listOf(it) }
+
+        return ValidationResult
+            .fromValidation(validation = UserDataValidation.IsValid, isValid = true)
+            .asList()
     }
 
 
@@ -25,8 +27,8 @@ class UserDataValidator {
     }
 
     fun validateEmail(email: String): List<UserDataValidationResult> {
-        return takeRequiredFieldValidationIsNotEmptyIfError(email)
-            ?: listOf(email.isValidEmail())
+        email.requireNotBlank().takeIfError()?.let { return listOf(it) }
+        return listOf(email.isValidEmail())
     }
 
 
@@ -48,12 +50,17 @@ class UserDataValidator {
         password: String,
         confirmationPassword: String
     ): List<UserDataValidationResult> {
-        return takeRequiredFieldValidationIsNotEmptyIfError(confirmationPassword)
-            ?: listOf(password.matchPassword(confirmationPassword))
+        confirmationPassword.requireNotBlank().takeIfError()?.let { return listOf(it) }
+        return listOf(password.matchPassword(confirmationPassword))
     }
 
 
-    private fun String.requireNotEmpty(): UserDataValidationResult {
+    fun validateRequiredFieldIsNotEmpty(value: String): List<UserDataValidationResult> {
+        return listOf(value.requireNotBlank())
+    }
+
+
+    private fun String.requireNotBlank(): UserDataValidationResult {
         return ValidationResult.fromValidation(
             validation = UserDataValidation.RequiredField,
             isValid = this.isNotBlank()
@@ -61,9 +68,25 @@ class UserDataValidator {
     }
 
     private fun String.isValidEmail(): UserDataValidationResult {
+        val isValid = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$").matches(this)
+
         return ValidationResult.fromValidation(
-            validation = UserDataValidation.EmailValidity,
-            isValid = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$").matches(this)
+            validation = if (isValid) UserDataValidation.IsValid else UserDataValidation.IsNotValid,
+            isValid = isValid
+        )
+    }
+
+    private fun String.atLeastNumberOfChars(number: Int): UserDataValidationResult {
+        return ValidationResult.fromValidation(
+            validation = UserDataValidation.TooShort,
+            isValid = trim().length >= number
+        )
+    }
+
+    private fun String.atMostNumberOfChars(number: Int): UserDataValidationResult {
+        return ValidationResult.fromValidation(
+            validation = UserDataValidation.TooLong,
+            isValid = trim().length <= number
         )
     }
 

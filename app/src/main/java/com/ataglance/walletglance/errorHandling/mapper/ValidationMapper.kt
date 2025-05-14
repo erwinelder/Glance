@@ -7,18 +7,20 @@ import com.ataglance.walletglance.errorHandling.presentation.model.ValidationUiS
 
 
 fun List<ValidationResult<UserDataValidation>>.toUiStates(): List<ValidationUiState> {
-    return this.map { it.toUiState() }
+    return this.map { it.toResultState() }
 }
 
-fun ValidationResult<UserDataValidation>.toUiState(): ValidationUiState {
+fun ValidationResult<UserDataValidation>.toResultState(): ValidationUiState {
     val isValid = this is ValidationResult.Success
 
     return ValidationUiState(
         isValid = isValid,
         messageRes = when (this.validation) {
+            UserDataValidation.IsValid -> R.string.is_valid
+            UserDataValidation.IsNotValid -> R.string.is_not_valid
             UserDataValidation.RequiredField -> R.string.required_field
-            UserDataValidation.EmailValidity ->
-                if (isValid) R.string.is_valid else R.string.not_valid_email
+            UserDataValidation.TooShort -> R.string.too_short
+            UserDataValidation.TooLong -> R.string.too_long
             UserDataValidation.AtLeastEightChars -> R.string.at_least_8_chars
             UserDataValidation.AtLeastOneUppercaseLetter -> R.string.at_least_1_uppercase_letter
             UserDataValidation.AtLeastOneLowercaseLetter -> R.string.at_least_1_lowercase_letter

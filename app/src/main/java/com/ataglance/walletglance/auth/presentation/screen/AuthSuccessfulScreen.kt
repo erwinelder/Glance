@@ -7,7 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.auth.presentation.model.AuthResultSuccessScreenState
 import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.errorHandling.presentation.components.screenContainers.ResultSuccessScreenContainer
 
 @Composable

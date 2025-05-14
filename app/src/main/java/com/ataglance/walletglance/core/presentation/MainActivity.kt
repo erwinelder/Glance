@@ -18,7 +18,7 @@ import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
-import com.ataglance.walletglance.core.presentation.components.GlanceAppComponent
+import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
 import com.google.firebase.BuildConfig
@@ -122,7 +122,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun processEmailVerificationLink(obbCode: String) {
+    private fun processEmailVerificationLink(obbCode: String) {
+        navController.navigate(AuthScreens.EmailVerification) { launchSingleTop = true }
+    }
+
+    private suspend fun processEmailVerificationLinkT(obbCode: String) {
         val screen = when (authController.applyOobCode(obbCode)) {
             true -> AuthScreens.ResultSuccess(
                 screenType = AuthResultSuccessScreenType.EmailVerification.name

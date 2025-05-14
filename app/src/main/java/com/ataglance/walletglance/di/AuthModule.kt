@@ -1,13 +1,21 @@
 package com.ataglance.walletglance.di
 
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.auth.data.repository.AuthRepository
+import com.ataglance.walletglance.auth.data.repository.AuthRepositoryImpl
 import com.ataglance.walletglance.auth.domain.model.AuthController
+import com.ataglance.walletglance.auth.domain.model.UserContext
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCase
 import com.ataglance.walletglance.auth.domain.usecase.ApplyOobCodeUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCase
+import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CreateNewUserUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCase
 import com.ataglance.walletglance.auth.domain.usecase.DeleteUserUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.FinishSignUpUseCase
+import com.ataglance.walletglance.auth.domain.usecase.FinishSignUpUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.GetAuthTokenFromSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.GetAuthTokenFromSecureStorageUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.GetUserDataUseCase
 import com.ataglance.walletglance.auth.domain.usecase.GetUserDataUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.GetUserEmailUseCase
@@ -18,18 +26,28 @@ import com.ataglance.walletglance.auth.domain.usecase.RequestEmailUpdateUseCase
 import com.ataglance.walletglance.auth.domain.usecase.RequestEmailUpdateUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.RequestPasswordResetUseCase
 import com.ataglance.walletglance.auth.domain.usecase.RequestPasswordResetUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.SaveAuthTokenToSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.SaveAuthTokenToSecureStorageUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.SendEmailVerificationEmailUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SendEmailVerificationEmailUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.SetNewPasswordUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SetNewPasswordUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.SignInUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SignInUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.SignInWithEmailAndPasswordUseCase
+import com.ataglance.walletglance.auth.domain.usecase.SignInWithEmailAndPasswordUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.SignOutUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SignOutUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.SignUpUseCase
+import com.ataglance.walletglance.auth.domain.usecase.SignUpUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCase
 import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.UserEmailIsVerifiedUseCase
 import com.ataglance.walletglance.auth.domain.usecase.UserEmailIsVerifiedUseCaseImpl
+import com.ataglance.walletglance.auth.presentation.viewmodel.FinishSignUpViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val authModule = module {
@@ -37,7 +55,10 @@ val authModule = module {
     /* ---------- Other ---------- */
 
     single {
-        UserContext()
+        UserContext(
+            getAuthTokenFromSecureStorageUseCase = get(),
+            saveAuthTokenToSecureStorageUseCase = get()
+        )
     }
 
     single {
@@ -65,8 +86,44 @@ val authModule = module {
         )
     }
 
+    /* ---------- Repositories ---------- */
+
+    single<AuthRepository> {
+        AuthRepositoryImpl(userContext = get())
+    }
+
     /* ---------- Use Cases ---------- */
 
+    single<GetAuthTokenFromSecureStorageUseCase> {
+        GetAuthTokenFromSecureStorageUseCaseImpl(secureStorage = get())
+    }
+    single<SaveAuthTokenToSecureStorageUseCase> {
+        SaveAuthTokenToSecureStorageUseCaseImpl(secureStorage = get())
+    }
+    single<SignInWithEmailAndPasswordUseCase> {
+        SignInWithEmailAndPasswordUseCaseImpl(
+            authRepository = get(),
+            userContext = get()
+        )
+    }
+    single<SignUpUseCase> {
+        SignUpUseCaseImpl(
+            authRepository = get(),
+            getLanguagePreferenceUseCase = get()
+        )
+    }
+    single<CheckEmailVerificationUseCase> {
+        CheckEmailVerificationUseCaseImpl(
+            authRepository = get(),
+            userContext = get()
+        )
+    }
+    single<FinishSignUpUseCase> {
+        FinishSignUpUseCaseImpl(
+            authRepository = get(),
+            userContext = get()
+        )
+    }
     single<GetUserEmailUseCase> {
         GetUserEmailUseCaseImpl(auth = get())
     }
@@ -108,6 +165,30 @@ val authModule = module {
     }
     single<SignOutUseCase> {
         SignOutUseCaseImpl(auth = get())
+    }
+
+    /* ---------- View models ---------- */
+
+    viewModel { params ->
+        SignInViewModel(
+            email = params.get(),
+            signInUseCase = get()
+        )
+    }
+
+    viewModel { params ->
+        SignUpViewModel(
+            email = params.get(),
+            signUpUseCase = get(),
+            checkEmailVerificationUseCase = get()
+        )
+    }
+
+    viewModel { params ->
+        FinishSignUpViewModel(
+            oobCode = params.get(),
+            finishSignUpUseCase = get()
+        )
     }
 
 }

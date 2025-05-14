@@ -1,8 +1,11 @@
 package com.ataglance.walletglance.errorHandling.domain.model.validation
 
 enum class UserDataValidation: Validation {
+    IsValid,
+    IsNotValid,
     RequiredField,
-    EmailValidity,
+    TooShort,
+    TooLong,
     AtLeastEightChars,
     AtLeastOneUppercaseLetter,
     AtLeastOneLowercaseLetter,

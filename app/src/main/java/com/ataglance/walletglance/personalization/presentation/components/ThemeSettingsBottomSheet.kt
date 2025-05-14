@@ -6,7 +6,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 

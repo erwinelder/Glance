@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
-import com.ataglance.walletglance.core.presentation.components.buttons.TypeToggleButton
+import com.ataglance.walletglance.core.presentation.component.button.TypeToggleButton
 
 @Composable
 fun CategoryCollectionTypeToggleButton(

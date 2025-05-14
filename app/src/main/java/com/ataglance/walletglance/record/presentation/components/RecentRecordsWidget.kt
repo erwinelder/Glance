@@ -27,9 +27,9 @@ import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
-import com.ataglance.walletglance.core.presentation.components.widgets.WidgetWithTitleAndButtonComponent
+import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.widgets.WidgetWithTitleAndButtonComponent
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.record.domain.model.RecordStack

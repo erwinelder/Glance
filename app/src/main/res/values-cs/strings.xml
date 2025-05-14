@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">Glance</string>
 
     <!-- navigation bar buttons -->
@@ -26,6 +27,9 @@
     <string name="save">Uložit</string>
     <string name="apply">Použít</string>
     <string name="confirm">Potvrdit</string>
+    <string name="check">Zkontrolovat</string>
+    <string name="check_verification">Zkontrolovat ověření</string>
+    <string name="verify">Ověřit</string>
     <string name="cancel">Zrušit</string>
     <string name="_continue">Pokračovat</string>
     <string name="save_and_continue">Uložit a pokračovat</string>
@@ -86,6 +90,7 @@
     <string name="continue_as_guest">Pokračovat jako host</string>
     <string name="continue_setup">Pokračovat v nastavení</string>
     <string name="choose_app_language">Vyberte jazyk aplikace</string>
+    <string name="email_verification">Ověření e-mailu</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -128,7 +133,9 @@
     <!-- Field validation -->
     <string name="required_field">povinné pole</string>
     <string name="is_valid">je platné</string>
-    <string name="not_valid_email">neplatný email</string>
+    <string name="is_not_valid">není platné</string>
+    <string name="too_short">příliš krátké</string>
+    <string name="too_long">příliš dlouhé</string>
     <string name="at_least_8_chars">alespoň 8 znaků</string>
     <string name="at_least_1_spec_char">alespoň 1 speciální znak</string>
     <string name="at_least_1_digit">alespoň 1 číslice</string>
@@ -137,7 +144,13 @@
     <string name="passwords_do_match">Hesla se shodují</string>
     <string name="passwords_do_not_match">Hesla se neshodují</string>
 
-    <!-- Auth error handling -->
+    <!-- Loaders -->
+    <string name="verifying_your_credentials_loader">Ověřování vašich přihlašovacích údajů…</string>
+    <string name="creating_your_identity_loader">Vytváření vaší identity…</string>
+    <string name="checking_email_verification_loader">Kontrola ověření e-mailu…</string>
+    <string name="finishing_your_registration_loader">Dokončování vaší registrace…</string>
+
+    <!-- Auth -->
     <string name="all_set">Vše připraveno!</string>
     <string name="oops">Jejda!</string>
     <string name="user_already_exists_error">Uživatel již existuje</string>
@@ -156,8 +169,10 @@
     <string name="password_updated">Heslo aktualizováno!</string>
     <string name="password_reset_error">Resetování hesla se nezdařilo</string>
     <string name="update_password_error">Chyba během aktualizace hesla</string>
+    <string name="verify_email">Ověřte e-mail</string>
+    <string name="verify_email_description">Ověřte svůj e-mail pro dokončení registrace.</string>
     <string name="email_sent">E-mail odeslán!</string>
-    <string name="sign_up_email_verification_sent">Ověřovací e-mail pro registraci byl odeslán. Postupujte prosím podle odkazu v e-mailu a dokončete svou registraci.</string>
+    <string name="sign_up_email_verification_sent_description">Ověřovací e-mail pro registraci byl odeslán. Postupujte prosím podle odkazu v e-mailu a dokončete svou registraci.</string>
     <string name="update_email_email_verification_sent">Ověřovací e-mail pro aktualizaci vaší e-mailové adresy byl odeslán. Postupujte prosím podle odkazu v e-mailu, abyste dokončili aktualizaci.</string>
     <string name="email_update_success">E-mail byl úspěšně aktualizován</string>
     <string name="email_verification_error">Ověření e-mailu se nezdařilo</string>

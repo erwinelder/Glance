@@ -26,6 +26,9 @@
     <string name="save">Сохранить</string>
     <string name="apply">Применить</string>
     <string name="confirm">Подтвердить</string>
+    <string name="check">Проверить</string>
+    <string name="check_verification">Проверить подтверждение</string>
+    <string name="verify">Подтвердить</string>
     <string name="cancel">Отменить</string>
     <string name="_continue">Продолжить</string>
     <string name="save_and_continue">Сохранить и продолжить</string>
@@ -86,6 +89,7 @@
     <string name="continue_as_guest">Продолжить как гость</string>
     <string name="continue_setup">Продолжить настройку</string>
     <string name="choose_app_language">Выберите язык приложения</string>
+    <string name="email_verification">Подтверждение электронной почты</string>
 
     <!-- Fields -->
     <string name="email">Электронная почта</string>
@@ -128,7 +132,9 @@
     <!-- Field validation -->
     <string name="required_field">обязательное поле</string>
     <string name="is_valid">допустимо</string>
-    <string name="not_valid_email">некорректный email</string>
+    <string name="is_not_valid">недействительно</string>
+    <string name="too_short">слишком коротко</string>
+    <string name="too_long">слишком длинно</string>
     <string name="at_least_8_chars">не менее 8 символов</string>
     <string name="at_least_1_spec_char">не менее 1 специального символа</string>
     <string name="at_least_1_digit">не менее 1 цифры</string>
@@ -137,7 +143,13 @@
     <string name="passwords_do_match">Пароли совпадают</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
 
-    <!-- Auth error handling -->
+    <!-- Loaders -->
+    <string name="verifying_your_credentials_loader">Проверка ваших учетных данных…</string>
+    <string name="creating_your_identity_loader">Создание вашей идентичности…</string>
+    <string name="checking_email_verification_loader">Проверка подтверждения электронной почты…</string>
+    <string name="finishing_your_registration_loader">Завершаем вашу регистрацию…</string>
+
+    <!-- Auth -->
     <string name="all_set">Всё готово!</string>
     <string name="oops">Ой!</string>
     <string name="user_already_exists_error">Пользователь уже существует</string>
@@ -156,8 +168,10 @@
     <string name="password_updated">Пароль обновлён!</string>
     <string name="password_reset_error">Сброс пароля не удался</string>
     <string name="update_password_error">Ошибка при обновлении пароля</string>
+    <string name="verify_email">Подтвердите почту</string>
+    <string name="verify_email_description">Подтвердите свою электронную почту, чтобы завершить регистрацию.</string>
     <string name="email_sent">Письмо отправлено!</string>
-    <string name="sign_up_email_verification_sent">Письмо для подтверждения регистрации было отправлено. Пожалуйста, перейдите по ссылке в письме, чтобы завершить регистрацию.</string>
+    <string name="sign_up_email_verification_sent_description">Письмо для подтверждения регистрации было отправлено. Пожалуйста, перейдите по ссылке в письме, чтобы завершить регистрацию.</string>
     <string name="update_email_email_verification_sent">Письмо для подтверждения обновления вашей электронной почты было отправлено. Пожалуйста, перейдите по ссылке в письме, чтобы завершить обновление.</string>
     <string name="email_update_success">Электронная почта была успешно обновлена</string>
     <string name="email_verification_error">Подтверждение электронной почты не удалось</string>

@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
-import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.checkboxes.TwoStateCheckbox
 
 @Composable
 fun CheckedDefaultBudgetComponent(

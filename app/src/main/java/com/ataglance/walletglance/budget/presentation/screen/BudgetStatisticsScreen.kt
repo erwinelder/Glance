@@ -41,11 +41,11 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
-import com.ataglance.walletglance.core.presentation.components.charts.GlanceColumnChart
-import com.ataglance.walletglance.core.presentation.components.charts.GlanceSingleValuePieChart
-import com.ataglance.walletglance.core.presentation.components.containers.BackButtonBlock
-import com.ataglance.walletglance.core.presentation.components.containers.MessageContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.charts.GlanceColumnChart
+import com.ataglance.walletglance.core.presentation.component.charts.GlanceSingleValuePieChart
+import com.ataglance.walletglance.core.presentation.component.container.BackButtonBlock
+import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors

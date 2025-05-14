@@ -16,8 +16,8 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors

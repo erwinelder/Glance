@@ -43,8 +43,8 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.viewmodel.ActiveAccountCardViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.Manrope

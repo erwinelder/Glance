@@ -21,11 +21,14 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.WindowType
 
-private val LocalColors = staticCompositionLocalOf<GlancePalette> { GlancePalette.LightDefault }
-val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
+
 private val LocalAppTheme = compositionLocalOf { AppTheme.LightDefault }
+private val LocalColors = staticCompositionLocalOf<GlancePalette> { GlancePalette.LightDefault }
+private val LocalTypography = staticCompositionLocalOf { GlanceCustomTypography() }
+private val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
 @OptIn(ExperimentalSharedTransitionApi::class)
 private val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
+
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +60,7 @@ fun GlanceTheme(
         AppTheme.LightDefault -> GlancePalette.LightDefault
         AppTheme.DarkDefault -> GlancePalette.DarkDefault
     }
+    val typography = GlanceCustomTypography()
     val windowType = when {
         boxWithConstraintsScope.maxWidth < 600.dp -> WindowType.Compact
         boxWithConstraintsScope.maxWidth < 840.dp -> WindowType.Medium
@@ -70,13 +74,14 @@ fun GlanceTheme(
     }
 
     CompositionLocalProvider(
-        LocalColors provides glanceColors,
-        LocalWindowType provides windowType,
         LocalAppTheme provides appTheme,
+        LocalColors provides glanceColors,
+        LocalTypography provides typography,
+        LocalWindowType provides windowType,
         LocalSharedTransitionScope provides sharedTransitionScope,
         LocalRippleConfiguration provides null
     ) {
-        MaterialTheme(typography = Typography, content = content)
+        MaterialTheme(content = content)
     }
 }
 
@@ -107,15 +112,20 @@ private fun setSystemBarsColors(
 }
 
 
+val CurrAppTheme: AppTheme
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalAppTheme.current
+
 val GlanceColors: GlancePalette
     @Composable
     @ReadOnlyComposable
     get() = LocalColors.current
 
-val CurrAppTheme: AppTheme
+val GlanceTypography: GlanceCustomTypography
     @Composable
     @ReadOnlyComposable
-    get() = LocalAppTheme.current
+    get() = LocalTypography.current
 
 val CurrWindowType: WindowType
     @Composable

@@ -8,8 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.screenContainers.ScreenContainer
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackButton
 import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessMessageWithIcon
 
 @Composable
@@ -21,7 +21,7 @@ fun ResultScreenContainer(
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {
-    ScreenContainer {
+    ScreenContainerWithBackButton {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier

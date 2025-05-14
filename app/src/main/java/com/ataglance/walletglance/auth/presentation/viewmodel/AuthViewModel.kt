@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class AuthViewModel(
-    private val userDataValidator: UserDataValidator,
     email: String
 ) : ViewModel() {
 
@@ -30,7 +29,7 @@ class AuthViewModel(
     private val _emailState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState(
             fieldText = email,
-            validationStates = userDataValidator.validateEmail(email).toUiStates()
+            validationStates = UserDataValidator.validateEmail(email).toUiStates()
         )
     )
     val emailState = _emailState.asStateFlow()
@@ -47,7 +46,7 @@ class AuthViewModel(
         _emailState.update {
             it.copy(
                 fieldText = email,
-                validationStates = userDataValidator.validateEmail(email).toUiStates()
+                validationStates = UserDataValidator.validateEmail(email).toUiStates()
             )
         }
     }
@@ -55,7 +54,7 @@ class AuthViewModel(
 
     private val _newEmailState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState(
-            validationStates = userDataValidator.validateEmail("").toUiStates()
+            validationStates = UserDataValidator.validateEmail("").toUiStates()
         )
     )
     val newEmailState = _newEmailState.asStateFlow()
@@ -64,7 +63,7 @@ class AuthViewModel(
         _newEmailState.update {
             it.copy(
                 fieldText = email,
-                validationStates = userDataValidator.validateEmail(email).toUiStates()
+                validationStates = UserDataValidator.validateEmail(email).toUiStates()
             )
         }
     }
@@ -77,7 +76,7 @@ class AuthViewModel(
     private val _passwordState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState(
             fieldText = "",
-            validationStates = userDataValidator.validateRequiredFieldIsNotEmpty("").toUiStates()
+            validationStates = UserDataValidator.validateRequiredFieldIsNotEmpty("").toUiStates()
         )
     )
     val passwordState = _passwordState.asStateFlow()
@@ -86,7 +85,7 @@ class AuthViewModel(
         _passwordState.update {
             it.copy(
                 fieldText = password,
-                validationStates = userDataValidator.validateRequiredFieldIsNotEmpty(password)
+                validationStates = UserDataValidator.validateRequiredFieldIsNotEmpty(password)
                     .toUiStates()
             )
         }
@@ -99,7 +98,7 @@ class AuthViewModel(
 
     private val _newPasswordState: MutableStateFlow<ValidatedFieldUiState> = MutableStateFlow(
         ValidatedFieldUiState(
-            validationStates = userDataValidator.validatePassword("").toUiStates()
+            validationStates = UserDataValidator.validatePassword("").toUiStates()
         )
     )
     val newPasswordState = _newPasswordState.asStateFlow()
@@ -108,7 +107,7 @@ class AuthViewModel(
         _newPasswordState.update {
             it.copy(
                 fieldText = password,
-                validationStates = userDataValidator.validatePassword(password).toUiStates()
+                validationStates = UserDataValidator.validatePassword(password).toUiStates()
             )
         }
     }
@@ -121,7 +120,7 @@ class AuthViewModel(
     private val _newPasswordConfirmationState: MutableStateFlow<ValidatedFieldUiState> =
         MutableStateFlow(
             ValidatedFieldUiState(
-                validationStates = userDataValidator.validateConfirmationPassword("", "")
+                validationStates = UserDataValidator.validateConfirmationPassword("", "")
                     .toUiStates()
             )
         )
@@ -131,7 +130,7 @@ class AuthViewModel(
         _newPasswordConfirmationState.update {
             it.copy(
                 fieldText = password,
-                validationStates = userDataValidator
+                validationStates = UserDataValidator
                     .validateConfirmationPassword(newPasswordState.value.fieldText, password)
                     .toUiStates()
             )
@@ -146,7 +145,7 @@ class AuthViewModel(
     val signInIsAllowed: StateFlow<Boolean> = combine(
         emailState, passwordState
     ) { emailState, passwordState ->
-        userDataValidator.isValidEmail(emailState.fieldText) &&
+        UserDataValidator.isValidEmail(emailState.fieldText) &&
                 passwordState.fieldText.isNotEmpty()
     }.stateIn(
         scope = viewModelScope,
@@ -157,8 +156,8 @@ class AuthViewModel(
     val signUpIsAllowed: StateFlow<Boolean> = combine(
         emailState, newPasswordState, newPasswordConfirmationState
     ) { emailState, passwordState, confirmPasswordState ->
-        userDataValidator.isValidEmail(emailState.fieldText) &&
-                userDataValidator.isValidPassword(passwordState.fieldText) &&
+        UserDataValidator.isValidEmail(emailState.fieldText) &&
+                UserDataValidator.isValidPassword(passwordState.fieldText) &&
                 passwordState.fieldText == confirmPasswordState.fieldText
     }.stateIn(
         scope = viewModelScope,
@@ -170,7 +169,7 @@ class AuthViewModel(
         passwordState, newPasswordState, newPasswordConfirmationState
     ) { passwordState, newPasswordState, newPasswordConfirmationState ->
         passwordState.fieldText.isNotEmpty() &&
-                userDataValidator.isValidPassword(newPasswordState.fieldText) &&
+                UserDataValidator.isValidPassword(newPasswordState.fieldText) &&
                 newPasswordState.fieldText == newPasswordConfirmationState.fieldText
     }.stateIn(
         scope = viewModelScope,
@@ -181,7 +180,7 @@ class AuthViewModel(
     val passwordResetIsAllowed: StateFlow<Boolean> = combine(
         newPasswordState, newPasswordConfirmationState
     ) { newPasswordState, newPasswordConfirmationState ->
-        userDataValidator.isValidPassword(newPasswordState.fieldText) &&
+        UserDataValidator.isValidPassword(newPasswordState.fieldText) &&
                 newPasswordState.fieldText == newPasswordConfirmationState.fieldText
     }.stateIn(
         scope = viewModelScope,
@@ -192,7 +191,7 @@ class AuthViewModel(
     val emailUpdateIsAllowed: StateFlow<Boolean> = combine(
         passwordState, newEmailState
     ) { passwordState, newEmailState ->
-        userDataValidator.isValidEmail(newEmailState.fieldText) &&
+        UserDataValidator.isValidEmail(newEmailState.fieldText) &&
                 passwordState.fieldText.isNotEmpty()
     }.stateIn(
         scope = viewModelScope,
@@ -201,10 +200,10 @@ class AuthViewModel(
     )
 
 
-    private val _resultState: MutableStateFlow<ResultUiState?> = MutableStateFlow(null)
+    private val _resultState: MutableStateFlow<ResultState?> = MutableStateFlow(null)
     val resultState = _resultState.asStateFlow()
 
-    fun setResultState(result: ResultUiState) {
+    fun setResultState(result: ResultState) {
         _resultState.update { result }
     }
 
@@ -228,7 +227,6 @@ data class AuthViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return AuthViewModel(
-            userDataValidator = UserDataValidator(),
             email = email
         ) as T
     }

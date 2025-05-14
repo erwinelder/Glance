@@ -5,8 +5,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.components.containers.ReorderableListStyled
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.container.ReorderableListStyled
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

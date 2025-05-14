@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
-import com.ataglance.walletglance.core.presentation.components.charts.GlanceLineChart
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.charts.GlanceLineChart
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 

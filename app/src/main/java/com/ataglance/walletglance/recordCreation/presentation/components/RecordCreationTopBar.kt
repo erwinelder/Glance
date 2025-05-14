@@ -26,10 +26,10 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.presentation.components.CategoryTypeToggleButton
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.ButtonWithPopupContent
-import com.ataglance.walletglance.core.presentation.components.buttons.NavigationTextArrowButton
-import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckboxWithText
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.button.ButtonWithPopupContent
+import com.ataglance.walletglance.core.presentation.component.button.NavigationTextArrowButton
+import com.ataglance.walletglance.core.presentation.component.checkboxes.TwoStateCheckboxWithText
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences

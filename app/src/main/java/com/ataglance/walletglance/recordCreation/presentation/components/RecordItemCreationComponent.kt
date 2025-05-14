@@ -26,10 +26,10 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.components.CategoryField
 import com.ataglance.walletglance.category.presentation.components.RecordCategory
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.fields.GlanceTextField
+import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.fields.FieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.fields.GlanceTextField
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 
 @Composable

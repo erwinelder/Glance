@@ -27,6 +27,9 @@
     <string name="save">Save</string>
     <string name="apply">Apply</string>
     <string name="confirm">Confirm</string>
+    <string name="check">Check</string>
+    <string name="check_verification">Check verification</string>
+    <string name="verify">Verify</string>
     <string name="cancel">Cancel</string>
     <string name="_continue">Continue</string>
     <string name="save_and_continue">Save and continue</string>
@@ -87,6 +90,7 @@
     <string name="continue_as_guest">Continue as guest</string>
     <string name="continue_setup">Continue setup</string>
     <string name="choose_app_language">Choose app language</string>
+    <string name="email_verification">Email verification</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -129,7 +133,9 @@
     <!-- Field validation -->
     <string name="required_field">required field</string>
     <string name="is_valid">is valid</string>
-    <string name="not_valid_email">not a valid email</string>
+    <string name="is_not_valid">is not valid</string>
+    <string name="too_short">too short</string>
+    <string name="too_long">too long</string>
     <string name="at_least_8_chars">at least 8 characters</string>
     <string name="at_least_1_spec_char">at least 1 special character</string>
     <string name="at_least_1_digit">at least 1 digit</string>
@@ -138,7 +144,13 @@
     <string name="passwords_do_match">Passwords do match</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
 
-    <!-- Auth error handling -->
+    <!-- Loaders -->
+    <string name="verifying_your_credentials_loader">Verifying your credentials…</string>
+    <string name="creating_your_identity_loader">Creating your identity…</string>
+    <string name="checking_email_verification_loader">Checking email verification…</string>
+    <string name="finishing_your_registration_loader">Finishing your registration…</string>
+
+    <!-- Auth -->
     <string name="all_set">All set!</string>
     <string name="oops">Oops!</string>
     <string name="user_already_exists_error">User already exists</string>
@@ -157,8 +169,10 @@
     <string name="password_updated">Password updated!</string>
     <string name="password_reset_error">Password reset failed</string>
     <string name="update_password_error">Error during updating password</string>
+    <string name="verify_email">Verify email</string>
+    <string name="verify_email_description">Verify your email to finish your registration.</string>
     <string name="email_sent">Email sent!</string>
-    <string name="sign_up_email_verification_sent">A verification email for sign-up has been sent. Please follow the link in the email to complete your registration.</string>
+    <string name="sign_up_email_verification_sent_description">A verification email for sign-up has been sent. Please follow the link in the email to complete your registration.</string>
     <string name="update_email_email_verification_sent">A verification email to update your email address has been sent. Please follow the link in the email to complete the update.</string>
     <string name="email_update_success">Email has been updated successfully</string>
     <string name="email_verification_error">Email verification failed</string>

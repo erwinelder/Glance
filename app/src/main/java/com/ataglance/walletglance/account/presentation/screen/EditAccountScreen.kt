@@ -44,15 +44,15 @@ import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.switches.SwitchWithLabel
+import com.ataglance.walletglance.core.presentation.component.button.ColorButton
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.fields.FieldLabel
+import com.ataglance.walletglance.core.presentation.component.fields.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.pickers.ColorPicker
+import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.switches.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
 
 @Composable

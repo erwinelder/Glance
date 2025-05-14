@@ -7,4 +7,18 @@ sealed interface ResultData<out D, out E: RootError> {
 
     fun getDataIfSuccess(): D? = if (this is Success) this.data else null
 
+    fun <R> mapData(transform: (D) -> R): ResultData<R, E> {
+        return when (this) {
+            is Success -> Success<R, E>(this.data.let(transform))
+            is Error -> Error(this.error)
+        }
+    }
+
+    fun <S : RootSuccess> toDefaultResult(success: S): Result<S, E> {
+        return when (this) {
+            is Success -> Result.Success(success)
+            is Error -> Result.Error(this.error)
+        }
+    }
+
 }

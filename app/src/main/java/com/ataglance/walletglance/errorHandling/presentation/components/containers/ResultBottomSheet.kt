@@ -14,18 +14,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheetContentDialog
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetContentDialog
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultBottomSheet(
-    resultState: ResultUiState?,
+    resultState: ResultState?,
     onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -78,7 +78,7 @@ fun ResultBottomSheet(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun ResultBottomSheetPreview() {
-    val resultState = ResultUiState(
+    val resultState = ResultState(
         isSuccessful = true,
         titleRes = R.string.email_sent,
         messageRes = R.string.reset_password_email_sent
@@ -87,7 +87,7 @@ private fun ResultBottomSheetPreview() {
 //        messageRes = R.string.email_for_password_reset_error
     )
 
-    var state by remember { mutableStateOf<ResultUiState?>(resultState) }
+    var state by remember { mutableStateOf<ResultState?>(resultState) }
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         SmallPrimaryButton(

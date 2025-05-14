@@ -36,11 +36,11 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
-import com.ataglance.walletglance.core.presentation.components.containers.AppMainTopBar
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.components.widgets.ChosenBudgetsWidget
-import com.ataglance.walletglance.core.presentation.components.widgets.ExpensesIncomeWidget
-import com.ataglance.walletglance.core.presentation.components.widgets.GreetingsMessage
+import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.widgets.ChosenBudgetsWidget
+import com.ataglance.walletglance.core.presentation.component.widgets.ExpensesIncomeWidget
+import com.ataglance.walletglance.core.presentation.component.widgets.GreetingsMessage
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime

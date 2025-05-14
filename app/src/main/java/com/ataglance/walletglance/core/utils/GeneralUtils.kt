@@ -11,6 +11,11 @@ import java.util.Locale
 import kotlin.enums.enumEntries
 
 
+fun <T> T.asList(): List<T> {
+    return listOf(this)
+}
+
+
 fun takeActionIf(condition: Boolean, action: () -> Unit): (() -> Unit)? {
     return if (condition) {
         action

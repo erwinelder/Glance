@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.components.containers.ReorderableListStyled
-import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
-import com.ataglance.walletglance.core.presentation.components.other.ScreenNameWithIconComponent
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.container.ReorderableListStyled
+import com.ataglance.walletglance.core.presentation.component.dividers.SmallDivider
+import com.ataglance.walletglance.core.presentation.component.other.ScreenNameWithIconComponent
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 @OptIn(ExperimentalMaterial3Api::class)

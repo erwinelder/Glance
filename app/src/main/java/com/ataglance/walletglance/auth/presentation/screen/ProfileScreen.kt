@@ -6,22 +6,52 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheetDialog
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetDialog
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.components.OpenSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+
+@Composable
+fun ProfileScreenWrapper(
+    navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    authController: AuthController,
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    ProfileScreen(
+        onNavigateBack = navController::popBackStack,
+        onSignOut = {
+            coroutineScope.launch {
+                authController.signOut()
+                navController.popBackStack()
+            }
+        },
+        onNavigateToScreen = { screen ->
+            navViewModel.navigateToScreen(navController, screen)
+        },
+        onPopBackStackAndNavigateToScreen = { screen ->
+            navViewModel.popBackStackAndNavigate(navController, screen)
+        }
+    )
+}
 
 @Composable
 fun ProfileScreen(

@@ -5,10 +5,16 @@ import kotlinx.serialization.Serializable
 sealed interface AuthScreens {
 
     @Serializable
-    data class SignIn(val case: String) : AuthScreens
+    data class SignIn(val case: String, val email: String = "") : AuthScreens
 
     @Serializable
-    data object SignUp : AuthScreens
+    data class SignUp(val email: String = "") : AuthScreens
+
+    @Serializable
+    data object EmailVerification : AuthScreens
+
+    @Serializable
+    data class FinishSignUp(val oobCode: String) : AuthScreens
 
     @Serializable
     data class ResultSuccess(val screenType: String) : AuthScreens

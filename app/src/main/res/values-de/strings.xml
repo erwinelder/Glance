@@ -26,6 +26,9 @@
     <string name="save">Speichern</string>
     <string name="apply">Anwenden</string>
     <string name="confirm">Bestätigen</string>
+    <string name="check">Prüfen</string>
+    <string name="check_verification">Verifizierung prüfen</string>
+    <string name="verify">Verifizieren</string>
     <string name="cancel">Abbrechen</string>
     <string name="_continue">Fortsetzen</string>
     <string name="save_and_continue">Speichern und Fortsetzen</string>
@@ -86,6 +89,7 @@
     <string name="continue_as_guest">Als Gast fortfahren</string>
     <string name="continue_setup">Einrichtung fortsetzen</string>
     <string name="choose_app_language">Wählen Sie die App-Sprache</string>
+    <string name="email_verification">E-Mail-Verifizierung</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -128,7 +132,9 @@
     <!-- Field validation -->
     <string name="required_field">Pflichtfeld</string>
     <string name="is_valid">ist gültig</string>
-    <string name="not_valid_email">keine gültige E-Mail</string>
+    <string name="is_not_valid">ist nicht gültig</string>
+    <string name="too_short">zu kurz</string>
+    <string name="too_long">zu lang</string>
     <string name="at_least_8_chars">mindestens 8 Zeichen</string>
     <string name="at_least_1_spec_char">mindestens 1 Sonderzeichen</string>
     <string name="at_least_1_digit">mindestens 1 Ziffer</string>
@@ -137,7 +143,13 @@
     <string name="passwords_do_match">Passwörter stimmen überein</string>
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein</string>
 
-    <!-- Auth error handling -->
+    <!-- Loaders -->
+    <string name="verifying_your_credentials_loader">Überprüfung Ihrer Anmeldedaten…</string>
+    <string name="creating_your_identity_loader">Erstellen Ihrer Identität…</string>
+    <string name="checking_email_verification_loader">Überprüfung der E-Mail-Bestätigung…</string>
+    <string name="finishing_your_registration_loader">Abschluss Ihrer Registrierung…</string>
+
+    <!-- Auth -->
     <string name="all_set">Alles bereit!</string>
     <string name="oops">Ups!</string>
     <string name="user_already_exists_error">Benutzer existiert bereits</string>
@@ -156,8 +168,10 @@
     <string name="password_updated">Passwort aktualisiert!</string>
     <string name="password_reset_error">Passwort zurücksetzen fehlgeschlagen</string>
     <string name="update_password_error">Fehler beim Aktualisieren des Passworts</string>
+    <string name="verify_email">Verifizieren Sie Ihre E-Mail</string>
+    <string name="verify_email_description">Verifizieren Sie Ihre E-Mail, um die Registrierung abzuschließen.</string>
     <string name="email_sent">E-Mail gesendet!</string>
-    <string name="sign_up_email_verification_sent">Eine Bestätigungs-E-Mail für die Registrierung wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um Ihre Registrierung abzuschließen.</string>
+    <string name="sign_up_email_verification_sent_description">Eine Bestätigungs-E-Mail für die Registrierung wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um Ihre Registrierung abzuschließen.</string>
     <string name="update_email_email_verification_sent">Eine Bestätigungs-E-Mail zur Aktualisierung Ihrer E-Mail-Adresse wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um die Aktualisierung abzuschließen.</string>
     <string name="email_update_success">Die E-Mail wurde erfolgreich aktualisiert</string>
     <string name="email_verification_error">Die E-Mail-Verifizierung ist fehlgeschlagen</string>

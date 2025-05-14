@@ -1,0 +1,117 @@
+package com.ataglance.walletglance.auth.presentation.screen
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.presentation.viewmodel.FinishSignUpViewModel
+import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
+import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainer
+import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun FinishSignUpScreenWrapper(
+    navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    backStack: NavBackStackEntry
+) {
+    val viewModel = koinViewModel<FinishSignUpViewModel> {
+        parametersOf(
+            backStack.toRoute<AuthScreens.FinishSignUp>().oobCode
+        )
+    }
+
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
+
+    FinishSignUpScreen(
+        onFinishSignUp = viewModel::finishSignUp,
+        requestState = requestState,
+        onSuccessClose = {
+            navViewModel.navigateAndPopUpTo(
+                navController = navController,
+                screenToNavigateTo = SettingsScreens.Accounts,
+                inclusive = false
+            )
+        },
+        onErrorClose = viewModel::resetRequestState
+    )
+}
+
+@Composable
+fun FinishSignUpScreen(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
+    onFinishSignUp: () -> Unit,
+    requestState: RequestState?,
+    onSuccessClose: () -> Unit,
+    onErrorClose: () -> Unit
+) {
+    SetBackHandler()
+
+    AnimatedScreenWithRequestState(
+        screenPadding = screenPadding,
+        requestState = requestState,
+        onSuccessClose = onSuccessClose,
+        onErrorClose = onErrorClose
+    ) {
+        ScreenContainer {
+            VerifyEmailPromptedComponent(onVerify = onFinishSignUp)
+        }
+    }
+}
+
+@Composable
+private fun VerifyEmailPromptedComponent(onVerify: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        LargePrimaryIconWithMessage(
+            title = stringResource(R.string.verify_email),
+            message = stringResource(R.string.verify_email_description),
+            iconRes = R.drawable.email_large_icon,
+            iconDescription = "Email sent icon"
+        )
+        SmallPrimaryButton(
+            text = stringResource(R.string.verify),
+            onClick = onVerify
+        )
+    }
+}
+
+
+
+@Preview(device = PIXEL_7_PRO)
+@Composable
+fun FinishSignUpScreenPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
+        FinishSignUpScreen(
+            onFinishSignUp = {},
+            requestState = null,
+            onSuccessClose = {},
+            onErrorClose = {}
+        )
+    }
+}

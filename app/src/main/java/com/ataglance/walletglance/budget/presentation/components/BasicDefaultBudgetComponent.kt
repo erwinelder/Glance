@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.presentation.components.CategoryIconComponent
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
