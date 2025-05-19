@@ -2,7 +2,7 @@ package com.ataglance.walletglance.settings.domain.usecase.language
 
 import com.ataglance.walletglance.auth.data.model.SaveLanguageRequestDto
 import com.ataglance.walletglance.auth.data.repository.AuthRepository
-import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 
 class SaveLanguageRemotelyUseCaseImpl(

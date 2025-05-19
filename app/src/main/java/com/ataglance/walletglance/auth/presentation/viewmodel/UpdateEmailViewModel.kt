@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCase
 import com.ataglance.walletglance.auth.domain.usecase.RequestEmailUpdateUseCase
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.mapper.toResultWithButtonState
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
+import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultWithButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,7 +28,7 @@ class UpdateEmailViewModel(
 ) : ViewModel() {
 
     private val _passwordState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             validationStates = UserDataValidator.validateRequiredFieldIsNotBlank("").toUiStates()
         )
     )
@@ -46,7 +46,7 @@ class UpdateEmailViewModel(
 
 
     private val _newEmailState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             validationStates = UserDataValidator.validateEmail("").toUiStates()
         )
     )
@@ -117,7 +117,7 @@ class UpdateEmailViewModel(
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState?>(null)
+    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState(@StringRes messageRes: Int) {
@@ -126,7 +126,7 @@ class UpdateEmailViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ResultWithButtonState) {
+    private fun setRequestResultState(result: ButtonState) {
         _requestState.update { RequestState.Result(resultState = result) }
     }
 

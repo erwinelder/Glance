@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.modifiers.dragAndDropReordering
+import com.ataglance.walletglance.core.presentation.modifier.dragAndDropReordering
 import com.ataglance.walletglance.core.presentation.utils.draggableItems
 import com.ataglance.walletglance.core.presentation.utils.rememberDragDropState
 

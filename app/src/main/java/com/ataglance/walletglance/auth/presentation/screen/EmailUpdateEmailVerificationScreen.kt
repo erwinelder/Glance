@@ -19,13 +19,14 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithGlassBackButton
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithGlassBackButton
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 
@@ -60,7 +61,7 @@ fun EmailUpdateEmailVerificationScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
     onNavigateBack: () -> Unit,
     onCheckEmailVerification: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onCancelRequest: () -> Unit,
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit

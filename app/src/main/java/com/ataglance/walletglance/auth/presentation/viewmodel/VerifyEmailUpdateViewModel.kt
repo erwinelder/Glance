@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.usecase.VerifyEmailUpdateUseCase
-import com.ataglance.walletglance.errorHandling.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultWithButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +27,7 @@ class VerifyEmailUpdateViewModel(
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState?>(null)
+    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
@@ -36,7 +36,7 @@ class VerifyEmailUpdateViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ResultWithButtonState) {
+    private fun setRequestResultState(result: ButtonState) {
         _requestState.update { RequestState.Result(resultState = result) }
     }
 

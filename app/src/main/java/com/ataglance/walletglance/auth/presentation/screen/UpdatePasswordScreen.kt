@@ -16,22 +16,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -75,16 +76,16 @@ fun UpdatePasswordScreenWrapper(
 fun UpdatePasswordScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
     onNavigateBack: () -> Unit,
-    currentPasswordState: ValidatedFieldUiState,
+    currentPasswordState: ValidatedFieldState,
     onCurrentPasswordChange: (String) -> Unit,
-    newPasswordState: ValidatedFieldUiState,
+    newPasswordState: ValidatedFieldState,
     onNewPasswordChange: (String) -> Unit,
-    newPasswordConfirmationState: ValidatedFieldUiState,
+    newPasswordConfirmationState: ValidatedFieldState,
     onNewPasswordConfirmationChange: (String) -> Unit,
     passwordUpdateIsAllowed: Boolean,
     onUpdatePassword: () -> Unit,
     onNavigateToRequestPasswordResetScreen: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onCancelRequest: () -> Unit,
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit
@@ -140,11 +141,11 @@ fun UpdatePasswordScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    currentPasswordState: ValidatedFieldUiState,
+    currentPasswordState: ValidatedFieldState,
     onCurrentPasswordChange: (String) -> Unit,
-    newPasswordState: ValidatedFieldUiState,
+    newPasswordState: ValidatedFieldState,
     onNewPasswordChange: (String) -> Unit,
-    newPasswordConfirmationState: ValidatedFieldUiState,
+    newPasswordConfirmationState: ValidatedFieldState,
     onNewPasswordConfirmationChange: (String) -> Unit,
     onUpdatePassword: () -> Unit
 ) {
@@ -194,15 +195,15 @@ fun UpdatePasswordScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         UpdatePasswordScreen(
             onNavigateBack = {},
-            currentPasswordState = ValidatedFieldUiState(),
+            currentPasswordState = ValidatedFieldState(),
             onCurrentPasswordChange = {},
-            newPasswordState = ValidatedFieldUiState(
+            newPasswordState = ValidatedFieldState(
                 fieldText = newPassword,
                 validationStates = UserDataValidator.validatePassword(newPassword)
                     .toUiStates()
             ),
             onNewPasswordChange = {},
-            newPasswordConfirmationState = ValidatedFieldUiState(
+            newPasswordConfirmationState = ValidatedFieldState(
                 fieldText = confirmNewPassword,
                 validationStates = UserDataValidator
                     .validateConfirmationPassword(newPassword, confirmNewPassword)

@@ -19,7 +19,7 @@ import com.ataglance.walletglance.core.presentation.component.button.PrimaryButt
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 
 sealed class GlancePalette(
     val primary: Color,

@@ -38,9 +38,9 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.modifiers.innerVolumeShadow
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 
 @Composable
 fun ButtonWithPopupContent(

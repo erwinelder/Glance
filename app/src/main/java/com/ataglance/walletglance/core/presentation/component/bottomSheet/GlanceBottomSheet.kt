@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.component.dividers.BottomSheetHandle
+import com.ataglance.walletglance.core.presentation.component.divider.BottomSheetHandle
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @OptIn(ExperimentalMaterial3Api::class)

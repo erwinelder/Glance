@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.account.presentation.components.AccountsFilterBar
+import com.ataglance.walletglance.account.presentation.component.AccountsFilterBar
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 

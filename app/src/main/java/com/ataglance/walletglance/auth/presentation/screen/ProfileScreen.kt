@@ -16,14 +16,14 @@ import com.ataglance.walletglance.auth.presentation.viewmodel.ProfileViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetDialog
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
-import com.ataglance.walletglance.settings.presentation.components.OpenSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.component.NavigateToSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.component.OpenSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
-import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
+import com.ataglance.walletglance.settings.presentation.screenContainer.SettingsCategoryScreenContainer
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDateTime
 

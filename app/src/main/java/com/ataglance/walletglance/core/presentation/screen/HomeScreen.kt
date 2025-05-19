@@ -23,11 +23,11 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.components.ActiveAccountCard
+import com.ataglance.walletglance.account.presentation.component.ActiveAccountCard
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.presentation.components.CategoriesStatisticsWidget
+import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidget
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
@@ -37,10 +37,10 @@ import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.widgets.ChosenBudgetsWidget
-import com.ataglance.walletglance.core.presentation.component.widgets.ExpensesIncomeWidget
-import com.ataglance.walletglance.core.presentation.component.widgets.GreetingsMessage
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidget
+import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
+import com.ataglance.walletglance.core.presentation.component.widget.GreetingsMessage
 import com.ataglance.walletglance.core.utils.bottom
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
@@ -53,7 +53,7 @@ import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.mapper.toRecordStacks
-import com.ataglance.walletglance.record.presentation.components.RecentRecordsWidget
+import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidget
 
 @Composable
 fun HomeScreen(

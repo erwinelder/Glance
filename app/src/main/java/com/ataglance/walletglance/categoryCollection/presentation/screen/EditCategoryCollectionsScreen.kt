@@ -28,15 +28,15 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
-import com.ataglance.walletglance.categoryCollection.presentation.components.CategoryCollectionTypeBar
-import com.ataglance.walletglance.categoryCollection.presentation.components.EditingCategoryCollectionComponent
+import com.ataglance.walletglance.categoryCollection.presentation.component.CategoryCollectionTypeBar
+import com.ataglance.walletglance.categoryCollection.presentation.component.EditingCategoryCollectionComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionsScreen(

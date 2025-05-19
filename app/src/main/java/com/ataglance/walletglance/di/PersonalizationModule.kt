@@ -12,7 +12,7 @@ import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCa
 import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCaseImpl
 import com.ataglance.walletglance.personalization.domain.usecase.SaveWidgetsUseCase
 import com.ataglance.walletglance.personalization.domain.usecase.SaveWidgetsUseCaseImpl
-import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalisationViewModel
+import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -55,7 +55,7 @@ val personalizationModule = module {
     /* ---------- View Models ---------- */
 
     viewModel {
-        PersonalisationViewModel(
+        PersonalizationViewModel(
             getAppThemeConfigurationUseCase = get(),
             changeAppLookPreferencesUseCase = get(),
             saveWidgetsUseCase = get(),

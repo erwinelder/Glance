@@ -5,12 +5,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.account.presentation.components.ActiveAccountCardContent
+import com.ataglance.walletglance.account.presentation.component.ActiveAccountCardContent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorByTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 
 sealed class AccountColors(
     val name: AccountColorName,

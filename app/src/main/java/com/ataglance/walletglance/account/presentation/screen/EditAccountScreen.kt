@@ -47,13 +47,13 @@ import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.button.ColorButton
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
-import com.ataglance.walletglance.core.presentation.component.fields.FieldLabel
-import com.ataglance.walletglance.core.presentation.component.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.switches.SwitchWithLabel
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
+import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.picker.ColorPicker
+import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.switchButton.SwitchWithLabel
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
 @Composable
 fun EditAccountScreen(

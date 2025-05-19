@@ -38,7 +38,7 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
 import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.components.RecordCategory
+import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
@@ -47,13 +47,13 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.component.checkboxes.ThreeStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.checkbox.ThreeStateCheckbox
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.component.dividers.TextDivider
-import com.ataglance.walletglance.core.presentation.component.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
+import com.ataglance.walletglance.core.presentation.component.divider.TextDivider
+import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 
 @Composable
 fun EditCategoryCollectionScreen(

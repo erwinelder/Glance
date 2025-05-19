@@ -15,21 +15,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.RequestPasswordResetViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -65,11 +66,11 @@ fun RequestPasswordResetScreenWrapper(
 fun RequestPasswordResetScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
     onNavigateBack: () -> Unit,
-    emailState: ValidatedFieldUiState,
+    emailState: ValidatedFieldState,
     onEmailChange: (String) -> Unit,
     requestIsAllowed: Boolean,
     onRequestPasswordReset: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onCancelRequest: () -> Unit,
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit
@@ -115,7 +116,7 @@ fun RequestPasswordResetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    emailState: ValidatedFieldUiState,
+    emailState: ValidatedFieldState,
     onEmailChange: (String) -> Unit,
     onRequestPasswordReset: () -> Unit
 ) {
@@ -144,7 +145,7 @@ fun RequestPasswordResetScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RequestPasswordResetScreen(
             onNavigateBack = {},
-            emailState = ValidatedFieldUiState(
+            emailState = ValidatedFieldState(
                 fieldText = email,
                 validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(email)
                     .toUiStates()

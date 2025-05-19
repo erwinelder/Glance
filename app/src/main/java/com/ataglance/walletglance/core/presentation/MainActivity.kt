@@ -20,7 +20,7 @@ import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
-import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

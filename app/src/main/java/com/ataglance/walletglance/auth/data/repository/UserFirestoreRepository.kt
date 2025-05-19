@@ -3,7 +3,7 @@ package com.ataglance.walletglance.auth.data.repository
 import com.ataglance.walletglance.auth.data.model.UserData
 import com.ataglance.walletglance.core.data.mapper.toUserData
 import com.ataglance.walletglance.core.data.mapper.toUserDataMap
-import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore

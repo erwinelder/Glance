@@ -22,14 +22,14 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
-import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
+import com.ataglance.walletglance.settings.presentation.screenContainer.SettingsCategoryScreenContainer
 
 @Composable
 fun SubscriptionsScreenWrapper(

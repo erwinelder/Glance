@@ -3,9 +3,9 @@ package com.ataglance.walletglance.auth.mapper
 import com.ataglance.walletglance.auth.data.model.UserDto
 import com.ataglance.walletglance.auth.data.model.UserRoleDto
 import com.ataglance.walletglance.auth.data.model.UserWithTokenDto
-import com.ataglance.walletglance.auth.domain.model.User
-import com.ataglance.walletglance.auth.domain.model.UserRole
-import com.ataglance.walletglance.auth.domain.model.UserWithToken
+import com.ataglance.walletglance.auth.domain.model.user.User
+import com.ataglance.walletglance.auth.domain.model.user.UserRole
+import com.ataglance.walletglance.auth.domain.model.user.UserWithToken
 import com.ataglance.walletglance.billing.mapper.toDomainModel
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 

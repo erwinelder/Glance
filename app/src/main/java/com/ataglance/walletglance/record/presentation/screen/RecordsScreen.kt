@@ -31,8 +31,8 @@ import com.ataglance.walletglance.categoryCollection.presentation.model.Category
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.component.screenContainers.GlassSurfaceScreenContainerWithFilters
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainerWithFilters
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
@@ -43,8 +43,8 @@ import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.record.mapper.toRecordStacks
-import com.ataglance.walletglance.record.presentation.components.RecordStackComponent
-import com.ataglance.walletglance.record.presentation.components.TransferComponent
+import com.ataglance.walletglance.record.presentation.component.RecordStackComponent
+import com.ataglance.walletglance.record.presentation.component.TransferComponent
 
 @Composable
 fun RecordsScreen(

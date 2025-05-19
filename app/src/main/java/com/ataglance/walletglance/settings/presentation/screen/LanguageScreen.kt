@@ -14,15 +14,16 @@ import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.utils.takeComposableIf
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.MessageState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
-import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
+import com.ataglance.walletglance.settings.presentation.component.LanguagePicker
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
-import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
+import com.ataglance.walletglance.settings.presentation.screenContainer.SettingsCategoryScreenContainer
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -63,7 +64,7 @@ fun LanguageScreen(
     onSelectLangCode: (String) -> Unit,
     onApplyLanguage: () -> Unit,
     onContinueButton: () -> Unit,
-    requestState: RequestState?
+    requestState: RequestState<MessageState>?
 ) {
     val appTheme = CurrAppTheme
     val thisCategory = remember {

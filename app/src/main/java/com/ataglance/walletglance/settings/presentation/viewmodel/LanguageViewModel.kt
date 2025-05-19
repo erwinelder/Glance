@@ -3,16 +3,15 @@ package com.ataglance.walletglance.settings.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUseCase
 import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.utils.getCurrentEpochTimestamp
-import com.ataglance.walletglance.errorHandling.domain.model.result.AuthSuccess
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultWithButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.MessageState
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageLocallyUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageUseCase
@@ -74,7 +73,7 @@ class LanguageViewModel(
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState?>(null)
+    private val _requestState = MutableStateFlow<RequestState<MessageState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
@@ -83,7 +82,7 @@ class LanguageViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ResultWithButtonState) {
+    private fun setRequestResultState(result: MessageState) {
         _requestState.update { RequestState.Result(resultState = result) }
     }
 

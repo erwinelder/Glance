@@ -1,10 +1,10 @@
 package com.ataglance.walletglance.auth.domain.usecase
 
 import com.ataglance.walletglance.auth.data.repository.AuthRepository
-import com.ataglance.walletglance.auth.domain.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.auth.mapper.toDomainModel
 import com.ataglance.walletglance.core.data.local.preferences.SecureStorage
-import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.settings.domain.usecase.GetUserProfileLocalTimestampUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageLocallyUseCase

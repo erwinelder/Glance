@@ -12,22 +12,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.DeleteAccountViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,11 +66,11 @@ fun DeleteAccountScreenWrapper(
 fun DeleteAccountScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
     onNavigateBack: () -> Unit,
-    passwordState: ValidatedFieldUiState,
+    passwordState: ValidatedFieldState,
     onPasswordChange: (String) -> Unit,
     deletionIsAllowed: Boolean,
     onDeleteAccount: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onCancelRequest: () -> Unit,
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit
@@ -116,7 +117,7 @@ fun DeleteAccountScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    passwordState: ValidatedFieldUiState,
+    passwordState: ValidatedFieldState,
     onPasswordChange: (String) -> Unit,
     onDeleteAccount: () -> Unit
 ) {
@@ -145,7 +146,7 @@ fun DeleteAccountScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         DeleteAccountScreen(
             onNavigateBack = {},
-            passwordState = ValidatedFieldUiState(
+            passwordState = ValidatedFieldState(
                 fieldText = password,
                 validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password)
                     .toUiStates()

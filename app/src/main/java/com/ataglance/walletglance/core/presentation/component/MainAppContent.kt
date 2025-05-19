@@ -13,9 +13,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
-import com.ataglance.walletglance.core.presentation.component.pickers.DateRangeAssetsPickerContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.DimmedBackgroundOverlay
-import com.ataglance.walletglance.core.presentation.component.screenContainers.MainScaffold
+import com.ataglance.walletglance.core.presentation.component.picker.DateRangeAssetsPickerContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.DimmedBackgroundOverlay
+import com.ataglance.walletglance.core.presentation.component.screenContainer.MainScaffold
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs

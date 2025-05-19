@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.settings.domain.usecase.language
 
-import com.ataglance.walletglance.auth.domain.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.utils.getCurrentEpochTimestamp
 
 class SaveLanguageUseCaseImpl(

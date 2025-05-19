@@ -7,8 +7,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 
 @Composable

@@ -22,21 +22,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -101,18 +102,18 @@ fun SignUpScreenWrapper(
 @Composable
 fun SignUpScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
-    nameState: ValidatedFieldUiState,
+    nameState: ValidatedFieldState,
     onNameChange: (String) -> Unit,
-    emailState: ValidatedFieldUiState,
+    emailState: ValidatedFieldState,
     onEmailChange: (String) -> Unit,
-    passwordState: ValidatedFieldUiState,
+    passwordState: ValidatedFieldState,
     onPasswordChange: (String) -> Unit,
-    confirmPasswordState: ValidatedFieldUiState,
+    confirmPasswordState: ValidatedFieldState,
     onConfirmPasswordChange: (String) -> Unit,
     signUpIsAllowed: Boolean,
     onSignUp: () -> Unit,
     onNavigateToSignInScreen: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onCancelRequest: () -> Unit,
     onErrorClose: () -> Unit
 ) {
@@ -160,13 +161,13 @@ fun SignUpScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    nameState: ValidatedFieldUiState,
+    nameState: ValidatedFieldState,
     onNameChange: (String) -> Unit,
-    emailState: ValidatedFieldUiState,
+    emailState: ValidatedFieldState,
     onEmailChange: (String) -> Unit,
-    passwordState: ValidatedFieldUiState,
+    passwordState: ValidatedFieldState,
     onPasswordChange: (String) -> Unit,
-    confirmPasswordState: ValidatedFieldUiState,
+    confirmPasswordState: ValidatedFieldState,
     onConfirmPasswordChange: (String) -> Unit,
     onSignUp: () -> Unit
 ) {
@@ -224,19 +225,19 @@ fun SignUpScreenPreview(
     val confirmPassword = "_Password111111"
     val passwordsMatch = true
 
-    val nameState = ValidatedFieldUiState(
+    val nameState = ValidatedFieldState(
         fieldText = name,
         validationStates = UserDataValidator.validateName(name).toUiStates()
     )
-    val emailState = ValidatedFieldUiState(
+    val emailState = ValidatedFieldState(
         fieldText = email,
         validationStates = UserDataValidator.validateEmail(email).toUiStates()
     )
-    val passwordState = ValidatedFieldUiState(
+    val passwordState = ValidatedFieldState(
         fieldText = password,
         validationStates = UserDataValidator.validatePassword(password).toUiStates()
     )
-    val confirmPasswordState = ValidatedFieldUiState(
+    val confirmPasswordState = ValidatedFieldState(
         fieldText = confirmPassword,
         validationStates = UserDataValidator
             .validateConfirmationPassword(password, confirmPassword)

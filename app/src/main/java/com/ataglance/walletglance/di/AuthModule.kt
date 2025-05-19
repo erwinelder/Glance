@@ -2,7 +2,7 @@ package com.ataglance.walletglance.di
 
 import com.ataglance.walletglance.auth.data.repository.AuthRepository
 import com.ataglance.walletglance.auth.data.repository.AuthRepositoryImpl
-import com.ataglance.walletglance.auth.domain.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCase
 import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.CheckTokenValidityUseCase

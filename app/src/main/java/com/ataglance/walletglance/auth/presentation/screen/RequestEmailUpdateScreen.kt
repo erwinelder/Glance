@@ -18,22 +18,23 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdateEmailViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -83,13 +84,13 @@ fun RequestEmailUpdateScreenWrapper(
 fun RequestEmailUpdateScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
     onNavigateBack: () -> Unit,
-    passwordState: ValidatedFieldUiState,
+    passwordState: ValidatedFieldState,
     onPasswordChange: (String) -> Unit,
-    newEmailState: ValidatedFieldUiState,
+    newEmailState: ValidatedFieldState,
     onNewEmailChange: (String) -> Unit,
     emailUpdateIsAllowed: Boolean,
     onRequestEmailUpdate: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onCancelRequest: () -> Unit,
     onErrorClose: () -> Unit
 ) {
@@ -135,9 +136,9 @@ fun RequestEmailUpdateScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    passwordState: ValidatedFieldUiState,
+    passwordState: ValidatedFieldState,
     onPasswordChange: (String) -> Unit,
-    newEmailState: ValidatedFieldUiState,
+    newEmailState: ValidatedFieldState,
     onNewEmailChange: (String) -> Unit,
     onRequestUpdateEmail: () -> Unit
 ) {
@@ -174,9 +175,9 @@ fun RequestEmailUpdateScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RequestEmailUpdateScreen(
             onNavigateBack = {},
-            passwordState = ValidatedFieldUiState(),
+            passwordState = ValidatedFieldState(),
             onPasswordChange = {},
-            newEmailState = ValidatedFieldUiState(
+            newEmailState = ValidatedFieldState(
                 fieldText = newEmail,
                 validationStates = UserDataValidator.validateEmail(newEmail).toUiStates()
             ),

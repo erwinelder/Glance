@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.usecase.SignInWithEmailAndPasswordUseCase
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
-import com.ataglance.walletglance.errorHandling.mapper.toResultWithButtonState
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultWithButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +25,7 @@ class SignInViewModel(
 ) : ViewModel() {
 
     private val _emailState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             fieldText = email,
             validationStates = UserDataValidator.validateEmail(email).toUiStates()
         )
@@ -43,7 +43,7 @@ class SignInViewModel(
 
 
     private val _passwordState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             validationStates = UserDataValidator.validateRequiredFieldIsNotBlank("").toUiStates()
         )
     )
@@ -94,7 +94,7 @@ class SignInViewModel(
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState?>(null)
+    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
@@ -103,7 +103,7 @@ class SignInViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ResultWithButtonState) {
+    private fun setRequestResultState(result: ButtonState) {
         _requestState.update { RequestState.Result(resultState = result) }
     }
 

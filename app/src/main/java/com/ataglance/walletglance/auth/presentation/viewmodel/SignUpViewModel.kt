@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCase
 import com.ataglance.walletglance.auth.domain.usecase.SignUpUseCase
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.mapper.toResultWithButtonState
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
+import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultWithButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,7 +29,7 @@ class SignUpViewModel(
 ) : ViewModel() {
 
     private val _nameState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             validationStates = UserDataValidator.validateName("").toUiStates()
         )
     )
@@ -46,7 +46,7 @@ class SignUpViewModel(
 
 
     private val _emailState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             fieldText = email,
             validationStates = UserDataValidator.validateEmail(email).toUiStates()
         )
@@ -64,7 +64,7 @@ class SignUpViewModel(
 
 
     private val _passwordState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             validationStates = UserDataValidator.validatePassword("").toUiStates()
         )
     )
@@ -81,7 +81,7 @@ class SignUpViewModel(
 
 
     private val _confirmPasswordState = MutableStateFlow(
-        ValidatedFieldUiState(
+        ValidatedFieldState(
             validationStates = UserDataValidator
                 .validateConfirmationPassword(password = "", confirmationPassword = "")
                 .toUiStates()
@@ -161,7 +161,7 @@ class SignUpViewModel(
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState?>(null)
+    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState(@StringRes messageRes: Int) {
@@ -170,7 +170,7 @@ class SignUpViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ResultWithButtonState) {
+    private fun setRequestResultState(result: ButtonState) {
         _requestState.update { RequestState.Result(resultState = result) }
     }
 

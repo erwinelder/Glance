@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryTextButton
-import com.ataglance.walletglance.core.presentation.component.dividers.BottomSheetHandle
+import com.ataglance.walletglance.core.presentation.component.divider.BottomSheetHandle
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @OptIn(ExperimentalMaterial3Api::class)

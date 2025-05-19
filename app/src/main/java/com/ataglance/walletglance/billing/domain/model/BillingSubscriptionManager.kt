@@ -16,12 +16,12 @@ import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
-import com.ataglance.walletglance.auth.domain.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.billing.domain.mapper.getProductDetails
 import com.ataglance.walletglance.billing.domain.mapper.getProductsDetails
 import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
 import com.ataglance.walletglance.billing.domain.usecase.UpdateUserSubscriptionUseCase
-import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
+import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

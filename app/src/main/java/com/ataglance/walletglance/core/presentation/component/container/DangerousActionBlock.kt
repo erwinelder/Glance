@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryDangerousButton
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackButton
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackButton
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

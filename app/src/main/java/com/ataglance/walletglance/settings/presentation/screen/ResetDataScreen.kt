@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.container.DangerousActionBlock
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel

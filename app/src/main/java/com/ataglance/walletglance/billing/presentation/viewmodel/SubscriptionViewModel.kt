@@ -10,9 +10,9 @@ import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManage
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiState
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiStateList
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
-import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
+import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.mapper.toResultState
+import com.ataglance.walletglance.auth.mapper.toResultState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

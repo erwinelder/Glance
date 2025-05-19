@@ -21,11 +21,12 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
-import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -62,7 +63,7 @@ fun VerifyEmailUpdateScreenWrapper(
 fun VerifyEmailUpdateScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
     onVerify: () -> Unit,
-    requestState: RequestState?,
+    requestState: RequestState<ButtonState>?,
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit
 ) {
