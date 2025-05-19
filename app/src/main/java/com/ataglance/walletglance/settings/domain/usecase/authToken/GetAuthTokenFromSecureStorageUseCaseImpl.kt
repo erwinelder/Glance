@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.auth.domain.usecase
+package com.ataglance.walletglance.settings.domain.usecase.authToken
 
 import com.ataglance.walletglance.core.data.local.preferences.SecureStorage
 

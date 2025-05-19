@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.settings.domain.usecase
+package com.ataglance.walletglance.settings.domain.usecase.theme
 
 import com.ataglance.walletglance.core.domain.app.AppTheme
 

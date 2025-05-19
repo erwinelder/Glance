@@ -97,7 +97,7 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
         AuthError.UserNotSignedIn,
         AuthError.RequestDataNotValid,
         AuthError.SessionExpired -> R.string.oops
-        AuthError.AppUpdateRequired -> R.string.update_required // TODO: move to core error
+        AuthError.AppUpdateRequired -> R.string.update_required
         AuthError.InvalidCredentials,
         AuthError.ReauthenticationError,
         AuthError.EmailNotVerified,
@@ -114,8 +114,7 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
         AuthError.PasswordUpdateError,
         AuthError.ResetPasswordRequestError,
         AuthError.PasswordResetError,
-        AuthError.AccountNotDeleted,
-        AuthError.LanguageNotSaved -> R.string.oops
+        AuthError.AccountNotDeleted -> R.string.oops
     }
 }
 
@@ -142,7 +141,6 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
         AuthError.ResetPasswordRequestError -> R.string.password_reset_request_failed_message
         AuthError.PasswordResetError -> R.string.password_reset_failed_message
         AuthError.AccountNotDeleted -> R.string.account_deletion_failed_message
-        AuthError.LanguageNotSaved -> R.string.language_not_saved_message
     }
 }
 
@@ -169,7 +167,6 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
         AuthError.ResetPasswordRequestError -> R.string.close
         AuthError.PasswordResetError -> R.string.close
         AuthError.AccountNotDeleted -> R.string.close
-        AuthError.LanguageNotSaved -> R.string.close
     }
 }
 
@@ -196,6 +193,5 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
         AuthError.ResetPasswordRequestError -> R.drawable.close_icon
         AuthError.PasswordResetError -> R.drawable.close_icon
         AuthError.AccountNotDeleted -> R.drawable.close_icon
-        AuthError.LanguageNotSaved -> R.drawable.close_icon
     }
 }

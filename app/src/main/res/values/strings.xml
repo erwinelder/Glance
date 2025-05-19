@@ -67,7 +67,7 @@
     <string name="delete_account">Delete account</string>
     <string name="manage_subscriptions">Manage subscriptions</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Start</string>
     <string name="finish">Finish</string>
     <string name="_import">Import</string>
@@ -78,6 +78,9 @@
 
     <!-- Settings loaders -->
     <string name="saving_language_loader">Saving language…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">Not saved</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -200,7 +203,6 @@
     <string name="password_reset_request_failed_message">An error occurred while requesting a password reset.</string>
     <string name="password_reset_failed_message">An error occurred while resetting your password.</string>
     <string name="account_deletion_failed_message">An error occurred while deleting your account.</string>
-    <string name="language_not_saved_message">Language preference was not saved.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Subscribed successfully</string>

@@ -66,7 +66,7 @@
     <string name="delete_account">Видалити акаунт</string>
     <string name="manage_subscriptions">Керувати підписками</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Старт</string>
     <string name="finish">Завершити</string>
     <string name="_import">Імпорт</string>
@@ -77,6 +77,9 @@
 
     <!-- Settings loaders -->
     <string name="saving_language_loader">Збереження мови…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">Не збережено</string>
 
     <!-- Fields -->
     <string name="email">Електронна пошта</string>
@@ -199,7 +202,6 @@
     <string name="password_reset_request_failed_message">Сталася помилка під час запиту на скидання пароля.</string>
     <string name="password_reset_failed_message">Під час скидання пароля сталася помилка.</string>
     <string name="account_deletion_failed_message">Під час видалення вашого акаунта сталася помилка.</string>
-    <string name="language_not_saved_message">Налаштування мови не було збережено.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Підписку успішно оформлено</string>

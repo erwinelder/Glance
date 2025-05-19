@@ -1,12 +1,8 @@
 package com.ataglance.walletglance.di
 
 import com.ataglance.walletglance.settings.data.repository.SettingsRepository
-import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCase
-import com.ataglance.walletglance.settings.domain.usecase.ChangeAppLookPreferencesUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCaseImpl
-import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.GetUserProfileLocalTimestampUseCase
@@ -21,8 +17,10 @@ import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageR
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageToPreferencesUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageToPreferencesUseCaseImpl
-import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageUseCase
-import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageUseCaseImpl
+import com.ataglance.walletglance.settings.domain.usecase.theme.ChangeAppLookPreferencesUseCase
+import com.ataglance.walletglance.settings.domain.usecase.theme.ChangeAppLookPreferencesUseCaseImpl
+import com.ataglance.walletglance.settings.domain.usecase.theme.GetAppThemeConfigurationUseCase
+import com.ataglance.walletglance.settings.domain.usecase.theme.GetAppThemeConfigurationUseCaseImpl
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
 import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
 import org.koin.core.module.dsl.viewModel
@@ -60,13 +58,6 @@ val settingsModule = module {
     single<SaveLanguageRemotelyUseCase> {
         SaveLanguageRemotelyUseCaseImpl(authRepository = get())
     }
-    single<SaveLanguageUseCase> {
-        SaveLanguageUseCaseImpl(
-            saveLanguageLocallyUseCase = get(),
-            saveLanguageRemotelyUseCase = get(),
-            userContext = get()
-        )
-    }
 
     single<GetAppThemeConfigurationUseCase> {
         GetAppThemeConfigurationUseCaseImpl(settingsRepository = get())
@@ -89,8 +80,10 @@ val settingsModule = module {
     viewModel { parameters ->
         LanguageViewModel(
             currentLangCode = parameters.get(),
-            saveLanguageUseCase = get(),
-            translateCategoriesUseCase = get()
+            translateCategoriesUseCase = get(),
+            saveLanguageLocallyUseCase = get(),
+            saveLanguageRemotelyUseCase = get(),
+            userContext = get()
         )
     }
 

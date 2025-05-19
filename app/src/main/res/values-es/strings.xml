@@ -67,7 +67,7 @@
     <string name="delete_account">Eliminar cuenta</string>
     <string name="manage_subscriptions">Gestionar suscripciones</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Iniciar</string>
     <string name="finish">Finalizar</string>
     <string name="_import">Importar</string>
@@ -78,6 +78,9 @@
 
     <!-- Settings loaders -->
     <string name="saving_language_loader">Guardando idioma…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">No guardado</string>
 
     <!-- Fields -->
     <string name="email">Correo electrónico</string>
@@ -200,7 +203,6 @@
     <string name="password_reset_request_failed_message">Ocurrió un error al solicitar el restablecimiento de la contraseña.</string>
     <string name="password_reset_failed_message">Ocurrió un error al restablecer tu contraseña.</string>
     <string name="account_deletion_failed_message">Ocurrió un error al eliminar tu cuenta.</string>
-    <string name="language_not_saved_message">La preferencia de idioma no se guardó.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Suscripción realizada con éxito</string>

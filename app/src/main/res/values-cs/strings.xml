@@ -67,7 +67,7 @@
     <string name="delete_account">Smazat účet</string>
     <string name="manage_subscriptions">Spravovat předplatná</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Start</string>
     <string name="finish">Dokončit</string>
     <string name="_import">Import</string>
@@ -78,6 +78,9 @@
 
     <!-- Settings loaders -->
     <string name="saving_language_loader">Ukládání jazyka…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">Neuloženo</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -200,7 +203,6 @@
     <string name="password_reset_request_failed_message">Při požadavku na resetování hesla došlo k chybě.</string>
     <string name="password_reset_failed_message">Při resetování hesla došlo k chybě.</string>
     <string name="account_deletion_failed_message">Při mazání vašeho účtu došlo k chybě.</string>
-    <string name="language_not_saved_message">Jazykové nastavení nebylo uloženo.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Předplatné úspěšně aktivováno</string>

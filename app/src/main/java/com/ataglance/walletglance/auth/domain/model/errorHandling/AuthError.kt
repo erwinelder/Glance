@@ -23,6 +23,5 @@ enum class AuthError : Error {
     PasswordUpdateError,
     ResetPasswordRequestError,
     PasswordResetError,
-    AccountNotDeleted,
-    LanguageNotSaved
+    AccountNotDeleted
 }

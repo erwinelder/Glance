@@ -66,7 +66,7 @@
     <string name="delete_account">Konto löschen</string>
     <string name="manage_subscriptions">Abonnements verwalten</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Start</string>
     <string name="finish">Abschließen</string>
     <string name="_import">Importieren</string>
@@ -77,6 +77,9 @@
 
     <!-- Settings loaders -->
     <string name="saving_language_loader">Sprache wird gespeichert…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">Nicht gespeichert</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -199,7 +202,6 @@
     <string name="password_reset_request_failed_message">Beim Anfordern einer Passwortzurücksetzung ist ein Fehler aufgetreten.</string>
     <string name="password_reset_failed_message">Beim Zurücksetzen Ihres Passworts ist ein Fehler aufgetreten.</string>
     <string name="account_deletion_failed_message">Beim Löschen Ihres Kontos ist ein Fehler aufgetreten.</string>
-    <string name="language_not_saved_message">Die Spracheinstellung wurde nicht gespeichert.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Abo erfolgreich abgeschlossen</string>

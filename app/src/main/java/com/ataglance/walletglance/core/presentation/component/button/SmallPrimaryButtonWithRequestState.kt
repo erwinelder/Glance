@@ -1,9 +1,11 @@
 package com.ataglance.walletglance.core.presentation.component.button
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -14,12 +16,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -31,10 +35,13 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.MessageState
 
 @Composable
-fun SmallPrimaryButton(
+fun SmallPrimaryButtonWithRequestState(
     text: String,
+    requestState: RequestState<MessageState>?,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
     enabledGradient: Pair<Color, Color> = GlanceColors.primaryGradientPair,
@@ -42,10 +49,12 @@ fun SmallPrimaryButton(
     onClick: () -> Unit
 ) {
     val lighterGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.first else GlanceColors.disabledGradientPair.first
+        targetValue = if (enabled && requestState == null) enabledGradient.first else
+            GlanceColors.disabledGradientPair.first
     )
     val darkerGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second
+        targetValue = if (enabled && requestState == null) enabledGradient.second else
+            GlanceColors.disabledGradientPair.second
     )
 
     Button(
@@ -69,29 +78,58 @@ fun SmallPrimaryButton(
                 )
             )
     ) {
-        iconRes?.let {
-            Icon(
-                painter = painterResource(it),
-                contentDescription = "$text button icon",
-                tint = GlanceColors.onPrimary,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+        AnimatedContent(
+            targetState = requestState
+        ) { state ->
+            when (state) {
+                null -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        iconRes?.let {
+                            Icon(
+                                painter = painterResource(it),
+                                contentDescription = "$text button icon",
+                                tint = GlanceColors.onPrimary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                        Text(
+                            text = text,
+                            fontSize = fontSize,
+                            fontFamily = Manrope
+                        )
+                    }
+                }
+                is RequestState.Loading -> {
+                    Text(
+                        text = stringResource(state.messageRes),
+                        fontSize = fontSize,
+                        fontFamily = Manrope
+                    )
+                }
+                is RequestState.Result -> {
+                    Text(
+                        text = stringResource(state.resultState.messageRes),
+                        fontSize = fontSize,
+                        fontFamily = Manrope
+                    )
+                }
+            }
         }
-        Text(
-            text = text,
-            fontSize = fontSize,
-            fontFamily = Manrope
-        )
     }
 }
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun PreviewPrimarySmallButton() {
+    val requestState = null
+//    val requestState = RequestState.Loading<MessageState>(R.string.saving_language_loader)
+//    val requestState = RequestState.Result<MessageState>(MessageState(false, R.string.not_saved))
+
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        SmallPrimaryButton(
+        SmallPrimaryButtonWithRequestState(
             text = "ApplyApplyApply",
+            requestState = requestState,
             iconRes = R.drawable.close_icon,
             onClick = {}
         )

@@ -1,7 +1,7 @@
-package com.ataglance.walletglance.settings.domain.usecase
+package com.ataglance.walletglance.settings.domain.usecase.theme
 
-import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import kotlinx.coroutines.flow.firstOrNull
 
 class ChangeAppLookPreferencesUseCaseImpl(

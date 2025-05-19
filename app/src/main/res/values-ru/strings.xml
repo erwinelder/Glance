@@ -66,7 +66,7 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="manage_subscriptions">Управлять подписками</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Старт</string>
     <string name="finish">Завершить</string>
     <string name="_import">Импорт</string>
@@ -77,6 +77,9 @@
 
     <!-- Settings loaders -->
     <string name="saving_language_loader">Сохранение языка…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">Не сохранено</string>
 
     <!-- Fields -->
     <string name="email">Электронная почта</string>
@@ -199,7 +202,6 @@
     <string name="password_reset_request_failed_message">Произошла ошибка при запросе сброса пароля.</string>
     <string name="password_reset_failed_message">Произошла ошибка при сбросе пароля.</string>
     <string name="account_deletion_failed_message">Произошла ошибка при удалении вашего аккаунта.</string>
-    <string name="language_not_saved_message">Языковые настройки не были сохранены.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Подписка успешно оформлена</string>

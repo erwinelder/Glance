@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
@@ -25,6 +27,7 @@ sealed class GlancePalette(
     val primary: Color,
     val primaryGradient: List<Color>,
     val primaryGradientPair: Pair<Color, Color> = Pair(primaryGradient[0], primaryGradient[1]),
+    val primaryGlassBorder: Color,
     val onPrimary: Color,
 
     val glassGradient: List<Color>,
@@ -73,6 +76,7 @@ sealed class GlancePalette(
             Color(182, 103, 149),
             Color(117, 68, 98)
         ),
+        primaryGlassBorder = Color(165, 93, 135, 69),
         onPrimary = Color(255, 255, 255),
 
         glassGradient = listOf(
@@ -154,6 +158,7 @@ sealed class GlancePalette(
             Color(168, 90, 133),
             Color(105, 55, 82)
         ),
+        primaryGlassBorder = Color(154, 92, 128, 69),
         onPrimary = Color(231, 212, 225),
 
         glassGradient = listOf(
@@ -233,7 +238,43 @@ sealed class GlancePalette(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-private fun PreviewColors() {
+private fun PreviewColorsLightDefault() {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(40.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            GlassSurface {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp)
+                ) {
+                    LargePrimaryIcon(
+                        iconRes = R.drawable.error_large_icon,
+                        gradientColor = GlanceColors.errorGradient,
+                        iconDescription = ""
+                    )
+                    GlassSurfaceOnGlassSurface {
+                        Box(
+                            modifier = Modifier.size(150.dp, 100.dp)
+                        )
+                    }
+                }
+            }
+            PrimaryButton(text = "Save and continue")
+            SecondaryButton(text = "Apply") { }
+            SmallSecondaryButton(text = "Apply") { }
+        }
+    }
+}
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+private fun PreviewColorsDarkDefault() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -261,6 +302,8 @@ private fun PreviewColors() {
                 }
             }
             PrimaryButton(text = "Save and continue")
+            SecondaryButton(text = "Apply") { }
+            SmallSecondaryButton(text = "Apply") { }
         }
     }
 }

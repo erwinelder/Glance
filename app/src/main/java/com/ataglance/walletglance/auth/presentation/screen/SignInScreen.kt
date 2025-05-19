@@ -17,8 +17,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -32,7 +33,6 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.utils.takeActionIf
-import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState

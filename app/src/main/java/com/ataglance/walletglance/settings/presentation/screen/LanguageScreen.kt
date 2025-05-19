@@ -13,7 +13,7 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButtonWithRequestState
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.utils.takeComposableIf
@@ -80,8 +80,9 @@ fun LanguageScreen(
                 currentLangCode = chosenLanguage,
                 onLangCodeSelect = onSelectLangCode
             )
-            SmallPrimaryButton(
+            SmallPrimaryButtonWithRequestState(
                 text = stringResource(R.string.apply),
+                requestState = requestState,
                 enabled = appLanguage != chosenLanguage,
                 onClick = onApplyLanguage
             )

@@ -1,22 +1,24 @@
 package com.ataglance.walletglance.auth.domain.usecase
 
 import com.ataglance.walletglance.auth.data.repository.AuthRepository
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.auth.mapper.toDomainModel
 import com.ataglance.walletglance.core.data.local.preferences.SecureStorage
-import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.settings.domain.usecase.GetUserProfileLocalTimestampUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageLocallyUseCase
-import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCaseImpl
+import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCase
 
 class CheckTokenValidityUseCaseImpl(
     private val secureStorage: SecureStorage,
     private val authRepository: AuthRepository,
     private val userContext: UserContext,
     private val getUserProfileLocalTimestampUseCase: GetUserProfileLocalTimestampUseCase,
+    private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
     private val saveLanguageLocallyUseCase: SaveLanguageLocallyUseCase,
-    private val saveLanguagePreferenceRemotelyUseCaseImpl: SaveLanguageRemotelyUseCaseImpl
+    private val saveLanguagePreferenceRemotelyUseCase: SaveLanguageRemotelyUseCase
 ) : CheckTokenValidityUseCase {
 
     override suspend fun execute(): ResultData<Unit, AuthError> {
@@ -31,7 +33,7 @@ class CheckTokenValidityUseCaseImpl(
             userContext.saveUser(user = user)
             syncDataIfRequired(
                 remoteTimestamp = data.timestamp,
-                langCode = user.language.languageCode
+                remoteLangCode = user.language.languageCode
             )
         }
 
@@ -40,16 +42,19 @@ class CheckTokenValidityUseCaseImpl(
 
     private suspend fun syncDataIfRequired(
         remoteTimestamp: Long,
-        langCode: String
+        remoteLangCode: String
     ) {
         val localTimestamp = getUserProfileLocalTimestampUseCase.get()
         if (remoteTimestamp == localTimestamp) return
 
         if (remoteTimestamp > localTimestamp) {
-            saveLanguageLocallyUseCase.execute(langCode = langCode, timestamp = remoteTimestamp)
+            saveLanguageLocallyUseCase.execute(
+                langCode = remoteLangCode, timestamp = remoteTimestamp
+            )
         } else {
-            saveLanguagePreferenceRemotelyUseCaseImpl.execute(
-                langCode = langCode, timestamp = localTimestamp
+            val localLangCode = getLanguagePreferenceUseCase.get()
+            saveLanguagePreferenceRemotelyUseCase.execute(
+                langCode = localLangCode, timestamp = localTimestamp
             )
         }
     }

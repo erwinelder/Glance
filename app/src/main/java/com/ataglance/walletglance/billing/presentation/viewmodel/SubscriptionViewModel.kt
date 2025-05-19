@@ -7,12 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
 import com.ataglance.walletglance.billing.domain.model.AppSubscriptions
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
+import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiState
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiStateList
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
-import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.auth.mapper.toResultState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,9 +58,9 @@ class SubscriptionViewModel(
                     is ResultData.Success -> ResultData.Success(purchaseResult.data)
                     is ResultData.Error -> ResultData.Error(purchaseResult.error)
                 }
-                _purchaseResult.update {
-                    result.toResultState()
-                }
+//                _purchaseResult.update {
+//                    result.toResultState()
+//                }
             }
         }
     }

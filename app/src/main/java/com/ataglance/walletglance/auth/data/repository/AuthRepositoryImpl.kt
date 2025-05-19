@@ -9,13 +9,15 @@ import com.ataglance.walletglance.auth.data.model.UpdatePasswordRequestDto
 import com.ataglance.walletglance.auth.data.model.UserCredentialsDto
 import com.ataglance.walletglance.auth.data.model.UserDto
 import com.ataglance.walletglance.auth.data.model.UserWithTokenDto
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.data.remote.glanciBackendUrl
 import com.ataglance.walletglance.core.data.remote.httpClient
-import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
-import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
+import com.ataglance.walletglance.errorHandling.domain.model.result.Error
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
+import com.ataglance.walletglance.settings.errorHandling.SettingsError
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -311,7 +313,7 @@ class AuthRepositoryImpl(
 
     override suspend fun saveLanguage(
         saveLanguageRequest: SaveLanguageRequestDto
-    ): ResultData<Unit, AuthError> {
+    ): ResultData<Unit, Error> {
         val token = userContext.getAuthToken() ?: return ResultData.Error(AuthError.UserNotSignedIn)
 
         val response = try {
@@ -323,15 +325,15 @@ class AuthRepositoryImpl(
                 setBody(saveLanguageRequest)
             }
         } catch (_: Exception) {
-            return ResultData.Error(AuthError.LanguageNotSaved)
+            return ResultData.Error(SettingsError.NotSaved)
         }
 
         return when (response.status) {
             HttpStatusCode.OK -> ResultData.Success(Unit)
             HttpStatusCode.BadRequest -> ResultData.Error(AuthError.RequestDataNotValid)
-            HttpStatusCode.Unauthorized -> ResultData.Error(AuthError.InvalidCredentials)
-            HttpStatusCode.InternalServerError -> ResultData.Error(AuthError.LanguageNotSaved)
-            else -> ResultData.Error(AuthError.LanguageNotSaved)
+            HttpStatusCode.Unauthorized -> ResultData.Error(AuthError.SessionExpired)
+            HttpStatusCode.InternalServerError -> ResultData.Error(SettingsError.NotSaved)
+            else -> ResultData.Error(SettingsError.NotSaved)
         }
     }
 

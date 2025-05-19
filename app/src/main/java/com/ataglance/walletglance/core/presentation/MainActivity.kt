@@ -13,14 +13,13 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.domain.usecase.CheckTokenValidityUseCase
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
-import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -61,8 +60,7 @@ class MainActivity : AppCompatActivity() {
                     handleDeepLink(intent)
                 }
                 LaunchedEffect(true) {
-                    val checkTokenUseCase = GlobalContext.get().get<CheckTokenValidityUseCase>()
-                    val result = checkTokenUseCase.execute()
+                    val result = appViewModel.checkTokenValidity()
 
                     if (result !is ResultData.Error) return@LaunchedEffect
 

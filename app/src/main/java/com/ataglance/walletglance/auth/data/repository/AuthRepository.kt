@@ -10,6 +10,7 @@ import com.ataglance.walletglance.auth.data.model.UserDto
 import com.ataglance.walletglance.auth.data.model.UserWithTokenDto
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
+import com.ataglance.walletglance.errorHandling.domain.model.result.Error
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 
@@ -54,6 +55,6 @@ interface AuthRepository {
 
     suspend fun saveLanguage(
         saveLanguageRequest: SaveLanguageRequestDto
-    ): ResultData<Unit, AuthError>
+    ): ResultData<Unit, Error>
 
 }

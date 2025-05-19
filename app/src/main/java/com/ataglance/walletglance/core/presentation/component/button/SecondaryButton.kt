@@ -37,7 +37,7 @@ fun SecondaryButton(
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
-    val borderColor = if (enabled) GlanceColors.primary else GlanceColors.outline
+    val borderColor = if (enabled) GlanceColors.primaryGlassBorder else GlanceColors.outline
     val buttonLighterColor by animateColorAsState(
         targetValue = enabledGradientColor.second.copy(alpha = .5f)
     )
