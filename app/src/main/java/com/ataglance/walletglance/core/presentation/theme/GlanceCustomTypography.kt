@@ -14,8 +14,8 @@ data class GlanceCustomTypography(
         lineHeight = 46.sp
     ),
     val titleMedium: TextStyle = TextStyle(
-        fontSize = 28.sp,
-        fontWeight = FontWeight.W700,
+        fontSize = 32.sp,
+        fontWeight = FontWeight.W800,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Center,
         lineHeight = 40.sp

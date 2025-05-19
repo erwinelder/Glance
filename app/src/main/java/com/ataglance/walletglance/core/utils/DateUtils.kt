@@ -284,6 +284,15 @@ fun Int.getGreetingsWidgetTitleRes(): Int {
     }
 }
 
+fun Int.getGreetingsWithUsernameWidgetTitleRes(): Int {
+    return when (this) {
+        in 6..11 -> R.string.greetings_title_morning_username
+        in 12..17 -> R.string.greetings_title_afternoon_username
+        in 18..22 -> R.string.greetings_title_evening_username
+        else -> R.string.greetings_title_night_username
+    }
+}
+
 
 fun RepeatingPeriod.getColumnNameForColumnChart(
     dateRange: LongDateRange,

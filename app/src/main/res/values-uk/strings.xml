@@ -212,9 +212,13 @@
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>
+    <string name="greetings_title_morning_username">Доброго ранку, %s!</string>
     <string name="greetings_title_afternoon">Доброго дня!</string>
+    <string name="greetings_title_afternoon_username">Доброго дня, %s!</string>
     <string name="greetings_title_evening">Доброго вечора!</string>
+    <string name="greetings_title_evening_username">Доброго вечора, %s!</string>
     <string name="greetings_title_night">Доброї ночі!</string>
+    <string name="greetings_title_night_username">Доброї ночі, %s!</string>
     <string name="greetings_empty_message">Сьогодні ще не було жодних витрат</string>
     <string name="greetings_expenses_message">Сьогодні ви витратили %s %s</string>
     <string name="from_capital">Від</string>

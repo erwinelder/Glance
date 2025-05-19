@@ -8,31 +8,46 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.Typography
+import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
+import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.utils.getCurrentLocalDateTime
 import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
+import com.ataglance.walletglance.core.utils.getGreetingsWithUsernameWidgetTitleRes
+import org.koin.compose.koinInject
 
 @Composable
 fun GreetingsMessage() {
+    val userContext = koinInject<UserContext>()
+    val username by remember(userContext.name) {
+        mutableStateOf(userContext.name)
+    }
     val currentLocalDateTime = getCurrentLocalDateTime()
-    val greetingsTitleRes by remember(currentLocalDateTime.hour) {
+    val greetingsTitleRes by remember(currentLocalDateTime.hour, username) {
         derivedStateOf {
-            currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
+            if (username?.isNotBlank() == true) {
+                currentLocalDateTime.hour.getGreetingsWithUsernameWidgetTitleRes()
+            } else {
+                currentLocalDateTime.hour.getGreetingsWidgetTitleRes()
+            }
         }
     }
 
-    GreetingsMessageContent(message = stringResource(greetingsTitleRes))
+    username?.takeIf { it.isNotBlank() }
+        ?.let { GreetingsMessageContent(message = stringResource(greetingsTitleRes, it)) }
+        ?: GreetingsMessageContent(message = stringResource(greetingsTitleRes))
 }
 
 @Composable
@@ -46,7 +61,8 @@ fun GreetingsMessageContent(message: String) {
         Text(
             text = message,
             color = GlanceColors.onSurface,
-            style = Typography.titleMedium
+            style = GlanceTypography.titleMedium,
+            fontFamily = NotoSans
         )
     }
 }
@@ -56,6 +72,6 @@ fun GreetingsMessageContent(message: String) {
 @Composable
 fun GreetingsMessagePreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        GreetingsMessageContent(message = "Good afternoon!")
+        GreetingsMessageContent(message = "Good afternoon, username!")
     }
 }

@@ -212,9 +212,13 @@
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>
+    <string name="greetings_title_morning_username">Guten Morgen, %s!</string>
     <string name="greetings_title_afternoon">Guten Tag!</string>
+    <string name="greetings_title_afternoon_username">Guten Tag, %s!</string>
     <string name="greetings_title_evening">Guten Abend!</string>
+    <string name="greetings_title_evening_username">Guten Abend, %s!</string>
     <string name="greetings_title_night">Gute Nacht!</string>
+    <string name="greetings_title_night_username">Gute Nacht, %s!</string>
     <string name="greetings_empty_message">Heute Es wurden noch keine Spesen gemacht</string>
     <string name="greetings_expenses_message">Heute Sie haben bereits %s %s ausgegeben</string>
     <string name="from_capital">Von</string>

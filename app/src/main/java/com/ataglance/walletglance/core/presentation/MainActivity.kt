@@ -60,27 +60,7 @@ class MainActivity : AppCompatActivity() {
                     handleDeepLink(intent)
                 }
                 LaunchedEffect(true) {
-                    val result = appViewModel.checkTokenValidity()
-
-                    if (result !is ResultData.Error) return@LaunchedEffect
-
-                    when (result.error) {
-                        AuthError.AppUpdateRequired -> {
-                            navController.navigate(MainScreens.UpdateRequest) {
-                                popUpTo(0)
-                                launchSingleTop = true
-                            }
-                        }
-                        AuthError.SessionExpired -> {
-                            navController.navigate(AuthScreens.SignIn()) {
-                                popUpTo(0)
-                                launchSingleTop = true
-                            }
-                        }
-                        else -> {
-                            Log.e("MainActivity", "Error checking token validity: ${result.error}")
-                        }
-                    }
+                    checkTokenValidity()
                 }
 
                 GlanceAppComponent(
@@ -135,16 +115,39 @@ class MainActivity : AppCompatActivity() {
             launchSingleTop = true
         }
     }
-
     private fun processVerifyAndChangeEmailLink(obbCode: String) {
         navController.navigate(AuthScreens.VerifyEmailUpdate(oobCode = obbCode)) {
             launchSingleTop = true
         }
     }
-
     private fun processResetPasswordLink(oobCode: String) {
         navController.navigate(AuthScreens.ResetPassword(obbCode = oobCode)) {
             launchSingleTop = true
+        }
+    }
+
+
+    private suspend fun checkTokenValidity() {
+        val result = appViewModel.checkTokenValidity()
+
+        if (result !is ResultData.Error) return
+
+        when (result.error) {
+            AuthError.AppUpdateRequired -> {
+                navController.navigate(MainScreens.UpdateRequest) {
+                    popUpTo(0)
+                    launchSingleTop = true
+                }
+            }
+            AuthError.SessionExpired -> {
+                navController.navigate(AuthScreens.SignIn()) {
+                    popUpTo(0)
+                    launchSingleTop = true
+                }
+            }
+            else -> {
+                Log.e("MainActivity", "Error checking token validity: ${result.error}")
+            }
         }
     }
 
