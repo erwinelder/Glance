@@ -17,7 +17,7 @@ fun AnimatedScreenWithRequestState(
     onCancelRequest: (() -> Unit)? = null,
     onSuccessClose: () -> Unit = {},
     onErrorClose: () -> Unit,
-    screenContent: @Composable () -> Unit
+    screen: @Composable () -> Unit
 ) {
     SetBackHandler(enabled = requestState != null) {}
 
@@ -28,7 +28,7 @@ fun AnimatedScreenWithRequestState(
             .padding(screenPadding)
     ) { state ->
         if (state == null) {
-            screenContent()
+            screen()
         } else {
             RequestStateScreen(
                 state = state,

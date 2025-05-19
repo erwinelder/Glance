@@ -105,11 +105,11 @@ class SignUpViewModel(
 
     val signUpIsAllowed = combine(
         nameState, emailState, passwordState, confirmPasswordState
-    ) { nameState, emailState, passwordState, passwordConfirmationState ->
+    ) { nameState, emailState, passwordState, confirmPasswordState ->
         UserDataValidator.isValidName(name = nameState.fieldText) &&
                 UserDataValidator.isValidEmail(email = emailState.fieldText) &&
                 UserDataValidator.isValidPassword(password = passwordState.fieldText) &&
-                passwordState.fieldText == passwordConfirmationState.fieldText
+                passwordState.fieldText.trim() == confirmPasswordState.fieldText.trim()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
@@ -118,12 +118,13 @@ class SignUpViewModel(
 
 
     suspend fun signUp(): Boolean {
+        if (!signUpIsAllowed.value) return false
         setRequestLoadingState(messageRes = R.string.creating_your_identity_loader)
 
         val result = signUpUseCase.execute(
-            name = nameState.value.fieldText,
-            email = emailState.value.fieldText,
-            password = passwordState.value.fieldText
+            name = nameState.value.getTrimmedText(),
+            email = emailState.value.getTrimmedText(),
+            password = passwordState.value.getTrimmedText()
         )
 
         return when (result) {
@@ -146,8 +147,8 @@ class SignUpViewModel(
 
         checkVerificationJob = viewModelScope.launch {
             val result = checkEmailVerificationUseCase.execute(
-                email = emailState.value.fieldText,
-                password = passwordState.value.fieldText
+                email = emailState.value.getTrimmedText(),
+                password = passwordState.value.getTrimmedText()
             )
             setRequestResultState(result = result.toResultWithButtonState())
         }
@@ -155,6 +156,8 @@ class SignUpViewModel(
 
     fun cancelEmailVerificationCheck() {
         checkVerificationJob?.cancel()
+        checkVerificationJob = null
+        resetRequestState()
     }
 
 

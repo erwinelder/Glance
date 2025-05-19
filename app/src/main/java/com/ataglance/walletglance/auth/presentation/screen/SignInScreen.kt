@@ -17,7 +17,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
@@ -49,47 +48,55 @@ fun SignInScreenWrapper(
     appConfiguration: AppConfiguration,
     backStack: NavBackStackEntry
 ) {
-    val case = SignInCase.valueOf(backStack.toRoute<AuthScreens.SignIn>().case)
-
-    val signInViewModel = koinViewModel<SignInViewModel> {
+    val viewModel = koinViewModel<SignInViewModel> {
         parametersOf(
             backStack.toRoute<AuthScreens.SignIn>().email
         )
     }
 
-    val emailState by signInViewModel.emailState.collectAsStateWithLifecycle()
-    val passwordState by signInViewModel.passwordState.collectAsStateWithLifecycle()
-    val signInIsAllowed by signInViewModel.signInIsAllowed.collectAsStateWithLifecycle()
-    val requestState by signInViewModel.requestState.collectAsStateWithLifecycle()
+    val emailState by viewModel.emailState.collectAsStateWithLifecycle()
+    val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
+    val signInIsAllowed by viewModel.signInIsAllowed.collectAsStateWithLifecycle()
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     SignInScreen(
         emailState = emailState,
-        onEmailChange = signInViewModel::updateAndValidateEmail,
+        onEmailChange = viewModel::updateAndValidateEmail,
         passwordState = passwordState,
-        onPasswordChange = signInViewModel::updateAndValidatePassword,
+        onPasswordChange = viewModel::updateAndValidatePassword,
         signInIsAllowed = signInIsAllowed,
-        onSignIn = signInViewModel::signIn,
+        onSignIn = viewModel::signIn,
         onNavigateToRequestPasswordResetScreen = {
-            navViewModel.navigateToScreen(navController, AuthScreens.RequestPasswordReset)
+            navViewModel.navigateToScreen(
+                navController = navController,
+                screen = AuthScreens.RequestPasswordReset(email = emailState.fieldText)
+            )
         },
-        onNavigateToSignUpScreen = takeActionIf(case != SignInCase.AfterEmailChange) {
-            navViewModel.popBackStackAndNavigate(navController, AuthScreens.SignUp)
+        onNavigateToSignUpScreen = {
+            navViewModel.popBackStackAndNavigate(
+                navController = navController,
+                screen = AuthScreens.SignUp(email = emailState.fieldText)
+            )
         },
-        onContinueAsGuest = takeActionIf(case == SignInCase.Default && !appConfiguration.isSetUp) {
+        onContinueAsGuest = takeActionIf(!appConfiguration.isSetUp) {
             navViewModel.popBackStackAndNavigate(
                 navController = navController, screen = SettingsScreens.Accounts
             )
         },
         requestState = requestState,
-        onCancelRequest = signInViewModel::cancelRequest,
+        onCancelRequest = viewModel::cancelSignIn,
         onSuccessClose = {
-            navViewModel.navigateAndPopUpTo(
-                navController = navController,
-                screenToNavigateTo = if (appConfiguration.isSetUp)
-                    AuthScreens.Profile else MainScreens.FinishSetup
-            )
+            if (appConfiguration.isSetUp) {
+                navViewModel.navigateToScreenPoppingToStartDestination(
+                    navController = navController, screenToNavigateTo = AuthScreens.Profile
+                )
+            } else {
+                navViewModel.navigateAndPopUpTo(
+                    navController = navController, screenToNavigateTo = MainScreens.FinishSetup
+                )
+            }
         },
-        onErrorClose = signInViewModel::resetRequestState
+        onErrorClose = viewModel::resetRequestState
     )
 }
 
@@ -110,7 +117,9 @@ fun SignInScreen(
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit
 ) {
-    SetBackHandler()
+    if (requestState != null) {
+        SetBackHandler()
+    }
 
     AnimatedScreenWithRequestState(
         screenPadding = screenPadding,
@@ -226,7 +235,7 @@ fun SignInScreenPreview(
             onEmailChange = {},
             passwordState = ValidatedFieldUiState(
                 fieldText = password,
-                validationStates = UserDataValidator.validateRequiredFieldIsNotEmpty(password)
+                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password)
                     .toUiStates()
             ),
             onPasswordChange = {},

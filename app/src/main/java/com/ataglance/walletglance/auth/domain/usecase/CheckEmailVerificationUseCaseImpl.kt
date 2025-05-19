@@ -17,7 +17,7 @@ class CheckEmailVerificationUseCaseImpl(
         val result = authRepository.signInWithEmailAndPassword(userCredentials = userCredentials)
 
         result.getDataIfSuccess()?.let { data ->
-            val user = data.toDomainModel() ?: return Result.Error(AuthError.DataNotValid)
+            val user = data.toDomainModel() ?: return Result.Error(AuthError.RequestDataNotValid)
             userContext.saveUserWithToken(user = user)
         }
 

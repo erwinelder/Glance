@@ -14,7 +14,7 @@ fun SetupFinishScreen(
     onFinishSetupButton: () -> Unit
 ) {
     ResultSuccessScreenContainer(
-        message = stringResource(R.string.all_set),
+        title = stringResource(R.string.all_set),
         buttonText = stringResource(R.string.continue_to_app),
         onContinueButtonClick = onFinishSetupButton
     )
@@ -26,7 +26,7 @@ fun SetupFinishScreen(
     device = Devices.PIXEL_7_PRO
 )
 @Composable
-fun SetupFinishScreenPreview(
+fun FinishSetupScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true
 ) {

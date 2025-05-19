@@ -5,9 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
-import com.ataglance.walletglance.auth.domain.model.SignInCase
-import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
@@ -49,7 +46,7 @@ class NavigationViewModel(
     private val _moveScreensTowardsLeft: MutableStateFlow<Boolean> = MutableStateFlow(true)
     val moveScreensTowardsLeft: StateFlow<Boolean> = _moveScreensTowardsLeft.asStateFlow()
 
-    private fun setMoveScreensTowardsLeft(value: Boolean) {
+    fun setMoveScreensTowardsLeft(value: Boolean) {
         _moveScreensTowardsLeft.update { value }
     }
 
@@ -100,10 +97,23 @@ class NavigationViewModel(
     fun navigateToScreenPoppingToStartDestination(
         navController: NavController,
         navBackStackEntry: NavBackStackEntry?,
-        screenNavigateTo: MainScreens
+        screenToNavigateTo: MainScreens
     ) {
-        changeMoveScreensTowardsLeft(navBackStackEntry.fromMainScreen(), screenNavigateTo)
-        navController.navigate(screenNavigateTo) {
+        changeMoveScreensTowardsLeft(navBackStackEntry.fromMainScreen(), screenToNavigateTo)
+        navController.navigate(screenToNavigateTo) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                inclusive = false
+            }
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToScreenPoppingToStartDestination(
+        navController: NavController,
+        screenToNavigateTo: Any
+    ) {
+        setMoveScreensTowardsLeft(false)
+        navController.navigate(screenToNavigateTo) {
             popUpTo(navController.graph.findStartDestination().id) {
                 inclusive = false
             }
@@ -136,19 +146,12 @@ class NavigationViewModel(
         navigateToScreen(navController, screen)
     }
 
-    fun navigateToSignInScreen(
+    fun navigateToScreenMovingTowardsRight(
         navController: NavController,
-        signInCase: SignInCase
+        screen: Any
     ) {
-        navigateToScreen(navController, AuthScreens.SignIn(signInCase.name))
-    }
-
-    fun popBackStackAndNavigateToResultSuccessScreen(
-        navController: NavController,
-        screenType: AuthResultSuccessScreenType
-    ) {
-        navController.popBackStack()
-        navigateToScreen(navController, AuthScreens.ResultSuccess(screenType.name))
+        setMoveScreensTowardsLeft(false)
+        navigateToScreen(navController, screen)
     }
 
     fun <N : Any> navigateAndPopUpTo(

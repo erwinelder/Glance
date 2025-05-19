@@ -21,7 +21,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
@@ -51,7 +50,7 @@ fun SignUpScreenWrapper(
 ) {
     val viewModel = backStack.sharedKoinNavViewModel<SignUpViewModel>(navController) {
         parametersOf(
-            backStack.toRoute<AuthScreens.SignIn>().email
+            backStack.toRoute<AuthScreens.SignUp>().email
         )
     }
 
@@ -79,21 +78,20 @@ fun SignUpScreenWrapper(
             job = coroutineScope.launch {
                 if (!viewModel.signUp()) return@launch
                 navViewModel.navigateToScreen(
-                    navController = navController, screen = AuthScreens.EmailVerification
+                    navController = navController, screen = AuthScreens.SignUpEmailVerification
                 )
             }
         },
         onNavigateToSignInScreen = {
             navViewModel.popBackStackAndNavigate(
                 navController = navController,
-                screen = AuthScreens.SignIn(
-                    case = SignInCase.Default.name, email = emailState.fieldText
-                )
+                screen = AuthScreens.SignIn(email = emailState.fieldText)
             )
         },
         requestState = requestState,
         onCancelRequest = {
             job?.cancel()
+            job = null
             viewModel.resetRequestState()
         },
         onErrorClose = viewModel::resetRequestState,
@@ -118,7 +116,9 @@ fun SignUpScreen(
     onCancelRequest: () -> Unit,
     onErrorClose: () -> Unit
 ) {
-    SetBackHandler()
+    if (requestState != null) {
+        SetBackHandler()
+    }
 
     AnimatedScreenWithRequestState(
         screenPadding = screenPadding,

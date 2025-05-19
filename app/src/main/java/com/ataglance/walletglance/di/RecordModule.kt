@@ -109,7 +109,7 @@ val recordModule = module {
 
     viewModel { parameters ->
         RecentRecordsWidgetViewModel(
-            activeAccount = parameters.get(),
+            activeAccount = parameters.getOrNull(),
             activeDateRange = parameters.get(),
             getRecordStacksInDateRangeUseCase = get()
         )

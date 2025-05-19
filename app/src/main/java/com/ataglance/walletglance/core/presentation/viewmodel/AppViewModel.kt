@@ -16,13 +16,12 @@ import com.ataglance.walletglance.core.utils.timeInMillisToTimestampWithoutSpeci
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
-import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetUserIdPreferenceUseCase
-import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageToPreferencesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,11 +34,10 @@ import kotlinx.coroutines.launch
 class AppViewModel(
     private val getAppThemeConfigurationUseCase: GetAppThemeConfigurationUseCase,
     private val applyLanguageToSystemUseCase: ApplyLanguageToSystemUseCase,
-    private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
+    private val saveLanguageToPreferencesUseCase: SaveLanguageToPreferencesUseCase,
     private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
     private val changeAppSetupStageUseCase: ChangeAppSetupStageUseCase,
     getStartDestinationsBySetupStageUseCase: GetStartDestinationsBySetupStageUseCase,
-    getUserIdPreferenceUseCase: GetUserIdPreferenceUseCase,
 
     private val getAccountsUseCase: GetAccountsUseCase,
     private val getWidgetsUseCase: GetWidgetsUseCase
@@ -77,13 +75,11 @@ class AppViewModel(
 
     val appConfiguration = combine(
         getStartDestinationsBySetupStageUseCase.getFlow(),
-        getUserIdPreferenceUseCase.getFlow(),
         getLanguagePreferenceUseCase.getFlow(),
         _appTheme
-    ) { startDestinations, userId, language, appTheme ->
+    ) { startDestinations, language, appTheme ->
         AppConfiguration(
             isSetUp = startDestinations.first == MainScreens.Home,
-            isSignedIn = userId != null,
             mainStartDestination = startDestinations.first,
             settingsStartDestination = startDestinations.second,
             langCode = language,
@@ -98,7 +94,7 @@ class AppViewModel(
     private fun applyAppLanguage() {
         viewModelScope.launch {
             val langCode = getLanguagePreferenceUseCase.get()
-            saveLanguagePreferenceUseCase.save(langCode)
+            saveLanguageToPreferencesUseCase.execute(langCode)
             applyLanguageToSystemUseCase.execute(langCode)
         }
     }

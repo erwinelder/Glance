@@ -15,6 +15,7 @@ class SecureStorage(
 
     fun getAuthToken(): String? = settings.getStringOrNull(key = AUTH_TOKEN_KEY)
     fun saveAuthToken(token: String) = settings.putString(key = AUTH_TOKEN_KEY, value = token)
+    fun deleteAuthToken() = settings.remove(AUTH_TOKEN_KEY)
 
 
     fun clear() {

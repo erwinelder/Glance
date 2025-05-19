@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.AppLanguage
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun LanguagePicker(
     currentLangCode: String?,
-    onRadioButton: (String) -> Unit,
+    onLangCodeSelect: (String) -> Unit,
     languages: List<AppLanguage> = listOf(
         AppLanguage.Czech,
         AppLanguage.English,
@@ -46,7 +46,7 @@ fun LanguagePicker(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .bounceClickEffect { onRadioButton(it.languageCode) }
+                        .bounceClickEffect { onLangCodeSelect(it.languageCode) }
                 ) {
                     RadioButton(
                         selected = it.languageCode == currentLangCode,

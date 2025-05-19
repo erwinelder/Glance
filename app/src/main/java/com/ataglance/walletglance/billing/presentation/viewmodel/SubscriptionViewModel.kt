@@ -13,7 +13,7 @@ import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
 import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.mapper.toResultState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -49,7 +49,7 @@ class SubscriptionViewModel(
     }
 
 
-    private val _purchaseResult: MutableStateFlow<ResultState?> = MutableStateFlow(null)
+    private val _purchaseResult: MutableStateFlow<ResultTitleWithMessageState?> = MutableStateFlow(null)
     val purchaseResult = _purchaseResult.asStateFlow()
 
     private fun observeNewPurchase() {

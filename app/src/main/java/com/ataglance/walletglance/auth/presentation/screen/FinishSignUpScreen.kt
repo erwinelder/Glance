@@ -45,7 +45,7 @@ fun FinishSignUpScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     FinishSignUpScreen(
-        onFinishSignUp = viewModel::finishSignUp,
+        onVerify = viewModel::finishSignUp,
         requestState = requestState,
         onSuccessClose = {
             navViewModel.navigateAndPopUpTo(
@@ -61,7 +61,7 @@ fun FinishSignUpScreenWrapper(
 @Composable
 fun FinishSignUpScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
-    onFinishSignUp: () -> Unit,
+    onVerify: () -> Unit,
     requestState: RequestState?,
     onSuccessClose: () -> Unit,
     onErrorClose: () -> Unit
@@ -75,7 +75,7 @@ fun FinishSignUpScreen(
         onErrorClose = onErrorClose
     ) {
         ScreenContainer {
-            VerifyEmailPromptedComponent(onVerify = onFinishSignUp)
+            VerifyEmailPromptedComponent(onVerify = onVerify)
         }
     }
 }
@@ -88,7 +88,7 @@ private fun VerifyEmailPromptedComponent(onVerify: () -> Unit) {
     ) {
         LargePrimaryIconWithMessage(
             title = stringResource(R.string.verify_email),
-            message = stringResource(R.string.verify_email_description),
+            message = stringResource(R.string.sign_up_verify_email_description),
             iconRes = R.drawable.email_large_icon,
             iconDescription = "Email sent icon"
         )
@@ -108,7 +108,7 @@ fun FinishSignUpScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         FinishSignUpScreen(
-            onFinishSignUp = {},
+            onVerify = {},
             requestState = null,
             onSuccessClose = {},
             onErrorClose = {}

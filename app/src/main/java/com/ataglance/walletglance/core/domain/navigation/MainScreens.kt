@@ -35,4 +35,7 @@ sealed interface MainScreens {
     @Serializable
     data object FinishSetup : MainScreens
 
+    @Serializable
+    data object UpdateRequest : MainScreens
+
 }

@@ -95,7 +95,7 @@ val categoryModule = module {
 
     viewModel { parameters ->
         CategoryStatisticsWidgetViewModel(
-            activeAccount = parameters.get(),
+            activeAccount = parameters.getOrNull(),
             activeDateRange = parameters.get(),
             getRecordStacksInDateRangeUseCase = get()
         )

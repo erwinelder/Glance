@@ -1,106 +1,80 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModelFactory
+import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
 import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithTitleAndGlassSurface
-import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.mapper.toResultState
+import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UpdatePasswordScreenWrapper(
     navController: NavHostController,
-    navViewModel: NavigationViewModel,
-    authController: AuthController,
-    backStack: NavBackStackEntry
+    navViewModel: NavigationViewModel
 ) {
-    val viewModel = backStack.sharedViewModel<AuthViewModel>(
-        navController = navController,
-        factory = AuthViewModelFactory(email = authController.getEmail())
-    )
-    LaunchedEffect(true) {
-        viewModel.resetAllFieldsExceptEmail()
-    }
+    val viewModel = koinViewModel<UpdatePasswordViewModel>()
 
     val currentPasswordState by viewModel.passwordState.collectAsStateWithLifecycle()
     val newPasswordState by viewModel.newPasswordState.collectAsStateWithLifecycle()
-    val newPasswordConfirmationState by viewModel.newPasswordConfirmationState
-        .collectAsStateWithLifecycle()
-    val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed
-        .collectAsStateWithLifecycle()
-    val resultState by viewModel.resultState.collectAsStateWithLifecycle()
-
-    val coroutineScope = rememberCoroutineScope()
+    val confirmNewPasswordState by viewModel.confirmNewPasswordState.collectAsStateWithLifecycle()
+    val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed.collectAsStateWithLifecycle()
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     UpdatePasswordScreen(
+        onNavigateBack = navController::popBackStack,
         currentPasswordState = currentPasswordState,
         onCurrentPasswordChange = viewModel::updateAndValidatePassword,
         newPasswordState = newPasswordState,
         onNewPasswordChange = viewModel::updateAndValidateNewPassword,
-        newPasswordConfirmationState = newPasswordConfirmationState,
-        onNewPasswordConfirmationChange = viewModel::updateAndValidateNewPasswordConfirmation,
+        newPasswordConfirmationState = confirmNewPasswordState,
+        onNewPasswordConfirmationChange = viewModel::updateAndValidateConfirmNewPassword,
         passwordUpdateIsAllowed = passwordUpdateIsAllowed,
-        onUpdatePassword = {
-            coroutineScope.launch {
-                if (!passwordUpdateIsAllowed) return@launch
-                val result = authController.updatePassword(
-                    currentPassword = currentPasswordState.fieldText,
-                    newPassword = newPasswordState.fieldText
-                )
-                when (result) {
-                    is Result.Success -> {
-                        navViewModel.popBackStackAndNavigateToResultSuccessScreen(
-                            navController = navController,
-                            screenType = AuthResultSuccessScreenType.PasswordUpdate
-                        )
-                    }
-                    is Result.Error -> viewModel.setResultState(result.toResultState())
-                }
-            }
-        },
+        onUpdatePassword = viewModel::updatePassword,
         onNavigateToRequestPasswordResetScreen = {
             navViewModel.popBackStackAndNavigate(
                 navController = navController,
-                screen = AuthScreens.RequestPasswordReset
+                screen = AuthScreens.RequestPasswordReset()
             )
         },
-        resultState = resultState,
-        onResultReset = viewModel::resetResultState
+        requestState = requestState,
+        onCancelRequest = viewModel::cancelPasswordUpdate,
+        onSuccessClose = navController::popBackStack,
+        onErrorClose = viewModel::resetRequestState
     )
 }
 
 @Composable
 fun UpdatePasswordScreen(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
+    onNavigateBack: () -> Unit,
     currentPasswordState: ValidatedFieldUiState,
     onCurrentPasswordChange: (String) -> Unit,
     newPasswordState: ValidatedFieldUiState,
@@ -110,11 +84,31 @@ fun UpdatePasswordScreen(
     passwordUpdateIsAllowed: Boolean,
     onUpdatePassword: () -> Unit,
     onNavigateToRequestPasswordResetScreen: () -> Unit,
-    resultState: ResultState?,
-    onResultReset: () -> Unit
+    requestState: RequestState?,
+    onCancelRequest: () -> Unit,
+    onSuccessClose: () -> Unit,
+    onErrorClose: () -> Unit
 ) {
-    Box {
-        ScreenContainerWithTitleAndGlassSurface(
+    val backButtonImageRes = DrawableResByTheme(
+        lightDefault = R.drawable.password_light_default,
+        darkDefault = R.drawable.password_dark_default,
+    ).getByTheme(CurrAppTheme)
+
+    if (requestState != null) {
+        SetBackHandler()
+    }
+
+    AnimatedScreenWithRequestState(
+        screenPadding = screenPadding,
+        requestState = requestState,
+        onCancelRequest = onCancelRequest,
+        onSuccessClose = onSuccessClose,
+        onErrorClose = onErrorClose
+    ) {
+        ScreenContainerWithBackNavButtonTitleAndGlassSurface(
+            onNavigateBack = onNavigateBack,
+            backButtonText = stringResource(R.string.update_password),
+            backButtonImageRes = backButtonImageRes,
             title = stringResource(R.string.update_your_password),
             glassSurfaceContent = {
                 GlassSurfaceContent(
@@ -141,10 +135,6 @@ fun UpdatePasswordScreen(
                 )
             }
         )
-        ResultBottomSheet(
-            resultState = resultState,
-            onDismissRequest = onResultReset
-        )
     }
 }
 
@@ -158,7 +148,11 @@ private fun GlassSurfaceContent(
     onNewPasswordConfirmationChange: (String) -> Unit,
     onUpdatePassword: () -> Unit
 ) {
-    GlassSurfaceContentColumnWrapper {
+    val scrollState = rememberScrollState()
+
+    GlassSurfaceContentColumnWrapper(
+        modifier = Modifier.verticalScroll(scrollState)
+    ) {
         SmallTextFieldWithLabelAndMessages(
             state = currentPasswordState,
             onValueChange = onCurrentPasswordChange,
@@ -195,10 +189,11 @@ fun UpdatePasswordScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
 ) {
     val newPassword = "_Password1"
-    val newPasswordConfirmation = "_Password11"
+    val confirmNewPassword = "_Password11"
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         UpdatePasswordScreen(
+            onNavigateBack = {},
             currentPasswordState = ValidatedFieldUiState(),
             onCurrentPasswordChange = {},
             newPasswordState = ValidatedFieldUiState(
@@ -208,17 +203,19 @@ fun UpdatePasswordScreenPreview(
             ),
             onNewPasswordChange = {},
             newPasswordConfirmationState = ValidatedFieldUiState(
-                fieldText = newPasswordConfirmation,
+                fieldText = confirmNewPassword,
                 validationStates = UserDataValidator
-                    .validateConfirmationPassword(newPassword, newPasswordConfirmation)
+                    .validateConfirmationPassword(newPassword, confirmNewPassword)
                     .toUiStates()
             ),
             onNewPasswordConfirmationChange = {},
             passwordUpdateIsAllowed = true,
             onUpdatePassword = {},
             onNavigateToRequestPasswordResetScreen = {},
-            resultState = null,
-            onResultReset = {}
+            requestState = null,
+            onCancelRequest = {},
+            onSuccessClose = {},
+            onErrorClose = {}
         )
     }
 }

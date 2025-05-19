@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Glance</string>
+    <string name="app_name">Glanci</string>
 
     <!-- navigation bar buttons -->
     <string name="home">Головна</string>
@@ -15,16 +15,10 @@
     <string name="chosen_budgets">Обрані бюджети</string>
 
     <!-- Buttons -->
-    <string name="sign_in">Увійти</string>
-    <string name="sign_up">Зареєструватися</string>
-    <string name="sign_out">Вийти з акаунту</string>
-    <string name="send_email">Надіслати електронний лист</string>
-    <string name="update_email">Оновити електронну пошту</string>
-    <string name="reset_password">Скинути пароль</string>
-    <string name="update_password">Оновити пароль</string>
     <string name="create">Створити</string>
     <string name="save">Зберегти</string>
     <string name="apply">Застосувати</string>
+    <string name="update">Оновити</string>
     <string name="confirm">Підтвердити</string>
     <string name="check">Перевірити</string>
     <string name="check_verification">Перевірити підтвердження</string>
@@ -77,19 +71,12 @@
     <string name="finish">Завершити</string>
     <string name="_import">Імпорт</string>
     <string name="start_setup">Почати налаштування</string>
-    <string name="sign_in_to_your_account">Увійдіть у свій акаунт</string>
-    <string name="create_new_account">Створіть новий акаунт</string>
-    <string name="update_your_email">Оновіть вашу електронну пошту</string>
-    <string name="update_your_password">Оновіть свій пароль</string>
-    <string name="request_password_reset">Запросити скидання пароля</string>
-    <string name="reset_your_password">Скиньте свій пароль</string>
-    <string name="welcome_back_to_glance">Ласкаво просимо назад до Glance!</string>
-    <string name="welcome_to_glance">Ласкаво просимо до Glance!</string>
     <string name="continue_to_app">Перейти до додатка</string>
-    <string name="continue_as_guest">Продовжити як гість</string>
     <string name="continue_setup">Продовжити налаштування</string>
     <string name="choose_app_language">Виберіть мову застосунку</string>
-    <string name="email_verification">Підтвердження електронної пошти</string>
+
+    <!-- Settings loaders -->
+    <string name="saving_language_loader">Збереження мови…</string>
 
     <!-- Fields -->
     <string name="email">Електронна пошта</string>
@@ -143,44 +130,76 @@
     <string name="passwords_do_match">Паролі співпадають</string>
     <string name="passwords_do_not_match">Паролі не співпадають</string>
 
-    <!-- Loaders -->
+    <!-- Auth -->
+    <string name="sign_in">Увійти</string>
+    <string name="sign_up">Зареєструватися</string>
+    <string name="sign_out">Вийти з акаунту</string>
+    <string name="send_email">Надіслати електронний лист</string>
+    <string name="update_email">Оновити електронну пошту</string>
+    <string name="reset_password">Скинути пароль</string>
+    <string name="update_password">Оновити пароль</string>
+    <string name="sign_in_to_your_account">Увійдіть у свій акаунт</string>
+    <string name="create_new_account">Створіть новий акаунт</string>
+    <string name="update_your_email">Оновіть вашу електронну пошту</string>
+    <string name="update_your_password">Оновіть свій пароль</string>
+    <string name="request_password_reset">Запросити скидання пароля</string>
+    <string name="reset_your_password">Скиньте свій пароль</string>
+    <string name="continue_as_guest">Продовжити як гість</string>
+    <string name="email_verification">Підтвердження електронної пошти</string>
+    <string name="all_set">Все готово!</string>
+    <string name="oops">Ой!</string>
+    <string name="verify_email">Підтвердьте пошту</string>
+    <string name="sign_up_verify_email_description">Підтвердьте свою електронну пошту, щоб завершити реєстрацію.</string>
+    <string name="email_update_verify_email_description">Підтвердіть свою електронну пошту, щоб завершити оновлення.</string>
+    <string name="sign_out_of_your_account">Вийти зі свого акаунту? Вам потрібно буде знову увійти, щоб отримати доступ до своїх даних.</string>
+
+    <!-- Auth loaders -->
     <string name="verifying_your_credentials_loader">Перевірка ваших облікових даних…</string>
     <string name="creating_your_identity_loader">Створення вашої ідентичності…</string>
     <string name="checking_email_verification_loader">Перевірка підтвердження електронної пошти…</string>
     <string name="finishing_your_registration_loader">Завершення вашої реєстрації…</string>
+    <string name="requesting_email_update_loader">Запит на оновлення електронної пошти…</string>
+    <string name="verifying_your_email_loader">Підтвердження вашої електронної пошти…</string>
+    <string name="updating_your_password_loader">Оновлення вашого пароля…</string>
+    <string name="requesting_password_reset_loader">Запит на скидання пароля…</string>
+    <string name="deleting_your_account_loader">Видалення вашого акаунта…</string>
 
-    <!-- Auth -->
-    <string name="all_set">Все готово!</string>
-    <string name="oops">Ой!</string>
-    <string name="user_already_exists_error">Користувач вже існує</string>
-    <string name="user_not_created_error">Створення користувача не вдалося</string>
-    <string name="user_data_not_saved_error">Дані користувача не були збережені</string>
-    <string name="user_not_found_error">Користувача не знайдено</string>
-    <string name="user_not_signed_in_error">Користувач не увійшов у систему</string>
-    <string name="invalid_email_error">Недійсна електронна адреса</string>
-    <string name="invalid_code_error">Недійсний код</string>
-    <string name="wrong_credentials_error">Неправильні облікові дані</string>
-    <string name="sign_in_error">Помилка під час входу в систему</string>
-    <string name="reauthentication_error">Помилка під час повторної автентифікації</string>
-    <string name="sign_up_email_verification_error">Сталася помилка під час надсилання листа для підтвердження</string>
-    <string name="email_for_password_reset_error">Сталася помилка під час надсилання листа для скидання пароля</string>
-    <string name="password_update_success">Пароль успішно оновлено</string>
-    <string name="password_updated">Пароль оновлено!</string>
-    <string name="password_reset_error">Скидання пароля не вдалося</string>
-    <string name="update_password_error">Помилка під час оновлення пароля</string>
-    <string name="verify_email">Підтвердьте пошту</string>
-    <string name="verify_email_description">Підтвердьте свою електронну пошту, щоб завершити реєстрацію.</string>
+    <!-- Auth success -->
+    <string name="welcome_back_to_glance">Ласкаво просимо назад до Glanci!</string>
+    <string name="welcome_to_glance">Ласкаво просимо до Glanci!</string>
     <string name="email_sent">Лист надіслано!</string>
-    <string name="sign_up_email_verification_sent_description">Лист для підтвердження реєстрації було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити реєстрацію.</string>
-    <string name="update_email_email_verification_sent">Лист для підтвердження оновлення вашої електронної пошти було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити оновлення.</string>
-    <string name="email_update_success">Електронну пошту успішно оновлено</string>
-    <string name="email_verification_error">Підтвердження електронної пошти не вдалося</string>
-    <string name="reset_password_email_sent">Лист для скидання пароля було надіслано. Будь ласка, перейдіть за посиланням у листі.</string>
-    <string name="sign_out_of_your_account">Вийти зі свого акаунту? Вам потрібно буде знову увійти, щоб отримати доступ до своїх даних.</string>
     <string name="account_deleted">Акаунт видалено!</string>
-    <string name="your_account_has_been_deleted_successfully">Ваш акаунт успішно видалено</string>
-    <string name="deleting_user_account_error">Сталася помилка під час видалення акаунта користувача</string>
-    <string name="deleting_user_data_error">Сталася помилка під час видалення даних користувача</string>
+    <string name="sign_up_email_verification_sent_message">Лист для підтвердження реєстрації було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити реєстрацію.</string>
+    <string name="update_email_email_verification_sent_message">Лист для підтвердження оновлення вашої електронної пошти було надіслано. Будь ласка, перейдіть за посиланням у листі, щоб завершити оновлення.</string>
+    <string name="email_updated_successfully_message">Електронну пошту успішно оновлено.</string>
+    <string name="password_updated_successfully_message">Пароль успішно оновлено.</string>
+    <string name="reset_password_email_sent_message">Лист для скидання пароля було надіслано. Будь ласка, перейдіть за посиланням у листі.</string>
+    <string name="your_account_deleted_successfully_message">Ваш акаунт успішно видалено.</string>
+
+    <!-- Auth error -->
+    <string name="user_not_signed_in_message">Користувач не увійшов у систему.</string>
+    <string name="request_contains_invalid_data_message">Запит містить недійсні дані.</string>
+    <string name="your_session_expired_message">Ваш сеанс завершився.</string>
+    <string name="update_required">Потрібне оновлення</string>
+    <string name="app_update_required_message">Доступна нова версія додатка. Будь ласка, оновіть додаток, щоб усі функції працювали правильно.</string>
+    <string name="credentials_are_invalid_message">Облікові дані недійсні.</string>
+    <string name="reauthentication_error">Помилка під час повторної автентифікації.</string>
+    <string name="email_not_verified_message">Електронну пошту не підтверджено.</string>
+    <string name="user_not_found_message">Користувача не знайдено.</string>
+    <string name="sign_in_failed_message">Під час входу сталася помилка.</string>
+    <string name="user_already_exists_message">Користувач вже існує.</string>
+    <string name="sign_up_email_verification_failed_message">Сталася помилка під час надсилання листа для підтвердження.</string>
+    <string name="sign_up_failed_message">Під час реєстрації сталася помилка.</string>
+    <string name="email_verification_check_failed_message">Під час перевірки підтвердження електронної пошти сталася помилка.</string>
+    <string name="verification_code_invalid_or_expired_message">Код підтвердження недійсний або прострочений.</string>
+    <string name="sign_up_completing_failed_message">Під час завершення реєстрації сталася помилка.</string>
+    <string name="email_update_request_failed_message">Під час запиту на оновлення електронної пошти сталася помилка.</string>
+    <string name="password_update_failed_message">Під час оновлення пароля сталася помилка.</string>
+    <string name="email_update_failed_message">Під час оновлення електронної пошти сталася помилка.</string>
+    <string name="password_reset_request_failed_message">Сталася помилка під час запиту на скидання пароля.</string>
+    <string name="password_reset_failed_message">Під час скидання пароля сталася помилка.</string>
+    <string name="account_deletion_failed_message">Під час видалення вашого акаунта сталася помилка.</string>
+    <string name="language_not_saved_message">Налаштування мови не було збережено.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Підписку успішно оформлено</string>

@@ -13,37 +13,37 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
 import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetContentDialog
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewContainer
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultBottomSheet(
-    resultState: ResultState?,
+    resultTitleWithMessageState: ResultTitleWithMessageState?,
     onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
 
-    val titleColor = if (resultState?.isSuccessful == true) {
+    val titleColor = if (resultTitleWithMessageState?.isSuccessful == true) {
         GlanceColors.success
     } else {
         GlanceColors.error
     }
-    val iconGradientColor = if (resultState?.isSuccessful == true) {
+    val iconGradientColor = if (resultTitleWithMessageState?.isSuccessful == true) {
         GlanceColors.successGradient
     } else {
         GlanceColors.errorGradient
     }
 
     GlanceBottomSheet(
-        visible = resultState != null,
+        visible = resultTitleWithMessageState != null,
         sheetState = sheetState,
         onDismissRequest = {
             coroutineScope.launch { sheetState.hide() }
@@ -51,14 +51,14 @@ fun ResultBottomSheet(
         },
         dragHandle = {}
     ) {
-        resultState?.let {
+        resultTitleWithMessageState?.let {
             GlanceBottomSheetContentDialog(
-                title = stringResource(resultState.titleRes),
+                title = stringResource(resultTitleWithMessageState.titleRes),
                 titleColor = titleColor,
-                message = stringResource(resultState.messageRes),
-                iconRes = if (resultState.isSuccessful) R.drawable.success_large_icon else
+                message = resultTitleWithMessageState.messageRes?.let { stringResource(it) },
+                iconRes = if (resultTitleWithMessageState.isSuccessful) R.drawable.success_large_icon else
                     R.drawable.error_large_icon,
-                iconDescription = if (resultState.isSuccessful) "Success" else "Error",
+                iconDescription = if (resultTitleWithMessageState.isSuccessful) "Success" else "Error",
                 iconGradientColor = iconGradientColor
             ) {
                 SecondaryButton(
@@ -78,24 +78,24 @@ fun ResultBottomSheet(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 private fun ResultBottomSheetPreview() {
-    val resultState = ResultState(
+    val resultTitleWithMessageState = ResultTitleWithMessageState(
         isSuccessful = true,
         titleRes = R.string.email_sent,
-        messageRes = R.string.reset_password_email_sent
+        messageRes = R.string.reset_password_email_sent_message
 //        isSuccessful = false,
 //        titleRes = R.string.oops,
 //        messageRes = R.string.email_for_password_reset_error
     )
 
-    var state by remember { mutableStateOf<ResultState?>(resultState) }
+    var state by remember { mutableStateOf<ResultTitleWithMessageState?>(resultTitleWithMessageState) }
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         SmallPrimaryButton(
             text = "Show error",
-            onClick = { state = resultState }
+            onClick = { state = resultTitleWithMessageState }
         )
         ResultBottomSheet(
-            resultState = state,
+            resultTitleWithMessageState = state,
             onDismissRequest = { state = null }
         )
     }

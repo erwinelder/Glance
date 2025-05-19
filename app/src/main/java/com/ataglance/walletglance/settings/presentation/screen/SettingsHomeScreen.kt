@@ -26,7 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
@@ -36,12 +38,31 @@ import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.navigation.domain.utils.isScreen
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
+import org.koin.compose.koinInject
+
+@Composable
+fun SettingsHomeScreenWrapper(
+    screenPadding: PaddingValues,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel
+) {
+    val isSignedIn = koinInject<UserContext>().isSignedIn()
+
+    SettingsHomeScreen(
+        screenPadding = screenPadding,
+        isSignedIn = isSignedIn,
+        onNavigateToScreen = { screen ->
+            navViewModel.navigateToScreen(navController = navController, screen = screen)
+        }
+    )
+}
 
 @Composable
 fun SettingsHomeScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues,
     isSignedIn: Boolean,
     onNavigateToScreen: (Any) -> Unit
 ) {
@@ -76,13 +97,13 @@ fun SettingsHomeScreen(
         Spacer(modifier = Modifier.weight(1f))
         if (!WindowTypeIsExpanded) {
             CompactLayout(
-                scaffoldPadding = scaffoldPadding,
+                scaffoldPadding = screenPadding,
                 settingsCategories = settingsCategories,
                 onNavigateToScreen = onNavigateToScreen
             )
         } else {
             ExpandedLayout(
-                scaffoldPadding = scaffoldPadding,
+                scaffoldPadding = screenPadding,
                 settingsCategories = settingsCategories,
                 onNavigateToScreen = onNavigateToScreen
             )
@@ -162,7 +183,7 @@ fun BottomSpacer(scaffoldBottomPadding: Dp) {
 @Composable
 fun SettingsHomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
+    isSignedIn: Boolean = true,
     isBottomBarVisible: Boolean = true,
 ) {
     PreviewWithMainScaffoldContainer(
@@ -172,8 +193,8 @@ fun SettingsHomeScreenPreview(
         currentScreenIsScreenProvider = { false }
     ) { scaffoldPadding ->
         SettingsHomeScreen(
-            scaffoldPadding = scaffoldPadding,
-            isSignedIn = false,
+            screenPadding = scaffoldPadding,
+            isSignedIn = isSignedIn,
             onNavigateToScreen = {}
         )
     }

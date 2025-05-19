@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
@@ -40,11 +39,11 @@ fun ScreenContainerWithTitleAndGlassSurface(
     val focusManager = LocalFocusManager.current
     val imeBottomInset by getImeBottomInset()
     val bottomPadding by animateDpAsState(imeBottomInset.coerceAtLeast(24.dp))
-    val keyboardInFocus = bottomPadding > 60.dp
+    val keyboardInFocus = bottomPadding > 50.dp
 
     ScreenContainer(
         screenPadding = screenPadding,
-        padding = PaddingValues(top = 8.dp, bottom = bottomPadding),
+        padding = PaddingValues(top = 8.dp, bottom = /*bottomPadding*/24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.clickable { focusManager.clearFocus() }
     ) {

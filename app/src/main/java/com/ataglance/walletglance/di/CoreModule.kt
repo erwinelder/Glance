@@ -8,8 +8,8 @@ import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCas
 import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCaseImpl
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
-import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
-import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCaseImpl
+import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCaseImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.dsl.viewModel
@@ -65,11 +65,10 @@ val coreModule = module {
         AppViewModel(
             getAppThemeConfigurationUseCase = get(),
             applyLanguageToSystemUseCase = get(),
-            saveLanguagePreferenceUseCase = get(),
+            saveLanguageToPreferencesUseCase = get(),
             getLanguagePreferenceUseCase = get(),
             changeAppSetupStageUseCase = get(),
             getStartDestinationsBySetupStageUseCase = get(),
-            getUserIdPreferenceUseCase = get(),
 
             getAccountsUseCase = get(),
             getWidgetsUseCase = get()
@@ -78,7 +77,7 @@ val coreModule = module {
 
     viewModel { parameters ->
         ExpensesIncomeWidgetViewModel(
-            activeAccount = parameters.get(),
+            activeAccount = parameters.getOrNull(),
             activeDateRange = parameters.get(),
             getRecordStacksInDateRangeUseCase = get()
         )

@@ -64,7 +64,7 @@ fun MainAppContent(
                 navViewModel.navigateToScreenPoppingToStartDestination(
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
-                    screenNavigateTo = screenNavigateTo
+                    screenToNavigateTo = screenNavigateTo
                 )
             },
             onMakeRecordButtonClick = {

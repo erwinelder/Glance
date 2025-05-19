@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.AuthController
 import com.ataglance.walletglance.budget.presentation.containers.BudgetsOnWidgetSettingsBottomSheet
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreen
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreen
@@ -32,6 +31,7 @@ import com.ataglance.walletglance.core.presentation.animation.screenExitTransiti
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.screen.HomeScreen
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
+import com.ataglance.walletglance.core.presentation.screen.UpdateRequestScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
@@ -61,8 +61,6 @@ fun AppNavHost(
     onCustomDateRangeButtonClick: () -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
-    val authController = koinInject<AuthController>()
-
     val budgetsOnWidgetSettingsViewModel = koinViewModel<BudgetsOnWidgetSettingsViewModel>()
 
     NavHost(
@@ -331,7 +329,6 @@ fun AppNavHost(
             navController = navController,
             scaffoldPadding = scaffoldPadding,
             navViewModel = navViewModel,
-            authController = authController,
             appConfiguration = appConfiguration
         )
         composable<MainScreens.FinishSetup> {
@@ -344,6 +341,9 @@ fun AppNavHost(
                     }
                 }
             )
+        }
+        composable<MainScreens.UpdateRequest> {
+            UpdateRequestScreen()
         }
     }
 }

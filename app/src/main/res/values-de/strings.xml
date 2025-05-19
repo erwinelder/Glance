@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Glance</string>
+    <string name="app_name">Glanci</string>
 
     <!-- navigation bar buttons -->
     <string name="home">Startseite</string>
@@ -15,16 +15,10 @@
     <string name="chosen_budgets">Ausgewählte Budgets</string>
 
     <!-- Buttons -->
-    <string name="sign_in">Anmelden</string>
-    <string name="sign_up">Registrieren</string>
-    <string name="sign_out">Abmelden</string>
-    <string name="send_email">E-Mail senden</string>
-    <string name="update_email">E-Mail aktualisieren</string>
-    <string name="reset_password">Passwort zurücksetzen</string>
-    <string name="update_password">Passwort aktualisieren</string>
     <string name="create">Erstellen</string>
     <string name="save">Speichern</string>
     <string name="apply">Anwenden</string>
+    <string name="update">Aktualisieren</string>
     <string name="confirm">Bestätigen</string>
     <string name="check">Prüfen</string>
     <string name="check_verification">Verifizierung prüfen</string>
@@ -77,19 +71,12 @@
     <string name="finish">Abschließen</string>
     <string name="_import">Importieren</string>
     <string name="start_setup">Setup starten</string>
-    <string name="sign_in_to_your_account">Melden Sie sich bei Ihrem Konto an</string>
-    <string name="create_new_account">Erstellen Sie ein neues Konto</string>
-    <string name="update_your_email">Aktualisieren Sie Ihre E-Mail</string>
-    <string name="update_your_password">Aktualisieren Sie Ihr Passwort</string>
-    <string name="request_password_reset">Passwort zurücksetzen anfordern</string>
-    <string name="reset_your_password">Setzen Sie Ihr Passwort zurück</string>
-    <string name="welcome_back_to_glance">Willkommen zurück bei Glance!</string>
-    <string name="welcome_to_glance">Willkommen bei Glance!</string>
     <string name="continue_to_app">Zur App fortfahren</string>
-    <string name="continue_as_guest">Als Gast fortfahren</string>
     <string name="continue_setup">Einrichtung fortsetzen</string>
     <string name="choose_app_language">Wählen Sie die App-Sprache</string>
-    <string name="email_verification">E-Mail-Verifizierung</string>
+
+    <!-- Settings loaders -->
+    <string name="saving_language_loader">Sprache wird gespeichert…</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -143,44 +130,76 @@
     <string name="passwords_do_match">Passwörter stimmen überein</string>
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein</string>
 
-    <!-- Loaders -->
+    <!-- Auth -->
+    <string name="sign_in">Anmelden</string>
+    <string name="sign_up">Registrieren</string>
+    <string name="sign_out">Abmelden</string>
+    <string name="send_email">E-Mail senden</string>
+    <string name="update_email">E-Mail aktualisieren</string>
+    <string name="reset_password">Passwort zurücksetzen</string>
+    <string name="update_password">Passwort aktualisieren</string>
+    <string name="sign_in_to_your_account">Melden Sie sich bei Ihrem Konto an</string>
+    <string name="create_new_account">Erstellen Sie ein neues Konto</string>
+    <string name="update_your_email">Aktualisieren Sie Ihre E-Mail</string>
+    <string name="update_your_password">Aktualisieren Sie Ihr Passwort</string>
+    <string name="request_password_reset">Passwort zurücksetzen anfordern</string>
+    <string name="reset_your_password">Setzen Sie Ihr Passwort zurück</string>
+    <string name="continue_as_guest">Als Gast fortfahren</string>
+    <string name="email_verification">E-Mail-Verifizierung</string>
+    <string name="all_set">Alles bereit!</string>
+    <string name="oops">Ups!</string>
+    <string name="verify_email">Verifizieren Sie Ihre E-Mail</string>
+    <string name="sign_up_verify_email_description">Verifizieren Sie Ihre E-Mail, um die Registrierung abzuschließen.</string>
+    <string name="email_update_verify_email_description">Verifizieren Sie Ihre E-Mail, um die Aktualisierung abzuschließen.</string>
+    <string name="sign_out_of_your_account">Von Ihrem Konto abmelden? Sie müssen sich erneut anmelden, um auf Ihre Daten zuzugreifen.</string>
+
+    <!-- Auth loaders -->
     <string name="verifying_your_credentials_loader">Überprüfung Ihrer Anmeldedaten…</string>
     <string name="creating_your_identity_loader">Erstellen Ihrer Identität…</string>
     <string name="checking_email_verification_loader">Überprüfung der E-Mail-Bestätigung…</string>
     <string name="finishing_your_registration_loader">Abschluss Ihrer Registrierung…</string>
+    <string name="requesting_email_update_loader">E-Mail-Aktualisierung wird angefordert…</string>
+    <string name="verifying_your_email_loader">E-Mail wird verifiziert…</string>
+    <string name="updating_your_password_loader">Ihr Passwort wird aktualisiert…</string>
+    <string name="requesting_password_reset_loader">Passwortzurücksetzung wird angefordert…</string>
+    <string name="deleting_your_account_loader">Ihr Konto wird gelöscht…</string>
 
-    <!-- Auth -->
-    <string name="all_set">Alles bereit!</string>
-    <string name="oops">Ups!</string>
-    <string name="user_already_exists_error">Benutzer existiert bereits</string>
-    <string name="user_not_created_error">Benutzererstellung fehlgeschlagen</string>
-    <string name="user_data_not_saved_error">Benutzerdaten wurden nicht gespeichert</string>
-    <string name="user_not_found_error">Benutzer wurde nicht gefunden</string>
-    <string name="user_not_signed_in_error">Benutzer ist nicht angemeldet</string>
-    <string name="invalid_email_error">Ungültige E-Mail-Adresse</string>
-    <string name="invalid_code_error">Ungültiger Code</string>
-    <string name="wrong_credentials_error">Falsche Anmeldedaten</string>
-    <string name="sign_in_error">Fehler beim Anmelden</string>
-    <string name="reauthentication_error">Fehler bei der erneuten Authentifizierung</string>
-    <string name="sign_up_email_verification_error">Beim Senden der Bestätigungs-E-Mail ist ein Fehler aufgetreten</string>
-    <string name="email_for_password_reset_error">Beim Senden der E-Mail zum Zurücksetzen des Passworts ist ein Fehler aufgetreten</string>
-    <string name="password_update_success">Das Passwort wurde erfolgreich aktualisiert</string>
-    <string name="password_updated">Passwort aktualisiert!</string>
-    <string name="password_reset_error">Passwort zurücksetzen fehlgeschlagen</string>
-    <string name="update_password_error">Fehler beim Aktualisieren des Passworts</string>
-    <string name="verify_email">Verifizieren Sie Ihre E-Mail</string>
-    <string name="verify_email_description">Verifizieren Sie Ihre E-Mail, um die Registrierung abzuschließen.</string>
+    <!-- Auth success -->
+    <string name="welcome_back_to_glance">Willkommen zurück bei Glanci!</string>
+    <string name="welcome_to_glance">Willkommen bei Glanci!</string>
     <string name="email_sent">E-Mail gesendet!</string>
-    <string name="sign_up_email_verification_sent_description">Eine Bestätigungs-E-Mail für die Registrierung wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um Ihre Registrierung abzuschließen.</string>
-    <string name="update_email_email_verification_sent">Eine Bestätigungs-E-Mail zur Aktualisierung Ihrer E-Mail-Adresse wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um die Aktualisierung abzuschließen.</string>
-    <string name="email_update_success">Die E-Mail wurde erfolgreich aktualisiert</string>
-    <string name="email_verification_error">Die E-Mail-Verifizierung ist fehlgeschlagen</string>
-    <string name="reset_password_email_sent">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte folgen Sie dem Link in der E-Mail.</string>
-    <string name="sign_out_of_your_account">Von Ihrem Konto abmelden? Sie müssen sich erneut anmelden, um auf Ihre Daten zuzugreifen.</string>
     <string name="account_deleted">Konto gelöscht!</string>
-    <string name="your_account_has_been_deleted_successfully">Ihr Konto wurde erfolgreich gelöscht</string>
-    <string name="deleting_user_account_error">Beim Löschen des Benutzerkontos ist ein Fehler aufgetreten</string>
-    <string name="deleting_user_data_error">Beim Löschen der Benutzerdaten ist ein Fehler aufgetreten</string>
+    <string name="sign_up_email_verification_sent_message">Eine Bestätigungs-E-Mail für die Registrierung wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um Ihre Registrierung abzuschließen.</string>
+    <string name="update_email_email_verification_sent_message">Eine Bestätigungs-E-Mail zur Aktualisierung Ihrer E-Mail-Adresse wurde gesendet. Bitte folgen Sie dem Link in der E-Mail, um die Aktualisierung abzuschließen.</string>
+    <string name="email_updated_successfully_message">Die E-Mail wurde erfolgreich aktualisiert.</string>
+    <string name="password_updated_successfully_message">Das Passwort wurde erfolgreich aktualisiert.</string>
+    <string name="reset_password_email_sent_message">Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte folgen Sie dem Link in der E-Mail.</string>
+    <string name="your_account_deleted_successfully_message">Ihr Konto wurde erfolgreich gelöscht.</string>
+
+    <!-- Auth error -->
+    <string name="user_not_signed_in_message">Benutzer ist nicht angemeldet.</string>
+    <string name="request_contains_invalid_data_message">Die Anfrage enthält ungültige Daten.</string>
+    <string name="your_session_expired_message">Ihre Sitzung ist abgelaufen.</string>
+    <string name="update_required">Aktualisierung erforderlich</string>
+    <string name="app_update_required_message">Eine neue Version der App ist verfügbar. Bitte aktualisieren Sie die App, damit alle Funktionen korrekt funktionieren.</string>
+    <string name="credentials_are_invalid_message">Anmeldedaten sind ungültig.</string>
+    <string name="reauthentication_error">Fehler bei der erneuten Authentifizierung.</string>
+    <string name="email_not_verified_message">E-Mail ist nicht verifiziert.</string>
+    <string name="user_not_found_message">Benutzer wurde nicht gefunden.</string>
+    <string name="sign_in_failed_message">Beim Anmelden ist ein Fehler aufgetreten.</string>
+    <string name="user_already_exists_message">Benutzer existiert bereits.</string>
+    <string name="sign_up_email_verification_failed_message">Beim Senden der Bestätigungs-E-Mail ist ein Fehler aufgetreten.</string>
+    <string name="sign_up_failed_message">Während der Registrierung ist ein Fehler aufgetreten.</string>
+    <string name="email_verification_check_failed_message">Beim Überprüfen der E-Mail-Verifizierung ist ein Fehler aufgetreten.</string>
+    <string name="verification_code_invalid_or_expired_message">Der Bestätigungscode ist ungültig oder abgelaufen.</string>
+    <string name="sign_up_completing_failed_message">Beim Abschließen der Registrierung ist ein Fehler aufgetreten.</string>
+    <string name="email_update_request_failed_message">Beim Anfordern einer E-Mail-Aktualisierung ist ein Fehler aufgetreten.</string>
+    <string name="email_update_failed_message">Beim Aktualisieren Ihrer E-Mail ist ein Fehler aufgetreten.</string>
+    <string name="password_update_failed_message">Beim Aktualisieren Ihres Passworts ist ein Fehler aufgetreten.</string>
+    <string name="password_reset_request_failed_message">Beim Anfordern einer Passwortzurücksetzung ist ein Fehler aufgetreten.</string>
+    <string name="password_reset_failed_message">Beim Zurücksetzen Ihres Passworts ist ein Fehler aufgetreten.</string>
+    <string name="account_deletion_failed_message">Beim Löschen Ihres Kontos ist ein Fehler aufgetreten.</string>
+    <string name="language_not_saved_message">Die Spracheinstellung wurde nicht gespeichert.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Abo erfolgreich abgeschlossen</string>

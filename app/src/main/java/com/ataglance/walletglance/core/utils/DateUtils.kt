@@ -102,6 +102,10 @@ fun getCurrentLocalDate(): LocalDate {
 fun getCurrentTimestamp(): Long {
     return getCurrentLocalDateTime().asTimestamp()
 }
+fun getCurrentEpochTimestamp(): Long {
+    return getCurrentLocalDateTime().toInstant(TimeZone.UTC).epochSeconds
+}
+
 fun getCurrentDateLong(): Long {
     return getCurrentLocalDate().asTimestamp()
 }

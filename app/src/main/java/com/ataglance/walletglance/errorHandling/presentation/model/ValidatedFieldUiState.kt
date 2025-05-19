@@ -12,4 +12,8 @@ data class ValidatedFieldUiState(
         return validationStates.all { it.isValid }
     }
 
+    fun getTrimmedText(): String {
+        return fieldText.trim()
+    }
+
 }

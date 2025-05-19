@@ -1,20 +1,58 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import com.ataglance.walletglance.settings.presentation.components.LanguagePicker
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
+import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun LanguageScreenWrapper(
+    navController: NavController,
+    navViewModel: NavigationViewModel,
+    appConfiguration: AppConfiguration
+) {
+    val viewModel = koinViewModel<LanguageViewModel> {
+        parametersOf(appConfiguration.langCode)
+    }
+
+    val chosenLanguage by viewModel.langCode.collectAsStateWithLifecycle()
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
+
+    LanguageScreen(
+        isAppSetUp = appConfiguration.isSetUp,
+        onNavigateBack = navController::popBackStack,
+        appLanguage = appConfiguration.langCode,
+        chosenLanguage = chosenLanguage,
+        onSelectLangCode = viewModel::selectLanguage,
+        onApplyLanguage = viewModel::applyLanguage,
+        onContinueButton = {
+            navViewModel.navigateToScreen(navController, SettingsScreens.Personalisation)
+        },
+        requestState = requestState
+    )
+}
 
 @Composable
 fun LanguageScreen(
@@ -22,9 +60,10 @@ fun LanguageScreen(
     onNavigateBack: () -> Unit,
     appLanguage: String,
     chosenLanguage: String?,
-    onSelectNewLanguage: (String) -> Unit,
-    onApplyLanguageButton: () -> Unit,
-    onContinueButton: () -> Unit
+    onSelectLangCode: (String) -> Unit,
+    onApplyLanguage: () -> Unit,
+    onContinueButton: () -> Unit,
+    requestState: RequestState?
 ) {
     val appTheme = CurrAppTheme
     val thisCategory = remember {
@@ -38,23 +77,21 @@ fun LanguageScreen(
         mainScreenContentBlock = {
             LanguagePicker(
                 currentLangCode = chosenLanguage,
-                onRadioButton = { langCode ->
-                    onSelectNewLanguage(langCode)
-                }
+                onLangCodeSelect = onSelectLangCode
             )
             SmallPrimaryButton(
                 text = stringResource(R.string.apply),
                 enabled = appLanguage != chosenLanguage,
-                onClick = onApplyLanguageButton
+                onClick = onApplyLanguage
             )
         },
         allowScroll = false,
-        bottomBlock = if (!isAppSetUp) {{
+        bottomBlock = takeComposableIf(!isAppSetUp) {
             PrimaryButton(
                 onClick = onContinueButton,
                 text = stringResource(R.string._continue)
             )
-        }} else null
+        }
     )
 }
 
@@ -64,7 +101,7 @@ fun LanguageScreen(
 @Composable
 fun LanguageScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = false,
+    isAppSetUp: Boolean = true,
     isBottomBarVisible: Boolean = false,
     appLanguage: String = AppLanguage.English.languageCode,
     selectedLanguage: String? = AppLanguage.German.languageCode,
@@ -78,9 +115,10 @@ fun LanguageScreenPreview(
             onNavigateBack = {},
             appLanguage = appLanguage,
             chosenLanguage = selectedLanguage,
-            onSelectNewLanguage = {},
-            onApplyLanguageButton = {},
-            onContinueButton = {}
+            onSelectLangCode = {},
+            onApplyLanguage = {},
+            onContinueButton = {},
+            requestState = null
         )
     }
 }

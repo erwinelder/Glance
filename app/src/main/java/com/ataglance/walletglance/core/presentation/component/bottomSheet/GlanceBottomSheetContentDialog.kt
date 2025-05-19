@@ -25,7 +25,7 @@ import com.ataglance.walletglance.core.presentation.theme.NotoSans
 fun GlanceBottomSheetContentDialog(
     title: String,
     titleColor: Color = GlanceColors.onSurface,
-    message: String,
+    message: String?,
     @DrawableRes iconRes: Int,
     iconDescription: String,
     iconGradientColor: List<Color> = GlanceColors.primaryGradient,
@@ -57,15 +57,17 @@ fun GlanceBottomSheetContentDialog(
                 fontFamily = NotoSans,
                 lineHeight = 32.sp
             )
-            Text(
-                text = message,
-                fontSize = 20.sp,
-                color = GlanceColors.onSurface,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-                fontFamily = Manrope,
-                lineHeight = 32.sp
-            )
+            message?.let {
+                Text(
+                    text = it,
+                    fontSize = 20.sp,
+                    color = GlanceColors.onSurface,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    fontFamily = Manrope,
+                    lineHeight = 32.sp
+                )
+            }
         }
         Spacer(modifier = Modifier.height(24.dp))
         bottomBlock?.invoke()

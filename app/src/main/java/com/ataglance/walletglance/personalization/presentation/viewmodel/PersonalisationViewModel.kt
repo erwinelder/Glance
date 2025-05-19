@@ -2,6 +2,7 @@ package com.ataglance.walletglance.personalization.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.auth.domain.model.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.utils.moveItems
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
@@ -25,7 +26,8 @@ class PersonalisationViewModel(
     private val saveWidgetsUseCase: SaveWidgetsUseCase,
     private val getWidgetsUseCase: GetWidgetsUseCase,
     private val saveNavigationButtonsUseCase: SaveNavigationButtonsUseCase,
-    private val getNavigationButtonsUseCase: GetNavigationButtonsUseCase
+    private val getNavigationButtonsUseCase: GetNavigationButtonsUseCase,
+    private val userContext: UserContext
 ) : ViewModel() {
 
     init {
@@ -156,6 +158,11 @@ class PersonalisationViewModel(
             saveNavButtons()
             hideNavButtonsSettings()
         }
+    }
+
+
+    fun isUserSignedIn(): Boolean {
+        return userContext.isSignedIn()
     }
 
 }

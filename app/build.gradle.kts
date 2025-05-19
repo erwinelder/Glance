@@ -126,10 +126,8 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.analytics)
-    testImplementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.firebase.firestore.ktx)
     // Koin
     implementation(project.dependencies.platform(libs.koin.bom))

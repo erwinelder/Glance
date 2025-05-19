@@ -1,84 +1,99 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.AuthController
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.AuthViewModelFactory
+import com.ataglance.walletglance.auth.presentation.viewmodel.RequestPasswordResetViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.screenContainers.AnimatedScreenWithRequestState
 import com.ataglance.walletglance.core.presentation.component.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithTitleAndGlassSurface
-import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
-import com.ataglance.walletglance.errorHandling.mapper.toResultState
+import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
 import com.ataglance.walletglance.errorHandling.presentation.components.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
-import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RequestPasswordResetScreenWrapper(
     navController: NavHostController,
-    authController: AuthController,
     backStack: NavBackStackEntry
 ) {
-    val viewModel = backStack.sharedViewModel<AuthViewModel>(
-        navController = navController,
-        factory = AuthViewModelFactory(email = authController.getEmail())
-    )
-    LaunchedEffect(true) {
-        viewModel.resetAllFieldsExceptEmail()
+    val viewModel = koinViewModel<RequestPasswordResetViewModel> {
+        parametersOf(
+            backStack.toRoute<AuthScreens.RequestPasswordReset>().email
+        )
     }
 
     val emailState by viewModel.emailState.collectAsStateWithLifecycle()
-    val emailIsValid by viewModel.emailIsValid.collectAsStateWithLifecycle()
-    val resultState by viewModel.resultState.collectAsStateWithLifecycle()
-
-    val coroutineScope = rememberCoroutineScope()
+    val requestIsAllowed by viewModel.requestIsAllowed.collectAsStateWithLifecycle()
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     RequestPasswordResetScreen(
         emailState = emailState,
+        onNavigateBack = navController::popBackStack,
         onEmailChange = viewModel::updateAndValidateEmail,
-        requestIsAllowed = emailIsValid,
-        onRequestPasswordReset = {
-            coroutineScope.launch {
-                if (!emailIsValid) return@launch
-                val result = authController.requestPasswordReset(email = emailState.fieldText)
-                viewModel.setResultState(result.toResultState())
-            }
-        },
-        resultState = resultState,
-        onResultReset = viewModel::resetResultState
+        requestIsAllowed = requestIsAllowed,
+        onRequestPasswordReset = viewModel::requestPasswordReset,
+        requestState = requestState,
+        onCancelRequest = viewModel::cancelPasswordResetRequest,
+        onSuccessClose = navController::popBackStack,
+        onErrorClose = viewModel::resetRequestState
     )
 }
 
 @Composable
 fun RequestPasswordResetScreen(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
+    onNavigateBack: () -> Unit,
     emailState: ValidatedFieldUiState,
     onEmailChange: (String) -> Unit,
     requestIsAllowed: Boolean,
     onRequestPasswordReset: () -> Unit,
-    resultState: ResultState?,
-    onResultReset: () -> Unit
+    requestState: RequestState?,
+    onCancelRequest: () -> Unit,
+    onSuccessClose: () -> Unit,
+    onErrorClose: () -> Unit
 ) {
-    Box {
-        ScreenContainerWithTitleAndGlassSurface(
+    val backButtonImageRes = DrawableResByTheme(
+        lightDefault = R.drawable.password_light_default,
+        darkDefault = R.drawable.password_dark_default,
+    ).getByTheme(CurrAppTheme)
+
+    if (requestState != null) {
+        SetBackHandler()
+    }
+
+    AnimatedScreenWithRequestState(
+        screenPadding = screenPadding,
+        requestState = requestState,
+        onCancelRequest = onCancelRequest,
+        onSuccessClose = onSuccessClose,
+        onErrorClose = onErrorClose
+    ) {
+        ScreenContainerWithBackNavButtonTitleAndGlassSurface(
+            onNavigateBack = onNavigateBack,
+            backButtonText = stringResource(R.string.reset_password),
+            backButtonImageRes = backButtonImageRes,
             title = stringResource(R.string.request_password_reset),
             glassSurfaceContent = {
                 GlassSurfaceContent(
@@ -94,10 +109,6 @@ fun RequestPasswordResetScreen(
                     onClick = onRequestPasswordReset
                 )
             }
-        )
-        ResultBottomSheet(
-            resultState = resultState,
-            onDismissRequest = onResultReset
         )
     }
 }
@@ -132,15 +143,19 @@ fun RequestPasswordResetScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RequestPasswordResetScreen(
+            onNavigateBack = {},
             emailState = ValidatedFieldUiState(
                 fieldText = email,
-                validationStates = UserDataValidator.validateEmail(email).toUiStates()
+                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(email)
+                    .toUiStates()
             ),
             onEmailChange = {},
             requestIsAllowed = true,
             onRequestPasswordReset = {},
-            resultState = null,
-            onResultReset = {}
+            requestState = null,
+            onCancelRequest = {},
+            onSuccessClose = {},
+            onErrorClose = {}
         )
     }
 }

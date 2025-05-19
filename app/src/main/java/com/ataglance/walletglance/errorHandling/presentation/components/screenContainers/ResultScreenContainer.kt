@@ -7,14 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
 import com.ataglance.walletglance.core.presentation.component.screenContainers.ScreenContainerWithBackButton
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.SuccessMessageWithIcon
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 
 @Composable
 fun ResultScreenContainer(
-    message: String,
+    title: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,
     iconBackgroundGradient: List<Color> = GlanceColors.primaryGradient,
@@ -28,11 +28,11 @@ fun ResultScreenContainer(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            SuccessMessageWithIcon(
-                message = message,
+            LargePrimaryIconWithMessage(
+                title = title,
                 iconRes = iconRes,
                 iconDescription = iconDescription,
-                iconBackgroundGradient = iconBackgroundGradient
+                gradientColor = iconBackgroundGradient,
             )
         }
         PrimaryButton(

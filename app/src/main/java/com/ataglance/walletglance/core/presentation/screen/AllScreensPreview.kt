@@ -10,18 +10,18 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
-import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateEmailVerificationScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.FinishSignUpScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.RequestEmailUpdateScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignInScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.SignUpEmailVerificationScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignUpScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.UpdateEmailScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.VerifyEmailUpdateScreenPreview
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
@@ -48,7 +48,6 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
-import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenPreview
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
@@ -340,7 +339,7 @@ private val budgetAccountAssociationList = listOf(
     device = device
 )
 @Composable
-fun MainAppContentHomeScreenPreview() {
+private fun HomeScreenPreview_() {
     val defaultCategoriesPackage = DefaultCategoriesPackage(LocalContext.current)
         .getDefaultCategories()
     HomeScreenPreview(
@@ -371,7 +370,7 @@ fun MainAppContentHomeScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentRecordsScreenPreview() {
+private fun RecordsScreenPreview_() {
     val context = LocalContext.current
     val collectionType = CategoryCollectionType.Mixed
     val categoryCollectionWithIdsList = categoryCollectionsWithIdsByType
@@ -399,7 +398,7 @@ fun MainAppContentRecordsScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentCategoryStatisticsScreenPreview() {
+private fun CategoryStatisticsScreenPreview_() {
     val context = LocalContext.current
     val currentCollectionType = CategoryCollectionType.Expense
     val categoryCollectionWithIdsList = categoryCollectionsWithIdsByType
@@ -428,7 +427,7 @@ fun MainAppContentCategoryStatisticsScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentBudgetsScreenPreview() {
+private fun BudgetsScreenPreview_() {
     BudgetsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -448,7 +447,7 @@ fun MainAppContentBudgetsScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentBudgetStatisticsScreenPreview() {
+private fun BudgetStatisticsScreenPreview_() {
     val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
     val budget = budgetEntityList
         .toDomainModels(
@@ -470,21 +469,6 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
 }
 
 @Preview(
-    name = "FinishSetupScreen",
-    group = "MainScreens",
-    apiLevel = 34,
-    locale = langCode,
-    device = device
-)
-@Composable
-fun MainAppContentFinishSetupScreenPreview() {
-    SetupFinishScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-    )
-}
-
-@Preview(
     name = "RecordCreationScreen",
     group = "MainScreens",
     apiLevel = 34,
@@ -492,7 +476,7 @@ fun MainAppContentFinishSetupScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentRecordCreationScreenPreview() {
+private fun RecordCreationScreenPreview_() {
     val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
         .getDefaultCategories()
     val recordDraft = RecordDraft(
@@ -533,7 +517,7 @@ fun MainAppContentRecordCreationScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentTransferCreationScreenPreview() {
+private fun TransferCreationScreenPreview_() {
     val accountList = accountsAndActiveOne.accounts
     val transferDraft = TransferDraft(
         isNew = true,
@@ -569,7 +553,7 @@ fun MainAppContentTransferCreationScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentStartSetupScreenPreview() {
+private fun StartSetupScreenPreview_() {
     StartSetupScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -584,10 +568,10 @@ fun MainAppContentStartSetupScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentSettingHomeScreenPreview() {
+private fun SettingsHomeScreenPreview_() {
     SettingsHomeScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        isSignedIn = true,
         isBottomBarVisible = isBottomBarVisible,
     )
 }
@@ -600,7 +584,7 @@ fun MainAppContentSettingHomeScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditAccountsScreenPreview() {
+private fun EditAccountsScreenPreview_() {
     EditAccountsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -616,7 +600,7 @@ fun MainAppContentEditAccountsScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditAccountScreenPreview() {
+private fun EditAccountScreenPreview_() {
     EditAccountScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -632,7 +616,7 @@ fun MainAppContentEditAccountScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentCurrencyPickerScreenPreview() {
+private fun CurrencyPickerScreenPreview_() {
     CurrencyPickerScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -647,7 +631,7 @@ fun MainAppContentCurrencyPickerScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditBudgetsScreenPreview() {
+private fun EditBudgetsScreenPreview_() {
     EditBudgetsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -665,7 +649,7 @@ fun MainAppContentEditBudgetsScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditBudgetScreenPreview() {
+private fun EditBudgetScreenPreview_() {
     EditBudgetScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -683,7 +667,7 @@ fun MainAppContentEditBudgetScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditCategoriesScreenPreview() {
+private fun EditCategoriesScreenPreview_() {
     EditCategoriesScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -699,7 +683,7 @@ fun MainAppContentEditCategoriesScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditSubcategoriesScreenPreview() {
+private fun EditSubcategoriesScreenPreview_() {
     EditSubcategoriesScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -714,7 +698,7 @@ fun MainAppContentEditSubcategoriesScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditCategoryScreenPreview() {
+private fun EditCategoryScreenPreview_() {
     EditCategoryScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -729,7 +713,7 @@ fun MainAppContentEditCategoryScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditCategoryCollectionsScreenPreview() {
+private fun EditCategoryCollectionsScreenPreview_() {
     EditCategoryCollectionsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -746,7 +730,7 @@ fun MainAppContentEditCategoryCollectionsScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEditCategoryCollectionScreenPreview() {
+private fun EditCategoryCollectionScreenPreview_() {
     EditCategoryCollectionScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -762,7 +746,7 @@ fun MainAppContentEditCategoryCollectionScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentAppearanceScreenPreview() {
+private fun PersonalisationScreenPreview_() {
     PersonalisationScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -778,10 +762,11 @@ fun MainAppContentAppearanceScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentLanguageScreenPreview() {
+private fun LanguageScreenPreview_() {
     LanguageScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
+        isBottomBarVisible = isBottomBarVisible,
         appLanguage = AppLanguage.English.languageCode,
         selectedLanguage = AppLanguage.German.languageCode
     )
@@ -795,7 +780,7 @@ fun MainAppContentLanguageScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentSettingsDataScreenPreview() {
+private fun ResetDataScreenPreview_() {
     ResetDataScreenPreview(
         appTheme = appTheme,
         isBottomBarVisible = isBottomBarVisible,
@@ -811,7 +796,7 @@ fun MainAppContentSettingsDataScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentSignInScreenPreview() {
+private fun SignInScreenPreview_() {
     SignInScreenPreview(
         appTheme = appTheme
     )
@@ -825,7 +810,7 @@ fun MainAppContentSignInScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentSignUpScreenPreview() {
+private fun SignUpScreenPreview_() {
     SignUpScreenPreview(
         appTheme = appTheme
     )
@@ -839,8 +824,8 @@ fun MainAppContentSignUpScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentEmailVerificationScreenPreview() {
-    EmailVerificationScreenPreview(
+private fun SignUpEmailVerificationScreenPreview_() {
+    SignUpEmailVerificationScreenPreview(
         appTheme = appTheme
     )
 }
@@ -853,7 +838,7 @@ fun MainAppContentEmailVerificationScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentFinishSignUpScreenPreview() {
+private fun FinishSignUpScreenPreview_() {
     FinishSignUpScreenPreview(
         appTheme = appTheme
     )
@@ -867,22 +852,50 @@ fun MainAppContentFinishSignUpScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentProfileScreenPreview() {
+private fun ProfileScreenPreview_() {
     ProfileScreenPreview(
         appTheme = appTheme
     )
 }
 
 @Preview(
-    name = "UpdateEmailScreen",
+    name = "RequestEmailUpdateScreen",
     group = "AuthScreens",
     apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentUpdateEmailScreenPreview() {
-    UpdateEmailScreenPreview(
+private fun RequestEmailUpdateScreenPreview_() {
+    RequestEmailUpdateScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "EmailUpdateEmailVerification",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun EmailUpdateEmailVerificationScreenPreview_() {
+    EmailUpdateEmailVerificationScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "VerifyEmailUpdate",
+    group = "AuthScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun VerifyEmailUpdateScreenPreview_() {
+    VerifyEmailUpdateScreenPreview(
         appTheme = appTheme
     )
 }
@@ -895,7 +908,7 @@ fun MainAppContentUpdateEmailScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentUpdatePasswordScreenPreview() {
+private fun UpdatePasswordScreenPreview_() {
     UpdatePasswordScreenPreview(
         appTheme = appTheme
     )
@@ -909,7 +922,7 @@ fun MainAppContentUpdatePasswordScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentRequestPasswordResetScreenPreview() {
+private fun RequestPasswordResetScreenPreview_() {
     RequestPasswordResetScreenPreview(
         appTheme = appTheme
     )
@@ -923,7 +936,7 @@ fun MainAppContentRequestPasswordResetScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentResetPasswordScreenPreview() {
+private fun ResetPasswordScreenPreview_() {
     ResetPasswordScreenPreview(
         appTheme = appTheme
     )
@@ -937,37 +950,23 @@ fun MainAppContentResetPasswordScreenPreview() {
     device = device
 )
 @Composable
-fun MainAppContentDeleteAccountScreenPreview() {
+private fun DeleteAccountScreenPreview_() {
     DeleteAccountScreenPreview(
         appTheme = appTheme
     )
 }
 
 @Preview(
-    name = "EmailVerificationFailedScreen",
-    group = "AuthScreens",
+    name = "FinishSetupScreen",
+    group = "MainScreens",
     apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEmailVerificationFailedScreenPreview() {
-    EmailVerificationErrorScreenPreview(
-        appTheme = appTheme
-    )
-}
-
-@Preview(
-    name = "AuthResultSuccessScreen",
-    group = "AuthScreens",
-    apiLevel = 34,
-    locale = langCode,
-    device = device
-)
-@Composable
-fun MainAppContentAuthResultSuccessScreenPreview() {
-    AuthResultSuccessScreenPreview(
+private fun FinishSetupScreenPreview_() {
+    FinishSetupScreenPreview(
         appTheme = appTheme,
-        screenType = AuthResultSuccessScreenType.PasswordUpdate
+        isAppSetUp = isAppSetUp,
     )
 }

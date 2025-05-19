@@ -12,4 +12,4 @@ val httpClient = HttpClient(CIO) {
     }
 }
 
-const val glanciBackendUrl = "walletglance-backend-hgddf5fwckbqf8bf.northeurope-01.azurewebsites.net"
+const val glanciBackendUrl = "https://walletglance-backend-hgddf5fwckbqf8bf.northeurope-01.azurewebsites.net"

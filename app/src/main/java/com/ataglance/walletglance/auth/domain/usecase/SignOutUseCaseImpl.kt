@@ -1,9 +1,11 @@
 package com.ataglance.walletglance.auth.domain.usecase
 
-import com.google.firebase.auth.FirebaseAuth
+import com.ataglance.walletglance.auth.domain.model.UserContext
 
-class SignOutUseCaseImpl(private val auth: FirebaseAuth) : SignOutUseCase {
+class SignOutUseCaseImpl(
+    private val userContext: UserContext
+) : SignOutUseCase {
     override fun execute() {
-        auth.signOut()
+        userContext.deleteData()
     }
 }

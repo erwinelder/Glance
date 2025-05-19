@@ -44,7 +44,7 @@ class SignInViewModel(
 
     private val _passwordState = MutableStateFlow(
         ValidatedFieldUiState(
-            validationStates = UserDataValidator.validateRequiredFieldIsNotEmpty("").toUiStates()
+            validationStates = UserDataValidator.validateRequiredFieldIsNotBlank("").toUiStates()
         )
     )
     val passwordState = _passwordState.asStateFlow()
@@ -53,7 +53,7 @@ class SignInViewModel(
         _passwordState.update {
             it.copy(
                 fieldText = password,
-                validationStates = UserDataValidator.validateRequiredFieldIsNotEmpty(password)
+                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password)
                     .toUiStates()
             )
         }
@@ -64,7 +64,7 @@ class SignInViewModel(
         emailState, passwordState
     ) { emailState, passwordState ->
         UserDataValidator.isValidEmail(email = emailState.fieldText) &&
-                passwordState.fieldText.isNotEmpty()
+                passwordState.fieldText.isNotBlank()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
@@ -72,22 +72,24 @@ class SignInViewModel(
     )
 
 
-    private var requestJob: Job? = null
+    private var signInJob: Job? = null
 
     fun signIn() {
+        if (!signInIsAllowed.value) return
         setRequestLoadingState()
 
-        requestJob = viewModelScope.launch {
+        signInJob = viewModelScope.launch {
             val result = signInUseCase.execute(
-                email = emailState.value.fieldText,
-                password = passwordState.value.fieldText
+                email = emailState.value.getTrimmedText(),
+                password = passwordState.value.getTrimmedText()
             )
             setRequestResultState(result = result.toResultWithButtonState())
         }
     }
 
-    fun cancelRequest() {
-        requestJob?.cancel()
+    fun cancelSignIn() {
+        signInJob?.cancel()
+        signInJob = null
         resetRequestState()
     }
 

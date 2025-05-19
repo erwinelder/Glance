@@ -55,7 +55,7 @@ object UserDataValidator {
     }
 
 
-    fun validateRequiredFieldIsNotEmpty(value: String): List<UserDataValidationResult> {
+    fun validateRequiredFieldIsNotBlank(value: String): List<UserDataValidationResult> {
         return listOf(value.requireNotBlank())
     }
 
@@ -68,7 +68,8 @@ object UserDataValidator {
     }
 
     private fun String.isValidEmail(): UserDataValidationResult {
-        val isValid = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$").matches(this)
+        val email = this.trim()
+        val isValid = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$").matches(email)
 
         return ValidationResult.fromValidation(
             validation = if (isValid) UserDataValidation.IsValid else UserDataValidation.IsNotValid,
@@ -77,23 +78,26 @@ object UserDataValidator {
     }
 
     private fun String.atLeastNumberOfChars(number: Int): UserDataValidationResult {
+        val value = this.trim()
         return ValidationResult.fromValidation(
             validation = UserDataValidation.TooShort,
-            isValid = trim().length >= number
+            isValid = value.length >= number
         )
     }
 
     private fun String.atMostNumberOfChars(number: Int): UserDataValidationResult {
+        val value = this.trim()
         return ValidationResult.fromValidation(
             validation = UserDataValidation.TooLong,
-            isValid = trim().length <= number
+            isValid = value.length <= number
         )
     }
 
     private fun String.atLeastEightChars(): UserDataValidationResult {
+        val value = this.trim()
         return ValidationResult.fromValidation(
             validation = UserDataValidation.AtLeastEightChars,
-            isValid = Regex("^.{8,}$").matches(this)
+            isValid = Regex("^.{8,}$").matches(value)
         )
     }
 
@@ -129,7 +133,7 @@ object UserDataValidator {
     private fun String.matchPassword(password: String): UserDataValidationResult {
         return ValidationResult.fromValidation(
             validation = UserDataValidation.PasswordsMatching,
-            isValid = this == password
+            isValid = this.trim() == password.trim()
         )
     }
 

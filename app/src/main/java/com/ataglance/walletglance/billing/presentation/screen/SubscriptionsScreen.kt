@@ -28,8 +28,6 @@ import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import com.ataglance.walletglance.settings.presentation.screenContainers.SettingsCategoryScreenContainer
 
@@ -55,8 +53,6 @@ fun SubscriptionsScreenWrapper(
                 viewModel.startPurchase(activity = it, subscription = subscription)
             }
         },
-        purchaseResultState = purchaseResult,
-        onResultReset = viewModel::resetPurchaseResult
     )
 }
 
@@ -65,9 +61,7 @@ fun SubscriptionsScreen(
     onNavigateBack: () -> Unit,
     activeSubscriptions: List<SubscriptionUiState>,
     availableSubscriptions: List<SubscriptionUiState>,
-    onStartPurchase: (SubscriptionUiState) -> Unit,
-    purchaseResultState: ResultState?,
-    onResultReset: () -> Unit
+    onStartPurchase: (SubscriptionUiState) -> Unit
 ) {
     Box {
         SettingsCategoryScreenContainer(
@@ -88,7 +82,6 @@ fun SubscriptionsScreen(
                 )
             }
         )
-        ResultBottomSheet(resultState = purchaseResultState, onDismissRequest = onResultReset)
     }
 }
 
@@ -169,9 +162,7 @@ fun PreviewSubscriptionScreen(
                     price = "0.00 USD"
                 )
             ),
-            onStartPurchase = {},
-            purchaseResultState = null,
-            onResultReset = {}
+            onStartPurchase = {}
         )
     }
 }

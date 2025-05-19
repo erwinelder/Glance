@@ -1,8 +1,12 @@
 package com.ataglance.walletglance.errorHandling.domain.model.result
 
 enum class AuthError : Error {
-    DataNotValid,
+    UserNotSignedIn,
+    RequestDataNotValid,
+    SessionExpired,
+    AppUpdateRequired,
     InvalidCredentials,
+    ReauthenticationError,
     EmailNotVerified,
     UserNotFound,
     SignInError,
@@ -12,19 +16,11 @@ enum class AuthError : Error {
     CheckEmailVerificationError,
     OobCodeIsInvalid,
     FinishSignUpError,
-    SessionExpired,
-
-    UserNotCreated,
-    UserDataNotSaved,
-    UserNotSignedIn,
-    InvalidEmail,
-    InvalidCode,
-    WrongCredentials,
-    ReauthenticationError,
-    EmailVerificationError,
-    EmailForPasswordResetError,
+    RequestEmailUpdateError,
+    EmailUpdateError,
+    PasswordUpdateError,
+    ResetPasswordRequestError,
     PasswordResetError,
-    UpdatePasswordError,
-    DataDeletionError,
-    AccountDeletionError
+    AccountNotDeleted,
+    LanguageNotSaved
 }

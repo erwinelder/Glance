@@ -13,28 +13,22 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
-import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.domain.usecase.CheckTokenValidityUseCase
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
-import com.google.firebase.BuildConfig
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.ataglance.walletglance.errorHandling.domain.model.result.AuthError
+import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import org.koin.android.ext.android.inject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.GlobalContext
 
 class MainActivity : AppCompatActivity() {
 
-    private val auth: FirebaseAuth by inject()
-    private val authController: AuthController by inject()
     private lateinit var navController: NavHostController
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
 
@@ -57,8 +51,6 @@ class MainActivity : AppCompatActivity() {
             }
         }*/
 
-        initializeFirebaseDebugger()
-
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()
@@ -69,7 +61,28 @@ class MainActivity : AppCompatActivity() {
                     handleDeepLink(intent)
                 }
                 LaunchedEffect(true) {
-                    authController.fetchUserDataAndUpdateUser()
+                    val checkTokenUseCase = GlobalContext.get().get<CheckTokenValidityUseCase>()
+                    val result = checkTokenUseCase.execute()
+
+                    if (result !is ResultData.Error) return@LaunchedEffect
+
+                    when (result.error) {
+                        AuthError.AppUpdateRequired -> {
+                            navController.navigate(MainScreens.UpdateRequest) {
+                                popUpTo(0)
+                                launchSingleTop = true
+                            }
+                        }
+                        AuthError.SessionExpired -> {
+                            navController.navigate(AuthScreens.SignIn()) {
+                                popUpTo(0)
+                                launchSingleTop = true
+                            }
+                        }
+                        else -> {
+                            Log.e("MainActivity", "Error checking token validity: ${result.error}")
+                        }
+                    }
                 }
 
                 GlanceAppComponent(
@@ -99,22 +112,19 @@ class MainActivity : AppCompatActivity() {
         when (val mode = uri.getQueryParameter("mode")) {
             "verifyEmail" -> {
                 lifecycleScope.launch {
-                    uri.extractOobCode()
-                        ?.let { processEmailVerificationLink(it) }
+                    uri.extractOobCode()?.let(::processVerifyEmailLink)
                         ?: Log.e("Email verification link", "No oobCode found in the deep link")
                 }
             }
             "verifyAndChangeEmail" -> {
                 lifecycleScope.launch {
-                    uri.extractOobCode()
-                        ?.let { processEmailVerificationAndChangeLink(it) }
+                    uri.extractOobCode()?.let(::processVerifyAndChangeEmailLink)
                         ?: Log.e("Email verification link", "No oobCode found in the deep link")
                 }
             }
             "resetPassword" -> {
                 lifecycleScope.launch {
-                    uri.extractOobCode()
-                        ?.let { processResetPasswordLink(it) }
+                    uri.extractOobCode()?.let(::processResetPasswordLink)
                         ?: Log.e("Reset password link", "No oobCode found in the deep link")
                 }
             }
@@ -122,45 +132,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun processEmailVerificationLink(obbCode: String) {
-        navController.navigate(AuthScreens.EmailVerification) { launchSingleTop = true }
+    private fun processVerifyEmailLink(oobCode: String) {
+        navController.navigate(AuthScreens.FinishSignUp(oobCode = oobCode)) {
+            launchSingleTop = true
+        }
     }
 
-    private suspend fun processEmailVerificationLinkT(obbCode: String) {
-        val screen = when (authController.applyOobCode(obbCode)) {
-            true -> AuthScreens.ResultSuccess(
-                screenType = AuthResultSuccessScreenType.EmailVerification.name
-            )
-            false -> AuthScreens.EmailVerificationFailed
+    private fun processVerifyAndChangeEmailLink(obbCode: String) {
+        navController.navigate(AuthScreens.VerifyEmailUpdate(oobCode = obbCode)) {
+            launchSingleTop = true
         }
-        auth.currentUser?.reload()?.await()
-        auth.currentUser?.let { authController.fetchUserDataAndUpdateUser(it.uid) }
-
-        navController.navigate(screen) { launchSingleTop = true }
-    }
-
-    private suspend fun processEmailVerificationAndChangeLink(obbCode: String) {
-        val screen = when (authController.applyOobCode(obbCode)) {
-            true -> {
-                authController.signOut()
-                AuthScreens.SignIn(case = SignInCase.AfterEmailChange.name)
-            }
-            false -> AuthScreens.EmailVerificationFailed
-        }
-
-        navController.navigate(screen) { launchSingleTop = true }
     }
 
     private fun processResetPasswordLink(oobCode: String) {
-        navController.navigate(AuthScreens.ResetPassword(oobCode)) { launchSingleTop = true }
-    }
-
-
-    private fun initializeFirebaseDebugger() {
-        if (BuildConfig.DEBUG) {
-            val firestore: FirebaseFirestore by inject()
-            firestore.useEmulator("10.0.2.2", 8080)
-            auth.useEmulator("10.0.2.2", 9099)
+        navController.navigate(AuthScreens.ResetPassword(obbCode = oobCode)) {
+            launchSingleTop = true
         }
     }
 

@@ -1,43 +1,29 @@
 package com.ataglance.walletglance.settings.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ataglance.walletglance.account.presentation.navigation.accountsGraph
-import com.ataglance.walletglance.auth.domain.model.AuthController
-import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.presentation.navigation.authGraph
 import com.ataglance.walletglance.budget.presentation.navigation.budgetsGraph
-import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.presentation.navigation.categoriesGraph
 import com.ataglance.walletglance.categoryCollection.presentation.navigation.categoryCollectionsGraph
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreen
+import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenWrapper
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
-import com.ataglance.walletglance.settings.presentation.screen.LanguageScreen
-import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreen
-import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreen
+import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenWrapper
+import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenWrapper
+import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenWrapper
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreen
-import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
-import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
-import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.context.GlobalContext
-import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
     scaffoldPadding: PaddingValues,
     navViewModel: NavigationViewModel,
-    authController: AuthController,
     appConfiguration: AppConfiguration
 ) {
     navigation<MainScreens.Settings>(
@@ -52,18 +38,15 @@ fun NavGraphBuilder.settingsGraph(
             )
         }
         composable<SettingsScreens.SettingsHome> {
-            SettingsHomeScreen(
-                scaffoldPadding = scaffoldPadding,
-                isSignedIn = authController.isSignedIn(),
-                onNavigateToScreen = { screen ->
-                    navViewModel.navigateToScreen(navController, screen)
-                }
+            SettingsHomeScreenWrapper(
+                screenPadding = scaffoldPadding,
+                navController = navController,
+                navViewModel = navViewModel
             )
         }
         authGraph(
             navController = navController,
             navViewModel = navViewModel,
-            authController = authController,
             appConfiguration = appConfiguration
         )
         accountsGraph(
@@ -89,63 +72,21 @@ fun NavGraphBuilder.settingsGraph(
             navViewModel = navViewModel
         )
         composable<SettingsScreens.Personalisation> {
-            PersonalisationScreen(
-                isAppSetUp = appConfiguration.isSetUp,
-                onNavigateBack = navController::popBackStack,
-                onContinueSetupButton = {
-                    if (appConfiguration.isSignedIn) {
-                        navViewModel.navigateToScreen(navController, SettingsScreens.Accounts)
-                    } else {
-                        navViewModel.navigateToSignInScreen(navController, SignInCase.Default)
-                    }
-                }
+            PersonalisationScreenWrapper(
+                navController = navController,
+                navViewModel = navViewModel,
+                appConfiguration = appConfiguration
             )
         }
         composable<SettingsScreens.Language> {
-            val viewModel = koinViewModel<LanguageViewModel> {
-                parametersOf(appConfiguration.langCode)
-            }
-
-            val chosenLanguage by viewModel.langCode.collectAsState()
-            val coroutineScope = rememberCoroutineScope()
-
-            LanguageScreen(
-                isAppSetUp = appConfiguration.isSetUp,
-                onNavigateBack = navController::popBackStack,
-                appLanguage = appConfiguration.langCode,
-                chosenLanguage = chosenLanguage,
-                onSelectNewLanguage = viewModel::selectNewLanguage,
-                onApplyLanguageButton = {
-                    val koin = GlobalContext.get()
-                    val categoriesPackageCurr = DefaultCategoriesPackage(koin.get<ResourceManager>())
-                    val categoriesPackageNew = DefaultCategoriesPackage(
-                        koin.get<ResourceManager> { parametersOf(chosenLanguage) }
-                    )
-                    coroutineScope.launch {
-                        viewModel.translatedCategories(
-                            defaultInCurrLocale = categoriesPackageCurr.getAsList(),
-                            defaultInNewLocale = categoriesPackageNew.getAsList()
-                        )
-                        viewModel.applyLanguage()
-                    }
-                },
-                onContinueButton = {
-                    navViewModel.navigateToScreen(navController, SettingsScreens.Personalisation)
-                }
+            LanguageScreenWrapper(
+                navController = navController,
+                navViewModel = navViewModel,
+                appConfiguration = appConfiguration
             )
         }
         composable<SettingsScreens.ResetData> {
-            val viewModel = koinViewModel<ResetDataViewModel>()
-
-            val coroutineScope = rememberCoroutineScope()
-
-            ResetDataScreen(
-                onResetData = {
-                    coroutineScope.launch {
-                        viewModel.resetData()
-                    }
-                }
-            )
+            ResetDataScreenWrapper()
         }
     }
 }
