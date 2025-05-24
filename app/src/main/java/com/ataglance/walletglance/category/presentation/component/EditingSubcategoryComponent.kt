@@ -20,8 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun EditingSubcategoryComponent(
@@ -62,6 +63,7 @@ fun EditingSubcategoryComponent(
                 text = category.name,
                 color = GlanceColors.onSurface,
                 fontSize = 19.sp,
+                fontFamily = Manrope,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 1.dp)

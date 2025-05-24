@@ -28,7 +28,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.component.AccountPicker
-import com.ataglance.walletglance.account.presentation.component.SmallAccount
+import com.ataglance.walletglance.account.presentation.component.SmallAccountComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.BackButton
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
@@ -168,7 +168,7 @@ private fun GlassSurfaceContent(
                 targetState = transferDraft.sender.account,
                 label = "sender account field at the transfer creation screen"
             ) { targetAccount ->
-                SmallAccount(account = targetAccount) {
+                SmallAccountComponent(account = targetAccount) {
                     onAccountFieldClick(true)
                 }
             }
@@ -178,7 +178,7 @@ private fun GlassSurfaceContent(
                 targetState = transferDraft.receiver.account,
                 label = "receiver account field at the transfer creation screen"
             ) { targetAccount ->
-                SmallAccount(account = targetAccount) {
+                SmallAccountComponent(account = targetAccount) {
                     onAccountFieldClick(false)
                 }
             }

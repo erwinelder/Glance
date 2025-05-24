@@ -8,8 +8,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun TwoStateCheckboxWithText(
@@ -32,6 +33,7 @@ fun TwoStateCheckboxWithText(
             text = text,
             color = GlanceColors.onSurface,
             fontSize = fontSize,
+            fontFamily = Manrope,
             fontWeight = FontWeight.Normal,
             modifier = Modifier.bounceClickEffect {
                 onClick(!checked)

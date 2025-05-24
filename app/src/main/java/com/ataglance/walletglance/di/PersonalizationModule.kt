@@ -8,10 +8,10 @@ import com.ataglance.walletglance.personalization.data.remote.source.WidgetRemot
 import com.ataglance.walletglance.personalization.data.remote.source.WidgetRemoteDataSourceImpl
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepositoryImpl
-import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
-import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCaseImpl
-import com.ataglance.walletglance.personalization.domain.usecase.SaveWidgetsUseCase
-import com.ataglance.walletglance.personalization.domain.usecase.SaveWidgetsUseCaseImpl
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCaseImpl
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.SaveWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.SaveWidgetsUseCaseImpl
 import com.ataglance.walletglance.personalization.presentation.viewmodel.PersonalizationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module

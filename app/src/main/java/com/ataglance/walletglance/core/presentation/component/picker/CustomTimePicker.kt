@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,14 +42,20 @@ fun CustomTimePicker(
                         onConfirmButton(state.hour, state.minute)
                     }
                 ) {
-                    Text(text = stringResource(R.string.confirm))
+                    Text(
+                        text = stringResource(R.string.confirm),
+                        fontFamily = Manrope
+                    )
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { onOpenDialogChange(false) }
                 ) {
-                    Text(text = stringResource(R.string.cancel))
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        fontFamily = Manrope
+                    )
                 }
             }
         ) {

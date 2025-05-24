@@ -35,10 +35,11 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun EditingAccountComponent(
@@ -152,6 +153,7 @@ private fun TextWithLabel(
         Text(
             text = labelText,
             fontSize = labelFontSize,
+            fontFamily = Manrope,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.Center,
             color = color.copy(.6f)
@@ -159,6 +161,7 @@ private fun TextWithLabel(
         Text(
             text = text,
             fontSize = textFontSize,
+            fontFamily = Manrope,
             fontWeight = FontWeight.Light,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

@@ -46,8 +46,8 @@ fun NavigationTextArrowButton(
             text = text,
             color = GlanceColors.primary,
             fontSize = fontSize,
-            fontWeight = FontWeight.Normal,
-            fontFamily = Manrope
+            fontFamily = Manrope,
+            fontWeight = FontWeight.W400
         )
         if (!showLeftArrow) {
             Spacer(modifier = Modifier.width(4.dp))

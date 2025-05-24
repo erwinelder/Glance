@@ -19,6 +19,8 @@ assetDelivery = "2.3.0"
 googleBilling = "7.1.1"
 featureDelivery = "2.1.0"
 review = "2.0.2"
+# WorkManager
+work = "2.10.1"
 # Room
 room = "2.7.1"
 # Preferences
@@ -87,6 +89,8 @@ review = { module = "com.google.android.play:review", version.ref = "review" }
 review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "review" }
 google-billing = { module = "com.android.billingclient:billing", version.ref = "googleBilling" }
 google-billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "googleBilling" }
+# WorkManager
+androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work" }
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }

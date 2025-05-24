@@ -3,7 +3,7 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.usecase.UpdatePasswordUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.UpdatePasswordUseCase
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.auth.mapper.toUiStates

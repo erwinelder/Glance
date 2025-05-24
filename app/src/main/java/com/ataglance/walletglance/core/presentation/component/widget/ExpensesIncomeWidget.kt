@@ -31,13 +31,14 @@ import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.component.chart.GlanceLineChart
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -103,6 +104,7 @@ fun ExpensesIncomeWidgetContent(
                     color = GlanceColors.onSurface,
                     fontSize = 24.sp,
                     lineHeight = 30.sp,
+                    fontFamily = Manrope,
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Center,
                 )
@@ -116,6 +118,7 @@ fun ExpensesIncomeWidgetContent(
                     text = targetTotalExpensesAndIncome,
                     color = GlanceColors.onSurface,
                     fontSize = 22.sp,
+                    fontFamily = Manrope,
                     fontWeight = FontWeight.Light
                 )
             }
@@ -158,6 +161,7 @@ private fun StatisticBlock(
                 text = targetContent,
                 color = GlanceColors.onSurface,
                 fontSize = 20.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
         }
@@ -167,6 +171,7 @@ private fun StatisticBlock(
                 text = targetContent,
                 color = GlanceColors.onSurface,
                 fontSize = 20.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
         }

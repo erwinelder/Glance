@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun MessageContainer(message: String) {
@@ -26,6 +27,7 @@ fun MessageContainer(message: String) {
             text = message,
             color = GlanceColors.onSurface.copy(.6f),
             fontSize = 17.sp,
+            fontFamily = Manrope,
             textAlign = TextAlign.Center
         )
     }

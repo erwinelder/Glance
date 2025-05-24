@@ -7,9 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
-import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
 @Composable
 fun PrimaryTextButton(
@@ -25,8 +25,8 @@ fun PrimaryTextButton(
             text = text,
             color = GlanceColors.primary,
             fontSize = fontSize,
-            fontWeight = FontWeight.Normal,
-            fontFamily = Manrope
+            fontFamily = Manrope,
+            fontWeight = FontWeight.Normal
         )
     }
 }

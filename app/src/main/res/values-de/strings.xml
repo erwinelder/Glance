@@ -60,6 +60,7 @@
     <string name="color_theme">Farbthema</string>
     <string name="navigation_buttons">Navigationsschaltflächen</string>
     <string name="widgets">Widgets</string>
+    <string name="notifications">Benachrichtigungen</string>
     <string name="language">Sprachen</string>
     <string name="reset_data">Daten zurücksetzen</string>
     <string name="profile">Profil</string>
@@ -73,6 +74,7 @@
     <string name="start_setup">Setup starten</string>
     <string name="continue_to_app">Zur App fortfahren</string>
     <string name="continue_setup">Einrichtung fortsetzen</string>
+    <string name="adjust_app_notifications">Passen Sie die App-Benachrichtigungen an</string>
     <string name="choose_app_language">Wählen Sie die App-Sprache</string>
 
     <!-- Settings loaders -->
@@ -80,6 +82,9 @@
 
     <!-- Settings error -->
     <string name="not_saved">Nicht gespeichert</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Tägliche Erinnerungen zum Erfassen der Ausgaben</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -209,6 +214,13 @@
     <string name="purchase_was_cancelled">Kauf wurde abgebrochen</string>
     <string name="no_network">Keine Netzwerkverbindung</string>
     <string name="subscription_purchase_error">Beim Verarbeiten des Kaufs ist ein Fehler aufgetreten</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">Allgemeine Benachrichtigungen</string>
+    <string name="notifications_denied_title">Benachrichtigungen abgelehnt</string>
+    <string name="notifications_denied_message">Sie haben Benachrichtigungen von Glanci abgelehnt. Um diese Art von Benachrichtigungen zuzulassen, aktivieren Sie sie bitte in den Systemeinstellungen.</string>
+    <string name="daily_records_reminder_notification_title">Tägliche Erinnerungen an Einträge</string>
+    <string name="daily_records_reminder_notification_message">Vergiss nicht, deine täglichen Ausgaben zu erfassen.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Guten Morgen!</string>

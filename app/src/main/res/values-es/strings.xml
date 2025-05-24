@@ -61,6 +61,7 @@
     <string name="color_theme">Tema de color</string>
     <string name="navigation_buttons">Botones de navegación</string>
     <string name="widgets">Widgets</string>
+    <string name="notifications">Notificaciones</string>
     <string name="language">Idioma</string>
     <string name="reset_data">Restablecer datos</string>
     <string name="profile">Perfil</string>
@@ -74,6 +75,7 @@
     <string name="start_setup">Iniciar configuración</string>
     <string name="continue_to_app">Continuar como invitado</string>
     <string name="continue_setup">Continuar con la configuración</string>
+    <string name="adjust_app_notifications">Ajusta las notificaciones de la app</string>
     <string name="choose_app_language">Elige el idioma de la aplicación</string>
 
     <!-- Settings loaders -->
@@ -81,6 +83,9 @@
 
     <!-- Settings error -->
     <string name="not_saved">No guardado</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Recordatorios diarios para registrar tus gastos</string>
 
     <!-- Fields -->
     <string name="email">Correo electrónico</string>
@@ -210,6 +215,13 @@
     <string name="purchase_was_cancelled">La compra fue cancelada</string>
     <string name="no_network">Sin conexión a la red</string>
     <string name="subscription_purchase_error">Ocurrió un error al procesar la compra</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">Notificaciones generales</string>
+    <string name="notifications_denied_title">Notificaciones denegadas</string>
+    <string name="notifications_denied_message">Has denegado las notificaciones de Glance. Para permitir este tipo de notificaciones, actívalas en la configuración del sistema.</string>
+    <string name="daily_records_reminder_notification_title">Recordatorio diario de registros</string>
+    <string name="daily_records_reminder_notification_message">No olvides registrar tus gastos diarios.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">¡Buenos días!</string>

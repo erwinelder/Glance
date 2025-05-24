@@ -29,10 +29,11 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun AccountNameWithCurrencyComposable(
@@ -87,8 +88,9 @@ fun AccountNameWithCurrencyComposable(
                 Text(
                     text = account?.name ?: "???",
                     color = onAccountColor,
-                    textAlign = TextAlign.Center,
                     fontSize = fontSize,
+                    fontFamily = Manrope,
+                    textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Light,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -102,8 +104,9 @@ fun AccountNameWithCurrencyComposable(
                 Text(
                     text = account?.currency ?: "???",
                     color = onAccountColor,
-                    textAlign = TextAlign.Center,
                     fontSize = fontSize,
+                    fontFamily = Manrope,
+                    textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Light,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

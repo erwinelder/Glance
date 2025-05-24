@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,7 +109,7 @@ sealed class GlancePalette(
         ),
         onSurface = Color(31, 26, 28),
 
-        outline = Color(180, 171, 175),
+        outline = Color(140, 133, 137),
         outlineSemiTransparent = Color(180, 171, 175, 128),
 
         disabledGradient = listOf(
@@ -263,6 +264,11 @@ private fun PreviewColorsLightDefault() {
                             modifier = Modifier.size(150.dp, 100.dp)
                         )
                     }
+                    Text(
+                        text = "Outlined text",
+                        color = GlanceColors.outline,
+                        fontFamily = Manrope
+                    )
                 }
             }
             PrimaryButton(text = "Save and continue")
@@ -299,6 +305,11 @@ private fun PreviewColorsDarkDefault() {
                             modifier = Modifier.size(150.dp, 100.dp)
                         )
                     }
+                    Text(
+                        text = "Outlined text",
+                        color = GlanceColors.outline,
+                        fontFamily = Manrope
+                    )
                 }
             }
             PrimaryButton(text = "Save and continue")

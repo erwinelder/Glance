@@ -4,8 +4,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.usecase.CheckEmailVerificationUseCase
-import com.ataglance.walletglance.auth.domain.usecase.SignUpUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.CheckEmailVerificationUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.SignUpUseCase
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.errorHandling.domain.model.result.Result
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState

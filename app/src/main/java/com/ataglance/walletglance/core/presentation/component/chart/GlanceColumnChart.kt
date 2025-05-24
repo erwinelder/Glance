@@ -41,13 +41,14 @@ import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScr
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartColumnUiState
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerShadow
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
@@ -75,6 +76,7 @@ fun GlanceColumnChart(
                 Text(
                     text = it,
                     color = GlanceColors.onSurface,
+                    fontFamily = Manrope,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -105,6 +107,7 @@ fun GlanceColumnChart(
                 Text(
                     text = it,
                     color = GlanceColors.onSurface,
+                    fontFamily = Manrope,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
                 )
@@ -126,6 +129,7 @@ private fun LinesNamesColumn(linesNames: List<String>, graphHeight: Dp) {
             Text(
                 text = name,
                 color = GlanceColors.onSurface.copy(.5f),
+                fontFamily = Manrope,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -143,6 +147,7 @@ private fun ColumnsNamesRow(columnsNames: List<String>) {
             Text(
                 text = name,
                 color = GlanceColors.onSurface.copy(.5f),
+                fontFamily = Manrope,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center,

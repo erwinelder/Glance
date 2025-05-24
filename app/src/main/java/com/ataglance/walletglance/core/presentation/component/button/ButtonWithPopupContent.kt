@@ -35,12 +35,13 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun ButtonWithPopupContent(
@@ -81,6 +82,7 @@ fun ButtonWithPopupContent(
                 text = buttonText,
                 color = GlanceColors.onSurface,
                 fontSize = 16.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Normal
             )
             Spacer(modifier = Modifier.width(8.dp))

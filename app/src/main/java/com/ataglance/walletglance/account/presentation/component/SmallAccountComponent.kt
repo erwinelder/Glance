@@ -29,13 +29,14 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
-fun SmallAccount(
+fun SmallAccountComponent(
     account: Account?,
     fontSize: TextUnit = 21.sp,
     roundedCornerSize: Dp = 14.dp,
@@ -92,8 +93,9 @@ fun SmallAccount(
                 Text(
                     text = account?.name ?: "???",
                     color = onAccountColor,
-                    textAlign = TextAlign.Center,
                     fontSize = fontSize,
+                    fontFamily = Manrope,
+                    textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Light,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -108,8 +110,9 @@ fun SmallAccount(
                     Text(
                         text = account.getFormattedBalance(),
                         color = onAccountColor,
-                        textAlign = TextAlign.Center,
                         fontSize = fontSize,
+                        fontFamily = Manrope,
+                        textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Light,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -137,6 +140,6 @@ fun SmallAccount(
 @Composable
 private fun SmallAccountPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        SmallAccount(Account(balance = 516.41))
+        SmallAccountComponent(Account(balance = 516.41))
     }
 }

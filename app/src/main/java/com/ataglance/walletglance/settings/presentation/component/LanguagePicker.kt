@@ -19,6 +19,7 @@ import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun LanguagePicker(
@@ -59,7 +60,8 @@ fun LanguagePicker(
                     Text(
                         text = it.languageNativeName,
                         color = GlanceColors.onSurface,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        fontFamily = Manrope
                     )
                 }
             }

@@ -18,6 +18,7 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
@@ -49,6 +50,7 @@ fun BasicDefaultBudgetComponent(
                     text = budget.name,
                     color = GlanceColors.onSurface,
                     fontSize = 18.sp,
+                    fontFamily = Manrope,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
@@ -63,7 +65,8 @@ fun BasicDefaultBudgetComponent(
                 Text(
                     text = stringResource(R.string.limit) + ":",
                     color = GlanceColors.outline,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    fontFamily = Manrope
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -73,6 +76,7 @@ fun BasicDefaultBudgetComponent(
                         text = budget.amountLimit.formatWithSpaces(),
                         color = GlanceColors.onSurface,
                         fontSize = 18.sp,
+                        fontFamily = Manrope,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
@@ -80,7 +84,8 @@ fun BasicDefaultBudgetComponent(
                     Text(
                         text = budget.currency,
                         color = GlanceColors.onSurface.copy(.6f),
-                        fontSize = 19.sp
+                        fontSize = 19.sp,
+                        fontFamily = Manrope
                     )
                 }
             }

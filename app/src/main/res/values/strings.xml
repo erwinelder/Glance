@@ -61,6 +61,7 @@
     <string name="color_theme">Color theme</string>
     <string name="navigation_buttons">Navigation buttons</string>
     <string name="widgets">Widgets</string>
+    <string name="notifications">Notifications</string>
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
     <string name="profile">Profile</string>
@@ -74,6 +75,7 @@
     <string name="start_setup">Start setup</string>
     <string name="continue_to_app">Continue to app</string>
     <string name="continue_setup">Continue setup</string>
+    <string name="adjust_app_notifications">Adjust app notifications</string>
     <string name="choose_app_language">Choose app language</string>
 
     <!-- Settings loaders -->
@@ -81,6 +83,9 @@
 
     <!-- Settings error -->
     <string name="not_saved">Not saved</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Daily reminders to record your expenses</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -210,6 +215,13 @@
     <string name="purchase_was_cancelled">Purchase was cancelled</string>
     <string name="no_network">No network connection</string>
     <string name="subscription_purchase_error">An error occurred while handling the purchase</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">General notifications</string>
+    <string name="notifications_denied_title">Notifications denied</string>
+    <string name="notifications_denied_message">You have denied notifications from Glanci. To allow this type of notification, please turn them on in your system settings.</string>
+    <string name="daily_records_reminder_notification_title">Daily Records Reminder</string>
+    <string name="daily_records_reminder_notification_message">Just don\'t forget to record your daily expenses.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>

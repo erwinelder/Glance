@@ -41,13 +41,11 @@ fun GlanceBottomSheetDialog(
             title = title,
             titleColor = titleColor,
             message = message,
-            bottomBlock = if (bottomBlock != null) {
-                {
-                    bottomBlock {
-                        coroutineScope.launch { sheetState.hide() }
-                    }
+            bottomBlock = if (bottomBlock != null) { {
+                bottomBlock {
+                    coroutineScope.launch { sheetState.hide() }
                 }
-            } else null
+            } } else null
         )
     }
 }

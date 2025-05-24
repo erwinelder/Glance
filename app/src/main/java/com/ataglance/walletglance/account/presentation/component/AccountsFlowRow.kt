@@ -33,7 +33,7 @@ fun AccountsFlowRow(
         modifier = Modifier.nestedScroll(nestedScrollInterop)
     ) {
         accountList.forEach { account ->
-            SmallAccount(
+            SmallAccountComponent(
                 account = account,
                 fontSize = fontSize,
                 roundedCornerSize = 12.dp,

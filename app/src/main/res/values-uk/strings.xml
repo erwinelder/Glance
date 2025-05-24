@@ -60,6 +60,7 @@
     <string name="color_theme">Кольорова тема</string>
     <string name="navigation_buttons">Кнопки навігації</string>
     <string name="widgets">Віджети</string>
+    <string name="notifications">Сповіщення</string>
     <string name="language">Мова</string>
     <string name="reset_data">Скинути дані</string>
     <string name="profile">Профіль</string>
@@ -73,6 +74,7 @@
     <string name="start_setup">Почати налаштування</string>
     <string name="continue_to_app">Перейти до додатка</string>
     <string name="continue_setup">Продовжити налаштування</string>
+    <string name="adjust_app_notifications">Налаштуйте сповіщення додатка</string>
     <string name="choose_app_language">Виберіть мову застосунку</string>
 
     <!-- Settings loaders -->
@@ -80,6 +82,9 @@
 
     <!-- Settings error -->
     <string name="not_saved">Не збережено</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Щоденні нагадування фіксувати витрати</string>
 
     <!-- Fields -->
     <string name="email">Електронна пошта</string>
@@ -209,6 +214,13 @@
     <string name="purchase_was_cancelled">Покупку скасовано</string>
     <string name="no_network">Немає підключення до мережі</string>
     <string name="subscription_purchase_error">Під час обробки покупки сталася помилка</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">Загальні сповіщення</string>
+    <string name="notifications_denied_title">Сповіщення заборонені</string>
+    <string name="notifications_denied_message">Ви заборонили сповіщення від Glanci. Щоб дозволити цей тип сповіщень, увімкніть їх у системних налаштуваннях.</string>
+    <string name="daily_records_reminder_notification_title">Щоденне нагадування про записи</string>
+    <string name="daily_records_reminder_notification_message">Не забудьте фіксувати свої щоденні витрати.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброго ранку!</string>

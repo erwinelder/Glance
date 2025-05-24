@@ -110,6 +110,8 @@ dependencies {
     implementation(libs.review.ktx)
     implementation(libs.google.billing)
     implementation(libs.google.billing.ktx)
+    // WorkManager
+    implementation(libs.androidx.work.runtime)
     // Room
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.component.CategoryField
 import com.ataglance.walletglance.category.presentation.component.RecordCategory
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.field.GlanceTextField
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 
 @Composable
@@ -99,6 +100,7 @@ private fun RecordItemCreationComponentCollapsed(
                 text = recordDraftItem.note,
                 color = GlanceColors.onSurface,
                 fontSize = 18.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light,
                 fontStyle = FontStyle.Italic,
                 maxLines = 1,
@@ -115,21 +117,24 @@ private fun RecordItemCreationComponentCollapsed(
             if (recordDraftItem.quantity.isNotBlank()) {
                 Text(
                     text = "${recordDraftItem.quantity} x",
-                    fontSize = 18.sp,
                     color = GlanceColors.onSurface.copy(.6f),
+                    fontSize = 18.sp,
+                    fontFamily = Manrope,
                     modifier = Modifier.padding(bottom = 2.dp)
                 )
             }
             Text(
                 text = recordDraftItem.getFormattedAmountOrPlaceholder(),
-                fontSize = 22.sp,
                 color = GlanceColors.onSurface,
+                fontSize = 22.sp,
+                fontFamily = Manrope
             )
             accountCurrency?.let {
                 Text(
                     text = it,
-                    fontSize = 18.sp,
                     color = GlanceColors.onSurface.copy(.6f),
+                    fontSize = 18.sp,
+                    fontFamily = Manrope,
                     modifier = Modifier.padding(bottom = 2.dp)
                 )
             }

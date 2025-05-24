@@ -54,7 +54,7 @@ fun AccountPicker(
                 items = accountList,
                 key = { it.orderNum }
             ) { account ->
-                SmallAccount(account = account) {
+                SmallAccountComponent(account = account) {
                     onAccountChoose(account)
                     onDismissRequest()
                 }

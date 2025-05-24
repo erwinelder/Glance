@@ -21,6 +21,7 @@ import com.ataglance.walletglance.core.presentation.component.container.GlassSur
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatDateLongAsDayMonthYear
 import com.ataglance.walletglance.record.domain.model.RecordStack
 
@@ -44,12 +45,14 @@ fun TransferComponent(
                 ),
                 color = GlanceColors.outline,
                 fontSize = 16.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
             Text(
                 text = stringResource(R.string.transfer),
                 color = GlanceColors.primary,
                 fontSize = 16.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
         }
@@ -64,6 +67,7 @@ fun TransferComponent(
                 ),
                 color = GlanceColors.onSurface,
                 fontSize = 18.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
             Text(
@@ -71,6 +75,7 @@ fun TransferComponent(
                 color = secondAccount?.color?.colorOn?.getByTheme(CurrAppTheme)
                     ?: Color.Transparent,
                 fontSize = 18.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .clip(RoundedCornerShape(42))
@@ -85,6 +90,7 @@ fun TransferComponent(
             text = recordStack.getFormattedAmountWithSpaces(),
             color = GlanceColors.onSurface,
             fontSize = 20.sp,
+            fontFamily = Manrope,
             fontWeight = FontWeight.Light
         )
     }

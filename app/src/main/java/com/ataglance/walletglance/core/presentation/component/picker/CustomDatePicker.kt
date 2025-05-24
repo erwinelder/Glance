@@ -15,8 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,14 +38,20 @@ fun CustomDatePicker(
                         state.selectedDateMillis?.let { onConfirmButton(it) }
                     }
                 ) {
-                    Text(text = stringResource(R.string.confirm))
+                    Text(
+                        text = stringResource(R.string.confirm),
+                        fontFamily = Manrope
+                    )
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { onOpenDateDialogChange(false) }
                 ) {
-                    Text(text = stringResource(R.string.cancel))
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        fontFamily = Manrope
+                    )
                 }
             }
         ) {

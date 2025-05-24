@@ -25,6 +25,7 @@ import com.ataglance.walletglance.core.presentation.component.chart.GlanceLineCh
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun CategoryStatisticsItemComponent(
@@ -65,6 +66,7 @@ fun CategoryStatisticsItemComponent(
                     text = uiState?.category?.name ?: "---",
                     color = GlanceColors.onSurface,
                     fontSize = 18.sp,
+                    fontFamily = Manrope,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
@@ -93,6 +95,7 @@ fun CategoryStatisticsItemComponent(
                             text = uiState?.totalAmount ?: "---",
                             color = GlanceColors.onSurface,
                             fontSize = 18.sp,
+                            fontFamily = Manrope,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.weight(1f, fill = false)
@@ -100,13 +103,15 @@ fun CategoryStatisticsItemComponent(
                         Text(
                             text = uiState?.currency ?: "",
                             color = GlanceColors.onSurface.copy(.6f),
-                            fontSize = 17.sp
+                            fontSize = 17.sp,
+                            fontFamily = Manrope
                         )
                     }
                     Text(
                         text = uiState?.percentageFormatted ?: "---",
                         color = GlanceColors.onSurface,
                         fontSize = 18.sp,
+                        fontFamily = Manrope,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

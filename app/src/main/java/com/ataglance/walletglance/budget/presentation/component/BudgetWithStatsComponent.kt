@@ -32,6 +32,7 @@ import com.ataglance.walletglance.core.presentation.component.container.GlassSur
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.toStringDateRange
 
@@ -61,6 +62,7 @@ fun BudgetWithStatsComponent(
                     text = budget.name,
                     color = GlanceColors.onSurface,
                     fontSize = 18.sp,
+                    fontFamily = Manrope,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
@@ -84,6 +86,7 @@ fun BudgetWithStatsComponent(
                         text = budget.usedAmount.formatWithSpaces(),
                         color = GlanceColors.onSurface,
                         fontSize = 18.sp,
+                        fontFamily = Manrope,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
@@ -96,6 +99,7 @@ fun BudgetWithStatsComponent(
                             text = budget.amountLimit.formatWithSpaces(),
                             color = GlanceColors.onSurface,
                             fontSize = 18.sp,
+                            fontFamily = Manrope,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.weight(1f, fill = false)
@@ -103,7 +107,8 @@ fun BudgetWithStatsComponent(
                         Text(
                             text = budget.currency,
                             color = GlanceColors.onSurface.copy(.6f),
-                            fontSize = 17.sp
+                            fontSize = 17.sp,
+                            fontFamily = Manrope
                         )
                     }
                 }
@@ -158,6 +163,7 @@ private fun DateRangeLabels(
             text = stringDateRange.from,
             color = GlanceColors.onSurface,
             fontSize = 17.sp,
+            fontFamily = Manrope,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -165,6 +171,7 @@ private fun DateRangeLabels(
             text = stringDateRange.to,
             color = GlanceColors.onSurface,
             fontSize = 17.sp,
+            fontFamily = Manrope,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

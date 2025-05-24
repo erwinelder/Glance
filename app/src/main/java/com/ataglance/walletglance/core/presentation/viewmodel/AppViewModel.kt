@@ -6,7 +6,7 @@ import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
-import com.ataglance.walletglance.auth.domain.usecase.CheckTokenValidityUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.CheckTokenValidityUseCase
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -17,13 +17,13 @@ import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.utils.timeInMillisToTimestampWithoutSpecificTime
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCase
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCase
-import com.ataglance.walletglance.settings.domain.usecase.theme.GetAppThemeConfigurationUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

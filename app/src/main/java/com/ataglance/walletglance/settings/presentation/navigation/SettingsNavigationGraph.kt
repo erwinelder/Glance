@@ -16,6 +16,7 @@ import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationVi
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenWrapper
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenWrapper
+import com.ataglance.walletglance.notification.presentation.screen.NotificationsScreenWrapper
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenWrapper
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenWrapper
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreen
@@ -77,6 +78,9 @@ fun NavGraphBuilder.settingsGraph(
                 navViewModel = navViewModel,
                 appConfiguration = appConfiguration
             )
+        }
+        composable<SettingsScreens.Notifications> {
+            NotificationsScreenWrapper(navController = navController)
         }
         composable<SettingsScreens.Language> {
             LanguageScreenWrapper(

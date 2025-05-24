@@ -16,10 +16,10 @@ fun FieldLabel(
 ) {
     Text(
         text = text,
-        fontSize = fontSize,
         color = GlanceColors.outline,
-        fontWeight = FontWeight.Normal,
+        fontSize = fontSize,
         fontFamily = Manrope,
+        fontWeight = FontWeight.Normal,
         textAlign = TextAlign.Center
     )
 }

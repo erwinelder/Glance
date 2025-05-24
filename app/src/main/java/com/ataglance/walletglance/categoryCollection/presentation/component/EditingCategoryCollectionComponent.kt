@@ -27,8 +27,9 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun EditingCategoryCollectionComponent(
@@ -71,6 +72,7 @@ fun EditingCategoryCollectionComponent(
                 text = collection.name,
                 color = GlanceColors.onSurface,
                 fontSize = 20.sp,
+                fontFamily = Manrope,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.weight(1f, false)

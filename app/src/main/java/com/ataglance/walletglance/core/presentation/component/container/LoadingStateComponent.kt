@@ -27,8 +27,8 @@ fun LoadingStateComponent(
             text = message,
             color = GlanceColors.outline,
             fontSize = 18.sp,
-            fontWeight = FontWeight.W400,
-            fontFamily = Manrope
+            fontFamily = Manrope,
+            fontWeight = FontWeight.W400
         )
         onCancel?.let {
             SmallSecondaryButton(

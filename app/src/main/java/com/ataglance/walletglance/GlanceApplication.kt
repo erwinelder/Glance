@@ -2,6 +2,7 @@ package com.ataglance.walletglance
 
 import android.app.Application
 import com.ataglance.walletglance.di.initKoin
+import com.ataglance.walletglance.notification.domain.model.NotificationManager
 import org.koin.android.ext.koin.androidContext
 
 class GlanceApplication : Application() {
@@ -12,6 +13,8 @@ class GlanceApplication : Application() {
         initKoin {
             androidContext(this@GlanceApplication)
         }
+
+        NotificationManager.createGeneralNotificationsChannel()
     }
 
 }

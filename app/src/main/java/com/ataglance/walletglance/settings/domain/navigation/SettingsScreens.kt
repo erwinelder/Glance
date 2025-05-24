@@ -31,6 +31,9 @@ sealed interface SettingsScreens {
     data object Personalisation : SettingsScreens
 
     @Serializable
+    data object Notifications : SettingsScreens
+
+    @Serializable
     data object Language : SettingsScreens
 
     @Serializable

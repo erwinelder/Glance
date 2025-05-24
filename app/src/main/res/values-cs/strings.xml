@@ -61,6 +61,7 @@
     <string name="color_theme">Barevný motiv</string>
     <string name="navigation_buttons">Navigační tlačítka</string>
     <string name="widgets">Widgety</string>
+    <string name="notifications">Oznámení</string>
     <string name="language">Jazyk</string>
     <string name="reset_data">Resetovat data</string>
     <string name="profile">Profil</string>
@@ -74,6 +75,7 @@
     <string name="start_setup">Začít nastavení</string>
     <string name="continue_to_app">Pokračovat do aplikace</string>
     <string name="continue_setup">Pokračovat v nastavení</string>
+    <string name="adjust_app_notifications">Upravte oznámení aplikace</string>
     <string name="choose_app_language">Vyberte jazyk aplikace</string>
 
     <!-- Settings loaders -->
@@ -81,6 +83,9 @@
 
     <!-- Settings error -->
     <string name="not_saved">Neuloženo</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Denní připomenutí k zaznamenání výdajů</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -210,6 +215,13 @@
     <string name="purchase_was_cancelled">Nákup byl zrušen</string>
     <string name="no_network">Žádné připojení k síti</string>
     <string name="subscription_purchase_error">Při zpracování nákupu došlo k chybě</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">Obecná oznámení</string>
+    <string name="notifications_denied_title">Oznámení zamítnuta</string>
+    <string name="notifications_denied_message">Odmítli jste oznámení od aplikace Glanci. Pokud chcete tento typ oznámení povolit, zapněte je prosím v nastavení systému.</string>
+    <string name="daily_records_reminder_notification_title">Denní připomenutí záznamů</string>
+    <string name="daily_records_reminder_notification_message">Nezapomeňte si zaznamenat své denní výdaje.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Dobré ráno!</string>

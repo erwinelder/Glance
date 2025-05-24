@@ -1,8 +1,8 @@
 package com.ataglance.walletglance.auth.domain.model.user
 
-import com.ataglance.walletglance.auth.domain.usecase.DeleteAuthTokenFromSecureStorageUseCase
-import com.ataglance.walletglance.settings.domain.usecase.authToken.GetAuthTokenFromSecureStorageUseCase
-import com.ataglance.walletglance.settings.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.DeleteAuthTokenFromSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.authToken.GetAuthTokenFromSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCase
 import com.ataglance.walletglance.billing.domain.model.AppSubscription
 
 class UserContext(

@@ -49,6 +49,7 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
@@ -107,6 +108,7 @@ private fun BudgetStatisticsScreenContent(
                     text = budget.name,
                     color = GlanceColors.onSurface,
                     fontSize = 26.sp,
+                    fontFamily = Manrope,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
                 )
@@ -117,6 +119,7 @@ private fun BudgetStatisticsScreenContent(
                     ),
                     color = GlanceColors.onSurface,
                     fontSize = 20.sp,
+                    fontFamily = Manrope,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -177,6 +180,7 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
                 Text(
                     text = "${usedPercentage.toInt()}%",
                     color = GlanceColors.onSurface,
+                    fontFamily = Manrope,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -187,11 +191,13 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
                 Text(
                     text = stringResource(R.string.of_limit_used),
                     color = GlanceColors.onSurface,
+                    fontFamily = Manrope,
                 )
                 Text(
                     text = "(${totalAmount.formatWithSpaces(budget.currency)})",
                     color = GlanceColors.onSurface,
                     fontSize = 18.sp,
+                    fontFamily = Manrope,
                 )
             }
         }

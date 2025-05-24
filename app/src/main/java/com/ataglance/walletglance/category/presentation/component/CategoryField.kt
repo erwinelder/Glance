@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.domain.model.Category
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun CategoryField(
@@ -63,6 +64,7 @@ fun CategoryField(
             text = category?.name ?: "???",
             color = if (category != null) GlanceColors.onSurface else GlanceColors.surface,
             fontSize = fontSize,
+            fontFamily = Manrope,
             fontWeight = FontWeight.Light,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

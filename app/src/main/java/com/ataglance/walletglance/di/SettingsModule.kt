@@ -1,14 +1,23 @@
 package com.ataglance.walletglance.di
 
+import com.ataglance.walletglance.auth.domain.usecase.user.GetUserProfileLocalTimestampUseCase
+import com.ataglance.walletglance.auth.domain.usecase.user.GetUserProfileLocalTimestampUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.user.SaveUserProfileTimestampUseCase
+import com.ataglance.walletglance.auth.domain.usecase.user.SaveUserProfileTimestampUseCaseImpl
+import com.ataglance.walletglance.notification.domain.usecase.GetTurnOnDailyRecordsReminderPreferenceUseCase
+import com.ataglance.walletglance.notification.domain.usecase.GetTurnOnDailyRecordsReminderPreferenceUseCaseImpl
+import com.ataglance.walletglance.notification.domain.usecase.SaveTurnOnDailyRecordsReminderPreferenceUseCase
+import com.ataglance.walletglance.notification.domain.usecase.SaveTurnOnDailyRecordsReminderPreferenceUseCaseImpl
+import com.ataglance.walletglance.notification.presentation.viewmodel.NotificationsViewModel
+import com.ataglance.walletglance.personalization.domain.usecase.theme.ChangeAppLookPreferencesUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.ChangeAppLookPreferencesUseCaseImpl
+import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCaseImpl
 import com.ataglance.walletglance.settings.data.repository.SettingsRepository
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCaseImpl
-import com.ataglance.walletglance.settings.domain.usecase.GetUserProfileLocalTimestampUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetUserProfileLocalTimestampUseCaseImpl
-import com.ataglance.walletglance.settings.domain.usecase.SaveUserProfileTimestampUseCase
-import com.ataglance.walletglance.settings.domain.usecase.SaveUserProfileTimestampUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageLocallyUseCase
@@ -17,10 +26,6 @@ import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageR
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCaseImpl
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageToPreferencesUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageToPreferencesUseCaseImpl
-import com.ataglance.walletglance.settings.domain.usecase.theme.ChangeAppLookPreferencesUseCase
-import com.ataglance.walletglance.settings.domain.usecase.theme.ChangeAppLookPreferencesUseCaseImpl
-import com.ataglance.walletglance.settings.domain.usecase.theme.GetAppThemeConfigurationUseCase
-import com.ataglance.walletglance.settings.domain.usecase.theme.GetAppThemeConfigurationUseCaseImpl
 import com.ataglance.walletglance.settings.presentation.viewmodel.LanguageViewModel
 import com.ataglance.walletglance.settings.presentation.viewmodel.ResetDataViewModel
 import org.koin.core.module.dsl.viewModel
@@ -75,6 +80,13 @@ val settingsModule = module {
         GetStartDestinationsBySetupStageUseCaseImpl(settingsRepository = get())
     }
 
+    single<GetTurnOnDailyRecordsReminderPreferenceUseCase> {
+        GetTurnOnDailyRecordsReminderPreferenceUseCaseImpl(settingsRepository = get())
+    }
+    single<SaveTurnOnDailyRecordsReminderPreferenceUseCase> {
+        SaveTurnOnDailyRecordsReminderPreferenceUseCaseImpl(settingsRepository = get())
+    }
+
     /* ---------- View Models ---------- */
 
     viewModel { parameters ->
@@ -91,6 +103,13 @@ val settingsModule = module {
         ResetDataViewModel(
             deleteAllDataLocallyUseCase = get(),
             signOutUseCase = get()
+        )
+    }
+
+    viewModel {
+        NotificationsViewModel(
+            getTurnOnDailyRecordsReminderPreferenceUseCase = get(),
+            saveTurnOnDailyRecordsReminderPreferenceUseCase = get()
         )
     }
 

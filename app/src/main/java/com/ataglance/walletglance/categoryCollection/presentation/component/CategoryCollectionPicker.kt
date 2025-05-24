@@ -233,6 +233,7 @@ private fun PopupContent(
                         collection.name == selectedCollection.name
                     } ?: selectedColor,
                     fontSize = 20.sp,
+                    fontFamily = Manrope,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier

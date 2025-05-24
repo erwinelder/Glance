@@ -21,6 +21,7 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatDateLongAsDayMonthYear
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -42,7 +43,8 @@ fun RecordStackComponent(
                 includeYear = includeYearInDate
             ),
             color = GlanceColors.outline,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            fontFamily = Manrope
         )
         // note with category
         Column(
@@ -58,6 +60,7 @@ fun RecordStackComponent(
                             text = recordStackItem.note,
                             color = GlanceColors.onSurface.copy(.8f),
                             fontSize = 16.sp,
+                            fontFamily = Manrope,
                             fontWeight = FontWeight.Light,
                             fontStyle = FontStyle.Italic,
                             maxLines = 1,
@@ -76,6 +79,7 @@ fun RecordStackComponent(
             text = recordStack.getFormattedAmountWithSpaces(),
             color = GlanceColors.onSurface,
             fontSize = 20.sp,
+            fontFamily = Manrope,
             fontWeight = FontWeight.Light
         )
     }

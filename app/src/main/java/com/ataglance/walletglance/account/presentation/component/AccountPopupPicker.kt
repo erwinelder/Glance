@@ -90,7 +90,7 @@ private fun PickerButton(
         targetState = selectedAccount,
         label = "selected account"
     ) { account ->
-        SmallAccount(
+        SmallAccountComponent(
             account = account,
             onClick = {
                 onExpandedChange(true)
@@ -147,7 +147,7 @@ private fun PopupContent(
                             targetOffsetY = { -it }
                         )
             ) {
-                SmallAccount(
+                SmallAccountComponent(
                     account = account,
                     outerPadding = PaddingValues(
                         horizontal = dimensionResource(R.dimen.screen_horizontal_padding)

@@ -29,6 +29,7 @@ class SettingsRepository(
         val CHOSEN_LIGHT_THEME = stringPreferencesKey("chosenLightTheme")
         val CHOSEN_DARK_THEME = stringPreferencesKey("chosenDarkTheme")
         val LAST_CHOSEN_THEME = stringPreferencesKey("lastChosenTheme")
+        val TURN_ON_DAILY_RECORDS_REMINDER = booleanPreferencesKey("turnOnDailyRecordsReminder")
         const val TAG = "SettingsRepository"
     }
 
@@ -156,6 +157,24 @@ class SettingsRepository(
 
     suspend fun saveLastChosenThemePreference(theme: String) {
         dataStore.edit { it[LAST_CHOSEN_THEME] = theme }
+    }
+
+
+    val turnOnDailyRecordsReminder: Flow<Boolean> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.d(TAG, "Error reading turnOnDailyRecordsReminder", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[TURN_ON_DAILY_RECORDS_REMINDER] ?: false
+        }
+
+    suspend fun saveTurnOnDailyRecordsReminderPreference(turnOn: Boolean) {
+        dataStore.edit { it[TURN_ON_DAILY_RECORDS_REMINDER] = turnOn }
     }
 
 

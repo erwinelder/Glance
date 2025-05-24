@@ -36,11 +36,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun <T>PopupFloatingPicker(
@@ -124,8 +125,9 @@ private fun PickerButton(
         ) { targetText ->
             Text(
                 text = targetText,
-                fontSize = 20.sp,
                 color = selectedColor,
+                fontSize = 20.sp,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
         }
@@ -141,7 +143,7 @@ private fun PickerButton(
 }
 
 @Composable
-private fun <T>PopupContent(
+private fun <T> PopupContent(
     selectedItemText: String,
     itemToString: (T) -> String,
     itemList: List<T>,
@@ -170,6 +172,7 @@ private fun <T>PopupContent(
                 text = itemText,
                 color = if (itemText == selectedItemText) GlanceColors.primary else GlanceColors.onSurface,
                 fontSize = 19.sp,
+                fontFamily = Manrope,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.bounceClickEffect {

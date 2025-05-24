@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 
@@ -50,19 +51,18 @@ fun GlanceBottomSheetContentDialog(
         ) {
             Text(
                 text = title,
-                fontSize = 28.sp,
                 color = titleColor,
-                fontWeight = FontWeight.Black,
-                textAlign = TextAlign.Center,
-                fontFamily = NotoSans,
-                lineHeight = 32.sp
+                style = GlanceTypography.titleLarge,
+                fontSize = 28.sp,
+                lineHeight = 32.sp,
+                fontFamily = NotoSans
             )
             message?.let {
                 Text(
                     text = it,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     color = GlanceColors.onSurface,
-                    fontWeight = FontWeight.Normal,
+                    fontWeight = FontWeight.W400,
                     textAlign = TextAlign.Center,
                     fontFamily = Manrope,
                     lineHeight = 32.sp

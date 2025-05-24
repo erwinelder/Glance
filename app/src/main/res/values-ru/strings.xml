@@ -60,6 +60,7 @@
     <string name="color_theme">Цветовая тема</string>
     <string name="navigation_buttons">Кнопки навигации</string>
     <string name="widgets">Виджеты</string>
+    <string name="notifications">Уведомления</string>
     <string name="language">Язык</string>
     <string name="reset_data">Сбросить данные</string>
     <string name="profile">Профиль</string>
@@ -73,6 +74,7 @@
     <string name="start_setup">Начать настройку</string>
     <string name="continue_to_app">Перейти в приложение</string>
     <string name="continue_setup">Продолжить настройку</string>
+    <string name="adjust_app_notifications">Настройте уведомления приложения</string>
     <string name="choose_app_language">Выберите язык приложения</string>
 
     <!-- Settings loaders -->
@@ -80,6 +82,9 @@
 
     <!-- Settings error -->
     <string name="not_saved">Не сохранено</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Ежедневные напоминания о записи расходов</string>
 
     <!-- Fields -->
     <string name="email">Электронная почта</string>
@@ -209,6 +214,13 @@
     <string name="purchase_was_cancelled">Покупка была отменена</string>
     <string name="no_network">Нет подключения к сети</string>
     <string name="subscription_purchase_error">Произошла ошибка при обработке покупки</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">Общие уведомления</string>
+    <string name="notifications_denied_title">Уведомления отклонены</string>
+    <string name="notifications_denied_message">Вы отклонили уведомления от Glanci. Чтобы разрешить этот тип уведомлений, включите их в системных настройках.</string>
+    <string name="daily_records_reminder_notification_title">Ежедневное напоминание о записях</string>
+    <string name="daily_records_reminder_notification_message">Не забудьте записать свои ежедневные расходы.</string>
 
     <!-- Widgets -->
     <string name="greetings_title_morning">Доброе утро!</string>

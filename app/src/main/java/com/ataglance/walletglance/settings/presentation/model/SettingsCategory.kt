@@ -85,6 +85,15 @@ sealed class SettingsCategory(
         }
     )
 
+    data class Notifications(val appTheme: AppTheme) : SettingsCategory(
+        screen = SettingsScreens.Notifications,
+        stringRes = R.string.notifications,
+        iconRes = when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.notifications_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.notifications_dark_default_icon
+        }
+    )
+
     data class Language(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Language,
         stringRes = R.string.language,
@@ -177,6 +186,7 @@ sealed class SettingsCategory(
                 Categories(appTheme),
                 CategoryCollections(appTheme),
                 Appearance(appTheme),
+                Notifications(appTheme),
                 Language(appTheme),
                 ResetData(appTheme),
             )

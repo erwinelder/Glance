@@ -10,11 +10,11 @@ import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtons
 import com.ataglance.walletglance.navigation.domain.usecase.SaveNavigationButtonsUseCase
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
-import com.ataglance.walletglance.personalization.domain.usecase.SaveWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.SaveWidgetsUseCase
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
-import com.ataglance.walletglance.settings.domain.usecase.theme.ChangeAppLookPreferencesUseCase
-import com.ataglance.walletglance.settings.domain.usecase.theme.GetAppThemeConfigurationUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.ChangeAppLookPreferencesUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

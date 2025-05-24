@@ -124,6 +124,7 @@ fun ActiveAccountCardContent(
                 text = account.name,
                 fontSize = 20.sp,
                 color = onAccountColor,
+                fontFamily = Manrope,
                 fontWeight = FontWeight.ExtraLight,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -227,7 +228,8 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
         Text(
             text = targetContent,
             fontSize = 16.sp,
-            color = onAccountColor
+            color = onAccountColor,
+            fontFamily = Manrope
         )
     }
 }

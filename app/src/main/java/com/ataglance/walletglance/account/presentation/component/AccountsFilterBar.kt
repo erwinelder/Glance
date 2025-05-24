@@ -30,7 +30,7 @@ fun AccountsFilterBar(
             Spacer(modifier = Modifier.width(16.dp))
         }
         items(items = visibleAccounts) { account ->
-            SmallAccount(
+            SmallAccountComponent(
                 account = account,
                 fontSize = 20.sp,
                 roundedCornerSize = 16.dp,
