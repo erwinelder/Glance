@@ -15,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.domain.usecase.auth.CheckTokenValidityUseCase
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
@@ -128,7 +129,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private suspend fun checkTokenValidity() {
-        val result = appViewModel.checkTokenValidity()
+        val checkTokenValidityUseCase: CheckTokenValidityUseCase = GlobalContext.get().get()
+        val result = checkTokenValidityUseCase.execute()
 
         if (result !is ResultData.Error) return
 

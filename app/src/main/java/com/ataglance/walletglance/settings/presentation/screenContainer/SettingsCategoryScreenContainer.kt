@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,11 +21,13 @@ import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
+import com.ataglance.walletglance.core.presentation.utils.add
 import com.ataglance.walletglance.settings.presentation.component.NavigateBackSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun SettingsCategoryScreenContainer(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
     thisCategory: SettingsCategory,
     onNavigateBack: (() -> Unit)? = null,
     topBottomSpacingProportion: Pair<Float, Float> = Pair(2f, 1f),
@@ -42,8 +45,10 @@ fun SettingsCategoryScreenContainer(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = 8.dp,
-                bottom = if (bottomBlock != null) 24.dp else 8.dp
+                PaddingValues(
+                    top = 8.dp,
+                    bottom = if (bottomBlock != null) 24.dp else 8.dp
+                ).add(screenPadding)
             )
     ) {
         if (onNavigateBack != null && WindowTypeIsCompact) {

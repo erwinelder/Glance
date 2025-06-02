@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryDangerousButton
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackButton
 import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import kotlinx.coroutines.Job
@@ -34,30 +33,28 @@ fun DangerousActionBlock(
     var showActionConfirmation by remember { mutableStateOf(false) }
     val job = remember { mutableStateOf<Job?>(null) }
 
-    ScreenContainerWithBackButton {
-        GlassSurface {
-            DangerousActionBlockContent(
-                showConfirmation = showActionConfirmation,
-                actionText = actionText,
-                actionConfirmationText = actionConfirmationText,
-                actionButtonText = actionButtonText,
-                onActionButton = {
-                    job.value?.cancel()
+    GlassSurface {
+        DangerousActionBlockContent(
+            showConfirmation = showActionConfirmation,
+            actionText = actionText,
+            actionConfirmationText = actionConfirmationText,
+            actionButtonText = actionButtonText,
+            onActionButton = {
+                job.value?.cancel()
 
-                    showActionConfirmation = true
+                showActionConfirmation = true
 
-                    job.value = coroutineScope.launch {
-                        delay(5000)
-                        showActionConfirmation = false
-                    }
-                },
-                onActionConfirm = onAction,
-                onActionCancel = {
-                    job.value?.cancel()
+                job.value = coroutineScope.launch {
+                    delay(5000)
                     showActionConfirmation = false
                 }
-            )
-        }
+            },
+            onActionConfirm = onAction,
+            onActionCancel = {
+                job.value?.cancel()
+                showActionConfirmation = false
+            }
+        )
     }
 }
 
@@ -73,8 +70,7 @@ private fun DangerousActionBlockContent(
 ) {
     GlassSurfaceContentColumnWrapper {
         AnimatedContent(
-            targetState = if (showConfirmation) actionConfirmationText else actionText,
-            label = "action text"
+            targetState = if (showConfirmation) actionConfirmationText else actionText
         ) { targetMessage ->
             Text(
                 text = targetMessage,
@@ -85,8 +81,7 @@ private fun DangerousActionBlockContent(
             )
         }
         AnimatedContent(
-            targetState = showConfirmation,
-            label = "action buttons"
+            targetState = showConfirmation
         ) { targetShowConfirmation ->
             if (targetShowConfirmation) {
                 Row(

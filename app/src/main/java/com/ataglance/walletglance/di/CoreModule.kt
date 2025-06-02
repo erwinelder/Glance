@@ -63,8 +63,6 @@ val coreModule = module {
 
     viewModel {
         AppViewModel(
-            checkTokenValidityUseCase = get(),
-
             getAppThemeConfigurationUseCase = get(),
             applyLanguageToSystemUseCase = get(),
             getLanguagePreferenceUseCase = get(),
