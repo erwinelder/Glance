@@ -1,9 +1,7 @@
 package com.ataglance.walletglance.account.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.FlowRowOverflow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AccountsFlowRow(
     accountList: List<Account>,
@@ -29,7 +26,6 @@ fun AccountsFlowRow(
     FlowRow(
         horizontalArrangement = Arrangement.Center,
         maxLines = maxLines,
-        overflow = FlowRowOverflow.Clip,
         modifier = Modifier.nestedScroll(nestedScrollInterop)
     ) {
         accountList.forEach { account ->
