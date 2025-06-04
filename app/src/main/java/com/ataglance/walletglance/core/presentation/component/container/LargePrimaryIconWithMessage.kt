@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 
@@ -28,7 +28,7 @@ fun LargePrimaryIconWithMessage(
     message: String? = null,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    gradientColor: List<Color> = GlanceColors.primaryGradient,
+    gradientColor: List<Color> = GlanciColors.primaryGradient,
     filledWidth: FilledWidthByScreenType? = FilledWidthByScreenType(compact = .86f)
 ) {
     Column(
@@ -43,8 +43,8 @@ fun LargePrimaryIconWithMessage(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = title,
-            style = GlanceTypography.titleLarge,
-            color = GlanceColors.onSurface,
+            style = GlanciTypography.titleLarge,
+            color = GlanciColors.onSurface,
             fontFamily = NotoSans,
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
@@ -53,7 +53,7 @@ fun LargePrimaryIconWithMessage(
         message?.let {
             Text(
                 text = message,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W400,
                 fontFamily = Manrope,

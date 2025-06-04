@@ -34,7 +34,7 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCategoryCollectionScreen
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 
 @Composable
@@ -49,12 +49,12 @@ fun ThreeStateCheckbox(
         else -> R.drawable.partly_checked_icon
     }
     val checkboxBackground by animateColorAsState(
-        targetValue = GlanceColors.primary.copy(if (state == false) 0f else 1f),
+        targetValue = GlanciColors.primary.copy(if (state == false) 0f else 1f),
         label = "three state checkbox background color",
         animationSpec = tween(150, 0)
     )
     val checkboxBorderColor by animateColorAsState(
-        targetValue = GlanceColors.outline.copy(if (state == false) 1f else 0f),
+        targetValue = GlanciColors.outline.copy(if (state == false) 1f else 0f),
         label = "three state checkbox border color",
         animationSpec = tween(150, 0)
     )
@@ -85,7 +85,7 @@ fun ThreeStateCheckbox(
                 Icon(
                     painter = painterResource(targetIconRes),
                     contentDescription = "",
-                    tint = GlanceColors.background,
+                    tint = GlanciColors.background,
                     modifier = Modifier.padding(4.dp)
                 )
             }

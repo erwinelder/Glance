@@ -5,13 +5,13 @@ import com.ataglance.walletglance.di.initKoin
 import com.ataglance.walletglance.notification.domain.model.NotificationManager
 import org.koin.android.ext.koin.androidContext
 
-class GlanceApplication : Application() {
+class GlanciApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
         initKoin {
-            androidContext(this@GlanceApplication)
+            androidContext(this@GlanciApplication)
         }
 
         NotificationManager.createGeneralNotificationsChannel()

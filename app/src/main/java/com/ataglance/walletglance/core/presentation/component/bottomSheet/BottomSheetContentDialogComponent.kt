@@ -17,19 +17,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 
 @Composable
-fun GlanceBottomSheetContentDialog(
+fun BottomSheetContentDialogComponent(
     title: String,
-    titleColor: Color = GlanceColors.onSurface,
+    titleColor: Color = GlanciColors.onSurface,
     message: String?,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconGradientColor: List<Color> = GlanceColors.primaryGradient,
+    iconGradientColor: List<Color> = GlanciColors.primaryGradient,
     bottomBlock: @Composable (() -> Unit)? = null
 ) {
     Column(
@@ -52,7 +52,7 @@ fun GlanceBottomSheetContentDialog(
             Text(
                 text = title,
                 color = titleColor,
-                style = GlanceTypography.titleLarge,
+                style = GlanciTypography.titleLarge,
                 fontSize = 28.sp,
                 lineHeight = 32.sp,
                 fontFamily = NotoSans
@@ -61,7 +61,7 @@ fun GlanceBottomSheetContentDialog(
                 Text(
                     text = it,
                     fontSize = 18.sp,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontWeight = FontWeight.W400,
                     textAlign = TextAlign.Center,
                     fontFamily = Manrope,

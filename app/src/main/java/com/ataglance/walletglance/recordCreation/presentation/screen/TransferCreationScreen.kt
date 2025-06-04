@@ -34,7 +34,7 @@ import com.ataglance.walletglance.core.presentation.component.button.BackButton
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.field.GlanceTextField
+import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
@@ -185,7 +185,7 @@ private fun GlassSurfaceContent(
         }
         SmallDivider(Modifier.padding(top = 4.dp))
         FieldWithLabel(labelText = stringResource(R.string.rate)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = transferDraft.sender.rate,
                 placeholderText = "1.00",
                 fontSize = 18.sp,
@@ -194,7 +194,7 @@ private fun GlassSurfaceContent(
             )
         }
         FieldWithLabel(labelText = stringResource(R.string.start_amount)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = transferDraft.sender.amount,
                 placeholderText = "0.00",
                 fontSize = 22.sp,
@@ -203,7 +203,7 @@ private fun GlassSurfaceContent(
             )
         }
         FieldWithLabel(labelText = stringResource(R.string.final_amount)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = transferDraft.receiver.amount,
                 placeholderText = "0.00",
                 fontSize = 22.sp,
@@ -212,7 +212,7 @@ private fun GlassSurfaceContent(
             )
         }
         FieldWithLabel(labelText = stringResource(R.string.rate)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = transferDraft.receiver.rate,
                 placeholderText = "1.00",
                 fontSize = 18.sp,

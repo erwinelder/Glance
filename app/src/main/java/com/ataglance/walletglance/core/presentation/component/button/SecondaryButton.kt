@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 
@@ -33,11 +33,11 @@ import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 fun SecondaryButton(
     text: String,
     enabled: Boolean = true,
-    enabledGradientColor: Pair<Color, Color> = GlanceColors.glassGradientPair,
+    enabledGradientColor: Pair<Color, Color> = GlanciColors.glassGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
-    val borderColor = if (enabled) GlanceColors.primaryGlassBorder else GlanceColors.outline
+    val borderColor = if (enabled) GlanciColors.primaryGlassBorder else GlanciColors.outline
     val buttonLighterColor by animateColorAsState(
         targetValue = enabledGradientColor.second.copy(alpha = .5f)
     )
@@ -54,10 +54,10 @@ fun SecondaryButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = GlanceColors.surface.copy(.08f),
-            contentColor = GlanceColors.primary,
+            containerColor = GlanciColors.surface.copy(.08f),
+            contentColor = GlanciColors.primary,
             disabledContainerColor = Color.Transparent,
-            disabledContentColor = GlanceColors.outline
+            disabledContentColor = GlanciColors.outline
         ),
         shape = RoundedCornerShape(21.dp),
         border = BorderStroke(width = 1.dp, color = borderColor),

@@ -38,7 +38,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -61,7 +61,7 @@ fun EditingAccountComponent(
                 onAccountClick(account)
             }
             .clip(RoundedCornerShape(26.dp))
-            .background(GlanceColors.accountSemiTransparentBackground)
+            .background(GlanciColors.accountSemiTransparentBackground)
             .padding(2.dp)
     ) {
         Row(
@@ -117,7 +117,7 @@ fun EditingAccountComponent(
                         tint = if (upButtonEnabled) {
                             onAccountColor
                         } else {
-                            GlanceColors.outlineSemiTransparent
+                            GlanciColors.outlineSemiTransparent
                         }
                     )
                 }
@@ -132,7 +132,7 @@ fun EditingAccountComponent(
                         tint = if (downButtonEnabled) {
                             onAccountColor
                         } else {
-                            GlanceColors.outlineSemiTransparent
+                            GlanciColors.outlineSemiTransparent
                         }
                     )
                 }
@@ -145,7 +145,7 @@ fun EditingAccountComponent(
 private fun TextWithLabel(
     labelText: String,
     text: String,
-    color: Color = GlanceColors.onSurface,
+    color: Color = GlanciColors.onSurface,
     labelFontSize: TextUnit = 16.sp,
     textFontSize: TextUnit = 20.sp,
 ) {

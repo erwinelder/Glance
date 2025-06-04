@@ -23,7 +23,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun GlassSurface(
@@ -40,14 +40,14 @@ fun GlassSurface(
             .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceColors.glassGradient,
+                    colors = GlanciColors.glassGradient,
                     start = Offset(0f, 1400f),
                     end = Offset(600f, 0f)
                 )
             )
             .border(
                 width = 2.dp,
-                color = GlanceColors.glassBorder,
+                color = GlanciColors.glassBorder,
                 shape = RoundedCornerShape(cornerSize)
             )
             .padding(2.dp)

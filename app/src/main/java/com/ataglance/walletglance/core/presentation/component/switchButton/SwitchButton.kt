@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.modifier.innerShadow
 
 @Composable
@@ -36,7 +36,7 @@ fun SwitchButton(
         targetValue = if (checked) width - height else 0.dp
     )
     val background by animateColorAsState(
-        targetValue = if (checked) GlanceColors.primary else GlanceColors.surface
+        targetValue = if (checked) GlanciColors.primary else GlanciColors.surface
     )
 
     Row(
@@ -46,7 +46,7 @@ fun SwitchButton(
             .size(width, height)
             .clip(RoundedCornerShape(height))
             .background(background)
-            .border(1.dp, GlanceColors.outline.copy(.4f), CircleShape)
+            .border(1.dp, GlanciColors.outline.copy(.4f), CircleShape)
             .innerShadow(
                 shape = RoundedCornerShape(50)
             )
@@ -62,7 +62,7 @@ fun SwitchButton(
                     ambientColor = Color.Black
                 )
                 .clip(RoundedCornerShape(50))
-                .background(GlanceColors.onPrimary)
+                .background(GlanciColors.onPrimary)
         )
     }
 }

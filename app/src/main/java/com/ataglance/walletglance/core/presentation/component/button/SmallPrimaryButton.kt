@@ -29,7 +29,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -37,15 +37,15 @@ fun SmallPrimaryButton(
     text: String,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
-    enabledGradient: Pair<Color, Color> = GlanceColors.primaryGradientPair,
+    enabledGradient: Pair<Color, Color> = GlanciColors.primaryGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
     val lighterGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.first else GlanceColors.disabledGradientPair.first
+        targetValue = if (enabled) enabledGradient.first else GlanciColors.disabledGradientPair.first
     )
     val darkerGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second
+        targetValue = if (enabled) enabledGradient.second else GlanciColors.disabledGradientPair.second
     )
 
     Button(
@@ -53,9 +53,9 @@ fun SmallPrimaryButton(
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = GlanceColors.onPrimary,
+            contentColor = GlanciColors.onPrimary,
             disabledContainerColor = Color.Transparent,
-            disabledContentColor = GlanceColors.onPrimary
+            disabledContentColor = GlanciColors.onPrimary
         ),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
         modifier = Modifier
@@ -73,7 +73,7 @@ fun SmallPrimaryButton(
             Icon(
                 painter = painterResource(it),
                 contentDescription = "$text button icon",
-                tint = GlanceColors.onPrimary,
+                tint = GlanciColors.onPrimary,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))

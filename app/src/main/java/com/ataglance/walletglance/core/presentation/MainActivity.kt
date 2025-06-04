@@ -17,7 +17,7 @@ import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.usecase.auth.CheckTokenValidityUseCase
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
+import com.ataglance.walletglance.core.presentation.component.GlanciAppComponent
 import com.ataglance.walletglance.core.utils.extractOobCode
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.flow.first
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                     checkTokenValidity()
                 }
 
-                GlanceAppComponent(
+                GlanciAppComponent(
                     navController = navController
                 )
             }

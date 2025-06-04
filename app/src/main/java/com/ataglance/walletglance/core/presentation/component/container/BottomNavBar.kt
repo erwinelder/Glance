@@ -32,7 +32,7 @@ fun BottomNavBar(
         }
     }
 
-    GlanceBottomNavBar(
+    BottomNavBarComponent(
         isVisible = isVisible,
         anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
         currentScreenIsScreenProvider = currentScreenIsScreenProvider,

@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
 @Composable
@@ -41,7 +41,7 @@ fun RecordItemCreationControlPanel(
             modifier = Modifier
                 .bounceClickEffect(.98f)
                 .clip(RoundedCornerShape(17.dp))
-                .background(GlanceColors.surface)
+                .background(GlanciColors.surface)
                 .padding(horizontal = 4.dp)
         ) {
             SubrecordControlPanelButton(
@@ -75,7 +75,7 @@ private fun SubrecordControlPanelButton(
     onClick: () -> Unit
 ) {
     val color by animateColorAsState(
-        targetValue = if (enabled) GlanceColors.onSurface else GlanceColors.outline
+        targetValue = if (enabled) GlanciColors.onSurface else GlanciColors.outline
     )
 
     IconButton(

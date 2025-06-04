@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.component.AccountsFilterBar
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun AppMainTopBar(
@@ -35,7 +35,7 @@ fun AppMainTopBar(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
-            .background(GlanceColors.surface)
+            .background(GlanciColors.surface)
             .fillMaxWidth()
             .padding(
                 top = if (visibleAccounts.size > 1) 10.dp else 12.dp, bottom = 12.dp

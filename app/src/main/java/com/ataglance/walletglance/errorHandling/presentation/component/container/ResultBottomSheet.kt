@@ -13,12 +13,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetContentDialog
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetContentDialogComponent
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.launch
 
@@ -32,17 +32,17 @@ fun ResultBottomSheet(
     val coroutineScope = rememberCoroutineScope()
 
     val titleColor = if (resultTitleWithMessageState?.isSuccessful == true) {
-        GlanceColors.success
+        GlanciColors.success
     } else {
-        GlanceColors.error
+        GlanciColors.error
     }
     val iconGradientColor = if (resultTitleWithMessageState?.isSuccessful == true) {
-        GlanceColors.successGradient
+        GlanciColors.successGradient
     } else {
-        GlanceColors.errorGradient
+        GlanciColors.errorGradient
     }
 
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = resultTitleWithMessageState != null,
         sheetState = sheetState,
         onDismissRequest = {
@@ -52,7 +52,7 @@ fun ResultBottomSheet(
         dragHandle = {}
     ) {
         resultTitleWithMessageState?.let {
-            GlanceBottomSheetContentDialog(
+            BottomSheetContentDialogComponent(
                 title = stringResource(resultTitleWithMessageState.titleRes),
                 titleColor = titleColor,
                 message = resultTitleWithMessageState.messageRes?.let { stringResource(it) },

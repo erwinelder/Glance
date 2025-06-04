@@ -27,12 +27,12 @@ import com.ataglance.walletglance.account.presentation.model.CurrencyPickerUiSta
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.field.GlanceTextField
+import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import java.util.Currency
 
 @Composable
@@ -53,7 +53,7 @@ fun CurrencyPickerScreen(
                 targetState = currencyPickerUiState.selectedCurrency?.currencyCode,
                 label = "selected currency code"
             ) { targetCurrencyCode ->
-                GlanceTextField(
+                TextFieldComponent(
                     text = searchedPrompt,
                     onValueChange = onSearchPromptChange,
                     placeholderText = "\"${targetCurrencyCode}\"",
@@ -112,13 +112,13 @@ private fun GlassSurfaceContent(
                     selected = currency == uiState.selectedCurrency,
                     onClick = null,
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = GlanceColors.primary,
-                        unselectedColor = GlanceColors.outline
+                        selectedColor = GlanciColors.primary,
+                        unselectedColor = GlanciColors.outline
                     )
                 )
                 Text(
                     text = "${currency.currencyCode} - ${currency.displayName}",
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 17.sp
                 )
             }
@@ -131,8 +131,7 @@ private fun GlassSurfaceContent(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun CurrencyPickerScreenPreview(
-    appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true
+    appTheme: AppTheme = AppTheme.LightDefault
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         CurrencyPickerScreen(

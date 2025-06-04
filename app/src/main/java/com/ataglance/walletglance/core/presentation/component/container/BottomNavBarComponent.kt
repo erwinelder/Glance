@@ -52,18 +52,18 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
-import com.ataglance.walletglance.core.presentation.component.button.GlanceFloatingButton
+import com.ataglance.walletglance.core.presentation.component.button.FloatingButtonComponent
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun GlanceBottomNavBar(
+fun BottomNavBarComponent(
     isVisible: Boolean,
     anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
     currentScreenIsScreenProvider: (Any) -> Boolean,
@@ -95,7 +95,7 @@ fun GlanceBottomNavBar(
         isVisible = isVisible,
         isExpanded = isExpanded,
         floatingButton = {
-            GlanceFloatingButton(
+            FloatingButtonComponent(
                 iconRes = R.drawable.make_record_icon, onClick = onFloatingButtonClick
             )
         }
@@ -207,13 +207,13 @@ private fun BottomBarButtonsRow(
             .shadow(
                 elevation = 16.dp,
                 shape = RoundedCornerShape(26.dp),
-                ambientColor = GlanceColors.onSurface
+                ambientColor = GlanciColors.onSurface
             )
             .clip(RoundedCornerShape(26.dp))
-            .background(GlanceColors.surface)
+            .background(GlanciColors.surface)
             .border(
                 width = 1.dp,
-                color = GlanceColors.onSurface.copy(.05f),
+                color = GlanciColors.onSurface.copy(.05f),
                 shape = RoundedCornerShape(26.dp)
             )
             .padding(vertical = 16.dp, horizontal = 4.dp)
@@ -277,7 +277,7 @@ private fun PopupButtonsList(
                         .padding(horizontal = 16.dp, vertical = 16.dp)
                         .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(GlanceColors.surface)
+                        .background(GlanciColors.surface)
                         .padding(horizontal = 20.dp, vertical = 16.dp)
                 ) {
                     barButtons.forEach { button ->
@@ -337,7 +337,7 @@ private fun ListBarButton(
         derivedStateOf { anyScreenInHierarchyIsScreenProvider(button.screen) }
     }
     val textColor by animateColorAsState(
-        targetValue = if (isActive) GlanceColors.primary else GlanceColors.onSurface
+        targetValue = if (isActive) GlanciColors.primary else GlanciColors.onSurface
     )
 
     AnimatedContent(

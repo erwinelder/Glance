@@ -42,7 +42,7 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Gl
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun EditCategoryScreen(
@@ -152,9 +152,9 @@ private fun CategoryIconsGrid(
         items(items = categoryIconList, key = { it.res }) { categoryIcon ->
             val color by animateColorAsState(
                 targetValue = if (currentCategoryIcon.name == categoryIcon.name) {
-                    GlanceColors.primary
+                    GlanciColors.primary
                 } else {
-                    GlanceColors.onSurface
+                    GlanciColors.onSurface
                 },
                 label = "icon color"
             )
@@ -177,7 +177,6 @@ private fun CategoryIconsGrid(
 @Composable
 fun EditCategoryScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),

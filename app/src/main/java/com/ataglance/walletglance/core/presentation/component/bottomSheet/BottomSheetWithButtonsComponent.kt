@@ -15,20 +15,20 @@ import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryTextButton
 import com.ataglance.walletglance.core.presentation.component.divider.BottomSheetHandle
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GlanceBottomSheetWithButtons(
+fun BottomSheetWithButtonsComponent(
     visible: Boolean,
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     onSaveButtonClick: () -> Unit,
-    backgroundColor: Color = GlanceColors.background,
-    contentColor: Color = GlanceColors.onSurface,
+    backgroundColor: Color = GlanciColors.background,
+    contentColor: Color = GlanciColors.onSurface,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = visible,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,

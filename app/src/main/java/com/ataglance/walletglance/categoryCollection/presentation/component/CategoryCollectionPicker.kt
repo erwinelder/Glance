@@ -60,7 +60,7 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -73,7 +73,7 @@ fun RowScope.CategoryCollectionPicker(
 ) {
     val expandedState = remember { MutableTransitionState(false) }
     val selectedColor by animateColorAsState(
-        targetValue = if (expandedState.targetState) GlanceColors.primary else GlanceColors.onSurface
+        targetValue = if (expandedState.targetState) GlanciColors.primary else GlanciColors.onSurface
     )
 
     Column(
@@ -135,11 +135,11 @@ private fun PickerButton(
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
         modifier = Modifier
             .bounceClickEffect()
-            .border(1.dp, GlanceColors.glassGradientOnGlassBorder, RoundedCornerShape(40))
+            .border(1.dp, GlanciColors.glassGradientOnGlassBorder, RoundedCornerShape(40))
             .clip(RoundedCornerShape(40))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceColors.glassButtonGradient.reversed(),
+                    colors = GlanciColors.glassButtonGradient.reversed(),
                     start = Offset(75f, 210f),
                     end = Offset(95f, -10f)
                 )
@@ -229,7 +229,7 @@ private fun PopupContent(
             ) {
                 Text(
                     text = collection.name,
-                    color = GlanceColors.onSurface.takeUnless {
+                    color = GlanciColors.onSurface.takeUnless {
                         collection.name == selectedCollection.name
                     } ?: selectedColor,
                     fontSize = 20.sp,
@@ -248,7 +248,7 @@ private fun PopupContent(
                         .clip(RoundedCornerShape(40))
                         .background(
                             brush = Brush.linearGradient(
-                                colors = GlanceColors.surfaceGradient,
+                                colors = GlanciColors.surfaceGradient,
                                 start = Offset(75f, 210f),
                                 end = Offset(95f, -10f)
                             )

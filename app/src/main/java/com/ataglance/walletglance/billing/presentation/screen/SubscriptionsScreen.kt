@@ -25,7 +25,7 @@ import com.ataglance.walletglance.core.presentation.component.container.GlassSur
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
@@ -111,14 +111,14 @@ fun SubscriptionComponent(
         GlassSurfaceContentColumnWrapper {
             Text(
                 text = uiState.name,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontFamily = Manrope,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W600
             )
             Text(
                 text = uiState.price,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontFamily = Manrope,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W600

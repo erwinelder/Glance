@@ -24,7 +24,7 @@ import com.ataglance.walletglance.core.presentation.component.container.GlassSur
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 
-sealed class GlancePalette(
+sealed class GlanciPalette(
     val primary: Color,
     val primaryGradient: List<Color>,
     val primaryGradientPair: Pair<Color, Color> = Pair(primaryGradient[0], primaryGradient[1]),
@@ -71,7 +71,7 @@ sealed class GlancePalette(
     val accountSemiTransparentBackground: Color,
 ) {
 
-    data object LightDefault : GlancePalette(
+    data object LightDefault : GlanciPalette(
         primary = Color(165, 93, 135),
         primaryGradient = listOf(
             Color(182, 103, 149),
@@ -153,7 +153,7 @@ sealed class GlancePalette(
         accountSemiTransparentBackground = Color(31, 26, 28, 51),
     )
 
-    data object DarkDefault : GlancePalette(
+    data object DarkDefault : GlanciPalette(
         primary = Color(154, 92, 128),
         primaryGradient = listOf(
             Color(168, 90, 133),
@@ -256,7 +256,7 @@ private fun PreviewColorsLightDefault() {
                 ) {
                     LargePrimaryIcon(
                         iconRes = R.drawable.error_large_icon,
-                        gradientColor = GlanceColors.errorGradient,
+                        gradientColor = GlanciColors.errorGradient,
                         iconDescription = ""
                     )
                     GlassSurfaceOnGlassSurface {
@@ -266,7 +266,7 @@ private fun PreviewColorsLightDefault() {
                     }
                     Text(
                         text = "Outlined text",
-                        color = GlanceColors.outline,
+                        color = GlanciColors.outline,
                         fontFamily = Manrope
                     )
                 }
@@ -297,7 +297,7 @@ private fun PreviewColorsDarkDefault() {
                 ) {
                     LargePrimaryIcon(
                         iconRes = R.drawable.error_large_icon,
-                        gradientColor = GlanceColors.errorGradient,
+                        gradientColor = GlanciColors.errorGradient,
                         iconDescription = ""
                     )
                     GlassSurfaceOnGlassSurface {
@@ -307,7 +307,7 @@ private fun PreviewColorsDarkDefault() {
                     }
                     Text(
                         text = "Outlined text",
-                        color = GlanceColors.outline,
+                        color = GlanciColors.outline,
                         fontFamily = Manrope
                     )
                 }

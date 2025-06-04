@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanciTheme
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -28,7 +28,7 @@ fun PreviewWithMainScaffoldContainer(
 ) {
     BoxWithConstraints {
         SharedTransitionLayout {
-            GlanceTheme(
+            GlanciTheme(
                 useDeviceTheme = false,
                 lastChosenTheme = appTheme,
                 boxWithConstraintsScope = this@BoxWithConstraints,

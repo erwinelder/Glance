@@ -21,7 +21,7 @@ import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetS
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
@@ -38,7 +38,7 @@ fun BudgetsOnWidgetSettingsBottomSheet(
     val checkedBudgetByType by viewModel.checkedBudgetsByType.collectAsStateWithLifecycle()
     val limitIsReached by viewModel.checkedBudgetsLimitIsReached.collectAsStateWithLifecycle()
 
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = openedWidgetSettings == WidgetName.ChosenBudgets,
         sheetState = sheetState,
         onDismissRequest = {

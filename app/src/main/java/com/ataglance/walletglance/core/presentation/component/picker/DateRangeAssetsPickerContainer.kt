@@ -37,7 +37,7 @@ fun DateRangeAssetsPickerContainer(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        GlanceDateRangeAssetsPicker(
+        DateRangeAssetsPickerComponent(
             visible = openCustomDateRangeWindow,
             padding = PaddingValues(
                 top = scaffoldPadding.calculateTopPadding() * 2,
@@ -62,7 +62,7 @@ fun DateRangeAssetsPickerContainer(
                 )
             }
         )
-        GlanceDateRangePicker(
+        DateRangePickerComponent(
             visible = openDateRangePickerDialog,
             dateRangePickerState = dateRangePickerState,
             onCloseDialog = {

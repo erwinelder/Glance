@@ -459,8 +459,6 @@ private fun BudgetStatisticsScreenPreview_() {
 
     BudgetStatisticsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         groupedCategoriesByType = defaultCategories,
         accountList = accountsAndActiveOne.accounts.let { listOf(it[0], it[3]) },
         budget = budget,
@@ -555,8 +553,7 @@ private fun TransferCreationScreenPreview_() {
 @Composable
 private fun StartSetupScreenPreview_() {
     StartSetupScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
@@ -603,7 +600,6 @@ private fun EditAccountsScreenPreview_() {
 private fun EditAccountScreenPreview_() {
     EditAccountScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         account = accountsAndActiveOne.accounts.first()
     )
 }
@@ -618,8 +614,7 @@ private fun EditAccountScreenPreview_() {
 @Composable
 private fun CurrencyPickerScreenPreview_() {
     CurrencyPickerScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
@@ -700,8 +695,7 @@ private fun EditSubcategoriesScreenPreview_() {
 @Composable
 private fun EditCategoryScreenPreview_() {
     EditCategoryScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 

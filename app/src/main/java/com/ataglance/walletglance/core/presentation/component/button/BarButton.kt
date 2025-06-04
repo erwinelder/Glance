@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
@@ -31,27 +31,27 @@ fun BarButton(
 ) {
     val containerColorLighter by animateColorAsState(
         targetValue = if (active) {
-            GlanceColors.primaryGradientPair.first
+            GlanciColors.primaryGradientPair.first
         } else {
-            GlanceColors.glassButtonGradientPair.first
+            GlanciColors.glassButtonGradientPair.first
         },
         animationSpec = tween(300),
         label = "BarButton container lighter color"
     )
     val containerColorDarker by animateColorAsState(
         targetValue = if (active) {
-            GlanceColors.primaryGradientPair.second
+            GlanciColors.primaryGradientPair.second
         } else {
-            GlanceColors.glassButtonGradientPair.second
+            GlanciColors.glassButtonGradientPair.second
         },
         animationSpec = tween(300),
         label = "BarButton container darker color"
     )
     val contentColor by animateColorAsState(
         targetValue = if (active) {
-            GlanceColors.onPrimary
+            GlanciColors.onPrimary
         } else {
-            GlanceColors.primary
+            GlanciColors.primary
         },
         animationSpec = tween(300),
         label = "BarButton content color"
@@ -60,7 +60,7 @@ fun BarButton(
         targetValue = if (active) {
             Color.Transparent
         } else {
-            GlanceColors.glassGradientOnGlassBorder
+            GlanciColors.glassGradientOnGlassBorder
         },
         animationSpec = tween(300),
         label = "BarButton border color"

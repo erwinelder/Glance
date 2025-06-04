@@ -28,8 +28,8 @@ import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.field.GlanceTextField
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
 
@@ -98,7 +98,7 @@ private fun RecordItemCreationComponentCollapsed(
         if (recordDraftItem.note.isNotBlank()) {
             Text(
                 text = recordDraftItem.note,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 18.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light,
@@ -117,7 +117,7 @@ private fun RecordItemCreationComponentCollapsed(
             if (recordDraftItem.quantity.isNotBlank()) {
                 Text(
                     text = "${recordDraftItem.quantity} x",
-                    color = GlanceColors.onSurface.copy(.6f),
+                    color = GlanciColors.onSurface.copy(.6f),
                     fontSize = 18.sp,
                     fontFamily = Manrope,
                     modifier = Modifier.padding(bottom = 2.dp)
@@ -125,14 +125,14 @@ private fun RecordItemCreationComponentCollapsed(
             }
             Text(
                 text = recordDraftItem.getFormattedAmountOrPlaceholder(),
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 22.sp,
                 fontFamily = Manrope
             )
             accountCurrency?.let {
                 Text(
                     text = it,
-                    color = GlanceColors.onSurface.copy(.6f),
+                    color = GlanciColors.onSurface.copy(.6f),
                     fontSize = 18.sp,
                     fontFamily = Manrope,
                     modifier = Modifier.padding(bottom = 2.dp)
@@ -188,7 +188,7 @@ private fun RecordItemCreationComponentExpanded(
         modifier = Modifier.padding(horizontal = 24.dp, vertical = 22.dp)
     ) {
         FieldWithLabel(labelText = stringResource(R.string.amount)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = recordDraftItem.amount,
                 placeholderText = "0.00",
                 fontSize = 22.sp,
@@ -214,7 +214,7 @@ private fun RecordItemCreationComponentExpanded(
         Spacer(modifier = Modifier.height(12.dp))
 
         FieldWithLabel(labelText = stringResource(R.string.note)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = recordDraftItem.note,
                 placeholderText = stringResource(R.string.note_placeholder),
                 fontSize = 18.sp,
@@ -225,7 +225,7 @@ private fun RecordItemCreationComponentExpanded(
         Spacer(modifier = Modifier.height(12.dp))
 
         FieldWithLabel(labelText = stringResource(R.string.quantity)) {
-            GlanceTextField(
+            TextFieldComponent(
                 text = recordDraftItem.quantity,
                 placeholderText = stringResource(R.string.quantity_placeholder),
                 fontSize = 18.sp,

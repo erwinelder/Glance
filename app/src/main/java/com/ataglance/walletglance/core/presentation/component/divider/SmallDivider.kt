@@ -9,14 +9,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun SmallDivider(
     modifier: Modifier = Modifier,
     filledWidth: Float = .3f,
     thickness: Dp = 1.dp,
-    color: Color = GlanceColors.outlineSemiTransparent
+    color: Color = GlanciColors.outlineSemiTransparent
 ) {
     HorizontalDivider(
         modifier = modifier

@@ -11,11 +11,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GlanceDateRangePicker(
+fun DateRangePickerComponent(
     visible: Boolean,
     dateRangePickerState: DateRangePickerState,
     onCloseDialog: () -> Unit
@@ -32,12 +32,12 @@ fun GlanceDateRangePicker(
             DateRangePicker(
                 state = dateRangePickerState,
                 colors = DatePickerDefaults.colors(
-                    containerColor = GlanceColors.surface,
-                    titleContentColor = GlanceColors.onSurface,
-                    headlineContentColor = GlanceColors.onSurface,
-                    weekdayContentColor = GlanceColors.onSurface,
-                    subheadContentColor = GlanceColors.onSurface,
-                    yearContentColor = GlanceColors.onSurface
+                    containerColor = GlanciColors.surface,
+                    titleContentColor = GlanciColors.onSurface,
+                    headlineContentColor = GlanciColors.onSurface,
+                    weekdayContentColor = GlanciColors.onSurface,
+                    subheadContentColor = GlanciColors.onSurface,
+                    yearContentColor = GlanciColors.onSurface
                 )
             )
         }

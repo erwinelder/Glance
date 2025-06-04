@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -44,7 +44,7 @@ fun RecordCategory(
             Icon(
                 painter = painterResource(category.icon.res),
                 contentDescription = category.name + " icon",
-                tint = GlanceColors.surface,
+                tint = GlanciColors.surface,
                 modifier = Modifier
                     .shadow(
                         elevation = 6.dp,
@@ -58,7 +58,7 @@ fun RecordCategory(
             )
             Text(
                 text = category.name,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = fontSize,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light,

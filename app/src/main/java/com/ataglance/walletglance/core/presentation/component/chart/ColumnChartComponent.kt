@@ -47,12 +47,12 @@ import com.ataglance.walletglance.core.presentation.component.container.GlassSur
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerShadow
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
 @Composable
-fun GlanceColumnChart(
+fun ColumnChartComponent(
     uiState: ColumnChartUiState,
     columnsColor: Color? = null,
     title: String? = null,
@@ -75,7 +75,7 @@ fun GlanceColumnChart(
             title?.let {
                 Text(
                     text = it,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontFamily = Manrope,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
@@ -96,7 +96,7 @@ fun GlanceColumnChart(
                         DashedLinesColumn(uiState.rowsNames.size)
                         ChartColumns(
                             columns = uiState.columns,
-                            columnsColor = columnsColor ?: GlanceColors.primary,
+                            columnsColor = columnsColor ?: GlanciColors.primary,
                             columnPopupDetailsContent = columnPopupDetailsContent
                         )
                     }
@@ -106,7 +106,7 @@ fun GlanceColumnChart(
             bottomNote?.let {
                 Text(
                     text = it,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontFamily = Manrope,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
@@ -128,7 +128,7 @@ private fun LinesNamesColumn(linesNames: List<String>, graphHeight: Dp) {
         linesNames.forEach { name ->
             Text(
                 text = name,
-                color = GlanceColors.onSurface.copy(.5f),
+                color = GlanciColors.onSurface.copy(.5f),
                 fontFamily = Manrope,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium
@@ -146,7 +146,7 @@ private fun ColumnsNamesRow(columnsNames: List<String>) {
         columnsNames.forEach { name ->
             Text(
                 text = name,
-                color = GlanceColors.onSurface.copy(.5f),
+                color = GlanciColors.onSurface.copy(.5f),
                 fontFamily = Manrope,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
@@ -162,7 +162,7 @@ private fun ColumnsNamesRow(columnsNames: List<String>) {
 @Composable
 private fun DashedLinesColumn(linesCount: Int) {
     val dashedPathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
-    val dashedLineColor = GlanceColors.outline.copy(.35f)
+    val dashedLineColor = GlanciColors.outline.copy(.35f)
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -288,7 +288,7 @@ private fun ChartColumnPopupDetails(
                         .padding(horizontal = 8.dp, vertical = 16.dp)
                         .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
                         .clip(RoundedCornerShape(24.dp))
-                        .background(GlanceColors.surface)
+                        .background(GlanciColors.surface)
                         .padding(16.dp)
                 ) {
                     content()
@@ -336,10 +336,8 @@ private fun ChartColumn(
 }
 
 
-@Preview(
-    device = Devices.PIXEL_7_PRO
-)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-private fun GlanceColumnChartPreview() {
+private fun ColumnChartComponentPreview() {
     BudgetStatisticsScreenPreview()
 }

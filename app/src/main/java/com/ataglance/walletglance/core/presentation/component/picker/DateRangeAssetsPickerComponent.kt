@@ -35,12 +35,12 @@ import com.ataglance.walletglance.core.presentation.component.button.SmallPrimar
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BoxScope.GlanceDateRangeAssetsPicker(
+fun BoxScope.DateRangeAssetsPickerComponent(
     visible: Boolean,
     padding: PaddingValues,
     currentDateRangeEnum: DateRangeEnum,
@@ -68,7 +68,7 @@ fun BoxScope.GlanceDateRangeAssetsPicker(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                    .background(GlanceColors.background)
+                    .background(GlanciColors.background)
                     .padding(20.dp, 16.dp)
             ) {
                 DateRangeAssetComponent(DateRangeAssets.ThisWeek, currentDateRangeEnum, onDateRangeSelect)
@@ -128,9 +128,9 @@ private fun DateRangeAssetComponent(
 ) {
     val color by animateColorAsState(
         targetValue = if (dateRangeAssets.enum == currentDateRangeEnum) {
-            GlanceColors.primary
+            GlanciColors.primary
         } else {
-            GlanceColors.onSurface
+            GlanciColors.onSurface
         }
     )
 

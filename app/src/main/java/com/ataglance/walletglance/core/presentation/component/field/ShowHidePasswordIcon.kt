@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun ShowHidePasswordIcon(
@@ -20,7 +20,7 @@ fun ShowHidePasswordIcon(
             painter = painterResource(
                 if (isPasswordVisible) R.drawable.hide_icon else R.drawable.show_icon
             ),
-            tint = GlanceColors.onSurface,
+            tint = GlanciColors.onSurface,
             contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
             modifier = Modifier.Companion.size(24.dp)
         )

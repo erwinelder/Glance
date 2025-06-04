@@ -40,7 +40,7 @@ import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimati
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -52,7 +52,7 @@ fun <T>PopupFloatingPicker(
 ) {
     val isExpandedState = remember { MutableTransitionState(false) }
     val selectedColor by animateColorAsState(
-        targetValue = if (isExpandedState.targetState) GlanceColors.primary else GlanceColors.onSurface
+        targetValue = if (isExpandedState.targetState) GlanciColors.primary else GlanciColors.onSurface
     )
 
     Column(
@@ -116,7 +116,7 @@ private fun PickerButton(
         modifier = Modifier
             .bounceClickEffect(onClick = onClick)
             .clip(RoundedCornerShape(16.dp))
-            .background(GlanceColors.surface)
+            .background(GlanciColors.surface)
             .padding(16.dp, 8.dp)
     ) {
         AnimatedContent(
@@ -160,7 +160,7 @@ private fun <T> PopupContent(
             .padding(8.dp)
             .clip(RoundedCornerShape(20.dp))
             .shadow(10.dp, RoundedCornerShape(20.dp))
-            .background(GlanceColors.surface)
+            .background(GlanciColors.surface)
     ) {
         itemsIndexed(items = itemList) { index, item ->
             val itemText = itemToString(item)
@@ -170,7 +170,7 @@ private fun <T> PopupContent(
             }
             Text(
                 text = itemText,
-                color = if (itemText == selectedItemText) GlanceColors.primary else GlanceColors.onSurface,
+                color = if (itemText == selectedItemText) GlanciColors.primary else GlanciColors.onSurface,
                 fontSize = 19.sp,
                 fontFamily = Manrope,
                 maxLines = 1,

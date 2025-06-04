@@ -15,14 +15,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun SmallTextField(
     text: String,
     onValueChange: (String) -> Unit,
     placeholderText: String = "",
-    textColor: Color = GlanceColors.onSurface,
+    textColor: Color = GlanciColors.onSurface,
     fontSize: TextUnit = 20.sp,
     fontWeight: FontWeight = FontWeight.W400,
     cornerSize: Dp = 15.dp,

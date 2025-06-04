@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -40,14 +40,14 @@ fun CategoryField(
         modifier = Modifier
             .bounceClickEffect(.97f, onClick = onClick)
             .clip(RoundedCornerShape(cornerSize))
-            .background(GlanceColors.surface)
+            .background(GlanciColors.surface)
             .padding(top = 2.dp, bottom = 2.dp, start = 2.dp, end = 8.dp)
     ) {
         category?.let {
             Icon(
                 painter = painterResource(category.icon.res),
                 contentDescription = category.name + " icon",
-                tint = GlanceColors.surface,
+                tint = GlanciColors.surface,
                 modifier = Modifier
                     .shadow(
                         elevation = 6.dp,
@@ -62,7 +62,7 @@ fun CategoryField(
         }
         Text(
             text = category?.name ?: "???",
-            color = if (category != null) GlanceColors.onSurface else GlanceColors.surface,
+            color = if (category != null) GlanciColors.onSurface else GlanciColors.surface,
             fontSize = fontSize,
             fontFamily = Manrope,
             fontWeight = FontWeight.Light,

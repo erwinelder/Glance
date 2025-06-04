@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
-fun GlanceLineChart(
+fun LineChartComponent(
     percentage: Float,
     brushColors: List<Color>,
     shadowColor: Color,
@@ -36,7 +36,7 @@ fun GlanceLineChart(
         Spacer(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
-                .background(GlanceColors.glassButtonGradientPair.first)
+                .background(GlanciColors.glassButtonGradientPair.first)
                 .fillMaxWidth()
                 .fillMaxHeight()
         )

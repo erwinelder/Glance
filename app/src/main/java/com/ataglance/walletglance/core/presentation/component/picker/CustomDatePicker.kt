@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,38 +58,38 @@ fun CustomDatePicker(
             DatePicker(
                 state = state,
                 colors = DatePickerDefaults.colors(
-                    containerColor = GlanceColors.surface,
-                    titleContentColor = GlanceColors.onSurface,
-                    headlineContentColor = GlanceColors.onSurface,
-                    weekdayContentColor = GlanceColors.onSurface,
-                    subheadContentColor = GlanceColors.onSurface,
-                    navigationContentColor = GlanceColors.onSurface,
-                    yearContentColor = GlanceColors.onSurface,
-                    disabledYearContentColor = GlanceColors.onSurface,
-                    currentYearContentColor = GlanceColors.primary,
-                    selectedYearContentColor = GlanceColors.onPrimary,
-                    disabledSelectedYearContentColor = GlanceColors.onSurface,
-                    selectedYearContainerColor = GlanceColors.primary,
-                    disabledSelectedYearContainerColor = GlanceColors.onSurface,
-                    dayContentColor = GlanceColors.onSurface,
-                    disabledDayContentColor = GlanceColors.onSurface,
-                    selectedDayContentColor = GlanceColors.onPrimary,
-                    disabledSelectedDayContentColor = GlanceColors.onSurface,
-                    selectedDayContainerColor = GlanceColors.primary,
-                    disabledSelectedDayContainerColor = GlanceColors.onSurface,
-                    todayContentColor = GlanceColors.primary,
-                    todayDateBorderColor = GlanceColors.primary,
-                    dayInSelectionRangeContentColor = GlanceColors.onSurface,
-                    dayInSelectionRangeContainerColor = GlanceColors.onSurface,
-                    dividerColor = GlanceColors.outline,
+                    containerColor = GlanciColors.surface,
+                    titleContentColor = GlanciColors.onSurface,
+                    headlineContentColor = GlanciColors.onSurface,
+                    weekdayContentColor = GlanciColors.onSurface,
+                    subheadContentColor = GlanciColors.onSurface,
+                    navigationContentColor = GlanciColors.onSurface,
+                    yearContentColor = GlanciColors.onSurface,
+                    disabledYearContentColor = GlanciColors.onSurface,
+                    currentYearContentColor = GlanciColors.primary,
+                    selectedYearContentColor = GlanciColors.onPrimary,
+                    disabledSelectedYearContentColor = GlanciColors.onSurface,
+                    selectedYearContainerColor = GlanciColors.primary,
+                    disabledSelectedYearContainerColor = GlanciColors.onSurface,
+                    dayContentColor = GlanciColors.onSurface,
+                    disabledDayContentColor = GlanciColors.onSurface,
+                    selectedDayContentColor = GlanciColors.onPrimary,
+                    disabledSelectedDayContentColor = GlanciColors.onSurface,
+                    selectedDayContainerColor = GlanciColors.primary,
+                    disabledSelectedDayContainerColor = GlanciColors.onSurface,
+                    todayContentColor = GlanciColors.primary,
+                    todayDateBorderColor = GlanciColors.primary,
+                    dayInSelectionRangeContentColor = GlanciColors.onSurface,
+                    dayInSelectionRangeContainerColor = GlanciColors.onSurface,
+                    dividerColor = GlanciColors.outline,
                     dateTextFieldColors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = GlanceColors.onSurface,
-                        unfocusedIndicatorColor = GlanceColors.outline,
-                        focusedLabelColor = GlanceColors.onSurface,
-                        unfocusedLabelColor = GlanceColors.onSurface,
-                        disabledLabelColor = GlanceColors.onSurface
+                        focusedIndicatorColor = GlanciColors.onSurface,
+                        unfocusedIndicatorColor = GlanciColors.outline,
+                        focusedLabelColor = GlanciColors.onSurface,
+                        unfocusedLabelColor = GlanciColors.onSurface,
+                        disabledLabelColor = GlanciColors.onSurface
                     )
                 )
             )

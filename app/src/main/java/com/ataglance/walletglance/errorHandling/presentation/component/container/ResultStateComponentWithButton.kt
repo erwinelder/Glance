@@ -3,7 +3,7 @@ package com.ataglance.walletglance.errorHandling.presentation.component.containe
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
 
 @Composable
@@ -16,7 +16,7 @@ fun ResultStateComponentWithButton(
         R.drawable.success_large_icon else R.drawable.error_large_icon
     val iconDescription = if (resultState.isSuccessful) "Success icon" else "Error icon"
     val iconGradient = if (resultState.isSuccessful)
-        GlanceColors.primaryGradient else GlanceColors.errorGradient
+        GlanciColors.primaryGradient else GlanciColors.errorGradient
 
     ResultComponentWithButton(
         iconRes = iconRes,

@@ -42,8 +42,6 @@ import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
 import com.ataglance.walletglance.account.mapper.toEditAccountUiState
 import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
 import com.ataglance.walletglance.core.presentation.component.button.ColorButton
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
@@ -54,6 +52,8 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Gl
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.switchButton.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun EditAccountScreen(
@@ -197,19 +197,19 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
         ) {
             Text(
                 text = currency,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .bounceClickEffect(onClick = onNavigateToCurrencyPickerWindow)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(GlanceColors.surface)
+                    .background(GlanciColors.surface)
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             )
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "Right arrow icon",
-                tint = GlanceColors.onSurface,
+                tint = GlanciColors.onSurface,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -222,7 +222,6 @@ private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: ()
 @Composable
 fun EditAccountScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     account: Account = Account(
         id = 1,
         orderNum = 1,

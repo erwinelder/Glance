@@ -24,8 +24,8 @@ import com.ataglance.walletglance.core.presentation.component.button.GlassSurfac
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilityContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.utils.getImeBottomInset
 
@@ -75,8 +75,8 @@ fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
             KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
                 Text(
                     text = title,
-                    style = GlanceTypography.titleLarge,
-                    color = GlanceColors.onSurface,
+                    style = GlanciTypography.titleLarge,
+                    color = GlanciColors.onSurface,
                     fontFamily = NotoSans,
                     overflow = TextOverflow.Clip,
                     modifier = Modifier

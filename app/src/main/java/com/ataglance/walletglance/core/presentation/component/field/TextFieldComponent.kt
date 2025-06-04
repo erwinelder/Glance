@@ -33,13 +33,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.takeComposableIfNotNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GlanceTextField(
+fun TextFieldComponent(
     text: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -53,8 +53,8 @@ fun GlanceTextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val textColor = GlanceColors.onSurface
-    val containerColor = GlanceColors.surface
+    val textColor = GlanciColors.onSurface
+    val containerColor = GlanciColors.surface
 
     var isPasswordVisible by remember {
         mutableStateOf(false.takeIf {
@@ -98,7 +98,7 @@ fun GlanceTextField(
                 focusedContainerColor = containerColor,
                 unfocusedContainerColor = containerColor,
                 disabledContainerColor = containerColor,
-                errorContainerColor = GlanceColors.error,
+                errorContainerColor = GlanciColors.error,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
@@ -111,7 +111,7 @@ fun GlanceTextField(
                         painter = painterResource(
                             if (it) R.drawable.hide_icon else R.drawable.show_icon
                         ),
-                        tint = GlanceColors.onSurface,
+                        tint = GlanciColors.onSurface,
                         contentDescription = if (it) "Hide password" else "Show password",
                         modifier = Modifier.size(24.dp)
                     )
@@ -125,7 +125,7 @@ fun GlanceTextField(
                         Text(
                             text = placeholderText,
                             fontSize = fontSize,
-                            color = GlanceColors.outline,
+                            color = GlanciColors.outline,
                             fontWeight = FontWeight.Normal,
                             fontFamily = Manrope,
                             textAlign = TextAlign.Center

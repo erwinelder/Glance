@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 
@@ -39,14 +39,14 @@ fun PrimaryButton(
     text: String,
     enabled: Boolean = true,
     fontSize: TextUnit = 17.sp,
-    enabledGradient: Pair<Color, Color> = GlanceColors.primaryGradientPair,
+    enabledGradient: Pair<Color, Color> = GlanciColors.primaryGradientPair,
     onClick: () -> Unit = {}
 ) {
     val buttonLighterColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.first else GlanceColors.disabledGradientPair.first
+        targetValue = if (enabled) enabledGradient.first else GlanciColors.disabledGradientPair.first
     )
     val buttonDarkerColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.second else GlanceColors.disabledGradientPair.second
+        targetValue = if (enabled) enabledGradient.second else GlanciColors.disabledGradientPair.second
     )
     val modifier = if (WindowTypeIsCompact) {
         Modifier.fillMaxWidth(.84f)
@@ -64,9 +64,9 @@ fun PrimaryButton(
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceColors.onPrimary,
+                contentColor = GlanciColors.onPrimary,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = GlanceColors.onPrimary,
+                disabledContentColor = GlanciColors.onPrimary,
             ),
             contentPadding = PaddingValues(vertical = 14.dp),
             modifier = modifier
@@ -99,7 +99,7 @@ private fun Shadow(enabled: Boolean, enabledColor: Color) {
         targetValue = if (enabled) {
             enabledColor
         } else {
-            GlanceColors.outline
+            GlanciColors.outline
         }
     )
 

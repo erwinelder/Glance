@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun CategoryControlPanel(
@@ -34,8 +34,8 @@ fun CategoryControlPanel(
             shape = RectangleShape,
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceColors.onSurface,
-                disabledContentColor = GlanceColors.outlineSemiTransparent
+                contentColor = GlanciColors.onSurface,
+                disabledContentColor = GlanciColors.outlineSemiTransparent
             ),
             modifier = Modifier.size(25.dp, 15.dp)
         ) {
@@ -50,8 +50,8 @@ fun CategoryControlPanel(
             shape = RectangleShape,
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceColors.onSurface,
-                disabledContentColor = GlanceColors.outlineSemiTransparent
+                contentColor = GlanciColors.onSurface,
+                disabledContentColor = GlanciColors.outlineSemiTransparent
             ),
             modifier = Modifier.size(25.dp, 15.dp)
         ) {
@@ -65,7 +65,7 @@ fun CategoryControlPanel(
             shape = RectangleShape,
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceColors.onSurface
+                contentColor = GlanciColors.onSurface
             ),
             modifier = Modifier
                 .size(21.dp, 18.dp)

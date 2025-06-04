@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
 @Composable
@@ -29,13 +29,13 @@ fun AddNewItemButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
             .width(250.dp)
             .bounceClickEffect(.97f)
             .clip(RoundedCornerShape(22.dp))
-            .border(2.dp, GlanceColors.outline, RoundedCornerShape(22.dp))
+            .border(2.dp, GlanciColors.outline, RoundedCornerShape(22.dp))
             .padding(horizontal = 18.dp, vertical = 8.dp)
     ) {
         Icon(
             painter = painterResource(R.drawable.add_icon),
             contentDescription = "add new item",
-            tint = GlanceColors.outline,
+            tint = GlanciColors.outline,
             modifier = Modifier.size(26.dp)
         )
     }

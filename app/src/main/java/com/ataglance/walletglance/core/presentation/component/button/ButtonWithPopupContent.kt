@@ -40,7 +40,7 @@ import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimat
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -60,19 +60,19 @@ fun ButtonWithPopupContent(
                 .clip(RoundedCornerShape(36))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = GlanceColors.glassButtonGradient.reversed(),
+                        colors = GlanciColors.glassButtonGradient.reversed(),
                         start = Offset(75f, 210f),
                         end = Offset(95f, -10f)
                     )
                 )
                 .border(
                     width = 1.dp,
-                    color = GlanceColors.glassGradientOnGlassBorder,
+                    color = GlanciColors.glassGradientOnGlassBorder,
                     shape = RoundedCornerShape(36)
                 ),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceColors.onSurface,
+                contentColor = GlanciColors.onSurface,
             ),
             onClick = {
                 isExpandedState.targetState = true
@@ -80,7 +80,7 @@ fun ButtonWithPopupContent(
         ) {
             Text(
                 text = buttonText,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 16.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Normal
@@ -89,7 +89,7 @@ fun ButtonWithPopupContent(
             Icon(
                 painter = painterResource(R.drawable.see_other_icon),
                 contentDescription = "see other icon",
-                tint = GlanceColors.onSurface,
+                tint = GlanciColors.onSurface,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -115,7 +115,7 @@ fun ButtonWithPopupContent(
                                 .padding(horizontal = 8.dp, vertical = 8.dp)
                                 .innerVolumeShadow(shape = RoundedCornerShape(26.dp))
                                 .clip(RoundedCornerShape(26.dp))
-                                .background(GlanceColors.surface)
+                                .background(GlanciColors.surface)
                                 .padding(contentPadding)
                         ) {
                             popupContent {

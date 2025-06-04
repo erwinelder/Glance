@@ -29,7 +29,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.color.ColorWithName
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -65,7 +65,7 @@ fun ColorPicker(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
-                .background(GlanceColors.background)
+                .background(GlanciColors.background)
                 .fillMaxWidth(.8f)
                 .padding(12.dp)
         ) {

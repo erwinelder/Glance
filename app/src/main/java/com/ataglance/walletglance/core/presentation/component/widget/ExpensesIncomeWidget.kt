@@ -32,12 +32,12 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.core.presentation.component.chart.GlanceLineChart
+import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
 import org.koin.compose.koinInject
@@ -101,7 +101,7 @@ fun ExpensesIncomeWidgetContent(
             AnimatedContent(targetState = period) { targetPeriod ->
                 Text(
                     text = targetPeriod,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 24.sp,
                     lineHeight = 30.sp,
                     fontFamily = Manrope,
@@ -116,7 +116,7 @@ fun ExpensesIncomeWidgetContent(
             ) { targetTotalExpensesAndIncome ->
                 Text(
                     text = targetTotalExpensesAndIncome,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 22.sp,
                     fontFamily = Manrope,
                     fontWeight = FontWeight.Light
@@ -128,7 +128,7 @@ fun ExpensesIncomeWidgetContent(
                 percentage = uiState.incomePercentage,
                 percentageFloat = incomePercentage,
                 totalStringRow = "+ ${uiState.getIncomeTotalFormatted()} $accountCurrency",
-                gradientColorsPair = GlanceColors.lineChartGreenGradientPair
+                gradientColorsPair = GlanciColors.lineChartGreenGradientPair
             )
             Spacer(modifier = Modifier.height(16.dp))
             StatisticBlock(
@@ -136,7 +136,7 @@ fun ExpensesIncomeWidgetContent(
                 percentage = uiState.expensesPercentage,
                 percentageFloat = expensesPercentage,
                 totalStringRow = "- ${uiState.getExpensesTotalFormatted()} $accountCurrency",
-                gradientColorsPair = GlanceColors.lineChartRedGradientPair
+                gradientColorsPair = GlanciColors.lineChartRedGradientPair
             )
         }
     }
@@ -159,7 +159,7 @@ private fun StatisticBlock(
         ) { targetContent ->
             Text(
                 text = targetContent,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 20.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light
@@ -169,14 +169,14 @@ private fun StatisticBlock(
         AnimatedContent(targetState = totalStringRow) { targetContent ->
             Text(
                 text = targetContent,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 20.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        GlanceLineChart(
+        LineChartComponent(
             percentage = percentageFloat,
             brushColors = gradientColorsPair.toList(),
             shadowColor = gradientColorsPair.first,

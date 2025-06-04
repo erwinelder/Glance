@@ -12,7 +12,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun DefaultBudgetComponent(
@@ -26,7 +26,7 @@ fun DefaultBudgetComponent(
         Icon(
             painter = painterResource(R.drawable.short_arrow_right_icon),
             contentDescription = "right arrow icon",
-            tint = GlanceColors.onSurface,
+            tint = GlanciColors.onSurface,
             modifier = Modifier.size(20.dp)
         )
     }

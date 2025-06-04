@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetDialog
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetDialogComponent
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
@@ -96,7 +96,7 @@ fun NotificationsScreen(
             allowScroll = false
         )
 
-        GlanceBottomSheetDialog(
+        BottomSheetDialogComponent(
             visible = showNotificationsDeniedDialog,
             iconRes = R.drawable.notifications_large_icon,
             iconDescription = "Notifications denied",

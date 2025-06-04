@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -53,13 +53,13 @@ fun LanguagePicker(
                         selected = it.languageCode == currentLangCode,
                         onClick = null,
                         colors = RadioButtonDefaults.colors(
-                            selectedColor = GlanceColors.primary,
-                            unselectedColor = GlanceColors.onSurface.copy(.5f)
+                            selectedColor = GlanciColors.primary,
+                            unselectedColor = GlanciColors.onSurface.copy(.5f)
                         )
                     )
                     Text(
                         text = it.languageNativeName,
-                        color = GlanceColors.onSurface,
+                        color = GlanciColors.onSurface,
                         fontSize = 18.sp,
                         fontFamily = Manrope
                     )

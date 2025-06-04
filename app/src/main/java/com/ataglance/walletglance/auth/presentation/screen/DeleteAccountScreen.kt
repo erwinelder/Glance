@@ -23,7 +23,7 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
@@ -107,7 +107,7 @@ fun DeleteAccountScreen(
                 PrimaryButton(
                     text = stringResource(R.string.delete_account),
                     enabled = deletionIsAllowed,
-                    enabledGradient = GlanceColors.errorGradientPair,
+                    enabledGradient = GlanciColors.errorGradientPair,
                     onClick = onDeleteAccount
                 )
             }

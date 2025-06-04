@@ -4,14 +4,14 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun ResultSuccessScreenContainer(
     title: String,
     @DrawableRes iconRes: Int = R.drawable.success_large_icon,
     iconDescription: String = "Success",
-    iconBackgroundGradient: List<Color> = GlanceColors.primaryGradient,
+    iconBackgroundGradient: List<Color> = GlanciColors.primaryGradient,
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {

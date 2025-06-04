@@ -23,8 +23,8 @@ import com.ataglance.walletglance.core.domain.app.WindowType
 
 
 private val LocalAppTheme = compositionLocalOf { AppTheme.LightDefault }
-private val LocalColors = staticCompositionLocalOf<GlancePalette> { GlancePalette.LightDefault }
-private val LocalTypography = staticCompositionLocalOf { GlanceCustomTypography() }
+private val LocalColors = staticCompositionLocalOf<GlanciPalette> { GlanciPalette.LightDefault }
+private val LocalTypography = staticCompositionLocalOf { GlanciCustomTypography() }
 private val LocalWindowType = staticCompositionLocalOf { WindowType.Compact }
 @OptIn(ExperimentalSharedTransitionApi::class)
 private val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
@@ -32,7 +32,7 @@ private val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransiti
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun GlanceTheme(
+fun GlanciTheme(
     context: ComponentActivity? = null,
     useDeviceTheme: Boolean = true,
     chosenLightTheme: AppTheme = AppTheme.LightDefault,
@@ -56,11 +56,11 @@ fun GlanceTheme(
 
     setAppTheme(appTheme)
 
-    val glanceColors = when (appTheme) {
-        AppTheme.LightDefault -> GlancePalette.LightDefault
-        AppTheme.DarkDefault -> GlancePalette.DarkDefault
+    val glanciColors = when (appTheme) {
+        AppTheme.LightDefault -> GlanciPalette.LightDefault
+        AppTheme.DarkDefault -> GlanciPalette.DarkDefault
     }
-    val typography = GlanceCustomTypography()
+    val typography = GlanciCustomTypography()
     val windowType = when {
         boxWithConstraintsScope.maxWidth < 600.dp -> WindowType.Compact
         boxWithConstraintsScope.maxWidth < 840.dp -> WindowType.Medium
@@ -69,13 +69,13 @@ fun GlanceTheme(
 
     context?.let {
         LaunchedEffect(key1 = isDeviceIsDarkTheme, key2 = lastChosenTheme, key3 = useDeviceTheme) {
-            setSystemBarsColors(it, glanceColors, appTheme)
+            setSystemBarsColors(it, glanciColors, appTheme)
         }
     }
 
     CompositionLocalProvider(
         LocalAppTheme provides appTheme,
-        LocalColors provides glanceColors,
+        LocalColors provides glanciColors,
         LocalTypography provides typography,
         LocalWindowType provides windowType,
         LocalSharedTransitionScope provides sharedTransitionScope,
@@ -87,7 +87,7 @@ fun GlanceTheme(
 
 private fun setSystemBarsColors(
     context: ComponentActivity,
-    colorScheme: GlancePalette,
+    colorScheme: GlanciPalette,
     appTheme: AppTheme
 ) {
     context.enableEdgeToEdge(
@@ -117,12 +117,12 @@ val CurrAppTheme: AppTheme
     @ReadOnlyComposable
     get() = LocalAppTheme.current
 
-val GlanceColors: GlancePalette
+val GlanciColors: GlanciPalette
     @Composable
     @ReadOnlyComposable
     get() = LocalColors.current
 
-val GlanceTypography: GlanceCustomTypography
+val GlanciTypography: GlanciCustomTypography
     @Composable
     @ReadOnlyComposable
     get() = LocalTypography.current

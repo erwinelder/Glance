@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -25,7 +25,7 @@ fun LoadingStateComponent(
     ) {
         Text(
             text = message,
-            color = GlanceColors.outline,
+            color = GlanciColors.outline,
             fontSize = 18.sp,
             fontFamily = Manrope,
             fontWeight = FontWeight.W400

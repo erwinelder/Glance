@@ -19,7 +19,7 @@ fun TextFieldWithLabel(
     labelText: String = "Label"
 ) {
     FieldWithLabel(labelText) {
-        GlanceTextField(
+        TextFieldComponent(
             text = text,
             placeholderText = placeholderText,
             onValueChange = onValueChange,

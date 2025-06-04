@@ -33,8 +33,8 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
@@ -84,13 +84,13 @@ fun SettingsHomeScreen(
         ) {
             Text(
                 text = stringResource(R.string.settings),
-                color = GlanceColors.onSurface,
-                style = GlanceTypography.titleMedium,
+                color = GlanciColors.onSurface,
+                style = GlanciTypography.titleMedium,
                 fontFamily = NotoSans
             )
             Text(
                 text = stringResource(R.string.version) + " 4.2.0",
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
                 fontFamily = Manrope

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -26,14 +26,14 @@ fun DateField(
     FieldWithLabel(labelText = stringResource(R.string.date)) {
         Text(
             text = formattedDate,
-            color = GlanceColors.onSurface,
+            color = GlanciColors.onSurface,
             fontSize = 18.sp,
             fontFamily = Manrope,
             fontWeight = FontWeight.Light,
             modifier = Modifier
                 .bounceClickEffect(.97f, onClick = onClick)
                 .clip(RoundedCornerShape(cornerSize))
-                .background(GlanceColors.surface)
+                .background(GlanciColors.surface)
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         )
     }

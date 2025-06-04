@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,9 +65,9 @@ fun CustomTimePicker(
                     .fillMaxWidth()
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 colors = TimePickerDefaults.colors(
-                    containerColor = GlanceColors.surface,
-                    timeSelectorSelectedContainerColor = GlanceColors.primary,
-                    timeSelectorSelectedContentColor = GlanceColors.onPrimary
+                    containerColor = GlanciColors.surface,
+                    timeSelectorSelectedContainerColor = GlanciColors.primary,
+                    timeSelectorSelectedContentColor = GlanciColors.onPrimary
                 ),
                 layoutType = TimePickerLayoutType.Vertical
             )

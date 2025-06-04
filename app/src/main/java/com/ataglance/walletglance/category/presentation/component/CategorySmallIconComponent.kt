@@ -17,14 +17,14 @@ import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPr
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun CategoryIconComponent(category: Category) {
     Icon(
         painter = painterResource(category.icon.res),
         contentDescription = "category ${category.name} icon",
-        tint = GlanceColors.background,
+        tint = GlanciColors.background,
         modifier = Modifier
             .shadow(
                 elevation = 8.dp,

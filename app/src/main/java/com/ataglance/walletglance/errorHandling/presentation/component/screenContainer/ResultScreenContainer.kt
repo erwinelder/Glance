@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackButton
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun ResultScreenContainer(
     title: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconBackgroundGradient: List<Color> = GlanceColors.primaryGradient,
+    iconBackgroundGradient: List<Color> = GlanciColors.primaryGradient,
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {

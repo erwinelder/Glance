@@ -27,11 +27,11 @@ import com.ataglance.walletglance.category.presentation.component.CategoryIconCo
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.component.chart.GlanceLineChart
+import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.toStringDateRange
@@ -60,7 +60,7 @@ fun BudgetWithStatsComponent(
                 }
                 Text(
                     text = budget.name,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 18.sp,
                     fontFamily = Manrope,
                     maxLines = 1,
@@ -70,7 +70,7 @@ fun BudgetWithStatsComponent(
                 Icon(
                     painter = painterResource(R.drawable.short_arrow_right_icon),
                     contentDescription = "right arrow icon",
-                    tint = GlanceColors.onSurface,
+                    tint = GlanciColors.onSurface,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -84,7 +84,7 @@ fun BudgetWithStatsComponent(
                 ) {
                     Text(
                         text = budget.usedAmount.formatWithSpaces(),
-                        color = GlanceColors.onSurface,
+                        color = GlanciColors.onSurface,
                         fontSize = 18.sp,
                         fontFamily = Manrope,
                         maxLines = 1,
@@ -97,7 +97,7 @@ fun BudgetWithStatsComponent(
                     ) {
                         Text(
                             text = budget.amountLimit.formatWithSpaces(),
-                            color = GlanceColors.onSurface,
+                            color = GlanciColors.onSurface,
                             fontSize = 18.sp,
                             fontFamily = Manrope,
                             maxLines = 1,
@@ -106,14 +106,14 @@ fun BudgetWithStatsComponent(
                         )
                         Text(
                             text = budget.currency,
-                            color = GlanceColors.onSurface.copy(.6f),
+                            color = GlanciColors.onSurface.copy(.6f),
                             fontSize = 17.sp,
                             fontFamily = Manrope
                         )
                     }
                 }
                 budget.category?.let {
-                    GlanceLineChart(
+                    LineChartComponent(
                         percentage = budget.usedPercentage / 100,
                         brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
                         shadowColor = it.getIconSolidColorByTheme(CurrAppTheme)
@@ -124,7 +124,7 @@ fun BudgetWithStatsComponent(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 budget.category?.let {
-                    GlanceLineChart(
+                    LineChartComponent(
                         percentage = budget.currentTimeWithinRangeGraphPercentage,
                         brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
                         shadowColor = it.getIconSolidColorByTheme(CurrAppTheme),
@@ -161,7 +161,7 @@ private fun DateRangeLabels(
     ) {
         Text(
             text = stringDateRange.from,
-            color = GlanceColors.onSurface,
+            color = GlanciColors.onSurface,
             fontSize = 17.sp,
             fontFamily = Manrope,
             maxLines = 1,
@@ -169,7 +169,7 @@ private fun DateRangeLabels(
         )
         Text(
             text = stringDateRange.to,
-            color = GlanceColors.onSurface,
+            color = GlanciColors.onSurface,
             fontSize = 17.sp,
             fontFamily = Manrope,
             maxLines = 1,

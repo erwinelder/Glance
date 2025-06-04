@@ -30,7 +30,7 @@ import com.ataglance.walletglance.core.presentation.component.button.ButtonWithP
 import com.ataglance.walletglance.core.presentation.component.button.NavigationTextArrowButton
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckboxWithText
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences
 
@@ -135,7 +135,7 @@ private fun RecordPreferencesWindowContent(
         if (!showTransferButton && !showIncludeInBudgetsButton) {
             Text(
                 text = stringResource(R.string.no_preferences),
-                color = GlanceColors.onSurface.copy(.6f),
+                color = GlanciColors.onSurface.copy(.6f),
                 fontSize = 16.sp,
                 fontFamily = Manrope,
                 modifier = Modifier.padding(vertical = 16.dp)
@@ -151,7 +151,7 @@ private fun RecordPreferencesWindowContentPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         Box(
             modifier = Modifier
-                .border(1.dp, GlanceColors.onSurface.copy(.6f))
+                .border(1.dp, GlanciColors.onSurface.copy(.6f))
                 .padding(horizontal = 24.dp)
         ) {
             RecordPreferencesWindowContent(

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.modifier.innerShadow
 
 @Composable
@@ -26,7 +26,7 @@ fun CategoryBigIconComponent(category: Category) {
     Icon(
         painter = painterResource(category.icon.res),
         contentDescription = "category ${category.name} icon",
-        tint = GlanceColors.surface,
+        tint = GlanciColors.surface,
         modifier = Modifier
             .shadow(
                 elevation = 16.dp,

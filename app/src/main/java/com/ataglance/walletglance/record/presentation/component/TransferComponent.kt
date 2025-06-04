@@ -20,7 +20,7 @@ import com.ataglance.walletglance.account.domain.model.RecordAccount
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatDateLongAsDayMonthYear
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -43,14 +43,14 @@ fun TransferComponent(
                     resourceManager = resourceManager,
                     includeYear = includeYearToDate
                 ),
-                color = GlanceColors.outline,
+                color = GlanciColors.outline,
                 fontSize = 16.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light
             )
             Text(
                 text = stringResource(R.string.transfer),
-                color = GlanceColors.primary,
+                color = GlanciColors.primary,
                 fontSize = 16.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light
@@ -65,7 +65,7 @@ fun TransferComponent(
                     if (recordStack.isOutTransfer()) R.string.to_account_meaning
                     else R.string.from_account_meaning
                 ),
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 18.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.Light
@@ -88,7 +88,7 @@ fun TransferComponent(
         }
         Text(
             text = recordStack.getFormattedAmountWithSpaces(),
-            color = GlanceColors.onSurface,
+            color = GlanciColors.onSurface,
             fontSize = 20.sp,
             fontFamily = Manrope,
             fontWeight = FontWeight.Light

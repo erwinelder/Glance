@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
 import com.ataglance.walletglance.core.presentation.component.container.ReorderableListStyled
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.other.ScreenNameWithIconComponent
@@ -24,7 +24,7 @@ fun NavigationButtonsSettingsBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState()
 
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = visible,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest

@@ -5,7 +5,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
-data class GlanceCustomTypography(
+data class GlanciCustomTypography(
     val titleLarge: TextStyle = TextStyle(
         fontSize = 38.sp,
         fontWeight = FontWeight.W900,

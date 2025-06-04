@@ -43,6 +43,6 @@ fun AccountsFlowRow(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-private fun GlanceColumnChartPreview() {
+private fun AccountsFlowRowPreview() {
     BudgetStatisticsScreenPreview()
 }

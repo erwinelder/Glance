@@ -14,7 +14,7 @@ import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.presentation.viewmodel.ProfileViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheetDialog
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetDialogComponent
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
@@ -79,7 +79,7 @@ fun ProfileScreen(
 //                NavigateToSettingsCategoryButton(SettingsCategory.ManageSubscriptions(appTheme), onNavigateToScreen)
             }
         )
-        GlanceBottomSheetDialog(
+        BottomSheetDialogComponent(
             visible = showSignOutSheet,
             iconRes = R.drawable.sign_out_large_icon,
             iconDescription = "Sing out",

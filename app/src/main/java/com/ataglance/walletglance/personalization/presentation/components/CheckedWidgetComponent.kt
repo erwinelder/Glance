@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckboxContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
@@ -28,7 +28,7 @@ fun RowScope.CheckedWidgetComponent(
     ) {
         Text(
             text = stringResource(widget.name.getLocalizedStringRes()),
-            color = GlanceColors.onSurface,
+            color = GlanciColors.onSurface,
             fontSize = 20.sp,
             fontFamily = Manrope,
             maxLines = 1,

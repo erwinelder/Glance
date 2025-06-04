@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidationState
 
@@ -21,7 +21,7 @@ fun FieldValidationMessage(
         Text(
             text = "* " + stringResource(targetState.messageRes),
             fontSize = fontSize,
-            color = if (targetState.isValid) GlanceColors.success else GlanceColors.error,
+            color = if (targetState.isValid) GlanciColors.success else GlanciColors.error,
             fontWeight = FontWeight.W400,
             fontFamily = Manrope,
             textAlign = TextAlign.Center

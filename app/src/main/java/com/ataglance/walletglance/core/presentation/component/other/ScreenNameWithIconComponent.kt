@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
 
@@ -41,7 +41,7 @@ fun ScreenNameWithIconComponent(
         )
         Text(
             text = screenName,
-            color = if (showAsActive) GlanceColors.primary else GlanceColors.onSurface,
+            color = if (showAsActive) GlanciColors.primary else GlanciColors.onSurface,
             fontSize = 18.sp,
             fontFamily = Manrope,
             maxLines = 1,

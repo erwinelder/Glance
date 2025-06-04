@@ -28,7 +28,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -52,14 +52,14 @@ fun EditingCategoryCollectionComponent(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceColors.glassGradientOnGlass,
+                    colors = GlanciColors.glassGradientOnGlass,
                     start = Offset(50f, 190f),
                     end = Offset(100f, 0f)
                 )
             )
             .border(
                 width = 1.dp,
-                color = GlanceColors.glassGradientOnGlassBorder,
+                color = GlanciColors.glassGradientOnGlassBorder,
                 shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
             .padding(horizontal = 24.dp, vertical = 16.dp)
@@ -70,7 +70,7 @@ fun EditingCategoryCollectionComponent(
         ) {
             Text(
                 text = collection.name,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 20.sp,
                 fontFamily = Manrope,
                 overflow = TextOverflow.Ellipsis,
@@ -80,7 +80,7 @@ fun EditingCategoryCollectionComponent(
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "right arrow",
-                tint = GlanceColors.onSurface,
+                tint = GlanciColors.onSurface,
                 modifier = Modifier.size(12.dp, 20.dp)
             )
         }

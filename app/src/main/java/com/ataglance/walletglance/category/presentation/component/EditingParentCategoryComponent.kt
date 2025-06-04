@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -47,14 +47,14 @@ fun EditingParentCategoryComponent(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.record_corner_size)))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanceColors.glassGradientOnGlass,
+                    colors = GlanciColors.glassGradientOnGlass,
                     start = Offset(50f, 190f),
                     end = Offset(100f, 0f)
                 )
             )
             .border(
                 width = 1.dp,
-                color = GlanceColors.glassGradientOnGlassBorder,
+                color = GlanciColors.glassGradientOnGlassBorder,
                 shape = RoundedCornerShape(dimensionResource(R.dimen.record_corner_size))
             )
             .padding(start = 15.dp, end = 15.dp, top = 12.dp, bottom = 12.dp)
@@ -69,7 +69,7 @@ fun EditingParentCategoryComponent(
             CategoryIconComponent(category)
             Text(
                 text = category.name,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 20.sp,
                 fontFamily = Manrope,
                 maxLines = 1,
@@ -81,7 +81,7 @@ fun EditingParentCategoryComponent(
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "right arrow",
-                tint = GlanceColors.onSurface,
+                tint = GlanciColors.onSurface,
                 modifier = Modifier
                     .size(12.dp, 20.dp)
             )

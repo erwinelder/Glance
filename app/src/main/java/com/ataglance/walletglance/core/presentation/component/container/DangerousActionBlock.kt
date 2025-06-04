@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryDangerousButton
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -74,7 +74,7 @@ private fun DangerousActionBlockContent(
         ) { targetMessage ->
             Text(
                 text = targetMessage,
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 18.sp,
                 fontFamily = Manrope,
                 textAlign = TextAlign.Center

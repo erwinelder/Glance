@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.utils.add
@@ -65,7 +65,7 @@ fun SettingsCategoryScreenContainer(
                 Text(
                     text = title,
                     style = Typography.titleLarge,
-                    color = GlanceColors.onSurface
+                    color = GlanciColors.onSurface
                 )
             }
         }

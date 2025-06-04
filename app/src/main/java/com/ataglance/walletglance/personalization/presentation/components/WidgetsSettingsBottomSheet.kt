@@ -5,7 +5,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.core.presentation.component.bottomSheet.GlanceBottomSheet
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
 import com.ataglance.walletglance.core.presentation.component.container.ReorderableListStyled
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,7 +19,7 @@ fun WidgetsSettingsBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState()
 
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = visible,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest

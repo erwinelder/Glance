@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.GlanceTypography
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
@@ -60,8 +60,8 @@ fun GreetingsMessageContent(message: String) {
     ) {
         Text(
             text = message,
-            color = GlanceColors.onSurface,
-            style = GlanceTypography.titleMedium,
+            color = GlanciColors.onSurface,
+            style = GlanciTypography.titleMedium,
             fontFamily = NotoSans
         )
     }

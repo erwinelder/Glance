@@ -41,14 +41,14 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
-import com.ataglance.walletglance.core.presentation.component.chart.GlanceColumnChart
-import com.ataglance.walletglance.core.presentation.component.chart.GlanceSingleValuePieChart
+import com.ataglance.walletglance.core.presentation.component.chart.ColumnChartComponent
+import com.ataglance.walletglance.core.presentation.component.chart.SingleValuePieChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.BackButtonBlock
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
@@ -106,7 +106,7 @@ private fun BudgetStatisticsScreenContent(
                 }
                 Text(
                     text = budget.name,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 26.sp,
                     fontFamily = Manrope,
                     fontWeight = FontWeight.Medium,
@@ -117,7 +117,7 @@ private fun BudgetStatisticsScreenContent(
                         R.string.amount_currency_spending_limit,
                         budget.amountLimit.formatWithSpaces(), budget.currency
                     ),
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 20.sp,
                     fontFamily = Manrope,
                     fontWeight = FontWeight.Normal,
@@ -129,7 +129,7 @@ private fun BudgetStatisticsScreenContent(
         }
         item { Spacer(modifier = Modifier.height(verticalGap)) }
         item {
-            GlanceColumnChart(
+            ColumnChartComponent(
                 uiState = columnChartUiState,
                 columnsColor = budget.category?.getColorByTheme(CurrAppTheme)?.lighter,
                 title = stringResource(
@@ -154,11 +154,11 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
         derivedStateOf { (3.6 * usedPercentage).toFloat() }
     }
     val pieChartBrush = if (usedPercentage < 50.0) {
-        GlanceColors.pieChartGreenGradient.reversed()
+        GlanciColors.pieChartGreenGradient.reversed()
     } else if (usedPercentage >= 50.0 && usedPercentage < 100.0) {
-        GlanceColors.pieChartYellowGradient.reversed()
+        GlanciColors.pieChartYellowGradient.reversed()
     } else {
-        GlanceColors.pieChartRedGradient.reversed()
+        GlanciColors.pieChartRedGradient.reversed()
     }
 
     Column(
@@ -172,14 +172,14 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                GlanceSingleValuePieChart(
+                SingleValuePieChartComponent(
                     percentage = pieChartPercentage,
                     brush = pieChartBrush,
                     size = 70.dp
                 )
                 Text(
                     text = "${usedPercentage.toInt()}%",
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontFamily = Manrope,
                     fontWeight = FontWeight.Medium
                 )
@@ -190,12 +190,12 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
             ) {
                 Text(
                     text = stringResource(R.string.of_limit_used),
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontFamily = Manrope,
                 )
                 Text(
                     text = "(${totalAmount.formatWithSpaces(budget.currency)})",
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 18.sp,
                     fontFamily = Manrope,
                 )
@@ -212,8 +212,6 @@ private fun StatisticByPeriodDetailsPopupContent(budget: Budget, totalAmount: Do
 @Composable
 fun BudgetStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isBottomBarVisible: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),

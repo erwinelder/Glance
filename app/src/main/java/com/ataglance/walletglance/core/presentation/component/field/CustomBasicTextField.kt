@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,7 +103,7 @@ fun CustomBasicTextField(
                 fontFamily = Manrope,
                 textAlign = textAlign
             ),
-            cursorBrush = Brush.linearGradient(GlanceColors.primaryGradient),
+            cursorBrush = Brush.linearGradient(GlanciColors.primaryGradient),
             modifier = textFieldModifier
         ) {
             TextFieldDefaults.DecorationBox(
@@ -119,11 +119,11 @@ fun CustomBasicTextField(
                     focusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     errorContainerColor = Color.Transparent,
-                    cursorColor = GlanceColors.primary,
-                    unfocusedTrailingIconColor = GlanceColors.primary,
-                    focusedTrailingIconColor = GlanceColors.primary,
-                    disabledTrailingIconColor = GlanceColors.primary,
-                    errorTrailingIconColor = GlanceColors.primary,
+                    cursorColor = GlanciColors.primary,
+                    unfocusedTrailingIconColor = GlanciColors.primary,
+                    focusedTrailingIconColor = GlanciColors.primary,
+                    disabledTrailingIconColor = GlanciColors.primary,
+                    errorTrailingIconColor = GlanciColors.primary,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
@@ -165,7 +165,7 @@ private fun Placeholder(
     Text(
         text = text,
         fontSize = fontSize,
-        color = GlanceColors.outline,
+        color = GlanciColors.outline,
         fontWeight = FontWeight.Companion.Normal,
         textAlign = textAlign,
         fontFamily = Manrope,

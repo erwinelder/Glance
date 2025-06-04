@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
-import com.ataglance.walletglance.core.presentation.component.chart.GlanceLineChart
+import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -55,7 +55,7 @@ fun CategoryStatisticsItemComponent(
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_left_icon),
                         contentDescription = "go back to all categories",
-                        tint = GlanceColors.onSurface,
+                        tint = GlanciColors.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -64,7 +64,7 @@ fun CategoryStatisticsItemComponent(
                 }
                 Text(
                     text = uiState?.category?.name ?: "---",
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 18.sp,
                     fontFamily = Manrope,
                     maxLines = 1,
@@ -75,7 +75,7 @@ fun CategoryStatisticsItemComponent(
                     Icon(
                         painter = painterResource(R.drawable.short_arrow_right_icon),
                         contentDescription = "go to ${uiState.category.name} subcategories",
-                        tint = GlanceColors.onSurface,
+                        tint = GlanciColors.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -93,7 +93,7 @@ fun CategoryStatisticsItemComponent(
                     ) {
                         Text(
                             text = uiState?.totalAmount ?: "---",
-                            color = GlanceColors.onSurface,
+                            color = GlanciColors.onSurface,
                             fontSize = 18.sp,
                             fontFamily = Manrope,
                             maxLines = 1,
@@ -102,14 +102,14 @@ fun CategoryStatisticsItemComponent(
                         )
                         Text(
                             text = uiState?.currency ?: "",
-                            color = GlanceColors.onSurface.copy(.6f),
+                            color = GlanciColors.onSurface.copy(.6f),
                             fontSize = 17.sp,
                             fontFamily = Manrope
                         )
                     }
                     Text(
                         text = uiState?.percentageFormatted ?: "---",
-                        color = GlanceColors.onSurface,
+                        color = GlanciColors.onSurface,
                         fontSize = 18.sp,
                         fontFamily = Manrope,
                         maxLines = 1,
@@ -117,7 +117,7 @@ fun CategoryStatisticsItemComponent(
                     )
                 }
                 uiState?.let {
-                    GlanceLineChart(
+                    LineChartComponent(
                         percentage = uiState.percentageFloat,
                         brushColors = uiState.category.getLineChartColorsByTheme(CurrAppTheme),
                         shadowColor = uiState.category.getIconSolidColorByTheme(CurrAppTheme)

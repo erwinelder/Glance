@@ -15,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.core.presentation.component.other.AppBackground
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.theme.GlanceTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun GlanceAppComponent(
+fun GlanciAppComponent(
     navController: NavHostController
 ) {
     val context = LocalActivity.current as ComponentActivity
@@ -35,7 +35,7 @@ fun GlanceAppComponent(
     BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
         SharedTransitionLayout {
             appThemeConfiguration?.let { themeConfiguration ->
-                GlanceTheme(
+                GlanciTheme(
                     context = context,
                     useDeviceTheme = themeConfiguration.useDeviceTheme,
                     chosenLightTheme = themeConfiguration.chosenLightTheme,
@@ -48,7 +48,7 @@ fun GlanceAppComponent(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(GlanceColors.background)
+                            .background(GlanciColors.background)
                     ) {
                         AppBackground(appTheme = appConfiguration.appTheme)
                         MainAppContent(

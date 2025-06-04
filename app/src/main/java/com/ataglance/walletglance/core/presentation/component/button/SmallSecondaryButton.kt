@@ -30,7 +30,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
@@ -38,11 +38,11 @@ fun SmallSecondaryButton(
     text: String,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
-    enabledGradientColor: Pair<Color, Color> = GlanceColors.glassGradientPair,
+    enabledGradientColor: Pair<Color, Color> = GlanciColors.glassGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
-    val borderColor = if (enabled) GlanceColors.primaryGlassBorder else GlanceColors.outline
+    val borderColor = if (enabled) GlanciColors.primaryGlassBorder else GlanciColors.outline
     val buttonLighterColor by animateColorAsState(
         targetValue = enabledGradientColor.second.copy(alpha = .5f)
     )
@@ -55,9 +55,9 @@ fun SmallSecondaryButton(
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = GlanceColors.primary,
+            contentColor = GlanciColors.primary,
             disabledContainerColor = Color.Transparent,
-            disabledContentColor = GlanceColors.outline
+            disabledContentColor = GlanciColors.outline
         ),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(width = 1.dp, color = borderColor),
@@ -77,7 +77,7 @@ fun SmallSecondaryButton(
             Icon(
                 painter = painterResource(it),
                 contentDescription = "$text button icon",
-                tint = GlanceColors.primary,
+                tint = GlanciColors.primary,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))

@@ -10,16 +10,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.divider.BottomSheetHandle
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GlanceBottomSheet(
+fun BottomSheetComponent(
     visible: Boolean,
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
-    backgroundColor: Color = GlanceColors.background,
-    contentColor: Color = GlanceColors.onSurface,
+    backgroundColor: Color = GlanciColors.background,
+    contentColor: Color = GlanciColors.onSurface,
     dragHandle: @Composable () -> Unit = {
         BottomSheetHandle()
     },

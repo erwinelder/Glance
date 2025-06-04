@@ -17,7 +17,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 
@@ -48,7 +48,7 @@ fun BasicDefaultBudgetComponent(
                 }
                 Text(
                     text = budget.name,
-                    color = GlanceColors.onSurface,
+                    color = GlanciColors.onSurface,
                     fontSize = 18.sp,
                     fontFamily = Manrope,
                     maxLines = 1,
@@ -64,7 +64,7 @@ fun BasicDefaultBudgetComponent(
             ) {
                 Text(
                     text = stringResource(R.string.limit) + ":",
-                    color = GlanceColors.outline,
+                    color = GlanciColors.outline,
                     fontSize = 16.sp,
                     fontFamily = Manrope
                 )
@@ -74,7 +74,7 @@ fun BasicDefaultBudgetComponent(
                 ) {
                     Text(
                         text = budget.amountLimit.formatWithSpaces(),
-                        color = GlanceColors.onSurface,
+                        color = GlanciColors.onSurface,
                         fontSize = 18.sp,
                         fontFamily = Manrope,
                         maxLines = 1,
@@ -83,7 +83,7 @@ fun BasicDefaultBudgetComponent(
                     )
                     Text(
                         text = budget.currency,
-                        color = GlanceColors.onSurface.copy(.6f),
+                        color = GlanciColors.onSurface.copy(.6f),
                         fontSize = 19.sp,
                         fontFamily = Manrope
                     )
