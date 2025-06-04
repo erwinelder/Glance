@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
@@ -19,12 +18,10 @@ import com.ataglance.walletglance.auth.domain.usecase.auth.CheckTokenValidityUse
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.GlanceAppComponent
-import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.extractOobCode
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.GlobalContext
 
 class MainActivity : AppCompatActivity() {
@@ -32,10 +29,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavHostController
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
 
-    private lateinit var appViewModel: AppViewModel
+//    private lateinit var appViewModel: AppViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setupSplashScreen()
+//        setupSplashScreen()
 
         billingSubscriptionManager = GlobalContext.get().get()
 
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()
-                appViewModel = koinViewModel<AppViewModel>()
+//                appViewModel = koinViewModel<AppViewModel>()
 
                 LaunchedEffect(true) {
                     navController.currentBackStackEntryFlow.first()
@@ -65,20 +62,19 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 GlanceAppComponent(
-                    navController = navController,
-                    appViewModel = appViewModel
+                    navController = navController
                 )
             }
         }
     }
 
-    private fun setupSplashScreen() {
+    /*private fun setupSplashScreen() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 appViewModel.appConfiguration.value.appTheme == null
             }
         }
-    }
+    }*/
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
