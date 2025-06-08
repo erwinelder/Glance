@@ -44,6 +44,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SignInScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     appConfiguration: AppConfiguration,
@@ -61,6 +62,7 @@ fun SignInScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     SignInScreen(
+        screenPadding = screenPadding,
         emailState = emailState,
         onEmailChange = viewModel::updateAndValidateEmail,
         passwordState = passwordState,
@@ -103,7 +105,7 @@ fun SignInScreenWrapper(
 
 @Composable
 fun SignInScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     emailState: ValidatedFieldState,
     onEmailChange: (String) -> Unit,
     passwordState: ValidatedFieldState,

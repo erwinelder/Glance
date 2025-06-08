@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -12,6 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
@@ -22,6 +25,7 @@ import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.budget.presentation.component.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.component.BudgetWithStatsComponent
+import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -33,11 +37,38 @@ import com.ataglance.walletglance.core.presentation.component.container.MessageC
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.utils.plus
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.navigation.domain.utils.isScreen
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.mapper.toDomainModels
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun BudgetsScreenWrapper(
+    screenPadding: PaddingValues,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel
+) {
+    val resourceManager = koinInject<ResourceManager>()
+    val viewModel = koinViewModel<BudgetsViewModel>()
+
+    val budgetsByType by viewModel.budgetsByType.collectAsStateWithLifecycle()
+
+    BudgetsScreen(
+        screenPadding = screenPadding,
+        resourceManager = resourceManager,
+        budgetsByType = budgetsByType,
+        onBudgetClick = { budget ->
+            navViewModel.navigateToScreenMovingTowardsLeft(
+                navController = navController,
+                screen = MainScreens.BudgetStatistics(budget.id)
+            )
+        }
+    )
+}
 
 @Composable
 fun BudgetsScreen(
@@ -51,8 +82,9 @@ fun BudgetsScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = 16.dp, bottom = 16.dp + screenPadding.calculateBottomPadding(),
-                start = 16.dp, end = 16.dp
+                screenPadding + PaddingValues(
+                    top = 16.dp, bottom = 16.dp, start = 16.dp, end = 16.dp
+                )
             )
     ) {
         GlassSurface(
@@ -81,8 +113,6 @@ fun BudgetsScreen(
 @Composable
 fun BudgetsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isBottomBarVisible: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -169,8 +199,6 @@ fun BudgetsScreenPreview(
 
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible,
-        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Budgets) }
     ) { scaffoldPadding ->
         BudgetsScreen(
             screenPadding = scaffoldPadding,

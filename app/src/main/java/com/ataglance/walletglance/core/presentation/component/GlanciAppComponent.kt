@@ -1,14 +1,11 @@
 package com.ataglance.walletglance.core.presentation.component
 
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,18 +22,15 @@ import org.koin.compose.viewmodel.koinViewModel
 fun GlanciAppComponent(
     navController: NavHostController
 ) {
-    val context = LocalActivity.current as ComponentActivity
-
     val appViewModel = koinViewModel<AppViewModel>()
 
     val appThemeConfiguration by appViewModel.appThemeConfiguration.collectAsStateWithLifecycle()
     val appConfiguration by appViewModel.appConfiguration.collectAsStateWithLifecycle()
 
-    BoxWithConstraints(modifier = Modifier.safeDrawingPadding()) {
+    BoxWithConstraints {
         SharedTransitionLayout {
             appThemeConfiguration?.let { themeConfiguration ->
                 GlanciTheme(
-                    context = context,
                     useDeviceTheme = themeConfiguration.useDeviceTheme,
                     chosenLightTheme = themeConfiguration.chosenLightTheme,
                     chosenDarkTheme = themeConfiguration.chosenDarkTheme,

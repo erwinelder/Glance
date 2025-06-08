@@ -12,20 +12,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.compose.rememberNavController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciTheme
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.di.initializeKoinMockedModule
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCase
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCaseMock
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PreviewWithMainScaffoldContainer(
     appTheme: AppTheme = AppTheme.LightDefault,
     isBottomBarVisible: Boolean = false,
-    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean = { false },
-    currentScreenIsScreenProvider: (Any) -> Boolean = { false },
+    koinModuleDeclaration: Module.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
+    initializeKoinMockedModule {
+        single<GetNavigationButtonScreensUseCase> {
+            GetNavigationButtonScreensUseCaseMock()
+        }
+        viewModel {
+            NavigationViewModel(getNavigationButtonScreensUseCase = get())
+        }
+        koinModuleDeclaration()
+    }
+
+    val navViewModel = koinViewModel<NavigationViewModel>()
+    navViewModel.setBottomBarVisibility(isVisible = isBottomBarVisible)
+    val navController = rememberNavController()
+
     BoxWithConstraints {
         SharedTransitionLayout {
             GlanciTheme(
@@ -50,18 +70,9 @@ fun PreviewWithMainScaffoldContainer(
                         modifier = Modifier.fillMaxSize()
                     )
                     MainScaffold(
-                        isBottomBarVisible = isBottomBarVisible,
-                        onNavigateToScreenAndPopUp = {},
-                        onMakeRecordButtonClick = {},
-                        anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
-                        currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-                        bottomBarButtons = listOf(
-                            BottomBarNavigationButton.Home,
-                            BottomBarNavigationButton.Records,
-                            BottomBarNavigationButton.CategoryStatistics,
-                            BottomBarNavigationButton.Budgets,
-                            BottomBarNavigationButton.Settings
-                        ),
+                        navViewModel = navViewModel,
+                        navController = navController,
+                        navBackStackEntry = null,
                         content = content
                     )
                 }

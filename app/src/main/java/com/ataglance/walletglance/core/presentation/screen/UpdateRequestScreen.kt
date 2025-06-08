@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.presentation.screen
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
@@ -12,10 +13,14 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Sc
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 
 @Composable
-fun UpdateRequestScreen() {
+fun UpdateRequestScreen(
+    screenPadding: PaddingValues = PaddingValues()
+) {
     SetBackHandler()
 
-    ScreenContainer {
+    ScreenContainer(
+        screenPadding = screenPadding
+    ) {
         LargePrimaryIconWithMessage(
             title = stringResource(R.string.update_required),
             message = stringResource(R.string.app_update_required_message),

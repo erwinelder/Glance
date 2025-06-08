@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
@@ -33,8 +38,10 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.AddNewItemButton
 import com.ataglance.walletglance.core.presentation.component.field.DateField
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
@@ -42,15 +49,90 @@ import com.ataglance.walletglance.core.presentation.component.picker.CustomDateP
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationTopBar
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordItemCreationComponent
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.RecordCreationViewModel
+import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun RecordCreationScreenWrapper(
+    screenPadding: PaddingValues,
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    appUiState: AppUiState,
+    onDimBackgroundChange: (Boolean) -> Unit
+) {
+    val recordNum = backStack.toRoute<MainScreens.RecordCreation>().recordNum
+
+    val viewModel = koinViewModel<RecordCreationViewModel> {
+        parametersOf(recordNum)
+    }
+
+    val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
+    val recordDraftItems by viewModel.recordDraftItems.collectAsStateWithLifecycle()
+    val savingIsAllowed by viewModel.savingIsAllowed.collectAsStateWithLifecycle()
+    val groupedCategories by viewModel.groupedCategoriesByType.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
+    RecordCreationScreen(
+        screenPadding = screenPadding,
+        recordDraftGeneral = recordDraftGeneral,
+        recordDraftItems = recordDraftItems,
+        savingIsAllowed = savingIsAllowed,
+        accountList = appUiState.accountsAndActiveOne.accounts,
+        groupedCategoriesByType = groupedCategories,
+        onSelectCategoryType = viewModel::selectCategoryType,
+        onNavigateToTransferCreationScreen = {
+            navViewModel.navigateToScreen(
+                navController = navController, screen = MainScreens.TransferCreation()
+            )
+        },
+        onIncludeInBudgetsChange = viewModel::changeIncludeInBudgets,
+        onSelectDate = viewModel::selectDate,
+        onSelectTime = viewModel::selectTime,
+        onToggleAccounts = viewModel::toggleSelectedAccount,
+        onSelectAccount = viewModel::selectAccount,
+        onDimBackgroundChange = onDimBackgroundChange,
+        onAmountChange = viewModel::changeAmount,
+        onSelectCategory = viewModel::selectCategory,
+        onNoteChange = viewModel::changeNote,
+        onQuantityChange = viewModel::changeQuantity,
+        onSwapItems = viewModel::swapDraftItems,
+        onDeleteItem = viewModel::deleteDraftItem,
+        onCollapsedChange = viewModel::changeCollapsed,
+        onAddDraftItemButton = viewModel::addNewDraftItem,
+        onSaveButton = {
+            coroutineScope.launch {
+                viewModel.saveRecord()
+                navController.popBackStack()
+            }
+        },
+        onRepeatButton = {
+            coroutineScope.launch {
+                viewModel.repeatRecord()
+                navController.popBackStack()
+            }
+        },
+        onDeleteButton = {
+            coroutineScope.launch {
+                viewModel.deleteRecord()
+                navController.popBackStack()
+            }
+        }
+    )
+}
 
 @Composable
 fun RecordCreationScreen(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
     recordDraftGeneral: RecordDraftGeneral,
     recordDraftItems: List<RecordDraftItem>,
     savingIsAllowed: Boolean,
@@ -90,6 +172,8 @@ fun RecordCreationScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         GlassSurfaceScreenContainer(
+            topPadding = screenPadding.calculateTopPadding(),
+            bottomPadding = screenPadding.calculateBottomPadding(),
             topBar = {
                 RecordCreationTopBar(
                     showCategoryTypeButton = recordDraftGeneral.isNew,
@@ -252,10 +336,7 @@ private fun GlassSurfaceContent(
 
 
 
-@Preview(
-    device = Devices.PIXEL_7_PRO,
-    locale = "en"
-)
+@Preview(device = Devices.PIXEL_7_PRO, locale = "en")
 @Composable
 fun RecordCreationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,

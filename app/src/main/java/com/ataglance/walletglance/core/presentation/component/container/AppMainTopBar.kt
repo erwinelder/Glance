@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.component.AccountsFilterBar
@@ -25,7 +26,8 @@ fun AppMainTopBar(
     isCustomDateRangeWindowOpened: Boolean,
     onDateRangeChange: (DateRangeEnum) -> Unit,
     onCustomDateRangeButtonClick: () -> Unit,
-    onAccountClick: (Int) -> Unit
+    onAccountClick: (Int) -> Unit,
+    topPadding: Dp = 0.dp
 ) {
     val visibleAccounts by remember(accountList) {
         derivedStateOf { accountList.filterNot { it.hide } }
@@ -38,7 +40,8 @@ fun AppMainTopBar(
             .background(GlanciColors.surface)
             .fillMaxWidth()
             .padding(
-                top = if (visibleAccounts.size > 1) 10.dp else 12.dp, bottom = 12.dp
+                top = (if (visibleAccounts.size > 1) 10.dp else 12.dp) + topPadding,
+                bottom = 12.dp
             )
     ) {
         if (visibleAccounts.size > 1) {

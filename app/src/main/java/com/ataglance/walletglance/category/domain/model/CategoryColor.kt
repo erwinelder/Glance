@@ -223,7 +223,7 @@ private fun Preview() {
 
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
         EditCategoriesScreen(
-            scaffoldPadding = PaddingValues(),
+            screenPadding = PaddingValues(),
             isAppSetUp = true,
             uiState = SetupCategoriesUiState(
                 groupedCategoriesByType = categoriesWithSubcategories

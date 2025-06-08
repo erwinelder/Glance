@@ -12,14 +12,14 @@ import com.ataglance.walletglance.core.presentation.component.bottomSheet.Bottom
 import com.ataglance.walletglance.core.presentation.component.container.ReorderableListStyled
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.other.ScreenNameWithIconComponent
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationButtonsSettingsBottomSheet(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    navigationButtonList: List<BottomBarNavigationButton>,
+    navigationButtonList: List<BottomNavBarButtonState>,
     onMoveButtons: (Int, Int) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -33,7 +33,7 @@ fun NavigationButtonsSettingsBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
-            ScreenNameWithIconComponent(navigationButton = BottomBarNavigationButton.Home)
+            ScreenNameWithIconComponent(navigationButton = BottomNavBarButtonState.Home())
             SmallDivider(modifier = Modifier.padding(top = 16.dp))
             ReorderableListStyled(
                 list = navigationButtonList,
@@ -46,7 +46,7 @@ fun NavigationButtonsSettingsBottomSheet(
                 )
             }
             SmallDivider(modifier = Modifier.padding(bottom = 16.dp))
-            ScreenNameWithIconComponent(navigationButton = BottomBarNavigationButton.Settings)
+            ScreenNameWithIconComponent(navigationButton = BottomNavBarButtonState.Settings())
         }
     }
 }

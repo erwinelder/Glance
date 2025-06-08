@@ -7,7 +7,6 @@ android-targetSdk = "35"
 core = "1.16.0"
 activityCompose = "1.10.1"
 appcompat = "1.7.0"
-coreSplashscreen = "1.0.1"
 # Lifecycle
 lifecycle = "2.9.1"
 # Compose & Navigation
@@ -62,7 +61,6 @@ kotlin = "2.1.21"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 # Lifecycle
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }

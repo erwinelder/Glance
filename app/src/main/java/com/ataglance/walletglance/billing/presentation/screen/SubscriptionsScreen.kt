@@ -4,6 +4,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import com.ataglance.walletglance.settings.presentation.screenContainer.Settings
 
 @Composable
 fun SubscriptionsScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     backStack: NavBackStackEntry
 ) {
@@ -45,6 +47,7 @@ fun SubscriptionsScreenWrapper(
     val activity = LocalActivity.current
 
     SubscriptionsScreen(
+        screenPadding = screenPadding,
         onNavigateBack = navController::popBackStack,
         activeSubscriptions = activeSubscriptions,
         availableSubscriptions = availableSubscriptions,
@@ -58,6 +61,7 @@ fun SubscriptionsScreenWrapper(
 
 @Composable
 fun SubscriptionsScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     activeSubscriptions: List<SubscriptionUiState>,
     availableSubscriptions: List<SubscriptionUiState>,
@@ -65,6 +69,7 @@ fun SubscriptionsScreen(
 ) {
     Box {
         SettingsCategoryScreenContainer(
+            screenPadding = screenPadding,
             thisCategory = SettingsCategory.ManageSubscriptions(CurrAppTheme),
             onNavigateBack = onNavigateBack,
             topBottomSpacingProportion = Pair(1f, 1f),

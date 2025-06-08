@@ -1,8 +1,5 @@
 package com.ataglance.walletglance.core.presentation.theme
 
-import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -12,11 +9,9 @@ import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.WindowType
@@ -33,7 +28,6 @@ private val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransiti
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GlanciTheme(
-    context: ComponentActivity? = null,
     useDeviceTheme: Boolean = true,
     chosenLightTheme: AppTheme = AppTheme.LightDefault,
     chosenDarkTheme: AppTheme = AppTheme.DarkDefault,
@@ -67,12 +61,6 @@ fun GlanciTheme(
         else -> WindowType.Expanded
     }
 
-    context?.let {
-        LaunchedEffect(key1 = isDeviceIsDarkTheme, key2 = lastChosenTheme, key3 = useDeviceTheme) {
-            setSystemBarsColors(it, glanciColors, appTheme)
-        }
-    }
-
     CompositionLocalProvider(
         LocalAppTheme provides appTheme,
         LocalColors provides glanciColors,
@@ -83,32 +71,6 @@ fun GlanciTheme(
     ) {
         MaterialTheme(content = content)
     }
-}
-
-private fun setSystemBarsColors(
-    context: ComponentActivity,
-    colorScheme: GlanciPalette,
-    appTheme: AppTheme
-) {
-    context.enableEdgeToEdge(
-        statusBarStyle = when (appTheme) {
-            AppTheme.LightDefault ->
-                SystemBarStyle.light(
-                    colorScheme.surface.toArgb(),
-                    colorScheme.background.toArgb()
-                )
-            AppTheme.DarkDefault ->
-                SystemBarStyle.dark(colorScheme.surface.toArgb())
-        },
-        navigationBarStyle = when (appTheme) {
-            AppTheme.LightDefault ->
-                SystemBarStyle.light(
-                    colorScheme.surface.toArgb(),
-                    colorScheme.background.toArgb()
-                )
-            AppTheme.DarkDefault -> SystemBarStyle.dark(colorScheme.surface.toArgb())
-        }
-    )
 }
 
 

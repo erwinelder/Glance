@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceNavigationButton
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
-import com.ataglance.walletglance.core.presentation.utils.add
+import com.ataglance.walletglance.core.presentation.utils.plus
 
 @Composable
 fun ScreenContainerWithGlassBackButton(
@@ -35,7 +35,7 @@ fun ScreenContainerWithGlassBackButton(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(gap),
         modifier = modifier
-            .padding(padding.add(screenPadding))
+            .padding(padding + screenPadding)
             .fillMaxSize()
     ) {
         GlassSurfaceNavigationButton(

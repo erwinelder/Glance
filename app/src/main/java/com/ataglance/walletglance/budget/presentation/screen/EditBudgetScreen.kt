@@ -26,6 +26,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
@@ -35,10 +38,12 @@ import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
 import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
+import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoryField
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -52,13 +57,49 @@ import com.ataglance.walletglance.core.presentation.component.field.TextFieldWit
 import com.ataglance.walletglance.core.presentation.component.picker.PopupFloatingPicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.utils.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.core.utils.takeComposableIf
 
 @Composable
+fun EditBudgetScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController
+) {
+    val budgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(navController)
+    val budgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(navController)
+
+    val budget by budgetViewModel.budget.collectAsStateWithLifecycle()
+
+    EditBudgetScreen(
+        screenPadding = screenPadding,
+        budget = budget,
+        accountList = budgetViewModel.accounts,
+        groupedCategoriesByType = budgetViewModel.groupedCategoriesByType,
+        onNameChange = budgetViewModel::changeName,
+        onCategoryChange = budgetViewModel::changeCategory,
+        onAmountLimitChange = budgetViewModel::changeAmountLimit,
+        onRepeatingPeriodChange = budgetViewModel::changeRepeatingPeriod,
+        onLinkAccount = budgetViewModel::linkWithAccount,
+        onUnlinkAccount = budgetViewModel::unlinkWithAccount,
+        onDeleteButton = {
+            budgetsViewModel.deleteBudget(
+                id = budget.id, repeatingPeriod = budget.currRepeatingPeriod
+            )
+            navController.popBackStack()
+        },
+        onSaveButton = {
+            budgetsViewModel.applyBudget(budgetDraft = budgetViewModel.getBudgetDraft())
+            navController.popBackStack()
+        }
+    )
+}
+
+@Composable
 fun EditBudgetScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     budget: BudgetDraft,
     accountList: List<Account>,
     groupedCategoriesByType: GroupedCategoriesByType,
@@ -78,7 +119,8 @@ fun EditBudgetScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         GlassSurfaceScreenContainer(
-            topPadding = scaffoldPadding.calculateTopPadding(),
+            topPadding = screenPadding.calculateTopPadding(),
+            bottomPadding = screenPadding.calculateBottomPadding(),
             fillGlassSurface = false,
             topButton = takeComposableIf(!budget.isNew) {
                 SecondaryButton(
@@ -242,7 +284,6 @@ private fun LazyListScope.accountCheckedList(
 @Composable
 fun EditBudgetScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -270,7 +311,7 @@ fun EditBudgetScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditBudgetScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
             budget = budgetUiState,
             accountList = accountList,
             groupedCategoriesByType = groupedCategoriesByType,

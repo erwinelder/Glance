@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun LanguageScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavController,
     navViewModel: NavigationViewModel,
     appConfiguration: AppConfiguration
@@ -42,6 +44,7 @@ fun LanguageScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     LanguageScreen(
+        screenPadding = screenPadding,
         isAppSetUp = appConfiguration.isSetUp,
         onNavigateBack = navController::popBackStack,
         appLanguage = appConfiguration.langCode,
@@ -57,6 +60,7 @@ fun LanguageScreenWrapper(
 
 @Composable
 fun LanguageScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     isAppSetUp: Boolean,
     onNavigateBack: () -> Unit,
     appLanguage: String,
@@ -72,6 +76,7 @@ fun LanguageScreen(
     }
 
     SettingsCategoryScreenContainer(
+        screenPadding = screenPadding,
         thisCategory = thisCategory,
         onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
         title = stringResource(R.string.choose_app_language),
@@ -104,14 +109,10 @@ fun LanguageScreen(
 fun LanguageScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     isAppSetUp: Boolean = true,
-    isBottomBarVisible: Boolean = false,
     appLanguage: String = AppLanguage.English.languageCode,
     selectedLanguage: String? = AppLanguage.German.languageCode,
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         LanguageScreen(
             isAppSetUp = isAppSetUp,
             onNavigateBack = {},

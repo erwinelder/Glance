@@ -21,7 +21,7 @@ import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.utils.add
+import com.ataglance.walletglance.core.presentation.utils.plus
 import com.ataglance.walletglance.settings.presentation.component.NavigateBackSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
@@ -48,7 +48,7 @@ fun SettingsCategoryScreenContainer(
                 PaddingValues(
                     top = 8.dp,
                     bottom = if (bottomBlock != null) 24.dp else 8.dp
-                ).add(screenPadding)
+                ) + screenPadding
             )
     ) {
         if (onNavigateBack != null && WindowTypeIsCompact) {

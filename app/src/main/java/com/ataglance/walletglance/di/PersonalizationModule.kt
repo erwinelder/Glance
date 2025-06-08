@@ -61,7 +61,7 @@ val personalizationModule = module {
             saveWidgetsUseCase = get(),
             getWidgetsUseCase = get(),
             saveNavigationButtonsUseCase = get(),
-            getNavigationButtonsUseCase = get(),
+            getNavigationButtonScreensUseCase = get(),
             userContext = get()
         )
     }

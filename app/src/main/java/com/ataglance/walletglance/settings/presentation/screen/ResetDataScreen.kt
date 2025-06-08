@@ -7,7 +7,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -22,6 +21,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ResetDataScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavController
 ) {
     val viewModel = koinViewModel<ResetDataViewModel>()
@@ -29,6 +29,7 @@ fun ResetDataScreenWrapper(
     val coroutineScope = rememberCoroutineScope()
 
     ResetDataScreen(
+        screenPadding = screenPadding,
         onNavigateBack = navController::popBackStack,
         onResetData = {
             coroutineScope.launch {
@@ -40,7 +41,7 @@ fun ResetDataScreenWrapper(
 
 @Composable
 fun ResetDataScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     onResetData: () -> Unit
 ) {
@@ -71,13 +72,9 @@ fun ResetDataScreen(
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun ResetDataScreenPreview(
-    appTheme: AppTheme = AppTheme.LightDefault,
-    isBottomBarVisible: Boolean = true,
+    appTheme: AppTheme = AppTheme.LightDefault
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         ResetDataScreen(
             screenPadding = it,
             onNavigateBack = {},

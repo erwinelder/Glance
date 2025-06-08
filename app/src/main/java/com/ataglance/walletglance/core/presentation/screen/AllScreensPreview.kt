@@ -48,8 +48,9 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
+import com.ataglance.walletglance.notification.presentation.screen.NotificationsScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenPreview
+import com.ataglance.walletglance.personalization.presentation.screen.PersonalizationScreenPreview
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
@@ -75,7 +76,6 @@ private const val device = "spec:width=1440px,height=3120px,dpi=560" // default
 private val appTheme: AppTheme = AppTheme.LightDefault
 private const val langCode: String = "en"
 private const val isAppSetUp: Boolean = true
-private const val isBottomBarVisible: Boolean = true
 
 private val accountList = listOf(
     Account(
@@ -344,8 +344,6 @@ private fun HomeScreenPreview_() {
         .getDefaultCategories()
     HomeScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         accountsAndActiveOne = accountsAndActiveOne,
         dateRangeMenuUiState = dateRangeMenuUiState,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -379,8 +377,6 @@ private fun RecordsScreenPreview_() {
 
     RecordsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         accountList = accountsAndActiveOne.accounts,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -407,8 +403,6 @@ private fun CategoryStatisticsScreenPreview_() {
 
     CategoryStatisticsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         accountList = accountsAndActiveOne.accounts,
         currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
         currentCollectionType = currentCollectionType,
@@ -430,8 +424,6 @@ private fun CategoryStatisticsScreenPreview_() {
 private fun BudgetsScreenPreview_() {
     BudgetsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         budgetEntityList = budgetEntityList,
         budgetAccountAssociationList = budgetAccountAssociationList,
         accountList = accountsAndActiveOne.accounts,
@@ -568,8 +560,7 @@ private fun StartSetupScreenPreview_() {
 private fun SettingsHomeScreenPreview_() {
     SettingsHomeScreenPreview(
         appTheme = appTheme,
-        isSignedIn = true,
-        isBottomBarVisible = isBottomBarVisible,
+        isSignedIn = true
     )
 }
 
@@ -647,7 +638,6 @@ private fun EditBudgetsScreenPreview_() {
 private fun EditBudgetScreenPreview_() {
     EditBudgetScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         accountList = accountsAndActiveOne.accounts,
         budgetEntity = budgetEntityList.first(),
         budgetAccountAssociationList = budgetAccountAssociationList
@@ -680,8 +670,7 @@ private fun EditCategoriesScreenPreview_() {
 @Composable
 private fun EditSubcategoriesScreenPreview_() {
     EditSubcategoriesScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
@@ -710,7 +699,6 @@ private fun EditCategoryScreenPreview_() {
 private fun EditCategoryCollectionsScreenPreview_() {
     EditCategoryCollectionsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         collectionType = CategoryCollectionType.Mixed,
         categoryCollectionsWithIdsByType = categoryCollectionsWithIdsByType,
     )
@@ -727,24 +715,36 @@ private fun EditCategoryCollectionsScreenPreview_() {
 private fun EditCategoryCollectionScreenPreview_() {
     EditCategoryCollectionScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         collectionWithIds = categoryCollectionsWithIdsByType.mixed.first()
     )
 }
 
 @Preview(
-    name = "AppearanceScreen",
+    name = "PersonalizationScreen",
     group = "SettingsScreens",
     apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-private fun PersonalisationScreenPreview_() {
-    PersonalisationScreenPreview(
+private fun PersonalizationScreenPreview_() {
+    PersonalizationScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible
+        isAppSetUp = isAppSetUp
+    )
+}
+
+@Preview(
+    name = "NotificationsScreen",
+    group = "SettingsScreens",
+    apiLevel = 34,
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun NotificationsScreenPreview_() {
+    NotificationsScreenPreview(
+        appTheme = appTheme
     )
 }
 
@@ -760,7 +760,6 @@ private fun LanguageScreenPreview_() {
     LanguageScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         appLanguage = AppLanguage.English.languageCode,
         selectedLanguage = AppLanguage.German.languageCode
     )
@@ -776,8 +775,7 @@ private fun LanguageScreenPreview_() {
 @Composable
 private fun ResetDataScreenPreview_() {
     ResetDataScreenPreview(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible,
+        appTheme = appTheme
     )
 }
 
@@ -960,7 +958,6 @@ private fun DeleteAccountScreenPreview_() {
 @Composable
 private fun FinishSetupScreenPreview_() {
     FinishSetupScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }

@@ -42,9 +42,11 @@ import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
+import com.ataglance.walletglance.core.presentation.utils.plus
 
 @Composable
 fun StartSetupScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     isAppThemeSetUp: Boolean,
     onManualSetupButton: () -> Unit
 ) {
@@ -54,7 +56,9 @@ fun StartSetupScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 12.dp, bottom = 50.dp)
+            .padding(
+                screenPadding + PaddingValues(top = 12.dp, bottom = 48.dp)
+            )
     ) {
         StartAnimatedContainer(isAppThemeSetUp, 200) {
             Text(

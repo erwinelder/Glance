@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             }
         }*/
 
+        enableEdgeToEdge()
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()

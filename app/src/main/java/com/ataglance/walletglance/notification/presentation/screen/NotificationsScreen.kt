@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +31,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun NotificationsScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavController
 ) {
     val viewModel = koinViewModel<NotificationsViewModel>()
@@ -38,6 +40,7 @@ fun NotificationsScreenWrapper(
     val showNotificationsDeniedDialog by viewModel.showNotificationsDeniedDialog.collectAsStateWithLifecycle()
 
     NotificationsScreen(
+        screenPadding = screenPadding,
         onNavigateBack = navController::popBackStack,
         dailyRecordsReminderTurnedOn = dailyRecordsReminderTurnedOn,
         onSetDailyRecordReminder = viewModel::setDailyRecordsReminder,
@@ -50,6 +53,7 @@ fun NotificationsScreenWrapper(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     dailyRecordsReminderTurnedOn: Boolean,
     onSetDailyRecordReminder: (Boolean) -> Unit,
@@ -74,6 +78,7 @@ fun NotificationsScreen(
 
     Box {
         SettingsCategoryScreenContainer(
+            screenPadding = screenPadding,
             thisCategory = thisCategory,
             onNavigateBack = onNavigateBack,
             title = stringResource(R.string.adjust_app_notifications),
@@ -136,13 +141,9 @@ private fun NotificationsScreenContent(
 @Preview(device = PIXEL_7_PRO)
 @Composable
 fun NotificationsScreenPreview(
-    appTheme: AppTheme = AppTheme.LightDefault,
-    isBottomBarVisible: Boolean = false
+    appTheme: AppTheme = AppTheme.LightDefault
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible
-    ) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         NotificationsScreen(
             onNavigateBack = {},
             dailyRecordsReminderTurnedOn = false,

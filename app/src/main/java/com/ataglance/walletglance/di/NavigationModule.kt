@@ -8,8 +8,8 @@ import com.ataglance.walletglance.navigation.data.remote.source.NavigationButton
 import com.ataglance.walletglance.navigation.data.remote.source.NavigationButtonRemoteDataSourceImpl
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepositoryImpl
-import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
-import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCaseImpl
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCase
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCaseImpl
 import com.ataglance.walletglance.navigation.domain.usecase.SaveNavigationButtonsUseCase
 import com.ataglance.walletglance.navigation.domain.usecase.SaveNavigationButtonsUseCaseImpl
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -52,14 +52,14 @@ val navigationModule = module {
         SaveNavigationButtonsUseCaseImpl(navigationButtonRepository = get())
     }
 
-    single<GetNavigationButtonsUseCase> {
-        GetNavigationButtonsUseCaseImpl(navigationButtonRepository = get())
+    single<GetNavigationButtonScreensUseCase> {
+        GetNavigationButtonScreensUseCaseImpl(navigationButtonRepository = get())
     }
 
     /* ---------- View Models ---------- */
 
     viewModel {
-        NavigationViewModel(getNavigationButtonsUseCase = get())
+        NavigationViewModel(getNavigationButtonScreensUseCase = get())
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -29,12 +30,14 @@ import java.time.LocalDateTime
 
 @Composable
 fun ProfileScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel
 ) {
     val viewModel = koinViewModel<ProfileViewModel>()
 
     ProfileScreen(
+        screenPadding = screenPadding,
         onNavigateBack = navController::popBackStack,
         onSignOut = {
             viewModel.signOut()
@@ -51,6 +54,7 @@ fun ProfileScreenWrapper(
 
 @Composable
 fun ProfileScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     onSignOut: () -> Unit,
     onNavigateToScreen: (Any) -> Unit,
@@ -68,6 +72,7 @@ fun ProfileScreen(
 
     Box {
         SettingsCategoryScreenContainer(
+            screenPadding = screenPadding,
             thisCategory = SettingsCategory.Profile(appTheme),
             onNavigateBack = onNavigateBack,
             title = stringResource(greetingsTitleRes),

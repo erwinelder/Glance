@@ -11,12 +11,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
@@ -28,7 +28,6 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
@@ -38,6 +37,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UpdatePasswordScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel
 ) {
@@ -50,6 +50,7 @@ fun UpdatePasswordScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     UpdatePasswordScreen(
+        screenPadding = screenPadding,
         onNavigateBack = navController::popBackStack,
         currentPasswordState = currentPasswordState,
         onCurrentPasswordChange = viewModel::updateAndValidatePassword,
@@ -74,7 +75,7 @@ fun UpdatePasswordScreenWrapper(
 
 @Composable
 fun UpdatePasswordScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     currentPasswordState: ValidatedFieldState,
     onCurrentPasswordChange: (String) -> Unit,

@@ -16,13 +16,12 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 
 @Composable
 fun ScreenNameWithIconComponent(
-    navigationButton: BottomBarNavigationButton,
-    modifier: Modifier = Modifier,
-    showAsActive: Boolean = false
+    navigationButton: BottomNavBarButtonState,
+    modifier: Modifier = Modifier
 ) {
     val screenName = stringResource(navigationButton.screenNameRes)
 
@@ -32,16 +31,13 @@ fun ScreenNameWithIconComponent(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(
-                if (showAsActive) navigationButton.activeIconRes.getByTheme(CurrAppTheme)
-                else navigationButton.inactiveIconRes.getByTheme(CurrAppTheme)
-            ),
+            painter = painterResource(navigationButton.iconRes.getByTheme(CurrAppTheme)),
             contentDescription = "$screenName screen icon",
             modifier = Modifier.size(36.dp)
         )
         Text(
             text = screenName,
-            color = if (showAsActive) GlanciColors.primary else GlanciColors.onSurface,
+            color = if (navigationButton.isActive) GlanciColors.primary else GlanciColors.onSurface,
             fontSize = 18.sp,
             fontFamily = Manrope,
             maxLines = 1,

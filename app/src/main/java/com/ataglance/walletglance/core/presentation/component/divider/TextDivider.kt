@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun TextDivider(
@@ -37,6 +38,7 @@ fun TextDivider(
             color = GlanciColors.outline,
             fontSize = 17.sp,
             fontWeight = FontWeight.W500,
+            fontFamily = Manrope,
             modifier = Modifier
                 .requiredWidth(IntrinsicSize.Min)
                 .padding(horizontal = 8.dp)

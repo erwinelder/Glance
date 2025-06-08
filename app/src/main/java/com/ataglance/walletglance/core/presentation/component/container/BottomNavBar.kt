@@ -1,73 +1,385 @@
 package com.ataglance.walletglance.core.presentation.component.container
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
+import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
+import com.ataglance.walletglance.core.presentation.component.button.FloatingButtonComponent
+import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.di.initializeKoinMockedModule
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCase
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCaseMock
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.module.dsl.viewModel
 
 @Composable
-fun BottomNavBar(
-    isVisible: Boolean,
-    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
-    currentScreenIsScreenProvider: (Any) -> Boolean,
-    onNavigateToScreen: (MainScreens) -> Unit,
-    onMakeRecordButtonClick: () -> Unit,
-    barButtons: List<BottomBarNavigationButton>
+fun BottomNavBarWrapper(
+    navViewModel: NavigationViewModel,
+    navController: NavController,
+    navBackStackEntry: NavBackStackEntry?
 ) {
-    val bottomBarButtons by remember(barButtons) {
-        derivedStateOf { barButtons.take(3) }
-    }
-    val popupListBarButtons by remember(barButtons) {
-        derivedStateOf {
-            barButtons.subList(3, barButtons.size).reversed()
-        }
-    }
+    val isBottomBarVisible by navViewModel.isBottomBarVisible.collectAsStateWithLifecycle()
+    val isBottomBarExpanded by navViewModel.isBottomBarExpanded.collectAsStateWithLifecycle()
+    val isFloatingButtonVisible by navViewModel.isFloatingButtonVisible.collectAsStateWithLifecycle()
+    val primaryNavButtons by navViewModel.primaryNavigationButtons.collectAsStateWithLifecycle()
+    val secondaryNavButtons by navViewModel.secondaryNavigationButtons.collectAsStateWithLifecycle()
 
-    BottomNavBarComponent(
-        isVisible = isVisible,
-        anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
-        currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-        onNavigateToScreen = onNavigateToScreen,
-        onFloatingButtonClick = onMakeRecordButtonClick,
-        bottomBarButtons = bottomBarButtons,
-        popupListBarButtons = popupListBarButtons
+    val bottomSystemBarPadding = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+
+    BottomNavBar(
+        isBottomBarVisible = isBottomBarVisible,
+        isBottomBarExpanded = isBottomBarExpanded,
+        isFloatingButtonVisible = isFloatingButtonVisible,
+        onIsExpandedToggle = navViewModel::toggleBottomBarExpanded,
+        primaryNavButtons = primaryNavButtons,
+        secondaryNavButtons = secondaryNavButtons,
+        onButtonClick = { button ->
+            navViewModel.onNavButtonClick(
+                button = button,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry
+            )
+        },
+        onFloatingButtonClick = {
+            navViewModel.navigateToScreenMovingTowardsLeft(
+                navController = navController,
+                screen = MainScreens.RecordCreation()
+            )
+        },
+        bottomPadding = bottomSystemBarPadding
     )
 }
 
+@Composable
+fun BottomNavBar(
+    isBottomBarVisible: Boolean,
+    isBottomBarExpanded: Boolean,
+    isFloatingButtonVisible: Boolean,
+    onIsExpandedToggle: () -> Unit = {},
+    primaryNavButtons: List<BottomNavBarButtonState>,
+    secondaryNavButtons: List<BottomNavBarButtonState>,
+    onButtonClick: (BottomNavBarButtonState) -> Unit,
+    onFloatingButtonClick: () -> Unit,
+    bottomPadding: Dp = 0.dp
+) {
+    BottomBarContainer(
+        isBottomBarVisible = isBottomBarVisible,
+        isBottomBarExpanded = isBottomBarExpanded,
+        isFloatingButtonVisible = isFloatingButtonVisible,
+        bottomPadding = bottomPadding,
+        floatingButton = {
+            FloatingButtonComponent(
+                iconRes = R.drawable.make_record_icon,
+                onClick = onFloatingButtonClick
+            )
+        }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.End
+        ) {
+            PopupButtonsList(
+                isExpanded = isBottomBarExpanded,
+                onIsExpandedToggle = onIsExpandedToggle,
+                buttons = secondaryNavButtons,
+                onButtonClick = onButtonClick
+            )
+            BottomBarButtonsRow(
+                buttons = primaryNavButtons,
+                onButtonClick = onButtonClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun BottomBarContainer(
+    isBottomBarVisible: Boolean,
+    isBottomBarExpanded: Boolean,
+    isFloatingButtonVisible: Boolean,
+    bottomPadding: Dp = 0.dp,
+    floatingButton: @Composable (() -> Unit)?,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp + bottomPadding),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        AnimatedVisibility(
+            visible = isBottomBarVisible && !isBottomBarExpanded && isFloatingButtonVisible,
+            enter = slideInHorizontally { (it * 1.5).toInt() } + fadeIn(),
+            exit = slideOutHorizontally { (it * 1.5).toInt() } + fadeOut(),
+            modifier = Modifier.absoluteOffset(y = (-58).dp - bottomPadding)
+        ) {
+            floatingButton?.let { button ->
+                button()
+            }
+        }
+        AnimatedVisibility(
+            visible = isBottomBarVisible,
+            enter = slideInVertically { (it * 1.5).toInt() } + fadeIn(),
+            exit = slideOutVertically { (it * 1.5).toInt() } + fadeOut()
+        ) {
+            content()
+        }
+    }
+}
+
+
+@Composable
+private fun BottomBarButtonsRow(
+    buttons: List<BottomNavBarButtonState>,
+    onButtonClick: (BottomNavBarButtonState) -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .bounceClickEffect(.985f)
+                .shadow(
+                    elevation = 16.dp,
+                    shape = RoundedCornerShape(26.dp),
+                    ambientColor = GlanciColors.onSurface
+                )
+                .clip(RoundedCornerShape(26.dp))
+                .background(GlanciColors.surface)
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = GlanciColors.onSurface.copy(.05f),
+                    shape = RoundedCornerShape(26.dp)
+                )
+                .padding(vertical = 16.dp, horizontal = 4.dp)
+        ) {
+            buttons.forEach { button ->
+                BottomBarButton(button = button, onClick = onButtonClick)
+            }
+        }
+    }
+}
+
+/*
+@Composable
+private fun ExpandBottomBarButton(isActive: Boolean, onClick: () -> Unit) {
+    val iconRes = when (CurrAppTheme) {
+        AppTheme.LightDefault -> if (isActive) R.drawable.show_other_light_active else
+            R.drawable.show_other_light_inactive
+        AppTheme.DarkDefault -> if (isActive) R.drawable.show_other_dark_active else
+            R.drawable.show_other_dark_inactive
+    }
+
+    AnimatedContent(
+        targetState = iconRes,
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+    ) { targetIconRes ->
+        Image(
+            painter = painterResource(targetIconRes),
+            contentDescription = "expand top bar icon",
+            modifier = Modifier
+                .bounceClickEffect(onClick = onClick)
+                .size(36.dp)
+        )
+    }
+}
+*/
+
+@Composable
+private fun BottomBarButton(
+    button: BottomNavBarButtonState,
+    onClick: (BottomNavBarButtonState) -> Unit
+) {
+    AnimatedContent(
+        targetState = button.iconRes,
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+    ) { buttonIconRes ->
+        Image(
+            painter = painterResource(buttonIconRes.getByTheme(CurrAppTheme)),
+            contentDescription = "bottom bar ${button.screen} icon",
+            modifier = Modifier
+                .bounceClickEffect {
+                    onClick(button)
+                }
+                .size(36.dp)
+        )
+    }
+}
+
+
+@Composable
+private fun PopupButtonsList(
+    isExpanded: Boolean,
+    onIsExpandedToggle: () -> Unit,
+    buttons: List<BottomNavBarButtonState>,
+    onButtonClick: (BottomNavBarButtonState) -> Unit,
+) {
+    val expandedState = remember { MutableTransitionState(isExpanded) }
+    LaunchedEffect(isExpanded) {
+        expandedState.targetState = isExpanded
+    }
+
+    AnimatedVisibility(visible = expandedState.targetState) {
+        Popup(
+            alignment = Alignment.BottomEnd,
+            onDismissRequest = onIsExpandedToggle,
+            properties = PopupProperties(
+                focusable = true
+            )
+        ) {
+            AnimatedVisibility(
+                visibleState = expandedState,
+                enter = scaleSlideVerFadeInAnimation(
+                    scaleTransformOrigin = TransformOrigin(1.0f, 0.8f)
+                ),
+                exit = scaleSlideVerFadeOutAnimation(
+                    scaleTransformOrigin = TransformOrigin(1.0f, 0.8f)
+                )
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .innerVolumeShadow(shape = RoundedCornerShape(24.dp))
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(GlanciColors.surface)
+                        .padding(horizontal = 20.dp, vertical = 16.dp)
+                ) {
+                    buttons.forEach { button ->
+                        ListBarButton(
+                            button = button,
+                            onClick = onButtonClick
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ListBarButton(
+    button: BottomNavBarButtonState,
+    onClick: (BottomNavBarButtonState) -> Unit
+) {
+    val textColor by animateColorAsState(
+        targetValue = if (button.isActive) GlanciColors.primary else GlanciColors.onSurface
+    )
+
+    AnimatedContent(
+        targetState = button.iconRes,
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+    ) { buttonIconRes ->
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .bounceClickEffect {
+                    onClick(button)
+                }
+        ) {
+            Image(
+                painter = painterResource(buttonIconRes.getByTheme(CurrAppTheme)),
+                contentDescription = "bottom bar ${button.screen} icon",
+                modifier = Modifier.size(36.dp)
+            )
+            Text(
+                text = stringResource(button.screenNameRes),
+                fontSize = 18.sp,
+                color = textColor,
+                fontFamily = Manrope
+            )
+        }
+    }
+}
 
 
 @Preview
 @Composable
 private fun BottomNavBarPreview() {
-    val barButtons = listOf(
-        BottomBarNavigationButton.Home,
-        BottomBarNavigationButton.Records,
-        BottomBarNavigationButton.CategoryStatistics,
-        BottomBarNavigationButton.Budgets,
-        BottomBarNavigationButton.Settings
-    )
+    initializeKoinMockedModule {
+        single<GetNavigationButtonScreensUseCase> {
+            GetNavigationButtonScreensUseCaseMock()
+        }
+        viewModel {
+            NavigationViewModel(getNavigationButtonScreensUseCase = get())
+        }
+    }
+
+    val navViewModel = koinViewModel<NavigationViewModel>()
+    navViewModel.setBottomBarVisibility(isVisible = true)
+    val navController = rememberNavController()
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier.fillMaxSize()
         ) {
-            BottomNavBar(
-                isVisible = true,
-                anyScreenInHierarchyIsScreenProvider = { false },
-                currentScreenIsScreenProvider = { false },
-                onNavigateToScreen = {},
-                onMakeRecordButtonClick = {},
-                barButtons = barButtons
+            BottomNavBarWrapper(
+                navViewModel = navViewModel,
+                navController = navController,
+                navBackStackEntry = null
             )
         }
     }

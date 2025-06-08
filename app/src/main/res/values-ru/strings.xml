@@ -86,6 +86,9 @@
     <!-- Settings Notifications -->
     <string name="daily_reminders_to_record_expenses">Ежедневные напоминания о записи расходов</string>
 
+    <!-- Budgets -->
+    <string name="budget_statistics_title">Статистика бюджета</string>
+
     <!-- Fields -->
     <string name="email">Электронная почта</string>
     <string name="current_email">Текущая электронная почта</string>

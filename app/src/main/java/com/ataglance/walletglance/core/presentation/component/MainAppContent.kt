@@ -2,6 +2,7 @@ package com.ataglance.walletglance.core.presentation.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -16,10 +17,7 @@ import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.presentation.component.picker.DateRangeAssetsPickerContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.DimmedBackgroundOverlay
 import com.ataglance.walletglance.core.presentation.component.screenContainer.MainScaffold
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.navigation.domain.utils.anyScreenInHierarchyIs
-import com.ataglance.walletglance.navigation.domain.utils.currentScreenIs
 import com.ataglance.walletglance.navigation.presentation.AppNavHost
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -32,13 +30,18 @@ fun MainAppContent(
 ) {
     val navViewModel = koinViewModel<NavigationViewModel>()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val isBottomBarVisible by remember(appConfiguration.isSetUp, navBackStackEntry) {
-        derivedStateOf {
-            navViewModel.shouldDisplayBottomNavigationBar(appConfiguration.isSetUp, navBackStackEntry)
-        }
-    }
     val moveScreenTowardsLeft by navViewModel.moveScreensTowardsLeft.collectAsStateWithLifecycle()
-    val navigationButtons by navViewModel.navigationButtonList.collectAsStateWithLifecycle()
+    LaunchedEffect(appConfiguration.isSetUp, navBackStackEntry) {
+        navViewModel.updateBottomBarVisibility(
+            isSetUp = appConfiguration.isSetUp, navBackStackEntry = navBackStackEntry
+        )
+        navViewModel.updateFloatingButtonVisibility(
+            isSetUp = appConfiguration.isSetUp, navBackStackEntry = navBackStackEntry
+        )
+    }
+    LaunchedEffect(navBackStackEntry) {
+        navViewModel.updateBottomBarActiveButton(navBackStackEntry = navBackStackEntry)
+    }
 
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
     val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
@@ -57,27 +60,13 @@ fun MainAppContent(
 
     Box {
         MainScaffold(
-            isBottomBarVisible = isBottomBarVisible,
-            anyScreenInHierarchyIsScreenProvider = navBackStackEntry::anyScreenInHierarchyIs,
-            currentScreenIsScreenProvider = navBackStackEntry::currentScreenIs,
-            onNavigateToScreenAndPopUp = { screenNavigateTo: MainScreens ->
-                navViewModel.navigateToScreenPoppingToStartDestination(
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    screenToNavigateTo = screenNavigateTo
-                )
-            },
-            onMakeRecordButtonClick = {
-                navViewModel.navigateToScreenMovingTowardsLeft(
-                    navController = navController,
-                    screen = MainScreens.RecordCreation()
-                )
-            },
-            bottomBarButtons = navigationButtons
+            navViewModel = navViewModel,
+            navController = navController,
+            navBackStackEntry = navBackStackEntry
         ) { scaffoldPadding ->
             AppNavHost(
+                screenPadding = scaffoldPadding,
                 navController = navController,
-                scaffoldPadding = scaffoldPadding,
                 navViewModel = navViewModel,
                 appViewModel = appViewModel,
                 moveScreenTowardsLeft = moveScreenTowardsLeft,

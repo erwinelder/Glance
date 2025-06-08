@@ -35,12 +35,18 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.account.domain.navigation.AccountsSettingsScreens
 import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
 import com.ataglance.walletglance.account.mapper.toEditAccountUiState
 import com.ataglance.walletglance.account.presentation.model.AccountDraft
+import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountViewModel
+import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.ColorButton
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
@@ -54,10 +60,58 @@ import com.ataglance.walletglance.core.presentation.component.switchButton.Switc
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+
+@Composable
+fun EditAccountScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel
+) {
+    val accountsViewModel = backStack.sharedKoinNavViewModel<EditAccountsViewModel>(navController)
+    val accountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
+
+    val accountDraft by accountViewModel.accountDraft.collectAsStateWithLifecycle()
+    val allowDeleting by accountsViewModel.allowDeleting.collectAsStateWithLifecycle()
+    val allowSaving by accountViewModel.allowSaving.collectAsStateWithLifecycle()
+
+    EditAccountScreen(
+        screenPadding = screenPadding,
+        accountDraft = accountDraft,
+        allowDeleting = allowDeleting,
+        allowSaving = allowSaving,
+        onColorChange = accountViewModel::changeColor,
+        onNameChange = accountViewModel::changeName,
+        onNavigateToEditAccountCurrencyScreen = {
+            navViewModel.navigateToScreen(
+                navController = navController,
+                screen = AccountsSettingsScreens.EditAccountCurrency(
+                    currency = accountDraft.currency
+                )
+            )
+        },
+        onBalanceChange = accountViewModel::changeBalance,
+        onHideChange = accountViewModel::changeHideStatus,
+        onHideBalanceChange = accountViewModel::changeHideBalanceStatus,
+        onWithoutBalanceChange = accountViewModel::changeWithoutBalanceStatus,
+        onDeleteButton = { accountId ->
+            navController.popBackStack()
+            accountsViewModel.deleteAccount(id = accountId)
+        },
+        onSaveButton = {
+            accountViewModel.getAccount()?.let(accountsViewModel::applyAccount)
+            navController.popBackStack()
+        }
+    )
+}
 
 @Composable
 fun EditAccountScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     accountDraft: AccountDraft,
     allowDeleting: Boolean,
     allowSaving: Boolean,
@@ -78,15 +132,14 @@ fun EditAccountScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         GlassSurfaceScreenContainer(
-            topPadding = scaffoldPadding.calculateTopPadding(),
+            topPadding = screenPadding.calculateTopPadding(),
+            bottomPadding = screenPadding.calculateBottomPadding(),
             fillGlassSurface = false,
-            topButton = if (allowDeleting) {
-                {
-                    SecondaryButton(text = stringResource(R.string.delete)) {
-                        onDeleteButton(accountDraft.id)
-                    }
+            topButton = takeComposableIf(allowDeleting) {
+                SecondaryButton(text = stringResource(R.string.delete)) {
+                    onDeleteButton(accountDraft.id)
                 }
-            } else null,
+            },
             glassSurfaceContent = {
                 GlassSurfaceContent(
                     uiState = accountDraft,
@@ -237,7 +290,7 @@ fun EditAccountScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
             accountDraft = editAccountUiState,
             allowDeleting = allowDeleting,
             allowSaving = editAccountUiState.allowSaving(),

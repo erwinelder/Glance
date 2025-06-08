@@ -32,6 +32,7 @@ import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 
 @Composable
 fun SignUpEmailVerificationScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     backStack: NavBackStackEntry
@@ -41,6 +42,7 @@ fun SignUpEmailVerificationScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     SignUpEmailVerificationScreen(
+        screenPadding = screenPadding,
         onNavigateBack = navController::popBackStack,
         onCheckEmailVerification = viewModel::checkEmailVerification,
         requestState = requestState,
@@ -58,7 +60,7 @@ fun SignUpEmailVerificationScreenWrapper(
 
 @Composable
 fun SignUpEmailVerificationScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     onCheckEmailVerification: () -> Unit,
     requestState: RequestState<ButtonState>?,

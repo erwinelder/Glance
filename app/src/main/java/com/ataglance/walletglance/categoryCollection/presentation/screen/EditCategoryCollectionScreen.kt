@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,19 +31,24 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
-import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
 import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
@@ -54,9 +60,51 @@ import com.ataglance.walletglance.core.presentation.component.divider.TextDivide
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.core.utils.takeComposableIf
+
+@Composable
+fun EditCategoryCollectionScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController
+) {
+    val collectionsViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(navController)
+    val collectionViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionViewModel>(navController)
+
+    val collection by collectionViewModel.collectionUiState.collectAsStateWithLifecycle()
+    val checkedGroupedCategoriesByType by collectionViewModel.checkedGroupedCategoriesByType
+        .collectAsStateWithLifecycle()
+    val expandedCategory by collectionViewModel.expandedCategory.collectAsStateWithLifecycle()
+    val allowDeleting by collectionViewModel.allowDeleting.collectAsStateWithLifecycle()
+    val allowSaving by collectionViewModel.allowSaving.collectAsStateWithLifecycle()
+
+    EditCategoryCollectionScreen(
+        screenPadding = screenPadding,
+        collection = collection,
+        checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
+        expandedCategory = expandedCategory,
+        allowDeleting = allowDeleting,
+        allowSaving = allowSaving,
+        onNameChange = collectionViewModel::changeName,
+        onCheckedChange = collectionViewModel::inverseCheckedCategoryState,
+        onExpandedChange = collectionViewModel::inverseExpandedState,
+        onDeleteButton = {
+            collectionsViewModel.deleteCollection(collection = collection)
+            navController.popBackStack()
+        },
+        onSaveButton = {
+            collectionsViewModel.applyCollection(
+                collection = collectionViewModel.getCollection()
+            )
+            navController.popBackStack()
+        }
+    )
+}
 
 @Composable
 fun EditCategoryCollectionScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     collection: CategoryCollectionWithCategories,
     checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
     expandedCategory: CheckedGroupedCategories?,
@@ -69,14 +117,14 @@ fun EditCategoryCollectionScreen(
     onSaveButton: () -> Unit
 ) {
     GlassSurfaceScreenContainer(
-        topButton = if (allowDeleting) {
-            {
-                SecondaryButton(
-                    text = stringResource(R.string.delete),
-                    onClick = onDeleteButton
-                )
-            }
-        } else null,
+        topPadding = screenPadding.calculateTopPadding(),
+        bottomPadding = screenPadding.calculateBottomPadding(),
+        topButton = takeComposableIf(allowDeleting) {
+            SecondaryButton(
+                text = stringResource(R.string.delete),
+                onClick = onDeleteButton
+            )
+        },
         glassSurfaceContent = {
             GlassSurfaceContent(
                 collection = collection,
@@ -321,7 +369,6 @@ private fun CollectionSubcategoryItem(
 @Composable
 fun EditCategoryCollectionScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),

@@ -14,6 +14,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,15 +24,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.navigation.CategoriesSettingsScreens
 import com.ataglance.walletglance.category.presentation.component.CategoryTypeBar
 import com.ataglance.walletglance.category.presentation.component.EditingParentCategoryComponent
 import com.ataglance.walletglance.category.presentation.model.SetupCategoriesUiState
+import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
+import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
@@ -38,11 +48,74 @@ import com.ataglance.walletglance.core.presentation.component.button.SmallPrimar
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
+import kotlinx.coroutines.launch
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun EditCategoriesScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    appConfiguration: AppConfiguration
+) {
+    val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(
+        navController = navController,
+        parameters = { parametersOf(appConfiguration.langCode) }
+    )
+    val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
+
+    val uiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(true) {
+        if (uiState.groupedCategories != null) {
+            categoriesViewModel.clearSubcategoryList()
+        }
+    }
+
+    EditCategoriesScreen(
+        screenPadding = screenPadding,
+        isAppSetUp = appConfiguration.isSetUp,
+        uiState = uiState,
+        onShowCategoriesByType = categoriesViewModel::changeCategoryType,
+        onNavigateToEditSubcategoriesScreen = { categoryWithSubcategories ->
+            categoriesViewModel.applySubcategoryListToEdit(categoryWithSubcategories)
+            navViewModel.navigateToScreen(
+                navController, CategoriesSettingsScreens.EditSubcategories
+            )
+        },
+        onNavigateToEditCategoryScreen = { categoryOrNull ->
+            categoryViewModel.applyCategory(
+                category = categoryOrNull ?: categoriesViewModel.getNewParentCategory()
+            )
+            navViewModel.navigateToScreen(
+                navController, CategoriesSettingsScreens.EditCategory
+            )
+        },
+        onSwapCategories = categoriesViewModel::moveParentCategories,
+        onResetButton = categoriesViewModel::reapplyCategoryLists,
+        onSaveAndFinishSetupButton = {
+            coroutineScope.launch {
+                categoriesViewModel.saveCategories()
+                if (appConfiguration.isSetUp) {
+                    navController.popBackStack()
+                } else {
+                    navViewModel.navigateToScreen(navController, SettingsScreens.Budgets)
+                }
+            }
+        }
+    )
+}
 
 @Composable
 fun EditCategoriesScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     isAppSetUp: Boolean,
     uiState: SetupCategoriesUiState,
     onResetButton: () -> Unit,
@@ -53,7 +126,8 @@ fun EditCategoriesScreen(
     onSwapCategories: (Int, Int) -> Unit
 ) {
     GlassSurfaceScreenContainer(
-        topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
+        topPadding = screenPadding.calculateTopPadding(),
+        bottomPadding = screenPadding.calculateBottomPadding(),
         topBar = {
             CategoryTypeBar(
                 currentCategoryType = uiState.categoryType,
@@ -70,12 +144,18 @@ fun EditCategoriesScreen(
         },
         glassSurfaceFilledWidths = FilledWidthByScreenType(.86f, .86f, .86f),
         smallPrimaryButton = {
-            SmallPrimaryButton(text = stringResource(R.string.add_category)) {
+            SmallPrimaryButton(
+                text = stringResource(R.string.add_category),
+                iconRes = R.drawable.add_icon
+            ) {
                 onNavigateToEditCategoryScreen(null)
             }
         },
         secondaryBottomButton = takeComposableIf(!isAppSetUp) {
-            SecondaryButton(text = stringResource(R.string.reset), onClick = onResetButton)
+            SecondaryButton(
+                text = stringResource(R.string.reset),
+                onClick = onResetButton
+            )
         },
         primaryBottomButton = {
             PrimaryButton(
@@ -204,7 +284,7 @@ fun EditCategoriesScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditCategoriesScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,
             uiState = SetupCategoriesUiState(
                 categoryType = categoryType,

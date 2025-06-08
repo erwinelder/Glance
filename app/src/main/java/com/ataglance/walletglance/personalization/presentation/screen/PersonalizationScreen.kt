@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.personalization.presentation.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -16,7 +17,7 @@ import com.ataglance.walletglance.core.presentation.component.button.PrimaryButt
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.utils.takeComposableIf
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
@@ -32,7 +33,8 @@ import com.ataglance.walletglance.settings.presentation.screenContainer.Settings
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun PersonalisationScreenWrapper(
+fun PersonalizationScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavController,
     navViewModel: NavigationViewModel,
     appConfiguration: AppConfiguration
@@ -48,7 +50,8 @@ fun PersonalisationScreenWrapper(
     val showNavButtonsSettings by personalizationViewModel.showNavButtonsSettings.collectAsStateWithLifecycle()
     val navigationButtons by personalizationViewModel.navButtons.collectAsStateWithLifecycle()
 
-    PersonalisationScreen(
+    PersonalizationScreen(
+        screenPadding = screenPadding,
         isAppSetUp = appConfiguration.isSetUp,
         onNavigateBack = navController::popBackStack,
 
@@ -88,7 +91,8 @@ fun PersonalisationScreenWrapper(
 }
 
 @Composable
-fun PersonalisationScreen(
+fun PersonalizationScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     isAppSetUp: Boolean,
     onNavigateBack: () -> Unit,
 
@@ -110,13 +114,14 @@ fun PersonalisationScreen(
     showNavButtonsSettings: Boolean,
     onShowNavButtonsSettings: () -> Unit,
     onSaveNavButtonsAndCloseSettings: () -> Unit,
-    navigationButtons: List<BottomBarNavigationButton>,
+    navigationButtons: List<BottomNavBarButtonState>,
     onMoveButtons: (Int, Int) -> Unit,
 
     onContinueSetupButton: () -> Unit
 ) {
     Box {
         SettingsCategoryScreenContainer(
+            screenPadding = screenPadding,
             thisCategory = SettingsCategory.Appearance(CurrAppTheme),
             onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
             title = stringResource(R.string.appearance_settings_category_title),
@@ -168,16 +173,12 @@ fun PersonalisationScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO, locale = "en")
 @Composable
-fun PersonalisationScreenPreview(
+fun PersonalizationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = false,
-    isBottomBarVisible: Boolean = false
+    isAppSetUp: Boolean = false
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible
-    ) {
-        PersonalisationScreen(
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
+        PersonalizationScreen(
             isAppSetUp = isAppSetUp,
             onNavigateBack = {},
 

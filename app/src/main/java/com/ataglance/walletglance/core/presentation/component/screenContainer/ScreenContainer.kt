@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.utils.add
+import com.ataglance.walletglance.core.presentation.utils.plus
 
 @Composable
 fun ScreenContainer(
@@ -24,7 +24,7 @@ fun ScreenContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = verticalArrangement,
         modifier = modifier
-            .padding(padding.add(screenPadding))
+            .padding(padding + screenPadding)
             .fillMaxSize()
     ) {
         content()

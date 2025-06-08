@@ -2,22 +2,30 @@ package com.ataglance.walletglance.budget.presentation.screen
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
+import com.ataglance.walletglance.budget.domain.navigation.BudgetsSettingsScreens
 import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
 import com.ataglance.walletglance.budget.presentation.component.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.component.DefaultBudgetComponent
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
+import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
@@ -25,19 +33,58 @@ import com.ataglance.walletglance.core.presentation.component.button.SmallPrimar
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import kotlinx.coroutines.launch
+
+@Composable
+fun EditBudgetsScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    isAppSetUp: Boolean
+) {
+    val budgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(navController)
+    val budgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(navController)
+
+    val budgetsByType by budgetsViewModel.budgetsByType.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
+    EditBudgetsScreen(
+        screenPadding = screenPadding,
+        isAppSetUp = isAppSetUp,
+        budgetsByType = budgetsByType,
+        onNavigateToEditBudgetScreen = { budget: Budget? ->
+            budgetViewModel.applyBudget(budget)
+            navViewModel.navigateToScreen(navController, BudgetsSettingsScreens.EditBudget)
+        },
+        onSaveBudgetsButton = {
+            coroutineScope.launch {
+                budgetsViewModel.saveBudgets()
+                if (isAppSetUp) {
+                    navController.popBackStack()
+                } else {
+                    budgetsViewModel.preFinishSetup()
+                }
+            }
+        }
+    )
+}
 
 @Composable
 fun EditBudgetsScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     isAppSetUp: Boolean,
     budgetsByType: BudgetsByType,
     onNavigateToEditBudgetScreen: (Budget?) -> Unit,
     onSaveBudgetsButton: () -> Unit,
 ) {
     GlassSurfaceScreenContainer(
-        topPadding = scaffoldPadding.takeUnless { isAppSetUp }?.calculateTopPadding(),
+        topPadding = screenPadding.calculateTopPadding(),
+        bottomPadding = screenPadding.calculateBottomPadding(),
         glassSurfaceContent = {
             GlassSurfaceContent(
                 budgetsByType = budgetsByType,
@@ -46,11 +93,11 @@ fun EditBudgetsScreen(
         },
         smallPrimaryButton = {
             SmallPrimaryButton(
-                onClick = {
-                    onNavigateToEditBudgetScreen(null)
-                },
-                text = stringResource(R.string.add_budget)
-            )
+                text = stringResource(R.string.add_budget),
+                iconRes = R.drawable.add_icon
+            ) {
+                onNavigateToEditBudgetScreen(null)
+            }
         },
         primaryBottomButton = {
             PrimaryButton(
@@ -170,7 +217,7 @@ fun EditBudgetsScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditBudgetsScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
             isAppSetUp = isAppSetUp,
             budgetsByType = budgetsByType,
             onNavigateToEditBudgetScreen = {},

@@ -16,12 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 
 @Composable
 fun GlassSurfaceScreenContainer(
     topPadding: Dp? = null,
+    bottomPadding: Dp? = null,
     topButton: @Composable (() -> Unit)? = null,
     topBar: @Composable (() -> Unit)? = null,
     glassSurfaceContent: @Composable BoxScope.() -> Unit,
@@ -39,7 +40,7 @@ fun GlassSurfaceScreenContainer(
             .padding(
                 top = (if (topButton != null || topBar == null) 24.dp else 16.dp) +
                         (topPadding ?: 0.dp),
-                bottom = 24.dp
+                bottom = 24.dp + (bottomPadding ?: 0.dp)
             )
     ) {
 

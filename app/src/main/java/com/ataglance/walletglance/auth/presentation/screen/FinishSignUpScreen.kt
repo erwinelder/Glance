@@ -33,6 +33,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun FinishSignUpScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     backStack: NavBackStackEntry
@@ -46,6 +47,7 @@ fun FinishSignUpScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     FinishSignUpScreen(
+        screenPadding = screenPadding,
         onVerify = viewModel::finishSignUp,
         requestState = requestState,
         onSuccessClose = {
@@ -61,7 +63,7 @@ fun FinishSignUpScreenWrapper(
 
 @Composable
 fun FinishSignUpScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onVerify: () -> Unit,
     requestState: RequestState<ButtonState>?,
     onSuccessClose: () -> Unit,

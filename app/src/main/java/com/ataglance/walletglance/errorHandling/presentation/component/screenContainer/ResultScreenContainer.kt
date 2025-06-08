@@ -2,6 +2,7 @@ package com.ataglance.walletglance.errorHandling.presentation.component.screenCo
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun ResultScreenContainer(
+    screenPadding: PaddingValues = PaddingValues(),
     title: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,
@@ -21,7 +23,7 @@ fun ResultScreenContainer(
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {
-    ScreenContainerWithBackButton {
+    ScreenContainerWithBackButton(screenPadding = screenPadding) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier

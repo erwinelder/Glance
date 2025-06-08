@@ -27,13 +27,32 @@ fun getImeBottomInset(): State<Dp> {
 }
 
 
-fun PaddingValues.add(padding: PaddingValues): PaddingValues {
+operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingValues {
     return PaddingValues(
-        start = this.calculateStartPadding(LayoutDirection.Ltr) +
-                padding.calculateStartPadding(LayoutDirection.Ltr),
-        top = this.calculateTopPadding() + padding.calculateTopPadding(),
-        end = this.calculateEndPadding(LayoutDirection.Ltr) +
-                padding.calculateEndPadding(LayoutDirection.Ltr),
-        bottom = this.calculateBottomPadding() + padding.calculateBottomPadding()
+        start = this.start + paddingValues.start,
+        top = this.top + paddingValues.top,
+        end = this.end + paddingValues.end,
+        bottom = this.bottom + paddingValues.bottom
     )
 }
+
+fun PaddingValues.plusBottomPadding(padding: Dp): PaddingValues {
+    return PaddingValues(
+        start = this.start,
+        top = this.top,
+        end = this.end,
+        bottom = this.bottom + padding
+    )
+}
+
+val PaddingValues.start: Dp
+    get() = calculateStartPadding(LayoutDirection.Ltr)
+
+val PaddingValues.end: Dp
+    get() = calculateEndPadding(LayoutDirection.Ltr)
+
+val PaddingValues.top: Dp
+    get() = calculateTopPadding()
+
+val PaddingValues.bottom: Dp
+    get() = calculateBottomPadding()

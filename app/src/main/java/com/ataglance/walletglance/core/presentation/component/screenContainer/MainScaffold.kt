@@ -4,29 +4,24 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.ataglance.walletglance.core.presentation.component.container.BottomNavBar
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import com.ataglance.walletglance.core.presentation.component.container.BottomNavBarWrapper
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 
 @Composable
 fun MainScaffold(
-    isBottomBarVisible: Boolean,
-    onNavigateToScreenAndPopUp: (MainScreens) -> Unit,
-    onMakeRecordButtonClick: () -> Unit,
-    anyScreenInHierarchyIsScreenProvider: (Any) -> Boolean,
-    currentScreenIsScreenProvider: (Any) -> Boolean,
-    bottomBarButtons: List<BottomBarNavigationButton>,
+    navViewModel: NavigationViewModel,
+    navController: NavController,
+    navBackStackEntry: NavBackStackEntry?,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         bottomBar = {
-            BottomNavBar(
-                isVisible = isBottomBarVisible,
-                anyScreenInHierarchyIsScreenProvider = anyScreenInHierarchyIsScreenProvider,
-                currentScreenIsScreenProvider = currentScreenIsScreenProvider,
-                onNavigateToScreen = onNavigateToScreenAndPopUp,
-                onMakeRecordButtonClick = onMakeRecordButtonClick,
-                barButtons = bottomBarButtons
+            BottomNavBarWrapper(
+                navViewModel = navViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry
             )
         },
         containerColor = Color.Transparent

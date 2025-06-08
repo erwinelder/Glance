@@ -8,14 +8,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.presentation.viewmodel.ResetPasswordViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -25,7 +25,6 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.An
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
-import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
@@ -36,6 +35,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ResetPasswordScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     appConfiguration: AppConfiguration,
@@ -53,6 +53,7 @@ fun ResetPasswordScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     ResetPasswordScreen(
+        screenPadding = screenPadding,
         newPasswordState = newPasswordState,
         onNewPasswordChange = viewModel::updateAndValidateNewPassword,
         newPasswordConfirmationState = confirmNewPasswordState,
@@ -77,7 +78,7 @@ fun ResetPasswordScreenWrapper(
 
 @Composable
 fun ResetPasswordScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     newPasswordState: ValidatedFieldState,
     onNewPasswordChange: (String) -> Unit,
     newPasswordConfirmationState: ValidatedFieldState,

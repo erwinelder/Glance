@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,24 +24,71 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
+import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryCollectionsSettingsScreens
 import com.ataglance.walletglance.categoryCollection.presentation.component.CategoryCollectionTypeBar
 import com.ataglance.walletglance.categoryCollection.presentation.component.EditingCategoryCollectionComponent
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import kotlinx.coroutines.launch
+
+@Composable
+fun EditCategoryCollectionsScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel
+) {
+    val collectionsViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(navController)
+    val collectionViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionViewModel>(navController)
+
+    val collectionsByType by collectionsViewModel.collectionsByType.collectAsStateWithLifecycle()
+    val collectionType by collectionsViewModel.collectionType.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
+    EditCategoryCollectionsScreen(
+        screenPadding = screenPadding,
+        collectionsWithCategories = collectionsByType,
+        collectionType = collectionType,
+        onCategoryTypeChange = collectionsViewModel::changeCategoryType,
+        onNavigateToEditCollectionScreen = { collectionOrNull ->
+            collectionViewModel.applyCollection(
+                collection = collectionOrNull ?: collectionsViewModel.getNewCollection()
+            )
+            navViewModel.navigateToScreen(
+                navController = navController,
+                screen = CategoryCollectionsSettingsScreens.EditCategoryCollection
+            )
+        },
+        onSaveCollectionsButton = {
+            coroutineScope.launch {
+                collectionsViewModel.saveCategoryCollections()
+                navController.popBackStack()
+            }
+        }
+    )
+}
 
 @Composable
 fun EditCategoryCollectionsScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     collectionsWithCategories: List<CategoryCollectionWithCategories>,
     collectionType: CategoryCollectionType,
     onCategoryTypeChange: (CategoryCollectionType) -> Unit,
@@ -47,6 +96,8 @@ fun EditCategoryCollectionsScreen(
     onSaveCollectionsButton: () -> Unit,
 ) {
     GlassSurfaceScreenContainer(
+        topPadding = screenPadding.calculateTopPadding(),
+        bottomPadding = screenPadding.calculateBottomPadding(),
         topBar = {
             CategoryCollectionTypeBar(
                 currentType = collectionType,
@@ -61,16 +112,16 @@ fun EditCategoryCollectionsScreen(
         },
         smallPrimaryButton = {
             SmallPrimaryButton(
-                onClick = {
-                    onNavigateToEditCollectionScreen(null)
-                },
-                text = stringResource(R.string.add_collection)
-            )
+                text = stringResource(R.string.add_collection),
+                iconRes = R.drawable.add_icon
+            ) {
+                onNavigateToEditCollectionScreen(null)
+            }
         },
         primaryBottomButton = {
             PrimaryButton(
-                onClick = onSaveCollectionsButton,
-                text = stringResource(R.string.save)
+                text = stringResource(R.string.save),
+                onClick = onSaveCollectionsButton
             )
         }
     )
@@ -163,7 +214,6 @@ private fun ExpandedLayoutContent(
 @Composable
 fun EditCategoryCollectionsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),

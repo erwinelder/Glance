@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,12 +26,18 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.component.AccountPicker
 import com.ataglance.walletglance.account.presentation.component.SmallAccountComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.AppUiState
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.BackButton
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
@@ -39,12 +47,67 @@ import com.ataglance.walletglance.core.presentation.component.picker.CustomDateP
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
+import com.ataglance.walletglance.recordCreation.presentation.viewmodel.TransferCreationViewModel
+import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun TransferCreationScreenWrapper(
+    screenPadding: PaddingValues,
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel,
+    appUiState: AppUiState
+) {
+    val recordNum = backStack.toRoute<MainScreens.TransferCreation>().recordNum
+
+    val viewModel = koinViewModel<TransferCreationViewModel> {
+        parametersOf(recordNum)
+    }
+
+    val transferDraft by viewModel.transferDraft.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
+    TransferCreationScreen(
+        screenPadding = screenPadding,
+        transferDraft = transferDraft,
+        accountList = appUiState.accountsAndActiveOne.accounts,
+        onNavigateBack = navController::popBackStack,
+        onSelectNewDate = viewModel::selectNewDate,
+        onSelectNewTime = viewModel::selectNewTime,
+        onSelectAnotherAccount = viewModel::selectAnotherAccount,
+        onSelectAccount = viewModel::selectAccount,
+        onRateChange = viewModel::changeRate,
+        onAmountChange = viewModel::changeAmount,
+        onSaveButton = {
+            coroutineScope.launch {
+                viewModel.saveTransfer()
+                navViewModel.popBackStackToHomeScreen(navController)
+            }
+        },
+        onRepeatButton = {
+            coroutineScope.launch {
+                viewModel.repeatTransfer()
+                navViewModel.popBackStackToHomeScreen(navController)
+            }
+        },
+        onDeleteButton = {
+            coroutineScope.launch {
+                viewModel.deleteTransfer()
+                navViewModel.popBackStackToHomeScreen(navController)
+            }
+        }
+    )
+}
 
 @Composable
 fun TransferCreationScreen(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
     transferDraft: TransferDraft,
     accountList: List<Account>,
     onNavigateBack: () -> Unit,
@@ -68,6 +131,8 @@ fun TransferCreationScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         GlassSurfaceScreenContainer(
+            topPadding = screenPadding.calculateTopPadding(),
+            bottomPadding = screenPadding.calculateBottomPadding(),
             fillGlassSurface = false,
             topButton = {
                 BackButton(onNavigateBack)

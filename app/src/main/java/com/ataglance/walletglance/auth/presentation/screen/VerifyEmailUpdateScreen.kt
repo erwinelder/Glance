@@ -33,6 +33,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun VerifyEmailUpdateScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     backStack: NavBackStackEntry
@@ -46,6 +47,7 @@ fun VerifyEmailUpdateScreenWrapper(
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
     VerifyEmailUpdateScreen(
+        screenPadding = screenPadding,
         onVerify = viewModel::verifyEmail,
         requestState = requestState,
         onSuccessClose = {
@@ -61,7 +63,7 @@ fun VerifyEmailUpdateScreenWrapper(
 
 @Composable
 fun VerifyEmailUpdateScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onVerify: () -> Unit,
     requestState: RequestState<ButtonState>?,
     onSuccessClose: () -> Unit,

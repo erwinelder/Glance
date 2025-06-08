@@ -28,24 +28,32 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.component.AccountsFlowRow
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.model.BudgetStatisticsScreenUiState
+import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetStatisticsViewModel
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoryBigIconComponent
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
 import com.ataglance.walletglance.core.presentation.component.chart.ColumnChartComponent
 import com.ataglance.walletglance.core.presentation.component.chart.SingleValuePieChartComponent
-import com.ataglance.walletglance.core.presentation.component.container.BackButtonBlock
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithGlassBackButton
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
@@ -54,17 +62,49 @@ import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun BudgetStatisticsScreenWrapper(
+    screenPadding: PaddingValues,
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    appConfiguration: AppConfiguration
+) {
+    val budgetId = backStack.toRoute<MainScreens.BudgetStatistics>().id
+
+    val viewModel = koinViewModel<BudgetStatisticsViewModel> {
+        parametersOf(budgetId, appConfiguration.langCode)
+    }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    BudgetStatisticsScreen(
+        screenPadding = screenPadding,
+        uiState = uiState,
+        onBackButtonClick = navController::popBackStack
+    )
+}
 
 @Composable
 fun BudgetStatisticsScreen(
+    screenPadding: PaddingValues = PaddingValues(0.dp),
     uiState: BudgetStatisticsScreenUiState,
     onBackButtonClick: () -> Unit
 ) {
-    Column(
+    val backButtonImageRes = DrawableResByTheme(
+        lightDefault = R.drawable.budgets_light_default_icon,
+        darkDefault = R.drawable.budgets_dark_default_icon,
+    )
+
+    ScreenContainerWithGlassBackButton(
+        screenPadding = screenPadding,
         verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxSize()
+        onNavigateBack = onBackButtonClick,
+        backButtonText = stringResource(R.string.budget_statistics_title),
+        backButtonImageRes = backButtonImageRes.getByTheme(CurrAppTheme)
     ) {
-        BackButtonBlock(onBackButtonClick)
         if (uiState.budget != null) {
             BudgetStatisticsScreenContent(
                 budget = uiState.budget,

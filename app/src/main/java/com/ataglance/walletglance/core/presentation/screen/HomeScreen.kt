@@ -41,12 +41,11 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidget
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.component.widget.GreetingsMessage
-import com.ataglance.walletglance.core.utils.bottom
+import com.ataglance.walletglance.core.presentation.utils.bottom
+import com.ataglance.walletglance.core.presentation.utils.plusBottomPadding
+import com.ataglance.walletglance.core.presentation.utils.top
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.utils.plus
-import com.ataglance.walletglance.core.utils.top
-import com.ataglance.walletglance.navigation.domain.utils.isScreen
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -57,7 +56,7 @@ import com.ataglance.walletglance.record.presentation.component.RecentRecordsWid
 
 @Composable
 fun HomeScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsAndActiveOne: AccountsAndActiveOne,
     onTopBarAccountClick: (Int) -> Unit,
@@ -80,14 +79,17 @@ fun HomeScreen(
                     onDateRangeChange = onDateRangeChange,
                     isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
                     onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
-                    onAccountClick = onTopBarAccountClick
+                    onAccountClick = onTopBarAccountClick,
+                    topPadding = screenPadding.calculateTopPadding()
                 )
             }
         },
         containerColor = Color.Transparent
     ) { scaffoldHomeScreenPadding ->
         CompactLayout(
-            scaffoldPadding = scaffoldPadding + scaffoldHomeScreenPadding,
+            scaffoldPadding = scaffoldHomeScreenPadding.plusBottomPadding(
+                padding = screenPadding.calculateBottomPadding()
+            ),
             isAppThemeSetUp = isAppThemeSetUp,
             accountsAndActiveOne = accountsAndActiveOne,
             dateRangeWithEnum = dateRangeWithEnum,
@@ -217,8 +219,6 @@ private fun CompactLayout(
 @Composable
 fun HomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isBottomBarVisible: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -322,11 +322,9 @@ fun HomeScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible,
-        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Home) }
     ) { scaffoldPadding ->
         HomeScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
             isAppThemeSetUp = true,
             accountsAndActiveOne = accountsAndActiveOne,
             onTopBarAccountClick = {},

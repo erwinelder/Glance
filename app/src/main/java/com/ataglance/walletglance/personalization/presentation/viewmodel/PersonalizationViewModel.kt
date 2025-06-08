@@ -5,16 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.utils.moveItems
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
-import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonsUseCase
+import com.ataglance.walletglance.navigation.domain.usecase.GetNavigationButtonScreensUseCase
 import com.ataglance.walletglance.navigation.domain.usecase.SaveNavigationButtonsUseCase
+import com.ataglance.walletglance.navigation.mapper.toAppScreenEnum
+import com.ataglance.walletglance.navigation.mapper.toBottomBarNavButtonState
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
+import com.ataglance.walletglance.personalization.domain.usecase.theme.ChangeAppLookPreferencesUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
 import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCase
 import com.ataglance.walletglance.personalization.domain.usecase.widgets.SaveWidgetsUseCase
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
-import com.ataglance.walletglance.personalization.domain.usecase.theme.ChangeAppLookPreferencesUseCase
-import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,7 +28,7 @@ class PersonalizationViewModel(
     private val saveWidgetsUseCase: SaveWidgetsUseCase,
     private val getWidgetsUseCase: GetWidgetsUseCase,
     private val saveNavigationButtonsUseCase: SaveNavigationButtonsUseCase,
-    private val getNavigationButtonsUseCase: GetNavigationButtonsUseCase,
+    private val getNavigationButtonScreensUseCase: GetNavigationButtonScreensUseCase,
     private val userContext: UserContext
 ) : ViewModel() {
 
@@ -130,14 +132,15 @@ class PersonalizationViewModel(
     private fun hideNavButtonsSettings() = _showNavButtonsSettings.update { false }
 
 
-    private val _navButtons = MutableStateFlow<List<BottomBarNavigationButton>>(emptyList())
+    private val _navButtons = MutableStateFlow<List<BottomNavBarButtonState>>(emptyList())
     val navButtons = _navButtons.asStateFlow()
 
     private fun fetchNavButtons() {
         viewModelScope.launch {
-            getNavigationButtonsUseCase.getFlow().collect { navButtons ->
+            getNavigationButtonScreensUseCase.getFlow().collect { screens ->
+                val buttons = screens.map { it.toBottomBarNavButtonState() }
                 _navButtons.update {
-                    navButtons.takeIf { it.size > 1 }?.subList(1, navButtons.lastIndex) ?: navButtons
+                    buttons.takeIf { it.size > 1 }?.subList(1, buttons.lastIndex) ?: buttons
                 }
             }
         }
@@ -150,7 +153,8 @@ class PersonalizationViewModel(
     }
 
     private suspend fun saveNavButtons() {
-        saveNavigationButtonsUseCase.save(buttons = navButtons.value)
+        val screens = navButtons.value.mapNotNull { it.toAppScreenEnum() }
+        saveNavigationButtonsUseCase.execute(screens = screens)
     }
 
     fun saveNavButtonsAndCloseSettings() {
