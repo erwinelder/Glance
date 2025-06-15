@@ -1,11 +1,9 @@
 package com.ataglance.walletglance.core.presentation.theme
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,29 +16,42 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
-import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 
 sealed class GlanciPalette(
     val primary: Color,
     val primaryGradient: List<Color>,
-    val primaryGradientPair: Pair<Color, Color> = Pair(primaryGradient[0], primaryGradient[1]),
-    val primaryGlassBorder: Color,
+    val primaryGlassGradient: List<Color>,
+    val primaryGlassGradientPair: Pair<Color, Color> = Pair(
+        primaryGlassGradient[0], primaryGlassGradient[1]
+    ),
+    val primaryGlassBorderGradient: List<Color>,
+    val primaryGlassShadow: Pair<Color, Color>,
+    val primarySemiTransparentGlassBorderGradient: List<Color>,
     val onPrimary: Color,
+
+    val disabledGlassGradient: List<Color>,
+    val disabledGlassGradientPair: Pair<Color, Color> = Pair(
+        disabledGlassGradient[0], disabledGlassGradient[1]
+    ),
+    val disabledSemiTransparentGlassBorderGradient: List<Color>,
 
     val glassGradient: List<Color>,
     val glassGradientPair: Pair<Color, Color> = Pair(glassGradient[0], glassGradient[1]),
-    val glassBorder: Color,
-    val glassSurfaceShadow: Pair<Color, Color>,
+    val glassBorderGradient: List<Color>,
+    val glassShadow: Pair<Color, Color>,
 
     val glassGradientOnGlass: List<Color>,
     val glassGradientOnGlassBorder: Color,
 
     val glassButtonGradient: List<Color>,
-    val glassButtonGradientPair: Pair<Color, Color> = Pair(glassButtonGradient[0], glassButtonGradient[1]),
+    val glassButtonGradientPair: Pair<Color, Color> = Pair(
+        glassButtonGradient[0], glassButtonGradient[1]
+    ),
 
     val background: Color,
     val surface: Color,
@@ -50,9 +61,6 @@ sealed class GlanciPalette(
     val outline: Color,
     val outlineSemiTransparent: Color,
 
-    val disabledGradient: List<Color>,
-    val disabledGradientPair: Pair<Color, Color> = Pair(disabledGradient[0], disabledGradient[1]),
-
     val success: Color,
     val successGradient: List<Color>,
     val error: Color,
@@ -60,34 +68,72 @@ sealed class GlanciPalette(
     val errorGradientPair: Pair<Color, Color> = Pair(errorGradient[0], errorGradient[1]),
 
     val lineChartGreenGradient: List<Color>,
-    val lineChartGreenGradientPair: Pair<Color, Color> = Pair(lineChartGreenGradient[0], lineChartGreenGradient[1]),
+    val lineChartGreenGradientPair: Pair<Color, Color> = Pair(
+        lineChartGreenGradient[0], lineChartGreenGradient[1]
+    ),
     val lineChartRedGradient: List<Color>,
-    val lineChartRedGradientPair: Pair<Color, Color> = Pair(lineChartRedGradient[0], lineChartRedGradient[1]),
+    val lineChartRedGradientPair: Pair<Color, Color> = Pair(
+        lineChartRedGradient[0], lineChartRedGradient[1]
+    ),
 
     val pieChartGreenGradient: List<Color>,
     val pieChartYellowGradient: List<Color>,
     val pieChartRedGradient: List<Color>,
 
     val accountSemiTransparentBackground: Color,
+
+    val layeredIconBaseColor: Color,
+    val layeredIconPlatformColor: Color
 ) {
 
     data object LightDefault : GlanciPalette(
         primary = Color(165, 93, 135),
         primaryGradient = listOf(
-            Color(182, 103, 149),
-            Color(117, 68, 98)
+            Color(192, 97, 146, 204),
+            Color(164, 77, 131, 204)
         ),
-        primaryGlassBorder = Color(165, 93, 135, 69),
+        primaryGlassGradient = listOf(
+            Color(181, 100, 142, 204),
+            Color(153, 83, 126, 204)
+        ),
+        primaryGlassBorderGradient = listOf(
+            Color(255, 255, 255, 77),
+            Color(255, 255, 255, 64)
+        ),
+        primaryGlassShadow = Pair(
+//            Color(255, 255, 255, 122),
+//            Color(0, 0, 0, 54)
+            Color(0, 0, 0, 0),
+            Color(0, 0, 0, 0)
+        ),
+        primarySemiTransparentGlassBorderGradient = listOf(
+            Color(191, 98, 146, 112),
+            Color(163, 77, 130, 79)
+        ),
         onPrimary = Color(255, 255, 255),
 
-        glassGradient = listOf(
-            Color(242, 242, 242, 128),
-            Color(252, 252, 252, 128)
+        disabledGlassGradient = listOf(
+            Color(161, 161, 161, 204),
+            Color(138, 138, 138, 204)
         ),
-        glassBorder = Color(255, 255, 255, 69),
-        glassSurfaceShadow = Pair(
-            Color(255, 255, 255, 120),
-            Color(201, 201, 201, 120)
+        disabledSemiTransparentGlassBorderGradient = listOf(
+            Color(163, 163, 163, 204),
+            Color(179, 179, 179, 204)
+        ),
+
+        glassGradient = listOf(
+            Color(252, 252, 252, 128),
+            Color(240, 240, 240, 128)
+        ),
+        glassBorderGradient = listOf(
+            Color(255, 255, 255, 140),
+            Color(240, 240, 240, 140)
+        ),
+        glassShadow = Pair(
+//            Color(255, 255, 255, 138),
+//            Color(0, 0, 0, 43)
+            Color(0, 0, 0, 0),
+            Color(0, 0, 0, 0)
         ),
 
         glassGradientOnGlass = listOf(
@@ -111,11 +157,6 @@ sealed class GlanciPalette(
 
         outline = Color(140, 133, 137),
         outlineSemiTransparent = Color(180, 171, 175, 128),
-
-        disabledGradient = listOf(
-            Color(180, 171, 175),
-            Color(107, 102, 104)
-        ),
 
         success = Color(92, 180, 85),
         successGradient = listOf(
@@ -151,25 +192,59 @@ sealed class GlanciPalette(
         ),
 
         accountSemiTransparentBackground = Color(31, 26, 28, 51),
+
+        layeredIconBaseColor = Color(0, 0, 0),
+        layeredIconPlatformColor = Color(230, 230, 230),
     )
 
     data object DarkDefault : GlanciPalette(
         primary = Color(154, 92, 128),
         primaryGradient = listOf(
-            Color(168, 90, 133),
-            Color(105, 55, 82)
+            Color(199, 113, 160, 204),
+            Color(183, 108, 139, 204)
         ),
-        primaryGlassBorder = Color(154, 92, 128, 69),
+        primaryGlassGradient = listOf(
+            Color(199, 113, 158, 204),
+            Color(171, 91, 140, 204)
+        ),
+        primaryGlassBorderGradient = listOf(
+            Color(255, 255, 255, 33),
+            Color(255, 255, 255, 18)
+        ),
+        primaryGlassShadow = Pair(
+//            Color(255, 255, 255, 87),
+//            Color(0, 0, 0, 77)
+            Color(0, 0, 0, 0),
+            Color(0, 0, 0, 0)
+        ),
+        primarySemiTransparentGlassBorderGradient = listOf(
+            Color(212, 114, 168, 51),
+            Color(168, 89, 126, 38)
+        ),
         onPrimary = Color(231, 212, 225),
 
-        glassGradient = listOf(
-            Color(23, 23, 23, 128),
-            Color(31, 31, 31, 128)
+        disabledGlassGradient = listOf(
+            Color(89, 89, 89, 204),
+            Color(77, 77, 77, 204)
         ),
-        glassBorder = Color(35, 35, 35, 128),
-        glassSurfaceShadow = Pair(
-            Color(39, 39, 39, 120),
-            Color(19, 19, 19, 120)
+        disabledSemiTransparentGlassBorderGradient = listOf(
+            Color(56, 56, 56, 204),
+            Color(46, 46, 46, 204)
+        ),
+
+        glassGradient = listOf(
+            Color(31, 31, 31, 128),
+            Color(23, 23, 23, 128)
+        ),
+        glassBorderGradient = listOf(
+            Color(255, 255, 255, 20),
+            Color(102, 102, 102, 20)
+        ),
+        glassShadow = Pair(
+//            Color(255, 255, 255, 41),
+//            Color(0, 0, 0, 46)
+            Color(0, 0, 0, 0),
+            Color(0, 0, 0, 0)
         ),
 
         glassGradientOnGlass = listOf(
@@ -193,11 +268,6 @@ sealed class GlanciPalette(
 
         outline = Color(122, 115, 119),
         outlineSemiTransparent = Color(122, 115, 119, 128),
-
-        disabledGradient = listOf(
-            Color(122, 115, 119),
-            Color(51, 48, 50)
-        ),
 
         success = Color(82, 161, 76),
         successGradient = listOf(
@@ -233,11 +303,16 @@ sealed class GlanciPalette(
         ),
 
         accountSemiTransparentBackground = Color(226, 217, 220, 51),
+
+        layeredIconBaseColor = Color(255, 255, 255),
+        layeredIconPlatformColor = Color(12, 12, 12),
     )
 
 }
 
-@Preview(device = Devices.PIXEL_7_PRO)
+
+
+@Preview(device = Devices.PIXEL_7_PRO, group = "Light Default")
 @Composable
 private fun PreviewColorsLightDefault() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
@@ -259,11 +334,6 @@ private fun PreviewColorsLightDefault() {
                         gradientColor = GlanciColors.errorGradient,
                         iconDescription = ""
                     )
-                    GlassSurfaceOnGlassSurface {
-                        Box(
-                            modifier = Modifier.size(150.dp, 100.dp)
-                        )
-                    }
                     Text(
                         text = "Outlined text",
                         color = GlanciColors.outline,
@@ -271,14 +341,17 @@ private fun PreviewColorsLightDefault() {
                     )
                 }
             }
-            PrimaryButton(text = "Save and continue")
-            SecondaryButton(text = "Apply") { }
+            PrimaryButton(text = "Save and continue") {}
+            PrimaryButton(text = "Save and continue", enabled = false) {}
+            SmallPrimaryButton(text = "Apply") { }
+            SecondaryButton(text = "Save and continue") { }
+            SecondaryButton(text = "Save and continue", enabled = false) { }
             SmallSecondaryButton(text = "Apply") { }
         }
     }
 }
 
-@Preview(device = Devices.PIXEL_7_PRO)
+@Preview(device = Devices.PIXEL_7_PRO, group = "Dark Default")
 @Composable
 private fun PreviewColorsDarkDefault() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
@@ -300,11 +373,6 @@ private fun PreviewColorsDarkDefault() {
                         gradientColor = GlanciColors.errorGradient,
                         iconDescription = ""
                     )
-                    GlassSurfaceOnGlassSurface {
-                        Box(
-                            modifier = Modifier.size(150.dp, 100.dp)
-                        )
-                    }
                     Text(
                         text = "Outlined text",
                         color = GlanciColors.outline,
@@ -312,8 +380,11 @@ private fun PreviewColorsDarkDefault() {
                     )
                 }
             }
-            PrimaryButton(text = "Save and continue")
-            SecondaryButton(text = "Apply") { }
+            PrimaryButton(text = "Save and continue") {}
+            PrimaryButton(text = "Save and continue", enabled = false) {}
+            SmallPrimaryButton(text = "Apply") { }
+            SecondaryButton(text = "Save and continue") { }
+            SecondaryButton(text = "Save and continue", enabled = false) { }
             SmallSecondaryButton(text = "Apply") { }
         }
     }

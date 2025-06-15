@@ -28,7 +28,7 @@ fun LargePrimaryIconWithMessage(
     message: String? = null,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    gradientColor: List<Color> = GlanciColors.primaryGradient,
+    gradientColor: List<Color> = GlanciColors.primaryGlassGradient,
     filledWidth: FilledWidthByScreenType? = FilledWidthByScreenType(compact = .86f)
 ) {
     Column(

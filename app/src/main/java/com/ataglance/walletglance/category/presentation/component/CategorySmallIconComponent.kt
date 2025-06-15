@@ -20,7 +20,10 @@ import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
-fun CategoryIconComponent(category: Category) {
+fun CategoryIconComponent(
+    category: Category,
+    cornerSize: Int = 30
+) {
     Icon(
         painter = painterResource(category.icon.res),
         contentDescription = "category ${category.name} icon",
@@ -29,9 +32,9 @@ fun CategoryIconComponent(category: Category) {
             .shadow(
                 elevation = 8.dp,
                 spotColor = category.getIconSolidColorByTheme(CurrAppTheme),
-                shape = RoundedCornerShape(30)
+                shape = RoundedCornerShape(cornerSize)
             )
-            .clip(RoundedCornerShape(30))
+            .clip(RoundedCornerShape(cornerSize))
             .background(category.getIconSolidColorByTheme(CurrAppTheme))
             .size(28.dp)
             .padding(5.dp)

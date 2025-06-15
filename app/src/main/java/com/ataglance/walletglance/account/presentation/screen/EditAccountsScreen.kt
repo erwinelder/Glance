@@ -35,7 +35,7 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
@@ -107,7 +107,7 @@ fun EditAccountsScreen(
         },
         glassSurfaceFilledWidths = FilledWidthByScreenType(.86f, .86f, .86f),
         smallPrimaryButton = {
-            SmallPrimaryButton(
+            SmallSecondaryButton(
                 text = stringResource(R.string.add_account),
                 iconRes = R.drawable.add_icon
             ) {

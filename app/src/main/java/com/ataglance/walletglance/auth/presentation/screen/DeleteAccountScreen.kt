@@ -108,7 +108,7 @@ fun DeleteAccountScreen(
                 PrimaryButton(
                     text = stringResource(R.string.delete_account),
                     enabled = deletionIsAllowed,
-                    enabledGradient = GlanciColors.errorGradientPair,
+                    gradientColor = GlanciColors.errorGradientPair,
                     onClick = onDeleteAccount
                 )
             }

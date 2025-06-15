@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +23,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
@@ -30,6 +32,7 @@ fun GlassSurface(
     modifier: Modifier = Modifier,
     filledWidths: FilledWidthByScreenType? = FilledWidthByScreenType(),
     cornerSize: Dp = dimensionResource(R.dimen.widget_corner_size),
+    contentPadding: PaddingValues = PaddingValues(),
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
@@ -41,16 +44,29 @@ fun GlassSurface(
             .background(
                 brush = Brush.linearGradient(
                     colors = GlanciColors.glassGradient,
-                    start = Offset(0f, 1400f),
-                    end = Offset(600f, 0f)
+                    start = Offset(1100.0f, 0.0f),
+                    end = Offset(0.0f, 1200.0f)
                 )
             )
+            .innerVolumeShadow(
+                shape = RoundedCornerShape(cornerSize),
+                offset = 2.dp,
+                blur = 2.dp,
+                spread = 1.dp,
+                whiteColor = GlanciColors.glassShadow.first,
+                blackColor = GlanciColors.glassShadow.second
+            )
             .border(
-                width = 2.dp,
-                color = GlanciColors.glassBorder,
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    colors = GlanciColors.glassBorderGradient,
+                    start = Offset(100.0f, 0.0f),
+                    end = Offset(0.0f, 120.0f)
+                ),
                 shape = RoundedCornerShape(cornerSize)
             )
-            .padding(2.dp)
+            .padding(contentPadding)
+            .padding(1.dp)
     ) {
         content()
     }

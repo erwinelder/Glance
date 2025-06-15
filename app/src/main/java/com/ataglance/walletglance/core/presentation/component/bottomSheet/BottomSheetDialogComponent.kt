@@ -15,7 +15,7 @@ fun BottomSheetDialogComponent(
     visible: Boolean,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconGradientColor: List<Color> = GlanciColors.primaryGradient,
+    iconGradientColor: List<Color> = GlanciColors.primaryGlassGradient,
     title: String,
     titleColor: Color = GlanciColors.onSurface,
     message: String,

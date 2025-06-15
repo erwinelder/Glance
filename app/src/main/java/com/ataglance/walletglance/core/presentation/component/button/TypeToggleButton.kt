@@ -38,7 +38,7 @@ fun TypeToggleButton(
             .clip(RoundedCornerShape(50))
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanciColors.primaryGradient.reversed(),
+                    colors = GlanciColors.primaryGlassGradient.reversed(),
                     start = Offset(75f, 210f),
                     end = Offset(95f, -10f)
                 )

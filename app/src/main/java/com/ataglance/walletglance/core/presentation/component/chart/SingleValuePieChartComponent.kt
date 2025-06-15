@@ -59,7 +59,7 @@ private fun Preview() {
             ) {
                 SingleValuePieChartComponent(
                     percentage = 50f * 3.6f,
-                    brush = GlanciColors.primaryGradient,
+                    brush = GlanciColors.primaryGlassGradient,
                     size = 90.dp
                 )
             }

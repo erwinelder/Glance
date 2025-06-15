@@ -31,7 +31,7 @@ fun BarButton(
 ) {
     val containerColorLighter by animateColorAsState(
         targetValue = if (active) {
-            GlanciColors.primaryGradientPair.first
+            GlanciColors.primaryGlassGradientPair.first
         } else {
             GlanciColors.glassButtonGradientPair.first
         },
@@ -40,7 +40,7 @@ fun BarButton(
     )
     val containerColorDarker by animateColorAsState(
         targetValue = if (active) {
-            GlanciColors.primaryGradientPair.second
+            GlanciColors.primaryGlassGradientPair.second
         } else {
             GlanciColors.glassButtonGradientPair.second
         },

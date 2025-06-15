@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,11 +26,13 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
-import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
@@ -43,10 +46,11 @@ fun BudgetWithStatsComponent(
     resourceManager: ResourceManager,
     showDateRangeLabels: Boolean = false
 ) {
-    GlassSurfaceOnGlassSurface(
-        onClick = { onClick(budget) },
-        filledWidth = 1f,
-        paddingValues = PaddingValues(24.dp, 16.dp)
+    GlassSurface(
+        filledWidths = FilledWidthByScreenType(compact = 1f),
+        cornerSize = 26.dp,
+        contentPadding = PaddingValues(23.dp, 15.dp),
+        modifier = Modifier.bounceClickEffect { onClick(budget) }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -56,12 +60,13 @@ fun BudgetWithStatsComponent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 budget.category?.let {
-                    CategoryIconComponent(category = it)
+                    CategoryIconComponent(category = it, cornerSize = 34)
                 }
                 Text(
                     text = budget.name,
                     color = GlanciColors.onSurface,
                     fontSize = 18.sp,
+                    fontWeight = FontWeight.W500,
                     fontFamily = Manrope,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

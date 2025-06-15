@@ -44,17 +44,17 @@ fun SmallPrimaryButtonWithRequestState(
     requestState: RequestState<MessageState>?,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
-    enabledGradient: Pair<Color, Color> = GlanciColors.primaryGradientPair,
+    enabledGradient: Pair<Color, Color> = GlanciColors.primaryGlassGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
     val lighterGradientColor by animateColorAsState(
         targetValue = if (enabled && requestState == null) enabledGradient.first else
-            GlanciColors.disabledGradientPair.first
+            GlanciColors.disabledGlassGradientPair.first
     )
     val darkerGradientColor by animateColorAsState(
         targetValue = if (enabled && requestState == null) enabledGradient.second else
-            GlanciColors.disabledGradientPair.second
+            GlanciColors.disabledGlassGradientPair.second
     )
 
     Button(

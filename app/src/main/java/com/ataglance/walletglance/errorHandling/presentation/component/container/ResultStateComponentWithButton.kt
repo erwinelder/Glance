@@ -16,7 +16,7 @@ fun ResultStateComponentWithButton(
         R.drawable.success_large_icon else R.drawable.error_large_icon
     val iconDescription = if (resultState.isSuccessful) "Success icon" else "Error icon"
     val iconGradient = if (resultState.isSuccessful)
-        GlanciColors.primaryGradient else GlanciColors.errorGradient
+        GlanciColors.primaryGlassGradient else GlanciColors.errorGradient
 
     ResultComponentWithButton(
         iconRes = iconRes,

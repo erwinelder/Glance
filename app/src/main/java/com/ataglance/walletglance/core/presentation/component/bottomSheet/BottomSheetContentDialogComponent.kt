@@ -29,7 +29,7 @@ fun BottomSheetContentDialogComponent(
     message: String?,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconGradientColor: List<Color> = GlanciColors.primaryGradient,
+    iconGradientColor: List<Color> = GlanciColors.primaryGlassGradient,
     bottomBlock: @Composable (() -> Unit)? = null
 ) {
     Column(

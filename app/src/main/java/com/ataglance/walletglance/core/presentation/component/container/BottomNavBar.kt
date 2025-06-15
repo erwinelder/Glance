@@ -167,7 +167,7 @@ private fun BottomBarContainer(
             visible = isBottomBarVisible && !isBottomBarExpanded && isFloatingButtonVisible,
             enter = slideInHorizontally { (it * 1.5).toInt() } + fadeIn(),
             exit = slideOutHorizontally { (it * 1.5).toInt() } + fadeOut(),
-            modifier = Modifier.absoluteOffset(y = (-58).dp - bottomPadding)
+            modifier = Modifier.absoluteOffset(y = (-80).dp)
         ) {
             floatingButton?.let { button ->
                 button()

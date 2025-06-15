@@ -19,7 +19,7 @@ fun ResultScreenContainer(
     title: String,
     @DrawableRes iconRes: Int,
     iconDescription: String,
-    iconBackgroundGradient: List<Color> = GlanciColors.primaryGradient,
+    iconBackgroundGradient: List<Color> = GlanciColors.primaryGlassGradient,
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {

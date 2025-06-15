@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -27,10 +26,8 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.component.AccountsFilterBar
 import com.ataglance.walletglance.categoryCollection.presentation.component.CategoryCollectionPickerContainer
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.component.container.DateFilterBar
-import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 
 @Composable
@@ -95,37 +92,37 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
             onDimBackgroundChange = onDimBackgroundChange
         )
         Spacer(modifier = Modifier)
-        GlassSurface(
+//        GlassSurface( // TODO
+//            modifier = Modifier
+//                .fillMaxHeight()
+//                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)),
+//            filledWidths = FilledWidthByScreenType(compact = 1f)
+//        ) {
+//        }
+        Box(
+            contentAlignment = Alignment.TopCenter,
             modifier = Modifier
-                .fillMaxHeight()
-                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)),
-            filledWidths = FilledWidthByScreenType(compact = 1f)
+                .fillMaxSize()
+                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
         ) {
-            Box(
-                contentAlignment = Alignment.TopCenter,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
+            AnimatedContent(
+                targetState = animatedContentTargetState,
+                label = animatedContentLabel
             ) {
-                AnimatedContent(
-                    targetState = animatedContentTargetState,
-                    label = animatedContentLabel
-                ) {
-                    animatedContent(it)
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                animatedContent(it)
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                AnimatedVisibility(
+                    visible = visibleNoDataMessage,
+                    enter = fadeIn(tween(220, delayMillis = 90)) +
+                            scaleIn(tween(220, delayMillis = 90), .92f),
+                    exit = fadeOut(animationSpec = tween(90)),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    AnimatedVisibility(
-                        visible = visibleNoDataMessage,
-                        enter = fadeIn(tween(220, delayMillis = 90)) +
-                                scaleIn(tween(220, delayMillis = 90), .92f),
-                        exit = fadeOut(animationSpec = tween(90)),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        MessageContainer(message = stringResource(noDataMessageRes))
-                    }
+                    MessageContainer(message = stringResource(noDataMessageRes))
                 }
             }
         }

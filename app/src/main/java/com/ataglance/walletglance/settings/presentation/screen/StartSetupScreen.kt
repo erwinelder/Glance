@@ -98,7 +98,7 @@ private fun StartButton(onClick: () -> Unit = {}) {
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.97f)
     ) {
-        StartButtonShadow(GlanciColors.primaryGradientPair.first)
+        StartButtonShadow(GlanciColors.primaryGlassGradientPair.first)
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
@@ -113,7 +113,7 @@ private fun StartButton(onClick: () -> Unit = {}) {
                 .clip(RoundedCornerShape(30.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = GlanciColors.primaryGradient.reversed(),
+                        colors = GlanciColors.primaryGlassGradient.reversed(),
                         start = Offset(-25f, 101f),
                         end = Offset(124f, 30f)
                     )

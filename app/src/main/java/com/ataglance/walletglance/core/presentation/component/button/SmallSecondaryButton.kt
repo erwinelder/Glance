@@ -1,20 +1,19 @@
 package com.ataglance.walletglance.core.presentation.component.button
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -30,6 +29,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
@@ -38,19 +38,15 @@ fun SmallSecondaryButton(
     text: String,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
-    enabledGradientColor: Pair<Color, Color> = GlanciColors.glassGradientPair,
+    gradientColor: Pair<Color, Color> = GlanciColors.glassGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
-    val borderColor = if (enabled) GlanciColors.primaryGlassBorder else GlanciColors.outline
-    val buttonLighterColor by animateColorAsState(
-        targetValue = enabledGradientColor.second.copy(alpha = .5f)
-    )
-    val buttonDarkerColor by animateColorAsState(
-        targetValue = enabledGradientColor.first.copy(alpha = .5f)
-    )
+    val cornerSize = 20.dp
+    val borderGradient = if (enabled) GlanciColors.primarySemiTransparentGlassBorderGradient else
+        listOf(GlanciColors.outline, GlanciColors.outline)
 
-    OutlinedButton(
+    Button(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
@@ -59,19 +55,36 @@ fun SmallSecondaryButton(
             disabledContainerColor = Color.Transparent,
             disabledContentColor = GlanciColors.outline
         ),
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(width = 1.dp, color = borderColor),
+        shape = RoundedCornerShape(cornerSize),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
         modifier = Modifier
             .bounceClickEffect(.98f, enabled = enabled)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(buttonDarkerColor, buttonLighterColor),
+                    colors = listOf(gradientColor.second, gradientColor.first),
                     start = Offset(75f, 200f),
                     end = Offset(100f, 0f)
                 )
             )
+            .innerVolumeShadow(
+                shape = RoundedCornerShape(cornerSize),
+                offset = 1.dp,
+                blur = 2.dp,
+                spread = 1.dp,
+                whiteColor = GlanciColors.glassShadow.first,
+                blackColor = GlanciColors.glassShadow.second
+            )
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    colors = borderGradient,
+                    start = Offset(18f, 0f),
+                    end = Offset(0f, 100f)
+                ),
+                shape = RoundedCornerShape(cornerSize)
+            )
+            .padding(1.dp)
     ) {
         iconRes?.let {
             Icon(

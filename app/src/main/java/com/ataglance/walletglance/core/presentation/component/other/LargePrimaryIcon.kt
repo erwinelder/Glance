@@ -65,7 +65,7 @@ private fun IconWithBackgroundLightDefaultPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         LargePrimaryIcon(
             iconRes = R.drawable.success_large_icon,
-            gradientColor = GlanciColors.primaryGradient,
+            gradientColor = GlanciColors.primaryGlassGradient,
             iconDescription = ""
         )
     }
@@ -78,7 +78,7 @@ private fun IconWithBackgroundDarkDefaultPreview() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
         LargePrimaryIcon(
             iconRes = R.drawable.success_large_icon,
-            gradientColor = GlanciColors.primaryGradient,
+            gradientColor = GlanciColors.primaryGlassGradient,
             iconDescription = ""
         )
     }

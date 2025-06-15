@@ -13,7 +13,7 @@ fun ResultSuccessScreenContainer(
     title: String,
     @DrawableRes iconRes: Int = R.drawable.success_large_icon,
     iconDescription: String = "Success",
-    iconBackgroundGradient: List<Color> = GlanciColors.primaryGradient,
+    iconBackgroundGradient: List<Color> = GlanciColors.primaryGlassGradient,
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {

@@ -1,17 +1,16 @@
 package com.ataglance.walletglance.core.presentation.component.button
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
@@ -33,24 +33,15 @@ import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 fun SecondaryButton(
     text: String,
     enabled: Boolean = true,
-    enabledGradientColor: Pair<Color, Color> = GlanciColors.glassGradientPair,
+    gradientColor: Pair<Color, Color> = GlanciColors.glassGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
-    val borderColor = if (enabled) GlanciColors.primaryGlassBorder else GlanciColors.outline
-    val buttonLighterColor by animateColorAsState(
-        targetValue = enabledGradientColor.second.copy(alpha = .5f)
-    )
-    val buttonDarkerColor by animateColorAsState(
-        targetValue = enabledGradientColor.first.copy(alpha = .5f)
-    )
-    val modifier = if (WindowTypeIsCompact) {
-        Modifier.fillMaxWidth(.84f)
-    } else {
-        Modifier.width(400.dp)
-    }
+    val cornerSize = 21.dp
+    val borderGradient = if (enabled) GlanciColors.primarySemiTransparentGlassBorderGradient else
+        GlanciColors.disabledSemiTransparentGlassBorderGradient
 
-    OutlinedButton(
+    Button(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
@@ -59,19 +50,39 @@ fun SecondaryButton(
             disabledContainerColor = Color.Transparent,
             disabledContentColor = GlanciColors.outline
         ),
-        shape = RoundedCornerShape(21.dp),
-        border = BorderStroke(width = 1.dp, color = borderColor),
+        shape = RoundedCornerShape(cornerSize),
         contentPadding = PaddingValues(vertical = 14.dp),
-        modifier = modifier
+        modifier = Modifier
+            .run {
+                if (WindowTypeIsCompact) fillMaxWidth(.84f) else width(400.dp)
+            }
             .bounceClickEffect(.98f, enabled = enabled)
-            .clip(RoundedCornerShape(21.dp))
+            .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(buttonDarkerColor, buttonLighterColor),
-                    start = Offset(75f, 200f),
-                    end = Offset(100f, 0f)
+                    colors = listOf(gradientColor.second, gradientColor.first),
+                    start = Offset(75f, 210f),
+                    end = Offset(95f, -10f)
                 )
             )
+            .innerVolumeShadow(
+                shape = RoundedCornerShape(cornerSize),
+                offset = 1.dp,
+                blur = 2.dp,
+                spread = 1.dp,
+                whiteColor = GlanciColors.glassShadow.first,
+                blackColor = GlanciColors.glassShadow.second
+            )
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    colors = borderGradient,
+                    start = Offset(10f, 0f),
+                    end = Offset(0f, 100f)
+                ),
+                shape = RoundedCornerShape(cornerSize)
+            )
+            .padding(1.dp)
     ) {
         Text(
             text = text,

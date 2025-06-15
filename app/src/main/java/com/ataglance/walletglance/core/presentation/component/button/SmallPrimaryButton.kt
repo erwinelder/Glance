@@ -3,8 +3,10 @@ package com.ataglance.walletglance.core.presentation.component.button
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +31,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
@@ -37,15 +40,18 @@ fun SmallPrimaryButton(
     text: String,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
-    enabledGradient: Pair<Color, Color> = GlanciColors.primaryGradientPair,
+    enabledGradient: Pair<Color, Color> = GlanciColors.primaryGlassGradientPair,
     fontSize: TextUnit = 17.sp,
     onClick: () -> Unit
 ) {
+    val cornerSize = 20.dp
     val lighterGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.first else GlanciColors.disabledGradientPair.first
+        targetValue = if (enabled) enabledGradient.first else
+            GlanciColors.disabledGlassGradientPair.first
     )
     val darkerGradientColor by animateColorAsState(
-        targetValue = if (enabled) enabledGradient.second else GlanciColors.disabledGradientPair.second
+        targetValue = if (enabled) enabledGradient.second else
+            GlanciColors.disabledGlassGradientPair.second
     )
 
     Button(
@@ -60,7 +66,7 @@ fun SmallPrimaryButton(
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
         modifier = Modifier
             .bounceClickEffect(.98f, enabled = enabled)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(cornerSize))
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(darkerGradientColor, lighterGradientColor),
@@ -68,6 +74,24 @@ fun SmallPrimaryButton(
                     end = Offset(100f, 0f)
                 )
             )
+            .innerVolumeShadow(
+                shape = RoundedCornerShape(cornerSize),
+                offset = 1.dp,
+                blur = 2.dp,
+                spread = 1.dp,
+                whiteColor = GlanciColors.primaryGlassShadow.first,
+                blackColor = GlanciColors.primaryGlassShadow.second
+            )
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    colors = GlanciColors.primaryGlassBorderGradient,
+                    start = Offset(18f, 0f),
+                    end = Offset(0f, 100f)
+                ),
+                shape = RoundedCornerShape(cornerSize)
+            )
+            .padding(1.dp)
     ) {
         iconRes?.let {
             Icon(

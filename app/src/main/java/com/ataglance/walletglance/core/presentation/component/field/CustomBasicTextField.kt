@@ -103,7 +103,7 @@ fun CustomBasicTextField(
                 fontFamily = Manrope,
                 textAlign = textAlign
             ),
-            cursorBrush = Brush.linearGradient(GlanciColors.primaryGradient),
+            cursorBrush = Brush.linearGradient(GlanciColors.primaryGlassGradient),
             modifier = textFieldModifier
         ) {
             TextFieldDefaults.DecorationBox(

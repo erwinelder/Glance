@@ -8,11 +8,11 @@ import androidx.compose.ui.unit.dp
 
 fun Modifier.innerVolumeShadow(
     shape: Shape,
-    offset: Dp = 1.dp,
-    blur: Dp = 4.dp,
-    spread: Dp = 0.dp,
-    whiteColor: Color = Color.White.copy(.3f),
-    blackColor: Color = Color.Black.copy(.25f),
+    offset: Dp = 2.dp,
+    blur: Dp = 2.dp,
+    spread: Dp = 1.dp,
+    whiteColor: Color = Color.White.copy(.55f),
+    blackColor: Color = Color.Black.copy(.2f)
 ) = innerShadow(
     shape = shape,
     color = whiteColor,

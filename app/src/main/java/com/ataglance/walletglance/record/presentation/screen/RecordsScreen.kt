@@ -202,10 +202,7 @@ fun RecordsScreen(
 
 
 
-@Preview(
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun RecordsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,

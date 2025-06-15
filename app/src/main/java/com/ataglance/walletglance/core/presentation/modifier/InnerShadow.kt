@@ -53,4 +53,5 @@ fun Modifier.innerShadow(
         canvas.drawOutline(shadowOutline, paint)
         canvas.restore()
     }
+
 }
