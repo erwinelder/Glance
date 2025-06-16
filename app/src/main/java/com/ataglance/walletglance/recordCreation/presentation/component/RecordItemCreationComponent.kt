@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,9 +25,10 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.component.CategoryField
 import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
@@ -46,15 +46,17 @@ fun LazyItemScope.RecordItemCreationComponent(
     onDeleteItem: (Int) -> Unit,
     onCollapsedChange: (Boolean) -> Unit
 ) {
-    GlassSurfaceOnGlassSurface(
-        modifier = Modifier.animateItem(),
-        paddingValues = PaddingValues(0.dp),
-        clickEnabled = recordDraftItem.collapsed,
-        onClick = { onCollapsedChange(false) }
+    GlassSurface(
+        filledWidths = null,
+        cornerSize = 30.dp,
+        modifier = Modifier
+            .animateItem()
+            .bounceClickEffect(.98f, enabled = recordDraftItem.collapsed) {
+                onCollapsedChange(false)
+            }
     ) {
         AnimatedContent(
-            targetState = recordDraftItem.collapsed,
-            label = "record unit block"
+            targetState = recordDraftItem.collapsed
         ) { targetCollapsed ->
             if (targetCollapsed) {
                 RecordItemCreationComponentCollapsed(
@@ -143,8 +145,7 @@ private fun RecordItemCreationComponentCollapsed(
         Spacer(modifier = Modifier.height(4.dp))
 
         AnimatedContent(
-            targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory(),
-            label = "record draft item category"
+            targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory()
         ) { targetCategory ->
             RecordCategory(
                 category = targetCategory,
@@ -185,7 +186,7 @@ private fun RecordItemCreationComponentExpanded(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(horizontal = 24.dp, vertical = 22.dp)
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         FieldWithLabel(labelText = stringResource(R.string.amount)) {
             TextFieldComponent(
@@ -201,8 +202,7 @@ private fun RecordItemCreationComponentExpanded(
 
         FieldWithLabel(labelText = stringResource(R.string.category)) {
             AnimatedContent(
-                targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory(),
-                label = "category field at the make record screen"
+                targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory()
             ) { targetCategory ->
                 CategoryField(
                     category = targetCategory,

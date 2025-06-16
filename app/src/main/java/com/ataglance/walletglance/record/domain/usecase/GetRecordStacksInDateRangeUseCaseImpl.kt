@@ -17,7 +17,7 @@ class GetRecordStacksInDateRangeUseCaseImpl(
 
     override fun getFlow(range: LongDateRange): Flow<List<RecordStack>> = combine(
         recordRepository.getRecordsInDateRangeFlow(range = range),
-        getAccountsUseCase.getAllFlow(),
+        getAccountsUseCase.getAllAsFlow(),
         getCategoriesUseCase.getGroupedFlow()
     ) { records, accounts, categories ->
         records.toRecordStacks(accounts = accounts, groupedCategoriesByType = categories)

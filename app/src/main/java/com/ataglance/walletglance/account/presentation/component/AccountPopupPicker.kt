@@ -87,8 +87,7 @@ private fun PickerButton(
     onExpandedChange: (Boolean) -> Unit
 ) {
     AnimatedContent(
-        targetState = selectedAccount,
-        label = "selected account"
+        targetState = selectedAccount
     ) { account ->
         SmallAccountComponent(
             account = account,

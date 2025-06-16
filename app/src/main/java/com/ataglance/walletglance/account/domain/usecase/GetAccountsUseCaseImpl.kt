@@ -11,7 +11,7 @@ class GetAccountsUseCaseImpl(
     private val accountRepository: AccountRepository
 ) : GetAccountsUseCase {
 
-    override fun getAllFlow(): Flow<List<Account>> {
+    override fun getAllAsFlow(): Flow<List<Account>> {
         return accountRepository.getAllAccountsFlow().map { it.map(AccountEntity::toDomainModel) }
     }
 

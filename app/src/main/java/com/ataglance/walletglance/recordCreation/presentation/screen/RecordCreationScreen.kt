@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -19,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,25 +31,20 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.component.AccountPopupPicker
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.AddNewItemButton
-import com.ataglance.walletglance.core.presentation.component.field.DateField
-import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationTopBar
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordItemCreationComponent
@@ -66,8 +61,6 @@ fun RecordCreationScreenWrapper(
     screenPadding: PaddingValues,
     backStack: NavBackStackEntry,
     navController: NavHostController,
-    navViewModel: NavigationViewModel,
-    appUiState: AppUiState,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val recordNum = backStack.toRoute<MainScreens.RecordCreation>().recordNum
@@ -79,6 +72,7 @@ fun RecordCreationScreenWrapper(
     val recordDraftGeneral by viewModel.recordDraftGeneral.collectAsStateWithLifecycle()
     val recordDraftItems by viewModel.recordDraftItems.collectAsStateWithLifecycle()
     val savingIsAllowed by viewModel.savingIsAllowed.collectAsStateWithLifecycle()
+    val accounts by viewModel.accounts.collectAsStateWithLifecycle()
     val groupedCategories by viewModel.groupedCategoriesByType.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
 
@@ -87,17 +81,14 @@ fun RecordCreationScreenWrapper(
         recordDraftGeneral = recordDraftGeneral,
         recordDraftItems = recordDraftItems,
         savingIsAllowed = savingIsAllowed,
-        accountList = appUiState.accountsAndActiveOne.accounts,
+        accounts = accounts,
         groupedCategoriesByType = groupedCategories,
+
         onSelectCategoryType = viewModel::selectCategoryType,
-        onNavigateToTransferCreationScreen = {
-            navViewModel.navigateToScreen(
-                navController = navController, screen = MainScreens.TransferCreation()
-            )
-        },
         onIncludeInBudgetsChange = viewModel::changeIncludeInBudgets,
         onSelectDate = viewModel::selectDate,
         onSelectTime = viewModel::selectTime,
+
         onToggleAccounts = viewModel::toggleSelectedAccount,
         onSelectAccount = viewModel::selectAccount,
         onDimBackgroundChange = onDimBackgroundChange,
@@ -109,6 +100,7 @@ fun RecordCreationScreenWrapper(
         onDeleteItem = viewModel::deleteDraftItem,
         onCollapsedChange = viewModel::changeCollapsed,
         onAddDraftItemButton = viewModel::addNewDraftItem,
+
         onSaveButton = {
             coroutineScope.launch {
                 viewModel.saveRecord()
@@ -136,11 +128,10 @@ fun RecordCreationScreen(
     recordDraftGeneral: RecordDraftGeneral,
     recordDraftItems: List<RecordDraftItem>,
     savingIsAllowed: Boolean,
-    accountList: List<Account>,
+    accounts: List<Account>,
     groupedCategoriesByType: GroupedCategoriesByType,
 
     onSelectCategoryType: (CategoryType) -> Unit,
-    onNavigateToTransferCreationScreen: () -> Unit,
     onIncludeInBudgetsChange: (Boolean) -> Unit,
     onSelectDate: (Long) -> Unit,
     onSelectTime: (Int, Int) -> Unit,
@@ -171,30 +162,37 @@ fun RecordCreationScreen(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceScreenContainer(
-            topPadding = screenPadding.calculateTopPadding(),
-            bottomPadding = screenPadding.calculateBottomPadding(),
-            topBar = {
-                RecordCreationTopBar(
-                    showCategoryTypeButton = recordDraftGeneral.isNew,
-                    currentCategoryType = recordDraftGeneral.type,
-                    onSelectCategoryType = onSelectCategoryType,
-                    showTransferButton = recordDraftGeneral.isNew && accountList.size > 1,
-                    onNavigateToTransferCreationScreen = onNavigateToTransferCreationScreen,
-                    preferences = recordDraftGeneral.preferences,
-                    onIncludeInBudgetsChange = onIncludeInBudgetsChange
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = 16.dp + screenPadding.calculateTopPadding(),
+                    bottom = 24.dp + screenPadding.calculateBottomPadding()
                 )
-            },
-            glassSurfaceContent = {
-                GlassSurfaceContent(
-                    recordDraftGeneral = recordDraftGeneral,
-                    recordDraftItems = recordDraftItems,
-                    accountList = accountList,
-                    onDateFieldClick = {
-                        showDatePicker = true
-                    },
+        ) {
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                RecordCreationTopBar(
+                    draftGeneral = recordDraftGeneral,
+                    accounts = accounts,
+                    onSelectCategoryType = onSelectCategoryType,
+                    onIncludeInBudgetsChange = onIncludeInBudgetsChange,
+                    onDateFieldClick = { showDatePicker = true },
                     onToggleAccounts = onToggleAccounts,
                     onSelectAccount = onSelectAccount,
+                    onDimBackgroundChange = onDimBackgroundChange,
+                )
+                RecordCreationScreenContent(
+                    recordDraftItems = recordDraftItems,
+                    selectedAccount = recordDraftGeneral.account,
                     onAmountChange = onAmountChange,
                     onCategoryFieldClick = { index ->
                         selectedItemIndex = index
@@ -202,25 +200,22 @@ fun RecordCreationScreen(
                     },
                     onNoteChange = onNoteChange,
                     onQuantityChange = onQuantityChange,
-                    onDimBackgroundChange = onDimBackgroundChange,
                     onSwapItems = onSwapItems,
                     onDeleteItem = onDeleteItem,
                     onCollapsedChange = onCollapsedChange,
                     onAddDraftItemButton = onAddDraftItemButton
                 )
-            },
-            glassSurfaceFilledWidths = FilledWidthByScreenType(compact = .96f),
-            primaryBottomButton = {
-                RecordCreationBottomButtonsBlock(
-                    showOnlySaveButton = recordDraftGeneral.isNew,
-                    singlePrimaryButtonStringRes = R.string.save_record,
-                    onSaveButton = onSaveButton,
-                    onRepeatButton = onRepeatButton,
-                    onDeleteButton = onDeleteButton,
-                    savingAndRepeatingAreAllowed = savingIsAllowed
-                )
             }
-        )
+
+            RecordCreationBottomButtonsBlock(
+                showOnlySaveButton = recordDraftGeneral.isNew,
+                singlePrimaryButtonStringRes = R.string.save_record,
+                onSaveButton = onSaveButton,
+                onRepeatButton = onRepeatButton,
+                onDeleteButton = onDeleteButton,
+                savingAndRepeatingAreAllowed = savingIsAllowed
+            )
+        }
         CustomDatePicker(
             openDialog = showDatePicker,
             initialTimeInMillis = recordDraftGeneral.dateTimeState.getTimeInMillis(),
@@ -255,18 +250,13 @@ fun RecordCreationScreen(
 }
 
 @Composable
-private fun GlassSurfaceContent(
-    recordDraftGeneral: RecordDraftGeneral,
+private fun RecordCreationScreenContent(
     recordDraftItems: List<RecordDraftItem>,
-    accountList: List<Account>,
-    onDateFieldClick: () -> Unit,
-    onToggleAccounts: (List<Account>) -> Unit,
-    onSelectAccount: (Account) -> Unit,
+    selectedAccount: Account?,
     onAmountChange: (Int, String) -> Unit,
     onCategoryFieldClick: (Int) -> Unit,
     onNoteChange: (Int, String) -> Unit,
     onQuantityChange: (Int, String) -> Unit,
-    onDimBackgroundChange: (Boolean) -> Unit,
     onSwapItems: (Int, Int) -> Unit,
     onDeleteItem: (Int) -> Unit,
     onCollapsedChange: (Int, Boolean) -> Unit,
@@ -279,9 +269,10 @@ private fun GlassSurfaceContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 18.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth(FilledWidthByScreenType(.94f).getByType(CurrWindowType))
     ) {
-        item {
+        /*item {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -300,11 +291,11 @@ private fun GlassSurfaceContent(
                     )
                 }
             }
-        }
+        }*/
         items(items = recordDraftItems, key = { it.lazyListKey }) { item ->
             RecordItemCreationComponent(
                 recordDraftItem = item,
-                accountCurrency = recordDraftGeneral.account?.currency,
+                accountCurrency = selectedAccount?.currency,
                 onAmountChange = {
                     onAmountChange(item.index, it)
                 },
@@ -387,16 +378,22 @@ fun RecordCreationScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RecordCreationScreen(
-            recordDraftGeneral = recordDraft.general,
+            recordDraftGeneral = RecordDraftGeneral(
+                isNew = true,
+                type = recordDraft.general.type,
+                dateTimeState = recordDraft.general.dateTimeState,
+                account = recordDraft.general.account
+            ),
             recordDraftItems = recordDraft.items,
             savingIsAllowed = true,
-            accountList = accountsAndActiveOne.accounts,
+            accounts = accountsAndActiveOne.accounts,
             groupedCategoriesByType = groupedCategoriesByType,
+
             onSelectCategoryType = {},
-            onNavigateToTransferCreationScreen = {},
             onIncludeInBudgetsChange = {},
             onSelectDate = {},
             onSelectTime = { _, _ -> },
+
             onToggleAccounts = {},
             onSelectAccount = {},
             onDimBackgroundChange = {},
@@ -408,6 +405,7 @@ fun RecordCreationScreenPreview(
             onDeleteItem = {},
             onCollapsedChange = { _, _ -> },
             onAddDraftItemButton = {},
+
             onSaveButton = {},
             onRepeatButton = {},
             onDeleteButton = {}

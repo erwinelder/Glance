@@ -20,8 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun RecordItemCreationControlPanel(
@@ -90,7 +90,7 @@ private fun SubrecordControlPanelButton(
             painter = painterResource(iconRes),
             contentDescription = iconContentDescription,
             tint = color,
-            modifier = Modifier.size(28.dp)
+            modifier = Modifier.size(24.dp)
         )
     }
 }

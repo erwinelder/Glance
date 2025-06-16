@@ -3,6 +3,7 @@ package com.ataglance.walletglance.recordCreation.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
+import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.CategoryWithSubByType
@@ -35,15 +36,22 @@ class RecordCreationViewModel(
     private val deleteRecordUseCase: DeleteRecordUseCase,
     private val getLastUsedRecordCategoryUseCase: GetLastUsedRecordCategoryUseCase,
     private val getLastRecordNumUseCase: GetLastRecordNumUseCase,
+    private val getAccountsUseCase: GetAccountsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
+            getAccountsUseCase.getAllAsFlow().collect { accounts ->
+                _accounts.update { accounts }
+            }
+        }
+        viewModelScope.launch {
             val categories = getCategoriesUseCase.getGrouped()
             _groupedCategoriesByType.update { categories }
-
-            val category = getLastUsedRecordCategoryUseCase.get(CategoryType.Expense)
+        }
+        viewModelScope.launch {
+            val category = getLastUsedRecordCategoryUseCase.get(type = CategoryType.Expense)
 
             defaultCategoryByType = defaultCategoryByType.putByType(
                 type = CategoryType.Expense,
@@ -57,6 +65,10 @@ class RecordCreationViewModel(
             _recordDraftItems.update { recordDraft.items }
         }
     }
+
+
+    private val _accounts = MutableStateFlow<List<Account>>(emptyList())
+    val accounts = _accounts.asStateFlow()
 
 
     private val _groupedCategoriesByType = MutableStateFlow(GroupedCategoriesByType())
@@ -90,14 +102,6 @@ class RecordCreationViewModel(
         }
     }
 
-    fun changeIncludeInBudgets(value: Boolean) {
-        _recordDraftGeneral.update {
-            it.copy(
-                preferences = it.preferences.copy(includeInBudgets = value)
-            )
-        }
-    }
-
     fun selectDate(selectedDateMillis: Long) {
         _recordDraftGeneral.update {
             it.copy(dateTimeState = it.dateTimeState.applyNewDate(selectedDateMillis))
@@ -106,12 +110,12 @@ class RecordCreationViewModel(
 
     fun selectTime(hour: Int, minute: Int) {
         _recordDraftGeneral.update {
-            it.copy(dateTimeState = it.dateTimeState.applyNewTime(hour, minute))
+            it.copy(dateTimeState = it.dateTimeState.applyNewTime(hour = hour, minute = minute))
         }
     }
 
     fun toggleSelectedAccount(accountList: List<Account>) {
-        val currentAccount = recordDraftGeneral.value.account ?: return
+        val currentAccount = _recordDraftGeneral.value.account ?: return
 
         val index = accountList.indexOfFirst { it.id == currentAccount.id }
         if (index == -1) return
@@ -124,6 +128,14 @@ class RecordCreationViewModel(
     fun selectAccount(account: Account) {
         _recordDraftGeneral.update {
             it.copy(account = account)
+        }
+    }
+
+    fun changeIncludeInBudgets(value: Boolean) {
+        _recordDraftGeneral.update {
+            it.copy(
+                preferences = it.preferences.copy(includeInBudgets = value)
+            )
         }
     }
 
@@ -235,7 +247,7 @@ class RecordCreationViewModel(
 
 
     val savingIsAllowed = combine(
-        recordDraftGeneral, recordDraftItems
+        _recordDraftGeneral, _recordDraftItems
     ) { general, items ->
         general.savingIsAllowed() && items.all { it.savingIsAllowed() }
     }.stateIn(
@@ -247,8 +259,8 @@ class RecordCreationViewModel(
 
     private fun getRecordDraft(): RecordDraft {
         return RecordDraft(
-            general = recordDraftGeneral.value,
-            items = recordDraftItems.value
+            general = _recordDraftGeneral.value,
+            items = _recordDraftItems.value
         )
     }
 

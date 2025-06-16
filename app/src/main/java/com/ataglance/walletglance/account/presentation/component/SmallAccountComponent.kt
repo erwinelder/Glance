@@ -40,7 +40,7 @@ fun SmallAccountComponent(
     account: Account?,
     fontSize: TextUnit = 21.sp,
     roundedCornerSize: Dp = 14.dp,
-    horizontalPadding: Dp = 9.dp,
+    horizontalPadding: Dp = 10.dp,
     verticalPadding: Dp = 4.dp,
     outerPadding: PaddingValues = PaddingValues(0.dp),
     adjustStyleByActiveStatus: Boolean = false,
@@ -50,10 +50,9 @@ fun SmallAccountComponent(
     val accountAndOnAccountColor = account?.let {
         account.color.getColorAndColorOnByTheme(CurrAppTheme)
     } ?: Pair(LighterDarkerColors(), Color.White)
-    val transparency by animateFloatAsState(
+    val alpha by animateFloatAsState(
         targetValue =
-            if (adjustStyleByActiveStatus && account != null && !account.isActive) 0.6f else 1f,
-        label = "account transparency"
+            if (adjustStyleByActiveStatus && account != null && !account.isActive) 0.6f else 1f
     )
     val accountGradientColor = accountAndOnAccountColor.first
     val onAccountColor = accountAndOnAccountColor.second
@@ -62,14 +61,14 @@ fun SmallAccountComponent(
     Box(
         modifier = Modifier
             .padding(outerPadding)
-            .alpha(transparency)
+            .alpha(alpha)
     ) {
         Box(
             modifier = Modifier
                 .bounceClickEffect(
-                    .97f,
-                    onClick = { onClick?.let { it() } },
-                    enabled = onClick != null
+                    shrinkScale = .97f,
+                    enabled = onClick != null,
+                    onClick = { onClick?.let { it() } }
                 )
                 .clip(RoundedCornerShape(roundedCornerSize + 1.dp))
                 .background(GlanciColors.accountSemiTransparentBackground)

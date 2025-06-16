@@ -106,7 +106,7 @@ class AppViewModel(
 
     private fun fetchAccounts() {
         viewModelScope.launch {
-            getAccountsUseCase.getAllFlow().collect { accounts ->
+            getAccountsUseCase.getAllAsFlow().collect { accounts ->
                 _accountsAndActiveOne.update {
                     AccountsAndActiveOne.fromAccounts(accounts = accounts)
                 }

@@ -83,6 +83,7 @@ val recordCreationModule = module {
             deleteRecordUseCase = get(),
             getLastUsedRecordCategoryUseCase = get(),
             getLastRecordNumUseCase = get(),
+            getAccountsUseCase = get(),
             getCategoriesUseCase = get()
         )
     }

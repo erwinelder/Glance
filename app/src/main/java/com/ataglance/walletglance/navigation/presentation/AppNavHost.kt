@@ -129,8 +129,6 @@ fun AppNavHost(
                 screenPadding = screenPadding,
                 backStack = backStack,
                 navController = navController,
-                navViewModel = navViewModel,
-                appUiState = appUiState,
                 onDimBackgroundChange = onDimBackgroundChange
             )
         }
