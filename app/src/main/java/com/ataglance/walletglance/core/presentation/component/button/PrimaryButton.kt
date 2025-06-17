@@ -64,7 +64,7 @@ fun PrimaryButton(
                 disabledContainerColor = Color.Transparent,
                 disabledContentColor = GlanciColors.onPrimary,
             ),
-            contentPadding = PaddingValues(vertical = 14.dp),
+            contentPadding = PaddingValues(vertical = 13.dp),
             modifier = Modifier
                 .run {
                     if (WindowTypeIsCompact) fillMaxWidth(.84f) else width(400.dp)

@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceNavigationButton
+import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilityContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
@@ -61,10 +61,9 @@ fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
                 .weight(1f, fill = fillGlassSurface)
         ) {
             KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
-                GlassSurfaceNavigationButton(
+                GlassSurfaceTopNavButton(
                     text = backButtonText,
                     imageRes = backButtonImageRes,
-                    showRightIconInsteadOfLeft = false,
                     filledWidths = FilledWidthByScreenType(.96f, .75f, .54f),
                     onClick = onNavigateBack
                 )

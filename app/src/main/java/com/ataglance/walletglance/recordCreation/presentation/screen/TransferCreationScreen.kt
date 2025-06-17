@@ -37,16 +37,19 @@ import com.ataglance.walletglance.account.presentation.component.AccountPicker
 import com.ataglance.walletglance.account.presentation.component.SmallAccountComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.AppUiState
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.component.button.BackButton
+import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
@@ -75,9 +78,9 @@ fun TransferCreationScreenWrapper(
 
     TransferCreationScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         transferDraft = transferDraft,
         accountList = appUiState.accountsAndActiveOne.accounts,
-        onNavigateBack = navController::popBackStack,
         onSelectNewDate = viewModel::selectNewDate,
         onSelectNewTime = viewModel::selectNewTime,
         onSelectAnotherAccount = viewModel::selectAnotherAccount,
@@ -108,9 +111,9 @@ fun TransferCreationScreenWrapper(
 @Composable
 fun TransferCreationScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
+    onNavigateBack: () -> Unit,
     transferDraft: TransferDraft,
     accountList: List<Account>,
-    onNavigateBack: () -> Unit,
     onSelectNewDate: (Long) -> Unit,
     onSelectNewTime: (Int, Int) -> Unit,
     onSelectAnotherAccount: (Boolean) -> Unit,
@@ -126,18 +129,35 @@ fun TransferCreationScreen(
     var showSenderAccountPicker by remember { mutableStateOf(false) }
     var showReceiverAccountPicker by remember { mutableStateOf(false) }
 
+    val screenIcon = DrawableResByTheme(
+        lightDefault = R.drawable.make_transfer_light_default,
+        darkDefault = R.drawable.make_transfer_dark_default
+    )
+
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceScreenContainer(
-            topPadding = screenPadding.calculateTopPadding(),
-            bottomPadding = screenPadding.calculateBottomPadding(),
-            fillGlassSurface = false,
-            topButton = {
-                BackButton(onNavigateBack)
-            },
-            glassSurfaceContent = {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = 8.dp + screenPadding.calculateTopPadding(),
+                    bottom = 16.dp + screenPadding.calculateBottomPadding()
+                )
+        ) {
+            GlassSurfaceTopNavButton(
+                text = stringResource(R.string.make_transfer),
+                imageRes = screenIcon.getByTheme(CurrAppTheme),
+                filledWidths = FilledWidthByScreenType(.96f),
+                onClick = onNavigateBack
+            )
+            GlassSurface(
+                modifier = Modifier.weight(1f, fill = false),
+                filledWidths = FilledWidthByScreenType(compact = .86f)
+            ) {
                 GlassSurfaceContent(
                     transferDraft = transferDraft,
                     onDateFieldClick = { showDatePicker = true },
@@ -152,18 +172,16 @@ fun TransferCreationScreen(
                     onChangeRate = onRateChange,
                     onChangeAmount = onAmountChange
                 )
-            },
-            primaryBottomButton = {
-                RecordCreationBottomButtonsBlock(
-                    showOnlySaveButton = transferDraft.isNew,
-                    singlePrimaryButtonStringRes = R.string.make_transfer,
-                    onSaveButton = onSaveButton,
-                    onRepeatButton = onRepeatButton,
-                    onDeleteButton = onDeleteButton,
-                    savingAndRepeatingAreAllowed = transferDraft.savingIsAllowed
-                )
             }
-        )
+            RecordCreationBottomButtonsBlock(
+                showOnlySaveButton = transferDraft.isNew,
+                singlePrimaryButtonStringRes = R.string.make_transfer,
+                onSaveButton = onSaveButton,
+                onRepeatButton = onRepeatButton,
+                onDeleteButton = onDeleteButton,
+                savingAndRepeatingAreAllowed = transferDraft.savingIsAllowed
+            )
+        }
         CustomDatePicker(
             openDialog = showDatePicker,
             initialTimeInMillis = transferDraft.dateTimeState.getTimeInMillis(),
@@ -223,15 +241,14 @@ private fun GlassSurfaceContent(
             .padding(horizontal = 16.dp)
             .verticalScroll(scrollState)
     ) {
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         DateField(
             formattedDate = transferDraft.dateTimeState.dateFormatted,
             onClick = onDateFieldClick
         )
         FieldWithLabel(labelText = stringResource(R.string.from_account)) {
             AnimatedContent(
-                targetState = transferDraft.sender.account,
-                label = "sender account field at the transfer creation screen"
+                targetState = transferDraft.sender.account
             ) { targetAccount ->
                 SmallAccountComponent(account = targetAccount) {
                     onAccountFieldClick(true)
@@ -240,8 +257,7 @@ private fun GlassSurfaceContent(
         }
         FieldWithLabel(labelText = stringResource(R.string.to_account)) {
             AnimatedContent(
-                targetState = transferDraft.receiver.account,
-                label = "receiver account field at the transfer creation screen"
+                targetState = transferDraft.receiver.account
             ) { targetAccount ->
                 SmallAccountComponent(account = targetAccount) {
                     onAccountFieldClick(false)
@@ -285,7 +301,7 @@ private fun GlassSurfaceContent(
                 keyboardType = KeyboardType.Number
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(6.dp))
     }
 }
 
@@ -322,9 +338,9 @@ fun TransferCreationScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         TransferCreationScreen(
+            onNavigateBack = {},
             transferDraft = transferDraft,
             accountList = accountList,
-            onNavigateBack = {},
             onSelectNewDate = {},
             onSelectNewTime = { _, _ -> },
             onSelectAnotherAccount = {},

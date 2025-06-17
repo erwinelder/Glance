@@ -35,7 +35,7 @@ fun GlassSurfaceNavigationButton(
 ) {
     GlassSurface(
         filledWidths = filledWidths,
-        cornerSize = 26.dp,
+        cornerSize = 24.dp,
         modifier = Modifier.bounceClickEffect(.98f, onClick = onClick)
     ) {
         Row(
@@ -57,7 +57,7 @@ fun GlassSurfaceNavigationButton(
                 Image(
                     painter = painterResource(imageRes),
                     contentDescription = "$text icon",
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(32.dp)
                 )
             }
             Text(

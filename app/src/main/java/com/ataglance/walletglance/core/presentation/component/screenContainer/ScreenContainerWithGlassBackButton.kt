@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceNavigationButton
+import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButton
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.utils.plus
 
@@ -38,10 +38,9 @@ fun ScreenContainerWithGlassBackButton(
             .padding(padding + screenPadding)
             .fillMaxSize()
     ) {
-        GlassSurfaceNavigationButton(
+        GlassSurfaceTopNavButton(
             text = backButtonText,
             imageRes = backButtonImageRes,
-            showRightIconInsteadOfLeft = false,
             filledWidths = FilledWidthByScreenType(.96f, .75f, .54f),
             onClick = onNavigateBack
         )

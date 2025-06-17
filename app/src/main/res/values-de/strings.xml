@@ -37,6 +37,7 @@
     <string name="add_subcategory">Unterkategorie hinzufügen</string>
     <string name="add_collection">Sammlung hinzufügen</string>
     <string name="add_budget">Budget hinzufügen</string>
+    <string name="make_record">Eintrag erstellen</string>
     <string name="save_record">Eintrag speichern</string>
     <string name="make_transfer">Überweisen</string>
     <string name="repeat">Wiederholen</string>

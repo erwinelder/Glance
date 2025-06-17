@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,13 +38,16 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.AddNewItemButton
+import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButton
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationTopBar
@@ -78,6 +82,7 @@ fun RecordCreationScreenWrapper(
 
     RecordCreationScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         recordDraftGeneral = recordDraftGeneral,
         recordDraftItems = recordDraftItems,
         savingIsAllowed = savingIsAllowed,
@@ -125,6 +130,7 @@ fun RecordCreationScreenWrapper(
 @Composable
 fun RecordCreationScreen(
     screenPadding: PaddingValues = PaddingValues(0.dp),
+    onNavigateBack: () -> Unit,
     recordDraftGeneral: RecordDraftGeneral,
     recordDraftItems: List<RecordDraftItem>,
     savingIsAllowed: Boolean,
@@ -158,20 +164,31 @@ fun RecordCreationScreen(
 
     var selectedItemIndex by remember { mutableStateOf<Int?>(null) }
 
+    val screenIcon = DrawableResByTheme(
+        lightDefault = R.drawable.make_record_light_default,
+        darkDefault = R.drawable.make_record_dark_default
+    )
+
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = 16.dp + screenPadding.calculateTopPadding(),
-                    bottom = 24.dp + screenPadding.calculateBottomPadding()
+                    top = 8.dp + screenPadding.calculateTopPadding(),
+                    bottom = 16.dp + screenPadding.calculateBottomPadding()
                 )
         ) {
+            GlassSurfaceTopNavButton(
+                text = stringResource(R.string.make_record),
+                imageRes = screenIcon.getByTheme(CurrAppTheme),
+                filledWidths = FilledWidthByScreenType(.96f),
+                onClick = onNavigateBack
+            )
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -267,31 +284,11 @@ private fun RecordCreationScreenContent(
     LazyColumn(
         state = lazyListState,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 18.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         modifier = Modifier
-            .fillMaxWidth(FilledWidthByScreenType(.94f).getByType(CurrWindowType))
+            .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
     ) {
-        /*item {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                DateField(
-                    formattedDate = recordDraftGeneral.dateTimeState.dateFormatted,
-                    onClick = onDateFieldClick
-                )
-                FieldWithLabel(labelText = stringResource(R.string.account)) {
-                    AccountPopupPicker(
-                        accountList = accountList,
-                        selectedAccount = recordDraftGeneral.account,
-                        onToggleAccounts = onToggleAccounts,
-                        onSelectAccount = onSelectAccount,
-                        onDimBackgroundChange = onDimBackgroundChange
-                    )
-                }
-            }
-        }*/
         items(items = recordDraftItems, key = { it.lazyListKey }) { item ->
             RecordItemCreationComponent(
                 recordDraftItem = item,
@@ -375,7 +372,6 @@ fun RecordCreationScreenPreview(
         )
     )
 ) {
-
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         RecordCreationScreen(
             recordDraftGeneral = RecordDraftGeneral(
@@ -384,6 +380,7 @@ fun RecordCreationScreenPreview(
                 dateTimeState = recordDraft.general.dateTimeState,
                 account = recordDraft.general.account
             ),
+            onNavigateBack = {},
             recordDraftItems = recordDraft.items,
             savingIsAllowed = true,
             accounts = accountsAndActiveOne.accounts,
