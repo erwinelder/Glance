@@ -19,7 +19,7 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ChosenBudgetsWidget(
+fun ChosenBudgetsWidgetWrapper(
     onSettingsButtonClick: () -> Unit,
     onNavigateToBudgetsScreen: () -> Unit,
     onNavigateToBudgetStatisticsScreen: (Int) -> Unit
@@ -29,7 +29,7 @@ fun ChosenBudgetsWidget(
 
     val budgets by viewModel.budgets.collectAsStateWithLifecycle()
 
-    ChosenBudgetsWidgetContent(
+    ChosenBudgetsWidget(
         budgets = budgets,
         resourceManager = resourceManager,
         onSettingsButtonClick = onSettingsButtonClick,
@@ -39,7 +39,7 @@ fun ChosenBudgetsWidget(
 }
 
 @Composable
-private fun ChosenBudgetsWidgetContent(
+fun ChosenBudgetsWidget(
     budgets: List<Budget>,
     resourceManager: ResourceManager,
     onSettingsButtonClick: () -> Unit,

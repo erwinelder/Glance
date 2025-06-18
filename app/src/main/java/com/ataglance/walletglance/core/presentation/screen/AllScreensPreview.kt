@@ -354,7 +354,7 @@ private fun HomeScreenPreview_() {
             associations = budgetAccountAssociationList,
             accounts = accountsAndActiveOne.accounts
         ).fillUsedAmountsByRecords(recordEntityList.toDomainModels()).take(1),
-        widgetNamesList = listOf(
+        widgetNames = listOf(
             WidgetName.TotalForPeriod,
             WidgetName.ChosenBudgets,
         )

@@ -7,17 +7,15 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ataglance.walletglance.budget.presentation.container.BudgetsOnWidgetSettingsBottomSheet
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenWrapper
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenWrapper
-import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenWrapper
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.screenEnterTransition
 import com.ataglance.walletglance.core.presentation.animation.screenExitTransition
-import com.ataglance.walletglance.core.presentation.screen.HomeScreen
+import com.ataglance.walletglance.core.presentation.screen.HomeScreenWrapper
 import com.ataglance.walletglance.core.presentation.screen.SetupFinishScreen
 import com.ataglance.walletglance.core.presentation.screen.UpdateRequestScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -28,7 +26,6 @@ import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreat
 import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenWrapper
 import com.ataglance.walletglance.settings.presentation.navigation.settingsGraph
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppNavHost(
@@ -56,10 +53,7 @@ fun AppNavHost(
         composable<MainScreens.Home>(
             popEnterTransition = { screenEnterTransition(false) }
         ) {
-            val budgetsOnWidgetSettingsViewModel = koinViewModel<BudgetsOnWidgetSettingsViewModel>()
-            // TODO: fix bug with displaying the bottom sheet
-
-            HomeScreen(
+            HomeScreenWrapper(
                 screenPadding = screenPadding,
                 isAppThemeSetUp = appConfiguration.appTheme != null,
                 accountsAndActiveOne = appUiState.accountsAndActiveOne,
@@ -70,12 +64,8 @@ fun AppNavHost(
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
                 widgetNames = widgetNames,
                 onChangeHideActiveAccountBalance = appViewModel::onChangeHideActiveAccountBalance,
-                onWidgetSettingsButtonClick = budgetsOnWidgetSettingsViewModel::openWidgetSettings,
                 onNavigateToScreenMovingTowardsLeft = { screen ->
                     navViewModel.navigateToScreenMovingTowardsLeft(navController, screen)
-                },
-                widgetSettingsBottomSheets = {
-                    BudgetsOnWidgetSettingsBottomSheet(viewModel = budgetsOnWidgetSettingsViewModel)
                 }
             )
         }

@@ -53,7 +53,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun ActiveAccountCard(
+fun AccountWidgetWrapper(
     activeAccount: Account?,
     onChangeHideActiveAccountBalance: () -> Unit,
 ) {
@@ -85,7 +85,7 @@ fun ActiveAccountCard(
         modifier = Modifier.padding(bottom = 16.dp)
     ) { account ->
         if (account != null) {
-            ActiveAccountCardContent(
+            AccountWidget(
                 account = account,
                 todayExpenses = todayExpenses,
                 onHideBalanceButton = onChangeHideActiveAccountBalance
@@ -95,7 +95,7 @@ fun ActiveAccountCard(
 }
 
 @Composable
-fun ActiveAccountCardContent(
+fun AccountWidget(
     account: Account,
     todayExpenses: Double,
     onHideBalanceButton: () -> Unit = {}
@@ -238,7 +238,7 @@ private fun TodayStatistic(todayExpenses: Double, currency: String, onAccountCol
 @Composable
 private fun AccountCardPreview() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
-        ActiveAccountCardContent(
+        AccountWidget(
             account = Account(
                 color = AccountColors.Blue,
                 balance = 5160.0,

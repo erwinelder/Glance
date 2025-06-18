@@ -32,7 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun CategoriesStatisticsWidget(
+fun CategoriesStatisticsWidgetWrapper(
     activeAccount: Account?,
     activeDateRange: LongDateRange,
     onNavigateToCategoriesStatisticsScreen: (Int?, CategoryType?) -> Unit
@@ -50,14 +50,14 @@ fun CategoriesStatisticsWidget(
 
     val uiState by viewModel.statisticsUiState.collectAsStateWithLifecycle()
 
-    CategoriesStatisticsWidgetContent(
+    CategoriesStatisticsWidget(
         uiState = uiState,
         onNavigateToCategoriesStatisticsScreen = onNavigateToCategoriesStatisticsScreen
     )
 }
 
 @Composable
-fun CategoriesStatisticsWidgetContent(
+fun CategoriesStatisticsWidget(
     uiState: CategoriesStatisticsWidgetUiState,
     onNavigateToCategoriesStatisticsScreen: (Int?, CategoryType?) -> Unit
 ) {
@@ -107,7 +107,7 @@ fun CategoriesStatisticsWidgetContent(
 @Composable
 private fun CategoriesStatisticsWidgetPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        CategoriesStatisticsWidgetContent(
+        CategoriesStatisticsWidget(
             uiState = CategoriesStatisticsWidgetUiState(
                 top1Category = CategoryStatistics(
                     category = Category(

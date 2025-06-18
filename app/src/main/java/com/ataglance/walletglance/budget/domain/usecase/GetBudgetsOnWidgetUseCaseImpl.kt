@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 
 class GetBudgetsOnWidgetUseCaseImpl(
     private val budgetRepository: BudgetRepository,
@@ -24,7 +24,7 @@ class GetBudgetsOnWidgetUseCaseImpl(
 ) : GetBudgetsOnWidgetUseCase {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getFlow(): Flow<List<Budget>> = flow {
+    override fun getAsFlow(): Flow<List<Budget>> = flow {
         val (entities, associations) = budgetRepository.getAllBudgetsAndAssociations()
         val categoryWithSubcategoriesList = getCategoriesUseCase.getOfExpenseType()
         val accounts = getAccountsUseCase.getAll()
@@ -35,7 +35,7 @@ class GetBudgetsOnWidgetUseCaseImpl(
             accounts = accounts
         )
 
-        val budgetsOnWidget = getBudgetIdsOnWidgetUseCase.getFlow().map { budgetIds ->
+        val budgetsOnWidget = getBudgetIdsOnWidgetUseCase.getAsFlow().mapLatest { budgetIds ->
             allBudgets.filter { it.id in budgetIds }
         }
 

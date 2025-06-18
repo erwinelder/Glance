@@ -23,23 +23,27 @@ import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationVi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.KoinAppDeclaration
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PreviewWithMainScaffoldContainer(
     appTheme: AppTheme = AppTheme.LightDefault,
     isBottomBarVisible: Boolean = false,
+    koinConfig: KoinAppDeclaration? = null,
     koinModuleDeclaration: Module.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
-    initializeKoinMockedModule {
-        single<GetNavigationButtonScreensUseCase> {
-            GetNavigationButtonScreensUseCaseMock()
+    runCatching {
+        initializeKoinMockedModule(config = koinConfig) {
+            single<GetNavigationButtonScreensUseCase> {
+                GetNavigationButtonScreensUseCaseMock()
+            }
+            viewModel {
+                NavigationViewModel(getNavigationButtonScreensUseCase = get())
+            }
+            koinModuleDeclaration()
         }
-        viewModel {
-            NavigationViewModel(getNavigationButtonScreensUseCase = get())
-        }
-        koinModuleDeclaration()
     }
 
     val navViewModel = koinViewModel<NavigationViewModel>()

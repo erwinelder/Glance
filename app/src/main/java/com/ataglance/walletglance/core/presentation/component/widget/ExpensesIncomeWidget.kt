@@ -30,7 +30,6 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
@@ -46,7 +45,7 @@ import org.koin.core.parameter.parametersOf
 import java.util.Locale
 
 @Composable
-fun ExpensesIncomeWidget(
+fun ExpensesIncomeWidgetWrapper(
     activeAccount: Account?,
     dateRangeWithEnum: DateRangeWithEnum
 ) {
@@ -64,7 +63,7 @@ fun ExpensesIncomeWidget(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    ExpensesIncomeWidgetContent(
+    ExpensesIncomeWidget(
         uiState = uiState,
         dateRangeWithEnum = dateRangeWithEnum,
         accountCurrency = activeAccount?.currency ?: "???",
@@ -73,7 +72,7 @@ fun ExpensesIncomeWidget(
 }
 
 @Composable
-fun ExpensesIncomeWidgetContent(
+fun ExpensesIncomeWidget(
     uiState: ExpensesIncomeWidgetUiState,
     dateRangeWithEnum: DateRangeWithEnum,
     accountCurrency: String,
@@ -96,20 +95,16 @@ fun ExpensesIncomeWidgetContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
+                .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 20.dp)
         ) {
             AnimatedContent(targetState = period) { targetPeriod ->
-                Text(
-                    text = targetPeriod,
-                    color = GlanciColors.onSurface,
-                    fontSize = 24.sp,
-                    lineHeight = 30.sp,
-                    fontFamily = Manrope,
-                    fontWeight = FontWeight.Light,
-                    textAlign = TextAlign.Center,
+                WidgetTitleComponent(
+                    title = targetPeriod,
+                    lineHeight = 32.sp,
+                    textAlign = TextAlign.Center
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             AnimatedContent(
                 targetState = stringResource(R.string.total) +
                         " ${uiState.getTotalFormatted()} $accountCurrency"
@@ -119,7 +114,7 @@ fun ExpensesIncomeWidgetContent(
                     color = GlanciColors.onSurface,
                     fontSize = 22.sp,
                     fontFamily = Manrope,
-                    fontWeight = FontWeight.Light
+                    fontWeight = FontWeight.W400
                 )
             }
             BigDivider(Modifier.padding(vertical = 16.dp))
@@ -162,7 +157,7 @@ private fun StatisticBlock(
                 color = GlanciColors.onSurface,
                 fontSize = 20.sp,
                 fontFamily = Manrope,
-                fontWeight = FontWeight.Light
+                fontWeight = FontWeight.W400
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
@@ -172,7 +167,7 @@ private fun StatisticBlock(
                 color = GlanciColors.onSurface,
                 fontSize = 20.sp,
                 fontFamily = Manrope,
-                fontWeight = FontWeight.Light
+                fontWeight = FontWeight.W400
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -189,7 +184,7 @@ private fun StatisticBlock(
 @Composable
 private fun ExpensesIncomeWidgetPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        ExpensesIncomeWidgetContent(
+        ExpensesIncomeWidget(
             uiState = ExpensesIncomeWidgetUiState(
                 incomeTotal = 1000.0,
                 expensesTotal = 500.0,
@@ -198,9 +193,8 @@ private fun ExpensesIncomeWidgetPreview() {
                 expensesPercentageFloat = 0.8f,
                 incomePercentageFloat = 0.67f
             ),
-            dateRangeWithEnum = DateRangeWithEnum(
-                enum = DateRangeEnum.ThisMonth,
-                dateRange = LongDateRange(0, 0)
+            dateRangeWithEnum = DateRangeWithEnum.fromEnum(
+                enum = DateRangeEnum.Custom
             ),
             accountCurrency = "USD",
             resourceManager = ResourceManagerImpl(LocalContext.current)

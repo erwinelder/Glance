@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.account.presentation.component.ActiveAccountCardContent
+import com.ataglance.walletglance.account.presentation.component.AccountWidget
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorByTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
@@ -156,7 +156,7 @@ sealed class AccountColors(
 @Composable
 private fun AccountCardPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        ActiveAccountCardContent(
+        AccountWidget(
             account = Account(color = AccountColors.Red),
             todayExpenses = 0.0
         )

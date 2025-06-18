@@ -32,7 +32,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.model.TransformedLargeIconState
+import com.ataglance.walletglance.core.presentation.model.LayeredIconLayerState
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
@@ -50,7 +50,7 @@ fun LayeredIcon(
                 AppTheme.LightDefault -> 0.0313f
                 AppTheme.DarkDefault -> -0.0313f
             }
-            val states = TransformedLargeIconState.asLayers(
+            val states = LayeredIconLayerState.asLayers(
                 baseColor = baseColor,
                 layerCount = 30,
                 layerOffsetRatio = 1.3,
@@ -78,7 +78,7 @@ fun LayeredIcon(
 @Composable
 private fun LayeredIconLayer(
     @DrawableRes iconRes: Int,
-    state: TransformedLargeIconState,
+    state: LayeredIconLayerState,
     visible: Boolean = true
 ) {
     val offset by animateDpAsState(

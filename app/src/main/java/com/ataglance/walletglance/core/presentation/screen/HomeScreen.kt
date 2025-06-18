@@ -14,33 +14,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.component.ActiveAccountCard
+import com.ataglance.walletglance.account.presentation.component.AccountWidget
+import com.ataglance.walletglance.account.presentation.component.AccountWidgetWrapper
 import com.ataglance.walletglance.budget.domain.model.Budget
+import com.ataglance.walletglance.budget.presentation.container.BudgetsOnWidgetSettingsBottomSheet
+import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidget
+import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidgetWrapper
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsWidgetUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidget
+import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidgetWrapper
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
-import com.ataglance.walletglance.core.presentation.component.widget.GreetingsMessage
+import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetWrapper
+import com.ataglance.walletglance.core.presentation.component.widget.GreetingsWidget
+import com.ataglance.walletglance.core.presentation.component.widget.GreetingsWidgetWrapper
+import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.utils.bottom
 import com.ataglance.walletglance.core.presentation.utils.plusBottomPadding
 import com.ataglance.walletglance.core.presentation.utils.top
@@ -51,8 +60,109 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
+import com.ataglance.walletglance.record.domain.utils.filterByAccount
 import com.ataglance.walletglance.record.mapper.toRecordStacks
 import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidget
+import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidgetWrapper
+import com.ataglance.walletglance.record.presentation.model.RecentRecordsWidgetUiState
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun HomeScreenWrapper(
+    screenPadding: PaddingValues,
+    isAppThemeSetUp: Boolean,
+    accountsAndActiveOne: AccountsAndActiveOne,
+    onTopBarAccountClick: (Int) -> Unit,
+    dateRangeWithEnum: DateRangeWithEnum,
+    onDateRangeChange: (DateRangeEnum) -> Unit,
+    isCustomDateRangeWindowOpened: Boolean,
+    onCustomDateRangeButtonClick: () -> Unit,
+    widgetNames: List<WidgetName>,
+    onChangeHideActiveAccountBalance: () -> Unit,
+    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
+) {
+    val budgetsOnWidgetSettingsViewModel = koinViewModel<BudgetsOnWidgetSettingsViewModel>()
+    // TODO: fix bug with displaying the bottom sheet
+
+    HomeScreen(
+        screenPadding = screenPadding,
+        isAppThemeSetUp = isAppThemeSetUp,
+        accountsAndActiveOne = accountsAndActiveOne,
+        onTopBarAccountClick = onTopBarAccountClick,
+        dateRangeWithEnum = dateRangeWithEnum,
+        onDateRangeChange = onDateRangeChange,
+        isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
+        onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
+        widgetNames = widgetNames,
+        greetingsWidget = {
+            GreetingsWidgetWrapper()
+        },
+        accountWidget = {
+            AccountWidgetWrapper(
+                activeAccount = accountsAndActiveOne.activeAccount,
+                onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance
+            )
+        },
+        chosenBudgetsWidget = {
+            ChosenBudgetsWidgetWrapper(
+                onSettingsButtonClick = {
+                    budgetsOnWidgetSettingsViewModel.openWidgetSettings(WidgetName.ChosenBudgets)
+                },
+                onNavigateToBudgetsScreen = {
+                    onNavigateToScreenMovingTowardsLeft(MainScreens.Budgets)
+                },
+                onNavigateToBudgetStatisticsScreen = { id ->
+                    onNavigateToScreenMovingTowardsLeft(
+                        MainScreens.BudgetStatistics(id)
+                    )
+                }
+            )
+        },
+        expensesIncomeWidget = {
+            ExpensesIncomeWidgetWrapper(
+                activeAccount = accountsAndActiveOne.activeAccount,
+                dateRangeWithEnum = dateRangeWithEnum
+            )
+        },
+        recentRecordsWidget = {
+            RecentRecordsWidgetWrapper(
+                accountsAndActiveOne = accountsAndActiveOne,
+                dateRangeWithEnum = dateRangeWithEnum,
+                onRecordClick = { recordNum: Int ->
+                    onNavigateToScreenMovingTowardsLeft(
+                        MainScreens.RecordCreation(recordNum = recordNum)
+                    )
+                },
+                onTransferClick = { recordNum: Int ->
+                    onNavigateToScreenMovingTowardsLeft(
+                        MainScreens.TransferCreation(recordNum = recordNum)
+                    )
+                },
+                onNavigateToRecordsScreen = {
+                    onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
+                }
+            )
+        },
+        categoriesStatisticsWidget = {
+            CategoriesStatisticsWidgetWrapper(
+                activeAccount = accountsAndActiveOne.activeAccount,
+                activeDateRange = dateRangeWithEnum.dateRange,
+                onNavigateToCategoriesStatisticsScreen = { categoryId, type ->
+                    if (type != null) {
+                        onNavigateToScreenMovingTowardsLeft(
+                            MainScreens.CategoryStatistics(
+                                parentCategoryId = categoryId, type = type.name
+                            )
+                        )
+                    }
+                }
+            )
+        },
+        widgetSettingsBottomSheets = {
+            BudgetsOnWidgetSettingsBottomSheet(viewModel = budgetsOnWidgetSettingsViewModel)
+        }
+    )
+}
 
 @Composable
 fun HomeScreen(
@@ -65,9 +175,12 @@ fun HomeScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     widgetNames: List<WidgetName>,
-    onChangeHideActiveAccountBalance: () -> Unit,
-    onWidgetSettingsButtonClick: (WidgetName) -> Unit,
-    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
+    greetingsWidget: @Composable () -> Unit,
+    accountWidget: @Composable () -> Unit,
+    chosenBudgetsWidget: @Composable () -> Unit,
+    expensesIncomeWidget: @Composable () -> Unit,
+    recentRecordsWidget: @Composable () -> Unit,
+    categoriesStatisticsWidget: @Composable () -> Unit,
     widgetSettingsBottomSheets: @Composable BoxScope.() -> Unit
 ) {
     Scaffold(
@@ -92,11 +205,13 @@ fun HomeScreen(
             ),
             isAppThemeSetUp = isAppThemeSetUp,
             accountsAndActiveOne = accountsAndActiveOne,
-            dateRangeWithEnum = dateRangeWithEnum,
-            onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance,
             widgetNames = widgetNames,
-            onWidgetSettingsButtonClick = onWidgetSettingsButtonClick,
-            onNavigateToScreenMovingTowardsLeft = onNavigateToScreenMovingTowardsLeft,
+            greetingsWidget = greetingsWidget,
+            accountWidget = accountWidget,
+            chosenBudgetsWidget = chosenBudgetsWidget,
+            expensesIncomeWidget = expensesIncomeWidget,
+            recentRecordsWidget = recentRecordsWidget,
+            categoriesStatisticsWidget = categoriesStatisticsWidget,
             widgetSettingsBottomSheets = widgetSettingsBottomSheets
         )
     }
@@ -107,11 +222,13 @@ private fun CompactLayout(
     scaffoldPadding: PaddingValues,
     isAppThemeSetUp: Boolean,
     accountsAndActiveOne: AccountsAndActiveOne,
-    dateRangeWithEnum: DateRangeWithEnum,
-    onChangeHideActiveAccountBalance: () -> Unit,
     widgetNames: List<WidgetName>,
-    onWidgetSettingsButtonClick: (WidgetName) -> Unit,
-    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
+    greetingsWidget: @Composable () -> Unit,
+    accountWidget: @Composable () -> Unit,
+    chosenBudgetsWidget: @Composable () -> Unit,
+    expensesIncomeWidget: @Composable () -> Unit,
+    recentRecordsWidget: @Composable () -> Unit,
+    categoriesStatisticsWidget: @Composable () -> Unit,
     widgetSettingsBottomSheets: @Composable BoxScope.() -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -120,87 +237,34 @@ private fun CompactLayout(
         LazyColumn(
             state = listState,
             contentPadding = PaddingValues(
-                top = scaffoldPadding.top + dimensionResource(R.dimen.screen_vertical_padding),
-                bottom = scaffoldPadding.bottom + dimensionResource(R.dimen.screen_vertical_padding)
+                top = scaffoldPadding.top + 24.dp,
+                bottom = scaffoldPadding.bottom + 24.dp
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(32.dp),
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = 50) {
-                    GreetingsMessage()
-                }
+                StartAnimatedContainer(
+                    visible = isAppThemeSetUp,
+                    delayMillis = 50,
+                    content = greetingsWidget
+                )
             }
             item {
                 StartAnimatedContainer(
                     visible = isAppThemeSetUp && accountsAndActiveOne.activeAccount != null,
-                    delayMillis = 100
-                ) {
-                    ActiveAccountCard(
-                        activeAccount = accountsAndActiveOne.activeAccount,
-                        onChangeHideActiveAccountBalance = onChangeHideActiveAccountBalance
-                    )
-                }
+                    delayMillis = 100,
+                    content = accountWidget
+                )
             }
             itemsIndexed(items = widgetNames) { index, widgetName ->
                 WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
                     when (widgetName) {
-                        WidgetName.ChosenBudgets -> {
-                            ChosenBudgetsWidget(
-                                onSettingsButtonClick = {
-                                    onWidgetSettingsButtonClick(WidgetName.ChosenBudgets)
-                                },
-                                onNavigateToBudgetsScreen = {
-                                    onNavigateToScreenMovingTowardsLeft(MainScreens.Budgets)
-                                },
-                                onNavigateToBudgetStatisticsScreen = { id ->
-                                    onNavigateToScreenMovingTowardsLeft(
-                                        MainScreens.BudgetStatistics(id)
-                                    )
-                                }
-                            )
-                        }
-                        WidgetName.TotalForPeriod -> {
-                            ExpensesIncomeWidget(
-                                activeAccount = accountsAndActiveOne.activeAccount,
-                                dateRangeWithEnum = dateRangeWithEnum
-                            )
-                        }
-                        WidgetName.RecentRecords -> {
-                            RecentRecordsWidget(
-                                accountsAndActiveOne = accountsAndActiveOne,
-                                dateRangeWithEnum = dateRangeWithEnum,
-                                onRecordClick = { recordNum: Int ->
-                                    onNavigateToScreenMovingTowardsLeft(
-                                        MainScreens.RecordCreation(recordNum = recordNum)
-                                    )
-                                },
-                                onTransferClick = { recordNum: Int ->
-                                    onNavigateToScreenMovingTowardsLeft(
-                                        MainScreens.TransferCreation(recordNum = recordNum)
-                                    )
-                                },
-                                onNavigateToRecordsScreen = {
-                                    onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
-                                }
-                            )
-                        }
-                        WidgetName.TopExpenseCategories -> {
-                            CategoriesStatisticsWidget(
-                                activeAccount = accountsAndActiveOne.activeAccount,
-                                activeDateRange = dateRangeWithEnum.dateRange,
-                                onNavigateToCategoriesStatisticsScreen = { categoryId, type ->
-                                    if (type != null) {
-                                        onNavigateToScreenMovingTowardsLeft(
-                                            MainScreens.CategoryStatistics(
-                                                parentCategoryId = categoryId, type = type.name
-                                            )
-                                        )
-                                    }
-                                }
-                            )
-                        }
+                        WidgetName.ChosenBudgets -> chosenBudgetsWidget()
+                        WidgetName.TotalForPeriod -> expensesIncomeWidget()
+                        WidgetName.RecentRecords -> recentRecordsWidget()
+                        WidgetName.TopExpenseCategories -> categoriesStatisticsWidget()
                     }
                 }
             }
@@ -211,11 +275,7 @@ private fun CompactLayout(
 
 
 
-@Preview(
-    apiLevel = 34,
-    heightDp = 2000,
-    device = Devices.PIXEL_7_PRO
-)
+@Preview(heightDp = 2000, device = Devices.PIXEL_7_PRO)
 @Composable
 fun HomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
@@ -253,9 +313,11 @@ fun HomeScreenPreview(
             isActive = true
         )
     ),
-    dateRangeMenuUiState: DateRangeMenuUiState = DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth),
+    dateRangeMenuUiState: DateRangeMenuUiState = DateRangeMenuUiState.fromEnum(
+        enum = DateRangeEnum.ThisMonth
+    ),
     isCustomDateRangeWindowOpened: Boolean = false,
-    widgetNamesList: List<WidgetName> = listOf(
+    widgetNames: List<WidgetName> = listOf(
         WidgetName.ChosenBudgets,
         WidgetName.TopExpenseCategories,
         WidgetName.RecentRecords,
@@ -320,11 +382,19 @@ fun HomeScreenPreview(
         )
     )
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-    ) { scaffoldPadding ->
+    val context = LocalContext.current
+    val resourceManager = ResourceManagerImpl(context = context)
+
+    val categoriesStatisticsWidgetUiState = CategoriesStatisticsByType
+        .fromRecordStacks(
+            recordStacks = recordStackList.filterByAccount(accountsAndActiveOne.activeAccount!!.id)
+        )
+        .getExpenseIfNotEmptyOrIncome()
+        .let(CategoriesStatisticsWidgetUiState::fromStatistics)
+
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { screenPadding ->
         HomeScreen(
-            screenPadding = scaffoldPadding,
+            screenPadding = screenPadding,
             isAppThemeSetUp = true,
             accountsAndActiveOne = accountsAndActiveOne,
             onTopBarAccountClick = {},
@@ -332,10 +402,62 @@ fun HomeScreenPreview(
             onDateRangeChange = {},
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},
-            widgetNames = widgetNamesList,
-            onChangeHideActiveAccountBalance = {},
-            onWidgetSettingsButtonClick = {},
-            onNavigateToScreenMovingTowardsLeft = {},
+            widgetNames = widgetNames,
+            greetingsWidget = {
+                GreetingsWidget(message = "Good afternoon, Erwin!")
+            },
+            accountWidget = {
+                AccountWidget(
+                    account = accountsAndActiveOne.activeAccount,
+                    todayExpenses = 50.51,
+                    onHideBalanceButton = {}
+                )
+            },
+            chosenBudgetsWidget = {
+                ChosenBudgetsWidget(
+                    budgets = budgetsOnWidget,
+                    resourceManager = resourceManager,
+                    onSettingsButtonClick = {},
+                    onNavigateToBudgetsScreen = {},
+                    onNavigateToBudgetStatisticsScreen = {}
+                )
+            },
+            expensesIncomeWidget = {
+                ExpensesIncomeWidget(
+                    uiState = ExpensesIncomeWidgetUiState(
+                        expensesTotal = 0.0,
+                        incomeTotal = 0.0,
+                        expensesPercentage = 0.0,
+                        incomePercentage = 0.0,
+                        expensesPercentageFloat = 0.0f,
+                        incomePercentageFloat = 0.0f
+                    ),
+                    dateRangeWithEnum = DateRangeWithEnum.fromEnum(enum = DateRangeEnum.ThisMonth),
+                    accountCurrency = accountsAndActiveOne.activeAccount.currency,
+                    resourceManager = resourceManager
+                )
+            },
+            recentRecordsWidget = {
+                RecentRecordsWidget(
+                    uiState = RecentRecordsWidgetUiState(
+                        firstRecord = recordStackList.getOrNull(0),
+                        secondRecord = recordStackList.getOrNull(1),
+                        thirdRecord = recordStackList.getOrNull(2)
+                    ),
+                    accountList = accountsAndActiveOne.accounts,
+                    isCustomDateRange = false,
+                    resourceManager = resourceManager,
+                    onRecordClick = {},
+                    onTransferClick = {},
+                    onNavigateToRecordsScreen = {}
+                )
+            },
+            categoriesStatisticsWidget = {
+                CategoriesStatisticsWidget(
+                    uiState = categoriesStatisticsWidgetUiState,
+                    onNavigateToCategoriesStatisticsScreen = { _, _ -> }
+                )
+            },
             widgetSettingsBottomSheets = {}
         )
     }

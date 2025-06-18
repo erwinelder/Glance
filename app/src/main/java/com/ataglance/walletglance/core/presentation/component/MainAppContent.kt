@@ -74,7 +74,9 @@ fun MainAppContent(
                 appUiState = appUiState,
                 widgetNames = widgetNames,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
-                onCustomDateRangeButtonClick = { openCustomDateRangeWindow = !openCustomDateRangeWindow },
+                onCustomDateRangeButtonClick = {
+                    openCustomDateRangeWindow = !openCustomDateRangeWindow
+                },
                 onDimBackgroundChange = { dimBackground = it }
             )
             DateRangeAssetsPickerContainer(

@@ -30,7 +30,7 @@ class BudgetsOnWidgetSettingsViewModel(
             }
         }
         viewModelScope.launch {
-            getBudgetIdsOnWidgetUseCase.getFlow().collect { budgetsIds ->
+            getBudgetIdsOnWidgetUseCase.getAsFlow().collect { budgetsIds ->
                 _budgetsOnWidget.update { budgetsIds }
             }
         }

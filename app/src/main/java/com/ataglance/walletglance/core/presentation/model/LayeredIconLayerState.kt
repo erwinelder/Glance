@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class TransformedLargeIconState(
+data class LayeredIconLayerState(
     val tintColor: Color,
     val offset: Dp
 ) {
@@ -18,11 +18,11 @@ data class TransformedLargeIconState(
             layerCount: Int,
             layerOffsetRatio: Double,
             colorStep: Float
-        ): List<TransformedLargeIconState> {
+        ): List<LayeredIconLayerState> {
             return IntRange(0, layerCount)
                 .map { int ->
                     val colorDelta = colorStep * int
-                    TransformedLargeIconState(
+                    LayeredIconLayerState(
                         tintColor = Color(
                             red = (baseColor.red + colorDelta).coerceIn(0f, 1f),
                             green = (baseColor.green + colorDelta).coerceIn(0f, 1f),

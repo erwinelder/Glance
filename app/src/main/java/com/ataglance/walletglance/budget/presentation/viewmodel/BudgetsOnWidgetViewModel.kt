@@ -15,7 +15,7 @@ class BudgetsOnWidgetViewModel(
 
     init {
         viewModelScope.launch {
-            getBudgetsOnWidgetUseCase.getFlow().collect { budgets ->
+            getBudgetsOnWidgetUseCase.getAsFlow().collect { budgets ->
                 _budgets.update { budgets }
             }
         }

@@ -42,7 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun RecentRecordsWidget(
+fun RecentRecordsWidgetWrapper(
     accountsAndActiveOne: AccountsAndActiveOne,
     dateRangeWithEnum: DateRangeWithEnum,
     onRecordClick: (Int) -> Unit,
@@ -63,7 +63,7 @@ fun RecentRecordsWidget(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    RecentRecordsWidgetContent(
+    RecentRecordsWidget(
         uiState = uiState,
         accountList = accountsAndActiveOne.accounts,
         isCustomDateRange = dateRangeWithEnum.enum == DateRangeEnum.Custom,
@@ -75,7 +75,7 @@ fun RecentRecordsWidget(
 }
 
 @Composable
-fun RecentRecordsWidgetContent(
+fun RecentRecordsWidget(
     uiState: RecentRecordsWidgetUiState,
     accountList: List<Account>,
     isCustomDateRange: Boolean,
@@ -163,7 +163,7 @@ private fun RecordStackList(
 private fun RecordHistoryWidgetPreview() {
     PreviewContainer {
         Column {
-            RecentRecordsWidgetContent(
+            RecentRecordsWidget(
                 uiState = RecentRecordsWidgetUiState(),
                 accountList = listOf(),
                 isCustomDateRange = false,

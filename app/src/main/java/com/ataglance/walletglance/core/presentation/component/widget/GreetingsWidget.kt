@@ -29,7 +29,7 @@ import com.ataglance.walletglance.core.utils.getGreetingsWithUsernameWidgetTitle
 import org.koin.compose.koinInject
 
 @Composable
-fun GreetingsMessage() {
+fun GreetingsWidgetWrapper() {
     val userContext = koinInject<UserContext>()
     val username by remember(userContext.name) {
         mutableStateOf(userContext.name)
@@ -46,12 +46,12 @@ fun GreetingsMessage() {
     }
 
     username?.takeIf { it.isNotBlank() }
-        ?.let { GreetingsMessageContent(message = stringResource(greetingsTitleRes, it)) }
-        ?: GreetingsMessageContent(message = stringResource(greetingsTitleRes))
+        ?.let { GreetingsWidget(message = stringResource(greetingsTitleRes, it)) }
+        ?: GreetingsWidget(message = stringResource(greetingsTitleRes))
 }
 
 @Composable
-fun GreetingsMessageContent(message: String) {
+fun GreetingsWidget(message: String) {
     Row(
         horizontalArrangement = if (WindowTypeIsCompact) Arrangement.Start else Arrangement.Center,
         modifier = Modifier
@@ -72,6 +72,6 @@ fun GreetingsMessageContent(message: String) {
 @Composable
 fun GreetingsMessagePreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
-        GreetingsMessageContent(message = "Good afternoon, username!")
+        GreetingsWidget(message = "Good afternoon, username!")
     }
 }
