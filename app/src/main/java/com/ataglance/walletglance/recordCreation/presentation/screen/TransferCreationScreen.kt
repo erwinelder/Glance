@@ -124,10 +124,10 @@ fun TransferCreationScreen(
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit
 ) {
-    val screenIcon = DrawableResByTheme(
+    val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.make_transfer_light_default,
         darkDefault = R.drawable.make_transfer_dark_default
-    )
+    ).getByTheme(CurrAppTheme)
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -140,9 +140,9 @@ fun TransferCreationScreen(
     ) {
         ScreenContainerWithTopBackNavButton(
             screenPadding = screenPadding,
-            topBackNavButtonText = stringResource(R.string.make_transfer),
-            topBackNavButtonImageRes = screenIcon.getByTheme(CurrAppTheme),
-            onTopBackNavButtonClick = onNavigateBack
+            backNavButtonText = stringResource(R.string.make_transfer),
+            backNavButtonImageRes = backNavButtonImageRes,
+            onBackNavButtonClick = onNavigateBack
         ) {
 
             Column(

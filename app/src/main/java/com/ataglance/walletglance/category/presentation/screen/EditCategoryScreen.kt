@@ -122,8 +122,8 @@ fun EditCategoryScreen(
 
         ScreenContainerWithTopBackNavButtonAndPrimaryButton(
             screenPadding = screenPadding,
-            topBackNavButtonText = category.name,
-            topBackNavButtonIconComponent = {
+            backNavButtonText = category.name,
+            backNavButtonIconComponent = {
                 AnimatedContent(
                     targetState = categoryIconWithColor
                 ) { (icon, color) ->
@@ -134,8 +134,8 @@ fun EditCategoryScreen(
                     )
                 }
             },
-            onTopBackNavButtonClick = onNavigateBack,
-            topBackNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+            onBackNavButtonClick = onNavigateBack,
+            backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
                 SmallSecondaryButton(
                     text = stringResource(R.string.delete),
                     iconRes = R.drawable.trash_icon,

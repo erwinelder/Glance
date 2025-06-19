@@ -95,14 +95,14 @@ fun CurrencyPickerScreen(
     onSaveButtonClick: (String) -> Unit,
 ) {
     val settingsCategory = SettingsCategory.Accounts(appTheme = CurrAppTheme)
-    val topBackNavButtonText = accountName.takeIf { it.isNotBlank() }
+    val backNavButtonText = accountName.takeIf { it.isNotBlank() }
         ?: stringResource(R.string.currency)
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = topBackNavButtonText,
-        topBackNavButtonImageRes = settingsCategory.iconRes,
-        onTopBackNavButtonClick = onNavigateBack,
+        backNavButtonText = backNavButtonText,
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
         primaryButtonText = stringResource(R.string.save),
         primaryButtonEnabled = currencyPickerUiState.selectedCurrency != null,
         onPrimaryButtonClick = {

@@ -157,10 +157,10 @@ fun RecordCreationScreen(
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit
 ) {
-    val screenIcon = DrawableResByTheme(
+    val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.make_record_light_default,
         darkDefault = R.drawable.make_record_dark_default
-    )
+    ).getByTheme(CurrAppTheme)
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -174,9 +174,9 @@ fun RecordCreationScreen(
     ) {
         ScreenContainerWithTopBackNavButton(
             screenPadding = screenPadding,
-            topBackNavButtonText = stringResource(R.string.make_record),
-            topBackNavButtonImageRes = screenIcon.getByTheme(CurrAppTheme),
-            onTopBackNavButtonClick = onNavigateBack
+            backNavButtonText = stringResource(R.string.make_record),
+            backNavButtonImageRes = backNavButtonImageRes,
+            onBackNavButtonClick = onNavigateBack
         ) {
 
             Column(

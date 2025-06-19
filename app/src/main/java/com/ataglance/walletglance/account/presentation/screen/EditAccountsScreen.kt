@@ -102,9 +102,9 @@ fun EditAccountsScreen(
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = stringResource(settingsCategory.stringRes),
-        topBackNavButtonImageRes = settingsCategory.iconRes,
-        onTopBackNavButtonClick = onNavigateBack,
+        backNavButtonText = stringResource(settingsCategory.stringRes),
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
         primaryButtonText = stringResource(
             if (isAppSetUp) R.string.save else R.string.save_and_continue
         ),

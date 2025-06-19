@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
 
 @Composable
 fun AnimatedScreenWithRequestState(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     requestState: RequestState<ButtonState>?,
     onCancelRequest: (() -> Unit)? = null,
     onSuccessClose: () -> Unit = {},

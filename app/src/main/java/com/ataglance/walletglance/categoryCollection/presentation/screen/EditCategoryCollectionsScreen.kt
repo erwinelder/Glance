@@ -103,9 +103,9 @@ fun EditCategoryCollectionsScreen(
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = stringResource(settingsCategory.stringRes),
-        topBackNavButtonImageRes = settingsCategory.iconRes,
-        onTopBackNavButtonClick = onNavigateBack,
+        backNavButtonText = stringResource(settingsCategory.stringRes),
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
         primaryButtonText = stringResource(R.string.save),
         onPrimaryButtonClick = onSaveCollectionsButton
     ) {

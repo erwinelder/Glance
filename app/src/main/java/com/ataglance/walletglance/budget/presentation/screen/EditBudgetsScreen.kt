@@ -91,9 +91,9 @@ fun EditBudgetsScreen(
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = stringResource(settingsCategory.stringRes),
-        topBackNavButtonImageRes = settingsCategory.iconRes,
-        onTopBackNavButtonClick = onNavigateBack,
+        backNavButtonText = stringResource(settingsCategory.stringRes),
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
         primaryButtonText = stringResource(
             if (isAppSetUp) R.string.save
             else if (budgetsByType.areEmpty()) R.string.finish

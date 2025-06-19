@@ -96,19 +96,19 @@ fun EditSubcategoriesScreen(
     onSwapCategories: (Int, Int) -> Unit
 ) {
     val settingsCategory = SettingsCategory.Categories(appTheme = CurrAppTheme)
-    val topBackNavButtonText = groupedCategories?.category?.name
+    val backNavButtonText = groupedCategories?.category?.name
         ?: stringResource(settingsCategory.stringRes)
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = topBackNavButtonText,
-        topBackNavButtonIconComponent = takeComposableIfNotNull(groupedCategories?.category) {
+        backNavButtonText = backNavButtonText,
+        backNavButtonIconComponent = takeComposableIfNotNull(groupedCategories?.category) {
             CategoryIconComponent(
                 category = it,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         },
-        onTopBackNavButtonClick = onNavigateBack,
+        onBackNavButtonClick = onNavigateBack,
         primaryButtonText = stringResource(R.string.save),
         onPrimaryButtonClick = onSaveButton
     ) {

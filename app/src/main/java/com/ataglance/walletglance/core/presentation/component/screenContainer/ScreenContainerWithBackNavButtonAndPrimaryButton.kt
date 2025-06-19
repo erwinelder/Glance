@@ -14,10 +14,10 @@ import com.ataglance.walletglance.core.presentation.component.button.PrimaryButt
 @Composable
 fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
     screenPadding: PaddingValues = PaddingValues(),
-    topBackNavButtonText: String,
-    topBackNavButtonImageRes: Int? = null,
-    onTopBackNavButtonClick: () -> Unit,
-    topBackNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
+    backNavButtonText: String,
+    backNavButtonImageRes: Int? = null,
+    onBackNavButtonClick: () -> Unit,
+    backNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
     primaryButtonText: String,
     primaryButtonEnabled: Boolean = true,
     onPrimaryButtonClick: () -> Unit,
@@ -25,10 +25,10 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
 ) {
     ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = topBackNavButtonText,
-        topBackNavButtonImageRes = topBackNavButtonImageRes,
-        onTopBackNavButtonClick = onTopBackNavButtonClick,
-        topBackNavButtonCompanionComponent = topBackNavButtonCompanionComponent
+        backNavButtonText = backNavButtonText,
+        backNavButtonImageRes = backNavButtonImageRes,
+        onBackNavButtonClick = onBackNavButtonClick,
+        backNavButtonCompanionComponent = backNavButtonCompanionComponent
     ) {
 
         Column(
@@ -56,10 +56,10 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
 @Composable
 fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
     screenPadding: PaddingValues = PaddingValues(),
-    topBackNavButtonText: String,
-    topBackNavButtonIconComponent: @Composable (() -> Unit)? = null,
-    onTopBackNavButtonClick: () -> Unit,
-    topBackNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
+    backNavButtonText: String,
+    backNavButtonIconComponent: @Composable (() -> Unit)? = null,
+    onBackNavButtonClick: () -> Unit,
+    backNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
     primaryButtonText: String,
     primaryButtonEnabled: Boolean = true,
     onPrimaryButtonClick: () -> Unit,
@@ -67,10 +67,10 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
 ) {
     ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = topBackNavButtonText,
-        topBackNavButtonIconComponent = topBackNavButtonIconComponent,
-        onTopBackNavButtonClick = onTopBackNavButtonClick,
-        topBackNavButtonCompanionComponent = topBackNavButtonCompanionComponent
+        backNavButtonText = backNavButtonText,
+        backNavButtonIconComponent = backNavButtonIconComponent,
+        onBackNavButtonClick = onBackNavButtonClick,
+        backNavButtonCompanionComponent = backNavButtonCompanionComponent
     ) {
 
         Column(

@@ -117,7 +117,7 @@ fun EditBudgetScreen(
     onSaveButton: () -> Unit
 ) {
     val settingsCategory = SettingsCategory.Budgets(appTheme = CurrAppTheme)
-    val topBackNavButtonText = budget.name.takeIf { it.isNotBlank() }
+    val backNavButtonText = budget.name.takeIf { it.isNotBlank() }
         ?: stringResource(R.string.budget)
 
     var showCategoryPicker by remember { mutableStateOf(false) }
@@ -128,10 +128,10 @@ fun EditBudgetScreen(
     ) {
         ScreenContainerWithTopBackNavButtonAndPrimaryButton(
             screenPadding = screenPadding,
-            topBackNavButtonText = topBackNavButtonText,
-            topBackNavButtonImageRes = settingsCategory.iconRes,
-            onTopBackNavButtonClick = onNavigateBack,
-            topBackNavButtonCompanionComponent = takeRowComposableIf(!budget.isNew) {
+            backNavButtonText = backNavButtonText,
+            backNavButtonImageRes = settingsCategory.iconRes,
+            onBackNavButtonClick = onNavigateBack,
+            backNavButtonCompanionComponent = takeRowComposableIf(!budget.isNew) {
                 SmallSecondaryButton(
                     text = stringResource(R.string.delete),
                     iconRes = R.drawable.trash_icon,

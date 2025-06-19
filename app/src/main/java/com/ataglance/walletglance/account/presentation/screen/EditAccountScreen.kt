@@ -128,7 +128,7 @@ fun EditAccountScreen(
     onDeleteButton: (Int) -> Unit
 ) {
     val screenIcon = SettingsCategory.Accounts(appTheme = CurrAppTheme)
-    val topBackNavButtonText = accountDraft.name.takeIf { it.isNotBlank() }
+    val backNavButtonText = accountDraft.name.takeIf { it.isNotBlank() }
         ?: stringResource(R.string.account)
 
     var showColorPicker by remember { mutableStateOf(false) }
@@ -139,10 +139,10 @@ fun EditAccountScreen(
     ) {
         ScreenContainerWithTopBackNavButtonAndPrimaryButton(
             screenPadding = screenPadding,
-            topBackNavButtonText = topBackNavButtonText,
-            topBackNavButtonImageRes = screenIcon.iconRes,
-            onTopBackNavButtonClick = onNavigateBack,
-            topBackNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+            backNavButtonText = backNavButtonText,
+            backNavButtonImageRes = screenIcon.iconRes,
+            onBackNavButtonClick = onNavigateBack,
+            backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
                 SmallSecondaryButton(
                     text = stringResource(R.string.delete),
                     iconRes = R.drawable.trash_icon

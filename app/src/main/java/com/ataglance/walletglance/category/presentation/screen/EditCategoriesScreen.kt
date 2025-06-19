@@ -131,10 +131,10 @@ fun EditCategoriesScreen(
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = stringResource(settingsCategory.stringRes),
-        topBackNavButtonImageRes = settingsCategory.iconRes,
-        onTopBackNavButtonClick = onNavigateBack,
-        topBackNavButtonCompanionComponent = takeRowComposableIf(!isAppSetUp) {
+        backNavButtonText = stringResource(settingsCategory.stringRes),
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
+        backNavButtonCompanionComponent = takeRowComposableIf(!isAppSetUp) {
             SmallSecondaryButton(
                 text = stringResource(R.string.reset),
                 iconRes = R.drawable.reset_icon,

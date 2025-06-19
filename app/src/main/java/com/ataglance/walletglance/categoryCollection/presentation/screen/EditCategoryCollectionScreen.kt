@@ -128,10 +128,10 @@ fun EditCategoryCollectionScreen(
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = collection.name,
-        topBackNavButtonImageRes = settingsCategory.iconRes,
-        onTopBackNavButtonClick = onNavigateBack,
-        topBackNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+        backNavButtonText = collection.name,
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
+        backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
             SmallSecondaryButton(
                 text = stringResource(R.string.delete),
                 iconRes = R.drawable.trash_icon,

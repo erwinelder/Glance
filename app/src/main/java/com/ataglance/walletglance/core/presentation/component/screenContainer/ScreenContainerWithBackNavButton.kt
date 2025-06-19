@@ -20,10 +20,10 @@ import com.ataglance.walletglance.core.presentation.utils.plus
 fun ScreenContainerWithTopBackNavButton(
     screenPadding: PaddingValues = PaddingValues(),
     bottomPadding: Dp = 16.dp,
-    topBackNavButtonText: String,
-    topBackNavButtonImageRes: Int? = null,
-    onTopBackNavButtonClick: () -> Unit,
-    topBackNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
+    backNavButtonText: String,
+    backNavButtonImageRes: Int? = null,
+    onBackNavButtonClick: () -> Unit,
+    backNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
@@ -37,11 +37,11 @@ fun ScreenContainerWithTopBackNavButton(
     ) {
 
         GlassSurfaceTopNavButtonBlock(
-            text = topBackNavButtonText,
-            imageRes = topBackNavButtonImageRes,
+            text = backNavButtonText,
+            imageRes = backNavButtonImageRes,
             filledWidths = FilledWidthByScreenType(.96f, .75f, .75f),
-            onClick = onTopBackNavButtonClick,
-            companionComponent = topBackNavButtonCompanionComponent
+            onClick = onBackNavButtonClick,
+            companionComponent = backNavButtonCompanionComponent
         )
 
         content()
@@ -53,10 +53,10 @@ fun ScreenContainerWithTopBackNavButton(
 fun ScreenContainerWithTopBackNavButton(
     screenPadding: PaddingValues = PaddingValues(),
     bottomPadding: Dp = 16.dp,
-    topBackNavButtonText: String,
-    topBackNavButtonIconComponent: @Composable (() -> Unit)? = null,
-    onTopBackNavButtonClick: () -> Unit,
-    topBackNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
+    backNavButtonText: String,
+    backNavButtonIconComponent: @Composable (() -> Unit)? = null,
+    onBackNavButtonClick: () -> Unit,
+    backNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
@@ -70,11 +70,11 @@ fun ScreenContainerWithTopBackNavButton(
     ) {
 
         GlassSurfaceTopNavButtonBlock(
-            text = topBackNavButtonText,
-            iconComponent = topBackNavButtonIconComponent,
+            text = backNavButtonText,
+            iconComponent = backNavButtonIconComponent,
             filledWidths = FilledWidthByScreenType(.96f, .75f, .75f),
-            onClick = onTopBackNavButtonClick,
-            companionComponent = topBackNavButtonCompanionComponent
+            onClick = onBackNavButtonClick,
+            companionComponent = backNavButtonCompanionComponent
         )
 
         content()

@@ -94,16 +94,16 @@ fun BudgetStatisticsScreen(
     onNavigateBack: () -> Unit,
     uiState: BudgetStatisticsScreenUiState
 ) {
-    val backButtonImageRes = DrawableResByTheme(
+    val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.budgets_light_default_icon,
         darkDefault = R.drawable.budgets_dark_default_icon,
-    )
+    ).getByTheme(CurrAppTheme)
 
     ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,
-        topBackNavButtonText = stringResource(R.string.budget_statistics_title),
-        topBackNavButtonImageRes = backButtonImageRes.getByTheme(CurrAppTheme),
-        onTopBackNavButtonClick = onNavigateBack
+        backNavButtonText = stringResource(R.string.budget_statistics_title),
+        backNavButtonImageRes = backNavButtonImageRes,
+        onBackNavButtonClick = onNavigateBack
     ) {
         if (uiState.budget != null) {
             Column(
