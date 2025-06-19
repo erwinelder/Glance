@@ -39,14 +39,16 @@ import com.ataglance.walletglance.categoryCollection.presentation.component.Edit
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,6 +67,7 @@ fun EditCategoryCollectionsScreenWrapper(
 
     EditCategoryCollectionsScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         collectionsWithCategories = collectionsByType,
         collectionType = collectionType,
         onCategoryTypeChange = collectionsViewModel::changeCategoryType,
@@ -89,13 +92,48 @@ fun EditCategoryCollectionsScreenWrapper(
 @Composable
 fun EditCategoryCollectionsScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     collectionsWithCategories: List<CategoryCollectionWithCategories>,
     collectionType: CategoryCollectionType,
     onCategoryTypeChange: (CategoryCollectionType) -> Unit,
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories?) -> Unit,
     onSaveCollectionsButton: () -> Unit,
 ) {
-    GlassSurfaceScreenContainer(
+    val settingsCategory = SettingsCategory.CategoryCollections(appTheme = CurrAppTheme)
+
+    ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+        screenPadding = screenPadding,
+        topBackNavButtonText = stringResource(settingsCategory.stringRes),
+        topBackNavButtonImageRes = settingsCategory.iconRes,
+        onTopBackNavButtonClick = onNavigateBack,
+        primaryButtonText = stringResource(R.string.save),
+        onPrimaryButtonClick = onSaveCollectionsButton
+    ) {
+
+        CategoryCollectionTypeBar(
+            currentType = collectionType,
+            onClick = onCategoryTypeChange
+        )
+
+        GlassSurface(
+            modifier = Modifier.weight(1f)
+        ) {
+            GlassSurfaceContent(
+                collectionWithCategoriesList = collectionsWithCategories,
+                onNavigateToEditCollectionScreen = onNavigateToEditCollectionScreen
+            )
+        }
+
+        SmallSecondaryButton(
+            text = stringResource(R.string.add_collection),
+            iconRes = R.drawable.add_icon
+        ) {
+            onNavigateToEditCollectionScreen(null)
+        }
+
+    }
+
+    /*GlassSurfaceScreenContainer(
         topPadding = screenPadding.calculateTopPadding(),
         bottomPadding = screenPadding.calculateBottomPadding(),
         topBar = {
@@ -124,7 +162,7 @@ fun EditCategoryCollectionsScreen(
                 onClick = onSaveCollectionsButton
             )
         }
-    )
+    )*/
 }
 
 @Composable
@@ -133,8 +171,7 @@ private fun GlassSurfaceContent(
     onNavigateToEditCollectionScreen: (CategoryCollectionWithCategories) -> Unit,
 ) {
     AnimatedContent(
-        targetState = collectionWithCategoriesList,
-        label = "category list uploading"
+        targetState = collectionWithCategoriesList
     ) { targetCollectionWithCategoriesList ->
         if (targetCollectionWithCategoriesList.isNotEmpty()) {
             if (!WindowTypeIsExpanded) {
@@ -167,10 +204,8 @@ private fun CompactLayoutContent(
             dimensionResource(R.dimen.widget_content_padding)
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
         items(
             items = collectionWithCategoriesList,
@@ -252,8 +287,10 @@ fun EditCategoryCollectionsScreenPreview(
             ),
         )
 ) {
-    PreviewWithMainScaffoldContainer(appTheme = appTheme) {
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditCategoryCollectionsScreen(
+            screenPadding = scaffoldPadding,
+            onNavigateBack = {},
             collectionsWithCategories = collectionWithCategoriesList,
             collectionType = CategoryCollectionType.Mixed,
             onCategoryTypeChange = {},

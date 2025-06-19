@@ -1,6 +1,7 @@
 package com.ataglance.walletglance.core.utils
 
 import android.net.Uri
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import java.util.Locale
 import kotlin.enums.enumEntries
@@ -31,6 +32,17 @@ fun takeComposableIf(
     condition: Boolean,
     composable: @Composable () -> Unit
 ): (@Composable () -> Unit)? {
+    return if (condition) {
+        composable
+    } else {
+        null
+    }
+}
+
+fun takeRowComposableIf(
+    condition: Boolean,
+    composable: @Composable RowScope.() -> Unit
+): @Composable (RowScope.() -> Unit)? {
     return if (condition) {
         composable
     } else {

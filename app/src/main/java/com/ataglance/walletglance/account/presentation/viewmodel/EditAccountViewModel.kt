@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.mapper.toAccount
-import com.ataglance.walletglance.account.mapper.toEditAccountUiState
+import com.ataglance.walletglance.account.mapper.toDraft
 import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.core.utils.isNumberWithDecimalOptionalNegative
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ class EditAccountViewModel : ViewModel() {
     val accountDraft = _accountDraft.asStateFlow()
 
     fun applyAccount(account: Account) {
-        _accountDraft.update { account.toEditAccountUiState() }
+        _accountDraft.update { account.toDraft() }
     }
 
     fun changeColor(colorName: String) {

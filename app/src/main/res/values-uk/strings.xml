@@ -219,6 +219,12 @@
     <string name="no_network">Немає підключення до мережі</string>
     <string name="subscription_purchase_error">Під час обробки покупки сталася помилка</string>
 
+    <!-- Budgets -->
+    <string name="budget">Бюджет</string>
+
+    <!-- Category Collections -->
+    <string name="category_collection">Колекція категорій</string>
+
     <!-- Notifications -->
     <string name="general_notifications_channel_name">Загальні сповіщення</string>
     <string name="notifications_denied_title">Сповіщення заборонені</string>

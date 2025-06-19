@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
@@ -32,18 +31,21 @@ import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
 import com.ataglance.walletglance.account.presentation.model.CurrencyItem
 import com.ataglance.walletglance.account.presentation.model.CurrencyPickerUiState
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerViewModel
-import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerViewModelFactory
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.util.Currency
 
 @Composable
@@ -55,16 +57,19 @@ fun CurrencyPickerScreenWrapper(
     val currency = backStack.toRoute<AccountsSettingsScreens.EditAccountCurrency>().currency
 
     val editAccountViewModel = backStack.sharedViewModel<EditAccountViewModel>(navController)
-    val currencyPickerViewModel = viewModel<CurrencyPickerViewModel>(
-        factory = CurrencyPickerViewModelFactory(selectedCurrency = currency)
-    )
+    val currencyPickerViewModel = koinViewModel<CurrencyPickerViewModel> {
+        parametersOf(currency)
+    }
 
+    val accountDraft by editAccountViewModel.accountDraft.collectAsStateWithLifecycle()
     val uiState by currencyPickerViewModel.uiState.collectAsStateWithLifecycle()
     val currencyList by currencyPickerViewModel.currencyList.collectAsStateWithLifecycle()
     val searchedPrompt by currencyPickerViewModel.searchedPrompt.collectAsStateWithLifecycle()
 
     CurrencyPickerScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
+        accountName = accountDraft.name,
         currencyPickerUiState = uiState,
         currencyList = currencyList,
         searchedPrompt = searchedPrompt,
@@ -80,6 +85,8 @@ fun CurrencyPickerScreenWrapper(
 @Composable
 fun CurrencyPickerScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
+    accountName: String,
     currencyPickerUiState: CurrencyPickerUiState,
     currencyList: List<CurrencyItem>,
     searchedPrompt: String,
@@ -87,45 +94,48 @@ fun CurrencyPickerScreen(
     onSelectCurrency: (CurrencyItem) -> Unit,
     onSaveButtonClick: (String) -> Unit,
 ) {
+    val settingsCategory = SettingsCategory.Accounts(appTheme = CurrAppTheme)
+    val topBackNavButtonText = accountName.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.currency)
 
-    GlassSurfaceScreenContainer(
-        topPadding = screenPadding.calculateTopPadding(),
-        bottomPadding = screenPadding.calculateBottomPadding(),
-        topButton = {
-            AnimatedContent(
-                targetState = currencyPickerUiState.selectedCurrency?.currencyCode,
-                label = "selected currency code"
-            ) { targetCurrencyCode ->
-                TextFieldComponent(
-                    text = searchedPrompt,
-                    onValueChange = onSearchPromptChange,
-                    placeholderText = "\"${targetCurrencyCode}\"",
-                    modifier = Modifier.fillMaxWidth(
-                        FilledWidthByScreenType(compact = .86f).getByType(CurrWindowType)
-                    ),
-                    fontSize = 20.sp,
-                    cornerSize = 17.dp
-                )
-            }
-        },
-        glassSurfaceContent = {
+    ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+        screenPadding = screenPadding,
+        topBackNavButtonText = topBackNavButtonText,
+        topBackNavButtonImageRes = settingsCategory.iconRes,
+        onTopBackNavButtonClick = onNavigateBack,
+        primaryButtonText = stringResource(R.string.save),
+        primaryButtonEnabled = currencyPickerUiState.selectedCurrency != null,
+        onPrimaryButtonClick = {
+            currencyPickerUiState.selectedCurrency?.currencyCode?.let(onSaveButtonClick)
+        }
+    ) {
+
+        AnimatedContent(
+            targetState = currencyPickerUiState.selectedCurrency?.currencyCode
+        ) { targetCurrencyCode ->
+            TextFieldComponent(
+                text = searchedPrompt,
+                onValueChange = onSearchPromptChange,
+                placeholderText = "\"${targetCurrencyCode}\"",
+                modifier = Modifier.fillMaxWidth(
+                    FilledWidthByScreenType(compact = .86f).getByType(CurrWindowType)
+                ),
+                fontSize = 20.sp,
+                cornerSize = 17.dp
+            )
+        }
+
+        GlassSurface(
+            modifier = Modifier.weight(1f)
+        ) {
             GlassSurfaceContent(
                 currencyList = currencyList,
                 uiState = currencyPickerUiState,
                 onSelectCurrency = onSelectCurrency
             )
-        },
-        primaryBottomButton = {
-            PrimaryButton(
-                text = stringResource(R.string.save),
-                enabled = currencyPickerUiState.selectedCurrency != null
-            ) {
-                currencyPickerUiState.selectedCurrency?.currencyCode?.let {
-                    onSaveButtonClick(it)
-                }
-            }
         }
-    )
+
+    }
 }
 
 @Composable
@@ -138,7 +148,7 @@ private fun GlassSurfaceContent(
 
     LazyColumn(
         state = lazyColumnState,
-        contentPadding = PaddingValues(12.dp, 12.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
     ) {
         items(items = currencyList, key = { it.currencyCode }) { currency ->
             Row(
@@ -179,6 +189,8 @@ fun CurrencyPickerScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         CurrencyPickerScreen(
             screenPadding = scaffoldPadding,
+            onNavigateBack = {},
+            accountName = "Account Name",
             currencyPickerUiState = CurrencyPickerUiState(
                 isSearching = false,
                 selectedCurrency = CurrencyItem("USD", "US Dollar")

@@ -40,7 +40,6 @@ import com.ataglance.walletglance.core.domain.app.AppUiState
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
@@ -49,6 +48,7 @@ import com.ataglance.walletglance.core.presentation.component.field.TextFieldCom
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
@@ -124,55 +124,52 @@ fun TransferCreationScreen(
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit
 ) {
-    var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
-    var showSenderAccountPicker by remember { mutableStateOf(false) }
-    var showReceiverAccountPicker by remember { mutableStateOf(false) }
-
     val screenIcon = DrawableResByTheme(
         lightDefault = R.drawable.make_transfer_light_default,
         darkDefault = R.drawable.make_transfer_dark_default
     )
 
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+    var showSenderAccountPicker by remember { mutableStateOf(false) }
+    var showReceiverAccountPicker by remember { mutableStateOf(false) }
+
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = 8.dp + screenPadding.calculateTopPadding(),
-                    bottom = 16.dp + screenPadding.calculateBottomPadding()
-                )
+        ScreenContainerWithTopBackNavButton(
+            screenPadding = screenPadding,
+            topBackNavButtonText = stringResource(R.string.make_transfer),
+            topBackNavButtonImageRes = screenIcon.getByTheme(CurrAppTheme),
+            onTopBackNavButtonClick = onNavigateBack
         ) {
-            GlassSurfaceTopNavButton(
-                text = stringResource(R.string.make_transfer),
-                imageRes = screenIcon.getByTheme(CurrAppTheme),
-                filledWidths = FilledWidthByScreenType(.96f),
-                onClick = onNavigateBack
-            )
-            GlassSurface(
-                modifier = Modifier.weight(1f, fill = false),
-                filledWidths = FilledWidthByScreenType(compact = .86f)
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.weight(1f)
             ) {
-                GlassSurfaceContent(
-                    transferDraft = transferDraft,
-                    onDateFieldClick = { showDatePicker = true },
-                    onAccountFieldClick = { isSender: Boolean ->
-                        if (accountList.size == 2) {
-                            onSelectAnotherAccount(isSender)
-                        } else {
-                            if (isSender) showSenderAccountPicker = true
-                            else showReceiverAccountPicker = true
-                        }
-                    },
-                    onChangeRate = onRateChange,
-                    onChangeAmount = onAmountChange
-                )
+                GlassSurface(
+                    modifier = Modifier.weight(1f, fill = false),
+                    filledWidths = FilledWidthByScreenType(compact = .86f)
+                ) {
+                    GlassSurfaceContent(
+                        transferDraft = transferDraft,
+                        onDateFieldClick = { showDatePicker = true },
+                        onAccountFieldClick = { isSender ->
+                            if (accountList.size == 2) {
+                                onSelectAnotherAccount(isSender)
+                            } else {
+                                if (isSender) showSenderAccountPicker = true
+                                else showReceiverAccountPicker = true
+                            }
+                        },
+                        onChangeRate = onRateChange,
+                        onChangeAmount = onAmountChange
+                    )
+                }
             }
+
             RecordCreationBottomButtonsBlock(
                 showOnlySaveButton = transferDraft.isNew,
                 singlePrimaryButtonStringRes = R.string.make_transfer,
@@ -181,6 +178,7 @@ fun TransferCreationScreen(
                 onDeleteButton = onDeleteButton,
                 savingAndRepeatingAreAllowed = transferDraft.savingIsAllowed
             )
+
         }
         CustomDatePicker(
             openDialog = showDatePicker,

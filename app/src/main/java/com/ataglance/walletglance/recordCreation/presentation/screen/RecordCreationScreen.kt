@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -43,10 +42,10 @@ import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.AddNewItemButton
-import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButton
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationBottomButtonsBlock
@@ -158,37 +157,27 @@ fun RecordCreationScreen(
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit
 ) {
+    val screenIcon = DrawableResByTheme(
+        lightDefault = R.drawable.make_record_light_default,
+        darkDefault = R.drawable.make_record_dark_default
+    )
+
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showCategoryPicker by remember { mutableStateOf(false) }
 
     var selectedItemIndex by remember { mutableStateOf<Int?>(null) }
 
-    val screenIcon = DrawableResByTheme(
-        lightDefault = R.drawable.make_record_light_default,
-        darkDefault = R.drawable.make_record_dark_default
-    )
-
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = 8.dp + screenPadding.calculateTopPadding(),
-                    bottom = 16.dp + screenPadding.calculateBottomPadding()
-                )
+        ScreenContainerWithTopBackNavButton(
+            screenPadding = screenPadding,
+            topBackNavButtonText = stringResource(R.string.make_record),
+            topBackNavButtonImageRes = screenIcon.getByTheme(CurrAppTheme),
+            onTopBackNavButtonClick = onNavigateBack
         ) {
-            GlassSurfaceTopNavButton(
-                text = stringResource(R.string.make_record),
-                imageRes = screenIcon.getByTheme(CurrAppTheme),
-                filledWidths = FilledWidthByScreenType(.96f),
-                onClick = onNavigateBack
-            )
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -232,6 +221,7 @@ fun RecordCreationScreen(
                 onDeleteButton = onDeleteButton,
                 savingAndRepeatingAreAllowed = savingIsAllowed
             )
+
         }
         CustomDatePicker(
             openDialog = showDatePicker,

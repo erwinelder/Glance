@@ -12,6 +12,7 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCaseImpl
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCaseImpl
 import com.ataglance.walletglance.account.presentation.viewmodel.ActiveAccountCardViewModel
+import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import org.koin.core.module.dsl.viewModel
@@ -68,6 +69,10 @@ val accountModule = module {
             saveAccountsUseCase = get(),
             getAccountsUseCase = get()
         )
+    }
+
+    viewModel { params ->
+        CurrencyPickerViewModel(selectedCurrency = params.getOrNull<String>())
     }
 
     viewModel {

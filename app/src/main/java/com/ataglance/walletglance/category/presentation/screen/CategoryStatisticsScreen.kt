@@ -28,7 +28,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.presentation.component.CategoryStatisticsItemComponent
+import com.ataglance.walletglance.category.presentation.component.CategoryStatisticsGlassComponent
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.model.GroupedCategoryStatistics
@@ -58,7 +58,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CategoryStatisticsScreenWrapper(
-    screenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     backStack: NavBackStackEntry,
     navController: NavHostController,
     navViewModel: NavigationViewModel,
@@ -93,7 +93,7 @@ fun CategoryStatisticsScreenWrapper(
     val groupedCategoryStatistics by viewModel.groupedCategoryStatistics.collectAsStateWithLifecycle()
 
     CategoryStatisticsScreen(
-        scaffoldAppScreenPadding = screenPadding,
+        screenPadding = screenPadding,
         accountList = appUiState.accountsAndActiveOne.accounts,
         onAccountClick = appViewModel::applyActiveAccount,
         currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
@@ -120,7 +120,7 @@ fun CategoryStatisticsScreenWrapper(
 
 @Composable
 fun CategoryStatisticsScreen(
-    scaffoldAppScreenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
@@ -139,7 +139,7 @@ fun CategoryStatisticsScreen(
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     GlassSurfaceScreenContainerWithFilters(
-        screenPadding = scaffoldAppScreenPadding,
+        screenPadding = screenPadding,
         accountList = accountList,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
@@ -149,7 +149,6 @@ fun CategoryStatisticsScreen(
         collectionsUiState = collectionsUiState,
         onCollectionSelect = onCollectionSelect,
         onToggleCollectionType = onToggleCollectionType,
-        animatedContentLabel = "all categories statistics",
         animatedContentTargetState = groupedCategoryStatistics,
         visibleNoDataMessage = groupedCategoryStatistics.subcategories.isEmpty(),
         noDataMessageRes = R.string.no_data_for_the_selected_filter,
@@ -161,8 +160,8 @@ fun CategoryStatisticsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             groupedStatistics.parentCategory?.let {
-                Spacer(modifier = Modifier.height(16.dp))
-                CategoryStatisticsItemComponent(
+                Spacer(modifier = Modifier.height(8.dp))
+                CategoryStatisticsGlassComponent(
                     uiState = it,
                     showLeftArrow = true,
                     onClick = onClearParentCategory
@@ -173,14 +172,14 @@ fun CategoryStatisticsScreen(
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(vertical = 16.dp),
+                contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(
                     items = groupedStatistics.subcategories,
                     key = { it.category.id }
                 ) { category ->
-                    CategoryStatisticsItemComponent(uiState = category) {
+                    CategoryStatisticsGlassComponent(uiState = category) {
                         onSetParentCategory(category)
                     }
                 }
@@ -191,10 +190,7 @@ fun CategoryStatisticsScreen(
 
 
 
-@Preview(
-    apiLevel = 34,
-    device = Devices.PIXEL_7_PRO
-)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun CategoryStatisticsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
@@ -233,32 +229,138 @@ fun CategoryStatisticsScreenPreview(
             recordNum = 1,
             date = getCurrentDateLong(),
             type = RecordType.Expense,
-            account = accountList[0].toRecordAccount(),
+            account = Account().toRecordAccount(),
             totalAmount = 42.43,
             stack = listOf(
                 RecordStackItem(
                     id = 1,
                     amount = 46.47,
                     quantity = null,
-                    categoryWithSub = DefaultCategoriesPackage(LocalContext.current)
-                        .getDefaultCategories().expense[0].getWithFirstSubcategory(),
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[0].getWithFirstSubcategory(),
                     note = null,
                     includeInBudgets = true
                 )
             )
-        )
+        ),
+        RecordStack(
+            recordNum = 2,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[1].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 3,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[2].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 4,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[3].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 5,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[4].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 6,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[5].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 7,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[6].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
     ),
     parentCategory: CategoryStatistics? = null
 ) {
     val categoriesStatisticsByType = CategoriesStatisticsByType
-        .fromRecordStacks(recordStackList.filterByCollection(selectedCollection))
-        .getByType(currentCollectionType)
+        .fromRecordStacks(recordStacks = recordStackList.filterByCollection(selectedCollection))
+        .getByType(type = currentCollectionType)
 
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         CategoryStatisticsScreen(
-            scaffoldAppScreenPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
             accountList = accountList,
             onAccountClick = {},
             currentDateRangeEnum = currentDateRangeEnum,

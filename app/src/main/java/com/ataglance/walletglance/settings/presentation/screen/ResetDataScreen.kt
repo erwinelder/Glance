@@ -55,7 +55,7 @@ fun ResetDataScreen(
         thisCategory = thisCategory,
         onNavigateBack = onNavigateBack,
         topBottomSpacingProportion = Pair(1f, 1f),
-        mainScreenContentBlock = {
+        mainScreenContent = {
             DangerousActionBlock(
                 actionText = stringResource(R.string.reset_data_action),
                 actionConfirmationText = stringResource(R.string.reset_data_confirmation),

@@ -15,7 +15,7 @@ import com.ataglance.walletglance.core.presentation.utils.plus
 @Composable
 fun ScreenContainer(
     modifier: Modifier = Modifier,
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     padding: PaddingValues = PaddingValues(vertical = 24.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Center,
     content: @Composable ColumnScope.() -> Unit
@@ -24,7 +24,7 @@ fun ScreenContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = verticalArrangement,
         modifier = modifier
-            .padding(padding + screenPadding)
+            .padding(screenPadding + padding)
             .fillMaxSize()
     ) {
         content()

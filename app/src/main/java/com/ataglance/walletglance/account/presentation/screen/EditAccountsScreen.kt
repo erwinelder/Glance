@@ -33,16 +33,17 @@ import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountView
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,6 +62,7 @@ fun EditAccountsScreenWrapper(
 
     EditAccountsScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         isAppSetUp = appConfiguration.isSetUp,
         accounts = accounts,
         onNavigateToEditAccountScreen = { account ->
@@ -89,44 +91,48 @@ fun EditAccountsScreenWrapper(
 @Composable
 fun EditAccountsScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     isAppSetUp: Boolean,
     accounts: List<Account>,
     onNavigateToEditAccountScreen: (Account?) -> Unit,
     onMoveAccounts: (Int, Int) -> Unit,
     onSaveButton: () -> Unit
 ) {
-    GlassSurfaceScreenContainer(
-        topPadding = screenPadding.calculateTopPadding(),
-        bottomPadding = screenPadding.calculateBottomPadding(),
-        glassSurfaceContent = {
-            GlassSurfaceContent(
+    val settingsCategory = SettingsCategory.Accounts(appTheme = CurrAppTheme)
+
+    ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+        screenPadding = screenPadding,
+        topBackNavButtonText = stringResource(settingsCategory.stringRes),
+        topBackNavButtonImageRes = settingsCategory.iconRes,
+        onTopBackNavButtonClick = onNavigateBack,
+        primaryButtonText = stringResource(
+            if (isAppSetUp) R.string.save else R.string.save_and_continue
+        ),
+        onPrimaryButtonClick = onSaveButton
+    ) {
+
+        GlassSurface(
+            modifier = Modifier.weight(1f)
+        ) {
+            AccountsListComponent(
                 accountsList = accounts,
                 onNavigateToEditAccountScreen = onNavigateToEditAccountScreen,
                 onMoveAccounts = onMoveAccounts
             )
-        },
-        glassSurfaceFilledWidths = FilledWidthByScreenType(.86f, .86f, .86f),
-        smallPrimaryButton = {
-            SmallSecondaryButton(
-                text = stringResource(R.string.add_account),
-                iconRes = R.drawable.add_icon
-            ) {
-                onNavigateToEditAccountScreen(null)
-            }
-        },
-        primaryBottomButton = {
-            PrimaryButton(
-                text = stringResource(
-                    if (isAppSetUp) R.string.save else R.string.save_and_continue
-                ),
-                onClick = onSaveButton
-            )
         }
-    )
+
+        SmallSecondaryButton(
+            text = stringResource(R.string.add_account),
+            iconRes = R.drawable.add_icon
+        ) {
+            onNavigateToEditAccountScreen(null)
+        }
+
+    }
 }
 
 @Composable
-private fun GlassSurfaceContent(
+private fun AccountsListComponent(
     accountsList: List<Account>,
     onNavigateToEditAccountScreen: (Account) -> Unit,
     onMoveAccounts: (Int, Int) -> Unit
@@ -159,9 +165,7 @@ private fun CompactLayout(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         itemsIndexed(
             items = accountsList,
@@ -242,6 +246,7 @@ fun EditAccountsScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountsScreen(
             screenPadding = scaffoldPadding,
+            onNavigateBack = {},
             isAppSetUp = isAppSetUp,
             accounts = accountList,
             onNavigateToEditAccountScreen = {},

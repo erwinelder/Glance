@@ -76,17 +76,17 @@ fun CategoriesStatisticsWidget(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    CategoryStatisticsItemComponent(state.top1Category, enableClick = true) {
+                    CategoryStatisticsOnGlassComponent(state.top1Category, enableClick = true) {
                         state.top1Category?.category?.let { category ->
                             onNavigateToCategoriesStatisticsScreen(category.id, category.type)
                         }
                     }
-                    CategoryStatisticsItemComponent(state.top2Category, enableClick = true) {
+                    CategoryStatisticsOnGlassComponent(state.top2Category, enableClick = true) {
                         state.top2Category?.category?.let { category ->
                             onNavigateToCategoriesStatisticsScreen(category.id, category.type)
                         }
                     }
-                    CategoryStatisticsItemComponent(state.top3Category, enableClick = true) {
+                    CategoryStatisticsOnGlassComponent(state.top3Category, enableClick = true) {
                         state.top3Category?.category?.let { category ->
                             onNavigateToCategoriesStatisticsScreen(category.id, category.type)
                         }
@@ -105,8 +105,10 @@ fun CategoriesStatisticsWidget(
 
 @Preview
 @Composable
-private fun CategoriesStatisticsWidgetPreview() {
-    PreviewContainer(appTheme = AppTheme.LightDefault) {
+fun CategoriesStatisticsWidgetPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
+    PreviewContainer(appTheme = appTheme) {
         CategoriesStatisticsWidget(
             uiState = CategoriesStatisticsWidgetUiState(
                 top1Category = CategoryStatistics(

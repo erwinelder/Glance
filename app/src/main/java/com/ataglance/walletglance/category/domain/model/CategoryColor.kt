@@ -6,8 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.category.domain.mapper.toColorWithName
-import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.category.presentation.model.SetupCategoriesUiState
+import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
@@ -224,6 +224,7 @@ private fun Preview() {
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
         EditCategoriesScreen(
             screenPadding = PaddingValues(),
+            onNavigateBack = {},
             isAppSetUp = true,
             uiState = SetupCategoriesUiState(
                 groupedCategoriesByType = categoriesWithSubcategories

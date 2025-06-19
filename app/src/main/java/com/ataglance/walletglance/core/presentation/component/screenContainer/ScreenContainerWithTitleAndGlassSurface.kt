@@ -28,7 +28,7 @@ import com.ataglance.walletglance.core.presentation.utils.getImeBottomInset
 
 @Composable
 fun ScreenContainerWithTitleAndGlassSurface(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     title: String,
     glassSurfaceContent: @Composable BoxScope.() -> Unit,
     fillGlassSurface: Boolean = false,
@@ -64,8 +64,7 @@ fun ScreenContainerWithTitleAndGlassSurface(
                     fontFamily = NotoSans,
                     overflow = TextOverflow.Clip,
                     modifier = Modifier
-                        .fillMaxWidth(FilledWidthByScreenType(compact = .86f)
-                            .getByType(CurrWindowType))
+                        .fillMaxWidth(FilledWidthByScreenType(.86f).getByType(CurrWindowType))
                         .padding(vertical = 16.dp)
                 )
             }

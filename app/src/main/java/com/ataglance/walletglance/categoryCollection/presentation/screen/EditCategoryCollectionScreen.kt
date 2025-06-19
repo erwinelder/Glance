@@ -50,18 +50,20 @@ import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollec
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
 import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.checkbox.ThreeStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.divider.TextDivider
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.core.utils.takeRowComposableIf
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun EditCategoryCollectionScreenWrapper(
@@ -69,8 +71,12 @@ fun EditCategoryCollectionScreenWrapper(
     backStack: NavBackStackEntry,
     navController: NavHostController
 ) {
-    val collectionsViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(navController)
-    val collectionViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionViewModel>(navController)
+    val collectionsViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(
+        navController = navController
+    )
+    val collectionViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionViewModel>(
+        navController = navController
+    )
 
     val collection by collectionViewModel.collectionUiState.collectAsStateWithLifecycle()
     val checkedGroupedCategoriesByType by collectionViewModel.checkedGroupedCategoriesByType
@@ -81,6 +87,7 @@ fun EditCategoryCollectionScreenWrapper(
 
     EditCategoryCollectionScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         collection = collection,
         checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
         expandedCategory = expandedCategory,
@@ -105,6 +112,7 @@ fun EditCategoryCollectionScreenWrapper(
 @Composable
 fun EditCategoryCollectionScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     collection: CategoryCollectionWithCategories,
     checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
     expandedCategory: CheckedGroupedCategories?,
@@ -116,16 +124,25 @@ fun EditCategoryCollectionScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
-    GlassSurfaceScreenContainer(
-        topPadding = screenPadding.calculateTopPadding(),
-        bottomPadding = screenPadding.calculateBottomPadding(),
-        topButton = takeComposableIf(allowDeleting) {
-            SecondaryButton(
+    val settingsCategory = SettingsCategory.CategoryCollections(appTheme = CurrAppTheme)
+
+    ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+        screenPadding = screenPadding,
+        topBackNavButtonText = collection.name,
+        topBackNavButtonImageRes = settingsCategory.iconRes,
+        onTopBackNavButtonClick = onNavigateBack,
+        topBackNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+            SmallSecondaryButton(
                 text = stringResource(R.string.delete),
+                iconRes = R.drawable.trash_icon,
                 onClick = onDeleteButton
             )
         },
-        glassSurfaceContent = {
+        primaryButtonText = stringResource(R.string.save),
+        primaryButtonEnabled = allowSaving,
+        onPrimaryButtonClick = onSaveButton
+    ) {
+        GlassSurface {
             GlassSurfaceContent(
                 collection = collection,
                 checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
@@ -134,15 +151,8 @@ fun EditCategoryCollectionScreen(
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
             )
-        },
-        primaryBottomButton = {
-            PrimaryButton(
-                text = stringResource(R.string.save),
-                onClick = onSaveButton,
-                enabled = allowSaving
-            )
         }
-    )
+    }
 }
 
 @Composable
@@ -389,9 +399,10 @@ fun EditCategoryCollectionScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionScreen(
             collection = collection,
+            onNavigateBack = {},
             checkedGroupedCategoriesByType = editingCategoriesWithSubcategories,
             expandedCategory = null,
-            allowDeleting = true,
+            allowDeleting = false,
             allowSaving = collection.allowSaving() &&
                     editingCategoriesWithSubcategories.hasCheckedCategory(),
             onNameChange = {},

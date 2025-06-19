@@ -26,11 +26,12 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidgetPreview
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
@@ -40,55 +41,101 @@ import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.toStringDateRange
 
 @Composable
-fun BudgetWithStatsComponent(
+fun BudgetWithStatsGlassComponent(
     budget: Budget,
-    onClick: (Budget) -> Unit,
+    showDateRangeLabels: Boolean = false,
     resourceManager: ResourceManager,
-    showDateRangeLabels: Boolean = false
+    onClick: (Budget) -> Unit
 ) {
     GlassSurface(
-        filledWidths = FilledWidthByScreenType(compact = 1f),
         cornerSize = 26.dp,
-        contentPadding = PaddingValues(23.dp, 15.dp),
-        modifier = Modifier.bounceClickEffect { onClick(budget) }
+        contentPadding = PaddingValues(20.dp, 16.dp),
+        modifier = Modifier.bounceClickEffect(.98f) { onClick(budget) }
     ) {
+        BudgetWithStatsComponentContent(
+            budget = budget,
+            showDateRangeLabels = showDateRangeLabels,
+            resourceManager = resourceManager
+        )
+    }
+}
+
+@Composable
+fun BudgetWithStatsOnGlassComponent(
+    budget: Budget,
+    showDateRangeLabels: Boolean = false,
+    resourceManager: ResourceManager,
+    onClick: (Budget) -> Unit
+) {
+    GlassSurfaceOnGlassSurface(
+        onClick = { onClick(budget) },
+        paddingValues = PaddingValues(horizontal = 20.dp, vertical = 16.dp)
+    ) {
+        BudgetWithStatsComponentContent(
+            budget = budget,
+            showDateRangeLabels = showDateRangeLabels,
+            resourceManager = resourceManager
+        )
+    }
+}
+
+
+@Composable
+private fun BudgetWithStatsComponentContent(
+    budget: Budget,
+    showDateRangeLabels: Boolean = false,
+    resourceManager: ResourceManager
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            budget.category?.let {
+                CategoryIconComponent(category = it, cornerSize = 34)
+            }
+            Text(
+                text = budget.name,
+                color = GlanciColors.onSurface,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.W500,
+                fontFamily = Manrope,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                painter = painterResource(R.drawable.short_arrow_right_icon),
+                contentDescription = "right arrow icon",
+                tint = GlanciColors.onSurface,
+                modifier = Modifier.size(20.dp)
+            )
+        }
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                budget.category?.let {
-                    CategoryIconComponent(category = it, cornerSize = 34)
-                }
                 Text(
-                    text = budget.name,
+                    text = budget.usedAmount.formatWithSpaces(),
                     color = GlanciColors.onSurface,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.W500,
                     fontFamily = Manrope,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f, fill = false)
                 )
-                Icon(
-                    painter = painterResource(R.drawable.short_arrow_right_icon),
-                    contentDescription = "right arrow icon",
-                    tint = GlanciColors.onSurface,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = budget.usedAmount.formatWithSpaces(),
+                        text = budget.amountLimit.formatWithSpaces(),
                         color = GlanciColors.onSurface,
                         fontSize = 18.sp,
                         fontFamily = Manrope,
@@ -96,53 +143,39 @@ fun BudgetWithStatsComponent(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = budget.amountLimit.formatWithSpaces(),
-                            color = GlanciColors.onSurface,
-                            fontSize = 18.sp,
-                            fontFamily = Manrope,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f, fill = false)
-                        )
-                        Text(
-                            text = budget.currency,
-                            color = GlanciColors.onSurface.copy(.6f),
-                            fontSize = 17.sp,
-                            fontFamily = Manrope
-                        )
-                    }
-                }
-                budget.category?.let {
-                    LineChartComponent(
-                        percentage = budget.usedPercentage / 100,
-                        brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
-                        shadowColor = it.getIconSolidColorByTheme(CurrAppTheme)
+                    Text(
+                        text = budget.currency,
+                        color = GlanciColors.onSurface.copy(.6f),
+                        fontSize = 17.sp,
+                        fontFamily = Manrope
                     )
                 }
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                budget.category?.let {
-                    LineChartComponent(
-                        percentage = budget.currentTimeWithinRangeGraphPercentage,
-                        brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
-                        shadowColor = it.getIconSolidColorByTheme(CurrAppTheme),
-                        height = 6.dp
-                    )
-                }
-                if (showDateRangeLabels) {
-                    DateRangeLabels(
-                        dateRange = budget.dateRange,
-                        repeatingPeriod = budget.repeatingPeriod,
-                        resourceManager = resourceManager
-                    )
-                }
+            budget.category?.let {
+                LineChartComponent(
+                    percentage = budget.usedPercentage / 100,
+                    brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
+                    shadowColor = it.getIconSolidColorByTheme(CurrAppTheme)
+                )
+            }
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            budget.category?.let {
+                LineChartComponent(
+                    percentage = budget.currentTimeWithinRangeGraphPercentage,
+                    brushColors = it.getLineChartColorsByTheme(CurrAppTheme),
+                    shadowColor = it.getIconSolidColorByTheme(CurrAppTheme),
+                    height = 6.dp
+                )
+            }
+            if (showDateRangeLabels) {
+                DateRangeLabels(
+                    dateRange = budget.dateRange,
+                    repeatingPeriod = budget.repeatingPeriod,
+                    resourceManager = resourceManager
+                )
             }
         }
     }
@@ -186,6 +219,12 @@ private fun DateRangeLabels(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-private fun Preview() {
+private fun BudgetWithStatsGlassComponentPreview() {
     BudgetsScreenPreview(appTheme = AppTheme.LightDefault)
+}
+
+@Preview(device = Devices.PIXEL_7_PRO)
+@Composable
+private fun BudgetWithStatsOnGlassComponentPreview() {
+    ChosenBudgetsWidgetPreview(appTheme = AppTheme.LightDefault)
 }

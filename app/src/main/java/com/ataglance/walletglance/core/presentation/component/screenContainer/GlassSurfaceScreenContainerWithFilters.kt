@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -19,9 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import com.ataglance.walletglance.R
+import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.presentation.component.AccountsFilterBar
 import com.ataglance.walletglance.categoryCollection.presentation.component.CategoryCollectionPickerContainer
@@ -32,7 +30,7 @@ import com.ataglance.walletglance.core.presentation.component.container.MessageC
 
 @Composable
 fun <S> GlassSurfaceScreenContainerWithFilters(
-    screenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
 
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
@@ -46,7 +44,6 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
     onCollectionSelect: (Int) -> Unit,
     onToggleCollectionType: () -> Unit,
 
-    animatedContentLabel: String,
     animatedContentTargetState: S,
     visibleNoDataMessage: Boolean,
     noDataMessageRes: Int,
@@ -60,15 +57,10 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.button_bar_to_widget_gap)),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = screenPadding.calculateTopPadding() +
-                        dimensionResource(R.dimen.button_bar_to_widget_gap),
-                bottom = screenPadding.calculateBottomPadding() +
-                        dimensionResource(R.dimen.screen_vertical_padding)
-            )
+            .padding(top = screenPadding.calculateTopPadding() + 12.dp)
     ) {
         if (visibleAccounts.size > 1) {
             AccountsFilterBar(
@@ -91,24 +83,11 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
             onNavigateToEditCollectionsScreen = onNavigateToEditCollectionsScreen,
             onDimBackgroundChange = onDimBackgroundChange
         )
-        Spacer(modifier = Modifier)
-//        GlassSurface( // TODO
-//            modifier = Modifier
-//                .fillMaxHeight()
-//                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding)),
-//            filledWidths = FilledWidthByScreenType(compact = 1f)
-//        ) {
-//        }
         Box(
             contentAlignment = Alignment.TopCenter,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(R.dimen.screen_horizontal_padding))
+            modifier = Modifier.fillMaxSize()
         ) {
-            AnimatedContent(
-                targetState = animatedContentTargetState,
-                label = animatedContentLabel
-            ) {
+            AnimatedContent(targetState = animatedContentTargetState) {
                 animatedContent(it)
             }
             Column(

@@ -156,6 +156,7 @@ private fun EditCategoryCollectionScreenPreview() {
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         EditCategoryCollectionScreen(
+            onNavigateBack = {},
             collection = collection,
             checkedGroupedCategoriesByType =
             DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()

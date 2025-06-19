@@ -76,7 +76,7 @@ fun ProfileScreen(
             thisCategory = SettingsCategory.Profile(appTheme),
             onNavigateBack = onNavigateBack,
             title = stringResource(greetingsTitleRes),
-            mainScreenContentBlock = {
+            mainScreenContent = {
                 NavigateToSettingsCategoryButton(SettingsCategory.DeleteAccount(appTheme), onPopBackStackAndNavigateToScreen)
                 OpenSettingsCategoryButton(SettingsCategory.SignOut(appTheme)) { showSignOutSheet = true }
                 NavigateToSettingsCategoryButton(SettingsCategory.UpdateEmail(appTheme), onPopBackStackAndNavigateToScreen)

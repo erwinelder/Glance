@@ -31,19 +31,23 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.navigation.CategoriesSettingsScreens
+import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
 import com.ataglance.walletglance.category.presentation.component.EditingSubcategoryComponent
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
 import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.core.utils.takeComposableIfNotNull
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -64,6 +68,7 @@ fun EditSubcategoriesScreenWrapper(
 
     EditSubcategoriesScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         groupedCategories = categoriesUiState.groupedCategories,
         onSaveButton = {
             categoriesViewModel.saveSubcategoryList()
@@ -84,36 +89,48 @@ fun EditSubcategoriesScreenWrapper(
 @Composable
 fun EditSubcategoriesScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     groupedCategories: GroupedCategories?,
     onSaveButton: () -> Unit,
     onNavigateToEditCategoryScreen: (Category?) -> Unit,
     onSwapCategories: (Int, Int) -> Unit
 ) {
-    GlassSurfaceScreenContainer(
-        topPadding = screenPadding.calculateTopPadding(),
-        bottomPadding = screenPadding.calculateBottomPadding(),
-        glassSurfaceContent = {
+    val settingsCategory = SettingsCategory.Categories(appTheme = CurrAppTheme)
+    val topBackNavButtonText = groupedCategories?.category?.name
+        ?: stringResource(settingsCategory.stringRes)
+
+    ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+        screenPadding = screenPadding,
+        topBackNavButtonText = topBackNavButtonText,
+        topBackNavButtonIconComponent = takeComposableIfNotNull(groupedCategories?.category) {
+            CategoryIconComponent(
+                category = it,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        },
+        onTopBackNavButtonClick = onNavigateBack,
+        primaryButtonText = stringResource(R.string.save),
+        onPrimaryButtonClick = onSaveButton
+    ) {
+
+        GlassSurface(
+            modifier = Modifier.weight(1f, fill = false)
+        ) {
             GlassSurfaceContent(
                 subcategoryList = groupedCategories?.subcategoryList.orEmpty(),
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )
-        },
-        smallPrimaryButton = {
-            SmallPrimaryButton(
-                text = stringResource(R.string.add_subcategory),
-                iconRes = R.drawable.add_icon
-            ) {
-                onNavigateToEditCategoryScreen(null)
-            }
-        },
-        primaryBottomButton = {
-            PrimaryButton(
-                text = stringResource(R.string.save),
-                onClick = onSaveButton
-            )
         }
-    )
+
+        SmallSecondaryButton(
+            text = stringResource(R.string.add_subcategory),
+            iconRes = R.drawable.add_icon
+        ) {
+            onNavigateToEditCategoryScreen(null)
+        }
+
+    }
 }
 
 @Composable
@@ -149,12 +166,13 @@ private fun CompactLayout(
         state = lazyListState,
         contentPadding = PaddingValues(dimensionResource(R.dimen.widget_content_padding)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        itemsIndexed(items = subcategoryList, key = { _, item -> item.id }) { index, category ->
+        itemsIndexed(
+            items = subcategoryList,
+            key = { _, item -> item.id }
+        ) { index, category ->
             EditingSubcategoryComponent(
                 category = category,
                 onEditButton = {
@@ -224,6 +242,7 @@ fun EditSubcategoriesScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditSubcategoriesScreen(
             screenPadding = scaffoldPadding,
+            onNavigateBack = {},
             groupedCategories = groupedCategoriesByType.expense[2],
             onSaveButton = {},
             onNavigateToEditCategoryScreen = {},

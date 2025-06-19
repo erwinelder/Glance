@@ -125,7 +125,7 @@ fun PersonalizationScreen(
             thisCategory = SettingsCategory.Appearance(CurrAppTheme),
             onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
             title = stringResource(R.string.appearance_settings_category_title),
-            mainScreenContentBlock = {
+            mainScreenContent = {
                 OpenSettingsCategoryButton(
                     category = SettingsCategory.ColorTheme(CurrAppTheme),
                     onClick = onShowThemeSettings
@@ -175,7 +175,7 @@ fun PersonalizationScreen(
 @Composable
 fun PersonalizationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = false
+    isAppSetUp: Boolean = true
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         PersonalizationScreen(

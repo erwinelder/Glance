@@ -14,20 +14,23 @@ import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPr
 @Composable
 fun BudgetListsByPeriodComponent(
     budgetsByType: BudgetsByType,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+    textDividerFilledWidth: Float = .9f,
     budgetComponent: @Composable (Budget) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
 
     LazyColumn(
         state = lazyListState,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp)
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         budgetsByType.iterateByType { repeatingPeriod, budgetList ->
             item {
                 BudgetTypeListComponent(
                     budgetList = budgetList,
                     repeatingPeriod = repeatingPeriod,
+                    textDividerFilledWidth = textDividerFilledWidth,
                     budgetComponent = budgetComponent
                 )
             }

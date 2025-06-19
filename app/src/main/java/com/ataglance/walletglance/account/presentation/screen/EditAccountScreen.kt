@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,27 +42,28 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.domain.navigation.AccountsSettingsScreens
 import com.ataglance.walletglance.account.domain.utils.getAccountColorsWithNames
-import com.ataglance.walletglance.account.mapper.toEditAccountUiState
+import com.ataglance.walletglance.account.mapper.toDraft
 import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.ColorButton
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.ColorPicker
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.switchButton.SwitchWithLabel
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
-import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.core.utils.takeRowComposableIf
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun EditAccountScreenWrapper(
@@ -81,8 +81,9 @@ fun EditAccountScreenWrapper(
 
     EditAccountScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         accountDraft = accountDraft,
-        allowDeleting = allowDeleting,
+        allowDeleting = allowDeleting && !accountDraft.isNew(),
         allowSaving = allowSaving,
         onColorChange = accountViewModel::changeColor,
         onNameChange = accountViewModel::changeName,
@@ -112,6 +113,7 @@ fun EditAccountScreenWrapper(
 @Composable
 fun EditAccountScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     accountDraft: AccountDraft,
     allowDeleting: Boolean,
     allowSaving: Boolean,
@@ -125,22 +127,34 @@ fun EditAccountScreen(
     onSaveButton: () -> Unit,
     onDeleteButton: (Int) -> Unit
 ) {
+    val screenIcon = SettingsCategory.Accounts(appTheme = CurrAppTheme)
+    val topBackNavButtonText = accountDraft.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.account)
+
     var showColorPicker by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceScreenContainer(
-            topPadding = screenPadding.calculateTopPadding(),
-            bottomPadding = screenPadding.calculateBottomPadding(),
-            fillGlassSurface = false,
-            topButton = takeComposableIf(allowDeleting) {
-                SecondaryButton(text = stringResource(R.string.delete)) {
+        ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+            screenPadding = screenPadding,
+            topBackNavButtonText = topBackNavButtonText,
+            topBackNavButtonImageRes = screenIcon.iconRes,
+            onTopBackNavButtonClick = onNavigateBack,
+            topBackNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+                SmallSecondaryButton(
+                    text = stringResource(R.string.delete),
+                    iconRes = R.drawable.trash_icon
+                ) {
                     onDeleteButton(accountDraft.id)
                 }
             },
-            glassSurfaceContent = {
+            primaryButtonText = stringResource(R.string.save),
+            primaryButtonEnabled = allowSaving,
+            onPrimaryButtonClick = onSaveButton
+        ) {
+            GlassSurface {
                 GlassSurfaceContent(
                     uiState = accountDraft,
                     onColorButtonClick = { showColorPicker = true },
@@ -151,22 +165,13 @@ fun EditAccountScreen(
                     onHideBalanceChange = onHideBalanceChange,
                     onWithoutBalanceChange = onWithoutBalanceChange
                 )
-            },
-            primaryBottomButton = {
-                PrimaryButton(
-                    text = stringResource(R.string.save),
-                    enabled = allowSaving,
-                    onClick = onSaveButton
-                )
             }
-        )
+        }
         ColorPicker(
             visible = showColorPicker,
             colorList = getAccountColorsWithNames(CurrAppTheme),
             onColorClick = onColorChange,
-            onPickerClose = {
-                showColorPicker = false
-            }
+            onPickerClose = { showColorPicker = false }
         )
     }
 }
@@ -183,14 +188,14 @@ private fun GlassSurfaceContent(
     onWithoutBalanceChange: (Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val verticalGap = dimensionResource(R.dimen.field_gap)
+    val verticalGap = 16.dp
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(scrollState)
-            .padding(horizontal = 12.dp, vertical = 24.dp)
+            .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         ColorButton(
             color = uiState.color.getColorAndColorOnByTheme(CurrAppTheme).first.lighter,
@@ -284,16 +289,17 @@ fun EditAccountScreenPreview(
         color = AccountColors.Default,
         isActive = false
     ),
-    allowDeleting: Boolean = false,
+    allowDeleting: Boolean = true
 ) {
-    val editAccountUiState = account.toEditAccountUiState()
+    val accountDraft = account.toDraft()
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditAccountScreen(
             screenPadding = scaffoldPadding,
-            accountDraft = editAccountUiState,
-            allowDeleting = allowDeleting,
-            allowSaving = editAccountUiState.allowSaving(),
+            onNavigateBack = {},
+            accountDraft = accountDraft,
+            allowDeleting = allowDeleting && !accountDraft.isNew(),
+            allowSaving = accountDraft.allowSaving(),
             onColorChange = {},
             onNameChange = {},
             onNavigateToEditAccountCurrencyScreen = {},

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackButton
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
@@ -23,7 +23,7 @@ fun ResultScreenContainer(
     buttonText: String,
     onContinueButtonClick: () -> Unit
 ) {
-    ScreenContainerWithBackButton(screenPadding = screenPadding) {
+    ScreenContainer(screenPadding = screenPadding) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier

@@ -82,7 +82,7 @@ fun NotificationsScreen(
             thisCategory = thisCategory,
             onNavigateBack = onNavigateBack,
             title = stringResource(R.string.adjust_app_notifications),
-            mainScreenContentBlock = {
+            mainScreenContent = {
                 NotificationsScreenContent(
                     dailyRecordsReminderTurnedOn = dailyRecordsReminderTurnedOn,
                     onSetDailyRecordReminder = { turnOn ->

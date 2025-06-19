@@ -49,7 +49,7 @@ fun LargePrimaryIconWithMessage(
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         message?.let {
             Text(
                 text = message,

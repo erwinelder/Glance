@@ -30,7 +30,7 @@ fun GlassSurfaceNavigationButton(
     @DrawableRes imageRes: Int? = null,
     showRightIconInsteadOfLeft: Boolean = true,
     @DrawableRes rightIconRes: Int = R.drawable.short_arrow_right_icon,
-    filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(1f, .75f, .75f),
+    filledWidths: FilledWidthByScreenType? = FilledWidthByScreenType(1f, .75f, .75f),
     onClick: () -> Unit
 ) {
     GlassSurface(

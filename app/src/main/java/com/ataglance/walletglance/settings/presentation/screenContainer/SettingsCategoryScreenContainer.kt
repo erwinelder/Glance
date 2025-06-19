@@ -27,17 +27,16 @@ import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun SettingsCategoryScreenContainer(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     thisCategory: SettingsCategory,
     onNavigateBack: (() -> Unit)? = null,
     topBottomSpacingProportion: Pair<Float, Float> = Pair(2f, 1f),
     title: String? = null,
-    mainScreenContentBlock: @Composable ColumnScope.() -> Unit,
+    mainScreenContent: @Composable ColumnScope.() -> Unit,
     allowScroll: Boolean = true,
     bottomBlock: @Composable (() -> Unit)? = null
 ) {
-    val scrollState =  rememberScrollState()
-    val columnModifier = if (allowScroll) Modifier.verticalScroll(scrollState) else Modifier
+    val scrollState = rememberScrollState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -45,10 +44,10 @@ fun SettingsCategoryScreenContainer(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                PaddingValues(
+                screenPadding + PaddingValues(
                     top = 8.dp,
                     bottom = if (bottomBlock != null) 24.dp else 8.dp
-                ) + screenPadding
+                )
             )
     ) {
         if (onNavigateBack != null && WindowTypeIsCompact) {
@@ -73,10 +72,13 @@ fun SettingsCategoryScreenContainer(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = columnModifier
+            modifier = Modifier
+                .run {
+                    if (allowScroll) verticalScroll(scrollState) else this
+                }
                 .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
         ) {
-            mainScreenContentBlock()
+            mainScreenContent()
         }
 
         Spacer(modifier = Modifier.weight(topBottomSpacingProportion.second))

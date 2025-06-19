@@ -3,9 +3,11 @@ package com.ataglance.walletglance.auth.presentation.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +23,7 @@ import com.ataglance.walletglance.core.presentation.component.button.SmallPrimar
 import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
 import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithGlassBackButton
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
@@ -84,13 +86,21 @@ fun SignUpEmailVerificationScreen(
         onSuccessClose = onSuccessClose,
         onErrorClose = onErrorClose
     ) {
-        ScreenContainerWithGlassBackButton(
-            verticalArrangement = Arrangement.Center,
-            onNavigateBack = onNavigateBack,
-            backButtonImageRes = backButtonImageRes,
-            backButtonText = stringResource(R.string.email_verification)
+        ScreenContainerWithTopBackNavButton(
+            screenPadding = screenPadding,
+            topBackNavButtonText = stringResource(R.string.email_verification),
+            topBackNavButtonImageRes = backButtonImageRes,
+            onTopBackNavButtonClick = onNavigateBack
         ) {
-            EmailVerificationPromptedComponent(onCheck = onCheckEmailVerification)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .weight(1f)
+            ) {
+                EmailVerificationPromptedComponent(onCheck = onCheckEmailVerification)
+            }
         }
     }
 }

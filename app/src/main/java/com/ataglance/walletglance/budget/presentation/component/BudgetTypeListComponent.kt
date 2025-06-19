@@ -15,6 +15,7 @@ import com.ataglance.walletglance.core.utils.asStringRes
 fun <T> BudgetTypeListComponent(
     budgetList: List<T>,
     repeatingPeriod: RepeatingPeriod,
+    textDividerFilledWidth: Float = .9f,
     budgetComponent: @Composable (T) -> Unit
 ) {
     Column(
@@ -22,7 +23,7 @@ fun <T> BudgetTypeListComponent(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         TextDivider(
-            modifier = Modifier.fillMaxWidth(.9f),
+            modifier = Modifier.fillMaxWidth(textDividerFilledWidth),
             textRes = repeatingPeriod.asStringRes()
         )
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {

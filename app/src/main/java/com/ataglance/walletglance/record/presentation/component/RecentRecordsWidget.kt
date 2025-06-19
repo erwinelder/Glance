@@ -25,6 +25,8 @@ import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.utils.findById
+import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
@@ -32,7 +34,10 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.component.widget.WidgetWithTitleAndButtonComponent
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.record.domain.model.RecordStack
+import com.ataglance.walletglance.record.domain.model.RecordStackItem
+import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.model.RecordsTypeFilter
 import com.ataglance.walletglance.record.presentation.model.RecentRecordsWidgetUiState
 import com.ataglance.walletglance.record.presentation.utils.getNoRecordsMessageRes
@@ -132,7 +137,7 @@ private fun RecordStackList(
     ) {
         for (recordStack in recordStackList) {
             if (recordStack.isExpenseOrIncome()) {
-                RecordStackComponent(
+                RecordStackOnGlassComponent(
                     recordStack = recordStack,
                     includeYearInDate = includeYearInRecordDate,
                     resourceManager = resourceManager,
@@ -160,11 +165,55 @@ private fun RecordStackList(
 
 @Preview
 @Composable
-private fun RecordHistoryWidgetPreview() {
-    PreviewContainer {
+fun RecentRecordsWidgetPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
+    val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
+
+    PreviewContainer(appTheme = appTheme) {
         Column {
             RecentRecordsWidget(
-                uiState = RecentRecordsWidgetUiState(),
+                uiState = RecentRecordsWidgetUiState(
+                    firstRecord = RecordStack(
+                        recordNum = 1,
+                        date = getCurrentDateLong(),
+                        type = RecordType.Expense,
+                        account = Account().toRecordAccount(),
+                        totalAmount = 516.41,
+                        stack = listOf(
+                            RecordStackItem(
+                                amount = 0.0,
+                                quantity = null,
+                                categoryWithSub = defaultCategories.expense[0].getWithSubcategoryWithId(13),
+                                note = "some note note note",
+                                includeInBudgets = true
+                            ),
+                            RecordStackItem(
+                                amount = 0.0,
+                                quantity = null,
+                                categoryWithSub = defaultCategories.expense[1].getWithSubcategoryWithId(16),
+                                note = "some note",
+                                includeInBudgets = true
+                            ),
+                        )
+                    ),
+                    secondRecord = RecordStack(
+                        recordNum = 2,
+                        date = getCurrentDateLong(),
+                        type = RecordType.Expense,
+                        account = Account().toRecordAccount(),
+                        totalAmount = 16.41,
+                        stack = listOf(
+                            RecordStackItem(
+                                amount = 0.0,
+                                quantity = null,
+                                categoryWithSub = defaultCategories.expense[2].getWithSubcategoryWithId(13),
+                                note = "note",
+                                includeInBudgets = true
+                            )
+                        )
+                    ),
+                ),
                 accountList = listOf(),
                 isCustomDateRange = false,
                 resourceManager = ResourceManagerImpl(LocalContext.current),

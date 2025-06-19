@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.record.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,12 +32,14 @@ import com.ataglance.walletglance.categoryCollection.domain.navigation.CategoryC
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.AppUiState
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -48,7 +49,7 @@ import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.containsRecordsFromDifferentYears
 import com.ataglance.walletglance.record.mapper.toRecordStacks
-import com.ataglance.walletglance.record.presentation.component.RecordStackComponent
+import com.ataglance.walletglance.record.presentation.component.RecordStackGlassComponent
 import com.ataglance.walletglance.record.presentation.component.TransferComponent
 import com.ataglance.walletglance.record.presentation.viewmodel.RecordsViewModel
 import org.koin.compose.koinInject
@@ -57,7 +58,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RecordsScreenWrapper(
-    screenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     appViewModel: AppViewModel,
@@ -100,7 +101,7 @@ fun RecordsScreenWrapper(
         recordStacks = recordStacks,
         onCollectionSelect = viewModel::selectCollection,
         onToggleCollectionType = viewModel::toggleCollectionType,
-        onNavigateToScreenMovingTowardsLeft = { screen ->
+        onNavigateToScreen = { screen ->
             navViewModel.navigateToScreenMovingTowardsLeft(
                 navController = navController, screen = screen
             )
@@ -111,7 +112,7 @@ fun RecordsScreenWrapper(
 
 @Composable
 fun RecordsScreen(
-    screenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     resourceManager: ResourceManager,
     accountList: List<Account>,
     onAccountClick: (Int) -> Unit,
@@ -124,7 +125,7 @@ fun RecordsScreen(
     onCollectionSelect: (Int) -> Unit,
 
     recordStacks: List<RecordStack>,
-    onNavigateToScreenMovingTowardsLeft: (Any) -> Unit,
+    onNavigateToScreen: (Any) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
     val includeYearToRecordDate by remember {
@@ -143,7 +144,6 @@ fun RecordsScreen(
         collectionsUiState = collectionsUiState,
         onCollectionSelect = onCollectionSelect,
         onToggleCollectionType = onToggleCollectionType,
-        animatedContentLabel = "records history widget content",
         animatedContentTargetState = Pair(recordStacks, collectionsUiState.activeType),
         visibleNoDataMessage = recordStacks.isEmpty(),
         noDataMessageRes = when(collectionsUiState.activeType) {
@@ -152,47 +152,47 @@ fun RecordsScreen(
             CategoryCollectionType.Income -> R.string.you_have_no_income_in_date_range
         },
         onNavigateToEditCollectionsScreen = {
-            onNavigateToScreenMovingTowardsLeft(
+            onNavigateToScreen(
                 CategoryCollectionsSettingsScreens.EditCategoryCollections
             )
         },
         onDimBackgroundChange = onDimBackgroundChange
-    ) { targetRecordStackListAndTypeFilter ->
-        Column {
-            LazyColumn(
-                state = lazyListState,
-                contentPadding = PaddingValues(vertical = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(
-                    items = targetRecordStackListAndTypeFilter.first,
-                    key = { it.recordNum }
-                ) { recordStack ->
-                    if (recordStack.isNotTransfer()) {
-                        RecordStackComponent(
-                            recordStack = recordStack,
-                            includeYearInDate = includeYearToRecordDate,
-                            resourceManager = resourceManager
-                        ) { recordNum ->
-                            onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.RecordCreation(recordNum = recordNum)
-                            )
+    ) { (targetRecordStacks, _) ->
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxWidth(
+                FilledWidthByScreenType().getByType(CurrWindowType)
+            )
+        ) {
+            items(
+                items = targetRecordStacks,
+                key = { it.recordNum }
+            ) { recordStack ->
+                if (recordStack.isNotTransfer()) {
+                    RecordStackGlassComponent(
+                        recordStack = recordStack,
+                        includeYearInDate = includeYearToRecordDate,
+                        resourceManager = resourceManager
+                    ) { recordNum ->
+                        onNavigateToScreen(
+                            MainScreens.RecordCreation(recordNum = recordNum)
+                        )
+                    }
+                } else {
+                    TransferComponent(
+                        recordStack = recordStack,
+                        includeYearToDate = includeYearToRecordDate,
+                        resourceManager = resourceManager,
+                        secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
+                            accountList.findById(it)?.toRecordAccount()
                         }
-                    } else {
-                        TransferComponent(
-                            recordStack = recordStack,
-                            includeYearToDate = includeYearToRecordDate,
-                            resourceManager = resourceManager,
-                            secondAccount = recordStack.stack.firstOrNull()?.note?.toInt()?.let {
-                                accountList.findById(it)?.toRecordAccount()
-                            }
-                        ) { recordNum ->
-                            onNavigateToScreenMovingTowardsLeft(
-                                MainScreens.TransferCreation(recordNum = recordNum)
-                            )
-                        }
+                    ) { recordNum ->
+                        onNavigateToScreen(
+                            MainScreens.TransferCreation(recordNum = recordNum)
+                        )
                     }
                 }
             }
@@ -237,16 +237,122 @@ fun RecordsScreenPreview(
                     quantity = null,
                     categoryWithSub = groupedCategoriesByType
                         .expense[0].getWithFirstSubcategory(),
+                    note = "some very long note that is not very important at all",
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 2,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[1].getWithFirstSubcategory(),
                     note = null,
                     includeInBudgets = true
                 )
             )
-        )
+        ),
+        RecordStack(
+            recordNum = 3,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[2].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 4,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[3].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 5,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[4].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 6,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[5].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
+        RecordStack(
+            recordNum = 7,
+            date = getCurrentDateLong(),
+            type = RecordType.Expense,
+            account = Account().toRecordAccount(),
+            totalAmount = 42.43,
+            stack = listOf(
+                RecordStackItem(
+                    id = 1,
+                    amount = 46.47,
+                    quantity = null,
+                    categoryWithSub = groupedCategoriesByType
+                        .expense[6].getWithFirstSubcategory(),
+                    note = null,
+                    includeInBudgets = true
+                )
+            )
+        ),
     )
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         RecordsScreen(
             screenPadding = scaffoldPadding,
             resourceManager = ResourceManagerImpl(LocalContext.current),
@@ -264,7 +370,7 @@ fun RecordsScreenPreview(
             recordStacks = recordStackList,
             onCollectionSelect = {},
             onToggleCollectionType = {},
-            onNavigateToScreenMovingTowardsLeft = {},
+            onNavigateToScreen = {},
             onDimBackgroundChange = {}
         )
     }

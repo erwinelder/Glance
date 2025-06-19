@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,7 +54,7 @@ import com.ataglance.walletglance.core.presentation.component.chart.ColumnChartC
 import com.ataglance.walletglance.core.presentation.component.chart.SingleValuePieChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithGlassBackButton
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
@@ -82,35 +83,42 @@ fun BudgetStatisticsScreenWrapper(
 
     BudgetStatisticsScreen(
         screenPadding = screenPadding,
-        uiState = uiState,
-        onBackButtonClick = navController::popBackStack
+        onNavigateBack = navController::popBackStack,
+        uiState = uiState
     )
 }
 
 @Composable
 fun BudgetStatisticsScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
-    uiState: BudgetStatisticsScreenUiState,
-    onBackButtonClick: () -> Unit
+    screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
+    uiState: BudgetStatisticsScreenUiState
 ) {
     val backButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.budgets_light_default_icon,
         darkDefault = R.drawable.budgets_dark_default_icon,
     )
 
-    ScreenContainerWithGlassBackButton(
+    ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,
-        verticalArrangement = Arrangement.SpaceBetween,
-        onNavigateBack = onBackButtonClick,
-        backButtonText = stringResource(R.string.budget_statistics_title),
-        backButtonImageRes = backButtonImageRes.getByTheme(CurrAppTheme)
+        topBackNavButtonText = stringResource(R.string.budget_statistics_title),
+        topBackNavButtonImageRes = backButtonImageRes.getByTheme(CurrAppTheme),
+        onTopBackNavButtonClick = onNavigateBack
     ) {
         if (uiState.budget != null) {
-            BudgetStatisticsScreenContent(
-                budget = uiState.budget,
-                columnChartUiState = uiState.columnChartUiState,
-                budgetAccounts = uiState.accounts
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .weight(1f)
+            ) {
+                BudgetStatisticsScreenContent(
+                    budget = uiState.budget,
+                    columnChartUiState = uiState.columnChartUiState,
+                    budgetAccounts = uiState.accounts
+                )
+            }
         } else {
             MessageContainer(message = stringResource(R.string.budget_not_found))
         }
@@ -149,7 +157,7 @@ private fun BudgetStatisticsScreenContent(
                     color = GlanciColors.onSurface,
                     fontSize = 26.sp,
                     fontFamily = Manrope,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.W600,
                     textAlign = TextAlign.Center
                 )
                 Text(
@@ -310,12 +318,12 @@ fun BudgetStatisticsScreenPreview(
 
     PreviewContainer(appTheme = appTheme) {
         BudgetStatisticsScreen(
+            onNavigateBack = {},
             uiState = BudgetStatisticsScreenUiState(
                 budget = budget,
                 columnChartUiState = columnChartUiState,
                 accounts = accountList
-            ),
-            onBackButtonClick = {}
+            )
         )
     }
 }

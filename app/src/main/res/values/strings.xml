@@ -220,6 +220,12 @@
     <string name="no_network">No network connection</string>
     <string name="subscription_purchase_error">An error occurred while handling the purchase</string>
 
+    <!-- Budgets -->
+    <string name="budget">Budget</string>
+
+    <!-- Category Collections -->
+    <string name="category_collection">Category collection</string>
+
     <!-- Notifications -->
     <string name="general_notifications_channel_name">General notifications</string>
     <string name="notifications_denied_title">Notifications denied</string>

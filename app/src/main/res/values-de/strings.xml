@@ -219,6 +219,12 @@
     <string name="no_network">Keine Netzwerkverbindung</string>
     <string name="subscription_purchase_error">Beim Verarbeiten des Kaufs ist ein Fehler aufgetreten</string>
 
+    <!-- Budgets -->
+    <string name="budget">Budget</string>
+
+    <!-- Category Collections -->
+    <string name="category_collection">Kategoriesammlung</string>
+
     <!-- Notifications -->
     <string name="general_notifications_channel_name">Allgemeine Benachrichtigungen</string>
     <string name="notifications_denied_title">Benachrichtigungen abgelehnt</string>

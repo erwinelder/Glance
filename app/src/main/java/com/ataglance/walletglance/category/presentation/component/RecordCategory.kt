@@ -37,9 +37,10 @@ fun RecordCategory(
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = onClick?.let {
-                Modifier.bounceClickEffect { onClick(category) }
-            } ?: Modifier
+            modifier = Modifier
+                .run {
+                    onClick?.let { this.bounceClickEffect { onClick(category) } } ?: this
+                }
         ) {
             Icon(
                 painter = painterResource(category.icon.res),

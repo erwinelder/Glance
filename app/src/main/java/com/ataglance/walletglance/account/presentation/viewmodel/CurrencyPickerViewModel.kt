@@ -2,7 +2,6 @@ package com.ataglance.walletglance.account.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.utils.toSortedCurrencyItemList
 import com.ataglance.walletglance.account.presentation.model.CurrencyItem
@@ -16,7 +15,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.util.Currency
 
-class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
+class CurrencyPickerViewModel(
+    selectedCurrency: String?
+) : ViewModel() {
 
     private val _searchedPrompt = MutableStateFlow("")
     val searchedPrompt = _searchedPrompt.asStateFlow()
@@ -25,7 +26,8 @@ class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
         Currency.getAvailableCurrencies().toSortedCurrencyItemList()
     )
 
-    val currencyList: StateFlow<List<CurrencyItem>> = searchedPrompt.combine(
+    val currencyList: StateFlow<List<CurrencyItem>> = combine(
+        _searchedPrompt,
         _currencyList
     ) { prompt, list ->
         if (prompt.isBlank()) {
@@ -64,13 +66,4 @@ class CurrencyPickerViewModel(selectedCurrency: String?) : ViewModel() {
         _uiState.update { it.copy(isSearching = prompt.isNotEmpty()) }
     }
 
-}
-
-data class CurrencyPickerViewModelFactory(
-    private val selectedCurrency: String?
-) : ViewModelProvider.NewInstanceFactory() {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CurrencyPickerViewModel(selectedCurrency) as T
-    }
 }

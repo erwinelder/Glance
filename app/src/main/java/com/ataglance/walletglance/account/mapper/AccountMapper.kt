@@ -38,7 +38,7 @@ fun Account.toDataModel(): AccountEntity {
 }
 
 
-fun Account.toEditAccountUiState(): AccountDraft {
+fun Account.toDraft(): AccountDraft {
     return AccountDraft(
         id = id,
         orderNum = orderNum,

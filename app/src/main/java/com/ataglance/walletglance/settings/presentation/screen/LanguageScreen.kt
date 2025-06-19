@@ -80,7 +80,7 @@ fun LanguageScreen(
         thisCategory = thisCategory,
         onNavigateBack = onNavigateBack.takeIf { isAppSetUp },
         title = stringResource(R.string.choose_app_language),
-        mainScreenContentBlock = {
+        mainScreenContent = {
             LanguagePicker(
                 currentLangCode = chosenLanguage,
                 onLangCodeSelect = onSelectLangCode

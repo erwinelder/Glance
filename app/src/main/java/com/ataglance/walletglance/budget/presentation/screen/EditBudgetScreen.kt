@@ -48,19 +48,21 @@ import com.ataglance.walletglance.category.presentation.component.CategoryField
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.PopupFloatingPicker
-import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.utils.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.core.utils.takeRowComposableIf
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
 fun EditBudgetScreenWrapper(
@@ -75,6 +77,7 @@ fun EditBudgetScreenWrapper(
 
     EditBudgetScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         budget = budget,
         accountList = budgetViewModel.accounts,
         groupedCategoriesByType = budgetViewModel.groupedCategoriesByType,
@@ -100,6 +103,7 @@ fun EditBudgetScreenWrapper(
 @Composable
 fun EditBudgetScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     budget: BudgetDraft,
     accountList: List<Account>,
     groupedCategoriesByType: GroupedCategoriesByType,
@@ -112,23 +116,33 @@ fun EditBudgetScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
+    val settingsCategory = SettingsCategory.Budgets(appTheme = CurrAppTheme)
+    val topBackNavButtonText = budget.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.budget)
+
     var showCategoryPicker by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceScreenContainer(
-            topPadding = screenPadding.calculateTopPadding(),
-            bottomPadding = screenPadding.calculateBottomPadding(),
-            fillGlassSurface = false,
-            topButton = takeComposableIf(!budget.isNew) {
-                SecondaryButton(
+        ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+            screenPadding = screenPadding,
+            topBackNavButtonText = topBackNavButtonText,
+            topBackNavButtonImageRes = settingsCategory.iconRes,
+            onTopBackNavButtonClick = onNavigateBack,
+            topBackNavButtonCompanionComponent = takeRowComposableIf(!budget.isNew) {
+                SmallSecondaryButton(
                     text = stringResource(R.string.delete),
+                    iconRes = R.drawable.trash_icon,
                     onClick = onDeleteButton
                 )
             },
-            glassSurfaceContent = {
+            primaryButtonText = stringResource(if (budget.isNew) R.string.create else R.string.save),
+            primaryButtonEnabled = budget.allowSaving(),
+            onPrimaryButtonClick = onSaveButton
+        ) {
+            GlassSurface {
                 GlassSurfaceContent(
                     budget = budget,
                     accountList = accountList,
@@ -139,15 +153,8 @@ fun EditBudgetScreen(
                     onLinkAccount = onLinkAccount,
                     onUnlinkAccount = onUnlinkAccount
                 )
-            },
-            primaryBottomButton = {
-                PrimaryButton(
-                    text = stringResource(if (budget.isNew) R.string.create else R.string.save),
-                    enabled = budget.allowSaving(),
-                    onClick = onSaveButton
-                )
             }
-        )
+        }
         CategoryPicker(
             visible = showCategoryPicker,
             groupedCategoriesByType = groupedCategoriesByType,
@@ -312,6 +319,7 @@ fun EditBudgetScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditBudgetScreen(
             screenPadding = scaffoldPadding,
+            onNavigateBack = {},
             budget = budgetUiState,
             accountList = accountList,
             groupedCategoriesByType = groupedCategoriesByType,

@@ -219,6 +219,12 @@
     <string name="no_network">Нет подключения к сети</string>
     <string name="subscription_purchase_error">Произошла ошибка при обработке покупки</string>
 
+    <!-- Budgets -->
+    <string name="budget">Бюджет</string>
+
+    <!-- Category Collections -->
+    <string name="category_collection">Коллекция категорий</string>
+
     <!-- Notifications -->
     <string name="general_notifications_channel_name">Общие уведомления</string>
     <string name="notifications_denied_title">Уведомления отклонены</string>

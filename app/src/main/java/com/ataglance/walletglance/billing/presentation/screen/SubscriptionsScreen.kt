@@ -73,7 +73,7 @@ fun SubscriptionsScreen(
             thisCategory = SettingsCategory.ManageSubscriptions(CurrAppTheme),
             onNavigateBack = onNavigateBack,
             topBottomSpacingProportion = Pair(1f, 1f),
-            mainScreenContentBlock = {
+            mainScreenContent = {
                 SubscriptionsList(
                     subscriptions = activeSubscriptions,
                     onStartPurchase = onStartPurchase
