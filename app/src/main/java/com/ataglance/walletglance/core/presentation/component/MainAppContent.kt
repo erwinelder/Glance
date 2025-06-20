@@ -35,9 +35,6 @@ fun MainAppContent(
         navViewModel.updateBottomBarVisibility(
             isSetUp = appConfiguration.isSetUp, navBackStackEntry = navBackStackEntry
         )
-        navViewModel.updateFloatingButtonVisibility(
-            isSetUp = appConfiguration.isSetUp, navBackStackEntry = navBackStackEntry
-        )
     }
     LaunchedEffect(navBackStackEntry) {
         navViewModel.updateBottomBarActiveButton(navBackStackEntry = navBackStackEntry)

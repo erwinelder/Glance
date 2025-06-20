@@ -6,9 +6,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
@@ -19,7 +17,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +36,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,12 +47,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleSlideVerFadeOutAnimation
-import com.ataglance.walletglance.core.presentation.component.button.FloatingButtonComponent
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
@@ -77,7 +72,6 @@ fun BottomNavBarWrapper(
 ) {
     val isBottomBarVisible by navViewModel.isBottomBarVisible.collectAsStateWithLifecycle()
     val isBottomBarExpanded by navViewModel.isBottomBarExpanded.collectAsStateWithLifecycle()
-    val isFloatingButtonVisible by navViewModel.isFloatingButtonVisible.collectAsStateWithLifecycle()
     val primaryNavButtons by navViewModel.primaryNavigationButtons.collectAsStateWithLifecycle()
     val secondaryNavButtons by navViewModel.secondaryNavigationButtons.collectAsStateWithLifecycle()
 
@@ -86,7 +80,6 @@ fun BottomNavBarWrapper(
     BottomNavBar(
         isBottomBarVisible = isBottomBarVisible,
         isBottomBarExpanded = isBottomBarExpanded,
-        isFloatingButtonVisible = isFloatingButtonVisible,
         onIsExpandedToggle = navViewModel::toggleBottomBarExpanded,
         primaryNavButtons = primaryNavButtons,
         secondaryNavButtons = secondaryNavButtons,
@@ -97,12 +90,6 @@ fun BottomNavBarWrapper(
                 navBackStackEntry = navBackStackEntry
             )
         },
-        onFloatingButtonClick = {
-            navViewModel.navigateToScreenMovingTowardsLeft(
-                navController = navController,
-                screen = MainScreens.RecordCreation()
-            )
-        },
         bottomPadding = bottomSystemBarPadding
     )
 }
@@ -111,51 +98,11 @@ fun BottomNavBarWrapper(
 fun BottomNavBar(
     isBottomBarVisible: Boolean,
     isBottomBarExpanded: Boolean,
-    isFloatingButtonVisible: Boolean,
     onIsExpandedToggle: () -> Unit = {},
     primaryNavButtons: List<BottomNavBarButtonState>,
     secondaryNavButtons: List<BottomNavBarButtonState>,
     onButtonClick: (BottomNavBarButtonState) -> Unit,
-    onFloatingButtonClick: () -> Unit,
     bottomPadding: Dp = 0.dp
-) {
-    BottomBarContainer(
-        isBottomBarVisible = isBottomBarVisible,
-        isBottomBarExpanded = isBottomBarExpanded,
-        isFloatingButtonVisible = isFloatingButtonVisible,
-        bottomPadding = bottomPadding,
-        floatingButton = {
-            FloatingButtonComponent(
-                iconRes = R.drawable.make_record_icon,
-                onClick = onFloatingButtonClick
-            )
-        }
-    ) {
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
-            PopupButtonsList(
-                isExpanded = isBottomBarExpanded,
-                onIsExpandedToggle = onIsExpandedToggle,
-                buttons = secondaryNavButtons,
-                onButtonClick = onButtonClick
-            )
-            BottomBarButtonsRow(
-                buttons = primaryNavButtons,
-                onButtonClick = onButtonClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun BottomBarContainer(
-    isBottomBarVisible: Boolean,
-    isBottomBarExpanded: Boolean,
-    isFloatingButtonVisible: Boolean,
-    bottomPadding: Dp = 0.dp,
-    floatingButton: @Composable (() -> Unit)?,
-    content: @Composable () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -164,21 +111,24 @@ private fun BottomBarContainer(
         contentAlignment = Alignment.BottomEnd
     ) {
         AnimatedVisibility(
-            visible = isBottomBarVisible && !isBottomBarExpanded && isFloatingButtonVisible,
-            enter = slideInHorizontally { (it * 1.5).toInt() } + fadeIn(),
-            exit = slideOutHorizontally { (it * 1.5).toInt() } + fadeOut(),
-            modifier = Modifier.absoluteOffset(y = (-80).dp)
-        ) {
-            floatingButton?.let { button ->
-                button()
-            }
-        }
-        AnimatedVisibility(
             visible = isBottomBarVisible,
             enter = slideInVertically { (it * 1.5).toInt() } + fadeIn(),
             exit = slideOutVertically { (it * 1.5).toInt() } + fadeOut()
         ) {
-            content()
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                PopupButtonsList(
+                    isExpanded = isBottomBarExpanded,
+                    onIsExpandedToggle = onIsExpandedToggle,
+                    buttons = secondaryNavButtons,
+                    onButtonClick = onButtonClick
+                )
+                BottomBarButtonsRow(
+                    buttons = primaryNavButtons,
+                    onButtonClick = onButtonClick
+                )
+            }
         }
     }
 }
@@ -194,7 +144,7 @@ private fun BottomBarButtonsRow(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.spacedBy(22.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .bounceClickEffect(.985f)
@@ -205,13 +155,12 @@ private fun BottomBarButtonsRow(
                 )
                 .clip(RoundedCornerShape(26.dp))
                 .background(GlanciColors.surface)
-                .fillMaxWidth()
                 .border(
                     width = 1.dp,
                     color = GlanciColors.onSurface.copy(.05f),
                     shape = RoundedCornerShape(26.dp)
                 )
-                .padding(vertical = 16.dp, horizontal = 4.dp)
+                .padding(horizontal = 28.dp, vertical = 16.dp)
         ) {
             buttons.forEach { button ->
                 BottomBarButton(button = button, onClick = onButtonClick)
@@ -261,7 +210,7 @@ private fun BottomBarButton(
                 .bounceClickEffect {
                     onClick(button)
                 }
-                .size(36.dp)
+                .size(34.dp)
         )
     }
 }
@@ -355,7 +304,7 @@ private fun ListBarButton(
 }
 
 
-@Preview
+@Preview(device = PIXEL_7_PRO)
 @Composable
 private fun BottomNavBarPreview() {
     initializeKoinMockedModule {

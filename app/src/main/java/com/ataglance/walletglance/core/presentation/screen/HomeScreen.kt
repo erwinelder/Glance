@@ -298,7 +298,10 @@ private fun CompactLayout(
 
 
 
-@Preview(heightDp = 2000, device = Devices.PIXEL_7_PRO)
+@Preview(
+//    heightDp = 2000,
+    device = Devices.PIXEL_7_PRO
+)
 @Composable
 fun HomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
@@ -415,7 +418,10 @@ fun HomeScreenPreview(
         .getExpenseIfNotEmptyOrIncome()
         .let(CategoriesStatisticsWidgetUiState::fromStatistics)
 
-    PreviewWithMainScaffoldContainer(appTheme = appTheme) { screenPadding ->
+    PreviewWithMainScaffoldContainer(
+        appTheme = appTheme,
+        isBottomBarVisible = true
+    ) { screenPadding ->
         HomeScreen(
             screenPadding = screenPadding,
             isAppThemeSetUp = true,

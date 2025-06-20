@@ -57,18 +57,6 @@ class NavigationViewModel(
     }
 
 
-    private val _isFloatingActionVisible = MutableStateFlow(true)
-    val isFloatingButtonVisible = _isFloatingActionVisible.asStateFlow()
-
-    fun updateFloatingButtonVisibility(isSetUp: Boolean, navBackStackEntry: NavBackStackEntry?) {
-        val isVisible = isSetUp && navBackStackEntry.currentScreenIsAnyOf(
-            MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(),
-            MainScreens.Budgets
-        )
-        _isFloatingActionVisible.update { isVisible }
-    }
-
-
     private val _navigationButtons = MutableStateFlow<List<BottomNavBarButtonState>>(
         BottomNavBarButtonState.asDefaultList()
     )
