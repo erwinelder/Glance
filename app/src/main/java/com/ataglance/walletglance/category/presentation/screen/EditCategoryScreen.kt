@@ -109,6 +109,8 @@ fun EditCategoryScreen(
     val categoryIconWithColor by remember(category.icon, category.color) {
         derivedStateOf { category.icon to category.color }
     }
+    val backNavButtonText = category.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.category)
 
     var showColorPicker by remember { mutableStateOf(false) }
     val categoryIconList by remember {
@@ -122,7 +124,7 @@ fun EditCategoryScreen(
 
         ScreenContainerWithTopBackNavButtonAndPrimaryButton(
             screenPadding = screenPadding,
-            backNavButtonText = category.name,
+            backNavButtonText = backNavButtonText,
             backNavButtonIconComponent = {
                 AnimatedContent(
                     targetState = categoryIconWithColor

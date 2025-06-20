@@ -42,6 +42,8 @@ import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.AddNewItemButton
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilityContainer
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilitySpacer
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
@@ -158,8 +160,8 @@ fun RecordCreationScreen(
     onDeleteButton: () -> Unit
 ) {
     val backNavButtonImageRes = DrawableResByTheme(
-        lightDefault = R.drawable.make_record_light_default,
-        darkDefault = R.drawable.make_record_dark_default
+        lightDefault = R.drawable.create_record_light_default,
+        darkDefault = R.drawable.create_record_dark_default
     ).getByTheme(CurrAppTheme)
 
     var showDatePicker by remember { mutableStateOf(false) }
@@ -177,25 +179,27 @@ fun RecordCreationScreen(
             backNavButtonText = stringResource(R.string.create_record),
             backNavButtonImageRes = backNavButtonImageRes,
             onBackNavButtonClick = onNavigateBack
-        ) {
+        ) { keyboardInFocus ->
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                RecordCreationTopBar(
-                    draftGeneral = recordDraftGeneral,
-                    accounts = accounts,
-                    onSelectCategoryType = onSelectCategoryType,
-                    onIncludeInBudgetsChange = onIncludeInBudgetsChange,
-                    onDateFieldClick = { showDatePicker = true },
-                    onToggleAccounts = onToggleAccounts,
-                    onSelectAccount = onSelectAccount,
-                    onDimBackgroundChange = onDimBackgroundChange,
-                )
+                KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+                    RecordCreationTopBar(
+                        draftGeneral = recordDraftGeneral,
+                        accounts = accounts,
+                        onSelectCategoryType = onSelectCategoryType,
+                        onIncludeInBudgetsChange = onIncludeInBudgetsChange,
+                        onDateFieldClick = { showDatePicker = true },
+                        onToggleAccounts = onToggleAccounts,
+                        onSelectAccount = onSelectAccount,
+                        onDimBackgroundChange = onDimBackgroundChange,
+                    )
+                }
+                KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 16.dp)
                 RecordCreationScreenContent(
                     recordDraftItems = recordDraftItems,
                     selectedAccount = recordDraftGeneral.account,
@@ -213,14 +217,18 @@ fun RecordCreationScreen(
                 )
             }
 
-            RecordCreationBottomButtonsBlock(
-                showOnlySaveButton = recordDraftGeneral.isNew,
-                singlePrimaryButtonStringRes = R.string.save_record,
-                onSaveButton = onSaveButton,
-                onRepeatButton = onRepeatButton,
-                onDeleteButton = onDeleteButton,
-                savingAndRepeatingAreAllowed = savingIsAllowed
-            )
+            KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+
+            KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+                RecordCreationBottomButtonsBlock(
+                    showOnlySaveButton = recordDraftGeneral.isNew,
+                    singlePrimaryButtonStringRes = R.string.save_record,
+                    onSaveButton = onSaveButton,
+                    onRepeatButton = onRepeatButton,
+                    onDeleteButton = onDeleteButton,
+                    savingAndRepeatingAreAllowed = savingIsAllowed
+                )
+            }
 
         }
         CustomDatePicker(

@@ -125,10 +125,12 @@ fun EditCategoryCollectionScreen(
     onSaveButton: () -> Unit
 ) {
     val settingsCategory = SettingsCategory.CategoryCollections(appTheme = CurrAppTheme)
+    val backNavButtonText = collection.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.category_collection)
 
     ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         screenPadding = screenPadding,
-        backNavButtonText = collection.name,
+        backNavButtonText = backNavButtonText,
         backNavButtonImageRes = settingsCategory.iconRes,
         onBackNavButtonClick = onNavigateBack,
         backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {

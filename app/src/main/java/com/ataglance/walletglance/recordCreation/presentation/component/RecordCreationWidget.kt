@@ -48,8 +48,8 @@ fun RecordCreationWidget(
             .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
     ) {
         RecordCreationWidgetButton(
-            iconRes = R.drawable.make_record_dark_default,
-            contentDescription = "Make record",
+            iconRes = R.drawable.create_record_dark_default,
+            contentDescription = "Create record",
             text = stringResource(R.string.create_record),
             onClick = onMakeRecord
         )

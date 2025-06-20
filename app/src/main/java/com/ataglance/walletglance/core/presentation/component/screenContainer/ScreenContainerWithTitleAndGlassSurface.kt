@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilityContainer
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilitySpacer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
@@ -43,8 +44,7 @@ fun ScreenContainerWithTitleAndGlassSurface(
 
     ScreenContainer(
         screenPadding = screenPadding,
-        padding = PaddingValues(top = 8.dp, bottom = /*bottomPadding*/24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        padding = PaddingValues(top = 8.dp, bottom = bottomPadding),
         modifier = Modifier.clickable { focusManager.clearFocus() }
     ) {
 
@@ -86,6 +86,8 @@ fun ScreenContainerWithTitleAndGlassSurface(
 
             Spacer(modifier = Modifier.weight(1f))
         }
+
+        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 16.dp)
 
         KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
             bottomButtonBlock()

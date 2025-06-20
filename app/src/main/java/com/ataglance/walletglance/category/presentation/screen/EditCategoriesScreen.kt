@@ -154,7 +154,7 @@ fun EditCategoriesScreen(
         )
 
         GlassSurface(
-            modifier = Modifier.weight(1f, fill = false)
+            modifier = Modifier.weight(1f)
         ) {
             GlassSurfaceContent(
                 uiState = uiState,

@@ -127,7 +127,7 @@ fun EditAccountScreen(
     onSaveButton: () -> Unit,
     onDeleteButton: (Int) -> Unit
 ) {
-    val screenIcon = SettingsCategory.Accounts(appTheme = CurrAppTheme)
+    val settingsCategory = SettingsCategory.Accounts(appTheme = CurrAppTheme)
     val backNavButtonText = accountDraft.name.takeIf { it.isNotBlank() }
         ?: stringResource(R.string.account)
 
@@ -140,7 +140,7 @@ fun EditAccountScreen(
         ScreenContainerWithTopBackNavButtonAndPrimaryButton(
             screenPadding = screenPadding,
             backNavButtonText = backNavButtonText,
-            backNavButtonImageRes = screenIcon.iconRes,
+            backNavButtonImageRes = settingsCategory.iconRes,
             onBackNavButtonClick = onNavigateBack,
             backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
                 TertiaryButton(

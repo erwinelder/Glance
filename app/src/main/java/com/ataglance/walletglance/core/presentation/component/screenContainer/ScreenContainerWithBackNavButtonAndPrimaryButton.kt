@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilityContainer
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilitySpacer
 
 @Composable
 fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
@@ -21,7 +23,7 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
     primaryButtonText: String,
     primaryButtonEnabled: Boolean = true,
     onPrimaryButtonClick: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.(keyboardInFocus: Boolean) -> Unit
 ) {
     ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,
@@ -29,7 +31,7 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         backNavButtonImageRes = backNavButtonImageRes,
         onBackNavButtonClick = onBackNavButtonClick,
         backNavButtonCompanionComponent = backNavButtonCompanionComponent
-    ) {
+    ) { keyboardInFocus ->
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,15 +42,19 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                content()
+                content(keyboardInFocus)
             }
         }
 
-        PrimaryButton(
-            text = primaryButtonText,
-            enabled = primaryButtonEnabled,
-            onClick = onPrimaryButtonClick
-        )
+        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+
+        KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+            PrimaryButton(
+                text = primaryButtonText,
+                enabled = primaryButtonEnabled,
+                onClick = onPrimaryButtonClick
+            )
+        }
 
     }
 }
@@ -63,7 +69,7 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
     primaryButtonText: String,
     primaryButtonEnabled: Boolean = true,
     onPrimaryButtonClick: () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.(keyboardInFocus: Boolean) -> Unit
 ) {
     ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,
@@ -71,7 +77,7 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
         backNavButtonIconComponent = backNavButtonIconComponent,
         onBackNavButtonClick = onBackNavButtonClick,
         backNavButtonCompanionComponent = backNavButtonCompanionComponent
-    ) {
+    ) { keyboardInFocus ->
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,15 +88,19 @@ fun ScreenContainerWithTopBackNavButtonAndPrimaryButton(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                content()
+                content(keyboardInFocus)
             }
         }
 
-        PrimaryButton(
-            text = primaryButtonText,
-            enabled = primaryButtonEnabled,
-            onClick = onPrimaryButtonClick
-        )
+        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+
+        KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+            PrimaryButton(
+                text = primaryButtonText,
+                enabled = primaryButtonEnabled,
+                onClick = onPrimaryButtonClick
+            )
+        }
 
     }
 }

@@ -41,6 +41,8 @@ import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilityContainer
+import com.ataglance.walletglance.core.presentation.component.container.KeyboardTypingAnimatedVisibilitySpacer
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
@@ -143,7 +145,7 @@ fun TransferCreationScreen(
             backNavButtonText = stringResource(R.string.make_transfer),
             backNavButtonImageRes = backNavButtonImageRes,
             onBackNavButtonClick = onNavigateBack
-        ) {
+        ) { keyboardInFocus ->
 
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -170,14 +172,18 @@ fun TransferCreationScreen(
                 }
             }
 
-            RecordCreationBottomButtonsBlock(
-                showOnlySaveButton = transferDraft.isNew,
-                singlePrimaryButtonStringRes = R.string.make_transfer,
-                onSaveButton = onSaveButton,
-                onRepeatButton = onRepeatButton,
-                onDeleteButton = onDeleteButton,
-                savingAndRepeatingAreAllowed = transferDraft.savingIsAllowed
-            )
+            KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+
+            KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+                RecordCreationBottomButtonsBlock(
+                    showOnlySaveButton = transferDraft.isNew,
+                    singlePrimaryButtonStringRes = R.string.make_transfer,
+                    onSaveButton = onSaveButton,
+                    onRepeatButton = onRepeatButton,
+                    onDeleteButton = onDeleteButton,
+                    savingAndRepeatingAreAllowed = transferDraft.savingIsAllowed
+                )
+            }
 
         }
         CustomDatePicker(
