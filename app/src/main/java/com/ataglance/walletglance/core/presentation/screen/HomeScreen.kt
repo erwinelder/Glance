@@ -300,7 +300,8 @@ private fun CompactLayout(
 
 @Preview(
 //    heightDp = 2000,
-    device = Devices.PIXEL_7_PRO
+    device = Devices.PIXEL_7_PRO,
+    locale = "en"
 )
 @Composable
 fun HomeScreenPreview(
