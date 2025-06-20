@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.component.container
+package com.ataglance.walletglance.core.presentation.component.container.keyboardManagement
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween

@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.account.presentation.screen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -34,7 +33,7 @@ import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerV
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
@@ -110,20 +109,16 @@ fun CurrencyPickerScreen(
         }
     ) {
 
-        AnimatedContent(
-            targetState = currencyPickerUiState.selectedCurrency?.currencyCode
-        ) { targetCurrencyCode ->
-            TextFieldComponent(
-                text = searchedPrompt,
-                onValueChange = onSearchPromptChange,
-                placeholderText = "\"${targetCurrencyCode}\"",
-                modifier = Modifier.fillMaxWidth(
-                    FilledWidthByScreenType(compact = .86f).getByType(CurrWindowType)
-                ),
-                fontSize = 20.sp,
-                cornerSize = 17.dp
-            )
-        }
+        TextFieldComponent(
+            text = searchedPrompt,
+            onValueChange = onSearchPromptChange,
+            placeholderText = "\"${currencyPickerUiState.selectedCurrency?.currencyCode ?: ""}\"",
+            modifier = Modifier.fillMaxWidth(
+                FilledWidthByScreenType(compact = .86f).getByType(CurrWindowType)
+            ),
+            fontSize = 20.sp,
+            cornerSize = 17.dp
+        )
 
         GlassSurface(
             modifier = Modifier.weight(1f)

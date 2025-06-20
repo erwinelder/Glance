@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import com.ataglance.walletglance.personalization.domain.model.CheckedWidget
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
-import com.ataglance.walletglance.core.presentation.component.container.ReorderableListStyled
+import com.ataglance.walletglance.core.presentation.component.container.reorderable.ReorderableListStyled
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.component.container
+package com.ataglance.walletglance.core.presentation.component.container.icon
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column

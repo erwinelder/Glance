@@ -25,7 +25,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.category.presentation.component.CategoryField
 import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect

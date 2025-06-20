@@ -7,7 +7,7 @@ import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
+import com.ataglance.walletglance.core.presentation.component.container.icon.LargePrimaryIconWithMessage
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler

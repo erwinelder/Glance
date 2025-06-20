@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
-import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
+import com.ataglance.walletglance.core.presentation.component.container.icon.LargePrimaryIconWithMessage
 
 @Composable
 fun ResultComponentWithButton(

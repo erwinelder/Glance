@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.component.container
+package com.ataglance.walletglance.core.presentation.component.container.reorderable
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable

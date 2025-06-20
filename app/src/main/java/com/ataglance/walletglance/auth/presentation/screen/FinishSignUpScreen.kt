@@ -19,7 +19,7 @@ import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.presentation.viewmodel.FinishSignUpViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.component.container.LargePrimaryIconWithMessage
+import com.ataglance.walletglance.core.presentation.component.container.icon.LargePrimaryIconWithMessage
 import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
