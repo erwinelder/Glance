@@ -69,7 +69,7 @@ fun BudgetWithStatsOnGlassComponent(
 ) {
     GlassSurfaceOnGlassSurface(
         onClick = { onClick(budget) },
-        paddingValues = PaddingValues(horizontal = 20.dp, vertical = 16.dp)
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp)
     ) {
         BudgetWithStatsComponentContent(
             budget = budget,

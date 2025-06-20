@@ -33,7 +33,7 @@ fun BasicDefaultBudgetComponent(
         onClick = { onClick(budget) },
         clickEnabled = clickEnabled,
         filledWidth = 1f,
-        paddingValues = PaddingValues(22.dp, 14.dp),
+        contentPadding = PaddingValues(22.dp, 14.dp),
         modifier = modifier
     ) {
         Column(

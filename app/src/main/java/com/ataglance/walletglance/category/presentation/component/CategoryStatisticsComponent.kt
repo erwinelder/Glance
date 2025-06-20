@@ -73,7 +73,7 @@ fun CategoryStatisticsOnGlassComponent(
                     uiState.subcategoriesStatistics != null || showLeftArrow
                 ) || enableClick == true,
         filledWidth = 1f,
-        paddingValues = PaddingValues(20.dp, 16.dp)
+        contentPadding = PaddingValues(20.dp, 16.dp)
     ) {
         CategoryStatisticsComponentContent(
             uiState = uiState,

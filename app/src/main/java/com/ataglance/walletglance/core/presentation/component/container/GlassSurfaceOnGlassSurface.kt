@@ -24,14 +24,15 @@ fun GlassSurfaceOnGlassSurface(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     clickEnabled: Boolean = true,
-    filledWidth: Float? = null,
-    paddingValues: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     shrinkScale: Float = .98f,
+    filledWidth: Float? = null,
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(4.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = verticalArrangement,
         modifier = modifier
             .bounceClickEffect(shrinkScale = shrinkScale, enabled = clickEnabled, onClick = onClick)
             .clip(RoundedCornerShape(26.dp))
@@ -50,7 +51,7 @@ fun GlassSurfaceOnGlassSurface(
                 color = GlanciColors.glassGradientOnGlassBorder,
                 shape = RoundedCornerShape(26.dp)
             )
-            .padding(paddingValues)
+            .padding(contentPadding)
     ) {
         content()
     }
