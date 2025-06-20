@@ -37,7 +37,7 @@
     <string name="add_subcategory">Додати підкатегорію</string>
     <string name="add_collection">Додати колекцію</string>
     <string name="add_budget">Додати бюджет</string>
-    <string name="make_record">Створити запис</string>
+    <string name="create_record">Створити запис</string>
     <string name="save_record">Зберегти запис</string>
     <string name="make_transfer">Зробити переказ</string>
     <string name="repeat">Повторити</string>

@@ -123,7 +123,7 @@ fun CategoriesStatisticsWidgetPreview(
                         color = CategoryColor.Olive
                     ),
                     totalAmount = "1000.00",
-                    percentageFloat = 50f,
+                    percentageFloat = .75f,
                     percentageFormatted = "50%",
                     currency = "USD"
                 ),
@@ -135,7 +135,7 @@ fun CategoriesStatisticsWidgetPreview(
                         color = CategoryColor.Camel
                     ),
                     totalAmount = "500.00",
-                    percentageFloat = 25f,
+                    percentageFloat = .4f,
                     percentageFormatted = "25%",
                     currency = "USD"
                 ),

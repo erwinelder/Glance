@@ -42,7 +42,6 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
-import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
@@ -65,6 +64,7 @@ import com.ataglance.walletglance.record.mapper.toRecordStacks
 import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidget
 import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidgetWrapper
 import com.ataglance.walletglance.record.presentation.model.RecentRecordsWidgetUiState
+import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationWidget
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -94,6 +94,12 @@ fun HomeScreenWrapper(
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
         widgetNames = widgetNames,
+        onMakeRecord = {
+            onNavigateToScreenMovingTowardsLeft(MainScreens.RecordCreation())
+        },
+        onMakeTransfer = {
+            onNavigateToScreenMovingTowardsLeft(MainScreens.TransferCreation())
+        },
         greetingsWidget = {
             GreetingsWidgetWrapper()
         },
@@ -175,6 +181,8 @@ fun HomeScreen(
     isCustomDateRangeWindowOpened: Boolean,
     onCustomDateRangeButtonClick: () -> Unit,
     widgetNames: List<WidgetName>,
+    onMakeRecord: () -> Unit,
+    onMakeTransfer: () -> Unit,
     greetingsWidget: @Composable () -> Unit,
     accountWidget: @Composable () -> Unit,
     chosenBudgetsWidget: @Composable () -> Unit,
@@ -206,6 +214,8 @@ fun HomeScreen(
             isAppThemeSetUp = isAppThemeSetUp,
             accountsAndActiveOne = accountsAndActiveOne,
             widgetNames = widgetNames,
+            onMakeRecord = onMakeRecord,
+            onMakeTransfer = onMakeTransfer,
             greetingsWidget = greetingsWidget,
             accountWidget = accountWidget,
             chosenBudgetsWidget = chosenBudgetsWidget,
@@ -223,6 +233,8 @@ private fun CompactLayout(
     isAppThemeSetUp: Boolean,
     accountsAndActiveOne: AccountsAndActiveOne,
     widgetNames: List<WidgetName>,
+    onMakeRecord: () -> Unit,
+    onMakeTransfer: () -> Unit,
     greetingsWidget: @Composable () -> Unit,
     accountWidget: @Composable () -> Unit,
     chosenBudgetsWidget: @Composable () -> Unit,
@@ -258,8 +270,19 @@ private fun CompactLayout(
                     content = accountWidget
                 )
             }
+            item {
+                StartAnimatedContainer(
+                    visible = isAppThemeSetUp,
+                    delayMillis = 150
+                ) {
+                    RecordCreationWidget(
+                        onMakeRecord = onMakeRecord,
+                        onMakeTransfer = onMakeTransfer
+                    )
+                }
+            }
             itemsIndexed(items = widgetNames) { index, widgetName ->
-                WidgetStartAnimatedContainer(visible = isAppThemeSetUp, index = index) {
+                StartAnimatedContainer(visible = isAppThemeSetUp, delayMillis = (index + 4) * 50) {
                     when (widgetName) {
                         WidgetName.ChosenBudgets -> chosenBudgetsWidget()
                         WidgetName.TotalForPeriod -> expensesIncomeWidget()
@@ -403,6 +426,8 @@ fun HomeScreenPreview(
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},
             widgetNames = widgetNames,
+            onMakeRecord = {},
+            onMakeTransfer = {},
             greetingsWidget = {
                 GreetingsWidget(message = "Good afternoon, Erwin!")
             },

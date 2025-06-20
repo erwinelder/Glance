@@ -44,8 +44,8 @@ fun GlassSurface(
             .background(
                 brush = Brush.linearGradient(
                     colors = GlanciColors.glassGradient,
-                    start = Offset(1100.0f, 0.0f),
-                    end = Offset(0.0f, 1200.0f)
+                    start = Offset(1100f, 0f),
+                    end = Offset(0f, 1200f)
                 )
             )
             .innerVolumeShadow(
@@ -60,8 +60,8 @@ fun GlassSurface(
                 width = 1.dp,
                 brush = Brush.linearGradient(
                     colors = GlanciColors.glassBorderGradient,
-                    start = Offset(100.0f, 0.0f),
-                    end = Offset(0.0f, 120.0f)
+                    start = Offset(100f, 0f),
+                    end = Offset(0f, 120f)
                 ),
                 shape = RoundedCornerShape(cornerSize)
             )

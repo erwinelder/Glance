@@ -38,7 +38,7 @@
     <string name="add_subcategory">Add subcategory</string>
     <string name="add_collection">Add collection</string>
     <string name="add_budget">Add budget</string>
-    <string name="make_record">Make record</string>
+    <string name="create_record">Create record</string>
     <string name="save_record">Save record</string>
     <string name="make_transfer">Make transfer</string>
     <string name="repeat">Repeat</string>

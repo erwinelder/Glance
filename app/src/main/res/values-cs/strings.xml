@@ -38,9 +38,9 @@
     <string name="add_subcategory">Přidat podkategorii</string>
     <string name="add_collection">Přidat kolekci</string>
     <string name="add_budget">Přidat rozpočet</string>
-    <string name="make_record">Vytvořit záznam</string>
+    <string name="create_record">Vytvořit záznam</string>
     <string name="save_record">Uložit záznam</string>
-    <string name="make_transfer">Udělat převod</string>
+    <string name="make_transfer">Provést převod</string>
     <string name="repeat">Zopakovat</string>
     <string name="this_month">Tento měsíc</string>
     <string name="last_month">Před měsíc</string>

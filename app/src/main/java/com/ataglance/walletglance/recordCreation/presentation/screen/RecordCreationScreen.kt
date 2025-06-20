@@ -174,7 +174,7 @@ fun RecordCreationScreen(
     ) {
         ScreenContainerWithTopBackNavButton(
             screenPadding = screenPadding,
-            backNavButtonText = stringResource(R.string.make_record),
+            backNavButtonText = stringResource(R.string.create_record),
             backNavButtonImageRes = backNavButtonImageRes,
             onBackNavButtonClick = onNavigateBack
         ) {
