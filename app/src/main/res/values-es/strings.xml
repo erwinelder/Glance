@@ -50,6 +50,7 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="preferences">Preferencias</string>
+    <string name="adjust">Ajustar</string>
     <string name="include_in_budgets">Incluir en presupuestos</string>
 
     <!-- Settings categories -->

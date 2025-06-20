@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.component.widget
+package com.ataglance.walletglance.budget.presentation.component.widget
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +21,9 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetAdjustButton
+import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
+import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
@@ -41,7 +44,7 @@ fun ChosenBudgetsWidgetWrapper(
     ChosenBudgetsWidget(
         budgets = budgets,
         resourceManager = resourceManager,
-        onSettingsButtonClick = onSettingsButtonClick,
+        onAdjustWidget = onSettingsButtonClick,
         onNavigateToBudgetsScreen = onNavigateToBudgetsScreen,
         onNavigateToBudgetStatisticsScreen = onNavigateToBudgetStatisticsScreen
     )
@@ -51,14 +54,16 @@ fun ChosenBudgetsWidgetWrapper(
 fun ChosenBudgetsWidget(
     budgets: List<Budget>,
     resourceManager: ResourceManager,
-    onSettingsButtonClick: () -> Unit,
+    onAdjustWidget: () -> Unit,
     onNavigateToBudgetsScreen: () -> Unit,
     onNavigateToBudgetStatisticsScreen: (Int) -> Unit
 ) {
-    WidgetWithTitleSettingsAndButtonComponent(
+    WidgetContainer(
         title = stringResource(R.string.budgets),
-        onSettingsButtonClick = onSettingsButtonClick,
-        onBottomNavigationButtonClick = onNavigateToBudgetsScreen
+        buttonsBlock = {
+            WidgetAdjustButton(onClick = onAdjustWidget)
+            WidgetViewAllButton(onClick = onNavigateToBudgetsScreen)
+        }
     ) {
         AnimatedContent(targetState = budgets) { chosenBudgets ->
             Column(
@@ -87,7 +92,7 @@ fun ChosenBudgetsWidget(
 
 
 
-@Preview(device = PIXEL_7_PRO)
+@Preview(device = PIXEL_7_PRO, locale = "en")
 @Composable
 fun ChosenBudgetsWidgetPreview(
     appTheme: AppTheme = AppTheme.LightDefault
@@ -130,7 +135,7 @@ fun ChosenBudgetsWidgetPreview(
         ChosenBudgetsWidget(
             budgets = budgets,
             resourceManager = resourceManager,
-            onSettingsButtonClick = {},
+            onAdjustWidget = {},
             onNavigateToBudgetsScreen = {},
             onNavigateToBudgetStatisticsScreen = {}
         )

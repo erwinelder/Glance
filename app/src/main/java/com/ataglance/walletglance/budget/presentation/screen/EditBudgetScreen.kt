@@ -48,7 +48,7 @@ import com.ataglance.walletglance.category.presentation.component.CategoryField
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckbox
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
@@ -132,7 +132,7 @@ fun EditBudgetScreen(
             backNavButtonImageRes = settingsCategory.iconRes,
             onBackNavButtonClick = onNavigateBack,
             backNavButtonCompanionComponent = takeRowComposableIf(!budget.isNew) {
-                SmallSecondaryButton(
+                TertiaryButton(
                     text = stringResource(R.string.delete),
                     iconRes = R.drawable.trash_icon,
                     onClick = onDeleteButton

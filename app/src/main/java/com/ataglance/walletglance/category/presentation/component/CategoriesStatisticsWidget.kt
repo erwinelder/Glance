@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,7 +28,8 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.component.widget.WidgetWithTitleAndButtonComponent
+import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
+import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -61,10 +63,12 @@ fun CategoriesStatisticsWidget(
     uiState: CategoriesStatisticsWidgetUiState,
     onNavigateToCategoriesStatisticsScreen: (Int?, CategoryType?) -> Unit
 ) {
-    WidgetWithTitleAndButtonComponent(
+    WidgetContainer(
         title = stringResource(R.string.categories),
-        onBottomNavigationButtonClick = {
-            onNavigateToCategoriesStatisticsScreen(null, uiState.getType())
+        buttonsBlock = {
+            WidgetViewAllButton {
+                onNavigateToCategoriesStatisticsScreen(null, uiState.getType())
+            }
         }
     ) {
         AnimatedContent(targetState = uiState) { state ->
@@ -103,7 +107,7 @@ fun CategoriesStatisticsWidget(
 }
 
 
-@Preview
+@Preview(device = PIXEL_7_PRO)
 @Composable
 fun CategoriesStatisticsWidgetPreview(
     appTheme: AppTheme = AppTheme.LightDefault

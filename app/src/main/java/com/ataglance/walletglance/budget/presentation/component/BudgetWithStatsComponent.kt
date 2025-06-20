@@ -31,7 +31,7 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurfaceOnGlassSurface
-import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidgetPreview
+import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidgetPreview
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme

@@ -17,12 +17,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 fun Modifier.bounceClickEffect(
     shrinkScale: Float = .97f,
     enabled: Boolean = true,
-    onClick: () -> Unit = {}
+    interactionSource: MutableInteractionSource? = null,
+    onClick: (() -> Unit)? = null
 ) = composed {
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     var isPressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
-        targetValue = if (enabled && isPressed) shrinkScale else 1f,
-        label = "bounceClickEffect"
+        targetValue = if (enabled && isPressed) shrinkScale else 1f
     )
 
     this
@@ -30,15 +31,13 @@ fun Modifier.bounceClickEffect(
             scaleX = scale
             scaleY = scale
         }
-        .clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-            onClick = {
-                if (enabled) {
-                    onClick()
+        .run {
+            onClick?.let {
+                clickable(interactionSource = interactionSource, indication = null) {
+                    if (enabled) onClick()
                 }
-            }
-        )
+            } ?: this
+        }
         .pointerInput(isPressed) {
             awaitPointerEventScope {
                 isPressed =

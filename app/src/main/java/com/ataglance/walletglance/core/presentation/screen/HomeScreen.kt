@@ -24,7 +24,9 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.component.AccountWidget
 import com.ataglance.walletglance.account.presentation.component.AccountWidgetWrapper
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.presentation.container.BudgetsOnWidgetSettingsBottomSheet
+import com.ataglance.walletglance.budget.presentation.component.container.BudgetsOnWidgetSettingsBottomSheet
+import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidget
+import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidgetWrapper
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
@@ -43,8 +45,6 @@ import com.ataglance.walletglance.core.presentation.animation.StartAnimatedConta
 import com.ataglance.walletglance.core.presentation.animation.WidgetStartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidget
-import com.ataglance.walletglance.core.presentation.component.widget.ChosenBudgetsWidgetWrapper
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetWrapper
 import com.ataglance.walletglance.core.presentation.component.widget.GreetingsWidget
@@ -417,7 +417,7 @@ fun HomeScreenPreview(
                 ChosenBudgetsWidget(
                     budgets = budgetsOnWidget,
                     resourceManager = resourceManager,
-                    onSettingsButtonClick = {},
+                    onAdjustWidget = {},
                     onNavigateToBudgetsScreen = {},
                     onNavigateToBudgetStatisticsScreen = {}
                 )

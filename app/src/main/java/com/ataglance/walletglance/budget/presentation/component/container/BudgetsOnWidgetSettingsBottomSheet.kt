@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.budget.presentation.container
+package com.ataglance.walletglance.budget.presentation.component.container
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material3.ExperimentalMaterial3Api

@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,8 +33,10 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
+import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetTitleComponent
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
@@ -88,8 +91,8 @@ fun ExpensesIncomeWidget(
         animationSpec = tween(500)
     )
 
-    WidgetComponent(
-        filledWidthByScreenType = FilledWidthByScreenType(.84f, .63f, .4f)
+    GlassSurface(
+        filledWidths = FilledWidthByScreenType(.84f, .63f, .4f)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -180,10 +183,12 @@ private fun StatisticBlock(
     }
 }
 
-@Preview
+@Preview(device = PIXEL_7_PRO)
 @Composable
-private fun ExpensesIncomeWidgetPreview() {
-    PreviewContainer(appTheme = AppTheme.LightDefault) {
+fun ExpensesIncomeWidgetPreview(
+    appTheme: AppTheme = AppTheme.LightDefault
+) {
+    PreviewContainer(appTheme = appTheme) {
         ExpensesIncomeWidget(
             uiState = ExpensesIncomeWidgetUiState(
                 incomeTotal = 1000.0,
@@ -194,7 +199,7 @@ private fun ExpensesIncomeWidgetPreview() {
                 incomePercentageFloat = 0.67f
             ),
             dateRangeWithEnum = DateRangeWithEnum.fromEnum(
-                enum = DateRangeEnum.Custom
+                enum = DateRangeEnum.ThisMonth
             ),
             accountCurrency = "USD",
             resourceManager = ResourceManagerImpl(LocalContext.current)

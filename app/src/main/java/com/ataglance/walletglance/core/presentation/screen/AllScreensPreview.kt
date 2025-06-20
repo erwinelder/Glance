@@ -26,12 +26,14 @@ import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociati
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
+import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidgetPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidgetPreview
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreenPreview
 import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreenPreview
@@ -48,6 +50,7 @@ import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.YearMonthDay
+import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetPreview
 import com.ataglance.walletglance.notification.presentation.screen.NotificationsScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalizationScreenPreview
@@ -55,6 +58,7 @@ import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
 import com.ataglance.walletglance.record.mapper.toDomainModels
+import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidgetPreview
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
 import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
@@ -333,9 +337,62 @@ private val budgetAccountAssociationList = listOf(
 
 
 @Preview(
+    name = "ExpensesIncomeWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun ExpensesIncomeWidgetPreview_() {
+    ExpensesIncomeWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "RecentRecordsWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun RecentRecordsWidgetPreview_() {
+    RecentRecordsWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "CategoriesStatisticsWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun CategoriesStatisticsWidgetPreview_() {
+    CategoriesStatisticsWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "ChosenBudgetsWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun ChosenBudgetsWidgetPreview_() {
+    ChosenBudgetsWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+
+
+@Preview(
     name = "HomeScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -364,7 +421,6 @@ private fun HomeScreenPreview_() {
 @Preview(
     name = "RecordsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -390,7 +446,6 @@ private fun RecordsScreenPreview_() {
 @Preview(
     name = "CategoryStatisticsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -417,7 +472,6 @@ private fun CategoryStatisticsScreenPreview_() {
 @Preview(
     name = "BudgetsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -435,7 +489,6 @@ private fun BudgetsScreenPreview_() {
 @Preview(
     name = "BudgetStatisticsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -462,7 +515,6 @@ private fun BudgetStatisticsScreenPreview_() {
 @Preview(
     name = "RecordCreationScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -503,7 +555,6 @@ private fun RecordCreationScreenPreview_() {
 @Preview(
     name = "TransferCreationScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -539,7 +590,6 @@ private fun TransferCreationScreenPreview_() {
 @Preview(
     name = "StartSetupScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -553,7 +603,6 @@ private fun StartSetupScreenPreview_() {
 @Preview(
     name = "SettingsHomeScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -568,7 +617,6 @@ private fun SettingsHomeScreenPreview_() {
 @Preview(
     name = "EditAccountsScreen",
     group = "AccountsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -584,7 +632,6 @@ private fun EditAccountsScreenPreview_() {
 @Preview(
     name = "EditAccountScreen",
     group = "AccountsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -599,7 +646,6 @@ private fun EditAccountScreenPreview_() {
 @Preview(
     name = "CurrencyPickerScreen",
     group = "AccountsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -613,7 +659,6 @@ private fun CurrencyPickerScreenPreview_() {
 @Preview(
     name = "EditBudgetsScreen",
     group = "BudgetsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -631,7 +676,6 @@ private fun EditBudgetsScreenPreview_() {
 @Preview(
     name = "EditBudgetScreen",
     group = "BudgetsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -648,7 +692,6 @@ private fun EditBudgetScreenPreview_() {
 @Preview(
     name = "EditCategoriesScreen",
     group = "CategoriesSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -664,7 +707,6 @@ private fun EditCategoriesScreenPreview_() {
 @Preview(
     name = "EditSubcategoriesScreen",
     group = "CategoriesSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -678,7 +720,6 @@ private fun EditSubcategoriesScreenPreview_() {
 @Preview(
     name = "EditCategoryScreen",
     group = "CategoriesSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -692,7 +733,6 @@ private fun EditCategoryScreenPreview_() {
 @Preview(
     name = "EditCategoryCollectionsScreen",
     group = "CollectionsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -708,7 +748,6 @@ private fun EditCategoryCollectionsScreenPreview_() {
 @Preview(
     name = "EditCategoryCollectionScreen",
     group = "CollectionsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -723,7 +762,6 @@ private fun EditCategoryCollectionScreenPreview_() {
 @Preview(
     name = "PersonalizationScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -738,7 +776,6 @@ private fun PersonalizationScreenPreview_() {
 @Preview(
     name = "NotificationsScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -752,7 +789,6 @@ private fun NotificationsScreenPreview_() {
 @Preview(
     name = "LanguageScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -769,7 +805,6 @@ private fun LanguageScreenPreview_() {
 @Preview(
     name = "SettingsDataScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -784,7 +819,6 @@ private fun ResetDataScreenPreview_() {
 @Preview(
     name = "SignInScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -798,7 +832,6 @@ private fun SignInScreenPreview_() {
 @Preview(
     name = "SignUpScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -812,7 +845,6 @@ private fun SignUpScreenPreview_() {
 @Preview(
     name = "EmailVerificationScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -826,7 +858,6 @@ private fun SignUpEmailVerificationScreenPreview_() {
 @Preview(
     name = "FinishSignUpScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -840,7 +871,6 @@ private fun FinishSignUpScreenPreview_() {
 @Preview(
     name = "ProfileScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -854,7 +884,6 @@ private fun ProfileScreenPreview_() {
 @Preview(
     name = "RequestEmailUpdateScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -868,7 +897,6 @@ private fun RequestEmailUpdateScreenPreview_() {
 @Preview(
     name = "EmailUpdateEmailVerification",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -882,7 +910,6 @@ private fun EmailUpdateEmailVerificationScreenPreview_() {
 @Preview(
     name = "VerifyEmailUpdate",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -896,7 +923,6 @@ private fun VerifyEmailUpdateScreenPreview_() {
 @Preview(
     name = "UpdatePasswordScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -910,7 +936,6 @@ private fun UpdatePasswordScreenPreview_() {
 @Preview(
     name = "RequestPasswordResetScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -924,7 +949,6 @@ private fun RequestPasswordResetScreenPreview_() {
 @Preview(
     name = "ResetPasswordScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -938,7 +962,6 @@ private fun ResetPasswordScreenPreview_() {
 @Preview(
     name = "DeleteAccountScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
@@ -952,7 +975,6 @@ private fun DeleteAccountScreenPreview_() {
 @Preview(
     name = "FinishSetupScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )

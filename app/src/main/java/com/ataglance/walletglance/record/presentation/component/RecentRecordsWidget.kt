@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,7 +32,8 @@ import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.component.widget.WidgetWithTitleAndButtonComponent
+import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
+import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.utils.getCurrentDateLong
@@ -91,10 +93,12 @@ fun RecentRecordsWidget(
 ) {
     val includeYearToRecordDate = isCustomDateRange || uiState.containsRecordsFromDifferentYears()
 
-    WidgetWithTitleAndButtonComponent(
-        contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp),
+    WidgetContainer(
         title = stringResource(R.string.recent),
-        onBottomNavigationButtonClick = onNavigateToRecordsScreen
+        contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp),
+        buttonsBlock = {
+            WidgetViewAllButton(onClick = onNavigateToRecordsScreen)
+        }
     ) {
         AnimatedContent(targetState = uiState) { state ->
             Box(
@@ -163,7 +167,7 @@ private fun RecordStackList(
 
 
 
-@Preview
+@Preview(device = PIXEL_7_PRO)
 @Composable
 fun RecentRecordsWidgetPreview(
     appTheme: AppTheme = AppTheme.LightDefault

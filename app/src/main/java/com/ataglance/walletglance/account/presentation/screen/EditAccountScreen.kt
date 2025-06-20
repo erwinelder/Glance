@@ -48,7 +48,7 @@ import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountView
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.ColorButton
-import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
+import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
 import com.ataglance.walletglance.core.presentation.component.container.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
 import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
@@ -143,7 +143,7 @@ fun EditAccountScreen(
             backNavButtonImageRes = screenIcon.iconRes,
             onBackNavButtonClick = onNavigateBack,
             backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
-                SmallSecondaryButton(
+                TertiaryButton(
                     text = stringResource(R.string.delete),
                     iconRes = R.drawable.trash_icon
                 ) {

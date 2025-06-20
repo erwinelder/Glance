@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.component.widget
+package com.ataglance.walletglance.core.presentation.component.widget.component
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

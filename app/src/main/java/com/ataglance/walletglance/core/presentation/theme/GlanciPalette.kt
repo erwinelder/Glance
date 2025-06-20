@@ -137,7 +137,7 @@ sealed class GlanciPalette(
         ),
 
         glassGradientOnGlass = listOf(
-            Color(245, 245, 245, 120),
+            Color(247, 247, 247, 120),
             Color(255, 255, 255, 120)
         ),
         glassGradientOnGlassBorder = Color(255, 255, 255, 90),
