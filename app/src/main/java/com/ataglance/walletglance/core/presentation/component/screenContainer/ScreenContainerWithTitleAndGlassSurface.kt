@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.core.presentation.component.screenContainer
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
@@ -25,7 +24,7 @@ import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
-import com.ataglance.walletglance.core.presentation.utils.getImeBottomInset
+import com.ataglance.walletglance.core.presentation.utils.getKeyboardBottomPaddingAnimated
 
 @Composable
 fun ScreenContainerWithTitleAndGlassSurface(
@@ -38,8 +37,7 @@ fun ScreenContainerWithTitleAndGlassSurface(
     bottomButtonBlock: @Composable () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    val imeBottomInset by getImeBottomInset()
-    val bottomPadding by animateDpAsState(imeBottomInset.coerceAtLeast(24.dp))
+    val bottomPadding by getKeyboardBottomPaddingAnimated(minPadding = 24.dp)
     val keyboardInFocus = bottomPadding > 50.dp
 
     ScreenContainer(

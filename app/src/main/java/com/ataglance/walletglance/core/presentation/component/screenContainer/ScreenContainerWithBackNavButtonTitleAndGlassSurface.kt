@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.core.presentation.component.screenContainer
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
@@ -28,7 +26,7 @@ import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
-import com.ataglance.walletglance.core.presentation.utils.getImeBottomInset
+import com.ataglance.walletglance.core.presentation.utils.getKeyboardBottomPaddingAnimated
 
 @Composable
 fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
@@ -44,8 +42,7 @@ fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
     bottomButtonBlock: @Composable () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    val imeBottomInset by getImeBottomInset()
-    val bottomPadding by animateDpAsState(imeBottomInset.coerceAtLeast(24.dp))
+    val bottomPadding by getKeyboardBottomPaddingAnimated(minPadding = 24.dp)
     val keyboardInFocus = bottomPadding > 50.dp
 
     ScreenContainer(
