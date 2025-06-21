@@ -45,8 +45,8 @@ import com.ataglance.walletglance.core.presentation.component.container.keyboard
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilitySpacer
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
-import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
+import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
@@ -250,7 +250,7 @@ private fun GlassSurfaceContent(
             formattedDate = transferDraft.dateTimeState.dateFormatted,
             onClick = onDateFieldClick
         )
-        FieldWithLabel(labelText = stringResource(R.string.from_account)) {
+        FieldWithLabelWrapper(labelText = stringResource(R.string.from_account)) {
             AnimatedContent(
                 targetState = transferDraft.sender.account
             ) { targetAccount ->
@@ -259,7 +259,7 @@ private fun GlassSurfaceContent(
                 }
             }
         }
-        FieldWithLabel(labelText = stringResource(R.string.to_account)) {
+        FieldWithLabelWrapper(labelText = stringResource(R.string.to_account)) {
             AnimatedContent(
                 targetState = transferDraft.receiver.account
             ) { targetAccount ->
@@ -269,42 +269,38 @@ private fun GlassSurfaceContent(
             }
         }
         SmallDivider(Modifier.padding(top = 4.dp))
-        FieldWithLabel(labelText = stringResource(R.string.rate)) {
-            TextFieldComponent(
-                text = transferDraft.sender.rate,
-                placeholderText = "1.00",
-                fontSize = 18.sp,
-                onValueChange = { onChangeRate(it, true) },
-                keyboardType = KeyboardType.Number
-            )
-        }
-        FieldWithLabel(labelText = stringResource(R.string.start_amount)) {
-            TextFieldComponent(
-                text = transferDraft.sender.amount,
-                placeholderText = "0.00",
-                fontSize = 22.sp,
-                onValueChange = { onChangeAmount(it, true) },
-                keyboardType = KeyboardType.Number
-            )
-        }
-        FieldWithLabel(labelText = stringResource(R.string.final_amount)) {
-            TextFieldComponent(
-                text = transferDraft.receiver.amount,
-                placeholderText = "0.00",
-                fontSize = 22.sp,
-                onValueChange = { onChangeAmount(it, false) },
-                keyboardType = KeyboardType.Number
-            )
-        }
-        FieldWithLabel(labelText = stringResource(R.string.rate)) {
-            TextFieldComponent(
-                text = transferDraft.receiver.rate,
-                placeholderText = "1.00",
-                fontSize = 18.sp,
-                onValueChange = { onChangeRate(it, false) },
-                keyboardType = KeyboardType.Number
-            )
-        }
+        SmallTextFieldWithLabel(
+            text = transferDraft.sender.rate,
+            onValueChange = { onChangeRate(it, true) },
+            labelText = stringResource(R.string.rate),
+            placeholderText = "1.00",
+            fontSize = 18.sp,
+            keyboardType = KeyboardType.Number
+        )
+        SmallTextFieldWithLabel(
+            text = transferDraft.sender.amount,
+            onValueChange = { onChangeAmount(it, true) },
+            labelText = stringResource(R.string.start_amount),
+            placeholderText = "0.00",
+            fontSize = 20.sp,
+            keyboardType = KeyboardType.Number
+        )
+        SmallTextFieldWithLabel(
+            text = transferDraft.receiver.amount,
+            onValueChange = { onChangeAmount(it, false) },
+            labelText = stringResource(R.string.final_amount),
+            placeholderText = "0.00",
+            fontSize = 20.sp,
+            keyboardType = KeyboardType.Number
+        )
+        SmallTextFieldWithLabel(
+            text = transferDraft.receiver.rate,
+            onValueChange = { onChangeRate(it, false) },
+            labelText = stringResource(R.string.rate),
+            placeholderText = "1.00",
+            fontSize = 18.sp,
+            keyboardType = KeyboardType.Number
+        )
         Spacer(modifier = Modifier.height(6.dp))
     }
 }

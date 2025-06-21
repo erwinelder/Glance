@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.account.presentation.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +46,9 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.ColorButton
 import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
-import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
-import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceOnGlassSurface
+import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.ColorPicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
@@ -59,6 +56,7 @@ import com.ataglance.walletglance.core.presentation.component.switchButton.Switc
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
 import com.ataglance.walletglance.core.utils.takeRowComposableIf
@@ -197,78 +195,94 @@ private fun GlassSurfaceContent(
             .verticalScroll(scrollState)
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
+
         ColorButton(
             color = uiState.color.getColorAndColorOnByTheme(CurrAppTheme).first.lighter,
             onClick = onColorButtonClick
         )
+
         Spacer(modifier = Modifier.height(verticalGap))
-        TextFieldWithLabel(
+
+        SmallTextFieldWithLabel(
             text = uiState.name,
-            placeholderText = stringResource(R.string.account_name),
             onValueChange = onNameChange,
-            labelText = stringResource(R.string.name)
+            labelText = stringResource(R.string.name),
+            placeholderText = stringResource(R.string.account_name)
         )
+
         Spacer(modifier = Modifier.height(verticalGap))
-        CurrencyField(uiState.currency, onNavigateToEditAccountCurrencyScreen)
+
+        CurrencyField(
+            currency = uiState.currency,
+            onNavigateToCurrencyPickerWindow = onNavigateToEditAccountCurrencyScreen
+        )
+
         AnimatedVisibility(visible = !uiState.withoutBalance) {
             Column {
                 Spacer(modifier = Modifier.height(verticalGap))
-                TextFieldWithLabel(
+                SmallTextFieldWithLabel(
                     text = uiState.balance,
                     onValueChange = onBalanceChange,
-                    keyboardType = KeyboardType.Number,
-                    labelText = stringResource(R.string.balance)
+                    labelText = stringResource(R.string.balance),
+                    keyboardType = KeyboardType.Number
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(verticalGap))
+
         SwitchWithLabel(
             checked = uiState.hide,
             onCheckedChange = onHideChange,
             labelText = stringResource(R.string.hide_from_top_bar)
         )
+
         Spacer(modifier = Modifier.height(verticalGap))
+
         SwitchWithLabel(
             checked = uiState.hideBalance,
             onCheckedChange = onHideBalanceChange,
             labelText = stringResource(R.string.hide_balance)
         )
+
         Spacer(modifier = Modifier.height(verticalGap))
+
+
         SwitchWithLabel(
             checked = uiState.withoutBalance,
             onCheckedChange = onWithoutBalanceChange,
             labelText = stringResource(R.string.without_balance)
         )
+
     }
 }
 
 @Composable
 private fun CurrencyField(currency: String, onNavigateToCurrencyPickerWindow: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        FieldLabel(text = stringResource(R.string.currency))
+    FieldWithLabelWrapper(labelText = stringResource(R.string.currency)) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .bounceClickEffect(onClick = onNavigateToCurrencyPickerWindow)
         ) {
-            Text(
-                text = currency,
-                color = GlanciColors.onSurface,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Light,
-                modifier = Modifier
-                    .bounceClickEffect(onClick = onNavigateToCurrencyPickerWindow)
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(GlanciColors.surface)
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            )
+            GlassSurfaceOnGlassSurface(
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                cornerSize = 15.dp
+            ) {
+                Text(
+                    text = currency,
+                    color = GlanciColors.onSurface,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.W400,
+                    fontFamily = Manrope
+                )
+            }
             Icon(
                 painter = painterResource(R.drawable.short_arrow_right_icon),
                 contentDescription = "Right arrow icon",
                 tint = GlanciColors.onSurface,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.height(20.dp)
             )
         }
     }

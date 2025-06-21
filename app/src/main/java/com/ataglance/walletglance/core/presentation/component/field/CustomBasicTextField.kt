@@ -1,8 +1,11 @@
 package com.ataglance.walletglance.core.presentation.component.field
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,8 +34,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
+import com.ataglance.walletglance.core.presentation.utils.bottom
+import com.ataglance.walletglance.core.presentation.utils.end
+import com.ataglance.walletglance.core.presentation.utils.start
+import com.ataglance.walletglance.core.presentation.utils.top
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,84 +80,88 @@ fun CustomBasicTextField(
         VisualTransformation.Companion.None
     }
 
-    TextSelectionColorsProviderWrapper {
-        BasicTextField(
-            value = text,
-            onValueChange = onValueChange,
-            readOnly = readOnly,
-            interactionSource = interactionSource,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType,
-                imeAction = imeAction
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Companion.Down) },
-                onDone = {
-                    focusManager.clearFocus()
-                    onDoneKeyboardAction()
-                },
-                onGo = {
-                    focusManager.clearFocus()
-                    onGoKeyboardAction()
-                }
-            ),
-            maxLines = maxLines,
-            visualTransformation = visualTransformation,
-            singleLine = true,
-            textStyle = TextStyle(
-                color = textColor,
-                fontSize = fontSize,
-                fontWeight = fontWeight,
-                fontFamily = Manrope,
-                textAlign = textAlign
-            ),
-            cursorBrush = Brush.linearGradient(GlanciColors.primaryGlassGradient),
-            modifier = textFieldModifier
-        ) {
-            TextFieldDefaults.DecorationBox(
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = padding.start, end = padding.end)
+    ) {
+        TextSelectionColorsProviderWrapper {
+            BasicTextField(
                 value = text,
-                singleLine = true,
-                enabled = true,
-                isError = isError,
+                onValueChange = onValueChange,
+                readOnly = readOnly,
                 interactionSource = interactionSource,
-                visualTransformation = VisualTransformation.None,
-                shape = RoundedCornerShape(cornerSize),
-                colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent,
-                    cursorColor = GlanciColors.primary,
-                    unfocusedTrailingIconColor = GlanciColors.primary,
-                    focusedTrailingIconColor = GlanciColors.primary,
-                    disabledTrailingIconColor = GlanciColors.primary,
-                    errorTrailingIconColor = GlanciColors.primary,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = keyboardType,
+                    imeAction = imeAction
                 ),
-                contentPadding = padding,
-                trailingIcon = isPasswordVisible?.let {
-                    {
-                        ShowHidePasswordIcon(isPasswordVisible = it) { isPasswordVisible = !it }
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Companion.Down) },
+                    onDone = {
+                        focusManager.clearFocus()
+                        onDoneKeyboardAction()
+                    },
+                    onGo = {
+                        focusManager.clearFocus()
+                        onGoKeyboardAction()
                     }
-                },
-                innerTextField = {
-                    Box(contentAlignment = contentAlignment) {
-                        it()
-                        if (text.isBlank()) {
-                            Placeholder(
-                                text = placeholderText,
-                                fontSize = fontSize,
-                                textAlign = textAlign,
-                                maxLines = maxLines,
-                                modifier = placeholderModifier
-                            )
+                ),
+                maxLines = maxLines,
+                visualTransformation = visualTransformation,
+                singleLine = true,
+                textStyle = TextStyle(
+                    color = textColor,
+                    fontSize = fontSize,
+                    fontWeight = fontWeight,
+                    fontFamily = Manrope,
+                    textAlign = textAlign
+                ),
+                cursorBrush = Brush.linearGradient(GlanciColors.primaryGlassGradient),
+                modifier = textFieldModifier
+            ) {
+                TextFieldDefaults.DecorationBox(
+                    value = text,
+                    singleLine = true,
+                    enabled = true,
+                    isError = isError,
+                    interactionSource = interactionSource,
+                    visualTransformation = VisualTransformation.None,
+                    shape = RoundedCornerShape(cornerSize),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent,
+                        cursorColor = GlanciColors.primary,
+                        unfocusedTrailingIconColor = GlanciColors.primary,
+                        focusedTrailingIconColor = GlanciColors.primary,
+                        disabledTrailingIconColor = GlanciColors.primary,
+                        errorTrailingIconColor = GlanciColors.primary,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
+                    ),
+                    contentPadding = PaddingValues(top = padding.top, bottom = padding.bottom),
+                    innerTextField = {
+                        Box(contentAlignment = contentAlignment) {
+                            it()
+                            if (text.isBlank()) {
+                                Placeholder(
+                                    text = placeholderText,
+                                    fontSize = fontSize,
+                                    textAlign = textAlign,
+                                    maxLines = maxLines,
+                                    modifier = placeholderModifier
+                                )
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
+        }
+        isPasswordVisible?.let {
+            ShowHidePasswordIcon(isPasswordVisible = it) { isPasswordVisible = !it }
         }
     }
 }

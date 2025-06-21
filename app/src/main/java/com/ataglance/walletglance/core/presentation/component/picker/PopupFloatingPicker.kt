@@ -38,6 +38,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
@@ -73,9 +74,7 @@ fun <T>PopupFloatingPicker(
                     onDismissRequest = {
                         isExpandedState.targetState = false
                     },
-                    properties = PopupProperties(
-                        focusable = true
-                    )
+                    properties = PopupProperties(focusable = true)
                 ) {
                     AnimatedVisibility(
                         visibleState = isExpandedState,
@@ -106,39 +105,36 @@ private fun PickerButton(
     onClick: () -> Unit
 ) {
     val scaleY by animateFloatAsState(
-        targetValue = if (isExpanded) -1F else 1F,
-        label = "expanded scaleY"
+        targetValue = if (isExpanded) -1F else 1F
     )
 
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .bounceClickEffect(onClick = onClick)
-            .clip(RoundedCornerShape(16.dp))
-            .background(GlanciColors.surface)
-            .padding(16.dp, 8.dp)
+    GlassSurfaceOnGlassSurface(
+        onClick = onClick,
+        cornerSize = 16.dp,
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        AnimatedContent(
-            targetState = text,
-            label = "selected item text"
-        ) { targetText ->
-            Text(
-                text = targetText,
-                color = selectedColor,
-                fontSize = 20.sp,
-                fontFamily = Manrope,
-                fontWeight = FontWeight.Light
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AnimatedContent(targetState = text) { targetText ->
+                Text(
+                    text = targetText,
+                    color = selectedColor,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.W400,
+                    fontFamily = Manrope
+                )
+            }
+            Icon(
+                painter = painterResource(R.drawable.short_arrow_down_icon),
+                contentDescription = "expanded collection list icon",
+                tint = selectedColor,
+                modifier = Modifier
+                    .scale(scaleX = 1F, scaleY = scaleY)
+                    .width(18.dp)
             )
         }
-        Icon(
-            painter = painterResource(R.drawable.short_arrow_down_icon),
-            contentDescription = "expanded collection list icon",
-            tint = selectedColor,
-            modifier = Modifier
-                .scale(scaleX = 1F, scaleY = scaleY)
-                .width(20.dp)
-        )
     }
 }
 
@@ -172,6 +168,7 @@ private fun <T> PopupContent(
                 text = itemText,
                 color = if (itemText == selectedItemText) GlanciColors.primary else GlanciColors.onSurface,
                 fontSize = 19.sp,
+                fontWeight = FontWeight.W400,
                 fontFamily = Manrope,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

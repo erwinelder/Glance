@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceOnGlassSurfaceFilled
 
 @Composable
 fun CustomBasicTextFieldGlassSurface(
@@ -34,13 +34,14 @@ fun CustomBasicTextFieldGlassSurface(
     onGoKeyboardAction: () -> Unit = {},
     maxLines: Int,
     glassSurfaceModifier: Modifier = Modifier,
-    filledWidthByScreenType: FilledWidthByScreenType? = FilledWidthByScreenType(),
+    filledWidths: FilledWidthByScreenType? = FilledWidthByScreenType(),
     textFieldModifier: Modifier = Modifier,
     placeholderModifier: Modifier = Modifier
 ) {
-    GlassSurface(
-        filledWidths = filledWidthByScreenType,
+    GlassSurfaceOnGlassSurfaceFilled(
+        filledWidths = filledWidths,
         cornerSize = cornerSize,
+        contentPadding = PaddingValues(),
         modifier = glassSurfaceModifier
     ) {
         CustomBasicTextField(

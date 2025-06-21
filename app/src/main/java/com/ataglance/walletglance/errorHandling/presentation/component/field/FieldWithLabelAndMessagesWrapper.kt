@@ -9,7 +9,7 @@ import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
 import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 
 @Composable
-fun LabelWithMessagesFieldWrapper(
+fun FieldWithLabelAndMessagesWrapper(
     state: ValidatedFieldState,
     labelText: String? = null,
     field: @Composable () -> Unit

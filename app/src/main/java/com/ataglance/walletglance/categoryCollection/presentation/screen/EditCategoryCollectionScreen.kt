@@ -57,7 +57,7 @@ import com.ataglance.walletglance.core.presentation.component.container.glassSur
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.divider.TextDivider
-import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
@@ -169,11 +169,11 @@ private fun GlassSurfaceContent(
     GlassSurfaceContentColumnWrapper(
         paddingValues = PaddingValues(start = 16.dp, end = 16.dp, top = 20.dp)
     ) {
-        TextFieldWithLabel(
+        SmallTextFieldWithLabel(
             text = collection.name,
-            placeholderText = stringResource(R.string.collection_name),
             onValueChange = onNameChange,
-            labelText = stringResource(R.string.name)
+            labelText = stringResource(R.string.name),
+            placeholderText = stringResource(R.string.collection_name)
         )
         ParentCategoriesLists(
             checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
@@ -335,14 +335,13 @@ private fun CollectionCategoryItem(
         Spacer(modifier = Modifier.size(10.dp, 48.dp))
         RecordCategory(
             category = category,
-            iconSize = 32.dp,
-            fontSize = 20.sp
+            iconSize = 30.dp,
+            fontSize = 19.sp
         )
         if (expanded != null) {
             Spacer(modifier = Modifier.width(8.dp))
             AnimatedContent(
-                targetState = if (expanded) R.drawable.collapse_icon else R.drawable.expand_icon,
-                label = "expand or collapse subcategory list icon",
+                targetState = if (expanded) R.drawable.collapse_icon else R.drawable.expand_icon
             ) { iconRes ->
                 SmallFilledIconButton(
                     iconRes = iconRes,

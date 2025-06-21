@@ -17,17 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.presentation.component.CategoryField
+import com.ataglance.walletglance.category.presentation.component.CategoryFieldWithLabelAnimated
 import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
-import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.field.TextFieldComponent
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
@@ -188,51 +188,46 @@ private fun RecordItemCreationComponentExpanded(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
-        FieldWithLabel(labelText = stringResource(R.string.amount)) {
-            TextFieldComponent(
-                text = recordDraftItem.amount,
-                placeholderText = "0.00",
-                fontSize = 22.sp,
-                onValueChange = onAmountChange,
-                keyboardType = KeyboardType.Number
-            )
-        }
+        SmallTextFieldWithLabel(
+            text = recordDraftItem.amount,
+            onValueChange = onAmountChange,
+            labelText = stringResource(R.string.amount),
+            placeholderText = "0.00",
+            fontSize = 22.sp,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        FieldWithLabel(labelText = stringResource(R.string.category)) {
-            AnimatedContent(
-                targetState = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory()
-            ) { targetCategory ->
-                CategoryField(
-                    category = targetCategory,
-                    onClick = onCategoryFieldClick
-                )
-            }
-        }
+        CategoryFieldWithLabelAnimated(
+            category = recordDraftItem.categoryWithSub?.getSubcategoryOrCategory(),
+            onClick = onCategoryFieldClick
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        FieldWithLabel(labelText = stringResource(R.string.note)) {
-            TextFieldComponent(
-                text = recordDraftItem.note,
-                placeholderText = stringResource(R.string.note_placeholder),
-                fontSize = 18.sp,
-                onValueChange = onNoteChange
-            )
-        }
+        SmallTextFieldWithLabel(
+            text = recordDraftItem.note,
+            onValueChange = onNoteChange,
+            labelText = stringResource(R.string.note),
+            placeholderText = stringResource(R.string.note_placeholder),
+            fontSize = 18.sp,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        FieldWithLabel(labelText = stringResource(R.string.quantity)) {
-            TextFieldComponent(
-                text = recordDraftItem.quantity,
-                placeholderText = stringResource(R.string.quantity_placeholder),
-                fontSize = 18.sp,
-                onValueChange = onQuantityChange,
-                keyboardType = KeyboardType.Number
-            )
-        }
+        SmallTextFieldWithLabel(
+            text = recordDraftItem.quantity,
+            onValueChange = onQuantityChange,
+            labelText = stringResource(R.string.quantity),
+            placeholderText = stringResource(R.string.quantity_placeholder),
+            fontSize = 18.sp,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -243,7 +238,7 @@ private fun RecordItemCreationComponentExpanded(
             RecordItemCreationControlPanel(
                 thisIndex = recordDraftItem.index,
                 lastIndex = draftLastItemIndex,
-                spaceSize = 16.dp,
+                spaceSize = 12.dp,
                 onSwapButtonsClick = onSwapItems,
                 onDeleteButtonClick = onDeleteItem
             ) {

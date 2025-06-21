@@ -1,40 +1,35 @@
 package com.ataglance.walletglance.core.presentation.component.field
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
 @Composable
 fun DateField(
     formattedDate: String,
-    cornerSize: Dp = 15.dp,
     onClick: () -> Unit = {}
 ) {
-    FieldWithLabel(labelText = stringResource(R.string.date)) {
-        Text(
-            text = formattedDate,
-            color = GlanciColors.onSurface,
-            fontSize = 18.sp,
-            fontFamily = Manrope,
-            fontWeight = FontWeight.Light,
-            modifier = Modifier
-                .bounceClickEffect(.97f, onClick = onClick)
-                .clip(RoundedCornerShape(cornerSize))
-                .background(GlanciColors.surface)
-                .padding(horizontal = 12.dp, vertical = 6.dp)
-        )
+    FieldWithLabelWrapper(labelText = stringResource(R.string.date)) {
+        GlassSurfaceOnGlassSurface(
+            onClick = onClick,
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+            cornerSize = 15.dp
+        ) {
+            Text(
+                text = formattedDate,
+                color = GlanciColors.onSurface,
+                fontSize = 18.sp,
+                fontFamily = Manrope,
+                fontWeight = FontWeight.W400
+            )
+        }
     }
 }

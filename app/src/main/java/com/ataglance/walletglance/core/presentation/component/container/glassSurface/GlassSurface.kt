@@ -65,8 +65,8 @@ fun GlassSurface(
                 ),
                 shape = RoundedCornerShape(cornerSize)
             )
-            .padding(contentPadding)
             .padding(1.dp)
+            .padding(contentPadding)
     ) {
         content()
     }

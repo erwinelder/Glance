@@ -125,9 +125,9 @@ private fun GlassSurfaceContent(
         SmallTextFieldWithLabelAndMessages(
             state = emailState,
             onValueChange = onEmailChange,
-            keyboardType = KeyboardType.Email,
-            placeholderText = stringResource(R.string.email),
             labelText = stringResource(R.string.email),
+            placeholderText = stringResource(R.string.email),
+            keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Go,
             onGoKeyboardAction = onRequestPasswordReset
         )

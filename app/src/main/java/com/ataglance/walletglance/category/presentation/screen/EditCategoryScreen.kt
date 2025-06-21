@@ -44,7 +44,7 @@ import com.ataglance.walletglance.core.presentation.component.button.ColorButton
 import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.ColorPicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
@@ -180,11 +180,11 @@ private fun GlassSurfaceContent(
     onColorButtonClick: () -> Unit
 ) {
     GlassSurfaceContentColumnWrapper {
-        TextFieldWithLabel(
+        SmallTextFieldWithLabel(
             text = category.name,
-            placeholderText = stringResource(R.string.category_name),
+            onValueChange = onNameChange,
             labelText = stringResource(R.string.name),
-            onValueChange = onNameChange
+            placeholderText = stringResource(R.string.category_name)
         )
         if (category.isParentCategory()) {
             ColorButton(
@@ -209,7 +209,7 @@ private fun CategoryIconsGrid(
     val lazyGridState = rememberLazyGridState()
 
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(32.dp),
+        columns = GridCells.Adaptive(28.dp),
         state = lazyGridState,
         contentPadding = PaddingValues(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),

@@ -29,7 +29,7 @@ fun LargePrimaryIcon(
     @DrawableRes iconRes: Int,
     gradientColor: List<Color>,
     iconDescription: String,
-    iconTint: Color = GlanciColors.background,
+    iconTint: Color = GlanciColors.onPrimary,
     iconSize: Dp = 100.dp
 ) {
     Box(

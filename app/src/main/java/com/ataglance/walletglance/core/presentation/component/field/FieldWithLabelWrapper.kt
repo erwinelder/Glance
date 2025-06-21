@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FieldWithLabel(
+fun FieldWithLabelWrapper(
     labelText: String,
     gap: Dp = 4.dp,
     field: @Composable () -> Unit

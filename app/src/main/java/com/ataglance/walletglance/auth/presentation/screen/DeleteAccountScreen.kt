@@ -126,9 +126,9 @@ private fun GlassSurfaceContent(
         SmallTextFieldWithLabelAndMessages(
             state = passwordState,
             onValueChange = onPasswordChange,
-            keyboardType = KeyboardType.Password,
-            placeholderText = stringResource(R.string.password),
             labelText = stringResource(R.string.password),
+            placeholderText = stringResource(R.string.password),
+            keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Go,
             onGoKeyboardAction = onDeleteAccount
         )

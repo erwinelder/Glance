@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.budget.presentation.screen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,7 +43,7 @@ import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.presentation.component.CategoryField
+import com.ataglance.walletglance.category.presentation.component.CategoryFieldWithLabelAnimated
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
@@ -52,8 +51,8 @@ import com.ataglance.walletglance.core.presentation.component.button.TertiaryBut
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckbox
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
-import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.field.TextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.PopupFloatingPicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
@@ -186,7 +185,7 @@ private fun GlassSurfaceContent(
         modifier = Modifier.fillMaxWidth()
     ) {
         item {
-            FieldWithLabel(stringResource(R.string.repeating_period)) {
+            FieldWithLabelWrapper(stringResource(R.string.repeating_period)) {
                 PopupFloatingPicker(
                     selectedItemText = stringResource(budget.newRepeatingPeriod.asStringRes()),
                     itemList = listOf(
@@ -205,24 +204,17 @@ private fun GlassSurfaceContent(
         }
         budget.category?.let { category ->
             item {
-                FieldWithLabel(stringResource(R.string.category)) {
-                    AnimatedContent(
-                        targetState = category,
-                        label = "category field at the edit budget screen"
-                    ) { targetCategory ->
-                        CategoryField(
-                            category = targetCategory,
-                            onClick = onCategoryFieldClick
-                        )
-                    }
-                }
+                CategoryFieldWithLabelAnimated(
+                    category = category,
+                    onClick = onCategoryFieldClick
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
         item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-        item {
-            TextFieldWithLabel(
+            SmallTextFieldWithLabel(
                 text = budget.name,
                 onValueChange = onNameChange,
                 labelText = stringResource(R.string.budget_name),
@@ -233,12 +225,12 @@ private fun GlassSurfaceContent(
             Spacer(modifier = Modifier.height(4.dp))
         }
         item {
-            TextFieldWithLabel(
+            SmallTextFieldWithLabel(
                 text = budget.amountLimit,
                 onValueChange = onAmountLimitChange,
-                keyboardType = KeyboardType.Number,
                 labelText = stringResource(R.string.budget_limit),
-                placeholderText = "0.00"
+                placeholderText = "0.00",
+                keyboardType = KeyboardType.Number
             )
         }
         item {

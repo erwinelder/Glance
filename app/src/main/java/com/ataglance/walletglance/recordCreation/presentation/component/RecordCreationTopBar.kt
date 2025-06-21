@@ -31,7 +31,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.ButtonWithPopupContent
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckboxWithText
 import com.ataglance.walletglance.core.presentation.component.field.DateField
-import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
@@ -85,7 +85,7 @@ fun RecordCreationTopBar(
                 formattedDate = draftGeneral.dateTimeState.dateFormatted,
                 onClick = onDateFieldClick
             )
-            FieldWithLabel(labelText = stringResource(R.string.account)) {
+            FieldWithLabelWrapper(labelText = stringResource(R.string.account)) {
                 AccountPopupPicker(
                     accountList = accounts,
                     selectedAccount = draftGeneral.account,

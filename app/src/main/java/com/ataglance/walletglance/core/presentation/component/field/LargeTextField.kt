@@ -15,10 +15,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
-fun SmallTextField(
+fun LargeTextField(
     text: String,
     onValueChange: (String) -> Unit,
     placeholderText: String = "",
@@ -53,7 +54,7 @@ fun SmallTextField(
         onGoKeyboardAction = onGoKeyboardAction,
         maxLines = 1,
         glassSurfaceModifier = glassSurfaceModifier,
-        filledWidths = null,
+        filledWidths = FilledWidthByScreenType(),
         textFieldModifier = Modifier.animateContentSize(),
         placeholderModifier = Modifier.run { if (text.isEmpty()) width(123.dp) else this }
     )

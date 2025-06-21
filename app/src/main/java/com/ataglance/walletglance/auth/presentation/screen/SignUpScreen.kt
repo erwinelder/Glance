@@ -180,33 +180,32 @@ private fun GlassSurfaceContent(
         SmallTextFieldWithLabelAndMessages(
             state = nameState,
             onValueChange = onNameChange,
-            keyboardType = KeyboardType.Text,
-            placeholderText = stringResource(R.string.name),
             labelText = stringResource(R.string.name),
+            placeholderText = stringResource(R.string.name),
             imeAction = ImeAction.Next
         )
         SmallTextFieldWithLabelAndMessages(
             state = emailState,
             onValueChange = onEmailChange,
-            keyboardType = KeyboardType.Email,
-            placeholderText = stringResource(R.string.email),
             labelText = stringResource(R.string.email),
+            placeholderText = stringResource(R.string.email),
+            keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
         )
         SmallTextFieldWithLabelAndMessages(
             state = passwordState,
             onValueChange = onPasswordChange,
-            keyboardType = KeyboardType.Password,
-            placeholderText = stringResource(R.string.password),
             labelText = stringResource(R.string.password),
+            placeholderText = stringResource(R.string.password),
+            keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next
         )
         SmallTextFieldWithLabelAndMessages(
             state = confirmPasswordState,
             onValueChange = onConfirmPasswordChange,
-            keyboardType = KeyboardType.Password,
-            placeholderText = stringResource(R.string.password),
             labelText = stringResource(R.string.confirm_password),
+            placeholderText = stringResource(R.string.password),
+            keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Go,
             onGoKeyboardAction = onSignUp
         )

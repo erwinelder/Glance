@@ -62,7 +62,7 @@ fun RecordCategory(
                 color = GlanciColors.onSurface,
                 fontSize = fontSize,
                 fontFamily = Manrope,
-                fontWeight = FontWeight.Light,
+                fontWeight = FontWeight.W400,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f, false)

@@ -14,25 +14,25 @@ import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFiel
 fun SmallTextFieldWithLabelAndMessages(
     state: ValidatedFieldState,
     onValueChange: (String) -> Unit,
+    labelText: String? = null,
     placeholderText: String = "",
-    isError: Boolean = false,
-    keyboardType: KeyboardType = KeyboardType.Text,
     fontSize: TextUnit = 19.sp,
     cornerSize: Dp = 15.dp,
-    labelText: String? = null,
+    isError: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
     onDoneKeyboardAction: () -> Unit = {},
     onGoKeyboardAction: () -> Unit = {}
 ) {
-    LabelWithMessagesFieldWrapper(state = state, labelText = labelText) {
+    FieldWithLabelAndMessagesWrapper(state = state, labelText = labelText) {
         SmallTextField(
             text = state.fieldText,
-            placeholderText = placeholderText,
             onValueChange = onValueChange,
-            isError = isError,
-            keyboardType = keyboardType,
+            placeholderText = placeholderText,
             fontSize = fontSize,
             cornerSize = cornerSize,
+            isError = isError,
+            keyboardType = keyboardType,
             imeAction = imeAction,
             onDoneKeyboardAction = onDoneKeyboardAction,
             onGoKeyboardAction = onGoKeyboardAction

@@ -204,12 +204,12 @@ sealed class GlanciPalette(
             Color(183, 108, 139, 204)
         ),
         primaryGlassGradient = listOf(
-            Color(199, 113, 158, 204),
-            Color(171, 91, 140, 204)
+            Color(194, 114, 155, 204),
+            Color(166, 91, 137, 204)
         ),
         primaryGlassBorderGradient = listOf(
-            Color(255, 255, 255, 33),
-            Color(255, 255, 255, 18)
+            Color(255, 255, 255, 31),
+            Color(255, 255, 255, 15)
         ),
         primaryGlassShadow = Pair(
 //            Color(255, 255, 255, 87),
@@ -264,7 +264,7 @@ sealed class GlanciPalette(
             Color(22, 22, 22, 255),
             Color(29, 29, 29, 255)
         ),
-        onSurface = Color(226, 217, 220),
+        onSurface = Color(217, 208, 210, 255),
 
         outline = Color(122, 115, 119),
         outlineSemiTransparent = Color(122, 115, 119, 128),
