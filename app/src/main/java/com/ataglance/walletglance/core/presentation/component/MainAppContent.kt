@@ -41,7 +41,7 @@ fun MainAppContent(
     }
 
     val accountsUiState by appViewModel.accountsAndActiveOne.collectAsState()
-    val dateRangeMenuUiState by appViewModel.dateRangeMenuUiState.collectAsStateWithLifecycle()
+    val dateRangeMenuUiState by appViewModel.dateRangeWithEnum.collectAsStateWithLifecycle()
     val widgetNames by appViewModel.widgetNames.collectAsStateWithLifecycle()
 
     var dimBackground by remember { mutableStateOf(false) }
@@ -50,7 +50,8 @@ fun MainAppContent(
     val appUiState by remember(accountsUiState, dateRangeMenuUiState) {
         derivedStateOf {
             AppUiState(
-                accountsAndActiveOne = accountsUiState, dateRangeMenuUiState = dateRangeMenuUiState
+                accountsAndActiveOne = accountsUiState,
+                dateRangeWithEnum = dateRangeMenuUiState
             )
         }
     }
@@ -78,7 +79,7 @@ fun MainAppContent(
             )
             DateRangeAssetsPickerContainer(
                 scaffoldPadding = scaffoldPadding,
-                dateRangeMenuUiState = dateRangeMenuUiState,
+                dateRangeWithEnum = dateRangeMenuUiState,
                 openCustomDateRangeWindow = openCustomDateRangeWindow,
                 onCloseCustomDateRangeWindow = { openCustomDateRangeWindow = false },
                 onDateRangeSelect = appViewModel::selectDateRange,

@@ -14,13 +14,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
+import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangeAssetsPickerContainer(
     scaffoldPadding: PaddingValues,
-    dateRangeMenuUiState: DateRangeMenuUiState,
+    dateRangeWithEnum: DateRangeWithEnum,
     openCustomDateRangeWindow: Boolean,
     onCloseCustomDateRangeWindow: () -> Unit,
     onDateRangeSelect: (DateRangeEnum) -> Unit,
@@ -29,10 +29,10 @@ fun DateRangeAssetsPickerContainer(
     var openDateRangePickerDialog by remember { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState()
 
-    LaunchedEffect(dateRangeMenuUiState) {
+    LaunchedEffect(dateRangeWithEnum) {
         dateRangePickerState.setSelection(
-            dateRangeMenuUiState.startCalendarDateMillis,
-            dateRangeMenuUiState.endCalendarDateMillis
+            startDateMillis = dateRangeWithEnum.dateRange.from,
+            endDateMillis = dateRangeWithEnum.dateRange.to
         )
     }
 
@@ -44,7 +44,7 @@ fun DateRangeAssetsPickerContainer(
                 bottom = scaffoldPadding.calculateBottomPadding() * 2,
                 end = 16.dp
             ),
-            currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+            currentDateRangeEnum = dateRangeWithEnum.enum,
             dateRangePickerState = dateRangePickerState,
             onDismissRequest = onCloseCustomDateRangeWindow,
             onDateRangeSelect = { dateRangeEnum ->

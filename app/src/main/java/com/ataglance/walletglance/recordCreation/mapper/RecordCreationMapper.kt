@@ -70,7 +70,7 @@ fun RecordDraft.toCreatedRecord(): CreatedRecord? {
         recordNum = this.general.recordNum,
         account = account,
         type = this.general.type,
-        dateLong = this.general.dateTimeState.dateLong,
+        dateLong = this.general.dateTimeState.timestamp,
         preferences = this.general.preferences,
         items = items,
         totalAmount = items.getTotalAmount()

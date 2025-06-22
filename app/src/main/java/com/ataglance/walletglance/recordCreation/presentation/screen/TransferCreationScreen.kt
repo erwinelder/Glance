@@ -63,7 +63,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun TransferCreationScreenWrapper(
-    screenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     backStack: NavBackStackEntry,
     navController: NavHostController,
     navViewModel: NavigationViewModel,
@@ -112,7 +112,7 @@ fun TransferCreationScreenWrapper(
 
 @Composable
 fun TransferCreationScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     transferDraft: TransferDraft,
     accountList: List<Account>,
@@ -188,7 +188,7 @@ fun TransferCreationScreen(
         }
         CustomDatePicker(
             openDialog = showDatePicker,
-            initialTimeInMillis = transferDraft.dateTimeState.getTimeInMillis(),
+            initialTimestamp = transferDraft.dateTimeState.timestamp,
             onOpenDateDialogChange = {
                 showDatePicker = it
             },

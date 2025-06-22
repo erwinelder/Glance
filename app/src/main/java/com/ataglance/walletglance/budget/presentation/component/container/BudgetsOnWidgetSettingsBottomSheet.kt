@@ -23,7 +23,7 @@ import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.toTimestampRange
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,7 +100,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 category = groupedCategoriesByType.expense[0].category,
                 name = "Food & drinks",
                 repeatingPeriod = RepeatingPeriod.Daily,
-                dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
+                dateRange = RepeatingPeriod.Daily.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "USD",
                 linkedAccountsIds = listOf(1, 2)
@@ -116,7 +116,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 category = groupedCategoriesByType.expense[1].category,
                 name = "Housing",
                 repeatingPeriod = RepeatingPeriod.Weekly,
-                dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
+                dateRange = RepeatingPeriod.Weekly.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "CZK",
                 linkedAccountsIds = listOf(3, 4)
@@ -132,7 +132,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 category = groupedCategoriesByType.expense[0].category,
                 name = "Food & drinks",
                 repeatingPeriod = RepeatingPeriod.Monthly,
-                dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "USD",
                 linkedAccountsIds = listOf(1, 2)
@@ -146,7 +146,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 category = groupedCategoriesByType.expense[2].category,
                 name = "Shopping",
                 repeatingPeriod = RepeatingPeriod.Monthly,
-                dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "CZK",
                 linkedAccountsIds = listOf(3, 4)

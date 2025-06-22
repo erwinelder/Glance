@@ -3,7 +3,7 @@ package com.ataglance.walletglance.record.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.utils.filterByAccount
 import com.ataglance.walletglance.record.domain.utils.shrinkForCompactView
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 
 class RecentRecordsWidgetViewModel(
     activeAccount: Account?,
-    activeDateRange: LongDateRange,
+    activeDateRange: TimestampRange,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase
 ) : ViewModel() {
 
@@ -33,7 +33,7 @@ class RecentRecordsWidgetViewModel(
 
     private val _activeDateRange = MutableStateFlow(activeDateRange)
 
-    fun setActiveDateRange(dateRange: LongDateRange) {
+    fun setActiveDateRange(dateRange: TimestampRange) {
         if (_activeDateRange.value.equalsTo(dateRange)) return
         _activeDateRange.update { dateRange }
     }

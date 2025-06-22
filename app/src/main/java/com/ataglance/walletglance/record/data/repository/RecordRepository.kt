@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.record.data.repository
 
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -27,14 +27,14 @@ interface RecordRepository {
 
     suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
 
-    fun getRecordsInDateRangeFlow(range: LongDateRange): Flow<List<RecordEntity>>
+    fun getRecordsInDateRangeFlow(range: TimestampRange): Flow<List<RecordEntity>>
 
-    suspend fun getRecordsInDateRange(range: LongDateRange): List<RecordEntity>
+    suspend fun getRecordsInDateRange(range: TimestampRange): List<RecordEntity>
 
     suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
         accountsIds: List<Int>,
-        dateRange: LongDateRange
+        dateRange: TimestampRange
     ): Double
 
 }

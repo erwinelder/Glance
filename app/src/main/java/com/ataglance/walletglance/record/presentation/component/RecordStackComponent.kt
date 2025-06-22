@@ -22,7 +22,7 @@ import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
-import com.ataglance.walletglance.core.utils.formatDateLongAsDayMonthYear
+import com.ataglance.walletglance.core.presentation.utils.formatTimestampAsDayMonthNameYear
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
 
@@ -78,7 +78,7 @@ private fun RecordStackComponentContent(
 ) {
     // date
     Text(
-        text = recordStack.date.formatDateLongAsDayMonthYear(
+        text = recordStack.date.formatTimestampAsDayMonthNameYear(
             resourceManager = resourceManager,
             includeYear = includeYearInDate
         ),

@@ -47,6 +47,8 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.utils.getPrevDateRanges
+import com.ataglance.walletglance.core.domain.date.getSpendingInRecentStringRes
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
@@ -60,9 +62,7 @@ import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
-import com.ataglance.walletglance.core.utils.getPrevDateRanges
-import com.ataglance.walletglance.core.utils.getSpendingInRecentStringRes
+import com.ataglance.walletglance.core.utils.toTimestampRange
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -292,7 +292,7 @@ fun BudgetStatisticsScreenPreview(
         category = groupedCategoriesByType.expense[0].category,
         name = groupedCategoriesByType.expense[0].category.name,
         repeatingPeriod = RepeatingPeriod.Monthly,
-        dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+        dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
         currentTimeWithinRangeGraphPercentage = .5f,
         currency = "USD",
         linkedAccountsIds = listOf(1, 2)

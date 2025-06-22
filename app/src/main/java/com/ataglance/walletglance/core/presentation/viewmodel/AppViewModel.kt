@@ -8,11 +8,9 @@ import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.utils.timeInMillisToTimestampWithoutSpecificTime
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
 import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCase
@@ -139,18 +137,18 @@ class AppViewModel(
     }
 
 
-    private val _dateRangeMenuUiState = MutableStateFlow(
-        DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth)
+    private val _dateRangeWithEnum = MutableStateFlow(
+        DateRangeWithEnum.fromEnum(enum = DateRangeEnum.ThisMonth)
     )
-    val dateRangeMenuUiState = _dateRangeMenuUiState.asStateFlow()
+    val dateRangeWithEnum = _dateRangeWithEnum.asStateFlow()
 
     fun selectDateRange(dateRangeEnum: DateRangeEnum) {
-        val currDateRangeWithEnum = dateRangeMenuUiState.value.dateRangeWithEnum
+        val currDateRangeWithEnum = dateRangeWithEnum.value
 
         if (currDateRangeWithEnum.enum == dateRangeEnum) return
 
-        _dateRangeMenuUiState.update {
-            DateRangeMenuUiState.fromEnum(
+        _dateRangeWithEnum.update {
+            DateRangeWithEnum.fromEnum(
                 enum = dateRangeEnum,
                 currentRange = currDateRangeWithEnum.dateRange
             )
@@ -162,17 +160,11 @@ class AppViewModel(
             return
         }
 
-        _dateRangeMenuUiState.update {
-            DateRangeMenuUiState(
-                startCalendarDateMillis = pastDateMillis,
-                endCalendarDateMillis = futureDateMillis,
-                dateRangeWithEnum = DateRangeWithEnum(
-                    enum = DateRangeEnum.Custom,
-                    dateRange = LongDateRange(
-                        from = timeInMillisToTimestampWithoutSpecificTime(pastDateMillis),
-                        to = timeInMillisToTimestampWithoutSpecificTime(futureDateMillis) + 2359
-                    )
-                )
+        _dateRangeWithEnum.update {
+            DateRangeWithEnum(
+                enum = DateRangeEnum.Custom,
+                dateRange = TimestampRange(from = pastDateMillis, to = futureDateMillis)
+                    .extendTimeRange()
             )
         }
     }

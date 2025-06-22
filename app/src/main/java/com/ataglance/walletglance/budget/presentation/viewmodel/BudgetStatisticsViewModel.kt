@@ -6,9 +6,9 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.account.domain.utils.filterByBudgetAccounts
 import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
 import com.ataglance.walletglance.budget.presentation.model.BudgetStatisticsScreenUiState
+import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.core.domain.statistics.ColumnChartUiState
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
-import com.ataglance.walletglance.core.utils.getPrevDateRanges
 import com.ataglance.walletglance.record.domain.usecase.GetRecordsTotalAmountInDateRangesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +33,7 @@ class BudgetStatisticsViewModel(
                 .getFlowByCategoryAndAccounts(
                     categoryId = budget.category.id,
                     accountsIds = budget.linkedAccountsIds,
-                    dateRangeList = budget.repeatingPeriod.getPrevDateRanges()
+                    dateRanges = budget.repeatingPeriod.getPrevDateRanges()
                 )
                 .collect { totalInRanges ->
                     _uiState.update {

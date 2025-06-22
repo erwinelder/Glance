@@ -61,7 +61,7 @@ fun ExpensesIncomeWidgetWrapper(
         activeAccount?.id?.let(viewModel::setActiveAccountId)
     }
     LaunchedEffect(dateRangeWithEnum.dateRange) {
-        viewModel.setActiveDateRange(dateRangeWithEnum.dateRange)
+        viewModel.setActiveDateRange(dateRange = dateRangeWithEnum.dateRange)
     }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

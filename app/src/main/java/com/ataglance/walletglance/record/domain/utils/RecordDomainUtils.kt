@@ -4,7 +4,7 @@ import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
-import com.ataglance.walletglance.core.utils.extractYear
+import com.ataglance.walletglance.core.utils.timestampToYear
 import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
@@ -50,7 +50,7 @@ fun Char.asRecordType(): RecordType? {
 
 fun List<RecordStack>.containsRecordsFromDifferentYears(): Boolean {
     return this.isNotEmpty() &&
-            this.first().date.extractYear() != this.last().date.extractYear()
+            this.first().date.timestampToYear() != this.last().date.timestampToYear()
 }
 
 

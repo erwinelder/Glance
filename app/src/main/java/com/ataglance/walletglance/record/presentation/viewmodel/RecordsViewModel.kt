@@ -6,7 +6,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.utils.filterByAccount
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class RecordsViewModel(
     activeAccount: Account?,
-    activeDateRange: LongDateRange,
+    activeDateRange: TimestampRange,
     private val defaultCollectionName: String,
     private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase
@@ -53,7 +53,7 @@ class RecordsViewModel(
 
     private val _activeDateRange = MutableStateFlow(activeDateRange)
 
-    fun setActiveDateRange(dateRange: LongDateRange) {
+    fun setActiveDateRange(dateRange: TimestampRange) {
         if (_activeDateRange.value.equalsTo(dateRange)) return
         _activeDateRange.update { dateRange }
     }

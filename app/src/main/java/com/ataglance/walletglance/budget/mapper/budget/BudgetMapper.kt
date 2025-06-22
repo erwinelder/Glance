@@ -14,7 +14,7 @@ import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.enumValueOrNull
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.toTimestampRange
 
 
 fun List<BudgetEntity>.toDomainModels(
@@ -52,7 +52,7 @@ fun BudgetEntity.toDomainModel(
     linkedAccounts: List<Account>
 ): Budget? {
     val repeatingPeriodEnum = enumValueOrNull<RepeatingPeriod>(repeatingPeriod) ?: return null
-    val dateRange = repeatingPeriodEnum.getLongDateRangeWithTime()
+    val dateRange = repeatingPeriodEnum.toTimestampRange()
 
     return Budget(
         id = id,
@@ -64,7 +64,7 @@ fun BudgetEntity.toDomainModel(
         name = name,
         repeatingPeriod = repeatingPeriodEnum,
         dateRange = dateRange,
-        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentTimeAsGraphPercentageInThisRange(),
+        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentDateAsGraphPercentage(),
         currency = linkedAccounts.firstOrNull()?.currency ?: "",
         linkedAccountsIds = linkedAccounts.map { it.id }
     )
@@ -131,7 +131,7 @@ fun Budget.toDraft(accounts: List<Account>): BudgetDraft {
 
 fun BudgetDraft.toNewBudget(): Budget? {
     val newAmountLimit = amountLimit.toDoubleOrNull() ?: return null
-    val dateRange = newRepeatingPeriod.getLongDateRangeWithTime()
+    val dateRange = newRepeatingPeriod.toTimestampRange()
 
     return Budget(
         id = id,
@@ -143,7 +143,7 @@ fun BudgetDraft.toNewBudget(): Budget? {
         name = name,
         repeatingPeriod = newRepeatingPeriod,
         dateRange = dateRange,
-        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentTimeAsGraphPercentageInThisRange(),
+        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentDateAsGraphPercentage(),
         currency = linkedAccounts.firstOrNull()?.currency ?: "",
         linkedAccountsIds = linkedAccounts.map { it.id }
     )

@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.record.data.repository
 
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
@@ -89,19 +89,19 @@ class RecordRepositoryMock : RecordRepository {
             .sortedByDescending { it.date }
     }
 
-    override fun getRecordsInDateRangeFlow(range: LongDateRange): Flow<List<RecordEntity>> = flow {
+    override fun getRecordsInDateRangeFlow(range: TimestampRange): Flow<List<RecordEntity>> = flow {
         val filteredRecords = records.filter { range.containsDate(date = it.date) }
         emit(filteredRecords)
     }
 
-    override suspend fun getRecordsInDateRange(range: LongDateRange): List<RecordEntity> {
+    override suspend fun getRecordsInDateRange(range: TimestampRange): List<RecordEntity> {
         return records.filter { range.containsDate(date = it.date) }
     }
 
     override suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
         accountsIds: List<Int>,
-        dateRange: LongDateRange
+        dateRange: TimestampRange
     ): Double {
         return records
             .filter {

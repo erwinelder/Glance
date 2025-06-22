@@ -30,7 +30,7 @@ import androidx.compose.ui.window.Dialog
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.date.DateRangeAssets
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.TimeInMillisRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
 import com.ataglance.walletglance.core.presentation.component.field.DateField
@@ -104,10 +104,10 @@ fun BoxScope.DateRangeAssetsPickerComponent(
                     DateRangeAssetComponent(DateRangeAssets.December, currentDateRangeEnum, onDateRangeSelect)
                 }
                 DateField(
-                    formattedDate = TimeInMillisRange.from(
-                        dateRangePickerState.selectedStartDateMillis,
-                        dateRangePickerState.selectedEndDateMillis
-                    )?.formatDateRangeByTimeInMillis() ?: "??? - ???",
+                    formattedDate = TimestampRange.fromRange(
+                        from = dateRangePickerState.selectedStartDateMillis,
+                        to = dateRangePickerState.selectedEndDateMillis
+                    )?.formatAsDayMonth() ?: "??? - ???",
                     onClick = onCustomDateRangeFieldClick
                 )
                 SmallDivider()

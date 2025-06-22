@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.budget.domain.model
 
 import com.ataglance.walletglance.category.domain.model.Category
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import java.util.Locale
 
@@ -14,7 +14,7 @@ data class Budget(
     val category: Category?,
     val name: String,
     val repeatingPeriod: RepeatingPeriod,
-    val dateRange: LongDateRange,
+    val dateRange: TimestampRange,
     val currentTimeWithinRangeGraphPercentage: Float,
     val currency: String,
     val linkedAccountsIds: List<Int>
@@ -28,7 +28,7 @@ data class Budget(
         return this.copy(
             usedAmount = amount,
             usedPercentage = "%.2f".format(
-                Locale.US,
+                locale = Locale.US,
                 100 / amountLimit * amount
             ).toFloat()
         )

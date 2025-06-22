@@ -4,7 +4,7 @@ import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import kotlinx.coroutines.flow.Flow
@@ -74,7 +74,7 @@ class RecordLocalDataSourceImpl(
     }
 
     override suspend fun getRecordsInDateRange(
-        range: LongDateRange
+        range: TimestampRange
     ): Flow<List<RecordEntity>> {
         return recordDao.getRecordsInDateRange(
             startPastDate = range.from, endFutureDate = range.to
@@ -84,13 +84,13 @@ class RecordLocalDataSourceImpl(
     override suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
         linkedAccountsIds: List<Int>,
-        longDateRange: LongDateRange
+        dateRange: TimestampRange
     ): Double {
         return recordDao.getTotalAmountByCategoryAndAccountsInRange(
             categoryId = categoryId,
             linkedAccountsIds = linkedAccountsIds,
-            from = longDateRange.from,
-            to = longDateRange.to
+            from = dateRange.from,
+            to = dateRange.to
         ) ?: 0.0
     }
 

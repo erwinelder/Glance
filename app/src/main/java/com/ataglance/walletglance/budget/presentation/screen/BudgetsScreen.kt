@@ -37,8 +37,8 @@ import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.utils.plus
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.core.utils.toTimestampRange
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.mapper.toDomainModels
@@ -132,7 +132,7 @@ fun BudgetsScreenPreview(
                     category = groupedCategoriesByType.expense[0].category,
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Daily,
-                    dateRange = RepeatingPeriod.Daily.getLongDateRangeWithTime(),
+                    dateRange = RepeatingPeriod.Daily.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
                     linkedAccountsIds = listOf(1, 2)
@@ -148,7 +148,7 @@ fun BudgetsScreenPreview(
                     category = groupedCategoriesByType.expense[1].category,
                     name = "Housing",
                     repeatingPeriod = RepeatingPeriod.Weekly,
-                    dateRange = RepeatingPeriod.Weekly.getLongDateRangeWithTime(),
+                    dateRange = RepeatingPeriod.Weekly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
                     linkedAccountsIds = listOf(3, 4)
@@ -164,7 +164,7 @@ fun BudgetsScreenPreview(
                     category = groupedCategoriesByType.expense[0].category,
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Monthly,
-                    dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                    dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
                     linkedAccountsIds = listOf(1, 2)
@@ -178,7 +178,7 @@ fun BudgetsScreenPreview(
                     category = groupedCategoriesByType.expense[2].category,
                     name = "Shopping",
                     repeatingPeriod = RepeatingPeriod.Monthly,
-                    dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+                    dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
                     linkedAccountsIds = listOf(3, 4)
@@ -194,7 +194,7 @@ fun BudgetsScreenPreview(
                     category = groupedCategoriesByType.expense[0].category,
                     name = "Food & drinks",
                     repeatingPeriod = RepeatingPeriod.Yearly,
-                    dateRange = RepeatingPeriod.Yearly.getLongDateRangeWithTime(),
+                    dateRange = RepeatingPeriod.Yearly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
                     linkedAccountsIds = listOf(1, 2)
@@ -208,7 +208,7 @@ fun BudgetsScreenPreview(
                     category = groupedCategoriesByType.expense[2].category,
                     name = "Shopping",
                     repeatingPeriod = RepeatingPeriod.Yearly,
-                    dateRange = RepeatingPeriod.Yearly.getLongDateRangeWithTime(),
+                    dateRange = RepeatingPeriod.Yearly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
                     linkedAccountsIds = listOf(3, 4)

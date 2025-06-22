@@ -25,7 +25,7 @@ import com.ataglance.walletglance.category.presentation.model.CategoriesStatisti
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatisticsWidgetViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
@@ -36,7 +36,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun CategoriesStatisticsWidgetWrapper(
     activeAccount: Account?,
-    activeDateRange: LongDateRange,
+    activeDateRange: TimestampRange,
     onNavigateToCategoriesStatisticsScreen: (Int?, CategoryType?) -> Unit
 ) {
     val viewModel = koinViewModel<CategoryStatisticsWidgetViewModel> {
@@ -47,7 +47,7 @@ fun CategoriesStatisticsWidgetWrapper(
         activeAccount?.id?.let(viewModel::setActiveAccountId)
     }
     LaunchedEffect(activeDateRange) {
-        viewModel.setActiveDateRange(activeDateRange)
+        viewModel.setActiveDateRange(dateRange = activeDateRange)
     }
 
     val uiState by viewModel.statisticsUiState.collectAsStateWithLifecycle()

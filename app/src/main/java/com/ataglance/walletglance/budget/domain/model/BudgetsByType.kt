@@ -4,7 +4,7 @@ import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
 import com.ataglance.walletglance.budget.domain.utils.findById
 import com.ataglance.walletglance.budget.domain.utils.getFirstDateRange
 import com.ataglance.walletglance.budget.domain.utils.getMaxIdOrZero
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.utils.filterByBudgetsDateRange
@@ -27,7 +27,7 @@ data class BudgetsByType(
             ?: yearly.findById(id)
     }
 
-    fun getMaxDateRange(): LongDateRange? {
+    fun getMaxDateRange(): TimestampRange? {
         return yearly.getFirstDateRange()
             ?: monthly.getFirstDateRange()
             ?: weekly.getFirstDateRange()

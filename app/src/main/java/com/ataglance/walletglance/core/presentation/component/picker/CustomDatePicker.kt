@@ -23,11 +23,11 @@ import com.ataglance.walletglance.core.presentation.theme.Manrope
 @Composable
 fun CustomDatePicker(
     openDialog: Boolean,
-    initialTimeInMillis: Long,
+    initialTimestamp: Long,
     onOpenDateDialogChange: (Boolean) -> Unit,
     onConfirmButton: (Long) -> Unit
 ) {
-    val state = rememberDatePickerState(initialSelectedDateMillis = initialTimeInMillis)
+    val state = rememberDatePickerState(initialSelectedDateMillis = initialTimestamp)
 
     AnimatedVisibility(visible = openDialog) {
         DatePickerDialog(
@@ -103,7 +103,7 @@ private fun CustomDatePickerPreview() {
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         CustomDatePicker(
             openDialog = true,
-            initialTimeInMillis = System.currentTimeMillis(),
+            initialTimestamp = System.currentTimeMillis(),
             onOpenDateDialogChange = {},
             onConfirmButton = {}
         )

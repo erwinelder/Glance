@@ -58,7 +58,7 @@ fun AppNavHost(
                 isAppThemeSetUp = appConfiguration.appTheme != null,
                 accountsAndActiveOne = appUiState.accountsAndActiveOne,
                 onTopBarAccountClick = appViewModel::applyActiveAccount,
-                dateRangeWithEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum,
+                dateRangeWithEnum = appUiState.dateRangeWithEnum,
                 onDateRangeChange = appViewModel::selectDateRange,
                 isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
                 onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,

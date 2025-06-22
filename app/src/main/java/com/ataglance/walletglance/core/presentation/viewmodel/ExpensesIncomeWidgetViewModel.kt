@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
 import com.ataglance.walletglance.record.domain.utils.filterByAccount
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 
 class ExpensesIncomeWidgetViewModel(
     activeAccount: Account?,
-    activeDateRange: LongDateRange,
+    activeDateRange: TimestampRange,
     private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase
 ) : ViewModel() {
 
@@ -34,7 +34,7 @@ class ExpensesIncomeWidgetViewModel(
 
     private val _activeDateRange = MutableStateFlow(activeDateRange)
 
-    fun setActiveDateRange(dateRange: LongDateRange) {
+    fun setActiveDateRange(dateRange: TimestampRange) {
         if (_activeDateRange.value.equalsTo(dateRange)) return
         _activeDateRange.update { dateRange }
     }

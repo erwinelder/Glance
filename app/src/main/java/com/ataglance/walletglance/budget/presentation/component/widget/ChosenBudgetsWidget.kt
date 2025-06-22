@@ -26,7 +26,7 @@ import com.ataglance.walletglance.core.presentation.component.widget.component.W
 import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.toTimestampRange
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -110,7 +110,7 @@ fun ChosenBudgetsWidgetPreview(
             category = groupedCategoriesByType.expense[0].category,
             name = groupedCategoriesByType.expense[0].category.name,
             repeatingPeriod = RepeatingPeriod.Monthly,
-            dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+            dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
             currentTimeWithinRangeGraphPercentage = .5f,
             currency = "USD",
             linkedAccountsIds = listOf(1)
@@ -124,7 +124,7 @@ fun ChosenBudgetsWidgetPreview(
             category = groupedCategoriesByType.expense[1].category,
             name = groupedCategoriesByType.expense[1].category.name,
             repeatingPeriod = RepeatingPeriod.Monthly,
-            dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+            dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
             currentTimeWithinRangeGraphPercentage = .5f,
             currency = "USD",
             linkedAccountsIds = listOf(1)

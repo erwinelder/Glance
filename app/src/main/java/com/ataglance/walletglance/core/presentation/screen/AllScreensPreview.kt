@@ -46,11 +46,11 @@ import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCat
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
+import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.domain.date.YearMonthDay
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetPreview
+import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.notification.presentation.screen.NotificationsScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.personalization.presentation.screen.PersonalizationScreenPreview
@@ -71,6 +71,7 @@ import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPre
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
+import kotlinx.datetime.LocalDate
 
 private const val device = "spec:width=1440px,height=3120px,dpi=560" // default
 //private const val device = "spec:width=1440px,height=2988px,dpi=560" // phone promo
@@ -124,13 +125,13 @@ private val accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
     accounts = accountList,
     activeAccount = accountList.find { it.isActive } ?: accountList.first()
 )
-private val dateRangeMenuUiState = DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth)
+private val dateRangeWithEnum = DateRangeWithEnum.fromEnum(enum = DateRangeEnum.ThisMonth)
 private const val isCustomDateRangeWindowOpened = false
 private val recordEntityList = listOf(
     RecordEntity(
         id = 1,
         recordNum = 1,
-        date = YearMonthDay(2024, 9, 24).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 24).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount!!.id,
         amount = 68.43,
@@ -143,7 +144,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 2,
         recordNum = 1,
-        date = YearMonthDay(2024, 9, 24).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 24).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 178.9,
@@ -156,7 +157,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 3,
         recordNum = 2,
-        date = YearMonthDay(2024, 9, 23).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 23).toTimestamp(),
         type = RecordType.OutTransfer.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 3000.0,
@@ -169,7 +170,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 4,
         recordNum = 3,
-        date = YearMonthDay(2024, 9, 18).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 18).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 120.9,
@@ -182,7 +183,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 5,
         recordNum = 4,
-        date = YearMonthDay(2024, 9, 15).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 15).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 799.9,
@@ -195,7 +196,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 6,
         recordNum = 5,
-        date = YearMonthDay(2024, 9, 12).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 12).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 3599.9,
@@ -208,7 +209,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 7,
         recordNum = 6,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 8500.0,
@@ -221,7 +222,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 8,
         recordNum = 7,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
         type = RecordType.Income.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 42600.0,
@@ -234,7 +235,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 9,
         recordNum = 8,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 799.9,
@@ -247,7 +248,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 10,
         recordNum = 9,
-        date = YearMonthDay(2024, 6, 4).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 6, dayOfMonth = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.accounts[1].id,
         amount = 450.41,
@@ -260,7 +261,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 10,
         recordNum = 9,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
+        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 690.56,
@@ -403,7 +404,7 @@ private fun HomeScreenPreview_() {
     HomeScreenPreview(
         appTheme = appTheme,
         accountsAndActiveOne = accountsAndActiveOne,
-        dateRangeMenuUiState = dateRangeMenuUiState,
+        dateRangeWithEnum = dateRangeWithEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         recordList = recordEntityList,
         budgetsOnWidget = budgetEntityList.toDomainModels(
@@ -435,7 +436,7 @@ private fun RecordsScreenPreview_() {
     RecordsScreenPreview(
         appTheme = appTheme,
         accountList = accountsAndActiveOne.accounts,
-        currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+        currentDateRangeEnum = dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         collectionType = collectionType,
         collectionList = categoryCollectionWithIdsList,
@@ -460,7 +461,7 @@ private fun CategoryStatisticsScreenPreview_() {
     CategoryStatisticsScreenPreview(
         appTheme = appTheme,
         accountList = accountsAndActiveOne.accounts,
-        currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+        currentDateRangeEnum = dateRangeWithEnum.enum,
         currentCollectionType = currentCollectionType,
         parentCategory = null,
         collectionList = categoryCollectionWithIdsList,

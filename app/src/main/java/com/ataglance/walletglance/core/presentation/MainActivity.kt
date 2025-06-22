@@ -30,8 +30,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavHostController
     private lateinit var billingSubscriptionManager: BillingSubscriptionManager
 
-//    private lateinit var appViewModel: AppViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
 //        setupSplashScreen()
 
@@ -53,7 +51,6 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CompositionLocalProvider(LocalLifecycleOwner provides this) {
                 navController = rememberNavController()
-//                appViewModel = koinViewModel<AppViewModel>()
 
                 LaunchedEffect(true) {
                     navController.currentBackStackEntryFlow.first()

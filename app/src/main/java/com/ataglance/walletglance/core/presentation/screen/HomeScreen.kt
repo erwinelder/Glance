@@ -36,7 +36,6 @@ import com.ataglance.walletglance.category.presentation.model.CategoriesStatisti
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsWidgetUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
@@ -52,8 +51,8 @@ import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.utils.bottom
 import com.ataglance.walletglance.core.presentation.utils.plusBottomPadding
 import com.ataglance.walletglance.core.presentation.utils.top
-import com.ataglance.walletglance.core.utils.getCurrentDateLong
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import com.ataglance.walletglance.core.utils.toTimestampRange
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -340,7 +339,7 @@ fun HomeScreenPreview(
             isActive = true
         )
     ),
-    dateRangeMenuUiState: DateRangeMenuUiState = DateRangeMenuUiState.fromEnum(
+    dateRangeWithEnum: DateRangeWithEnum = DateRangeWithEnum.fromEnum(
         enum = DateRangeEnum.ThisMonth
     ),
     isCustomDateRangeWindowOpened: Boolean = false,
@@ -357,7 +356,7 @@ fun HomeScreenPreview(
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = accountsAndActiveOne.accounts[0].toRecordAccount(),
             totalAmount = 42.43,
@@ -375,7 +374,7 @@ fun HomeScreenPreview(
         ),
         RecordStack(
             recordNum = 2,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.OutTransfer,
             account = accountsAndActiveOne.accounts[0].toRecordAccount(),
             totalAmount = 42.43,
@@ -402,7 +401,7 @@ fun HomeScreenPreview(
             category = groupedCategoriesByType.expense[0].category,
             name = groupedCategoriesByType.expense[0].category.name,
             repeatingPeriod = RepeatingPeriod.Monthly,
-            dateRange = RepeatingPeriod.Monthly.getLongDateRangeWithTime(),
+            dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
             currentTimeWithinRangeGraphPercentage = .5f,
             currency = accountsAndActiveOne.activeAccount?.currency ?: "",
             linkedAccountsIds = listOf(1)
@@ -428,7 +427,7 @@ fun HomeScreenPreview(
             isAppThemeSetUp = true,
             accountsAndActiveOne = accountsAndActiveOne,
             onTopBarAccountClick = {},
-            dateRangeWithEnum = dateRangeMenuUiState.dateRangeWithEnum,
+            dateRangeWithEnum = dateRangeWithEnum,
             onDateRangeChange = {},
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
             onCustomDateRangeButtonClick = {},

@@ -4,7 +4,7 @@ import com.ataglance.walletglance.core.data.model.DataSyncHelper
 import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.data.local.source.RecordLocalDataSource
@@ -129,14 +129,14 @@ class RecordRepositoryImpl(
         return localSource.getRecordsByRecordNum(recordNum = recordNum)
     }
 
-    override fun getRecordsInDateRangeFlow(range: LongDateRange): Flow<List<RecordEntity>> = flow {
+    override fun getRecordsInDateRangeFlow(range: TimestampRange): Flow<List<RecordEntity>> = flow {
         coroutineScope {
             launch { synchroniseRecords() }
             localSource.getRecordsInDateRange(range = range).collect(::emit)
         }
     }
 
-    override suspend fun getRecordsInDateRange(range: LongDateRange): List<RecordEntity> {
+    override suspend fun getRecordsInDateRange(range: TimestampRange): List<RecordEntity> {
         synchroniseRecords()
         return localSource.getRecordsInDateRange(range = range).firstOrNull().orEmpty()
     }
@@ -144,13 +144,13 @@ class RecordRepositoryImpl(
     override suspend fun getTotalAmountByCategoryAndAccountsInRange(
         categoryId: Int,
         accountsIds: List<Int>,
-        dateRange: LongDateRange
+        dateRange: TimestampRange
     ): Double {
         synchroniseRecords()
         return localSource.getTotalAmountByCategoryAndAccountsInRange(
             categoryId = categoryId,
             linkedAccountsIds = accountsIds,
-            longDateRange = dateRange
+            dateRange = dateRange
         )
     }
 

@@ -52,7 +52,7 @@ fun TransferDraft.toCreatedTransfer(): CreatedTransfer? {
         isNew = isNew,
         sender = sender,
         receiver = receiver,
-        dateLong = dateTimeState.dateLong,
+        dateLong = dateTimeState.timestamp,
         includeInBudgets = includeInBudgets
     )
 }

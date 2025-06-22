@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.divider.TextDivider
-import com.ataglance.walletglance.core.utils.asStringRes
+import com.ataglance.walletglance.core.domain.date.asStringRes
 
 @Composable
 fun <T> BudgetTypeListComponent(

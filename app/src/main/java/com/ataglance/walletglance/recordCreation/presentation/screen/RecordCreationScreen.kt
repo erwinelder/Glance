@@ -63,7 +63,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RecordCreationScreenWrapper(
-    screenPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     backStack: NavBackStackEntry,
     navController: NavHostController,
     onDimBackgroundChange: (Boolean) -> Unit
@@ -130,7 +130,7 @@ fun RecordCreationScreenWrapper(
 
 @Composable
 fun RecordCreationScreen(
-    screenPadding: PaddingValues = PaddingValues(0.dp),
+    screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
     recordDraftGeneral: RecordDraftGeneral,
     recordDraftItems: List<RecordDraftItem>,
@@ -233,7 +233,7 @@ fun RecordCreationScreen(
         }
         CustomDatePicker(
             openDialog = showDatePicker,
-            initialTimeInMillis = recordDraftGeneral.dateTimeState.getTimeInMillis(),
+            initialTimestamp = recordDraftGeneral.dateTimeState.timestamp,
             onOpenDateDialogChange = { showDatePicker = it },
             onConfirmButton = { timeInMillis ->
                 onSelectDate(timeInMillis)

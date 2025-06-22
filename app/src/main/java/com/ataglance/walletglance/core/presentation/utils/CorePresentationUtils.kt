@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.utils.getCurrentLocalDateTime
-import com.ataglance.walletglance.core.utils.getGreetingsWidgetTitleRes
-import com.ataglance.walletglance.core.utils.getGreetingsWithUsernameWidgetTitleRes
 import org.koin.compose.koinInject
 
 

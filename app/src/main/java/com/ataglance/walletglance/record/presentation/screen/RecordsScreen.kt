@@ -41,7 +41,7 @@ import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
-import com.ataglance.walletglance.core.utils.getCurrentDateLong
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
 import com.ataglance.walletglance.record.domain.model.RecordStack
@@ -73,16 +73,16 @@ fun RecordsScreenWrapper(
     val viewModel = koinViewModel<RecordsViewModel> {
         parametersOf(
             appUiState.accountsAndActiveOne.activeAccount,
-            appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange,
+            appUiState.dateRangeWithEnum.dateRange,
             defaultCollectionName
         )
     }
 
     LaunchedEffect(appUiState.accountsAndActiveOne.activeAccount) {
-        viewModel.setActiveAccountId(appUiState.accountsAndActiveOne.activeAccount?.id ?: 0)
+        viewModel.setActiveAccountId(id = appUiState.accountsAndActiveOne.activeAccount?.id ?: 0)
     }
-    LaunchedEffect(appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange) {
-        viewModel.setActiveDateRange(appUiState.dateRangeMenuUiState.dateRangeWithEnum.dateRange)
+    LaunchedEffect(appUiState.dateRangeWithEnum.dateRange) {
+        viewModel.setActiveDateRange(dateRange = appUiState.dateRangeWithEnum.dateRange)
     }
 
     val collectionsUiState by viewModel.categoryCollectionsUiState.collectAsStateWithLifecycle()
@@ -93,7 +93,7 @@ fun RecordsScreenWrapper(
         resourceManager = resourceManager,
         accountList = appUiState.accountsAndActiveOne.accounts,
         onAccountClick = appViewModel::applyActiveAccount,
-        currentDateRangeEnum = appUiState.dateRangeMenuUiState.dateRangeWithEnum.enum,
+        currentDateRangeEnum = appUiState.dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
         onDateRangeChange = appViewModel::selectDateRange,
         onCustomDateRangeButtonClick = onCustomDateRangeButtonClick,
@@ -226,7 +226,7 @@ fun RecordsScreenPreview(
     ) ?: listOf(
         RecordStack(
             recordNum = 1,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -244,7 +244,7 @@ fun RecordsScreenPreview(
         ),
         RecordStack(
             recordNum = 2,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -262,7 +262,7 @@ fun RecordsScreenPreview(
         ),
         RecordStack(
             recordNum = 3,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -280,7 +280,7 @@ fun RecordsScreenPreview(
         ),
         RecordStack(
             recordNum = 4,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -298,7 +298,7 @@ fun RecordsScreenPreview(
         ),
         RecordStack(
             recordNum = 5,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -316,7 +316,7 @@ fun RecordsScreenPreview(
         ),
         RecordStack(
             recordNum = 6,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,
@@ -334,7 +334,7 @@ fun RecordsScreenPreview(
         ),
         RecordStack(
             recordNum = 7,
-            date = getCurrentDateLong(),
+            date = getCurrentTimestamp(),
             type = RecordType.Expense,
             account = Account().toRecordAccount(),
             totalAmount = 42.43,

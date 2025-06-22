@@ -7,7 +7,7 @@ import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUseCase
 import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
-import com.ataglance.walletglance.core.utils.getCurrentEpochTimestamp
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.MessageState
@@ -54,7 +54,7 @@ class LanguageViewModel(
                 defaultCategoriesInNewLocale = categoriesPackageNew.getAsList()
             )
 
-            val timestamp = getCurrentEpochTimestamp()
+            val timestamp = getCurrentTimestamp()
 
             saveLanguageLocallyUseCase.execute(langCode = langCode, timestamp = timestamp)
 

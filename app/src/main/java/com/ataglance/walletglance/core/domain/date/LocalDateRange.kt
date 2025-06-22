@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.core.domain.date
 
-import com.ataglance.walletglance.core.utils.asTimestamp
 import com.ataglance.walletglance.core.utils.getCurrentLocalDate
 import com.ataglance.walletglance.core.utils.minusDays
 import com.ataglance.walletglance.core.utils.minusMonths
@@ -8,7 +7,6 @@ import com.ataglance.walletglance.core.utils.minusWeeks
 import com.ataglance.walletglance.core.utils.minusYears
 import com.ataglance.walletglance.core.utils.plusDays
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.atTime
 
 data class LocalDateRange(
     val from: LocalDate,
@@ -72,15 +70,6 @@ data class LocalDateRange(
             return LocalDateRange(firstDay, lastDay)
         }
 
-    }
-
-
-    fun toLocalDateTimeRange(): LocalDateTimeRange {
-        return LocalDateTimeRange(from = from.atTime(0, 0), to = to.atTime(23, 59))
-    }
-
-    fun toLongDateRange(): LongDateRange {
-        return LongDateRange(from = from.asTimestamp(), to = to.asTimestamp() + 2359)
     }
 
 }

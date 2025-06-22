@@ -58,7 +58,7 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Pr
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.core.utils.asStringRes
+import com.ataglance.walletglance.core.domain.date.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.core.utils.takeRowComposableIf
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory

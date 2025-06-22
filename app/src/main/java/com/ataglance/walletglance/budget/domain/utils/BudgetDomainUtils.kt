@@ -2,7 +2,7 @@ package com.ataglance.walletglance.budget.domain.utils
 
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.record.domain.model.Record
 import com.ataglance.walletglance.record.domain.utils.getTotalAmountCorrespondingToBudget
@@ -25,11 +25,11 @@ fun List<Budget>.getWithMaxRepeatingPeriod(): Budget? {
         ?: find { it.repeatingPeriod == RepeatingPeriod.Daily }
 }
 
-fun List<Budget>.getMaxDateRange(): LongDateRange? {
+fun List<Budget>.getMaxDateRange(): TimestampRange? {
     return getWithMaxRepeatingPeriod()?.dateRange
 }
 
-fun List<Budget>.getFirstDateRange(): LongDateRange? {
+fun List<Budget>.getFirstDateRange(): TimestampRange? {
     return firstOrNull()?.dateRange
 }
 

@@ -36,7 +36,7 @@ import com.ataglance.walletglance.core.presentation.component.widget.component.W
 import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
-import com.ataglance.walletglance.core.utils.getCurrentDateLong
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.record.domain.model.RecordStack
 import com.ataglance.walletglance.record.domain.model.RecordStackItem
 import com.ataglance.walletglance.record.domain.model.RecordType
@@ -65,7 +65,7 @@ fun RecentRecordsWidgetWrapper(
         accountsAndActiveOne.activeAccount?.id?.let(viewModel::setActiveAccountId)
     }
     LaunchedEffect(dateRangeWithEnum.dateRange) {
-        viewModel.setActiveDateRange(dateRangeWithEnum.dateRange)
+        viewModel.setActiveDateRange(dateRange = dateRangeWithEnum.dateRange)
     }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -180,7 +180,7 @@ fun RecentRecordsWidgetPreview(
                 uiState = RecentRecordsWidgetUiState(
                     firstRecord = RecordStack(
                         recordNum = 1,
-                        date = getCurrentDateLong(),
+                        date = getCurrentTimestamp(),
                         type = RecordType.Expense,
                         account = Account().toRecordAccount(),
                         totalAmount = 516.41,
@@ -203,7 +203,7 @@ fun RecentRecordsWidgetPreview(
                     ),
                     secondRecord = RecordStack(
                         recordNum = 2,
-                        date = getCurrentDateLong(),
+                        date = getCurrentTimestamp(),
                         type = RecordType.Expense,
                         account = Account().toRecordAccount(),
                         totalAmount = 16.41,
