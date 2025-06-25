@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.ataglance.walletglance.core.utils
 
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -9,24 +11,26 @@ import com.ataglance.walletglance.core.domain.date.getDefaultRangesCount
 import com.ataglance.walletglance.core.domain.date.getMonthNumber
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.utils.formatByRepeatingPeriod
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
+import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 
 fun Long.timestampToYear(): Int {
     return LocalDateTime.fromTimestamp(this).year
 }
 fun Long.timestampToMonth(): Int {
-    return LocalDateTime.fromTimestamp(this).monthNumber
+    return LocalDateTime.fromTimestamp(this).month.number
 }
 
 fun getCurrentTimestamp(): Long {
@@ -49,25 +53,25 @@ fun LocalDate.Companion.fromTimestamp(timestamp: Long): LocalDate {
 
 
 fun LocalDateTime.toTimestamp(): Long {
-    return this.toInstant(TimeZone.UTC).toEpochMilliseconds()
+    return toInstant(TimeZone.UTC).toEpochMilliseconds()
 }
 fun LocalDate.toTimestamp(): Long {
-    return this.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+    return atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
 }
 
 
 fun LocalDateTime.withTime(hour: Int, minute: Int): LocalDateTime {
     return LocalDateTime(
-        year = this.year,
-        monthNumber = this.monthNumber,
-        dayOfMonth = this.dayOfMonth,
+        year = year,
+        month = month.number,
+        day = day,
         hour = hour,
         minute = minute
     )
 }
 
 fun LocalDateTime.toLocalDate(): LocalDate {
-    return LocalDate(this.year, this.monthNumber, this.dayOfMonth)
+    return LocalDate(year, month.number, day)
 }
 
 
@@ -96,12 +100,12 @@ fun DateRangeEnum.toLocalDateRangeByBasicValues(
         DateRangeEnum.SevenDays -> LocalDateRange.asSevenDays()
         DateRangeEnum.ThisYear -> LocalDateRange.asThisYear()
         DateRangeEnum.LastYear -> LocalDateRange.asLastYear()
-        else -> this.getLocalDateRangeByMonth(timestampRange = timestampRange)
+        else -> getLocalDateRangeByMonth(timestampRange = timestampRange)
     }
 }
 
 fun DateRangeEnum.getLocalDateRangeByMonth(timestampRange: TimestampRange?): LocalDateRange {
-    val monthNumber = this.getMonthNumber()
+    val monthNumber = getMonthNumber()
 
     if (monthNumber == null || timestampRange == null) {
         return LocalDateRange.asThisMonth()
@@ -130,7 +134,7 @@ fun RepeatingPeriod.toTimestampRange(): TimestampRange {
 }
 
 fun RepeatingPeriod.getPrevDateRanges(
-    range: IntProgression = (this.getDefaultRangesCount() - 1) downTo 0
+    range: IntProgression = (getDefaultRangesCount() - 1) downTo 0
 ): List<TimestampRange> {
     return when (this) {
         RepeatingPeriod.Daily -> range.map {
