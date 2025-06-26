@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
@@ -64,14 +63,6 @@ fun SecondaryButton(
                     start = Offset(75f, 210f),
                     end = Offset(95f, -10f)
                 )
-            )
-            .innerVolumeShadow(
-                shape = RoundedCornerShape(cornerSize),
-                offset = 1.dp,
-                blur = 2.dp,
-                spread = 1.dp,
-                whiteColor = GlanciColors.glassShadow.first,
-                blackColor = GlanciColors.glassShadow.second
             )
             .border(
                 width = 1.dp,

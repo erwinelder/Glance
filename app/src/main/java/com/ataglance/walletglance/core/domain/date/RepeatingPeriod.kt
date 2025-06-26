@@ -10,7 +10,16 @@ import com.ataglance.walletglance.core.utils.timestampToYear
 import kotlinx.datetime.LocalDateTime
 
 enum class RepeatingPeriod {
-    Daily, Weekly, Monthly, Yearly
+    Daily, Weekly, Monthly, Yearly;
+
+    companion object {
+
+        fun asList(): List<RepeatingPeriod> {
+            return listOf(Daily, Weekly, Monthly, Yearly)
+        }
+
+    }
+
 }
 
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,18 +48,18 @@ import com.ataglance.walletglance.category.presentation.component.CategoryFieldW
 import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
+import com.ataglance.walletglance.core.domain.date.asStringRes
 import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckbox
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
 import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.picker.PopupFloatingPicker
+import com.ataglance.walletglance.core.presentation.component.picker.PopupPicker
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.core.domain.date.asStringRes
 import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.core.utils.takeRowComposableIf
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
@@ -143,7 +144,7 @@ fun EditBudgetScreen(
         ) {
             GlassSurface {
                 GlassSurfaceContent(
-                    budget = budget,
+                    budgetDraft = budget,
                     accountList = accountList,
                     onNameChange = onNameChange,
                     onCategoryFieldClick = { showCategoryPicker = true },
@@ -167,7 +168,7 @@ fun EditBudgetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    budget: BudgetDraft,
+    budgetDraft: BudgetDraft,
     accountList: List<Account>,
     onNameChange: (String) -> Unit,
     onCategoryFieldClick: () -> Unit,
@@ -176,7 +177,9 @@ private fun GlassSurfaceContent(
     onLinkAccount: (Account) -> Unit,
     onUnlinkAccount: (Account) -> Unit
 ) {
-    val context = LocalContext.current
+    val repeatingPeriodList by remember {
+        derivedStateOf { RepeatingPeriod.asList() }
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -186,23 +189,19 @@ private fun GlassSurfaceContent(
     ) {
         item {
             FieldWithLabelWrapper(stringResource(R.string.repeating_period)) {
-                PopupFloatingPicker(
-                    selectedItemText = stringResource(budget.newRepeatingPeriod.asStringRes()),
-                    itemList = listOf(
-                        RepeatingPeriod.Daily,
-                        RepeatingPeriod.Weekly,
-                        RepeatingPeriod.Monthly,
-                        RepeatingPeriod.Yearly,
-                    ),
-                    itemToString = { context.getString(it.asStringRes()) },
-                    onItemSelect = onRepeatingPeriodChange
+                PopupPicker(
+                    selectedItem = budgetDraft.newRepeatingPeriod,
+                    itemList = repeatingPeriodList,
+                    itemToStringMapper = { stringResource(it.asStringRes()) },
+                    onItemSelect = onRepeatingPeriodChange,
+                    outerPadding = PaddingValues(horizontal = 16.dp)
                 )
             }
         }
         item {
             Spacer(modifier = Modifier.height(4.dp))
         }
-        budget.category?.let { category ->
+        budgetDraft.category?.let { category ->
             item {
                 CategoryFieldWithLabelAnimated(
                     category = category,
@@ -215,7 +214,7 @@ private fun GlassSurfaceContent(
         }
         item {
             SmallTextFieldWithLabel(
-                text = budget.name,
+                text = budgetDraft.name,
                 onValueChange = onNameChange,
                 labelText = stringResource(R.string.budget_name),
                 placeholderText = stringResource(R.string.name)
@@ -226,7 +225,7 @@ private fun GlassSurfaceContent(
         }
         item {
             SmallTextFieldWithLabel(
-                text = budget.amountLimit,
+                text = budgetDraft.amountLimit,
                 onValueChange = onAmountLimitChange,
                 labelText = stringResource(R.string.budget_limit),
                 placeholderText = "0.00",
@@ -237,7 +236,7 @@ private fun GlassSurfaceContent(
             Spacer(modifier = Modifier.height(4.dp))
         }
         accountCheckedList(
-            budget = budget,
+            budget = budgetDraft,
             accountList = accountList,
             onAccountCheck = onLinkAccount,
             onAccountUncheck = onUnlinkAccount

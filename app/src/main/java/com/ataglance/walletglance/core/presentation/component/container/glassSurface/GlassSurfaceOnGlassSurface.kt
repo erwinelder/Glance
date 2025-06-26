@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
@@ -32,6 +33,7 @@ fun GlassSurfaceOnGlassSurfaceFilled(
     cornerSize: Dp = 26.dp,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(4.dp),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    gradientColor: List<Color> = GlanciColors.glassGradientOnGlass,
     content: @Composable ColumnScope.() -> Unit
 ) {
     GlassSurfaceOnGlassSurface(
@@ -43,6 +45,7 @@ fun GlassSurfaceOnGlassSurfaceFilled(
         cornerSize = cornerSize,
         verticalArrangement = verticalArrangement,
         contentPadding = contentPadding,
+        gradientColor = gradientColor,
         content = content
     )
 }
@@ -57,6 +60,7 @@ fun GlassSurfaceOnGlassSurface(
     cornerSize: Dp = 26.dp,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(4.dp),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    gradientColor: List<Color> = GlanciColors.glassGradientOnGlass,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
@@ -76,7 +80,7 @@ fun GlassSurfaceOnGlassSurface(
             }
             .background(
                 brush = Brush.linearGradient(
-                    colors = GlanciColors.glassGradientOnGlass,
+                    colors = gradientColor,
                     start = Offset(75f, 200f),
                     end = Offset(100f, 0f)
                 )

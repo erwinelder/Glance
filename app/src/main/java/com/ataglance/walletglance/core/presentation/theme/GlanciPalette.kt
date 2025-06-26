@@ -30,7 +30,6 @@ sealed class GlanciPalette(
         primaryGlassGradient[0], primaryGlassGradient[1]
     ),
     val primaryGlassBorderGradient: List<Color>,
-    val primaryGlassShadow: Pair<Color, Color>,
     val primarySemiTransparentGlassBorderGradient: List<Color>,
     val onPrimary: Color,
 
@@ -99,12 +98,6 @@ sealed class GlanciPalette(
         primaryGlassBorderGradient = listOf(
             Color(255, 255, 255, 77),
             Color(255, 255, 255, 64)
-        ),
-        primaryGlassShadow = Pair(
-//            Color(255, 255, 255, 122),
-//            Color(0, 0, 0, 54)
-            Color(0, 0, 0, 0),
-            Color(0, 0, 0, 0)
         ),
         primarySemiTransparentGlassBorderGradient = listOf(
             Color(191, 98, 146, 112),
@@ -210,12 +203,6 @@ sealed class GlanciPalette(
         primaryGlassBorderGradient = listOf(
             Color(255, 255, 255, 31),
             Color(255, 255, 255, 15)
-        ),
-        primaryGlassShadow = Pair(
-//            Color(255, 255, 255, 87),
-//            Color(0, 0, 0, 77)
-            Color(0, 0, 0, 0),
-            Color(0, 0, 0, 0)
         ),
         primarySemiTransparentGlassBorderGradient = listOf(
             Color(212, 114, 168, 51),

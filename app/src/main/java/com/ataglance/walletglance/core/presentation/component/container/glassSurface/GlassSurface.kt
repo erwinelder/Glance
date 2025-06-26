@@ -23,7 +23,6 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
-import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
@@ -47,14 +46,6 @@ fun GlassSurface(
                     start = Offset(1100f, 0f),
                     end = Offset(0f, 1200f)
                 )
-            )
-            .innerVolumeShadow(
-                shape = RoundedCornerShape(cornerSize),
-                offset = 2.dp,
-                blur = 2.dp,
-                spread = 1.dp,
-                whiteColor = GlanciColors.glassShadow.first,
-                blackColor = GlanciColors.glassShadow.second
             )
             .border(
                 width = 1.dp,

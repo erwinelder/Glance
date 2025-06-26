@@ -29,7 +29,6 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
-import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
@@ -66,14 +65,6 @@ fun SmallSecondaryButton(
                     start = Offset(75f, 200f),
                     end = Offset(100f, 0f)
                 )
-            )
-            .innerVolumeShadow(
-                shape = RoundedCornerShape(cornerSize),
-                offset = 1.dp,
-                blur = 2.dp,
-                spread = 1.dp,
-                whiteColor = GlanciColors.glassShadow.first,
-                blackColor = GlanciColors.glassShadow.second
             )
             .border(
                 width = 1.dp,
