@@ -3,9 +3,10 @@ package com.ataglance.walletglance.personalization.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Widget")
+@Entity(tableName = "widget")
 data class WidgetEntity(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
     val name: String,
-    val orderNum: Int
+    val orderNum: Int,
+    val timestamp: Long
 )

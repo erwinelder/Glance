@@ -28,7 +28,7 @@ class GetAccountsUseCaseImpl(
     }
 
     override suspend fun getActive(): Account? {
-        return accountRepository.getAllAccounts().firstOrNull { it.isActive }?.toDomainModel()
+        return accountRepository.getAllAccounts().firstOrNull()?.toDomainModel()
     }
 
 }

@@ -1,9 +1,15 @@
 package com.ataglance.walletglance.core.data.local.database
 
+import androidx.core.database.getIntOrNull
+import androidx.core.database.getStringOrNull
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlin.time.ExperimentalTime
 
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
@@ -267,4 +273,247 @@ val MIGRATION_11_12 = object : Migration(11, 12) {
         }
 
     }
+}
+
+val MIGRATION_12_13 = object : Migration(12, 13) {
+
+    val timestamp = getCurrentTimestamp()
+
+    @OptIn(ExperimentalTime::class)
+    val readableTimestampToEpochTimestamp: (Long) -> Long = { readableTimestamp ->
+        val year = (readableTimestamp / 100000000).toInt()
+        val month = (readableTimestamp / 1000000 - year * 100).toInt()
+        val day = (readableTimestamp / 10000 - year * 10000 - month * 100).toInt()
+        val hour = (readableTimestamp / 100 - year * 1000000 - month * 10000 - day * 100).toInt()
+        val minute = (readableTimestamp - year * 100000000 - month * 1000000 - day * 10000 - hour * 100).toInt()
+        LocalDateTime(year, month, day, hour, minute).toInstant(TimeZone.UTC).toEpochMilliseconds()
+    }
+
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS account (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                orderNum INTEGER NOT NULL,
+                name TEXT NOT NULL,
+                currency TEXT NOT NULL,
+                balance REAL NOT NULL,
+                color TEXT NOT NULL,
+                hide INTEGER NOT NULL,
+                hideBalance INTEGER NOT NULL,
+                withoutBalance INTEGER NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO account (id, orderNum, name, currency, balance, color, hide, hideBalance, withoutBalance, timestamp)
+            SELECT id, orderNum, name, currency, balance, color, hide, hideBalance, withoutBalance, $timestamp
+            FROM Account
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS category (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                type TEXT NOT NULL,
+                orderNum INTEGER NOT NULL,
+                parentCategoryId INTEGER,
+                name TEXT NOT NULL,
+                iconName TEXT NOT NULL,
+                colorName TEXT NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO category (id, type, orderNum, parentCategoryId, name, iconName, colorName, timestamp)
+            SELECT id, type, orderNum, parentCategoryId, name, iconName, colorName, $timestamp
+            FROM Category
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS record (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                recordNum INTEGER NOT NULL,
+                date INTEGER NOT NULL,
+                type TEXT NOT NULL,
+                accountId INTEGER NOT NULL REFERENCES account(id) ON DELETE CASCADE,
+                amount REAL NOT NULL,
+                quantity INTEGER,
+                categoryId INTEGER NOT NULL,
+                subcategoryId INTEGER,
+                note TEXT,
+                includeInBudgets INTEGER NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_record_accountId ON record(accountId)
+        """.trimIndent())
+        val cursor = db.query("SELECT id, recordNum, date, type, accountId, amount, quantity, categoryId, subcategoryId, note, includeInBudgets FROM Record")
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(0)
+            val recordNum = cursor.getInt(1)
+            val date = readableTimestampToEpochTimestamp(cursor.getLong(2))
+            val type = cursor.getString(3)[0]
+            val accountId = cursor.getInt(4)
+            val amount = cursor.getDouble(5)
+            val quantity = cursor.getIntOrNull(6)
+            val categoryId = cursor.getInt(7)
+            val subcategoryId = cursor.getIntOrNull(8)
+            val note = cursor.getStringOrNull(9)
+            val includeInBudgets = cursor.getInt(10)
+            db.execSQL(
+                "INSERT INTO record (id, recordNum, date, type, accountId, amount, quantity, categoryId, subcategoryId, note, includeInBudgets, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                arrayOf<Any?>(id, recordNum, date, type, accountId, amount, quantity, categoryId, subcategoryId, note, includeInBudgets, timestamp)
+            )
+        }
+        cursor.close()
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS category_collection (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                orderNum INTEGER NOT NULL,
+                type TEXT NOT NULL,
+                name TEXT NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO category_collection (id, orderNum, type, name, timestamp)
+            SELECT id, orderNum, type, name, $timestamp
+            FROM CategoryCollection
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS category_collection_category_association (
+                categoryCollectionId INTEGER NOT NULL REFERENCES category_collection(id) ON DELETE CASCADE,
+                categoryId INTEGER NOT NULL REFERENCES category(id) ON DELETE CASCADE,
+                timestamp INTEGER NOT NULL,
+                PRIMARY KEY (categoryCollectionId, categoryId)
+            )
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_category_collection_category_association_categoryCollectionId ON category_collection_category_association(categoryCollectionId)
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_category_collection_category_association_categoryId ON category_collection_category_association(categoryId)
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO category_collection_category_association (categoryCollectionId, categoryId, timestamp)
+            SELECT categoryCollectionId, categoryId, $timestamp
+            FROM CategoryCollectionCategoryAssociation
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS budget (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                amountLimit REAL NOT NULL,
+                categoryId INTEGER NOT NULL REFERENCES category(id) ON DELETE CASCADE,
+                name TEXT NOT NULL,
+                repeatingPeriod TEXT NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_budget_categoryId ON budget(categoryId)
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO budget (id, amountLimit, categoryId, name, repeatingPeriod, timestamp)
+            SELECT id, amountLimit, categoryId, name, repeatingPeriod, $timestamp
+            FROM Budget
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS budget_account_association (
+                budgetId INTEGER NOT NULL REFERENCES budget(id) ON DELETE CASCADE,
+                accountId INTEGER NOT NULL REFERENCES account(id) ON DELETE CASCADE,
+                timestamp INTEGER NOT NULL,
+                PRIMARY KEY (budgetId, accountId)
+            )
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_budget_account_association_budgetId ON budget_account_association(budgetId)
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_budget_account_association_accountId ON budget_account_association(accountId)
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO budget_account_association (budgetId, accountId, timestamp)
+            SELECT budgetId, accountId, $timestamp
+            FROM BudgetAccountAssociation
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS budget_on_widget (
+                budgetId INTEGER PRIMARY KEY REFERENCES budget(id) ON DELETE CASCADE,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_budget_on_widget_budgetId ON budget_on_widget(budgetId)
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO budget_on_widget (budgetId, timestamp)
+            SELECT budgetId, $timestamp
+            FROM BudgetOnWidget
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS widget (
+                name TEXT PRIMARY KEY,
+                orderNum INTEGER NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO widget (name, orderNum, timestamp)
+            SELECT name, orderNum, $timestamp
+            FROM Widget
+        """.trimIndent())
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS navigation_button (
+                screenName TEXT PRIMARY KEY,
+                orderNum INTEGER NOT NULL,
+                timestamp INTEGER NOT NULL
+            )
+        """.trimIndent())
+        db.execSQL("""
+            INSERT INTO navigation_button (screenName, orderNum, timestamp)
+            SELECT screenName, orderNum, $timestamp
+            FROM NavigationButton
+        """.trimIndent())
+
+        db.execSQL("""
+            DROP TABLE IF EXISTS NavigationButton
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS Widget
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS BudgetOnWidget
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS BudgetAccountAssociation
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS Budget
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS CategoryCollectionCategoryAssociation
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS CategoryCollection
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS Record
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS Category
+        """.trimIndent())
+        db.execSQL("""
+            DROP TABLE IF EXISTS Account
+        """.trimIndent())
+
+    }
+
 }

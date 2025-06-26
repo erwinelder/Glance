@@ -2,6 +2,7 @@ package com.ataglance.walletglance.account.data.repository
 
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.account.domain.model.color.AccountColorName
+import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -18,7 +19,7 @@ class AccountRepositoryMock : AccountRepository {
             hide = false,
             hideBalance = false,
             withoutBalance = false,
-            isActive = true
+            timestamp = getCurrentTimestamp()
         ),
         AccountEntity(
             id = 2,
@@ -30,7 +31,7 @@ class AccountRepositoryMock : AccountRepository {
             hide = false,
             hideBalance = false,
             withoutBalance = false,
-            isActive = false
+            timestamp = getCurrentTimestamp()
         ),
     )
 

@@ -9,7 +9,7 @@ import com.ataglance.walletglance.record.domain.model.RecordType
 import com.ataglance.walletglance.record.domain.utils.asChar
 
 @Entity(
-    tableName = "Record",
+    tableName = "record",
     foreignKeys = [
         ForeignKey(
             entity = AccountEntity::class,
@@ -32,7 +32,8 @@ data class RecordEntity(
     val categoryId: Int,
     val subcategoryId: Int?,
     val note: String?,
-    val includeInBudgets: Boolean
+    val includeInBudgets: Boolean,
+    val timestamp: Long
 ) {
 
     fun isExpense() = type == RecordType.Expense.asChar()

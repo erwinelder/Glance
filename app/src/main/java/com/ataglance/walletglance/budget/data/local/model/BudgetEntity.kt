@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 
 @Entity(
-    tableName = "Budget",
+    tableName = "budget",
     foreignKeys = [
         ForeignKey(
             entity = CategoryEntity::class,
@@ -20,9 +20,10 @@ import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 )
 data class BudgetEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val amountLimit: Double,
     val categoryId: Int,
     val name: String,
-    val repeatingPeriod: String
+    val repeatingPeriod: String,
+    val timestamp: Long
 )

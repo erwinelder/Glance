@@ -19,7 +19,6 @@ fun AccountEntity.toRemoteEntity(updateTime: Long, deleted: Boolean): AccountRem
         hide = hide,
         hideBalance = hideBalance,
         withoutBalance = withoutBalance,
-        isActive = isActive
     )
 }
 
@@ -34,14 +33,14 @@ fun AccountRemoteEntity.toLocalEntity(): AccountEntity {
         hide = hide,
         hideBalance = hideBalance,
         withoutBalance = withoutBalance,
-        isActive = isActive
+        timestamp = updateTime // TODO-SYNC
     )
 }
 
 
 fun AccountRemoteEntity.toMap(): HashMap<String, Any> {
     return hashMapOf(
-        "updateTime" to updateTime,
+        /*"updateTime" to updateTime,
         "deleted" to deleted,
         "id" to id,
         "orderNum" to orderNum,
@@ -51,8 +50,7 @@ fun AccountRemoteEntity.toMap(): HashMap<String, Any> {
         "color" to color,
         "hide" to hide,
         "hideBalance" to hideBalance,
-        "withoutBalance" to withoutBalance,
-        "isActive" to isActive
+        "withoutBalance" to withoutBalance*/
     )
 }
 
@@ -68,7 +66,6 @@ fun Map<String, Any?>.toAccountRemoteEntity(): AccountRemoteEntity {
         color = this["color"] as String,
         hide = this["hide"] as Boolean,
         hideBalance = this["hideBalance"] as Boolean,
-        withoutBalance = this["withoutBalance"] as Boolean,
-        isActive = this["isActive"] as Boolean
+        withoutBalance = this["withoutBalance"] as Boolean
     )
 }

@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "BudgetOnWidget",
+    tableName = "budget_on_widget",
     foreignKeys = [
         ForeignKey(
             entity = BudgetEntity::class,
@@ -18,6 +18,7 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["budgetId"])]
 )
 data class BudgetOnWidgetEntity(
-    @PrimaryKey(autoGenerate = false)
-    val budgetId: Int
+    @PrimaryKey
+    val budgetId: Int,
+    val timestamp: Long
 )

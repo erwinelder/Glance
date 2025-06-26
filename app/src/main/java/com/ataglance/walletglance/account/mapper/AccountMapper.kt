@@ -17,12 +17,11 @@ fun AccountEntity.toDomainModel(): Account {
         color = AccountColors.fromName(color),
         hide = hide,
         hideBalance = hideBalance,
-        withoutBalance = withoutBalance,
-        isActive = isActive
+        withoutBalance = withoutBalance
     )
 }
 
-fun Account.toDataModel(): AccountEntity {
+fun Account.toDataModel(timestamp: Long): AccountEntity { // TODO-SYNC: pass timestamp from the caller
     return AccountEntity(
         id = id,
         orderNum = orderNum,
@@ -33,7 +32,7 @@ fun Account.toDataModel(): AccountEntity {
         hide = hide,
         hideBalance = hideBalance,
         withoutBalance = withoutBalance,
-        isActive = isActive
+        timestamp = timestamp
     )
 }
 

@@ -6,7 +6,7 @@ import androidx.room.Index
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 
 @Entity(
-    tableName = "CategoryCollectionCategoryAssociation",
+    tableName = "category_collection_category_association",
     primaryKeys = ["categoryCollectionId", "categoryId"],
     foreignKeys = [
         ForeignKey(
@@ -22,9 +22,13 @@ import com.ataglance.walletglance.category.data.local.model.CategoryEntity
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["categoryId"])]
+    indices = [
+        Index(value = ["categoryCollectionId"]),
+        Index(value = ["categoryId"])
+    ]
 )
 data class CategoryCollectionCategoryAssociation(
     val categoryCollectionId: Int,
-    val categoryId: Int
+    val categoryId: Int,
+    val timestamp: Long
 )

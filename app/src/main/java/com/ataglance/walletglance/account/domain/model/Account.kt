@@ -17,7 +17,7 @@ data class Account(
     val hide: Boolean = false,
     val hideBalance: Boolean = false,
     val withoutBalance: Boolean = false,
-    val isActive: Boolean = true
+    val isActive: Boolean = false
 ) {
 
     private fun getHiddenBalance(): String? {

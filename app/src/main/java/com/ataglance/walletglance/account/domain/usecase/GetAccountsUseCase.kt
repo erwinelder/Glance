@@ -12,6 +12,7 @@ interface GetAccountsUseCase {
 
     suspend fun get(id: Int): Account?
 
+    @Deprecated("Account entity cannot be active.", level = DeprecationLevel.WARNING)
     suspend fun getActive(): Account?
 
 }

@@ -6,7 +6,7 @@ import androidx.room.Index
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 
 @Entity(
-    tableName = "BudgetAccountAssociation",
+    tableName = "budget_account_association",
     primaryKeys = ["budgetId", "accountId"],
     foreignKeys = [
         ForeignKey(
@@ -22,9 +22,13 @@ import com.ataglance.walletglance.account.data.local.model.AccountEntity
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["accountId"])]
+    indices = [
+        Index(value = ["budgetId"]),
+        Index(value = ["accountId"])
+    ]
 )
 data class BudgetAccountAssociation(
     val budgetId: Int,
-    val accountId: Int
+    val accountId: Int,
+    val timestamp: Long
 )

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.category.domain.model.CategoryType
 
-@Entity(tableName = "Category")
+@Entity(tableName = "category")
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -13,7 +13,8 @@ data class CategoryEntity(
     val parentCategoryId: Int?,
     val name: String,
     val iconName: String,
-    val colorName: String
+    val colorName: String,
+    val timestamp: Long
 ) {
 
     fun isExpense() = type == '-'

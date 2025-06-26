@@ -43,7 +43,7 @@ fun List<CategoryEntity>.toDomainModels(): List<Category> {
 }
 
 
-fun Category.toDataModel(): CategoryEntity {
+fun Category.toDataModel(timestamp: Long): CategoryEntity { // TODO-SYNC: pass timestamp from the caller
     return CategoryEntity(
         id = id,
         type = type.asChar(),
@@ -51,7 +51,8 @@ fun Category.toDataModel(): CategoryEntity {
         parentCategoryId = parentCategoryId,
         name = name,
         iconName = icon.name,
-        colorName = color.getNameValue()
+        colorName = color.getNameValue(),
+        timestamp = timestamp
     )
 }
 

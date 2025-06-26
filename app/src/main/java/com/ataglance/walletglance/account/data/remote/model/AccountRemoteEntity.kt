@@ -11,6 +11,5 @@ data class AccountRemoteEntity(
     val color: String,
     val hide: Boolean,
     val hideBalance: Boolean,
-    val withoutBalance: Boolean,
-    val isActive: Boolean
+    val withoutBalance: Boolean
 )
