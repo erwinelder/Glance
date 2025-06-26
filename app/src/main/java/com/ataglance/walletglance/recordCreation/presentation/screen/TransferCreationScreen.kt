@@ -49,7 +49,7 @@ import com.ataglance.walletglance.core.presentation.component.field.FieldWithLab
 import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.CustomDatePicker
 import com.ataglance.walletglance.core.presentation.component.picker.CustomTimePicker
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel

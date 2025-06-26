@@ -42,7 +42,7 @@ import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetWrapper
 import com.ataglance.walletglance.core.presentation.component.widget.GreetingsWidget

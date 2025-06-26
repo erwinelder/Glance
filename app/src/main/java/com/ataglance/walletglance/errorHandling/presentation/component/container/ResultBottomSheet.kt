@@ -17,7 +17,7 @@ import com.ataglance.walletglance.core.presentation.component.bottomSheet.Bottom
 import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetContentDialogComponent
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.launch

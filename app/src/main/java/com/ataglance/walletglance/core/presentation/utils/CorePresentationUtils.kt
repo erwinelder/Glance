@@ -74,7 +74,6 @@ val PaddingValues.bottom: Dp
     get() = calculateBottomPadding()
 
 
-
 @Composable
 @StringRes fun getGreetingsWidgetTitleRes(): State<Int> {
     val userContext = koinInject<UserContext>()

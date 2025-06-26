@@ -16,7 +16,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.icon.LayeredIcon
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.GlanciTypography

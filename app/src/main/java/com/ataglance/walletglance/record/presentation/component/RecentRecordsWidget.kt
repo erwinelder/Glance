@@ -31,7 +31,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
 import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager

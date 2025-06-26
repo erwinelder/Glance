@@ -27,7 +27,7 @@ import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatis
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
 import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
 import org.koin.compose.viewmodel.koinViewModel

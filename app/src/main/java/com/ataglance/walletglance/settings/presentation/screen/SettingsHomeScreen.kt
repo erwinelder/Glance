@@ -32,7 +32,7 @@ import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.GlanciTypography

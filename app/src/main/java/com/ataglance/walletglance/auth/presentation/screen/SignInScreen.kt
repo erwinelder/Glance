@@ -28,8 +28,8 @@ import com.ataglance.walletglance.core.presentation.component.button.PrimaryButt
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilityContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.AnimatedScreenWithRequestState
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.state.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.utils.takeActionIf

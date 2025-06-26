@@ -1,10 +1,9 @@
 package com.ataglance.walletglance.core.presentation.component.container.icon
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,6 +32,7 @@ fun LargePrimaryIconWithMessage(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxWidth(filledWidth?.getByType(CurrWindowType) ?: 1f)
     ) {
         LargePrimaryIcon(
@@ -40,7 +40,6 @@ fun LargePrimaryIconWithMessage(
             gradientColor = gradientColor,
             iconDescription = iconDescription
         )
-        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = title,
             style = GlanciTypography.titleLarge,
@@ -49,7 +48,6 @@ fun LargePrimaryIconWithMessage(
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
         )
-        Spacer(modifier = Modifier.height(16.dp))
         message?.let {
             Text(
                 text = message,

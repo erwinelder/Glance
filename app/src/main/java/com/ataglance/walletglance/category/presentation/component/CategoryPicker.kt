@@ -53,7 +53,7 @@ import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBot
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.core.presentation.component.button.CloseButton
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 
 @Composable

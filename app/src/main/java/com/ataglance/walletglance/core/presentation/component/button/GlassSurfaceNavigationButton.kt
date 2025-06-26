@@ -3,6 +3,7 @@ package com.ataglance.walletglance.core.presentation.component.button
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,12 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
+import com.ataglance.walletglance.core.presentation.model.IconOrientation
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.modifier.singleTapLightVibration
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
@@ -28,24 +33,29 @@ import com.ataglance.walletglance.core.presentation.theme.Manrope
 fun GlassSurfaceNavigationButton(
     text: String,
     @DrawableRes imageRes: Int? = null,
-    showRightIconInsteadOfLeft: Boolean = true,
+    iconOrientation: IconOrientation = IconOrientation.Right,
     @DrawableRes rightIconRes: Int = R.drawable.short_arrow_right_icon,
     filledWidths: FilledWidthByScreenType? = FilledWidthByScreenType(1f, .75f, .75f),
+    padding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+    fontSize: TextUnit = 20.sp,
+    cornerSize: Dp = 24.dp,
     onClick: () -> Unit
 ) {
     GlassSurface(
         filledWidths = filledWidths,
-        cornerSize = 24.dp,
-        modifier = Modifier.bounceClickEffect(.98f, onClick = onClick)
+        cornerSize = cornerSize,
+        modifier = Modifier
+            .singleTapLightVibration()
+            .bounceClickEffect(.98f, onClick = onClick)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(padding)
         ) {
-            if (!showRightIconInsteadOfLeft) {
+            if (iconOrientation == IconOrientation.Left) {
                 Icon(
                     painter = painterResource(R.drawable.short_arrow_left_icon),
                     contentDescription = "left arrow icon",
@@ -63,14 +73,14 @@ fun GlassSurfaceNavigationButton(
             Text(
                 text = text,
                 color = GlanciColors.onSurface,
-                fontSize = 20.sp,
+                fontSize = fontSize,
                 fontFamily = Manrope,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.weight(1f)
             )
-            if (showRightIconInsteadOfLeft) {
+            if (iconOrientation == IconOrientation.Right) {
                 Icon(
                     painter = painterResource(rightIconRes),
                     contentDescription = "right arrow icon",

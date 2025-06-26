@@ -58,7 +58,7 @@ import com.ataglance.walletglance.core.presentation.component.container.glassSur
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.divider.TextDivider
 import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel

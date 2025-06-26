@@ -44,7 +44,7 @@ import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimati
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope

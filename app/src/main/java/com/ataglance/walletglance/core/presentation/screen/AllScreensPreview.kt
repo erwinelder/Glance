@@ -131,7 +131,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 1,
         recordNum = 1,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 24).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 24).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount!!.id,
         amount = 68.43,
@@ -144,7 +144,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 2,
         recordNum = 1,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 24).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 24).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 178.9,
@@ -157,7 +157,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 3,
         recordNum = 2,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 23).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 23).toTimestamp(),
         type = RecordType.OutTransfer.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 3000.0,
@@ -170,7 +170,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 4,
         recordNum = 3,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 18).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 18).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 120.9,
@@ -183,7 +183,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 5,
         recordNum = 4,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 15).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 15).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 799.9,
@@ -196,7 +196,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 6,
         recordNum = 5,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 12).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 12).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 3599.9,
@@ -209,7 +209,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 7,
         recordNum = 6,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 8500.0,
@@ -222,7 +222,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 8,
         recordNum = 7,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 4).toTimestamp(),
         type = RecordType.Income.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 42600.0,
@@ -235,7 +235,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 9,
         recordNum = 8,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 799.9,
@@ -248,7 +248,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 10,
         recordNum = 9,
-        date = LocalDate(year = 2024, monthNumber = 6, dayOfMonth = 4).toTimestamp(),
+        date = LocalDate(year = 2024, month = 6, day = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.accounts[1].id,
         amount = 450.41,
@@ -261,7 +261,7 @@ private val recordEntityList = listOf(
     RecordEntity(
         id = 10,
         recordNum = 9,
-        date = LocalDate(year = 2024, monthNumber = 9, dayOfMonth = 4).toTimestamp(),
+        date = LocalDate(year = 2024, month = 9, day = 4).toTimestamp(),
         type = RecordType.Expense.asChar(),
         accountId = accountsAndActiveOne.activeAccount.id,
         amount = 690.56,

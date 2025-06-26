@@ -37,7 +37,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeInAnimation
 import com.ataglance.walletglance.core.presentation.animation.scaleFadeOutAnimation
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.modifier.innerVolumeShadow
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors

@@ -12,7 +12,7 @@ import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 
 sealed class CategoryColor(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {
 

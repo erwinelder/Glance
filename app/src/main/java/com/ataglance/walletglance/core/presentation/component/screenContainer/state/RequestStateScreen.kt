@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.core.presentation.component.screenContainer
+package com.ataglance.walletglance.core.presentation.component.screenContainer.state
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

@@ -32,7 +32,7 @@ import com.ataglance.walletglance.core.presentation.component.button.ButtonWithP
 import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckboxWithText
 import com.ataglance.walletglance.core.presentation.component.field.DateField
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.recordCreation.domain.record.RecordDraftPreferences

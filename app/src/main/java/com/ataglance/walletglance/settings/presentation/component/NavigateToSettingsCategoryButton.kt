@@ -12,9 +12,8 @@ fun NavigateToSettingsCategoryButton(
 ) {
     GlassSurfaceNavigationButton(
         text = stringResource(category.stringRes),
-        imageRes = category.iconRes,
-        onClick = {
-            onNavigateToScreen(category.screen)
-        }
-    )
+        imageRes = category.iconRes
+    ) {
+        onNavigateToScreen(category.screen)
+    }
 }

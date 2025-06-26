@@ -7,6 +7,8 @@ import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactoryImpl
 import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.vibration.Vibrator
+import com.ataglance.walletglance.core.presentation.vibration.VibratorImpl
 import com.google.firebase.firestore.FirebaseFirestore
 import com.russhwolf.settings.Settings
 import org.koin.dsl.module
@@ -40,6 +42,12 @@ val corePlatformModule = module {
         }
 
         ResourceManagerImpl(context = context)
+    }
+
+    /* ---------- Vibration ---------- */
+
+    single<Vibrator> {
+        VibratorImpl(context = get())
     }
 
     /* ---------- DAOs ---------- */

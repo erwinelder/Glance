@@ -55,7 +55,7 @@ import com.ataglance.walletglance.core.domain.statistics.TotalAmountInRange
 import com.ataglance.walletglance.core.presentation.component.chart.ColumnChartComponent
 import com.ataglance.walletglance.core.presentation.component.chart.SingleValuePieChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme

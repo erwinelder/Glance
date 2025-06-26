@@ -35,7 +35,7 @@ import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.component.chart.LineChartComponent
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetTitleComponent
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl

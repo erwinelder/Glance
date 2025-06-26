@@ -20,7 +20,7 @@ import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetAdjustButton
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
 import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer

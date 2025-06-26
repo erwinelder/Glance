@@ -32,7 +32,7 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel

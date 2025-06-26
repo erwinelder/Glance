@@ -46,7 +46,7 @@ import com.ataglance.walletglance.core.presentation.component.container.glassSur
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.ColorPicker
-import com.ataglance.walletglance.core.presentation.component.screenContainer.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
