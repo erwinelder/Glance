@@ -70,7 +70,7 @@ import com.ataglance.walletglance.transaction.domain.model.RecordItem
 import com.ataglance.walletglance.transaction.domain.model.RecordWithItems
 import com.ataglance.walletglance.transaction.domain.model.Transfer
 import com.ataglance.walletglance.transaction.domain.model.TransferItem
-import com.ataglance.walletglance.transaction.presentation.screen.RecordsScreenPreview
+import com.ataglance.walletglance.transaction.presentation.screen.TransactionsScreenPreview
 import com.ataglance.walletglance.transfer.presentation.model.TransferDraft
 import com.ataglance.walletglance.transfer.presentation.model.TransferDraftItem
 import com.ataglance.walletglance.transfer.presentation.screen.TransferCreationScreenPreview
@@ -517,7 +517,7 @@ private fun RecordsScreenPreview_() {
         .appendDefaultCollection(context.getString(R.string.all_categories))
         .getByType(collectionType)
 
-    RecordsScreenPreview(
+    TransactionsScreenPreview(
         appTheme = appTheme,
         accounts = accountsAndActiveOne.accounts,
         currentDateRangeEnum = dateRangeWithEnum.enum,

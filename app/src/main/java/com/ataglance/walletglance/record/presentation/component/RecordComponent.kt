@@ -23,7 +23,7 @@ import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.transaction.presentation.component.RecentRecordsWidgetPreview
 import com.ataglance.walletglance.transaction.presentation.model.RecordUiState
-import com.ataglance.walletglance.transaction.presentation.screen.RecordsScreenPreview
+import com.ataglance.walletglance.transaction.presentation.screen.TransactionsScreenPreview
 
 @Composable
 fun RecordGlassComponent(
@@ -120,7 +120,7 @@ private fun RecordComponentContent(
 @Preview(device = PIXEL_7_PRO)
 @Composable
 private fun RecordGlassComponentPreview() {
-    RecordsScreenPreview()
+    TransactionsScreenPreview()
 }
 
 @Preview(device = PIXEL_7_PRO)

@@ -39,7 +39,6 @@ import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.transaction.presentation.viewmodel.TransactionsViewModel
 import com.ataglance.walletglance.record.presentation.component.RecordGlassComponent
 import com.ataglance.walletglance.transaction.domain.model.Record
 import com.ataglance.walletglance.transaction.domain.model.RecordItem
@@ -51,6 +50,7 @@ import com.ataglance.walletglance.transaction.mapper.toUiStates
 import com.ataglance.walletglance.transaction.presentation.model.RecordUiState
 import com.ataglance.walletglance.transaction.presentation.model.TransactionUiState
 import com.ataglance.walletglance.transaction.presentation.model.TransferUiState
+import com.ataglance.walletglance.transaction.presentation.viewmodel.TransactionsViewModel
 import com.ataglance.walletglance.transfer.presentation.component.TransferGlassComponent
 import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
@@ -186,7 +186,7 @@ fun TransactionsScreen(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun RecordsScreenPreview(
+fun TransactionsScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current

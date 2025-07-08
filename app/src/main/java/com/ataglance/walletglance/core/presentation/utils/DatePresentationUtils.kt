@@ -63,7 +63,7 @@ fun Long.formatTimestampAsDayMonthNameYear(
 
 
 fun LocalDateTime.formatByDefault(): String {
-    return this.format(
+    return format(
         format = LocalDateTime.Format {
             day(); char('.'); monthNumber(); char('.'); year()
             char(' ')
@@ -73,7 +73,7 @@ fun LocalDateTime.formatByDefault(): String {
 }
 
 fun LocalDateTime.formatAsDayMonth(): String {
-    return this.format(
+    return format(
         format = LocalDateTime.Format {
             day(); char('.'); monthNumber()
         }
@@ -83,9 +83,9 @@ fun LocalDateTime.formatAsDayMonth(): String {
 fun LocalDateTime.formatAsDayMonthName(resourceManager: ResourceManager): String {
     val monthName = resourceManager.getString(id = month.number.getMonthShortNameRes())
 
-    return this.format(
+    return format(
         format = LocalDateTime.Format {
-            day(); char(' '); monthName
+            day(); char(' '); chars(monthName)
         }
     )
 }
@@ -93,9 +93,9 @@ fun LocalDateTime.formatAsDayMonthName(resourceManager: ResourceManager): String
 fun LocalDateTime.formatAsDayMonthNameYear(resourceManager: ResourceManager): String {
     val monthName = resourceManager.getString(id = month.number.getMonthShortNameRes())
 
-    return this.format(
+    return format(
         format = LocalDateTime.Format {
-            day(); char(' '); monthName; char(' '); year()
+            day(); char(' '); chars(monthName); char(' '); year()
         }
     )
 }
@@ -119,7 +119,7 @@ fun LocalDateTime.formatByRepeatingPeriod(
 
 
 fun LocalDate.formatAsDayMonth(): String {
-    return this.format(
+    return format(
         format = LocalDate.Format {
             day(); char('.'); monthNumber()
         }

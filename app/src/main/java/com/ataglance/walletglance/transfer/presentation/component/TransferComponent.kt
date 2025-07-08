@@ -2,6 +2,7 @@ package com.ataglance.walletglance.transfer.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -26,7 +27,7 @@ import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.transaction.presentation.component.RecentRecordsWidgetPreview
 import com.ataglance.walletglance.transaction.presentation.model.TransferUiState
-import com.ataglance.walletglance.transaction.presentation.screen.RecordsScreenPreview
+import com.ataglance.walletglance.transaction.presentation.screen.TransactionsScreenPreview
 
 @Composable
 fun TransferGlassComponent(
@@ -41,7 +42,12 @@ fun TransferGlassComponent(
             onClick(uiState.id)
         }
     ) {
-        TransferComponentContent(uiState = uiState)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            TransferComponentContent(uiState = uiState)
+        }
     }
 }
 
@@ -119,7 +125,7 @@ private fun TransferComponentContent(
 @Preview(device = PIXEL_7_PRO)
 @Composable
 private fun TransferGlassComponentPreview() {
-    RecordsScreenPreview()
+    TransactionsScreenPreview()
 }
 
 @Preview(device = PIXEL_7_PRO)
