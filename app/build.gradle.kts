@@ -15,8 +15,8 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 83
-        versionName = "4.2.0"
+        versionCode = 84
+        versionName = "5.0 alpha 1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
