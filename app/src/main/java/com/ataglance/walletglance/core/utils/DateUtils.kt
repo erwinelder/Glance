@@ -60,13 +60,14 @@ fun LocalDate.toTimestamp(): Long {
 }
 
 
-fun LocalDateTime.withTime(hour: Int, minute: Int): LocalDateTime {
+fun LocalDateTime.atTime(hour: Int = 0, minute: Int = 0, second: Int = 0): LocalDateTime {
     return LocalDateTime(
         year = year,
         month = month.number,
         day = day,
         hour = hour,
-        minute = minute
+        minute = minute,
+        second = second
     )
 }
 

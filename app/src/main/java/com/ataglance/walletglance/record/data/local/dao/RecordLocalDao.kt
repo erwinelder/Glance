@@ -34,7 +34,7 @@ interface RecordLocalDao {
         return insertRecords(records = toInsert)
     }
 
-    @Query("SELECT * FROM record WHERE timestamp > :timestamp ORDER BY timestamp DESC")
+    @Query("SELECT * FROM record WHERE timestamp > :timestamp ORDER BY date DESC")
     suspend fun getRecordsAfterTimestamp(timestamp: Long): List<RecordEntity>
 
     @Query("SELECT * FROM record WHERE id = :id")
@@ -42,20 +42,20 @@ interface RecordLocalDao {
 
     @Query("""
         SELECT * FROM record WHERE type = :type AND accountId = :accountId
-        ORDER BY timestamp DESC LIMIT 1
+        ORDER BY date DESC LIMIT 1
     """)
     suspend fun getLastRecordByTypeAndAccount(type: Char, accountId: Int): RecordEntity?
 
-    @Query("SELECT * FROM record WHERE timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
+    @Query("SELECT * FROM record WHERE date BETWEEN :from AND :to ORDER BY date DESC")
     fun getRecordsInDateRangeAsFlow(from: Long, to: Long): Flow<List<RecordEntity>>
 
-    @Query("SELECT * FROM record WHERE timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
+    @Query("SELECT * FROM record WHERE date BETWEEN :from AND :to ORDER BY date DESC")
     suspend fun getRecordsInDateRange(from: Long, to: Long): List<RecordEntity>
 
     @Query("""
         SELECT * FROM record
-        WHERE timestamp BETWEEN :from AND :to AND accountId IN (:accountIds)
-        ORDER BY timestamp DESC
+        WHERE date BETWEEN :from AND :to AND accountId IN (:accountIds)
+        ORDER BY date DESC
     """)
     suspend fun getRecordsInDateRangeByAccounts(
         from: Long,

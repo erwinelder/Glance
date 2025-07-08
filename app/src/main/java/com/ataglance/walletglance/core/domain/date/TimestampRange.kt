@@ -4,11 +4,11 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.utils.formatAsDayMonth
 import com.ataglance.walletglance.core.presentation.utils.formatTimestampAsDayMonthNameYear
+import com.ataglance.walletglance.core.utils.atTime
 import com.ataglance.walletglance.core.utils.fromTimestamp
 import com.ataglance.walletglance.core.utils.getCurrentLocalDateTime
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.core.utils.toTimestamp
-import com.ataglance.walletglance.core.utils.withTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.atTime
@@ -27,20 +27,17 @@ data class TimestampRange(
 
         fun fromLocalDateRange(from: LocalDate, to: LocalDate): TimestampRange {
             return TimestampRange(
-                from = from.atTime(hour = 0, minute = 0).toTimestamp(),
-                to = to.atTime(hour = 23, minute = 59).toTimestamp()
+                from = from.atTime(0, 0, 0).toTimestamp(),
+                to = to.atTime(23, 59, 59).toTimestamp()
             )
         }
 
         fun asToday(): TimestampRange {
             val localDateTime = getCurrentLocalDateTime()
-            val from = localDateTime.withTime(hour = 0, minute = 0)
-            val to = localDateTime.withTime(hour = 23, minute = 59)
+            val from = localDateTime.atTime(0, 0, 0).toTimestamp()
+            val to = localDateTime.atTime(23, 59, 59).toTimestamp()
 
-            return TimestampRange(
-                from = from.toTimestamp(),
-                to = to.toTimestamp()
-            )
+            return TimestampRange(from = from, to = to)
         }
 
     }
@@ -48,8 +45,8 @@ data class TimestampRange(
 
     fun extendTimeRange(): TimestampRange {
         return TimestampRange(
-            from = LocalDateTime.fromTimestamp(from).withTime(hour = 0, minute = 0).toTimestamp(),
-            to = LocalDateTime.fromTimestamp(to).withTime(hour = 23, minute = 59).toTimestamp()
+            from = LocalDateTime.fromTimestamp(from).atTime(0, 0, 0).toTimestamp(),
+            to = LocalDateTime.fromTimestamp(to).atTime(23, 59, 59).toTimestamp()
         )
     }
 
