@@ -440,53 +440,35 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
         db.execSQL("CREATE INDEX index_transfer_senderAccountId ON transfer(senderAccountId)")
         db.execSQL("CREATE INDEX index_transfer_receiverAccountId ON transfer(receiverAccountId)")
 
-        val transferNums = mutableListOf<Int>()
-        val tnCursor = db.query("""
-            SELECT recordNum FROM legacy_record
+
+        val trCursor = db.query("""
+            SELECT recordNum, type, date, accountId, amount, includeInBudgets
+            FROM legacy_record
             WHERE type IN (60, 62)
-            GROUP BY recordNum
-            HAVING COUNT(*) = 2
+            ORDER BY recordNum
         """.trimIndent())
-        while (tnCursor.moveToNext()) {
-            transferNums.add(tnCursor.getInt(0))
+        val recordPairs = mutableListOf<Pair<Map<String, Any?>, Map<String, Any?>>>()
+        while (trCursor.moveToNext()) {
+            val first = mapOf<String, Any?>(
+                "date" to trCursor.getLong(2),
+                "accountId" to trCursor.getInt(3),
+                "amount" to trCursor.getDouble(4),
+                "includeInBudgets" to trCursor.getInt(5)
+            )
+            trCursor.moveToNext()
+            val second = mapOf<String, Any?>(
+                "date" to trCursor.getLong(2),
+                "accountId" to trCursor.getInt(3),
+                "amount" to trCursor.getDouble(4),
+                "includeInBudgets" to trCursor.getInt(5)
+            )
+            recordPairs.add(first to second)
         }
-        tnCursor.close()
+        trCursor.close()
 
-        for (recordNum in transferNums) {
-
-            val rCursor = db.query(
-                """
-                    SELECT date, type, accountId, amount, includeInBudgets
-                    FROM legacy_record
-                    WHERE recordNum = ?
-                    ORDER BY type DESC
-                """.trimIndent(),
-                arrayOf<Any?>(recordNum)
-            )
-            val records = mutableListOf<MutableMap<String, Any?>>()
-            while (rCursor.moveToNext()) {
-                records.add(
-                    mutableMapOf(
-                        "id" to rCursor.getInt(0),
-                        "date" to rCursor.getLong(1),
-                        "type" to rCursor.getInt(2),
-                        "accountId" to rCursor.getInt(3),
-                        "amount" to rCursor.getDouble(4),
-                        "includeInBudgets" to rCursor.getInt(5)
-                    )
-                )
-            }
-            rCursor.close()
-
-            if (records.size != 2) continue
-
-            val sender = records[0]
-            val receiver = records[1]
-            sender.put("rate", 1.0)
-            receiver.put(
-                "rate",
-                receiver["amount"].toString().toDouble() / sender["amount"].toString().toDouble()
-            )
+        recordPairs.forEach { (sender, receiver) ->
+            val senderRate = 1.0
+            val receiverRate = receiver["amount"].toString().toDouble() / sender["amount"].toString().toDouble()
             db.execSQL(
                 """
                     INSERT INTO transfer (
@@ -503,8 +485,8 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
                     receiver["accountId"],
                     sender["amount"],
                     receiver["amount"],
-                    sender["rate"],
-                    receiver["rate"],
+                    senderRate,
+                    receiverRate,
                     sender["includeInBudgets"],
                     timestamp,
                     false
