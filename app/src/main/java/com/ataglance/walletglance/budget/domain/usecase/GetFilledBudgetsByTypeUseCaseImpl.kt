@@ -17,7 +17,7 @@ class GetFilledBudgetsByTypeUseCaseImpl(
         val budgetsByType = getEmptyBudgetsUseCase.get().groupByType()
 
         budgetsByType.getMaxDateRange()?.let { range ->
-            val flow = getTransactionsInDateRangeUseCase.getAsFlowOrEmpty(range = range).map { transactions ->
+            val flow = getTransactionsInDateRangeUseCase.getAsFlow(range = range).map { transactions ->
                 budgetsByType.fillUsedAmountsByTransactions(transactions = transactions)
             }
             emitAll(flow = flow)

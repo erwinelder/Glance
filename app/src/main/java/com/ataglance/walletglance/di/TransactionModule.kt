@@ -46,7 +46,7 @@ val transactionModule = module {
 
     viewModel { parameters ->
         TransactionsViewModel(
-            activeAccount = parameters.get(),
+            activeAccount = parameters.getOrNull(),
             activeDateRange = parameters.get(),
             resourceManager = get(),
             defaultCollectionName = parameters.get(),

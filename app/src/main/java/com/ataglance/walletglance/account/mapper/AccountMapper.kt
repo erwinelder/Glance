@@ -7,7 +7,7 @@ import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import java.util.Locale
 
 
-fun AccountDataModel.toDomainModel(): Account {
+fun AccountDataModel.toDomainModel(isActive: Boolean = false): Account {
     return Account(
         id = id,
         orderNum = orderNum,
@@ -17,9 +17,17 @@ fun AccountDataModel.toDomainModel(): Account {
         color = AccountColors.fromName(color),
         hide = hide,
         hideBalance = hideBalance,
-        withoutBalance = withoutBalance
+        withoutBalance = withoutBalance,
+        isActive = isActive
     )
 }
+
+fun List<AccountDataModel>.toDomainModels(): List<Account> {
+    return mapIndexed { index, account ->
+        account.toDomainModel(isActive = index == 0)
+    }
+}
+
 
 fun Account.toDataModel(): AccountDataModel {
     return AccountDataModel(

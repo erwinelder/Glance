@@ -42,7 +42,7 @@ class ExpensesIncomeWidgetViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _transactionsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
-        getTransactionsInDateRangeUseCase.getAsFlowOrEmpty(range = dateRange)
+        getTransactionsInDateRangeUseCase.getAsFlow(range = dateRange)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

@@ -3,6 +3,7 @@ package com.ataglance.walletglance.account.domain.usecase
 import com.ataglance.walletglance.account.data.repository.AccountRepository
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.mapper.toDomainModel
+import com.ataglance.walletglance.account.mapper.toDomainModels
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -11,13 +12,11 @@ class GetAccountsUseCaseImpl(
 ) : GetAccountsUseCase {
 
     override fun getAllAsFlow(): Flow<List<Account>> {
-        return accountRepository.getAllAccountsAsFlow().map { accounts ->
-            accounts.map { it.toDomainModel() }
-        }
+        return accountRepository.getAllAccountsAsFlow().map { it.toDomainModels() }
     }
 
     override suspend fun getAll(): List<Account> {
-        return accountRepository.getAllAccounts().map { it.toDomainModel() }
+        return accountRepository.getAllAccounts().toDomainModels()
     }
 
     override suspend fun get(ids: List<Int>): List<Account> {

@@ -8,10 +8,10 @@ import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
-import com.ataglance.walletglance.transaction.presentation.model.RecentTransactionsWidgetUiState
 import com.ataglance.walletglance.transaction.domain.usecase.GetTransactionsInDateRangeUseCase
 import com.ataglance.walletglance.transaction.domain.utils.filterByAccount
 import com.ataglance.walletglance.transaction.mapper.toUiStates
+import com.ataglance.walletglance.transaction.presentation.model.RecentTransactionsWidgetUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,7 +52,7 @@ class RecentTransactionsWidgetViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _transactionsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
-        getTransactionsInDateRangeUseCase.getAsFlowOrEmpty(range = dateRange)
+        getTransactionsInDateRangeUseCase.getAsFlow(range = dateRange)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Companion.WhileSubscribed(5000),

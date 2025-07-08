@@ -83,7 +83,6 @@ fun HomeScreenWrapper(
     onNavigateToScreenMovingTowardsLeft: (Any) -> Unit
 ) {
     val budgetsOnWidgetSettingsViewModel = koinViewModel<BudgetsOnWidgetSettingsViewModel>()
-    // TODO: fix bug with displaying the bottom sheet
 
     HomeScreen(
         screenPadding = screenPadding,
