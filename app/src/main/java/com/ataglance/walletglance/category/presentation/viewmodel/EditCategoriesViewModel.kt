@@ -88,13 +88,13 @@ class EditCategoriesViewModel(
 
     fun moveSubcategories(firstIndex: Int, secondIndex: Int) {
         val categoryWithSubcategories = uiState.value.groupedCategories ?: return
-        val subcategoryList = categoryWithSubcategories.subcategoryList
+        val subcategoryList = categoryWithSubcategories.subcategories
             .moveItems(firstIndex, secondIndex)
 
         _uiState.update {
             it.copy(
                 groupedCategories = categoryWithSubcategories.copy(
-                    subcategoryList = subcategoryList
+                    subcategories = subcategoryList
                 )
             )
         }
@@ -183,7 +183,7 @@ class EditCategoriesViewModel(
         val categories = uiState.value.groupedCategoriesByType
             .fixParentCategoriesOrderNums()
             .asList()
-        saveCategoriesUseCase.save(categories = categories)
+        saveCategoriesUseCase.saveAndDeleteRest(categories = categories)
     }
 
 }

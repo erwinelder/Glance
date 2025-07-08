@@ -8,6 +8,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
+import kotlinx.datetime.number
 
 
 fun Int.getGreetingsWidgetTitleRes(): Int {
@@ -64,7 +65,7 @@ fun Long.formatTimestampAsDayMonthNameYear(
 fun LocalDateTime.formatByDefault(): String {
     return this.format(
         format = LocalDateTime.Format {
-            dayOfMonth(); char('.'); monthNumber(); char('.'); year()
+            day(); char('.'); monthNumber(); char('.'); year()
             char(' ')
             hour(); char(':'); minute()
         }
@@ -74,27 +75,27 @@ fun LocalDateTime.formatByDefault(): String {
 fun LocalDateTime.formatAsDayMonth(): String {
     return this.format(
         format = LocalDateTime.Format {
-            dayOfMonth(); char('.'); monthNumber()
+            day(); char('.'); monthNumber()
         }
     )
 }
 
 fun LocalDateTime.formatAsDayMonthName(resourceManager: ResourceManager): String {
-    val monthName = resourceManager.getString(id = monthNumber.getMonthShortNameRes())
+    val monthName = resourceManager.getString(id = month.number.getMonthShortNameRes())
 
     return this.format(
         format = LocalDateTime.Format {
-            dayOfMonth(); char(' '); monthName
+            day(); char(' '); monthName
         }
     )
 }
 
 fun LocalDateTime.formatAsDayMonthNameYear(resourceManager: ResourceManager): String {
-    val monthName = resourceManager.getString(id = monthNumber.getMonthShortNameRes())
+    val monthName = resourceManager.getString(id = month.number.getMonthShortNameRes())
 
     return this.format(
         format = LocalDateTime.Format {
-            dayOfMonth(); char(' '); monthName; char(' '); year()
+            day(); char(' '); monthName; char(' '); year()
         }
     )
 }
@@ -108,10 +109,10 @@ fun LocalDateTime.formatByRepeatingPeriod(
             "${hour}:${minute}"
         }
         RepeatingPeriod.Weekly, RepeatingPeriod.Monthly -> {
-            "$dayOfMonth " + resourceManager.getString(id = monthNumber.getMonthShortNameRes())
+            "$day " + resourceManager.getString(id = month.number.getMonthShortNameRes())
         }
         RepeatingPeriod.Yearly -> {
-            resourceManager.getString(id = monthNumber.getMonthShortNameRes()) + " $year"
+            resourceManager.getString(id = month.number.getMonthShortNameRes()) + " $year"
         }
     }
 }
@@ -120,7 +121,7 @@ fun LocalDateTime.formatByRepeatingPeriod(
 fun LocalDate.formatAsDayMonth(): String {
     return this.format(
         format = LocalDate.Format {
-            dayOfMonth(); char('.'); monthNumber()
+            day(); char('.'); monthNumber()
         }
     )
 }

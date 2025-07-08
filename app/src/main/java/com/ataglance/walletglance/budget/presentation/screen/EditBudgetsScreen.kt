@@ -14,13 +14,12 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.navigation.BudgetsSettingsScreens
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
 import com.ataglance.walletglance.budget.presentation.component.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.component.DefaultBudgetComponent
 import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
@@ -32,11 +31,10 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
-import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.core.utils.toTimestampRange
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
@@ -144,20 +142,20 @@ fun EditBudgetsScreenPreview(
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
-    budgetEntityList: List<BudgetEntity>? = null,
-    budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
-    accountList: List<Account> = listOf(
+
+    budgetDataModelsWithAssociations: List<BudgetDataModelWithAssociations>? = null,
+    accounts: List<Account> = listOf(
         Account(id = 1, orderNum = 1, isActive = true),
         Account(id = 2, orderNum = 2, isActive = false)
     ),
 ) {
-    val budgetsByType = (budgetEntityList to budgetAccountAssociationList)
-        .letIfNoneIsNull { (budgets, associations) ->
-            budgets.toDomainModels(
-                groupedCategoriesList = groupedCategoriesByType.expense,
-                associations = associations,
-                accounts = accountList
-            )
+    val budgetsByType = budgetDataModelsWithAssociations
+        ?.let { budgets ->
+            budgets.mapNotNull {
+                it.toDomainModel(
+                    groupedCategoriesList = groupedCategoriesByType.expense, accounts = accounts
+                )
+            }
         }?.groupByType()
         ?: BudgetsByType(
             daily = listOf(
@@ -173,7 +171,7 @@ fun EditBudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Daily.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
-                    linkedAccountsIds = listOf(1, 2)
+                    linkedAccountIds = listOf(1, 2)
                 )
             ),
             weekly = listOf(
@@ -189,7 +187,7 @@ fun EditBudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Weekly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
-                    linkedAccountsIds = listOf(3, 4)
+                    linkedAccountIds = listOf(3, 4)
                 )
             ),
             monthly = listOf(
@@ -205,7 +203,7 @@ fun EditBudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
-                    linkedAccountsIds = listOf(1, 2)
+                    linkedAccountIds = listOf(1, 2)
                 ),
                 Budget(
                     id = 3,
@@ -219,7 +217,7 @@ fun EditBudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
-                    linkedAccountsIds = listOf(3, 4)
+                    linkedAccountIds = listOf(3, 4)
                 )
             )
         )

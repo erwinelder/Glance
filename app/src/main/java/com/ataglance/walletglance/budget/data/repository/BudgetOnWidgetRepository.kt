@@ -1,21 +1,17 @@
 package com.ataglance.walletglance.budget.data.repository
 
-import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.budget.data.model.BudgetOnWidgetDataModel
 import kotlinx.coroutines.flow.Flow
 
 interface BudgetOnWidgetRepository {
 
-    suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>)
-
     suspend fun deleteAndUpsertBudgetsOnWidget(
-        toDelete: List<BudgetOnWidgetEntity>,
-        toUpsert: List<BudgetOnWidgetEntity>
+        toDelete: List<BudgetOnWidgetDataModel>,
+        toUpsert: List<BudgetOnWidgetDataModel>
     )
 
-    suspend fun deleteAllBudgetsOnWidgetLocally()
+    fun getAllBudgetsOnWidgetAsFlow(): Flow<List<BudgetOnWidgetDataModel>>
 
-    fun getAllBudgetsOnWidgetFlow(): Flow<List<BudgetOnWidgetEntity>>
-
-    suspend fun getAllBudgetsOnWidget(): List<BudgetOnWidgetEntity>
+    suspend fun getAllBudgetsOnWidget(): List<BudgetOnWidgetDataModel>
 
 }

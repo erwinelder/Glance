@@ -1,9 +1,7 @@
 package com.ataglance.walletglance.di
 
-import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import com.ataglance.walletglance.navigation.data.local.source.NavigationButtonLocalDataSource
 import com.ataglance.walletglance.navigation.data.local.source.getNavigationButtonLocalDataSource
-import com.ataglance.walletglance.navigation.data.remote.dao.NavigationButtonRemoteDao
 import com.ataglance.walletglance.navigation.data.remote.source.NavigationButtonRemoteDataSource
 import com.ataglance.walletglance.navigation.data.remote.source.NavigationButtonRemoteDataSourceImpl
 import com.ataglance.walletglance.navigation.data.repository.NavigationButtonRepository
@@ -18,14 +16,6 @@ import org.koin.dsl.module
 
 val navigationModule = module {
 
-    /* ---------- DAOs ---------- */
-
-    single {
-        NavigationButtonRemoteDao(
-            firestoreAdapter = get<FirestoreAdapterFactory>().getNavigationButtonFirestoreAdapter()
-        )
-    }
-
     /* ---------- Data Sources ---------- */
 
     single<NavigationButtonLocalDataSource> {
@@ -33,7 +23,7 @@ val navigationModule = module {
     }
 
     single<NavigationButtonRemoteDataSource> {
-        NavigationButtonRemoteDataSourceImpl(navigationButtonDao = get(), updateTimeDao = get())
+        NavigationButtonRemoteDataSourceImpl()
     }
 
     /* ---------- Repositories ---------- */
@@ -56,7 +46,7 @@ val navigationModule = module {
         GetNavigationButtonScreensUseCaseImpl(navigationButtonRepository = get())
     }
 
-    /* ---------- View Models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel {
         NavigationViewModel(getNavigationButtonScreensUseCase = get())

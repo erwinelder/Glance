@@ -71,7 +71,7 @@ class EditCategoryCollectionsViewModel(
             orderNum = 0,
             type = collectionType.value,
             name = "",
-            categoryList = emptyList()
+            categories = emptyList()
         )
     }
 
@@ -90,7 +90,7 @@ class EditCategoryCollectionsViewModel(
 
 
     suspend fun saveCategoryCollections() {
-        saveCategoryCollectionsUseCase.save(
+        saveCategoryCollectionsUseCase.saveAndDeleteRest(
             collections = _collectionsWithCategories.value.concatenateLists()
         )
     }

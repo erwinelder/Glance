@@ -37,7 +37,7 @@ fun EditingCategoryCollectionComponent(
     onClick: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
-    val categoriesWithUniqueIcons = collection.categoryList
+    val categoriesWithUniqueIcons = collection.categories
         ?.groupBy { it.icon }
         ?.flatMap { (_, categories) ->
             categories.distinctBy { it.color }

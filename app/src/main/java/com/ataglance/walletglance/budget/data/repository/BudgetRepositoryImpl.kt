@@ -1,20 +1,18 @@
 package com.ataglance.walletglance.budget.data.repository
 
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntityWithAssociations
 import com.ataglance.walletglance.budget.data.local.source.BudgetLocalDataSource
-import com.ataglance.walletglance.budget.data.mapper.budget.toLocalAssociation
-import com.ataglance.walletglance.budget.data.mapper.budget.toLocalEntity
-import com.ataglance.walletglance.budget.data.mapper.budget.toRemoteAssociation
-import com.ataglance.walletglance.budget.data.mapper.budget.toRemoteEntity
-import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
-import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
+import com.ataglance.walletglance.budget.data.mapper.budget.toDataModel
+import com.ataglance.walletglance.budget.data.mapper.budget.toDataModelWithAssociations
+import com.ataglance.walletglance.budget.data.mapper.budget.toDtoWithAssociations
+import com.ataglance.walletglance.budget.data.mapper.budget.toEntityWithAssociations
+import com.ataglance.walletglance.budget.data.mapper.budget.withAssociations
+import com.ataglance.walletglance.budget.data.model.BudgetDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
+import com.ataglance.walletglance.budget.data.remote.model.BudgetDtoWithAssociations
 import com.ataglance.walletglance.budget.data.remote.source.BudgetRemoteDataSource
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
-import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 
 class BudgetRepositoryImpl(
     private val localSource: BudgetLocalDataSource,
@@ -22,114 +20,97 @@ class BudgetRepositoryImpl(
     private val syncHelper: DataSyncHelper
 ) : BudgetRepository {
 
-    private suspend fun synchroniseBudgets() {
-        val userId = syncHelper.getUserIdForSync(TableName.Budget) ?: return
-
-        synchroniseDataFromRemote(
-            localUpdateTimeGetter = localSource::getBudgetUpdateTime,
-            remoteUpdateTimeGetter = { remoteSource.getBudgetUpdateTime(userId = userId) },
-            remoteDataGetter = { timestamp ->
-                remoteSource.getBudgetsAfterTimestamp(timestamp = timestamp, userId = userId)
+    private suspend fun synchronizeBudgetsWithAssociations() {
+        syncHelper.synchronizeData(
+            tableName = TableName.Account,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localDataGetter = { timestamp ->
+                localSource.getBudgetsWithAssociationsAfterTimestamp(timestamp = timestamp)
             },
-            remoteDataToLocalDataMapper = BudgetRemoteEntity::toLocalEntity,
-            localSynchroniser = localSource::synchroniseBudgets
-        )
-    }
-
-    private suspend fun synchroniseBudgetAccountAssociations() {
-        val userId = syncHelper.getUserIdForSync(TableName.BudgetAccountAssociation) ?: return
-
-        synchroniseDataFromRemote(
-            localUpdateTimeGetter = localSource::getBudgetAccountAssociationUpdateTime,
-            remoteUpdateTimeGetter = {
-                remoteSource.getBudgetAccountAssociationUpdateTime(userId = userId)
-            },
-            remoteDataGetter = { timestamp ->
-                remoteSource.getBudgetAccountAssociationsAfterTimestamp(
+            remoteDataGetter = { timestamp, userId ->
+                remoteSource.getBudgetsWithAssociationsAfterTimestamp(
                     timestamp = timestamp, userId = userId
                 )
             },
-            remoteDataToLocalDataMapper = BudgetAccountRemoteAssociation::toLocalAssociation,
-            localSynchroniser = localSource::synchroniseBudgetAccountAssociations
+            localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
+                localSource.deleteAndUpsertBudgetsWithAssociations(
+                    toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
+                )
+            },
+            remoteSynchronizer = { data, timestamp, userId ->
+                remoteSource.synchronizeBudgetsWithAssociations(
+                    budgets = data, timestamp = timestamp, userId = userId
+                )
+            },
+            entityDeletedPredicate = { it.deleted },
+            entityToCommandDtoMapper = BudgetEntityWithAssociations::toDtoWithAssociations,
+            queryDtoToEntityMapper = BudgetDtoWithAssociations::toEntityWithAssociations,
         )
     }
 
-
-    override suspend fun deleteBudgetsAndAssociations(
-        budgets: List<BudgetEntity>,
-        associations: List<BudgetAccountAssociation>
+    override suspend fun deleteAndUpsertBudgetsWithAssociations(
+        toDelete: List<BudgetDataModel>,
+        toUpsert: List<BudgetDataModelWithAssociations>
     ) {
-        val timestamp = getCurrentTimestamp()
-
-        localSource.deleteBudgets(budgets = budgets, timestamp = timestamp)
-        syncHelper.tryToSyncToRemote(TableName.Budget, TableName.BudgetAccountAssociation) { userId ->
-            remoteSource.upsertBudgetsAndAssociations(
-                budgets = budgets.map {
-                    it.toRemoteEntity(updateTime = timestamp, deleted = true)
-                },
-                associations = associations.map {
-                    it.toRemoteAssociation(updateTime = timestamp, deleted = true)
-                },
-                timestamp = timestamp,
-                userId = userId
-            )
-        }
+        syncHelper.deleteAndUpsertData(
+            toDelete = toDelete.map { it.withAssociations() },
+            toUpsert = toUpsert,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localSoftCommand = { entities, timestamp ->
+                localSource.upsertBudgetsWithAssociations(
+                    budgetsWithAssociations = entities, timestamp = timestamp
+                )
+            },
+            localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
+                localSource.deleteAndUpsertBudgetsWithAssociations(
+                    toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
+                )
+            },
+            localDeleteCommand = { entities ->
+                localSource.deleteBudgetsWithAssociations(budgetsWithAssociations = entities)
+            },
+            remoteSoftCommand = { dtos, timestamp, userId ->
+                remoteSource.synchronizeBudgetsWithAssociations(
+                    budgets = dtos, timestamp = timestamp, userId = userId
+                )
+            },
+            localDataAfterTimestampGetter = { timestamp ->
+                localSource.getBudgetsWithAssociationsAfterTimestamp(timestamp = timestamp)
+            },
+            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, userId, localTimestamp ->
+                remoteSource.synchronizeBudgetsWithAssociationsAndGetAfterTimestamp(
+                    budgets = dtos,
+                    timestamp = timestamp,
+                    userId = userId,
+                    localTimestamp = localTimestamp
+                )
+            },
+            entityDeletedPredicate = { it.deleted },
+            dataModelToEntityMapper = BudgetDataModelWithAssociations::toEntityWithAssociations,
+            dataModelToCommandDtoMapper = BudgetDataModelWithAssociations::toDtoWithAssociations,
+            entityToCommandDtoMapper = BudgetEntityWithAssociations::toDtoWithAssociations,
+            queryDtoToEntityMapper = BudgetDtoWithAssociations::toEntityWithAssociations
+        )
     }
 
-    override suspend fun deleteAndUpsertBudgetsAndAssociations(
-        budgetsToDelete: List<BudgetEntity>,
-        budgetsToUpsert: List<BudgetEntity>,
-        associationsToDelete: List<BudgetAccountAssociation>,
-        associationsToUpsert: List<BudgetAccountAssociation>
-    ) {
-        val timestamp = getCurrentTimestamp()
-        val budgetsToSync = EntitiesToSync(
-            toDelete = budgetsToDelete, toUpsert = budgetsToUpsert
-        )
-        val associationsToSync = EntitiesToSync(
-            toDelete = associationsToDelete, toUpsert = associationsToUpsert
-        )
-
-        localSource.synchroniseBudgetsAndAssociations(
-            budgetsToSync = budgetsToSync,
-            associationsToSync = associationsToSync,
-            timestamp = timestamp
-        )
-        syncHelper.tryToSyncToRemote(TableName.Budget, TableName.BudgetAccountAssociation) { userId ->
-            remoteSource.synchroniseBudgetsAndAssociations(
-                budgetsToSync = budgetsToSync.map { deleted ->
-                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
-                },
-                associationsToSync = associationsToSync.map { deleted ->
-                    toRemoteAssociation(updateTime = timestamp, deleted = deleted)
-                },
-                timestamp = timestamp,
-                userId = userId
-            )
-        }
+    override suspend fun getAllBudgets(): List<BudgetDataModel> {
+        synchronizeBudgetsWithAssociations()
+        return localSource.getAllBudgets().map { it.toDataModel() }
     }
 
-    override suspend fun getBudgetAndAssociations(
+    override suspend fun getBudgetWithAssociations(
         budgetId: Int
-    ): Pair<BudgetEntity, List<BudgetAccountAssociation>>? {
-        synchroniseBudgets()
-        synchroniseBudgetAccountAssociations()
-
-        val budget = localSource.getBudget(id = budgetId) ?: return null
-        val associations = localSource.getBudgetAccountAssociations(budgetId = budgetId)
-
-        return budget to associations
+    ): BudgetDataModelWithAssociations? {
+        synchronizeBudgetsWithAssociations()
+        return localSource.getBudgetWithAssociations(budgetId = budgetId)
+            ?.toDataModelWithAssociations()
     }
 
-    override suspend fun getAllBudgetsAndAssociations(
-    ): Pair<List<BudgetEntity>, List<BudgetAccountAssociation>> {
-        synchroniseBudgets()
-        synchroniseBudgetAccountAssociations()
-
-        val budgets = localSource.getAllBudgets()
-        val associations = localSource.getAllBudgetAccountAssociations()
-
-        return budgets to associations
+    override suspend fun getAllBudgetsWithAssociations(): List<BudgetDataModelWithAssociations> {
+        synchronizeBudgetsWithAssociations()
+        return localSource.getAllBudgetsWithAssociations().map { it.toDataModelWithAssociations() }
     }
 
 }

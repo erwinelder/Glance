@@ -35,7 +35,7 @@ class NavigationViewModel(
 
     fun updateBottomBarVisibility(isSetUp: Boolean, navBackStackEntry: NavBackStackEntry?) {
         val isVisible = isSetUp && navBackStackEntry.currentScreenIsAnyOf(
-            MainScreens.Home, MainScreens.Records, MainScreens.CategoryStatistics(),
+            MainScreens.Home, MainScreens.Transactions, MainScreens.CategoryStatistics(),
             MainScreens.Budgets, SettingsScreens.SettingsHome
         )
         _isBottomBarVisible.update { isVisible }

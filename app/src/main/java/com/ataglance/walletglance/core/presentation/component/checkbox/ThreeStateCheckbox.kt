@@ -151,7 +151,7 @@ private fun EditCategoryCollectionScreenPreview() {
         orderNum = 1,
         type = CategoryCollectionType.Expense,
         name = "Collection",
-        categoryList = categoryList
+        categories = categoryList
     )
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {

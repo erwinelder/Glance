@@ -1,13 +1,13 @@
 package com.ataglance.walletglance.category.domain.usecase
 
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import kotlinx.coroutines.flow.Flow
 
 interface GetCategoriesUseCase {
 
-    fun getGroupedFlow(): Flow<GroupedCategoriesByType>
+    fun getGroupedAsFlow(): Flow<GroupedCategoriesByType>
 
     suspend fun getGrouped(): GroupedCategoriesByType
 

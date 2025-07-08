@@ -29,6 +29,10 @@ import com.ataglance.walletglance.auth.domain.usecase.auth.UpdatePasswordUseCase
 import com.ataglance.walletglance.auth.domain.usecase.auth.UpdatePasswordUseCaseImpl
 import com.ataglance.walletglance.auth.domain.usecase.auth.VerifyEmailUpdateUseCase
 import com.ataglance.walletglance.auth.domain.usecase.auth.VerifyEmailUpdateUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.authToken.GetAuthTokenFromSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.authToken.GetAuthTokenFromSecureStorageUseCaseImpl
+import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCase
+import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCaseImpl
 import com.ataglance.walletglance.auth.presentation.viewmodel.DeleteAccountViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.FinishSignUpViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.ProfileViewModel
@@ -39,10 +43,6 @@ import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdateEmailViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.VerifyEmailUpdateViewModel
-import com.ataglance.walletglance.auth.domain.usecase.authToken.GetAuthTokenFromSecureStorageUseCase
-import com.ataglance.walletglance.auth.domain.usecase.authToken.GetAuthTokenFromSecureStorageUseCaseImpl
-import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCase
-import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCaseImpl
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -141,7 +141,7 @@ val authModule = module {
         DeleteAuthTokenFromSecureStorageUseCaseImpl(secureStorage = get())
     }
 
-    /* ---------- View models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel { params ->
         SignInViewModel(

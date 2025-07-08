@@ -8,5 +8,6 @@ data class NavigationButtonEntity(
     @PrimaryKey
     val screenName: String,
     val orderNum: Int,
-    val timestamp: Long
+    val timestamp: Long,
+    val deleted: Boolean
 )

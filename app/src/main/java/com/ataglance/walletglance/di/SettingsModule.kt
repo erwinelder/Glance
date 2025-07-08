@@ -87,7 +87,7 @@ val settingsModule = module {
         SaveTurnOnDailyRecordsReminderPreferenceUseCaseImpl(settingsRepository = get())
     }
 
-    /* ---------- View Models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel { parameters ->
         LanguageViewModel(

@@ -1,63 +1,40 @@
 package com.ataglance.walletglance.record.data.remote.source
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
-import com.ataglance.walletglance.record.data.remote.dao.RecordRemoteDao
-import com.ataglance.walletglance.record.data.remote.model.RecordRemoteEntity
+import com.ataglance.walletglance.record.data.remote.model.RecordCommandDtoWithItems
+import com.ataglance.walletglance.record.data.remote.model.RecordQueryDtoWithItems
 
-class RecordRemoteDataSourceImpl(
-    private val recordDao: RecordRemoteDao,
-    private val updateTimeDao: RemoteUpdateTimeDao
-) : RecordRemoteDataSource {
+class RecordRemoteDataSourceImpl : RecordRemoteDataSource {
 
-    override suspend fun getUpdateTime(userId: String): Long? {
-        return updateTimeDao.getUpdateTime(tableName = TableName.Record.name, userId = userId)
+    override suspend fun getUpdateTime(userId: Int): Long? {
+        // TODO("Not yet implemented")
+        return null
     }
 
-    override suspend fun saveUpdateTime(timestamp: Long, userId: String) {
-        updateTimeDao.saveUpdateTime(
-            tableName = TableName.Record.name, timestamp = timestamp, userId = userId
-        )
-    }
-
-    override suspend fun upsertRecords(
-        records: List<RecordRemoteEntity>,
+    override suspend fun synchronizeRecordsWithItems(
+        recordsWithItems: List<RecordCommandDtoWithItems>,
         timestamp: Long,
-        userId: String
-    ) {
-        recordDao.upsertRecords(records = records, userId = userId)
-        saveUpdateTime(timestamp = timestamp, userId = userId)
+        userId: Int
+    ): List<RecordQueryDtoWithItems>? {
+        // TODO("Not yet implemented")
+        return null
     }
 
-    override suspend fun synchroniseRecords(
-        recordsToSync: EntitiesToSync<RecordRemoteEntity>,
+    override suspend fun synchronizeRecordsWithItemsAndGetAfterTimestamp(
+        recordsWithItems: List<RecordCommandDtoWithItems>,
         timestamp: Long,
-        userId: String
-    ) {
-        recordDao.synchroniseRecords(recordsToSync = recordsToSync, userId = userId)
-        saveUpdateTime(timestamp = timestamp, userId = userId)
+        userId: Int,
+        localTimestamp: Long
+    ): List<RecordQueryDtoWithItems>? {
+        // TODO("Not yet implemented")
+        return null
     }
 
-    override suspend fun deleteRecordsByAccounts(
-        accountIds: List<Int>,
+    override suspend fun getRecordsWithItemsAfterTimestamp(
         timestamp: Long,
-        userId: String
-    ) {
-        recordDao.deleteRecordsByAccounts(
-            accountIds = accountIds, timestamp = timestamp, userId = userId
-        )
-        recordDao.convertTransfersToRecords(
-            noteValues = accountIds.map { it.toString() }, timestamp = timestamp, userId = userId
-        )
-        saveUpdateTime(timestamp = timestamp, userId = userId)
-    }
-
-    override suspend fun getRecordsAfterTimestamp(
-        timestamp: Long,
-        userId: String
-    ): EntitiesToSync<RecordRemoteEntity> {
-        return recordDao.getRecordsAfterTimestamp(timestamp = timestamp, userId = userId)
+        userId: Int
+    ): List<RecordQueryDtoWithItems>? {
+        // TODO("Not yet implemented")
+        return null
     }
 
 }

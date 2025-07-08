@@ -12,24 +12,24 @@ import kotlinx.coroutines.flow.Flow
 interface BudgetOnWidgetLocalDao {
 
     @Upsert
-    suspend fun upsertBudgets(budgets: List<BudgetOnWidgetEntity>)
+    suspend fun upsertBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>)
 
     @Delete
-    suspend fun deleteBudgets(budgets: List<BudgetOnWidgetEntity>)
+    suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>)
 
     @Transaction
-    suspend fun deleteAndUpsertBudgets(
+    suspend fun deleteAndUpsertBudgetsOnWidget(
         toDelete: List<BudgetOnWidgetEntity>,
         toUpsert: List<BudgetOnWidgetEntity>
     ) {
-        deleteBudgets(toDelete)
-        upsertBudgets(toUpsert)
+        deleteBudgetsOnWidget(budgets = toDelete)
+        upsertBudgetsOnWidget(budgets = toUpsert)
     }
 
-    @Query("DELETE FROM BudgetOnWidget")
-    suspend fun deleteAllBudgetsOnWidget()
+    @Query("SELECT * FROM budget_on_widget WHERE timestamp > :timestamp")
+    suspend fun getBudgetsOnWidgetAfterTimestamp(timestamp: Long): List<BudgetOnWidgetEntity>
 
-    @Query("SELECT * FROM BudgetOnWidget")
-    fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>>
+    @Query("SELECT * FROM budget_on_widget WHERE deleted = 0")
+    fun getAllBudgetsOnWidgetAsFlow(): Flow<List<BudgetOnWidgetEntity>>
 
 }

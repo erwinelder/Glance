@@ -1,44 +1,49 @@
 package com.ataglance.walletglance.navigation.data.mapper
 
-import com.ataglance.walletglance.core.utils.convertToIntOrZero
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
-import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonRemoteEntity
+import com.ataglance.walletglance.navigation.data.model.NavigationButtonDataModel
+import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonDto
 
 
-fun NavigationButtonEntity.toRemoteEntity(
-    updateTime: Long,
-    deleted: Boolean
-): NavigationButtonRemoteEntity {
-    return NavigationButtonRemoteEntity(
-        updateTime = updateTime,
-        deleted = deleted,
-        screenName = screenName,
-        orderNum = orderNum
-    )
-}
-
-fun NavigationButtonRemoteEntity.toLocalEntity(): NavigationButtonEntity {
+fun NavigationButtonDataModel.toEntity(timestamp: Long, deleted: Boolean): NavigationButtonEntity {
     return NavigationButtonEntity(
         screenName = screenName,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun NavigationButtonEntity.toDataModel(): NavigationButtonDataModel {
+    return NavigationButtonDataModel(
+        screenName = screenName,
         orderNum = orderNum
     )
 }
 
-
-fun NavigationButtonRemoteEntity.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "screenName" to screenName,
-        "orderNum" to orderNum
+fun NavigationButtonDataModel.toDto(timestamp: Long, deleted: Boolean): NavigationButtonDto {
+    return NavigationButtonDto(
+        screenName = screenName,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }
 
-fun Map<String, Any?>.toNavigationButtonRemoteEntity(): NavigationButtonRemoteEntity {
-    return NavigationButtonRemoteEntity(
-        updateTime = get("updateTime") as Long,
-        deleted = get("deleted") as Boolean,
-        screenName = get("screenName") as String,
-        orderNum = get("orderNum").convertToIntOrZero()
+fun NavigationButtonEntity.toDto(): NavigationButtonDto {
+    return NavigationButtonDto(
+        screenName = screenName,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun NavigationButtonDto.toEntity(): NavigationButtonEntity {
+    return NavigationButtonEntity(
+        screenName = screenName,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }

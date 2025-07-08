@@ -117,7 +117,7 @@ fun EditSubcategoriesScreen(
             modifier = Modifier.weight(1f)
         ) {
             GlassSurfaceContent(
-                subcategoryList = groupedCategories?.subcategoryList.orEmpty(),
+                subcategoryList = groupedCategories?.subcategories.orEmpty(),
                 onNavigateToEditCategoryScreen = onNavigateToEditCategoryScreen,
                 onSwapCategories = onSwapCategories
             )

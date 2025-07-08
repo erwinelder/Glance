@@ -25,18 +25,13 @@ fun NavBackStackEntry?.fromMainScreen(): MainScreens {
     this.fromRoute().let {
         when (it) {
             MainScreens.Home::class.simpleName() -> return MainScreens.Home
-            MainScreens.Records::class.simpleName() -> return MainScreens.Records
+            MainScreens.Transactions::class.simpleName() -> return MainScreens.Transactions
             MainScreens.CategoryStatistics::class.simpleName() ->
                 return MainScreens.CategoryStatistics()
             MainScreens.Budgets::class.simpleName() -> return MainScreens.Budgets
             else -> return MainScreens.Settings
         }
     }
-}
-
-
-fun Any.isScreen(screen: Any): Boolean {
-    return this::class.simpleName() == screen.toString()
 }
 
 
@@ -56,11 +51,6 @@ fun NavBackStackEntry?.currentScreenIs(screen: Any): Boolean {
 fun NavBackStackEntry?.currentScreenIsAnyOf(vararg screens: Any): Boolean {
     this ?: return false
     return screens.any { this.currentScreenIs(it) }
-}
-
-fun NavBackStackEntry?.currentScreenIsNoneOf(vararg screens: Any): Boolean {
-    this ?: return false
-    return screens.none { this.currentScreenIs(it) }
 }
 
 fun NavBackStackEntry?.anyScreenInHierarchyIs(screen: Any): Boolean {

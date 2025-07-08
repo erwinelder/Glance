@@ -20,5 +20,6 @@ import androidx.room.PrimaryKey
 data class BudgetOnWidgetEntity(
     @PrimaryKey
     val budgetId: Int,
-    val timestamp: Long
+    val timestamp: Long,
+    val deleted: Boolean
 )

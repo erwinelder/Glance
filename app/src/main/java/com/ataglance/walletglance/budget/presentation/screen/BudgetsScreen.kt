@@ -16,15 +16,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.utils.groupByType
-import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
 import com.ataglance.walletglance.budget.presentation.component.BudgetListsByPeriodComponent
 import com.ataglance.walletglance.budget.presentation.component.BudgetWithStatsGlassComponent
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsViewModel
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
@@ -32,16 +32,21 @@ import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.utils.plus
-import com.ataglance.walletglance.core.utils.letIfNoneIsNull
+import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.core.utils.toTimestampRange
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.mapper.toDomainModels
+import com.ataglance.walletglance.transaction.domain.model.Record
+import com.ataglance.walletglance.transaction.domain.model.RecordItem
+import com.ataglance.walletglance.transaction.domain.model.RecordWithItems
+import com.ataglance.walletglance.transaction.domain.model.Transaction
+import com.ataglance.walletglance.transaction.domain.model.Transfer
+import com.ataglance.walletglance.transaction.domain.model.TransferItem
+import kotlinx.datetime.LocalDateTime
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -105,22 +110,226 @@ fun BudgetsScreenPreview(
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
-    budgetEntityList: List<BudgetEntity>? = null,
-    budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
-    accountList: List<Account> = listOf(
+    budgetDataModelsWithAssociations: List<BudgetDataModelWithAssociations>? = null,
+    accounts: List<Account> = listOf(
         Account(id = 1, orderNum = 1, isActive = true),
         Account(id = 2, orderNum = 2, isActive = false)
     ),
-    recordList: List<RecordEntity> = emptyList()
-) {
-    val budgetsByType = (budgetEntityList to budgetAccountAssociationList)
-        .letIfNoneIsNull { (budgets, associations) ->
-            budgets.toDomainModels(
-                groupedCategoriesList = groupedCategoriesByType.expense,
-                associations = associations,
-                accounts = accountList
+    transactions: List<Transaction> = listOf(
+        RecordWithItems(
+            record = Record(
+                id = 1,
+                date = LocalDateTime(2024, 9, 24, 12, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 1,
+                    recordId = 1,
+                    totalAmount = 68.43,
+                    quantity = null,
+                    categoryId = 1,
+                    subcategoryId = 13,
+                    note = "bread, milk"
+                ),
+                RecordItem(
+                    id = 2,
+                    recordId = 1,
+                    totalAmount = 178.9,
+                    quantity = null,
+                    categoryId = 3,
+                    subcategoryId = 24,
+                    note = "shampoo"
+                )
             )
-        }?.groupByType()?.fillUsedAmountsByRecords(recordList.toDomainModels())
+        ),
+        Transfer(
+            id = 1,
+            date = LocalDateTime(2024, 9, 23, 0, 0).toTimestamp(),
+            sender = TransferItem(
+                accountId = accounts[0].id,
+                amount = 3000.0,
+                rate = 1.0
+            ),
+            receiver = TransferItem(
+                accountId = accounts[1].id,
+                amount = 3000.0,
+                rate = 1.0
+            ),
+            includeInBudgets = true
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 4,
+                date = LocalDateTime(2024, 9, 18, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 4,
+                    recordId = 4,
+                    totalAmount = 120.9,
+                    quantity = null,
+                    categoryId = 6,
+                    subcategoryId = 40,
+                    note = "Music platform"
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 5,
+                date = LocalDateTime(2024, 9, 15, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 5,
+                    recordId = 5,
+                    totalAmount = 799.9,
+                    quantity = null,
+                    categoryId = 3,
+                    subcategoryId = 21,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 6,
+                date = LocalDateTime(2024, 9, 12, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 6,
+                    recordId = 6,
+                    totalAmount = 3599.9,
+                    quantity = null,
+                    categoryId = 1,
+                    subcategoryId = 13,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 7,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 7,
+                    recordId = 7,
+                    totalAmount = 8500.0,
+                    quantity = null,
+                    categoryId = 2,
+                    subcategoryId = 15,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 8,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Income,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 8,
+                    recordId = 8,
+                    totalAmount = 42600.0,
+                    quantity = null,
+                    categoryId = 72,
+                    subcategoryId = null,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 9,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 9,
+                    recordId = 9,
+                    totalAmount = 799.9,
+                    quantity = null,
+                    categoryId = 6,
+                    subcategoryId = 38,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 10,
+                date = LocalDateTime(2024, 6, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[1].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 10,
+                    recordId = 10,
+                    totalAmount = 450.41,
+                    quantity = null,
+                    categoryId = 9,
+                    subcategoryId = 50,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 10,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accounts[0].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 10,
+                    recordId = 10,
+                    totalAmount = 690.56,
+                    quantity = null,
+                    categoryId = 10,
+                    subcategoryId = 58,
+                    note = null
+                )
+            )
+        ),
+    ),
+) {
+    val budgetsByType = budgetDataModelsWithAssociations
+        ?.let { budgets ->
+            budgets.mapNotNull {
+                it.toDomainModel(
+                    groupedCategoriesList = groupedCategoriesByType.expense, accounts = accounts
+                )
+            }
+        }?.groupByType()?.fillUsedAmountsByTransactions(transactions = transactions)
         ?: BudgetsByType(
             daily = listOf(
                 Budget(
@@ -135,7 +344,7 @@ fun BudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Daily.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
-                    linkedAccountsIds = listOf(1, 2)
+                    linkedAccountIds = listOf(1, 2)
                 )
             ),
             weekly = listOf(
@@ -151,7 +360,7 @@ fun BudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Weekly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
-                    linkedAccountsIds = listOf(3, 4)
+                    linkedAccountIds = listOf(3, 4)
                 )
             ),
             monthly = listOf(
@@ -167,7 +376,7 @@ fun BudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
-                    linkedAccountsIds = listOf(1, 2)
+                    linkedAccountIds = listOf(1, 2)
                 ),
                 Budget(
                     id = 3,
@@ -181,7 +390,7 @@ fun BudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
-                    linkedAccountsIds = listOf(3, 4)
+                    linkedAccountIds = listOf(3, 4)
                 )
             ),
             yearly = listOf(
@@ -197,7 +406,7 @@ fun BudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Yearly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "USD",
-                    linkedAccountsIds = listOf(1, 2)
+                    linkedAccountIds = listOf(1, 2)
                 ),
                 Budget(
                     id = 3,
@@ -211,7 +420,7 @@ fun BudgetsScreenPreview(
                     dateRange = RepeatingPeriod.Yearly.toTimestampRange(),
                     currentTimeWithinRangeGraphPercentage = .5f,
                     currency = "CZK",
-                    linkedAccountsIds = listOf(3, 4)
+                    linkedAccountIds = listOf(3, 4)
                 )
             )
         )

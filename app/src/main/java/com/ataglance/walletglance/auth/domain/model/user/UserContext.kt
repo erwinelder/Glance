@@ -71,8 +71,8 @@ class UserContext(
         return isSignedIn() && subscription != AppSubscription.Free
     }
 
-    fun getUserIdIfEligibleForDataSync(): String? {
-        return if (isEligibleForDataSync()) userIdString else null
+    fun getUserIdIfEligibleForDataSync(): Int? {
+        return if (isEligibleForDataSync()) userId else null
     }
 
 }

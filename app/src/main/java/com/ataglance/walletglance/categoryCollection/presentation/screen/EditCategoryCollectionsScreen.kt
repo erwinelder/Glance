@@ -263,7 +263,7 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 1,
                 type = CategoryCollectionType.Mixed,
                 name = "Category collection collection 1",
-                categoryList = groupedCategoriesByType.expense.let { list ->
+                categories = groupedCategoriesByType.expense.let { list ->
                     list.subList(0, 3).map { it.category }
                 }
             ),
@@ -272,7 +272,7 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 2,
                 type = CategoryCollectionType.Mixed,
                 name = "Collection 2",
-                categoryList = groupedCategoriesByType.expense.let { list ->
+                categories = groupedCategoriesByType.expense.let { list ->
                     list.subList(3, 6).map { it.category }
                 }
             ),
@@ -281,7 +281,7 @@ fun EditCategoryCollectionsScreenPreview(
                 orderNum = 3,
                 type = CategoryCollectionType.Mixed,
                 name = "Category collection 3",
-                categoryList = groupedCategoriesByType.expense.let { list ->
+                categories = groupedCategoriesByType.expense.let { list ->
                     list.subList(0, list.size).map { it.category }
                 }
             ),

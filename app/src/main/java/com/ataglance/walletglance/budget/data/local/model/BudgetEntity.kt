@@ -20,10 +20,11 @@ import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 )
 data class BudgetEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Int,
     val amountLimit: Double,
     val categoryId: Int,
     val name: String,
     val repeatingPeriod: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val deleted: Boolean
 )

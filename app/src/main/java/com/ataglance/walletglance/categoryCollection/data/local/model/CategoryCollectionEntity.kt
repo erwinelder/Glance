@@ -6,9 +6,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "category_collection")
 data class CategoryCollectionEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Int,
     val orderNum: Int,
     val type: Char,
     val name: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val deleted: Boolean
 )

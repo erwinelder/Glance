@@ -23,10 +23,10 @@ val billingModule = module {
     /* ---------- Use Cases ---------- */
 
     single<UpdateUserSubscriptionUseCase> {
-        UpdateUserSubscriptionUseCaseImpl(userRepository = get())
+        UpdateUserSubscriptionUseCaseImpl()
     }
 
-    /* ---------- View Models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel {
         SubscriptionViewModel(billingSubscriptionManager = get())

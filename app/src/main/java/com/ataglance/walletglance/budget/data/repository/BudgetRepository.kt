@@ -1,24 +1,19 @@
 package com.ataglance.walletglance.budget.data.repository
 
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.model.BudgetDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
 
 interface BudgetRepository {
 
-    suspend fun deleteBudgetsAndAssociations(
-        budgets: List<BudgetEntity>,
-        associations: List<BudgetAccountAssociation>
+    suspend fun deleteAndUpsertBudgetsWithAssociations(
+        toDelete: List<BudgetDataModel>,
+        toUpsert: List<BudgetDataModelWithAssociations>
     )
 
-    suspend fun deleteAndUpsertBudgetsAndAssociations(
-        budgetsToDelete: List<BudgetEntity>,
-        budgetsToUpsert: List<BudgetEntity>,
-        associationsToDelete: List<BudgetAccountAssociation>,
-        associationsToUpsert: List<BudgetAccountAssociation>,
-    )
+    suspend fun getAllBudgets(): List<BudgetDataModel>
 
-    suspend fun getBudgetAndAssociations(budgetId: Int): Pair<BudgetEntity, List<BudgetAccountAssociation>>?
+    suspend fun getBudgetWithAssociations(budgetId: Int): BudgetDataModelWithAssociations?
 
-    suspend fun getAllBudgetsAndAssociations(): Pair<List<BudgetEntity>, List<BudgetAccountAssociation>>
+    suspend fun getAllBudgetsWithAssociations(): List<BudgetDataModelWithAssociations>
 
 }

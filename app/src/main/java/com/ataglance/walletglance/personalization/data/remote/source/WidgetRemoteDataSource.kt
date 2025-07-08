@@ -1,25 +1,24 @@
 package com.ataglance.walletglance.personalization.data.remote.source
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.personalization.data.remote.model.WidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.remote.model.WidgetDto
 
 interface WidgetRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: String): Long?
+    suspend fun getUpdateTime(userId: Int): Long?
 
-    suspend fun saveUpdateTime(timestamp: Long, userId: String)
-
-    suspend fun upsertWidgets(widgets: List<WidgetRemoteEntity>, timestamp: Long, userId: String)
-
-    suspend fun synchroniseWidgets(
-        widgetsToSync: EntitiesToSync<WidgetRemoteEntity>,
+    suspend fun synchronizeWidgets(
+        widgets: List<WidgetDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int
+    ): List<WidgetDto>?
 
-    suspend fun getWidgetsAfterTimestamp(
+    suspend fun synchronizeWidgetsAndGetAfterTimestamp(
+        widgets: List<WidgetDto>,
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<WidgetRemoteEntity>
+        userId: Int,
+        localTimestamp: Long
+    ): List<WidgetDto>?
+
+    suspend fun getWidgetsAfterTimestamp(timestamp: Long, userId: Int): List<WidgetDto>?
 
 }

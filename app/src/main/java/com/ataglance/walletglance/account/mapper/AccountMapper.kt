@@ -1,13 +1,13 @@
 package com.ataglance.walletglance.account.mapper
 
-import com.ataglance.walletglance.account.data.local.model.AccountEntity
+import com.ataglance.walletglance.account.data.model.AccountDataModel
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.model.AccountDraft
 import java.util.Locale
 
 
-fun AccountEntity.toDomainModel(): Account {
+fun AccountDataModel.toDomainModel(): Account {
     return Account(
         id = id,
         orderNum = orderNum,
@@ -21,8 +21,8 @@ fun AccountEntity.toDomainModel(): Account {
     )
 }
 
-fun Account.toDataModel(timestamp: Long): AccountEntity { // TODO-SYNC: pass timestamp from the caller
-    return AccountEntity(
+fun Account.toDataModel(): AccountDataModel {
+    return AccountDataModel(
         id = id,
         orderNum = orderNum,
         name = name,
@@ -31,8 +31,7 @@ fun Account.toDataModel(timestamp: Long): AccountEntity { // TODO-SYNC: pass tim
         color = color.getNameValue(),
         hide = hide,
         hideBalance = hideBalance,
-        withoutBalance = withoutBalance,
-        timestamp = timestamp
+        withoutBalance = withoutBalance
     )
 }
 

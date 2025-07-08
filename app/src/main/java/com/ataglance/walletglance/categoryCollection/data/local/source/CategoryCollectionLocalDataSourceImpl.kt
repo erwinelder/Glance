@@ -1,112 +1,117 @@
 package com.ataglance.walletglance.categoryCollection.data.local.source
 
 import com.ataglance.walletglance.categoryCollection.data.local.dao.CategoryCollectionLocalDao
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntityWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.utils.divide
+import com.ataglance.walletglance.categoryCollection.data.utils.zipWithAssociations
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.core.utils.excludeItems
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 class CategoryCollectionLocalDataSourceImpl(
     private val categoryCollectionDao: CategoryCollectionLocalDao,
     private val updateTimeDao: LocalUpdateTimeDao
 ) : CategoryCollectionLocalDataSource {
 
-    override suspend fun getCategoryCollectionUpdateTime(): Long? {
+    override suspend fun getUpdateTime(): Long? {
         return updateTimeDao.getUpdateTime(tableName = TableName.CategoryCollection.name)
     }
 
-    override suspend fun saveCategoryCollectionUpdateTime(timestamp: Long) {
+    override suspend fun saveUpdateTime(timestamp: Long) {
         updateTimeDao.saveUpdateTime(
             tableName = TableName.CategoryCollection.name, timestamp = timestamp
         )
     }
 
-    override suspend fun deleteAllCategoryCollections(timestamp: Long) {
-        categoryCollectionDao.deleteAllCategoryCollections()
-        saveCategoryCollectionUpdateTime(timestamp = timestamp)
+    override suspend fun deleteUpdateTime() {
+        updateTimeDao.deleteUpdateTime(tableName = TableName.CategoryCollection.name)
     }
 
-    override suspend fun synchroniseCategoryCollections(
-        collectionsToSync: EntitiesToSync<CategoryCollectionEntity>,
+    override suspend fun deleteAllCategoryCollections() {
+        categoryCollectionDao.deleteAllCategoryCollections()
+        deleteUpdateTime()
+    }
+
+    override suspend fun upsertCollectionsWithAssociations(
+        collectionsWithAssociations: List<CategoryCollectionEntityWithAssociations>,
         timestamp: Long
     ) {
-        categoryCollectionDao.deleteAndUpsertCollections(
-            toDelete = collectionsToSync.toDelete,
-            toUpsert = collectionsToSync.toUpsert
+        val (collections, associations) = collectionsWithAssociations.divide()
+
+        categoryCollectionDao.upsertCollectionsAndAssociations(
+            collections = collections, associations = associations
         )
-        saveCategoryCollectionUpdateTime(timestamp = timestamp)
+        updateTimeDao.saveUpdateTime(
+            tableName = TableName.CategoryCollection.name, timestamp = timestamp
+        )
     }
 
-    override fun getAllCategoryCollectionsFlow(): Flow<List<CategoryCollectionEntity>> {
-        return categoryCollectionDao.getAllCollectionsFlow()
+    override suspend fun deleteCollectionsWithAssociations(
+        collectionsWithAssociations: List<CategoryCollectionEntityWithAssociations>
+    ) {
+        val collections = collectionsWithAssociations.map { it.collection }
+
+        categoryCollectionDao.deleteCollections(collections = collections)
     }
 
-    override suspend fun getAllCategoryCollections(): List<CategoryCollectionEntity> {
+    override suspend fun deleteAndUpsertCollectionsWithAssociations(
+        toDelete: List<CategoryCollectionEntityWithAssociations>,
+        toUpsert: List<CategoryCollectionEntityWithAssociations>,
+        timestamp: Long
+    ) {
+        val collectionsToDelete = toDelete.map { it.collection }
+        val (collectionsToUpsert, associationsToUpsert) = toUpsert.divide()
+
+        val associationsToDelete = categoryCollectionDao
+            .getCollectionCategoryAssociations(
+                collectionIds = collectionsToUpsert.map { it.id }
+            )
+            .excludeItems(associationsToUpsert) { it.collectionId to it.categoryId }
+
+        categoryCollectionDao.deleteAndUpsertCollectionsAndAssociations(
+            collectionsToDelete = collectionsToDelete,
+            collectionsToUpsert = collectionsToUpsert,
+            associationsToUpsert = associationsToUpsert,
+            associationsToDelete = associationsToDelete
+        )
+        updateTimeDao.saveUpdateTime(
+            tableName = TableName.CategoryCollection.name, timestamp = timestamp
+        )
+    }
+
+    override suspend fun getAllCollections(): List<CategoryCollectionEntity> {
         return categoryCollectionDao.getAllCollections()
     }
 
-
-    override suspend fun getCollectionCategoryAssociationUpdateTime(): Long? {
-        return updateTimeDao.getUpdateTime(
-            tableName = TableName.CategoryCollectionCategoryAssociation.name
-        )
-    }
-
-    override suspend fun saveCollectionCategoryAssociationUpdateTime(timestamp: Long) {
-        updateTimeDao.saveUpdateTime(
-            tableName = TableName.CategoryCollectionCategoryAssociation.name, timestamp = timestamp
-        )
-    }
-
-    override suspend fun synchroniseCollectionCategoryAssociations(
-        associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,
+    override suspend fun getCollectionsWithAssociationsAfterTimestamp(
         timestamp: Long
-    ) {
-        categoryCollectionDao.deleteAndUpsertCollectionCategoryAssociations(
-            toDelete = associationsToSync.toDelete,
-            toUpsert = associationsToSync.toUpsert
+    ): List<CategoryCollectionEntityWithAssociations> {
+        val collections = categoryCollectionDao.getCollectionsAfterTimestamp(timestamp = timestamp)
+        val ids = collections.filterNot { it.deleted }.map { it.id }
+        val associations = categoryCollectionDao.getCollectionCategoryAssociations(
+            collectionIds = ids
         )
-        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp)
+
+        return collections.zipWithAssociations(associations = associations)
     }
 
-    override fun getAllCollectionCategoryAssociationsFlow(
-    ): Flow<List<CategoryCollectionCategoryAssociation>> {
-        return categoryCollectionDao.getAllCollectionCategoryAssociationsFlow()
+    override fun getAllCollectionsWithAssociationsAsFlow(
+    ): Flow<List<CategoryCollectionEntityWithAssociations>> = combine(
+        categoryCollectionDao.getAllCollectionsAsFlow(),
+        categoryCollectionDao.getAllCollectionCategoryAssociationsAsFlow()
+    ) { collections, associations ->
+        collections.zipWithAssociations(associations = associations)
     }
 
-    override suspend fun getAllCollectionCategoryAssociations(
-    ): List<CategoryCollectionCategoryAssociation> {
-        return categoryCollectionDao.getAllCollectionCategoryAssociations()
-    }
-
-
-    override suspend fun deleteCollectionsAndAssociations(
-        collections: List<CategoryCollectionEntity>,
-        associations: List<CategoryCollectionCategoryAssociation>,
-        timestamp: Long
-    ) {
-        categoryCollectionDao.deleteCollectionCategoryAssociations(associations = associations)
-        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp)
-        categoryCollectionDao.deleteCollections(collections = collections)
-        saveCategoryCollectionUpdateTime(timestamp = timestamp)
-    }
-
-    override suspend fun synchroniseCollectionsAndAssociations(
-        collectionsToSync: EntitiesToSync<CategoryCollectionEntity>,
-        associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,
-        timestamp: Long
-    ) {
-        categoryCollectionDao.deleteAndUpsertCollectionsAndAssociations(
-            collectionsToDelete = collectionsToSync.toDelete,
-            collectionsToUpsert = collectionsToSync.toUpsert,
-            associationsToDelete = associationsToSync.toDelete,
-            associationsToUpsert = associationsToSync.toUpsert
-        )
-        saveCategoryCollectionUpdateTime(timestamp = timestamp)
-        saveCollectionCategoryAssociationUpdateTime(timestamp = timestamp)
+    override suspend fun getAllCollectionsWithAssociations(
+    ): List<CategoryCollectionEntityWithAssociations> {
+        val collections = categoryCollectionDao.getAllCollections()
+        val associations = categoryCollectionDao.getAllCollectionCategoryAssociations()
+        return collections.zipWithAssociations(associations = associations)
     }
 
 }

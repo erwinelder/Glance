@@ -1,29 +1,27 @@
 package com.ataglance.walletglance.budget.data.remote.source
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
+import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetDto
 
 interface BudgetOnWidgetRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: String): Long?
+    suspend fun getUpdateTime(userId: Int): Long?
 
-    suspend fun saveUpdateTime(timestamp: Long, userId: String)
-
-    suspend fun upsertBudgetsOnWidget(
-        budgets: List<BudgetOnWidgetRemoteEntity>,
+    suspend fun synchronizeBudgetsOnWidget(
+        budgets: List<BudgetOnWidgetDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int
+    ): List<BudgetOnWidgetDto>?
 
-    suspend fun synchroniseBudgetsOnWidget(
-        budgetsToSync: EntitiesToSync<BudgetOnWidgetRemoteEntity>,
+    suspend fun synchronizeBudgetsOnWidgetAndGetAfterTimestamp(
+        budgets: List<BudgetOnWidgetDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int,
+        localTimestamp: Long
+    ): List<BudgetOnWidgetDto>?
 
     suspend fun getBudgetsOnWidgetAfterTimestamp(
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<BudgetOnWidgetRemoteEntity>
+        userId: Int
+    ): List<BudgetOnWidgetDto>?
 
 }

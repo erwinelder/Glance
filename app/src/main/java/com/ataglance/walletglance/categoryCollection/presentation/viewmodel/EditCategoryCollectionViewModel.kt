@@ -97,7 +97,7 @@ class EditCategoryCollectionViewModel(
         return collectionUiState.value.let {
             it.copy(
                 name = it.name.trim(),
-                categoryList = checkedGroupedCategoriesByType.value.getCheckedCategories()
+                categories = checkedGroupedCategoriesByType.value.getCheckedCategories()
             )
         }
     }

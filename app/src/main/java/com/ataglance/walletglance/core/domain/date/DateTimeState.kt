@@ -6,6 +6,7 @@ import com.ataglance.walletglance.core.utils.getCurrentLocalDateTime
 import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.core.utils.withTime
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.number
 
 data class DateTimeState(
     private val localDateTime: LocalDateTime,
@@ -40,14 +41,14 @@ data class DateTimeState(
 
     fun getHourAndMinute(): Pair<Int, Int> = localDateTime.hour to localDateTime.minute
 
-    fun applyNewDate(newTimestamp: Long): DateTimeState {
-        val newLocalDateTime = LocalDateTime.fromTimestamp(newTimestamp).withTime(
+    fun applyNewDate(timestamp: Long): DateTimeState {
+        val newLocalDateTime = LocalDateTime.fromTimestamp(timestamp).withTime(
             hour = localDateTime.hour, minute = localDateTime.minute
         )
 
         return DateTimeState(
             localDateTime = newLocalDateTime,
-            timestamp = newTimestamp,
+            timestamp = timestamp,
             dateFormatted = newLocalDateTime.formatByDefault()
         )
     }
@@ -55,8 +56,8 @@ data class DateTimeState(
     fun applyNewTime(hour: Int, minute: Int): DateTimeState {
         val localDateTime = LocalDateTime(
             year = localDateTime.year,
-            monthNumber = localDateTime.monthNumber,
-            dayOfMonth = localDateTime.dayOfMonth,
+            month = localDateTime.month.number,
+            day = localDateTime.day,
             hour = hour,
             minute = minute
         )

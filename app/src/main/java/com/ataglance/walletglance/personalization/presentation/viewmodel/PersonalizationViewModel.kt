@@ -88,7 +88,7 @@ class PersonalizationViewModel(
 
     private fun fetchWidgets() {
         viewModelScope.launch {
-            getWidgetsUseCase.getFlow().collect { widgets ->
+            getWidgetsUseCase.getAsFlow().collect { widgets ->
                 _widgets.update {
                     widgets.map { widgetName ->
                         CheckedWidget(widgetName, widgetName in widgets)
@@ -114,7 +114,7 @@ class PersonalizationViewModel(
 
     private suspend fun saveWidgets() {
         val widgets = widgets.value.filter { it.isChecked }.map { it.name }
-        saveWidgetsUseCase.save(widgets = widgets)
+        saveWidgetsUseCase.saveAndDeleteRest(widgets = widgets)
     }
 
     fun saveWidgetsAndCloseSettings() {

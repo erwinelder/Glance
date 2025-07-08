@@ -1,9 +1,7 @@
 package com.ataglance.walletglance.di
 
-import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import com.ataglance.walletglance.personalization.data.local.source.WidgetLocalDataSource
 import com.ataglance.walletglance.personalization.data.local.source.getWidgetLocalDataSource
-import com.ataglance.walletglance.personalization.data.remote.dao.WidgetRemoteDao
 import com.ataglance.walletglance.personalization.data.remote.source.WidgetRemoteDataSource
 import com.ataglance.walletglance.personalization.data.remote.source.WidgetRemoteDataSourceImpl
 import com.ataglance.walletglance.personalization.data.repository.WidgetRepository
@@ -18,14 +16,6 @@ import org.koin.dsl.module
 
 val personalizationModule = module {
 
-    /* ---------- DAOs ---------- */
-
-    single {
-        WidgetRemoteDao(
-            firestoreAdapter = get<FirestoreAdapterFactory>().getWidgetFirestoreAdapter()
-        )
-    }
-
     /* ---------- Data Sources ---------- */
 
     single<WidgetLocalDataSource> {
@@ -33,7 +23,7 @@ val personalizationModule = module {
     }
 
     single<WidgetRemoteDataSource> {
-        WidgetRemoteDataSourceImpl(widgetDao = get(), updateTimeDao = get())
+        WidgetRemoteDataSourceImpl()
     }
 
     /* ---------- Repositories ---------- */
@@ -52,7 +42,7 @@ val personalizationModule = module {
         GetWidgetsUseCaseImpl(widgetRepository = get())
     }
 
-    /* ---------- View Models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel {
         PersonalizationViewModel(

@@ -1,29 +1,25 @@
 package com.ataglance.walletglance.category.data.remote.source
 
-import com.ataglance.walletglance.category.data.remote.model.CategoryRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.category.data.remote.model.CategoryCommandDto
+import com.ataglance.walletglance.category.data.remote.model.CategoryQueryDto
 
 interface CategoryRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: String): Long?
+    suspend fun getUpdateTime(userId: Int): Long?
 
-    suspend fun saveUpdateTime(timestamp: Long, userId: String)
-
-    suspend fun upsertCategories(
-        categories: List<CategoryRemoteEntity>,
+    suspend fun synchronizeCategories(
+        categories: List<CategoryCommandDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int
+    ): List<CategoryQueryDto>?
 
-    suspend fun synchroniseCategories(
-        categoriesToSync: EntitiesToSync<CategoryRemoteEntity>,
+    suspend fun synchronizeCategoriesAndGetAfterTimestamp(
+        categories: List<CategoryCommandDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int,
+        localTimestamp: Long
+    ): List<CategoryQueryDto>?
 
-    suspend fun getCategoriesAfterTimestamp(
-        timestamp: Long,
-        userId: String
-    ): EntitiesToSync<CategoryRemoteEntity>
+    suspend fun getCategoriesAfterTimestamp(timestamp: Long, userId: Int): List<CategoryQueryDto>
 
 }

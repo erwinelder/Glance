@@ -8,5 +8,6 @@ data class WidgetEntity(
     @PrimaryKey
     val name: String,
     val orderNum: Int,
-    val timestamp: Long
+    val timestamp: Long,
+    val deleted: Boolean
 )

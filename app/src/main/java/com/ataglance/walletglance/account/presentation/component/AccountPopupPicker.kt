@@ -36,7 +36,7 @@ import com.ataglance.walletglance.account.domain.model.Account
 fun AccountPopupPicker(
     accountList: List<Account>,
     selectedAccount: Account?,
-    onToggleAccounts: (List<Account>) -> Unit,
+    onToggleAccounts: () -> Unit,
     onSelectAccount: (Account) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit
 ) {
@@ -47,7 +47,7 @@ fun AccountPopupPicker(
     ) {
         PickerButton(selectedAccount = selectedAccount) {
             if (accountList.size == 2) {
-                onToggleAccounts(accountList)
+                onToggleAccounts()
             } else if (accountList.size > 1) {
                 onDimBackgroundChange(it)
                 expandedState.targetState = it

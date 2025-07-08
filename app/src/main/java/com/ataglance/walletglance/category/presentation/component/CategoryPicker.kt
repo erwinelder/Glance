@@ -71,7 +71,7 @@ fun CategoryPicker(
         mutableStateOf(null)
     }
     var subcategoryList: List<Category> by remember { mutableStateOf(emptyList()) }
-    chosenGroupedCategories?.subcategoryList?.takeIf { it.isNotEmpty() }
+    chosenGroupedCategories?.subcategories?.takeIf { it.isNotEmpty() }
         ?.let { subcategoryList = it }
 
     AnimatedVisibility(
@@ -125,7 +125,7 @@ fun CategoryPicker(
                 ) {
                     CategoryListItem(categoryWithSubcategories.category) {
                         if (
-                            categoryWithSubcategories.subcategoryList.isNotEmpty() &&
+                            categoryWithSubcategories.subcategories.isNotEmpty() &&
                                 !allowChoosingParentCategory
                         ) {
                             chosenGroupedCategories = categoryWithSubcategories
@@ -138,7 +138,7 @@ fun CategoryPicker(
                     }
                     if (allowChoosingParentCategory) {
                         FilledIconButton(
-                            enabled = categoryWithSubcategories.subcategoryList.isNotEmpty(),
+                            enabled = categoryWithSubcategories.subcategories.isNotEmpty(),
                             shape = RoundedCornerShape(30),
                             colors = IconButtonColors(
                                 containerColor = Color.Transparent,
@@ -159,7 +159,7 @@ fun CategoryPicker(
                                     .border(
                                         width = 1.dp,
                                         color = if (
-                                            categoryWithSubcategories.subcategoryList.isEmpty()
+                                            categoryWithSubcategories.subcategories.isEmpty()
                                         ) {
                                             GlanciColors.outline.copy(.3f)
                                         } else {

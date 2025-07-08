@@ -21,10 +21,10 @@ import com.ataglance.walletglance.core.presentation.screen.UpdateRequestScreen
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.record.presentation.screen.RecordsScreenWrapper
-import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenWrapper
-import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenWrapper
+import com.ataglance.walletglance.record.presentation.screen.RecordCreationScreenWrapper
 import com.ataglance.walletglance.settings.presentation.navigation.settingsGraph
+import com.ataglance.walletglance.transaction.presentation.screen.TransactionsScreenWrapper
+import com.ataglance.walletglance.transfer.presentation.screen.TransferCreationScreenWrapper
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,8 +69,8 @@ fun AppNavHost(
                 }
             )
         }
-        composable<MainScreens.Records> {
-            RecordsScreenWrapper(
+        composable<MainScreens.Transactions> {
+            TransactionsScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 navViewModel = navViewModel,
@@ -119,7 +119,8 @@ fun AppNavHost(
                 screenPadding = screenPadding,
                 backStack = backStack,
                 navController = navController,
-                onDimBackgroundChange = onDimBackgroundChange
+                onDimBackgroundChange = onDimBackgroundChange,
+                appUiState = appUiState
             )
         }
         composable<MainScreens.TransferCreation>(

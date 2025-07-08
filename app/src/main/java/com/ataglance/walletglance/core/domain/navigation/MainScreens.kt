@@ -9,7 +9,7 @@ sealed interface MainScreens {
     data object Home : MainScreens
 
     @Serializable
-    data object Records : MainScreens
+    data object Transactions : MainScreens
 
     @Serializable
     data class CategoryStatistics(
@@ -24,10 +24,10 @@ sealed interface MainScreens {
     data class BudgetStatistics(val id: Int) : MainScreens
 
     @Serializable
-    data class RecordCreation(val recordNum: Int? = null) : MainScreens
+    data class RecordCreation(val recordId: Long? = null) : MainScreens
 
     @Serializable
-    data class TransferCreation(val recordNum: Int? = null) : MainScreens
+    data class TransferCreation(val transferId: Long? = null) : MainScreens
 
     @Serializable
     data object Settings : MainScreens

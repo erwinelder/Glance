@@ -1,29 +1,24 @@
 package com.ataglance.walletglance.categoryCollection.data.repository
 
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionDataModel
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionDataModelWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryCollectionRepository {
 
-    suspend fun deleteCollectionsAndAssociations(
-        collections: List<CategoryCollectionEntity>,
-        associations: List<CategoryCollectionCategoryAssociation>
+    suspend fun deleteAllCollectionsLocally()
+
+    suspend fun deleteAndUpsertCollectionsWithAssociations(
+        toDelete: List<CategoryCollectionDataModel>,
+        toUpsert: List<CategoryCollectionDataModelWithAssociations>
     )
 
-    suspend fun deleteAllCategoryCollectionsLocally()
+    suspend fun getAllCollections(): List<CategoryCollectionDataModel>
 
-    suspend fun deleteAndUpsertCollectionsAndAssociations(
-        collectionsToDelete: List<CategoryCollectionEntity>,
-        collectionsToUpsert: List<CategoryCollectionEntity>,
-        associationsToDelete: List<CategoryCollectionCategoryAssociation>,
-        associationsToUpsert: List<CategoryCollectionCategoryAssociation>
-    )
+    fun getAllCollectionsWithAssociationsAsFlow(
+    ): Flow<List<CategoryCollectionDataModelWithAssociations>>
 
-    fun getAllCollectionsAndAssociationsFlow(
-    ): Flow<Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>>
-
-    suspend fun getAllCollectionsAndAssociations(
-    ): Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>
+    suspend fun getAllCollectionsWithAssociations(
+    ): List<CategoryCollectionDataModelWithAssociations>
 
 }

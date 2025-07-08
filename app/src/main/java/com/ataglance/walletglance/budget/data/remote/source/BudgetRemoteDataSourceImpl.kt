@@ -1,85 +1,39 @@
 package com.ataglance.walletglance.budget.data.remote.source
 
-import com.ataglance.walletglance.budget.data.remote.dao.BudgetRemoteDao
-import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
-import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.remote.dao.RemoteUpdateTimeDao
+import com.ataglance.walletglance.budget.data.remote.model.BudgetDtoWithAssociations
 
-class BudgetRemoteDataSourceImpl(
-    private val budgetDao: BudgetRemoteDao,
-    private val updateTimeDao: RemoteUpdateTimeDao
-) : BudgetRemoteDataSource {
+class BudgetRemoteDataSourceImpl() : BudgetRemoteDataSource {
 
-    override suspend fun getBudgetUpdateTime(userId: String): Long? {
-        return updateTimeDao.getUpdateTime(tableName = TableName.Budget.name, userId = userId)
+    override suspend fun getUpdateTime(userId: Int): Long? {
+        // TODO("Not yet implemented")
+        return null
     }
 
-    override suspend fun saveBudgetUpdateTime(timestamp: Long, userId: String) {
-        updateTimeDao.saveUpdateTime(
-            tableName = TableName.Budget.name, timestamp = timestamp, userId = userId
-        )
-    }
-
-    override suspend fun getBudgetsAfterTimestamp(
+    override suspend fun synchronizeBudgetsWithAssociations(
+        budgets: List<BudgetDtoWithAssociations>,
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<BudgetRemoteEntity> {
-        return budgetDao.getBudgetsAfterTimestamp(timestamp = timestamp, userId = userId)
+        userId: Int
+    ): List<BudgetDtoWithAssociations>? {
+        // TODO("Not yet implemented")
+        return null
     }
 
-
-    override suspend fun getBudgetAccountAssociationUpdateTime(userId: String): Long? {
-        return updateTimeDao.getUpdateTime(
-            tableName = TableName.BudgetAccountAssociation.name, userId = userId
-        )
-    }
-
-    override suspend fun saveBudgetAccountAssociationUpdateTime(timestamp: Long, userId: String) {
-        updateTimeDao.saveUpdateTime(
-            tableName = TableName.BudgetAccountAssociation.name,
-            timestamp = timestamp,
-            userId = userId
-        )
-    }
-
-    override suspend fun getBudgetAccountAssociationsAfterTimestamp(
+    override suspend fun synchronizeBudgetsWithAssociationsAndGetAfterTimestamp(
+        budgets: List<BudgetDtoWithAssociations>,
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<BudgetAccountRemoteAssociation> {
-        return budgetDao.getBudgetAccountAssociationsAfterTimestamp(
-            timestamp = timestamp, userId = userId
-        )
+        userId: Int,
+        localTimestamp: Long
+    ): List<BudgetDtoWithAssociations>? {
+        // TODO("Not yet implemented")
+        return null
     }
 
-
-    override suspend fun upsertBudgetsAndAssociations(
-        budgets: List<BudgetRemoteEntity>,
-        associations: List<BudgetAccountRemoteAssociation>,
+    override suspend fun getBudgetsWithAssociationsAfterTimestamp(
         timestamp: Long,
-        userId: String
-    ) {
-        budgetDao.upsertBudgetsAndAssociations(
-            budgets = budgets, associations = associations, userId = userId
-        )
-        saveBudgetUpdateTime(timestamp = timestamp, userId = userId)
-        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp, userId = userId)
-    }
-
-    override suspend fun synchroniseBudgetsAndAssociations(
-        budgetsToSync: EntitiesToSync<BudgetRemoteEntity>,
-        associationsToSync: EntitiesToSync<BudgetAccountRemoteAssociation>,
-        timestamp: Long,
-        userId: String
-    ) {
-        budgetDao.synchroniseBudgetsAndAssociations(
-            budgetsToSync = budgetsToSync,
-            associationsToSync = associationsToSync,
-            userId = userId
-        )
-        saveBudgetUpdateTime(timestamp = timestamp, userId = userId)
-        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp, userId = userId)
+        userId: Int
+    ): List<BudgetDtoWithAssociations>? {
+        // TODO("Not yet implemented")
+        return null
     }
 
 }

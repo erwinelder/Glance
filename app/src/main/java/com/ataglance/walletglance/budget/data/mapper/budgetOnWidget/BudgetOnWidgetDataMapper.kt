@@ -1,40 +1,44 @@
 package com.ataglance.walletglance.budget.data.mapper.budgetOnWidget
 
 import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
-import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetRemoteEntity
-import com.ataglance.walletglance.core.utils.convertToIntOrZero
+import com.ataglance.walletglance.budget.data.model.BudgetOnWidgetDataModel
+import com.ataglance.walletglance.budget.data.remote.model.BudgetOnWidgetDto
 
 
-fun BudgetOnWidgetEntity.toRemoteEntity(
-    updateTime: Long,
-    deleted: Boolean
-): BudgetOnWidgetRemoteEntity {
-    return BudgetOnWidgetRemoteEntity(
-        updateTime = updateTime,
-        deleted = deleted,
-        budgetId = budgetId
-    )
-}
-
-fun BudgetOnWidgetRemoteEntity.toLocalEntity(): BudgetOnWidgetEntity {
+fun BudgetOnWidgetDataModel.toEntity(timestamp: Long, deleted: Boolean): BudgetOnWidgetEntity {
     return BudgetOnWidgetEntity(
+        budgetId = budgetId,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun BudgetOnWidgetEntity.toDataModel(): BudgetOnWidgetDataModel {
+    return BudgetOnWidgetDataModel(
         budgetId = budgetId
     )
 }
 
-
-fun BudgetOnWidgetRemoteEntity.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "budgetId" to budgetId
+fun BudgetOnWidgetDataModel.toDto(timestamp: Long, deleted: Boolean): BudgetOnWidgetDto {
+    return BudgetOnWidgetDto(
+        budgetId = budgetId,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }
 
-fun Map<String, Any?>.toBudgetOnWidgetRemoteEntity(): BudgetOnWidgetRemoteEntity {
-    return BudgetOnWidgetRemoteEntity(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        budgetId = this["budgetId"].convertToIntOrZero()
+fun BudgetOnWidgetEntity.toDto(): BudgetOnWidgetDto {
+    return BudgetOnWidgetDto(
+        budgetId = budgetId,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun BudgetOnWidgetDto.toEntity(): BudgetOnWidgetEntity {
+    return BudgetOnWidgetEntity(
+        budgetId = budgetId,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }

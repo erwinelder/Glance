@@ -295,21 +295,21 @@ private fun Preview() {
             orderNum = 1,
             type = CategoryCollectionType.Expense,
             name = "Collection 1",
-            categoriesIds = listOf(1, 2, 3)
+            categoryIds = listOf(1, 2, 3)
         ),
         CategoryCollectionWithIds(
             id = 2,
             orderNum = 2,
             type = CategoryCollectionType.Expense,
             name = "Collection 2",
-            categoriesIds = listOf(1, 2, 3)
+            categoryIds = listOf(1, 2, 3)
         ),
         CategoryCollectionWithIds(
             id = 3,
             orderNum = 3,
             type = CategoryCollectionType.Expense,
             name = "Collection 3",
-            categoriesIds = listOf(1, 2, 3)
+            categoryIds = listOf(1, 2, 3)
         ),
     )
 

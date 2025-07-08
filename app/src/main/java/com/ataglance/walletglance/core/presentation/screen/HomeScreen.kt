@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.account.domain.mapper.toRecordAccount
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.AccountsAndActiveOne
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
@@ -28,11 +27,12 @@ import com.ataglance.walletglance.budget.presentation.component.container.Budget
 import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidget
 import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidgetWrapper
 import com.ataglance.walletglance.budget.presentation.viewmodel.BudgetsOnWidgetSettingsViewModel
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidget
 import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidgetWrapper
-import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatistics
 import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsWidgetUiState
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
@@ -42,28 +42,30 @@ import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
 import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
 import com.ataglance.walletglance.core.presentation.component.container.AppMainTopBar
-import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidget
 import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetWrapper
 import com.ataglance.walletglance.core.presentation.component.widget.GreetingsWidget
 import com.ataglance.walletglance.core.presentation.component.widget.GreetingsWidgetWrapper
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.utils.bottom
 import com.ataglance.walletglance.core.presentation.utils.plusBottomPadding
 import com.ataglance.walletglance.core.presentation.utils.top
-import com.ataglance.walletglance.core.utils.getCurrentTimestamp
+import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.core.utils.toTimestampRange
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.domain.model.RecordStack
-import com.ataglance.walletglance.record.domain.model.RecordStackItem
-import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.utils.filterByAccount
-import com.ataglance.walletglance.record.mapper.toRecordStacks
-import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidget
-import com.ataglance.walletglance.record.presentation.component.RecentRecordsWidgetWrapper
-import com.ataglance.walletglance.record.presentation.model.RecentRecordsWidgetUiState
-import com.ataglance.walletglance.recordCreation.presentation.component.RecordCreationWidget
+import com.ataglance.walletglance.transaction.domain.model.Record
+import com.ataglance.walletglance.transaction.domain.model.RecordItem
+import com.ataglance.walletglance.transaction.domain.model.RecordWithItems
+import com.ataglance.walletglance.transaction.domain.model.Transaction
+import com.ataglance.walletglance.transaction.domain.model.Transfer
+import com.ataglance.walletglance.transaction.domain.model.TransferItem
+import com.ataglance.walletglance.transaction.mapper.toUiStates
+import com.ataglance.walletglance.transaction.presentation.component.RecentTransactionsWidget
+import com.ataglance.walletglance.transaction.presentation.component.RecentTransactionsWidgetWrapper
+import com.ataglance.walletglance.transaction.presentation.component.TransactionCreationWidget
+import com.ataglance.walletglance.transaction.presentation.model.RecentTransactionsWidgetUiState
+import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -130,21 +132,21 @@ fun HomeScreenWrapper(
             )
         },
         recentRecordsWidget = {
-            RecentRecordsWidgetWrapper(
+            RecentTransactionsWidgetWrapper(
                 accountsAndActiveOne = accountsAndActiveOne,
                 dateRangeWithEnum = dateRangeWithEnum,
-                onRecordClick = { recordNum: Int ->
+                onRecordClick = { id ->
                     onNavigateToScreenMovingTowardsLeft(
-                        MainScreens.RecordCreation(recordNum = recordNum)
+                        MainScreens.RecordCreation(recordId = id)
                     )
                 },
-                onTransferClick = { recordNum: Int ->
+                onTransferClick = { id ->
                     onNavigateToScreenMovingTowardsLeft(
-                        MainScreens.TransferCreation(recordNum = recordNum)
+                        MainScreens.TransferCreation(transferId = id)
                     )
                 },
                 onNavigateToRecordsScreen = {
-                    onNavigateToScreenMovingTowardsLeft(MainScreens.Records)
+                    onNavigateToScreenMovingTowardsLeft(MainScreens.Transactions)
                 }
             )
         },
@@ -274,7 +276,7 @@ private fun CompactLayout(
                     visible = isAppThemeSetUp,
                     delayMillis = 150
                 ) {
-                    RecordCreationWidget(
+                    TransactionCreationWidget(
                         onMakeRecord = onMakeRecord,
                         onMakeTransfer = onMakeTransfer
                     )
@@ -349,44 +351,209 @@ fun HomeScreenPreview(
         WidgetName.RecentRecords,
         WidgetName.TotalForPeriod,
     ),
-    recordList: List<RecordEntity>? = null,
-    recordStackList: List<RecordStack> = recordList?.toRecordStacks(
-        accounts = accountsAndActiveOne.accounts,
-        groupedCategoriesByType = groupedCategoriesByType
-    ) ?: listOf(
-        RecordStack(
-            recordNum = 1,
-            date = getCurrentTimestamp(),
-            type = RecordType.Expense,
-            account = accountsAndActiveOne.accounts[0].toRecordAccount(),
-            totalAmount = 42.43,
-            stack = listOf(
-                RecordStackItem(
+    categoryType: CategoryType = CategoryType.Expense,
+    transactions: List<Transaction> = listOf(
+        RecordWithItems(
+            record = Record(
+                id = 1,
+                date = LocalDateTime(2024, 9, 24, 12, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount!!.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
                     id = 1,
-                    amount = 46.47,
+                    recordId = 1,
+                    totalAmount = 68.43,
                     quantity = null,
-                    categoryWithSub = groupedCategoriesByType
-                        .expense[0].getWithFirstSubcategory(),
-                    note = null,
-                    includeInBudgets = true
+                    categoryId = 1,
+                    subcategoryId = 13,
+                    note = "bread, milk"
+                ),
+                RecordItem(
+                    id = 2,
+                    recordId = 1,
+                    totalAmount = 178.9,
+                    quantity = null,
+                    categoryId = 3,
+                    subcategoryId = 24,
+                    note = "shampoo"
                 )
             )
         ),
-        RecordStack(
-            recordNum = 2,
-            date = getCurrentTimestamp(),
-            type = RecordType.OutTransfer,
-            account = accountsAndActiveOne.accounts[0].toRecordAccount(),
-            totalAmount = 42.43,
-            stack = listOf(
-                RecordStackItem(
-                    id = 1,
-                    amount = 46.47,
+        Transfer(
+            id = 1,
+            date = LocalDateTime(2024, 9, 23, 0, 0).toTimestamp(),
+            sender = TransferItem(
+                accountId = accountsAndActiveOne.activeAccount.id,
+                amount = 3000.0,
+                rate = 1.0
+            ),
+            receiver = TransferItem(
+                accountId = accountsAndActiveOne.accounts[1].id,
+                amount = 3000.0,
+                rate = 1.0
+            ),
+            includeInBudgets = true
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 4,
+                date = LocalDateTime(2024, 9, 18, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 4,
+                    recordId = 4,
+                    totalAmount = 120.9,
                     quantity = null,
-                    categoryWithSub = groupedCategoriesByType
-                        .expense[0].getWithFirstSubcategory(),
-                    note = accountsAndActiveOne.accounts[1].id.toString(),
-                    includeInBudgets = true
+                    categoryId = 6,
+                    subcategoryId = 40,
+                    note = "Music platform"
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 5,
+                date = LocalDateTime(2024, 9, 15, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 5,
+                    recordId = 5,
+                    totalAmount = 799.9,
+                    quantity = null,
+                    categoryId = 3,
+                    subcategoryId = 21,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 6,
+                date = LocalDateTime(2024, 9, 12, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 6,
+                    recordId = 6,
+                    totalAmount = 3599.9,
+                    quantity = null,
+                    categoryId = 1,
+                    subcategoryId = 13,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 7,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 7,
+                    recordId = 7,
+                    totalAmount = 8500.0,
+                    quantity = null,
+                    categoryId = 2,
+                    subcategoryId = 15,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 8,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Income,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 8,
+                    recordId = 8,
+                    totalAmount = 42600.0,
+                    quantity = null,
+                    categoryId = 72,
+                    subcategoryId = null,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 9,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 9,
+                    recordId = 9,
+                    totalAmount = 799.9,
+                    quantity = null,
+                    categoryId = 6,
+                    subcategoryId = 38,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 10,
+                date = LocalDateTime(2024, 6, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.accounts[1].id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 10,
+                    recordId = 10,
+                    totalAmount = 450.41,
+                    quantity = null,
+                    categoryId = 9,
+                    subcategoryId = 50,
+                    note = null
+                )
+            )
+        ),
+        RecordWithItems(
+            record = Record(
+                id = 10,
+                date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+                type = CategoryType.Expense,
+                accountId = accountsAndActiveOne.activeAccount.id,
+                includeInBudgets = true
+            ),
+            items = listOf(
+                RecordItem(
+                    id = 10,
+                    recordId = 10,
+                    totalAmount = 690.56,
+                    quantity = null,
+                    categoryId = 10,
+                    subcategoryId = 58,
+                    note = null
                 )
             )
         ),
@@ -404,19 +571,29 @@ fun HomeScreenPreview(
             dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
             currentTimeWithinRangeGraphPercentage = .5f,
             currency = accountsAndActiveOne.activeAccount?.currency ?: "",
-            linkedAccountsIds = listOf(1)
+            linkedAccountIds = listOf(1)
         )
     )
 ) {
     val context = LocalContext.current
     val resourceManager = ResourceManagerImpl(context = context)
 
-    val categoriesStatisticsWidgetUiState = CategoriesStatisticsByType
-        .fromRecordStacks(
-            recordStacks = recordStackList.filterByAccount(accountsAndActiveOne.activeAccount!!.id)
+    val categoriesStatisticsWidgetUiState = CategoriesStatistics
+        .fromTransactions(
+            type = categoryType,
+            accountId = accountsAndActiveOne.activeAccount!!.id,
+            accountCurrency = accountsAndActiveOne.activeAccount.currency,
+            transactions = transactions,
+            groupedCategories = groupedCategoriesByType.getByType(type = categoryType)
         )
-        .getExpenseIfNotEmptyOrIncome()
-        .let(CategoriesStatisticsWidgetUiState::fromStatistics)
+        .let { CategoriesStatisticsWidgetUiState.fromStatistics(it.stats) }
+
+    val transactions = transactions.toUiStates(
+        accountId = accountsAndActiveOne.activeAccount.id,
+        accounts = accountsAndActiveOne.accounts,
+        groupedCategoriesByType = groupedCategoriesByType,
+        resourceManager = resourceManager
+    )
 
     PreviewWithMainScaffoldContainer(
         appTheme = appTheme,
@@ -469,15 +646,12 @@ fun HomeScreenPreview(
                 )
             },
             recentRecordsWidget = {
-                RecentRecordsWidget(
-                    uiState = RecentRecordsWidgetUiState(
-                        firstRecord = recordStackList.getOrNull(0),
-                        secondRecord = recordStackList.getOrNull(1),
-                        thirdRecord = recordStackList.getOrNull(2)
+                RecentTransactionsWidget(
+                    uiState = RecentTransactionsWidgetUiState(
+                        firstRecord = transactions.getOrNull(0),
+                        secondRecord = transactions.getOrNull(1),
+                        thirdRecord = transactions.getOrNull(2)
                     ),
-                    accountList = accountsAndActiveOne.accounts,
-                    isCustomDateRange = false,
-                    resourceManager = resourceManager,
                     onRecordClick = {},
                     onTransferClick = {},
                     onNavigateToRecordsScreen = {}

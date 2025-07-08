@@ -1,21 +1,23 @@
 package com.ataglance.walletglance.personalization.mapper
 
 import com.ataglance.walletglance.core.utils.enumValueOrNull
-import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
+import com.ataglance.walletglance.personalization.data.model.WidgetDataModel
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
 
 
-fun List<WidgetEntity>.toDomainModels(): List<WidgetName> {
-    return this.mapNotNull(WidgetEntity::toDomainModel)
+fun List<WidgetDataModel>.toDomainModelsSorted(): List<WidgetName> {
+    return this
+        .sortedBy { it.orderNum }
+        .mapNotNull { it.toDomainModel() }
 }
 
-fun WidgetEntity.toDomainModel(): WidgetName? {
+fun WidgetDataModel.toDomainModel(): WidgetName? {
     return enumValueOrNull<WidgetName>(name)
 }
 
 
-fun List<WidgetName>.toDataModels(): List<WidgetEntity> {
+fun List<WidgetName>.toDataModels(): List<WidgetDataModel> {
     return mapIndexed { index, widgetName ->
-        WidgetEntity(name = widgetName.name, orderNum = index)
+        WidgetDataModel(name = widgetName.name, orderNum = index)
     }
 }

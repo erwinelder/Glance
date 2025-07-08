@@ -1,42 +1,37 @@
 package com.ataglance.walletglance.budget.data.local.source
 
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntityWithAssociations
 
 interface BudgetLocalDataSource {
 
-    suspend fun getBudgetUpdateTime(): Long?
+    suspend fun getUpdateTime(): Long?
 
-    suspend fun saveBudgetUpdateTime(timestamp: Long)
+    suspend fun saveUpdateTime(timestamp: Long)
 
-    suspend fun synchroniseBudgets(budgetsToSync: EntitiesToSync<BudgetEntity>, timestamp: Long)
+    suspend fun upsertBudgetsWithAssociations(
+        budgetsWithAssociations: List<BudgetEntityWithAssociations>,
+        timestamp: Long
+    )
 
-    suspend fun getBudget(id: Int): BudgetEntity?
+    suspend fun deleteBudgetsWithAssociations(
+        budgetsWithAssociations: List<BudgetEntityWithAssociations>
+    )
+
+    suspend fun deleteAndUpsertBudgetsWithAssociations(
+        toDelete: List<BudgetEntityWithAssociations>,
+        toUpsert: List<BudgetEntityWithAssociations>,
+        timestamp: Long
+    )
 
     suspend fun getAllBudgets(): List<BudgetEntity>
 
-
-    suspend fun getBudgetAccountAssociationUpdateTime(): Long?
-
-    suspend fun saveBudgetAccountAssociationUpdateTime(timestamp: Long)
-
-    suspend fun synchroniseBudgetAccountAssociations(
-        associationsToSync: EntitiesToSync<BudgetAccountAssociation>,
+    suspend fun getBudgetsWithAssociationsAfterTimestamp(
         timestamp: Long
-    )
+    ): List<BudgetEntityWithAssociations>
 
-    suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociation>
+    suspend fun getBudgetWithAssociations(budgetId: Int): BudgetEntityWithAssociations?
 
-    suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociation>
-
-
-    suspend fun deleteBudgets(budgets: List<BudgetEntity>, timestamp: Long)
-
-    suspend fun synchroniseBudgetsAndAssociations(
-        budgetsToSync: EntitiesToSync<BudgetEntity>,
-        associationsToSync: EntitiesToSync<BudgetAccountAssociation>,
-        timestamp: Long
-    )
+    suspend fun getAllBudgetsWithAssociations(): List<BudgetEntityWithAssociations>
 
 }

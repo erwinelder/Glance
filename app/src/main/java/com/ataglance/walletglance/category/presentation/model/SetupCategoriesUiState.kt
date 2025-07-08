@@ -13,7 +13,7 @@ data class SetupCategoriesUiState(
 
     private fun getNewCategoryId(): Int {
         return ((groupedCategoriesByType.asList() +
-                groupedCategories?.subcategoryList.orEmpty())
+                groupedCategories?.subcategories.orEmpty())
             .maxOfOrNull { it.id } ?: 0) + 1
     }
 

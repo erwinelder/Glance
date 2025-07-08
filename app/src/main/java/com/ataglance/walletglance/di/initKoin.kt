@@ -9,9 +9,10 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         modules(
             coreModule, corePlatformModule,
             settingsModule, settingsPlatformModule,
-            authModule, authPlatformModule,
+            authModule,
             billingModule,
-            accountModule, categoryModule, recordModule, recordCreationModule,
+            accountModule, categoryModule,
+            transactionModule, recordModule, transferModule,
             categoryCollectionModule, budgetModule,
             navigationModule, personalizationModule
         )

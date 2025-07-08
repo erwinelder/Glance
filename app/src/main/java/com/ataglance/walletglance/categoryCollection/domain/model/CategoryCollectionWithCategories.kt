@@ -7,7 +7,7 @@ data class CategoryCollectionWithCategories(
     val orderNum: Int = 0,
     val type: CategoryCollectionType = CategoryCollectionType.Mixed,
     val name: String = "",
-    val categoryList: List<Category>? = null
+    val categories: List<Category>? = null
 ) {
 
     fun allowSaving(): Boolean {
@@ -20,7 +20,7 @@ data class CategoryCollectionWithCategories(
             orderNum = orderNum,
             type = type,
             name = name,
-            categoriesIds = categoryList?.map { it.id }
+            categoryIds = categories?.map { it.id }
         )
     }
 

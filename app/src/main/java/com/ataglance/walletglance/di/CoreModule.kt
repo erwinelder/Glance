@@ -3,7 +3,6 @@ package com.ataglance.walletglance.di
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
 import com.ataglance.walletglance.core.data.local.preferences.SecureStorage
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
-import com.ataglance.walletglance.core.data.model.SyncTablesContext
 import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCase
 import com.ataglance.walletglance.core.domain.usecase.DeleteAllDataLocallyUseCaseImpl
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
@@ -28,14 +27,7 @@ val coreModule = module {
     }
 
     single {
-        SyncTablesContext()
-    }
-
-    single {
-        DataSyncHelper(
-            syncTablesContext = get(),
-            userContext = get()
-        )
+        DataSyncHelper(userContext = get())
     }
 
     factory {
@@ -59,7 +51,7 @@ val coreModule = module {
         )
     }
 
-    /* ---------- View Models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel {
         AppViewModel(
@@ -78,7 +70,7 @@ val coreModule = module {
         ExpensesIncomeWidgetViewModel(
             activeAccount = parameters.getOrNull(),
             activeDateRange = parameters.get(),
-            getRecordStacksInDateRangeUseCase = get()
+            getTransactionsInDateRangeUseCase = get()
         )
     }
 

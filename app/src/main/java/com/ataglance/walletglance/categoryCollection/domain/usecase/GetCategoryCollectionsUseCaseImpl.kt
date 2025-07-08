@@ -12,12 +12,12 @@ class GetCategoryCollectionsUseCaseImpl(
 
     override fun getFlow(): Flow<CategoryCollectionsWithIdsByType> {
         return categoryCollectionRepository
-            .getAllCollectionsAndAssociationsFlow()
+            .getAllCollectionsWithAssociationsAsFlow()
             .map { it.groupByType() }
     }
 
     override suspend fun get(): CategoryCollectionsWithIdsByType {
-        return categoryCollectionRepository.getAllCollectionsAndAssociations().groupByType()
+        return categoryCollectionRepository.getAllCollectionsWithAssociations().groupByType()
     }
 
 }

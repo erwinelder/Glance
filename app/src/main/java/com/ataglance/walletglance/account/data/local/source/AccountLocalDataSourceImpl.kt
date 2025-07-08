@@ -4,10 +4,8 @@ import com.ataglance.walletglance.account.data.local.dao.AccountLocalDao
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 
 class AccountLocalDataSourceImpl(
     private val accountDao: AccountLocalDao,
@@ -22,33 +20,48 @@ class AccountLocalDataSourceImpl(
         updateTimeDao.saveUpdateTime(tableName = TableName.Account.name, timestamp = timestamp)
     }
 
-    override suspend fun upsertAccounts(accounts: List<AccountEntity>, timestamp: Long) {
-        accountDao.upsertAccounts(accounts = accounts)
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun deleteUpdateTime() {
+        updateTimeDao.deleteUpdateTime(tableName = TableName.Account.name)
     }
 
-    override suspend fun deleteAllAccounts(timestamp: Long) {
-        accountDao.deleteAllAccounts()
-        saveUpdateTime(timestamp = timestamp)
-    }
-
-    override suspend fun synchroniseAccounts(
-        accountsToSync: EntitiesToSync<AccountEntity>,
+    override suspend fun saveAccounts(
+        accounts: List<AccountEntity>,
         timestamp: Long
-    ) {
-        accountDao.deleteAndUpsertAccounts(
-            toDelete = accountsToSync.toDelete,
-            toUpsert = accountsToSync.toUpsert
-        )
-        saveUpdateTime(timestamp = timestamp)
+    ): List<AccountEntity> {
+        return accountDao.saveAccounts(accounts = accounts).also {
+            saveUpdateTime(timestamp = timestamp)
+        }
     }
 
-    override fun getAllAccountsFlow(): Flow<List<AccountEntity>> {
-        return accountDao.getAllAccounts()
+    override suspend fun deleteAccounts(accounts: List<AccountEntity>, timestamp: Long?) {
+        accountDao.deleteAccounts(accounts = accounts)
+        timestamp?.let { saveUpdateTime(timestamp = it) }
+    }
+
+    override suspend fun deleteAllAccounts() {
+        accountDao.deleteAllAccounts()
+        deleteUpdateTime()
+    }
+
+    override suspend fun deleteAndSaveAccounts(
+        toDelete: List<AccountEntity>,
+        toUpsert: List<AccountEntity>,
+        timestamp: Long
+    ): List<AccountEntity> {
+        return accountDao.deleteAndSaveAccounts(toDelete = toDelete, toSave = toUpsert)
+            .also { saveUpdateTime(timestamp = timestamp) }
+    }
+
+    override suspend fun getAccountsAfterTimestamp(timestamp: Long): List<AccountEntity> {
+        return accountDao.getAccountsAfterTimestamp(timestamp = timestamp)
+    }
+
+    override fun getAllAccountsAsFlow(): Flow<List<AccountEntity>> {
+        return accountDao.getAllAccountsAsFlow()
     }
 
     override suspend fun getAllAccounts(): List<AccountEntity> {
-        return accountDao.getAllAccounts().firstOrNull().orEmpty()
+        return accountDao.getAllAccounts()
     }
 
     override suspend fun getAccounts(ids: List<Int>): List<AccountEntity> {

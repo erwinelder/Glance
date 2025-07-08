@@ -2,9 +2,9 @@ package com.ataglance.walletglance.account.domain.model
 
 import androidx.compose.runtime.Stable
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
+import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.record.domain.model.RecordType
-import java.util.Locale
+import com.ataglance.walletglance.core.utils.roundToTwoDecimals
 
 @Stable
 data class Account(
@@ -51,40 +51,38 @@ data class Account(
         }
     }
 
-    fun cloneAndAddToBalance(amount: Double): Account {
-        return this.copy(
-            balance = "%.2f".format(Locale.US, balance + amount).toDouble()
-        )
+    fun addToBalance(amount: Double): Account = copy(
+        balance = (balance + amount).roundToTwoDecimals()
+    )
+
+    fun subtractFromBalance(amount: Double): Account = copy(
+        balance = (balance - amount).roundToTwoDecimals()
+    )
+
+    fun applyTransaction(amount: Double, type: CategoryType): Account {
+        return when (type) {
+            CategoryType.Expense -> subtractFromBalance(amount)
+            CategoryType.Income -> addToBalance(amount)
+        }
     }
 
-    fun cloneAndSubtractFromBalance(amount: Double): Account {
-        return this.copy(
-            balance = "%.2f".format(Locale.US, balance - amount).toDouble()
-        )
+    fun rollbackTransaction(amount: Double, type: CategoryType): Account {
+        return when (type) {
+            CategoryType.Expense -> addToBalance(amount)
+            CategoryType.Income -> subtractFromBalance(amount)
+        }
     }
 
-    fun cloneAndAddToOrSubtractFromBalance(amount: Double, recordType: RecordType): Account {
-        return this.copy(
-            balance = "%.2f".format(
-                Locale.US,
-                balance + if (recordType == RecordType.Expense) -amount else amount
-            ).toDouble()
-        )
-    }
-
-    fun cloneAndReapplyAmountToBalance(
+    fun reapplyTransaction(
         prevAmount: Double,
         newAmount: Double,
-        recordType: RecordType
+        type: CategoryType
     ): Account {
-        return this.copy(
-            balance = "%.2f".format(
-                Locale.US,
-                balance +
-                        (if (recordType == RecordType.Expense) prevAmount else -prevAmount) +
-                        if (recordType == RecordType.Expense) -newAmount else newAmount
-            ).toDouble()
-        )
+        val balance = balance +
+                (if (type == CategoryType.Expense) prevAmount else -prevAmount) +
+                if (type == CategoryType.Expense) -newAmount else newAmount
+
+        return copy(balance = balance.roundToTwoDecimals())
     }
 
 }

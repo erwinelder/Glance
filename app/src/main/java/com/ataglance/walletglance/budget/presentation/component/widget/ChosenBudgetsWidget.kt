@@ -113,7 +113,7 @@ fun ChosenBudgetsWidgetPreview(
             dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
             currentTimeWithinRangeGraphPercentage = .5f,
             currency = "USD",
-            linkedAccountsIds = listOf(1)
+            linkedAccountIds = listOf(1)
         ),
         Budget(
             id = 2,
@@ -127,7 +127,7 @@ fun ChosenBudgetsWidgetPreview(
             dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
             currentTimeWithinRangeGraphPercentage = .5f,
             currency = "USD",
-            linkedAccountsIds = listOf(1)
+            linkedAccountIds = listOf(1)
         ),
     )
 

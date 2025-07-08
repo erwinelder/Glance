@@ -19,7 +19,7 @@ class DeleteAllDataLocallyUseCaseImpl(
         settingsRepository.clearAllPreferences()
         accountRepository.deleteAllAccountsLocally()
         categoryRepository.deleteAllCategoriesLocally()
-        categoryCollectionRepository.deleteAllCategoryCollectionsLocally()
+        categoryCollectionRepository.deleteAllCollectionsLocally()
         widgetRepository.deleteAllWidgetsLocally()
         navigationButtonRepository.deleteAllNavigationButtonsLocally()
     }

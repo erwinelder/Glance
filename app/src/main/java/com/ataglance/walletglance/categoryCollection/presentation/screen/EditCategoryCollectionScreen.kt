@@ -388,7 +388,7 @@ fun EditCategoryCollectionScreenPreview(
         orderNum = 1,
         type = CategoryCollectionType.Expense,
         name = "Collection",
-        categoriesIds = listOf(13, 14, 25, 30)
+        categoryIds = listOf(13, 14, 25, 30)
     ),
 ) {
     val collection = collectionWithIds.toCategoryCollectionWithCategories(

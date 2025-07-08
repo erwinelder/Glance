@@ -33,8 +33,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.component.AccountNameWithCurrencyComposable
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
 import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
@@ -56,11 +55,10 @@ import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
 import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
 import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
 import com.ataglance.walletglance.core.presentation.component.picker.PopupPicker
-import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.core.utils.letIfNoneIsNull
 import com.ataglance.walletglance.core.utils.takeRowComposableIf
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
@@ -290,16 +288,14 @@ fun EditBudgetScreenPreview(
         Account(id = 2, color = AccountColors.Blue),
         Account(id = 3, color = AccountColors.Default, currency = "CZK"),
     ),
-    budgetEntity: BudgetEntity? = null,
-    budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
-    budgetUiState: BudgetDraft = (budgetEntity to budgetAccountAssociationList)
-        .letIfNoneIsNull { (budget, associations) ->
-            budget.toDomainModel(
-                groupedCategoriesList = groupedCategoriesByType.expense,
-                associations = associations,
-                accounts = accountList
-            )?.toDraft(accounts = accountList)
-        } ?: BudgetDraft(
+    budgetDataModelWithAssociations: BudgetDataModelWithAssociations? = null,
+    budgetUiState: BudgetDraft = budgetDataModelWithAssociations
+        ?.toDomainModel(
+            groupedCategoriesList = groupedCategoriesByType.expense,
+            accounts = accountList
+        )
+        ?.toDraft(accounts = accountList)
+        ?: BudgetDraft(
             isNew = true,
             amountLimit = "4000",
             category = groupedCategoriesByType.expense[0].category,

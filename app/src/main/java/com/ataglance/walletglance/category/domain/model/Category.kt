@@ -1,11 +1,9 @@
 package com.ataglance.walletglance.category.domain.model
 
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 
-@Stable
 data class Category(
     val id: Int = 0,
     val type: CategoryType = CategoryType.Expense,

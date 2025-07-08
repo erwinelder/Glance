@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "account")
 data class AccountEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Int,
     val orderNum: Int,
     val name: String,
     val currency: String,
@@ -15,5 +15,6 @@ data class AccountEntity(
     val hide: Boolean,
     val hideBalance: Boolean,
     val withoutBalance: Boolean,
-    val timestamp: Long
+    val timestamp: Long,
+    val deleted: Boolean
 )

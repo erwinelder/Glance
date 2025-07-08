@@ -23,7 +23,7 @@ sealed class BottomNavBarButtonState(
     )
 
     data class Records(override val isActive: Boolean = false) : BottomNavBarButtonState(
-        screen = MainScreens.Records,
+        screen = MainScreens.Transactions,
         screenNameRes = R.string.records,
         iconRes = DrawableResByTheme(
             lightDefault = if (isActive) R.drawable.records_light_active else R.drawable.records_light_inactive,

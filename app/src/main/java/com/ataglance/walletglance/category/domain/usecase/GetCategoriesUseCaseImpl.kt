@@ -7,8 +7,7 @@ import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.domain.utils.asChar
-import com.ataglance.walletglance.category.mapper.toDomainModels
+import com.ataglance.walletglance.category.mapper.toDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -16,24 +15,24 @@ class GetCategoriesUseCaseImpl(
     private val categoryRepository: CategoryRepository
 ) : GetCategoriesUseCase {
 
-    override fun getGroupedFlow(): Flow<GroupedCategoriesByType> {
-        return categoryRepository.getAllCategoriesFlow().map { categories ->
-            categories.toDomainModels().groupByType()
+    override fun getGroupedAsFlow(): Flow<GroupedCategoriesByType> {
+        return categoryRepository.getAllCategoriesAsFlow().map { categories ->
+            categories.mapNotNull { it.toDomainModel() }.groupByType()
         }
     }
 
     override suspend fun getGrouped(): GroupedCategoriesByType {
-        return categoryRepository.getAllCategories().toDomainModels().groupByType()
+        return categoryRepository.getAllCategories().mapNotNull { it.toDomainModel() }.groupByType()
     }
 
     override suspend fun getOfExpenseType(): List<GroupedCategories> {
         return categoryRepository.getCategoriesByType(type = CategoryType.Expense.asChar())
-            .toDomainModels()
+            .mapNotNull { it.toDomainModel() }
             .group()
     }
 
     override suspend fun getAsList(): List<Category> {
-        return categoryRepository.getAllCategories().toDomainModels()
+        return categoryRepository.getAllCategories().mapNotNull { it.toDomainModel() }
     }
 
 }

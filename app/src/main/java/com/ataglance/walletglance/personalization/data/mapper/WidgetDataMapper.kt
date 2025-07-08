@@ -1,41 +1,49 @@
 package com.ataglance.walletglance.personalization.data.mapper
 
-import com.ataglance.walletglance.core.utils.convertToIntOrZero
 import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
-import com.ataglance.walletglance.personalization.data.remote.model.WidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.model.WidgetDataModel
+import com.ataglance.walletglance.personalization.data.remote.model.WidgetDto
 
 
-fun WidgetEntity.toRemoteEntity(updateTime: Long, deleted: Boolean): WidgetRemoteEntity {
-    return WidgetRemoteEntity(
-        updateTime = updateTime,
-        deleted = deleted,
-        name = name,
-        orderNum = orderNum
-    )
-}
-
-fun WidgetRemoteEntity.toLocalEntity(): WidgetEntity {
+fun WidgetDataModel.toEntity(timestamp: Long, deleted: Boolean): WidgetEntity {
     return WidgetEntity(
         name = name,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun WidgetEntity.toDataModel(): WidgetDataModel {
+    return WidgetDataModel(
+        name = name,
         orderNum = orderNum
     )
 }
 
-
-fun WidgetRemoteEntity.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "name" to name,
-        "orderNum" to orderNum
+fun WidgetDataModel.toDto(timestamp: Long, deleted: Boolean): WidgetDto {
+    return WidgetDto(
+        name = name,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }
 
-fun Map<String, Any?>.toWidgetRemoteEntity(): WidgetRemoteEntity {
-    return WidgetRemoteEntity(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        name = this["name"] as String,
-        orderNum = this["orderNum"].convertToIntOrZero()
+fun WidgetEntity.toDto(): WidgetDto {
+    return WidgetDto(
+        name = name,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun WidgetDto.toEntity(): WidgetEntity {
+    return WidgetEntity(
+        name = name,
+        orderNum = orderNum,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }

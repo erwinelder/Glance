@@ -2,19 +2,18 @@ package com.ataglance.walletglance.budget.domain.utils
 
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.record.domain.model.Record
-import com.ataglance.walletglance.record.domain.utils.getTotalAmountCorrespondingToBudget
+import com.ataglance.walletglance.core.domain.date.TimestampRange
+import com.ataglance.walletglance.transaction.domain.model.Transaction
 
 
 fun List<Budget>.findById(id: Int): Budget? {
-    return this.find { it.id == id }
+    return find { it.id == id }
 }
 
 
 fun List<Budget>.getMaxIdOrZero(): Int {
-    return this.maxOfOrNull { it.id } ?: 0
+    return maxOfOrNull { it.id } ?: 0
 }
 
 
@@ -34,13 +33,6 @@ fun List<Budget>.getFirstDateRange(): TimestampRange? {
 }
 
 
-fun List<Budget>.fillUsedAmountsByRecords(recordList: List<Record>): List<Budget> {
-    return this.map { budget ->
-        budget.applyUsedAmount(recordList.getTotalAmountCorrespondingToBudget(budget))
-    }
-}
-
-
 fun List<Budget>.groupByType(): BudgetsByType {
     val groupedBudgets = this
         .groupBy { it.repeatingPeriod }
@@ -54,4 +46,32 @@ fun List<Budget>.groupByType(): BudgetsByType {
         monthly = groupedBudgets[RepeatingPeriod.Monthly].orEmpty(),
         yearly = groupedBudgets[RepeatingPeriod.Yearly].orEmpty()
     )
+}
+
+
+fun List<Transaction>.filterByBudgetsDateRange(budgets: List<Budget>): List<Transaction> {
+    val dateRange = budgets.firstOrNull()?.dateRange ?: return this
+    return filter { dateRange.containsDate(date = it.date) }
+}
+
+
+fun List<Budget>.fillUsedAmountsByTransactions(transactions: List<Transaction>): List<Budget> {
+    return map { budget ->
+        budget.applyUsedAmount(
+            amount = transactions.getTotalAmountCorrespondingToBudget(budget = budget)
+        )
+    }
+}
+
+fun List<Transaction>.getTotalAmountCorrespondingToBudget(budget: Budget): Double {
+    if (budget.category == null || budget.linkedAccountIds.isEmpty()) return 0.0
+
+    return sumOf { transaction ->
+        transaction
+            .takeIf { it.includeInBudgets }
+            ?.getTotalExpensesByAccountsAndCategory(
+                accountIds = budget.linkedAccountIds, categoryId = budget.category.id
+            )
+            ?: 0.0
+    }
 }

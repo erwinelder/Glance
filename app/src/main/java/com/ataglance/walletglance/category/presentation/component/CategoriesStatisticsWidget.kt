@@ -27,9 +27,9 @@ import com.ataglance.walletglance.category.presentation.viewmodel.CategoryStatis
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
-import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.component.widget.component.WidgetViewAllButton
 import com.ataglance.walletglance.core.presentation.component.widget.container.WidgetContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -44,7 +44,7 @@ fun CategoriesStatisticsWidgetWrapper(
     }
 
     LaunchedEffect(activeAccount) {
-        activeAccount?.id?.let(viewModel::setActiveAccountId)
+        viewModel.setActiveAccount(account = activeAccount)
     }
     LaunchedEffect(activeDateRange) {
         viewModel.setActiveDateRange(dateRange = activeDateRange)
@@ -123,9 +123,9 @@ fun CategoriesStatisticsWidgetPreview(
                         color = CategoryColor.Olive
                     ),
                     totalAmount = "1000.00",
-                    percentageFloat = .75f,
+                    currency = "USD",
                     percentageFormatted = "50%",
-                    currency = "USD"
+                    percentageFloat = .75f
                 ),
                 top2Category = CategoryStatistics(
                     category = Category(
@@ -135,9 +135,9 @@ fun CategoriesStatisticsWidgetPreview(
                         color = CategoryColor.Camel
                     ),
                     totalAmount = "500.00",
-                    percentageFloat = .4f,
+                    currency = "USD",
                     percentageFormatted = "25%",
-                    currency = "USD"
+                    percentageFloat = .4f
                 ),
             ),
             onNavigateToCategoriesStatisticsScreen = { _, _ -> }

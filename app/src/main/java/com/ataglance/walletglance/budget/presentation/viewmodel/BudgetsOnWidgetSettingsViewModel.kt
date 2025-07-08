@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.domain.usecase.GetBudgetIdsOnWidgetUseCase
-import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.GetFilledBudgetsByTypeUseCase
 import com.ataglance.walletglance.budget.domain.usecase.SaveBudgetsOnWidgetUseCase
 import com.ataglance.walletglance.budget.mapper.budget.toCheckedBudgetsByType
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
@@ -20,12 +20,12 @@ import kotlinx.coroutines.launch
 class BudgetsOnWidgetSettingsViewModel(
     private val saveBudgetsOnWidgetUseCase: SaveBudgetsOnWidgetUseCase,
     private val getBudgetIdsOnWidgetUseCase: GetBudgetIdsOnWidgetUseCase,
-    private val getBudgetsUseCase: GetBudgetsUseCase
+    private val getFilledBudgetsByTypeUseCase: GetFilledBudgetsByTypeUseCase
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            getBudgetsUseCase.getGroupedByTypeFlow().collect { budgetsByType ->
+            getFilledBudgetsByTypeUseCase.getAsFlow().collect { budgetsByType ->
                 _budgetsByType.update { budgetsByType }
             }
         }

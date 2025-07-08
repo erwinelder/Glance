@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.category.data.local.source
 
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryLocalDataSource {
@@ -10,16 +9,28 @@ interface CategoryLocalDataSource {
 
     suspend fun saveUpdateTime(timestamp: Long)
 
-    suspend fun upsertCategories(categories: List<CategoryEntity>, timestamp: Long)
+    suspend fun deleteUpdateTime()
 
-    suspend fun deleteAllCategories(timestamp: Long)
-
-    suspend fun synchroniseCategories(
-        categoriesToSync: EntitiesToSync<CategoryEntity>,
+    suspend fun saveCategories(
+        categories: List<CategoryEntity>,
         timestamp: Long
-    )
+    ): List<CategoryEntity>
 
-    fun getAllCategories(): Flow<List<CategoryEntity>>
+    suspend fun deleteCategories(categories: List<CategoryEntity>)
+
+    suspend fun deleteAllCategories()
+
+    suspend fun deleteAndSaveCategories(
+        toDelete: List<CategoryEntity>,
+        toUpsert: List<CategoryEntity>,
+        timestamp: Long
+    ): List<CategoryEntity>
+
+    suspend fun getCategoriesAfterTimestamp(timestamp: Long): List<CategoryEntity>
+
+    fun getAllCategoriesAsFlow(): Flow<List<CategoryEntity>>
+
+    suspend fun getAllCategories(): List<CategoryEntity>
 
     suspend fun getCategoriesByType(type: Char): List<CategoryEntity>
 

@@ -1,7 +1,6 @@
 package com.ataglance.walletglance.core.domain.widget
 
 import com.ataglance.walletglance.core.utils.formatWithSpaces
-import com.ataglance.walletglance.record.domain.utils.getTotalPercentages
 
 data class ExpensesIncomeWidgetUiState(
     val expensesTotal: Double = 0.0,
@@ -25,6 +24,16 @@ data class ExpensesIncomeWidgetUiState(
                 expensesPercentageFloat = expensesPercentage.toFloat() / 100F,
                 incomePercentageFloat = incomePercentage.toFloat() / 100F
             )
+        }
+
+        private fun getTotalPercentages(
+            expensesTotal: Double,
+            incomeTotal: Double
+        ): Pair<Double, Double> {
+            return (expensesTotal + incomeTotal)
+                .takeUnless { it == 0.0 }
+                ?.let { (100 / it) * expensesTotal to (100 / it) * incomeTotal }
+                ?: (0.0 to 0.0)
         }
 
     }

@@ -1,98 +1,95 @@
 package com.ataglance.walletglance.budget.data.local.source
 
 import com.ataglance.walletglance.budget.data.local.dao.BudgetLocalDao
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntityWithAssociations
+import com.ataglance.walletglance.budget.data.utils.divide
+import com.ataglance.walletglance.budget.data.utils.zipWithAssociations
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
+import com.ataglance.walletglance.core.utils.excludeItems
 
 class BudgetLocalDataSourceImpl(
     private val budgetDao: BudgetLocalDao,
     private val updateTimeDao: LocalUpdateTimeDao
 ) : BudgetLocalDataSource {
 
-    override suspend fun getBudgetUpdateTime(): Long? {
+    override suspend fun getUpdateTime(): Long? {
         return updateTimeDao.getUpdateTime(tableName = TableName.Budget.name)
     }
 
-    override suspend fun saveBudgetUpdateTime(timestamp: Long) {
+    override suspend fun saveUpdateTime(timestamp: Long) {
         updateTimeDao.saveUpdateTime(tableName = TableName.Budget.name, timestamp = timestamp)
     }
 
-    override suspend fun synchroniseBudgets(
-        budgetsToSync: EntitiesToSync<BudgetEntity>,
+    override suspend fun upsertBudgetsWithAssociations(
+        budgetsWithAssociations: List<BudgetEntityWithAssociations>,
         timestamp: Long
     ) {
-        budgetDao.deleteAndUpsertBudgets(
-            toDelete = budgetsToSync.toDelete,
-            toUpsert = budgetsToSync.toUpsert
-        )
-        saveBudgetUpdateTime(timestamp = timestamp)
-        if (budgetsToSync.toDelete.isNotEmpty()) {
-            saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
-        }
+        val (budgets, associations) = budgetsWithAssociations.divide()
+
+        budgetDao.upsertBudgetsAndAssociations(budgets = budgets, associations = associations)
+        updateTimeDao.saveUpdateTime(tableName = TableName.Budget.name, timestamp = timestamp)
     }
 
-    override suspend fun getBudget(id: Int): BudgetEntity? {
-        return budgetDao.getBudget(id = id)
+    override suspend fun deleteBudgetsWithAssociations(
+        budgetsWithAssociations: List<BudgetEntityWithAssociations>
+    ) {
+        val budgets = budgetsWithAssociations.map { it.budget }
+
+        budgetDao.deleteBudgets(budgets = budgets)
+    }
+
+    override suspend fun deleteAndUpsertBudgetsWithAssociations(
+        toDelete: List<BudgetEntityWithAssociations>,
+        toUpsert: List<BudgetEntityWithAssociations>,
+        timestamp: Long
+    ) {
+        val budgetsToDelete = toDelete.map { it.budget }
+        val (budgetsToUpsert, associationsToUpsert) = toUpsert.divide()
+
+        val associationsToDelete = budgetDao
+            .getBudgetAccountAssociations(
+                budgetIds = budgetsToUpsert.map { it.id }
+            )
+            .excludeItems(associationsToUpsert) { it.budgetId to it.accountId }
+
+        budgetDao.deleteAndUpsertBudgetsAndAssociations(
+            budgetsToDelete = budgetsToDelete,
+            budgetsToUpsert = budgetsToUpsert,
+            associationsToUpsert = associationsToUpsert,
+            associationsToDelete = associationsToDelete
+        )
+        updateTimeDao.saveUpdateTime(tableName = TableName.Budget.name, timestamp = timestamp)
     }
 
     override suspend fun getAllBudgets(): List<BudgetEntity> {
         return budgetDao.getAllBudgets()
     }
 
-
-    override suspend fun getBudgetAccountAssociationUpdateTime(): Long? {
-        return updateTimeDao.getUpdateTime(tableName = TableName.BudgetAccountAssociation.name)
-    }
-
-    override suspend fun saveBudgetAccountAssociationUpdateTime(timestamp: Long) {
-        updateTimeDao.saveUpdateTime(
-            tableName = TableName.BudgetAccountAssociation.name, timestamp = timestamp
-        )
-    }
-
-    override suspend fun synchroniseBudgetAccountAssociations(
-        associationsToSync: EntitiesToSync<BudgetAccountAssociation>,
+    override suspend fun getBudgetsWithAssociationsAfterTimestamp(
         timestamp: Long
-    ) {
-        budgetDao.deleteAndUpsertBudgetAccountAssociations(
-            toDelete = associationsToSync.toDelete,
-            toUpsert = associationsToSync.toUpsert
-        )
-        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
+    ): List<BudgetEntityWithAssociations> {
+        val budgets = budgetDao.getBudgetsAfterTimestamp(timestamp = timestamp)
+        val ids = budgets.filterNot { it.deleted }.map { it.id }
+        val associations = budgetDao.getBudgetAccountAssociations(budgetIds = ids)
+
+        return budgets.zipWithAssociations(associations = associations)
     }
 
-    override suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociation> {
-        return budgetDao.getBudgetAccountAssociations(budgetId = budgetId)
+    override suspend fun getBudgetWithAssociations(budgetId: Int): BudgetEntityWithAssociations? {
+        val budget = budgetDao.getBudget(id = budgetId) ?: return null
+        val associations = budgetDao.getBudgetAccountAssociations(budgetId = budgetId)
+
+        return BudgetEntityWithAssociations(budget = budget, associations = associations)
     }
 
-    override suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociation> {
-        return budgetDao.getAllBudgetAccountAssociations()
-    }
+    override suspend fun getAllBudgetsWithAssociations(): List<BudgetEntityWithAssociations> {
+        val budgets = budgetDao.getAllBudgets()
+        val associations = budgetDao.getAllBudgetAccountAssociations()
 
-
-    override suspend fun deleteBudgets(budgets: List<BudgetEntity>, timestamp: Long) {
-        budgetDao.deleteBudgets(budgets = budgets)
-        saveBudgetUpdateTime(timestamp = timestamp)
-        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
-    }
-
-    override suspend fun synchroniseBudgetsAndAssociations(
-        budgetsToSync: EntitiesToSync<BudgetEntity>,
-        associationsToSync: EntitiesToSync<BudgetAccountAssociation>,
-        timestamp: Long
-    ) {
-        budgetDao.deleteAndUpsertBudgetsAndAssociations(
-            budgetsToDelete = budgetsToSync.toDelete,
-            budgetsToUpsert = budgetsToSync.toUpsert,
-            associationsToDelete = associationsToSync.toDelete,
-            associationsToUpsert = associationsToSync.toUpsert
-        )
-        saveBudgetUpdateTime(timestamp = timestamp)
-        saveBudgetAccountAssociationUpdateTime(timestamp = timestamp)
+        return budgets.zipWithAssociations(associations = associations)
     }
 
 }

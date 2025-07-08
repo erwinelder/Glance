@@ -2,26 +2,25 @@ package com.ataglance.walletglance.budget.domain.usecase
 
 import com.ataglance.walletglance.budget.data.repository.BudgetRepository
 import com.ataglance.walletglance.budget.domain.model.Budget
-import com.ataglance.walletglance.budget.mapper.budget.divideIntoBudgetsAndAssociations
+import com.ataglance.walletglance.budget.mapper.budget.toDataModelWithAssociations
 import com.ataglance.walletglance.core.utils.excludeItems
 
 class SaveBudgetsUseCaseImpl(
     private val budgetRepository: BudgetRepository
 ) : SaveBudgetsUseCase {
-    override suspend fun save(budgets: List<Budget>) {
-        val (originalBudgets, originalAssociations) = budgetRepository.getAllBudgetsAndAssociations()
-        val (newBudgets, newAssociations) = budgets.divideIntoBudgetsAndAssociations()
+    override suspend fun saveAndDeleteRest(budgets: List<Budget>) {
+        val currentBudgets = budgetRepository.getAllBudgets()
 
-        val budgetsToDelete = originalBudgets.excludeItems(newBudgets) { it.id }
-        val associationsToDelete = originalAssociations.excludeItems(newAssociations) {
-            it.budgetId to it.accountId
-        }
+        val budgetsToUpsert = budgets.map { it.toDataModelWithAssociations() }
+        val budgetsToDelete = currentBudgets.excludeItems(
+            items = budgetsToUpsert,
+            keySelector1 = { it.id },
+            keySelector2 = { it.budgetId }
+        )
 
-        budgetRepository.deleteAndUpsertBudgetsAndAssociations(
-            budgetsToDelete = budgetsToDelete,
-            budgetsToUpsert = newBudgets,
-            associationsToDelete = associationsToDelete,
-            associationsToUpsert = newAssociations
+        budgetRepository.deleteAndUpsertBudgetsWithAssociations(
+            toDelete = budgetsToDelete,
+            toUpsert = budgetsToUpsert
         )
     }
 }

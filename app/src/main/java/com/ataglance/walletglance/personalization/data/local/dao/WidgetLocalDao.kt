@@ -22,14 +22,17 @@ interface WidgetLocalDao {
         toDelete: List<WidgetEntity>,
         toUpsert: List<WidgetEntity>
     ) {
-        deleteWidgets(toDelete)
-        upsertWidgets(toUpsert)
+        deleteWidgets(widgets = toDelete)
+        upsertWidgets(widgets = toUpsert)
     }
 
-    @Query("DELETE FROM Widget")
+    @Query("DELETE FROM widget")
     suspend fun deleteAllWidgets()
 
-    @Query("SELECT * FROM Widget")
-    fun getAllWidgets(): Flow<List<WidgetEntity>>
+    @Query("SELECT * FROM widget WHERE timestamp > :timestamp")
+    suspend fun getWidgetsAfterTimestamp(timestamp: Long): List<WidgetEntity>
+
+    @Query("SELECT * FROM widget WHERE deleted = 0")
+    fun getAllWidgetsAsFlow(): Flow<List<WidgetEntity>>
 
 }

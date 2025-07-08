@@ -107,23 +107,32 @@ fun <T, V> List<T>.excludeItems(items: List<T>, keySelector: (T) -> V): List<T> 
         items.none { keySelector(item) == keySelector(it) }
     }
 }
+fun <T1, T2, V1, V2> List<T1>.excludeItems(items: List<T2>, keySelector1: (T1) -> V1, keySelector2: (T2) -> V2): List<T1> {
+    return this.filter { item ->
+        items.none { keySelector1(item) == keySelector2(it) }
+    }
+}
 
 
 fun Double.roundToTwoDecimals(): Double {
-    return "%.2f".format(Locale.US, this).toDouble()
+    return "%.2f".format(locale = Locale.US, this).toDouble()
 }
 
-fun Float.roundToTwoDecimals(): Float {
-    return "%.2f".format(Locale.US, this).toFloat()
+fun Double.roundToTwoDecimalsAsFloat(): Float {
+    return "%.2f".format(locale = Locale.US, this).toFloat()
+}
+
+fun Double.roundToTwoDecimalsAsString(): String {
+    return "%.2f".format(locale = Locale.US, this)
 }
 
 fun Float.roundToTwoDecimals(suffix: String): String {
-    return "%.2f".format(Locale.US, this) + suffix
+    return "%.2f".format(locale = Locale.US, this) + suffix
 }
 
 
 fun Double.formatWithSpaces(additionToEnd: String? = null): String {
-    val numberString = "%.2f".format(Locale.US, this)
+    val numberString = "%.2f".format(locale = Locale.US, this)
     var formattedNumber = numberString.takeLast(3)
     val decimalPart = numberString.dropLast(3)
 
@@ -190,43 +199,4 @@ inline fun <reified T : Enum<T>> enumValueOrNull(name: String): T? {
 
 fun Uri.extractOobCode(): String? {
     return getQueryParameter("oobCode")?.takeIf { it.isNotEmpty() }
-}
-
-
-fun Any.convertToIntOrNull(): Int? {
-    return when (this) {
-        is Int -> this
-        is Double -> this.toInt()
-        is Float -> this.toInt()
-        is Long -> this.toInt()
-        else -> null
-    }
-}
-
-fun Any?.convertToIntOrZero(): Int {
-    return this?.convertToIntOrNull() ?: 0
-}
-
-
-fun Any.convertToDoubleOrNull(): Double? {
-    return when (this) {
-        is Int -> this.toDouble()
-        is Double -> this
-        is Float -> this.toDouble()
-        is Long -> this.toDouble()
-        else -> null
-    }
-}
-
-fun Any?.convertToDoubleOrZero(): Double {
-    return this?.convertToDoubleOrNull() ?: 0.0
-}
-
-
-fun Any.convertToCharOrNull(): Char? {
-    return when (this) {
-        is Char -> this
-        is String -> this.firstOrNull()
-        else -> null
-    }
 }

@@ -4,18 +4,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoryType
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.mapper.toCategoryCollectionType
-import com.ataglance.walletglance.category.presentation.model.CategoriesStatisticsByType
+import com.ataglance.walletglance.category.presentation.model.CategoriesStatistics
 import com.ataglance.walletglance.category.presentation.model.CategoryStatistics
 import com.ataglance.walletglance.category.presentation.model.GroupedCategoryStatistics
+import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionsWithIdsByType
 import com.ataglance.walletglance.categoryCollection.domain.usecase.GetCategoryCollectionsUseCase
 import com.ataglance.walletglance.categoryCollection.domain.utils.toggleExpenseIncome
 import com.ataglance.walletglance.categoryCollection.presentation.model.CategoryCollectionsUiState
 import com.ataglance.walletglance.core.domain.date.TimestampRange
-import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
-import com.ataglance.walletglance.record.domain.utils.filterByAccount
-import com.ataglance.walletglance.record.domain.utils.filterByCollection
+import com.ataglance.walletglance.transaction.domain.usecase.GetTransactionsInDateRangeUseCase
+import com.ataglance.walletglance.transaction.domain.utils.filterByAccount
+import com.ataglance.walletglance.transaction.domain.utils.filterByCollection
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,12 +36,15 @@ class CategoryStatisticsViewModel(
     activeAccount: Account?,
     activeDateRange: TimestampRange,
     private val defaultCollectionName: String,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getCategoryCollectionsUseCase: GetCategoryCollectionsUseCase,
-    private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase
+    private val getTransactionsInDateRangeUseCase: GetTransactionsInDateRangeUseCase
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
+
+            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
 
             getCategoryCollectionsUseCase.getFlow().collect { collections ->
                 collectionsByType = collections
@@ -51,13 +57,15 @@ class CategoryStatisticsViewModel(
 
     private var initialParentCategoryId: Int? = initialCategoryId
 
+    private var groupedCategoriesByType = GroupedCategoriesByType()
 
-    private val _activeAccountId = MutableStateFlow(activeAccount?.id)
 
-    fun setActiveAccountId(id: Int) {
-        if (_activeAccountId.value == id) return
+    private val _activeAccount = MutableStateFlow(activeAccount)
 
-        _activeAccountId.update { id }
+    fun setActiveAccount(account: Account?) {
+        if (_activeAccount.value == account) return
+
+        _activeAccount.update { account }
         clearParentCategoryStatistics()
     }
 
@@ -108,35 +116,52 @@ class CategoryStatisticsViewModel(
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _recordsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
-        getRecordStacksInDateRangeUseCase.getFlow(range = dateRange)
+    private val _transactionsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
+        getTransactionsInDateRangeUseCase.getAsFlowOrEmpty(range = dateRange)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
 
 
-    private val statisticsByType: StateFlow<CategoriesStatisticsByType> = combine(
-        _recordsInDateRange,
-        _activeAccountId,
+    private val categoriesStatistics: StateFlow<List<CategoryStatistics>> = combine(
+        _transactionsInDateRange,
+        _activeAccount,
         _categoryCollectionsUiState
-    ) { stacks, accountId, collectionsState ->
-        val statistics = stacks.filterByAccount(accountId)
-            .filterByCollection(collectionsState.activeCollection)
-            .let { CategoriesStatisticsByType.fromRecordStacks(it) }
+    ) { transactions, account, collectionsState ->
+        if (account == null) return@combine emptyList()
+
+        val categoryType = when (collectionsState.activeType) {
+            CategoryCollectionType.Expense -> CategoryType.Expense
+            CategoryCollectionType.Income -> CategoryType.Income
+            CategoryCollectionType.Mixed -> CategoryType.Expense
+        }
+
+        val statistics = transactions
+            .filterByAccount(accountId = account.id)
+            .filterByCollection(collection = collectionsState.activeCollection)
+            .let { transactions ->
+                CategoriesStatistics.fromTransactions(
+                    type = categoryType,
+                    accountId = account.id,
+                    accountCurrency = account.currency,
+                    transactions = transactions,
+                    groupedCategories = groupedCategoriesByType.getByType(type = categoryType)
+                )
+            }
 
         initialParentCategoryId?.let { id ->
-            statistics.getParentStatsIfSubStatsPresent(id)?.let { statistics ->
+            statistics.getParentStatsIfSubStatsPresent(categoryId = id)?.let { statistics ->
                 _parentCategoryStatistics.update { statistics }
             }
         }
 
-        statistics
+        statistics.stats
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = CategoriesStatisticsByType()
+        initialValue = emptyList()
     )
 
 
@@ -157,17 +182,15 @@ class CategoryStatisticsViewModel(
 
     val groupedCategoryStatistics: StateFlow<GroupedCategoryStatistics> = combine(
         _parentCategoryStatistics,
-        _categoryCollectionsUiState,
-        statisticsByType
-    ) { parentCategory, collectionsState, statistics ->
+        categoriesStatistics
+    ) { parentCategory, statistics ->
         GroupedCategoryStatistics(
             parentCategory = parentCategory,
-            subcategories = parentCategory?.subcategoriesStatistics
-                ?: statistics.getByType(collectionsState.activeType)
+            subcategories = parentCategory?.subcategoriesStatistics ?: statistics
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
+        started = SharingStarted.WhileSubscribed(5000),
         initialValue = GroupedCategoryStatistics()
     )
 

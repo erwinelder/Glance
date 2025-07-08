@@ -295,7 +295,7 @@ fun BudgetStatisticsScreenPreview(
         dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
         currentTimeWithinRangeGraphPercentage = .5f,
         currency = "USD",
-        linkedAccountsIds = listOf(1, 2)
+        linkedAccountIds = listOf(1, 2)
     ),
     totalAmounts: List<Double> = (0..5).map { 5000.0 / (it + 1) }
 ) {

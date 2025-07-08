@@ -18,7 +18,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.FoodAndDrinks,
                         color = CategoryColor.Olive
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 13, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 1,
@@ -43,7 +43,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Housing,
                         color = CategoryColor.Camel
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 15, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 2,
@@ -96,7 +96,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Shopping,
                         color = CategoryColor.Pink
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 21, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 3,
@@ -169,7 +169,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Transport,
                         color = CategoryColor.Green
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 30, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 4,
@@ -201,7 +201,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Vehicle,
                         color = CategoryColor.Red
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 33, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 5,
@@ -247,7 +247,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.DigitalLife,
                         color = CategoryColor.LightBlue
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 38, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 6,
@@ -286,7 +286,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Medicine,
                         color = CategoryColor.Lavender
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 42, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 7,
@@ -332,7 +332,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Education,
                         color = CategoryColor.Blue
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 47, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 8,
@@ -364,7 +364,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Travels,
                         color = CategoryColor.Aquamarine
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 50, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 9,
@@ -424,7 +424,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Entertainment,
                         color = CategoryColor.Orange
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 57, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 10,
@@ -477,7 +477,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Investments,
                         color = CategoryColor.Yellow
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 63, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 11,
@@ -516,7 +516,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Other,
                         color = CategoryColor.GrayDefault
                     ),
-                    subcategoryList = listOf(
+                    subcategories = listOf(
                         Category(
                             id = 67, type = CategoryType.Expense,
                             orderNum = 1, parentCategoryId = 12,
@@ -564,7 +564,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Salary,
                         color = CategoryColor.Green
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -574,7 +574,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Scholarship,
                         color = CategoryColor.Blue
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -584,7 +584,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Sales,
                         color = CategoryColor.Orange
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -594,7 +594,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Housing,
                         color = CategoryColor.Camel
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -604,7 +604,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Refunds,
                         color = CategoryColor.LightBlue
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -614,7 +614,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Investments,
                         color = CategoryColor.Yellow
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -624,7 +624,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Gifts,
                         color = CategoryColor.Lavender
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 ),
                 GroupedCategories(
                     category = Category(
@@ -634,7 +634,7 @@ data class DefaultCategoriesPackage(
                         icon = CategoryIcon.Transfers,
                         color = CategoryColor.GrayDefault
                     ),
-                    subcategoryList = emptyList()
+                    subcategories = emptyList()
                 )
             )
         )

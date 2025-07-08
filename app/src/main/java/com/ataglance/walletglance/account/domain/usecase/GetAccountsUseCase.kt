@@ -6,13 +6,11 @@ import kotlinx.coroutines.flow.Flow
 interface GetAccountsUseCase {
 
     fun getAllAsFlow(): Flow<List<Account>>
+
     suspend fun getAll(): List<Account>
 
     suspend fun get(ids: List<Int>): List<Account>
 
     suspend fun get(id: Int): Account?
-
-    @Deprecated("Account entity cannot be active.", level = DeprecationLevel.WARNING)
-    suspend fun getActive(): Account?
 
 }

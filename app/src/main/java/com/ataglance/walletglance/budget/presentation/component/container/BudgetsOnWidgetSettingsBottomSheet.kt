@@ -103,7 +103,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 dateRange = RepeatingPeriod.Daily.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "USD",
-                linkedAccountsIds = listOf(1, 2)
+                linkedAccountIds = listOf(1, 2)
             )
         ),
         weekly = listOf(
@@ -119,7 +119,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 dateRange = RepeatingPeriod.Weekly.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "CZK",
-                linkedAccountsIds = listOf(3, 4)
+                linkedAccountIds = listOf(3, 4)
             )
         ),
         monthly = listOf(
@@ -135,7 +135,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "USD",
-                linkedAccountsIds = listOf(1, 2)
+                linkedAccountIds = listOf(1, 2)
             ),
             Budget(
                 id = 3,
@@ -149,7 +149,7 @@ fun BudgetsOnWidgetSettingsBottomSheetPreview(
                 dateRange = RepeatingPeriod.Monthly.toTimestampRange(),
                 currentTimeWithinRangeGraphPercentage = .5f,
                 currency = "CZK",
-                linkedAccountsIds = listOf(3, 4)
+                linkedAccountIds = listOf(3, 4)
             )
         )
     )

@@ -5,71 +5,81 @@ import com.ataglance.walletglance.core.utils.deleteItemAndMoveOrderNum
 
 data class GroupedCategories(
     val category: Category,
-    val subcategoryList: List<Category> = emptyList()
+    val subcategories: List<Category> = emptyList()
 ) {
 
+    val categoryId: Int
+        get() = category.id
+
+
     fun appendNewSubcategory(subcategory: Category): GroupedCategories {
-        val list = subcategoryList.toMutableList()
-        list.add(
-            subcategory.copy(
-                orderNum = (list.maxOfOrNull { it.orderNum } ?: 0) + 1
+        val subcategories = subcategories.toMutableList().apply {
+            add(
+                subcategory.copy(orderNum = (subcategories.maxOfOrNull { it.orderNum } ?: 0) + 1)
             )
-        )
-        return this.copy(subcategoryList = list)
+        }
+        return copy(subcategories = subcategories)
     }
 
     fun replaceSubcategory(subcategory: Category): GroupedCategories {
-        return this.copy(
-            subcategoryList = subcategoryList.map {
-                it.takeIf { it.id != subcategory.id } ?: subcategory
+        return copy(
+            subcategories = subcategories.map {
+                it.takeUnless { it.id == subcategory.id } ?: subcategory
             }
         )
     }
 
     fun deleteSubcategoryById(id: Int): GroupedCategories {
-        return this.copy(
-            subcategoryList = subcategoryList.deleteItemAndMoveOrderNum(
+        return copy(
+            subcategories = subcategories.deleteItemAndMoveOrderNum(
                 { it.id == id }, { it.copy(orderNum = it.orderNum - 1) }
             )
         )
     }
 
     fun changeSubcategoriesColorTo(categoryColor: CategoryColor): List<Category> {
-        return if (subcategoryList.firstOrNull()?.color?.name == categoryColor.name) {
-            subcategoryList
+        return if (subcategories.firstOrNull()?.color?.name == categoryColor.name) {
+            subcategories
         } else {
-            subcategoryList.map { it.copy(color = categoryColor) }
+            subcategories.map { it.copy(color = categoryColor) }
         }
     }
 
-    fun getWithSubcategoryWithIdOrWithoutSubcategory(id: Int?): CategoryWithSub {
-        val subcategory = id?.let { subcategoryList.findById(it) }
-        return CategoryWithSub(category, subcategory)
+    fun getSubcategoryById(id: Int?): Category? {
+        return id?.let { subcategories.findById(it) }
     }
 
-    fun getWithSubcategoryWithId(id: Int): CategoryWithSub {
-        return CategoryWithSub(category, subcategoryList.findById(id))
+    fun getWithSubcategoryOrNull(id: Int?): CategoryWithSub? {
+        val subcategory = getSubcategoryById(id = id) ?: return null
+
+        return CategoryWithSub(
+            category = category,
+            subcategory = subcategory
+        )
+    }
+
+    fun getWithSubcategory(id: Int?): CategoryWithSub {
+        return CategoryWithSub(
+            category = category,
+            subcategory = id?.let { subcategories.findById(it) }
+        )
     }
 
     fun getWithFirstSubcategory(): CategoryWithSub {
-        return CategoryWithSub(category, subcategoryList.firstOrNull())
+        return CategoryWithSub(category = category, subcategory = subcategories.firstOrNull())
     }
 
     fun getWithLastSubcategory(): CategoryWithSub {
-        return CategoryWithSub(category, subcategoryList.lastOrNull())
-    }
-
-    fun getWithoutSubcategory(): CategoryWithSub {
-        return CategoryWithSub(category)
+        return CategoryWithSub(category = category, subcategory = subcategories.lastOrNull())
     }
 
     fun asSingleList(): List<Category> {
-        return listOf(category) + subcategoryList
+        return listOf(category) + subcategories
     }
 
     fun fixSubcategoriesOrderNumbers(): GroupedCategories {
-        return this.copy(
-            subcategoryList = subcategoryList.mapIndexed { index, category ->
+        return copy(
+            subcategories = subcategories.mapIndexed { index, category ->
                 category.copy(orderNum = index + 1)
             }
         )

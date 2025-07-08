@@ -1,22 +1,22 @@
 package com.ataglance.walletglance.navigation.mapper
 
 import com.ataglance.walletglance.core.utils.enumValueOrNull
-import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
+import com.ataglance.walletglance.navigation.data.model.NavigationButtonDataModel
 import com.ataglance.walletglance.navigation.domain.model.AppScreenEnum
 import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 
 
-fun List<NavigationButtonEntity>.toDomainModelsSorted(): List<AppScreenEnum> {
+fun List<NavigationButtonDataModel>.toDomainModelsSorted(): List<AppScreenEnum> {
     return this
         .sortedBy { it.orderNum }
         .mapNotNull { entity ->
-            enumValueOrNull<AppScreenEnum>(entity.screenName)
+            enumValueOrNull<AppScreenEnum>(name = entity.screenName)
         }
 }
 
-fun List<AppScreenEnum>.toDataModels(): List<NavigationButtonEntity> {
+fun List<AppScreenEnum>.toDataModels(): List<NavigationButtonDataModel> {
     return this.mapIndexed { index, screen ->
-        NavigationButtonEntity(screen.name, index)
+        NavigationButtonDataModel(screenName = screen.name, orderNum = index)
     }
 }
 

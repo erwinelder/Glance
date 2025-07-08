@@ -2,7 +2,6 @@ package com.ataglance.walletglance.navigation.data.local.source
 
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.navigation.data.local.dao.NavigationButtonLocalDao
 import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
@@ -23,6 +22,10 @@ class NavigationButtonLocalDataSourceImpl(
         )
     }
 
+    override suspend fun deleteUpdateTime() {
+        updateTimeDao.deleteUpdateTime(tableName = TableName.NavigationButton.name)
+    }
+
     override suspend fun upsertNavigationButtons(
         buttons: List<NavigationButtonEntity>,
         timestamp: Long
@@ -31,24 +34,32 @@ class NavigationButtonLocalDataSourceImpl(
         saveUpdateTime(timestamp = timestamp)
     }
 
-    override suspend fun synchroniseNavigationButtons(
-        buttonsToSync: EntitiesToSync<NavigationButtonEntity>,
+    override suspend fun deleteNavigationButtons(buttons: List<NavigationButtonEntity>) {
+        navigationButtonDao.deleteButtons(buttons = buttons)
+    }
+
+    override suspend fun deleteAllNavigationButtons() {
+        navigationButtonDao.deleteAllNavigationButtons()
+        deleteUpdateTime()
+    }
+
+    override suspend fun deleteAndUpsertNavigationButtons(
+        toDelete: List<NavigationButtonEntity>,
+        toUpsert: List<NavigationButtonEntity>,
         timestamp: Long
     ) {
-        navigationButtonDao.deleteAndUpsertButtons(
-            toDelete = buttonsToSync.toDelete,
-            toUpsert = buttonsToSync.toUpsert
-        )
+        navigationButtonDao.deleteAndUpsertButtons(toDelete = toDelete, toUpsert = toUpsert)
         saveUpdateTime(timestamp = timestamp)
     }
 
-    override suspend fun deleteAllNavigationButtons(timestamp: Long) {
-        navigationButtonDao.deleteAllNavigationButtons()
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun getNavigationButtonsAfterTimestamp(
+        timestamp: Long
+    ): List<NavigationButtonEntity> {
+        return navigationButtonDao.getNavigationButtonsAfterTimestamp(timestamp = timestamp)
     }
 
-    override fun getAllNavigationButtons(): Flow<List<NavigationButtonEntity>> {
-        return navigationButtonDao.getAllNavigationButtons()
+    override fun getAllNavigationButtonsAsFlow(): Flow<List<NavigationButtonEntity>> {
+        return navigationButtonDao.getAllNavigationButtonsAsFlow()
     }
 
 }
