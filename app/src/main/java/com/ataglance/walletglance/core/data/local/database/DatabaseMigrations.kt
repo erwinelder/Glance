@@ -400,7 +400,7 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
         while (rCursor.moveToNext()) {
             val recordNum = rCursor.getInt(0)
             val date = readableTimestampToEpochTimestamp(rCursor.getLong(1))
-            val type = rCursor.getString(2)[0]
+            val type = rCursor.getString(2).toInt()
             val accountId = rCursor.getInt(3)
             val amount = rCursor.getDouble(4)
             val quantity = rCursor.getIntOrNull(5)
@@ -468,7 +468,7 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
 
         recordPairs.forEach { (sender, receiver) ->
             val senderRate = 1.0
-            val receiverRate = receiver["amount"].toString().toDouble() / sender["amount"].toString().toDouble()
+            val receiverRate = (receiver["amount"] as Double) / (sender["amount"] as Double)
             db.execSQL(
                 """
                     INSERT INTO transfer (
@@ -480,7 +480,7 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """.trimIndent(),
                 arrayOf(
-                    sender["date"],
+                    readableTimestampToEpochTimestamp(sender["date"] as Long),
                     sender["accountId"],
                     receiver["accountId"],
                     sender["amount"],
