@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociationEntity
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,62 +18,61 @@ interface CategoryCollectionLocalDao {
     @Delete
     suspend fun deleteCollections(collections: List<CategoryCollectionEntity>)
 
-    @Query("DELETE FROM CategoryCollection")
+    @Query("DELETE FROM category_collection")
     suspend fun deleteAllCategoryCollections()
 
-    @Transaction
-    suspend fun deleteAndUpsertCollections(
-        toDelete: List<CategoryCollectionEntity>,
-        toUpsert: List<CategoryCollectionEntity>
-    ) {
-        deleteCollections(toDelete)
-        upsertCollections(toUpsert)
-    }
+    @Query("SELECT * FROM category_collection WHERE timestamp > :timestamp")
+    suspend fun getCollectionsAfterTimestamp(timestamp: Long): List<CategoryCollectionEntity>
 
-    @Query("SELECT * FROM CategoryCollection")
-    fun getAllCollectionsFlow(): Flow<List<CategoryCollectionEntity>>
+    @Query("SELECT * FROM category_collection")
+    fun getAllCollectionsAsFlow(): Flow<List<CategoryCollectionEntity>>
 
-    @Query("SELECT * FROM CategoryCollection")
+    @Query("SELECT * FROM category_collection")
     suspend fun getAllCollections(): List<CategoryCollectionEntity>
 
 
     @Upsert
     suspend fun upsertCollectionCategoryAssociations(
-        associations: List<CategoryCollectionCategoryAssociation>
+        associations: List<CategoryCollectionCategoryAssociationEntity>
     )
 
     @Delete
     suspend fun deleteCollectionCategoryAssociations(
-        associations: List<CategoryCollectionCategoryAssociation>
+        associations: List<CategoryCollectionCategoryAssociationEntity>
     )
 
+    @Query("SELECT * FROM category_collection_category_association WHERE collectionId IN (:collectionIds)")
+    suspend fun getCollectionCategoryAssociations(
+        collectionIds: List<Int>
+    ): List<CategoryCollectionCategoryAssociationEntity>
+
+    @Query("SELECT * FROM category_collection_category_association")
+    fun getAllCollectionCategoryAssociationsAsFlow(): Flow<List<CategoryCollectionCategoryAssociationEntity>>
+
+    @Query("SELECT * FROM category_collection_category_association")
+    suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociationEntity>
+
+
     @Transaction
-    suspend fun deleteAndUpsertCollectionCategoryAssociations(
-        toDelete: List<CategoryCollectionCategoryAssociation>,
-        toUpsert: List<CategoryCollectionCategoryAssociation>
+    suspend fun upsertCollectionsAndAssociations(
+        collections: List<CategoryCollectionEntity>,
+        associations: List<CategoryCollectionCategoryAssociationEntity>
     ) {
-        deleteCollectionCategoryAssociations(toDelete)
-        upsertCollectionCategoryAssociations(toUpsert)
+        upsertCollections(collections = collections)
+        upsertCollectionCategoryAssociations(associations = associations)
     }
-
-    @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
-    fun getAllCollectionCategoryAssociationsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
-
-    @Query("SELECT * FROM CategoryCollectionCategoryAssociation")
-    suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>
-
 
     @Transaction
     suspend fun deleteAndUpsertCollectionsAndAssociations(
         collectionsToDelete: List<CategoryCollectionEntity>,
         collectionsToUpsert: List<CategoryCollectionEntity>,
-        associationsToDelete: List<CategoryCollectionCategoryAssociation>,
-        associationsToUpsert: List<CategoryCollectionCategoryAssociation>
+        associationsToUpsert: List<CategoryCollectionCategoryAssociationEntity>,
+        associationsToDelete: List<CategoryCollectionCategoryAssociationEntity>
     ) {
-        deleteCollections(collectionsToDelete)
-        upsertCollections(collectionsToUpsert)
-        deleteCollectionCategoryAssociations(associationsToDelete)
-        upsertCollectionCategoryAssociations(associationsToUpsert)
+        deleteCollections(collections = collectionsToDelete)
+        upsertCollections(collections = collectionsToUpsert)
+        upsertCollectionCategoryAssociations(associations = associationsToUpsert)
+        deleteCollectionCategoryAssociations(associations = associationsToDelete)
     }
 
 }

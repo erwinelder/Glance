@@ -1,52 +1,43 @@
 package com.ataglance.walletglance.categoryCollection.data.local.source
 
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntityWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryCollectionLocalDataSource {
 
-    suspend fun getCategoryCollectionUpdateTime(): Long?
+    suspend fun getUpdateTime(): Long?
 
-    suspend fun saveCategoryCollectionUpdateTime(timestamp: Long)
+    suspend fun saveUpdateTime(timestamp: Long)
 
-    suspend fun deleteAllCategoryCollections(timestamp: Long)
+    suspend fun deleteUpdateTime()
 
-    suspend fun synchroniseCategoryCollections(
-        collectionsToSync: EntitiesToSync<CategoryCollectionEntity>,
+    suspend fun deleteAllCategoryCollections()
+
+    suspend fun upsertCollectionsWithAssociations(
+        collectionsWithAssociations: List<CategoryCollectionEntityWithAssociations>,
         timestamp: Long
     )
 
-    fun getAllCategoryCollectionsFlow(): Flow<List<CategoryCollectionEntity>>
+    suspend fun deleteCollectionsWithAssociations(
+        collectionsWithAssociations: List<CategoryCollectionEntityWithAssociations>
+    )
 
-    suspend fun getAllCategoryCollections(): List<CategoryCollectionEntity>
-
-
-    suspend fun getCollectionCategoryAssociationUpdateTime(): Long?
-
-    suspend fun saveCollectionCategoryAssociationUpdateTime(timestamp: Long)
-
-    suspend fun synchroniseCollectionCategoryAssociations(
-        associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,
+    suspend fun deleteAndUpsertCollectionsWithAssociations(
+        toDelete: List<CategoryCollectionEntityWithAssociations>,
+        toUpsert: List<CategoryCollectionEntityWithAssociations>,
         timestamp: Long
     )
 
-    fun getAllCollectionCategoryAssociationsFlow(): Flow<List<CategoryCollectionCategoryAssociation>>
+    suspend fun getAllCollections(): List<CategoryCollectionEntity>
 
-    suspend fun getAllCollectionCategoryAssociations(): List<CategoryCollectionCategoryAssociation>
-
-
-    suspend fun deleteCollectionsAndAssociations(
-        collections: List<CategoryCollectionEntity>,
-        associations: List<CategoryCollectionCategoryAssociation>,
+    suspend fun getCollectionsWithAssociationsAfterTimestamp(
         timestamp: Long
-    )
+    ): List<CategoryCollectionEntityWithAssociations>
 
-    suspend fun synchroniseCollectionsAndAssociations(
-        collectionsToSync: EntitiesToSync<CategoryCollectionEntity>,
-        associationsToSync: EntitiesToSync<CategoryCollectionCategoryAssociation>,
-        timestamp: Long
-    )
+    fun getAllCollectionsWithAssociationsAsFlow(
+    ): Flow<List<CategoryCollectionEntityWithAssociations>>
+
+    suspend fun getAllCollectionsWithAssociations(): List<CategoryCollectionEntityWithAssociations>
 
 }

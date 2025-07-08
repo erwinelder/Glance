@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,33 +31,88 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
-import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.mapper.toCheckedCategoriesWithSubcategories
-import com.ataglance.walletglance.category.presentation.components.RecordCategory
+import com.ataglance.walletglance.category.presentation.component.RecordCategory
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
+import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategoriesByType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionType
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithCategories
 import com.ataglance.walletglance.categoryCollection.domain.model.CategoryCollectionWithIds
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionViewModel
+import com.ataglance.walletglance.categoryCollection.presentation.viewmodel.EditCategoryCollectionsViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SmallFilledIconButton
-import com.ataglance.walletglance.core.presentation.components.checkboxes.ThreeStateCheckbox
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.dividers.BigDivider
-import com.ataglance.walletglance.core.presentation.components.dividers.TextDivider
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.button.SmallFilledIconButton
+import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
+import com.ataglance.walletglance.core.presentation.component.checkbox.ThreeStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
+import com.ataglance.walletglance.core.presentation.component.divider.TextDivider
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.core.utils.takeRowComposableIf
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
+
+@Composable
+fun EditCategoryCollectionScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController
+) {
+    val collectionsViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionsViewModel>(
+        navController = navController
+    )
+    val collectionViewModel = backStack.sharedKoinNavViewModel<EditCategoryCollectionViewModel>(
+        navController = navController
+    )
+
+    val collection by collectionViewModel.collectionUiState.collectAsStateWithLifecycle()
+    val checkedGroupedCategoriesByType by collectionViewModel.checkedGroupedCategoriesByType
+        .collectAsStateWithLifecycle()
+    val expandedCategory by collectionViewModel.expandedCategory.collectAsStateWithLifecycle()
+    val allowDeleting by collectionViewModel.allowDeleting.collectAsStateWithLifecycle()
+    val allowSaving by collectionViewModel.allowSaving.collectAsStateWithLifecycle()
+
+    EditCategoryCollectionScreen(
+        screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
+        collection = collection,
+        checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
+        expandedCategory = expandedCategory,
+        allowDeleting = allowDeleting,
+        allowSaving = allowSaving,
+        onNameChange = collectionViewModel::changeName,
+        onCheckedChange = collectionViewModel::inverseCheckedCategoryState,
+        onExpandedChange = collectionViewModel::inverseExpandedState,
+        onDeleteButton = {
+            collectionsViewModel.deleteCollection(collection = collection)
+            navController.popBackStack()
+        },
+        onSaveButton = {
+            collectionsViewModel.applyCollection(
+                collection = collectionViewModel.getCollection()
+            )
+            navController.popBackStack()
+        }
+    )
+}
 
 @Composable
 fun EditCategoryCollectionScreen(
+    screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     collection: CategoryCollectionWithCategories,
     checkedGroupedCategoriesByType: CheckedGroupedCategoriesByType,
     expandedCategory: CheckedGroupedCategories?,
@@ -68,16 +124,27 @@ fun EditCategoryCollectionScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
-    GlassSurfaceScreenContainer(
-        topButton = if (allowDeleting) {
-            {
-                SecondaryButton(
-                    text = stringResource(R.string.delete),
-                    onClick = onDeleteButton
-                )
-            }
-        } else null,
-        glassSurfaceContent = {
+    val settingsCategory = SettingsCategory.CategoryCollections(appTheme = CurrAppTheme)
+    val backNavButtonText = collection.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.category_collection)
+
+    ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+        screenPadding = screenPadding,
+        backNavButtonText = backNavButtonText,
+        backNavButtonImageRes = settingsCategory.iconRes,
+        onBackNavButtonClick = onNavigateBack,
+        backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+            TertiaryButton(
+                text = stringResource(R.string.delete),
+                iconRes = R.drawable.trash_icon,
+                onClick = onDeleteButton
+            )
+        },
+        primaryButtonText = stringResource(R.string.save),
+        primaryButtonEnabled = allowSaving,
+        onPrimaryButtonClick = onSaveButton
+    ) {
+        GlassSurface {
             GlassSurfaceContent(
                 collection = collection,
                 checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
@@ -86,15 +153,8 @@ fun EditCategoryCollectionScreen(
                 onCheckedChange = onCheckedChange,
                 onExpandedChange = onExpandedChange
             )
-        },
-        primaryBottomButton = {
-            PrimaryButton(
-                text = stringResource(R.string.save),
-                onClick = onSaveButton,
-                enabled = allowSaving
-            )
         }
-    )
+    }
 }
 
 @Composable
@@ -109,11 +169,11 @@ private fun GlassSurfaceContent(
     GlassSurfaceContentColumnWrapper(
         paddingValues = PaddingValues(start = 16.dp, end = 16.dp, top = 20.dp)
     ) {
-        TextFieldWithLabel(
+        SmallTextFieldWithLabel(
             text = collection.name,
-            placeholderText = stringResource(R.string.collection_name),
             onValueChange = onNameChange,
-            labelText = stringResource(R.string.name)
+            labelText = stringResource(R.string.name),
+            placeholderText = stringResource(R.string.collection_name)
         )
         ParentCategoriesLists(
             checkedGroupedCategoriesByType = checkedGroupedCategoriesByType,
@@ -275,14 +335,13 @@ private fun CollectionCategoryItem(
         Spacer(modifier = Modifier.size(10.dp, 48.dp))
         RecordCategory(
             category = category,
-            iconSize = 32.dp,
-            fontSize = 20.sp
+            iconSize = 30.dp,
+            fontSize = 19.sp
         )
         if (expanded != null) {
             Spacer(modifier = Modifier.width(8.dp))
             AnimatedContent(
-                targetState = if (expanded) R.drawable.collapse_icon else R.drawable.expand_icon,
-                label = "expand or collapse subcategory list icon",
+                targetState = if (expanded) R.drawable.collapse_icon else R.drawable.expand_icon
             ) { iconRes ->
                 SmallFilledIconButton(
                     iconRes = iconRes,
@@ -321,7 +380,6 @@ private fun CollectionSubcategoryItem(
 @Composable
 fun EditCategoryCollectionScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -330,7 +388,7 @@ fun EditCategoryCollectionScreenPreview(
         orderNum = 1,
         type = CategoryCollectionType.Expense,
         name = "Collection",
-        categoriesIds = listOf(13, 14, 25, 30)
+        categoryIds = listOf(13, 14, 25, 30)
     ),
 ) {
     val collection = collectionWithIds.toCategoryCollectionWithCategories(
@@ -342,9 +400,10 @@ fun EditCategoryCollectionScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EditCategoryCollectionScreen(
             collection = collection,
+            onNavigateBack = {},
             checkedGroupedCategoriesByType = editingCategoriesWithSubcategories,
             expandedCategory = null,
-            allowDeleting = true,
+            allowDeleting = false,
             allowSaving = collection.allowSaving() &&
                     editingCategoriesWithSubcategories.hasCheckedCategory(),
             onNameChange = {},

@@ -89,7 +89,7 @@ class EditAccountsViewModel(
             ?.makeSureActiveAccountIsVisibleOne()
             ?: return
 
-        saveAccountsUseCase.save(accounts = accounts)
+        saveAccountsUseCase.saveAndDeleteRest(accounts = accounts)
     }
 
 

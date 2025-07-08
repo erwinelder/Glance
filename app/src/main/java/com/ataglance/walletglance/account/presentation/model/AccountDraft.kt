@@ -23,4 +23,8 @@ data class AccountDraft(
                 balance.last() != '-'
     }
 
+    fun isNew(): Boolean {
+        return id == 0
+    }
+
 }

@@ -1,12 +1,12 @@
 package com.ataglance.walletglance.budget.data.local.source
 
-import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
-import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.data.model.TableName
 import com.ataglance.walletglance.budget.data.local.dao.BudgetOnWidgetLocalDao
 import com.ataglance.walletglance.budget.data.local.model.BudgetOnWidgetEntity
+import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
+import com.ataglance.walletglance.core.data.local.database.AppDatabase
+import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 class BudgetOnWidgetLocalDataSourceImpl(
     private val budgetOnWidgetDao: BudgetOnWidgetLocalDao,
@@ -22,33 +22,33 @@ class BudgetOnWidgetLocalDataSourceImpl(
     }
 
     override suspend fun upsertBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>, timestamp: Long) {
-        budgetOnWidgetDao.upsertBudgets(budgets = budgets)
+        budgetOnWidgetDao.upsertBudgetsOnWidget(budgets = budgets)
         saveUpdateTime(timestamp = timestamp)
     }
 
-    override suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>, timestamp: Long) {
-        budgetOnWidgetDao.deleteBudgets(budgets = budgets)
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun deleteBudgetsOnWidget(budgets: List<BudgetOnWidgetEntity>) {
+        budgetOnWidgetDao.deleteBudgetsOnWidget(budgets = budgets)
     }
 
-    override suspend fun synchroniseBudgetsOnWidget(
-        budgetsToSync: EntitiesToSync<BudgetOnWidgetEntity>,
+    override suspend fun deleteAndUpsertBudgetsOnWidget(
+        toDelete: List<BudgetOnWidgetEntity>,
+        toUpsert: List<BudgetOnWidgetEntity>,
         timestamp: Long
     ) {
-        budgetOnWidgetDao.deleteAndUpsertBudgets(
-            toDelete = budgetsToSync.toDelete,
-            toUpsert = budgetsToSync.toUpsert
-        )
+        budgetOnWidgetDao.deleteAndUpsertBudgetsOnWidget(toDelete = toDelete, toUpsert = toUpsert)
         saveUpdateTime(timestamp = timestamp)
     }
 
-    override suspend fun deleteAllBudgetsOnWidget(timestamp: Long) {
-        budgetOnWidgetDao.deleteAllBudgetsOnWidget()
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun getBudgetsOnWidgetAfterTimestamp(timestamp: Long): List<BudgetOnWidgetEntity> {
+        return budgetOnWidgetDao.getBudgetsOnWidgetAfterTimestamp(timestamp = timestamp)
     }
 
-    override fun getAllBudgetsOnWidget(): Flow<List<BudgetOnWidgetEntity>> {
-        return budgetOnWidgetDao.getAllBudgetsOnWidget()
+    override fun getAllBudgetsOnWidgetAsFlow(): Flow<List<BudgetOnWidgetEntity>> {
+        return budgetOnWidgetDao.getAllBudgetsOnWidgetAsFlow()
+    }
+
+    override suspend fun getAllBudgetsOnWidget(): List<BudgetOnWidgetEntity> {
+        return budgetOnWidgetDao.getAllBudgetsOnWidgetAsFlow().firstOrNull().orEmpty()
     }
 
 }

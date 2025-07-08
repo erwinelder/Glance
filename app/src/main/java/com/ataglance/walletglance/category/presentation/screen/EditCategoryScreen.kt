@@ -1,11 +1,12 @@
 package com.ataglance.walletglance.category.presentation.screen
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -25,28 +26,77 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.presentation.component.CategoryIconComponent
+import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoriesViewModel
+import com.ataglance.walletglance.category.presentation.viewmodel.EditCategoryViewModel
+import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.presentation.component.button.ColorButton
+import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.picker.ColorPicker
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
-import com.ataglance.walletglance.core.presentation.components.buttons.ColorButton
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.pickers.ColorPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedViewModel
+import com.ataglance.walletglance.core.utils.takeRowComposableIf
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun EditCategoryScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController,
+    appConfiguration: AppConfiguration
+) {
+    val categoriesViewModel = backStack.sharedKoinNavViewModel<EditCategoriesViewModel>(
+        navController = navController,
+        parameters = { parametersOf(appConfiguration.langCode) }
+    )
+    val categoryViewModel = backStack.sharedViewModel<EditCategoryViewModel>(navController)
+
+    val category by categoryViewModel.category.collectAsStateWithLifecycle()
+    val allowDeleting by categoryViewModel.allowDeleting.collectAsStateWithLifecycle()
+    val allowSaving by categoryViewModel.allowSaving.collectAsStateWithLifecycle()
+
+    EditCategoryScreen(
+        screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
+        category = category,
+        allowDeleting = allowDeleting,
+        allowSaving = allowSaving,
+        onNameChange = categoryViewModel::changeName,
+        onCategoryColorChange = categoryViewModel::changeColor,
+        onIconChange = categoryViewModel::changeIcon,
+        onDeleteButton = {
+            categoriesViewModel.deleteCategory(categoryViewModel.getCategory())
+            navController.popBackStack()
+        },
+        onSaveButton = {
+            categoriesViewModel.saveEditedCategory(categoryViewModel.getCategory())
+            navController.popBackStack()
+        }
+    )
+}
 
 @Composable
 fun EditCategoryScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     category: Category,
     allowDeleting: Boolean,
     allowSaving: Boolean,
@@ -56,6 +106,12 @@ fun EditCategoryScreen(
     onSaveButton: () -> Unit,
     onDeleteButton: () -> Unit,
 ) {
+    val categoryIconWithColor by remember(category.icon, category.color) {
+        derivedStateOf { category.icon to category.color }
+    }
+    val backNavButtonText = category.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.category)
+
     var showColorPicker by remember { mutableStateOf(false) }
     val categoryIconList by remember {
         derivedStateOf { CategoryIcon.getAll() }
@@ -65,17 +121,36 @@ fun EditCategoryScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceScreenContainer(
-            topPadding = scaffoldPadding.calculateTopPadding(),
-            topButton = if (allowDeleting) {
-                {
-                    SecondaryButton(
-                        onClick = onDeleteButton,
-                        text = stringResource(R.string.delete)
+
+        ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+            screenPadding = screenPadding,
+            backNavButtonText = backNavButtonText,
+            backNavButtonIconComponent = {
+                AnimatedContent(
+                    targetState = categoryIconWithColor
+                ) { (icon, color) ->
+                    CategoryIconComponent(
+                        categoryIcon = icon,
+                        categoryColor = color,
+                        modifier = Modifier.padding(vertical = 2.dp)
                     )
                 }
-            } else null,
-            glassSurfaceContent = {
+            },
+            onBackNavButtonClick = onNavigateBack,
+            backNavButtonCompanionComponent = takeRowComposableIf(allowDeleting) {
+                TertiaryButton(
+                    text = stringResource(R.string.delete),
+                    iconRes = R.drawable.trash_icon,
+                    onClick = onDeleteButton
+                )
+            },
+            primaryButtonText = stringResource(R.string.save),
+            primaryButtonEnabled = allowSaving,
+            onPrimaryButtonClick = onSaveButton
+        ) {
+            GlassSurface(
+                modifier = Modifier.weight(1f, fill = false)
+            ) {
                 GlassSurfaceContent(
                     category = category,
                     onNameChange = onNameChange,
@@ -83,23 +158,16 @@ fun EditCategoryScreen(
                     categoryIconList = categoryIconList,
                     onColorButtonClick = { showColorPicker = true }
                 )
-            },
-            primaryBottomButton = {
-                PrimaryButton(
-                    onClick = onSaveButton,
-                    text = stringResource(R.string.save),
-                    enabled = allowSaving
-                )
             }
-        )
+        }
+
         ColorPicker(
             visible = showColorPicker,
             colorList = CategoryColor.asColorWithNameList(CurrAppTheme),
             onColorClick = onCategoryColorChange,
-            onPickerClose = {
-                showColorPicker = false
-            }
+            onPickerClose = { showColorPicker = false }
         )
+
     }
 }
 
@@ -112,11 +180,11 @@ private fun GlassSurfaceContent(
     onColorButtonClick: () -> Unit
 ) {
     GlassSurfaceContentColumnWrapper {
-        TextFieldWithLabel(
+        SmallTextFieldWithLabel(
             text = category.name,
-            placeholderText = stringResource(R.string.category_name),
+            onValueChange = onNameChange,
             labelText = stringResource(R.string.name),
-            onValueChange = onNameChange
+            placeholderText = stringResource(R.string.category_name)
         )
         if (category.isParentCategory()) {
             ColorButton(
@@ -141,31 +209,27 @@ private fun CategoryIconsGrid(
     val lazyGridState = rememberLazyGridState()
 
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(40.dp),
+        columns = GridCells.Adaptive(28.dp),
         state = lazyGridState,
         contentPadding = PaddingValues(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .size(300.dp, 500.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(items = categoryIconList, key = { it.res }) { categoryIcon ->
             val color by animateColorAsState(
                 targetValue = if (currentCategoryIcon.name == categoryIcon.name) {
-                    GlanceColors.primary
+                    GlanciColors.primary
                 } else {
-                    GlanceColors.onSurface
-                },
-                label = "icon color"
+                    GlanciColors.onSurface
+                }
             )
             Icon(
                 painter = painterResource(categoryIcon.res),
                 contentDescription = categoryIcon.name + " icon",
                 tint = color,
-                modifier = Modifier
-                    .bounceClickEffect(.97f) {
-                        onCategoryIconChange(categoryIcon)
-                    }
+                modifier = Modifier.bounceClickEffect {
+                    onCategoryIconChange(categoryIcon)
+                }
             )
         }
     }
@@ -177,16 +241,16 @@ private fun CategoryIconsGrid(
 @Composable
 fun EditCategoryScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
-    ).getDefaultCategories(),
+    ).getDefaultCategories()
 ) {
     val category = groupedCategoriesByType.expense[0].category
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditCategoryScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
+            onNavigateBack = {},
             category = category,
             allowDeleting = false,
             allowSaving = category.savingIsAllowed(),

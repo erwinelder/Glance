@@ -1,13 +1,12 @@
 package com.ataglance.walletglance.budget.domain.model
 
-import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
-import com.ataglance.walletglance.budget.domain.utils.findById
+import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByTransactions
+import com.ataglance.walletglance.budget.domain.utils.filterByBudgetsDateRange
 import com.ataglance.walletglance.budget.domain.utils.getFirstDateRange
 import com.ataglance.walletglance.budget.domain.utils.getMaxIdOrZero
-import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.record.domain.model.Record
-import com.ataglance.walletglance.record.domain.utils.filterByBudgetsDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
+import com.ataglance.walletglance.transaction.domain.model.Transaction
 
 data class BudgetsByType(
     val daily: List<Budget> = emptyList(),
@@ -20,14 +19,7 @@ data class BudgetsByType(
         return daily.isEmpty() && weekly.isEmpty() && monthly.isEmpty() && yearly.isEmpty()
     }
 
-    fun findById(id: Int): Budget? {
-        return daily.findById(id)
-            ?: weekly.findById(id)
-            ?: monthly.findById(id)
-            ?: yearly.findById(id)
-    }
-
-    fun getMaxDateRange(): LongDateRange? {
+    fun getMaxDateRange(): TimestampRange? {
         return yearly.getFirstDateRange()
             ?: monthly.getFirstDateRange()
             ?: weekly.getFirstDateRange()
@@ -91,20 +83,20 @@ data class BudgetsByType(
     }
 
 
-    fun fillUsedAmountsByRecords(records: List<Record>): BudgetsByType {
-        var recordsInDateRange = records.filterByBudgetsDateRange(yearly)
-        val filledYearlyBudgets = recordsInDateRange.let { yearly.fillUsedAmountsByRecords(it) }
+    fun fillUsedAmountsByTransactions(transactions: List<Transaction>): BudgetsByType {
+        var transactions = transactions.filterByBudgetsDateRange(yearly)
+        val filledYearlyBudgets = yearly.fillUsedAmountsByTransactions(transactions)
 
-        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(monthly)
-        val filledMonthlyBudgets = recordsInDateRange.let { monthly.fillUsedAmountsByRecords(it) }
+        transactions = transactions.filterByBudgetsDateRange(monthly)
+        val filledMonthlyBudgets = monthly.fillUsedAmountsByTransactions(transactions)
 
-        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(weekly)
-        val filledWeeklyBudgets = recordsInDateRange.let { weekly.fillUsedAmountsByRecords(it) }
+        transactions = transactions.filterByBudgetsDateRange(weekly)
+        val filledWeeklyBudgets = weekly.fillUsedAmountsByTransactions(transactions)
 
-        recordsInDateRange = recordsInDateRange.filterByBudgetsDateRange(daily)
-        val filledDailyBudgets = recordsInDateRange.let { daily.fillUsedAmountsByRecords(it) }
+        transactions = transactions.filterByBudgetsDateRange(daily)
+        val filledDailyBudgets = daily.fillUsedAmountsByTransactions(transactions)
 
-        return this.copy(
+        return copy(
             daily = filledDailyBudgets,
             weekly = filledWeeklyBudgets,
             monthly = filledMonthlyBudgets,

@@ -7,7 +7,7 @@ data class CategoryCollectionWithIds(
     val orderNum: Int = 0,
     val type: CategoryCollectionType = CategoryCollectionType.Expense,
     val name: String = "",
-    val categoriesIds: List<Int>? = null
+    val categoryIds: List<Int>? = null
 ) {
 
     fun toCategoryCollectionWithCategories(
@@ -19,7 +19,7 @@ data class CategoryCollectionWithIds(
             orderNum = orderNum,
             type = type,
             name = name,
-            categoryList = categoriesIds?.let { categoriesIds ->
+            categories = categoryIds?.let { categoriesIds ->
                 allCategories.filter { category ->
                     categoriesIds.find { it == category.id } != null
                 }

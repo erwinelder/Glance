@@ -1,98 +1,166 @@
 package com.ataglance.walletglance.categoryCollection.data.mapper
 
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociationEntity
 import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
-import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionCategoryRemoteAssociation
-import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionRemoteEntity
-import com.ataglance.walletglance.core.utils.convertToCharOrNull
-import com.ataglance.walletglance.core.utils.convertToIntOrZero
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntityWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionCategoryAssociationDataModel
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionDataModel
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionDataModelWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionCategoryAssociationDto
+import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionDto
+import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionDtoWithAssociations
 
 
-fun CategoryCollectionEntity.toRemoteEntity(
-    updateTime: Long,
-    deleted: Boolean
-): CategoryCollectionRemoteEntity {
-    return CategoryCollectionRemoteEntity(
-        updateTime = updateTime,
-        deleted = deleted,
-        id = id,
-        orderNum = orderNum,
-        type = type,
-        name = name
+fun CategoryCollectionDataModel.withAssociations(
+    associations: List<CategoryCollectionCategoryAssociationDataModel> = emptyList()
+): CategoryCollectionDataModelWithAssociations {
+    return CategoryCollectionDataModelWithAssociations(
+        collection = this,
+        associations = associations
     )
 }
 
-fun CategoryCollectionRemoteEntity.toLocalEntity(): CategoryCollectionEntity {
+
+fun CategoryCollectionDataModel.toEntity(
+    timestamp: Long,
+    deleted: Boolean
+): CategoryCollectionEntity {
     return CategoryCollectionEntity(
         id = id,
         orderNum = orderNum,
         type = type,
+        name = name,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun CategoryCollectionCategoryAssociationDataModel.toEntity(
+): CategoryCollectionCategoryAssociationEntity {
+    return CategoryCollectionCategoryAssociationEntity(
+        collectionId = categoryCollectionId,
+        categoryId = categoryId
+    )
+}
+
+fun CategoryCollectionDataModelWithAssociations.toEntityWithAssociations(
+    timestamp: Long,
+    deleted: Boolean
+): CategoryCollectionEntityWithAssociations {
+    return CategoryCollectionEntityWithAssociations(
+        collection = collection.toEntity(timestamp = timestamp, deleted = deleted),
+        associations = associations.map { it.toEntity() }
+    )
+}
+
+
+fun CategoryCollectionEntity.toDataModel(): CategoryCollectionDataModel {
+    return CategoryCollectionDataModel(
+        id = id,
+        orderNum = orderNum,
+        type = type,
         name = name
     )
 }
 
+fun CategoryCollectionCategoryAssociationEntity.toDataModel(
+): CategoryCollectionCategoryAssociationDataModel {
+    return CategoryCollectionCategoryAssociationDataModel(
+        categoryCollectionId = collectionId,
+        categoryId = categoryId
+    )
+}
 
-fun CategoryCollectionCategoryAssociation.toRemoteAssociation(
-    updateTime: Long,
+fun CategoryCollectionEntityWithAssociations.toDataModelWithAssociations(
+): CategoryCollectionDataModelWithAssociations {
+    return CategoryCollectionDataModelWithAssociations(
+        collection = collection.toDataModel(),
+        associations = associations.map { it.toDataModel() }
+    )
+}
+
+
+fun CategoryCollectionDataModel.toDto(timestamp: Long, deleted: Boolean): CategoryCollectionDto {
+    return CategoryCollectionDto(
+        id = id,
+        orderNum = orderNum,
+        type = type,
+        name = name,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun CategoryCollectionCategoryAssociationDataModel.toDto(
+): CategoryCollectionCategoryAssociationDto {
+    return CategoryCollectionCategoryAssociationDto(
+        categoryCollectionId = categoryCollectionId,
+        categoryId = categoryId
+    )
+}
+
+fun CategoryCollectionDataModelWithAssociations.toDtoWithAssociations(
+    timestamp: Long,
     deleted: Boolean
-): CategoryCollectionCategoryRemoteAssociation {
-    return CategoryCollectionCategoryRemoteAssociation(
-        updateTime = updateTime,
-        deleted = deleted,
-        categoryCollectionId = categoryCollectionId,
+): CategoryCollectionDtoWithAssociations {
+    return CategoryCollectionDtoWithAssociations(
+        collection = collection.toDto(timestamp = timestamp, deleted = deleted),
+        associations = associations.map { it.toDto() }
+    )
+}
+
+
+fun CategoryCollectionEntity.toDto(): CategoryCollectionDto {
+    return CategoryCollectionDto(
+        id = id,
+        orderNum = orderNum,
+        type = type,
+        name = name,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun CategoryCollectionCategoryAssociationEntity.toDto(
+): CategoryCollectionCategoryAssociationDto {
+    return CategoryCollectionCategoryAssociationDto(
+        categoryCollectionId = collectionId,
         categoryId = categoryId
     )
 }
 
-fun CategoryCollectionCategoryRemoteAssociation.toLocalAssociation():
-        CategoryCollectionCategoryAssociation
-{
-    return CategoryCollectionCategoryAssociation(
-        categoryCollectionId = categoryCollectionId,
+fun CategoryCollectionEntityWithAssociations.toDtoWithAssociations(
+): CategoryCollectionDtoWithAssociations {
+    return CategoryCollectionDtoWithAssociations(
+        collection = collection.toDto(),
+        associations = associations.map { it.toDto() }
+    )
+}
+
+
+fun CategoryCollectionDto.toEntity(): CategoryCollectionEntity {
+    return CategoryCollectionEntity(
+        id = id,
+        orderNum = orderNum,
+        type = type,
+        name = name,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun CategoryCollectionCategoryAssociationDto.toEntity(
+): CategoryCollectionCategoryAssociationEntity {
+    return CategoryCollectionCategoryAssociationEntity(
+        collectionId = categoryCollectionId,
         categoryId = categoryId
     )
 }
 
-
-fun CategoryCollectionRemoteEntity.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "id" to id,
-        "orderNum" to orderNum,
-        "type" to type,
-        "name" to name
-    )
-}
-
-fun Map<String, Any?>.toCategoryCollectionRemoteEntity(): CategoryCollectionRemoteEntity {
-    return CategoryCollectionRemoteEntity(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        id = this["id"].convertToIntOrZero(),
-        orderNum = this["orderNum"].convertToIntOrZero(),
-        type = this["type"]?.convertToCharOrNull() ?: ' ',
-        name = this["name"] as String
-    )
-}
-
-
-fun CategoryCollectionCategoryRemoteAssociation.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "categoryCollectionId" to categoryCollectionId,
-        "categoryId" to categoryId
-    )
-}
-
-fun Map<String, Any?>.toCategoryCollectionCategoryRemoteAssociation():
-        CategoryCollectionCategoryRemoteAssociation
-{
-    return CategoryCollectionCategoryRemoteAssociation(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        categoryCollectionId = this["categoryCollectionId"].convertToIntOrZero(),
-        categoryId = this["categoryId"].convertToIntOrZero()
+fun CategoryCollectionDtoWithAssociations.toEntityWithAssociations(
+): CategoryCollectionEntityWithAssociations {
+    return CategoryCollectionEntityWithAssociations(
+        collection = collection.toEntity(),
+        associations = associations.map { it.toEntity() }
     )
 }

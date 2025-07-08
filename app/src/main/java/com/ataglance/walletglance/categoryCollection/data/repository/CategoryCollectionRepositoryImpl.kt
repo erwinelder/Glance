@@ -1,25 +1,21 @@
 package com.ataglance.walletglance.categoryCollection.data.repository
 
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionCategoryAssociation
-import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntity
+import com.ataglance.walletglance.categoryCollection.data.local.model.CategoryCollectionEntityWithAssociations
 import com.ataglance.walletglance.categoryCollection.data.local.source.CategoryCollectionLocalDataSource
-import com.ataglance.walletglance.categoryCollection.data.mapper.toLocalAssociation
-import com.ataglance.walletglance.categoryCollection.data.mapper.toLocalEntity
-import com.ataglance.walletglance.categoryCollection.data.mapper.toRemoteAssociation
-import com.ataglance.walletglance.categoryCollection.data.mapper.toRemoteEntity
-import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionCategoryRemoteAssociation
-import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionRemoteEntity
+import com.ataglance.walletglance.categoryCollection.data.mapper.toDataModel
+import com.ataglance.walletglance.categoryCollection.data.mapper.toDataModelWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.mapper.toDtoWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.mapper.toEntityWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.mapper.withAssociations
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionDataModel
+import com.ataglance.walletglance.categoryCollection.data.model.CategoryCollectionDataModelWithAssociations
+import com.ataglance.walletglance.categoryCollection.data.remote.model.CategoryCollectionDtoWithAssociations
 import com.ataglance.walletglance.categoryCollection.data.remote.source.CategoryCollectionRemoteDataSource
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
-import com.ataglance.walletglance.core.utils.getCurrentTimestamp
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class CategoryCollectionRepositoryImpl(
     private val localSource: CategoryCollectionLocalDataSource,
@@ -27,131 +23,105 @@ class CategoryCollectionRepositoryImpl(
     private val syncHelper: DataSyncHelper
 ) : CategoryCollectionRepository {
 
-    private suspend fun synchroniseCollections() {
-        val userId = syncHelper.getUserIdForSync(TableName.CategoryCollection) ?: return
-
-        synchroniseDataFromRemote(
-            localUpdateTimeGetter = localSource::getCategoryCollectionUpdateTime,
-            remoteUpdateTimeGetter = { remoteSource.getCategoryCollectionUpdateTime(userId = userId) },
-            remoteDataGetter = { timestamp ->
-                remoteSource.getCategoryCollectionsAfterTimestamp(timestamp = timestamp, userId = userId)
+    private suspend fun synchronizeCollections() {
+        syncHelper.synchronizeData(
+            tableName = TableName.CategoryCollection,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localDataGetter = { timestamp ->
+                localSource.getCollectionsWithAssociationsAfterTimestamp(timestamp = timestamp)
             },
-            remoteDataToLocalDataMapper = CategoryCollectionRemoteEntity::toLocalEntity,
-            localSynchroniser = localSource::synchroniseCategoryCollections
-        )
-    }
-
-    private suspend fun synchroniseCollectionCategoryAssociations() {
-        val userId = syncHelper.getUserIdForSync(TableName.CategoryCollectionCategoryAssociation)
-            ?: return
-
-        synchroniseDataFromRemote(
-            localUpdateTimeGetter = localSource::getCollectionCategoryAssociationUpdateTime,
-            remoteUpdateTimeGetter = {
-                remoteSource.getCollectionCategoryAssociationUpdateTime(userId = userId)
-            },
-            remoteDataGetter = { timestamp ->
-                remoteSource.getCollectionCategoryAssociationsAfterTimestamp(
+            remoteDataGetter = { timestamp, userId ->
+                remoteSource.getCollectionsWithAssociationsAfterTimestamp(
                     timestamp = timestamp, userId = userId
                 )
             },
-            remoteDataToLocalDataMapper = CategoryCollectionCategoryRemoteAssociation::toLocalAssociation,
-            localSynchroniser = localSource::synchroniseCollectionCategoryAssociations
+            localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
+                localSource.deleteAndUpsertCollectionsWithAssociations(
+                    toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
+                )
+            },
+            remoteSynchronizer = { data, timestamp, userId ->
+                remoteSource.synchronizeCollectionsWithAssociations(
+                    collections = data, timestamp = timestamp, userId = userId
+                )
+            },
+            entityDeletedPredicate = { it.deleted },
+            entityToCommandDtoMapper = CategoryCollectionEntityWithAssociations::toDtoWithAssociations,
+            queryDtoToEntityMapper = CategoryCollectionDtoWithAssociations::toEntityWithAssociations,
         )
     }
 
+    override suspend fun deleteAllCollectionsLocally() {
+        localSource.deleteAllCategoryCollections()
+    }
 
-    override suspend fun deleteCollectionsAndAssociations(
-        collections: List<CategoryCollectionEntity>,
-        associations: List<CategoryCollectionCategoryAssociation>
+    override suspend fun deleteAndUpsertCollectionsWithAssociations(
+        toDelete: List<CategoryCollectionDataModel>,
+        toUpsert: List<CategoryCollectionDataModelWithAssociations>
     ) {
-        val timestamp = getCurrentTimestamp()
-        localSource.deleteCollectionsAndAssociations(
-            collections = collections, associations = associations, timestamp = timestamp
+        syncHelper.deleteAndUpsertData(
+            toDelete = toDelete.map { it.withAssociations() },
+            toUpsert = toUpsert,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localSoftCommand = { entities, timestamp ->
+                localSource.upsertCollectionsWithAssociations(
+                    collectionsWithAssociations = entities, timestamp = timestamp
+                )
+            },
+            localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
+                localSource.deleteAndUpsertCollectionsWithAssociations(
+                    toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
+                )
+            },
+            localDeleteCommand = { entities ->
+                localSource.deleteCollectionsWithAssociations(collectionsWithAssociations = entities)
+            },
+            remoteSoftCommand = { dtos, timestamp, userId ->
+                remoteSource.synchronizeCollectionsWithAssociations(
+                    collections = dtos, timestamp = timestamp, userId = userId
+                )
+            },
+            localDataAfterTimestampGetter = { timestamp ->
+                localSource.getCollectionsWithAssociationsAfterTimestamp(timestamp = timestamp)
+            },
+            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, userId, localTimestamp ->
+                remoteSource.synchronizeCollectionsWithAssociationsAndGetAfterTimestamp(
+                    collections = dtos,
+                    timestamp = timestamp,
+                    userId = userId,
+                    localTimestamp = localTimestamp
+                )
+            },
+            entityDeletedPredicate = { it.deleted },
+            dataModelToEntityMapper = CategoryCollectionDataModelWithAssociations::toEntityWithAssociations,
+            dataModelToCommandDtoMapper = CategoryCollectionDataModelWithAssociations::toDtoWithAssociations,
+            entityToCommandDtoMapper = CategoryCollectionEntityWithAssociations::toDtoWithAssociations,
+            queryDtoToEntityMapper = CategoryCollectionDtoWithAssociations::toEntityWithAssociations
         )
-        syncHelper.tryToSyncToRemote(
-            TableName.CategoryCollection,
-            TableName.CategoryCollectionCategoryAssociation
-        ) { userId ->
-            remoteSource.upsertCollectionsAndAssociations(
-                collections = collections.map {
-                    it.toRemoteEntity(updateTime = timestamp, deleted = true)
-                },
-                associations = associations.map {
-                    it.toRemoteAssociation(updateTime = timestamp, deleted = true)
-                },
-                timestamp = timestamp,
-                userId = userId
-            )
-        }
     }
 
-    override suspend fun deleteAllCategoryCollectionsLocally() {
-        val timestamp = getCurrentTimestamp()
-        localSource.deleteAllCategoryCollections(timestamp = timestamp)
+    override suspend fun getAllCollections(): List<CategoryCollectionDataModel> {
+        synchronizeCollections()
+        return localSource.getAllCollections().map { it.toDataModel() }
     }
 
-    override suspend fun deleteAndUpsertCollectionsAndAssociations(
-        collectionsToDelete: List<CategoryCollectionEntity>,
-        collectionsToUpsert: List<CategoryCollectionEntity>,
-        associationsToDelete: List<CategoryCollectionCategoryAssociation>,
-        associationsToUpsert: List<CategoryCollectionCategoryAssociation>
-    ) {
-        val timestamp = getCurrentTimestamp()
-        val collectionsToSync = EntitiesToSync(
-            toDelete = collectionsToDelete, toUpsert = collectionsToUpsert
-        )
-        val associationsToSync = EntitiesToSync(
-            toDelete = associationsToDelete, toUpsert = associationsToUpsert
-        )
-
-        localSource.synchroniseCollectionsAndAssociations(
-            collectionsToSync = collectionsToSync,
-            associationsToSync = associationsToSync,
-            timestamp = timestamp
-        )
-        syncHelper.tryToSyncToRemote(
-            TableName.CategoryCollection,
-            TableName.CategoryCollectionCategoryAssociation
-        ) { userId ->
-            remoteSource.synchroniseCollectionsAndAssociations(
-                collectionsToSync = collectionsToSync.map { deleted ->
-                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
-                },
-                associationsToSync = associationsToSync.map { deleted ->
-                    toRemoteAssociation(updateTime = timestamp, deleted = deleted)
-                },
-                timestamp = timestamp,
-                userId = userId
-            )
-        }
-    }
-
-    override fun getAllCollectionsAndAssociationsFlow(
-    ): Flow<Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>>> = flow {
-        coroutineScope {
-            launch {
-                synchroniseCollections()
-                synchroniseCollectionCategoryAssociations()
+    override fun getAllCollectionsWithAssociationsAsFlow(
+    ): Flow<List<CategoryCollectionDataModelWithAssociations>> {
+        return localSource.getAllCollectionsWithAssociationsAsFlow()
+            .onStart { synchronizeCollections() }
+            .map { collectionsWithAssociations ->
+                collectionsWithAssociations.map { it.toDataModelWithAssociations() }
             }
-            combine(
-                localSource.getAllCategoryCollectionsFlow(),
-                localSource.getAllCollectionCategoryAssociationsFlow()
-            ) { collections, associations ->
-                collections to associations
-            }.collect(::emit)
-        }
     }
 
-    override suspend fun getAllCollectionsAndAssociations(
-    ): Pair<List<CategoryCollectionEntity>, List<CategoryCollectionCategoryAssociation>> {
-        synchroniseCollections()
-        synchroniseCollectionCategoryAssociations()
-
-        val collections = localSource.getAllCategoryCollections()
-        val associations = localSource.getAllCollectionCategoryAssociations()
-
-        return collections to associations
+    override suspend fun getAllCollectionsWithAssociations(
+    ): List<CategoryCollectionDataModelWithAssociations> {
+        synchronizeCollections()
+        return localSource.getAllCollectionsWithAssociations().map {
+            it.toDataModelWithAssociations()
+        }
     }
 
 }

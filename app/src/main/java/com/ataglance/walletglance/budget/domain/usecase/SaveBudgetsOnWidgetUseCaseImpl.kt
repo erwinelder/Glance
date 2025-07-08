@@ -1,13 +1,13 @@
 package com.ataglance.walletglance.budget.domain.usecase
 
 import com.ataglance.walletglance.budget.data.repository.BudgetOnWidgetRepository
-import com.ataglance.walletglance.budget.mapper.budgetOnWidget.toBudgetOnWidgetEntities
+import com.ataglance.walletglance.budget.mapper.budgetOnWidget.toBudgetOnWidgetDataModels
 
 class SaveBudgetsOnWidgetUseCaseImpl(
     private val budgetOnWidgetRepository: BudgetOnWidgetRepository
 ) : SaveBudgetsOnWidgetUseCase {
     override suspend fun execute(budgetsIds: List<Int>) {
-        val budgets = budgetsIds.toBudgetOnWidgetEntities()
+        val budgets = budgetsIds.toBudgetOnWidgetDataModels()
         val currBudgets = budgetOnWidgetRepository.getAllBudgetsOnWidget()
 
         val budgetsToDelete = currBudgets.filter { budget ->

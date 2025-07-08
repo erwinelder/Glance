@@ -1,70 +1,55 @@
 package com.ataglance.walletglance.navigation.mapper
 
-import com.ataglance.walletglance.navigation.data.local.model.NavigationButtonEntity
+import com.ataglance.walletglance.core.utils.enumValueOrNull
+import com.ataglance.walletglance.navigation.data.model.NavigationButtonDataModel
 import com.ataglance.walletglance.navigation.domain.model.AppScreenEnum
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 
 
-fun List<NavigationButtonEntity>.toDomainModels(): List<BottomBarNavigationButton> {
-    return this.mapNotNull(NavigationButtonEntity::toDomainModel)
+fun List<NavigationButtonDataModel>.toDomainModelsSorted(): List<AppScreenEnum> {
+    return this
+        .sortedBy { it.orderNum }
+        .mapNotNull { entity ->
+            enumValueOrNull<AppScreenEnum>(name = entity.screenName)
+        }
 }
 
-fun NavigationButtonEntity.toDomainModel(): BottomBarNavigationButton? {
-    return this.screenName.getAppScreenEnum()?.toBottomBarNavigationButton()
-}
-
-fun String.getAppScreenEnum(): AppScreenEnum? {
-    return when (this) {
-        AppScreenEnum.Home.name -> AppScreenEnum.Home
-        AppScreenEnum.Records.name -> AppScreenEnum.Records
-        AppScreenEnum.CategoryStatistics.name -> AppScreenEnum.CategoryStatistics
-        AppScreenEnum.Budgets.name -> AppScreenEnum.Budgets
-        AppScreenEnum.Settings.name -> AppScreenEnum.Settings
-        else -> null
-    }
-}
-
-fun AppScreenEnum.toBottomBarNavigationButton(): BottomBarNavigationButton {
-    return when (this) {
-        AppScreenEnum.Home -> BottomBarNavigationButton.Home
-        AppScreenEnum.Records -> BottomBarNavigationButton.Records
-        AppScreenEnum.CategoryStatistics -> BottomBarNavigationButton.CategoryStatistics
-        AppScreenEnum.Budgets -> BottomBarNavigationButton.Budgets
-        AppScreenEnum.Settings -> BottomBarNavigationButton.Settings
+fun List<AppScreenEnum>.toDataModels(): List<NavigationButtonDataModel> {
+    return this.mapIndexed { index, screen ->
+        NavigationButtonDataModel(screenName = screen.name, orderNum = index)
     }
 }
 
 
-fun List<BottomBarNavigationButton>.toDataModelsWithDefaultOrderNums(): List<NavigationButtonEntity> {
-    return this.map(BottomBarNavigationButton::toDataModelWithDefaultOrderNum)
-}
-
-fun BottomBarNavigationButton.toDataModelWithDefaultOrderNum(): NavigationButtonEntity {
+fun AppScreenEnum.toBottomBarNavButtonState(
+    activeScreen: AppScreenEnum? = null
+): BottomNavBarButtonState {
     return when (this) {
-        BottomBarNavigationButton.Home -> NavigationButtonEntity(AppScreenEnum.Home.name, 0)
-        BottomBarNavigationButton.Records -> NavigationButtonEntity(AppScreenEnum.Records.name, 1)
-        BottomBarNavigationButton.CategoryStatistics ->
-            NavigationButtonEntity(AppScreenEnum.CategoryStatistics.name, 2)
-        BottomBarNavigationButton.Budgets -> NavigationButtonEntity(AppScreenEnum.Budgets.name, 3)
-        BottomBarNavigationButton.Settings -> NavigationButtonEntity(AppScreenEnum.Settings.name, 4)
+        AppScreenEnum.Home -> BottomNavBarButtonState.Home(
+            isActive = this == activeScreen
+        )
+        AppScreenEnum.Records -> BottomNavBarButtonState.Records(
+            isActive = this == activeScreen
+        )
+        AppScreenEnum.CategoryStatistics -> BottomNavBarButtonState.CategoryStatistics(
+            isActive = this == activeScreen
+        )
+        AppScreenEnum.Budgets -> BottomNavBarButtonState.Budgets(
+            isActive = this == activeScreen
+        )
+        AppScreenEnum.Settings -> BottomNavBarButtonState.Settings(
+            isActive = this == activeScreen
+        )
     }
 }
 
-
-fun List<BottomBarNavigationButton>.toDataModels(): List<NavigationButtonEntity> {
-    return this.mapIndexed { index, button -> button.toDataModel(index) }
-}
-
-fun BottomBarNavigationButton.toDataModel(orderNum: Int): NavigationButtonEntity {
+fun BottomNavBarButtonState.toAppScreenEnum(): AppScreenEnum? {
     return when (this) {
-        BottomBarNavigationButton.Home -> NavigationButtonEntity(AppScreenEnum.Home.name, orderNum)
-        BottomBarNavigationButton.Records ->
-            NavigationButtonEntity(AppScreenEnum.Records.name, orderNum)
-        BottomBarNavigationButton.CategoryStatistics ->
-            NavigationButtonEntity(AppScreenEnum.CategoryStatistics.name, orderNum)
-        BottomBarNavigationButton.Budgets ->
-            NavigationButtonEntity(AppScreenEnum.Budgets.name, orderNum)
-        BottomBarNavigationButton.Settings ->
-            NavigationButtonEntity(AppScreenEnum.Settings.name, orderNum)
+        is BottomNavBarButtonState.Home -> AppScreenEnum.Home
+        is BottomNavBarButtonState.Records -> AppScreenEnum.Records
+        is BottomNavBarButtonState.CategoryStatistics -> AppScreenEnum.CategoryStatistics
+        is BottomNavBarButtonState.Budgets -> AppScreenEnum.Budgets
+        is BottomNavBarButtonState.Settings -> AppScreenEnum.Settings
+        is BottomNavBarButtonState.Other -> null
     }
 }

@@ -2,81 +2,23 @@ package com.ataglance.walletglance.budget.mapper.budget
 
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.utils.filterByBudgetAccounts
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociationDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudget
 import com.ataglance.walletglance.budget.presentation.model.CheckedBudgetsByType
-import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.enumValueOrNull
-import com.ataglance.walletglance.core.utils.getLongDateRangeWithTime
+import com.ataglance.walletglance.core.utils.toTimestampRange
 
 
-fun List<BudgetEntity>.toDomainModels(
-    groupedCategoriesList: List<GroupedCategories>,
-    associations: List<BudgetAccountAssociation>,
-    accounts: List<Account>
-): List<Budget> {
-    return this.mapNotNull { budget ->
-        budget.toDomainModel(
-            groupedCategoriesList = groupedCategoriesList,
-            associations = associations,
-            accounts = accounts
-        )
-    }
-}
-
-fun BudgetEntity.toDomainModel(
-    groupedCategoriesList: List<GroupedCategories>,
-    associations: List<BudgetAccountAssociation>,
-    accounts: List<Account>
-): Budget? {
-    val categoryWithSubcategory = groupedCategoriesList.getCategoryWithSubcategoryById(
-        id = this.categoryId
-    )
-    val linkedAccountsIds = associations.filter { it.budgetId == this.id }.map { it.accountId }
-    val linkedAccounts = accounts.filter { linkedAccountsIds.contains(it.id) }
-
-    return this.toDomainModel(
-        categoryWithSub = categoryWithSubcategory, linkedAccounts = linkedAccounts
-    )
-}
-
-fun BudgetEntity.toDomainModel(
-    categoryWithSub: CategoryWithSub?,
-    linkedAccounts: List<Account>
-): Budget? {
-    val repeatingPeriodEnum = enumValueOrNull<RepeatingPeriod>(repeatingPeriod) ?: return null
-    val dateRange = repeatingPeriodEnum.getLongDateRangeWithTime()
-
-    return Budget(
-        id = id,
-        priorityNum = categoryWithSub?.groupParentAndSubcategoryOrderNums() ?: 0.0,
-        usedAmount = 0.0,
-        amountLimit = amountLimit,
-        usedPercentage = 0F,
-        category = categoryWithSub?.getSubcategoryOrCategory(),
-        name = name,
-        repeatingPeriod = repeatingPeriodEnum,
-        dateRange = dateRange,
-        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentTimeAsGraphPercentageInThisRange(),
-        currency = linkedAccounts.firstOrNull()?.currency ?: "",
-        linkedAccountsIds = linkedAccounts.map { it.id }
-    )
-}
-
-
-fun List<Budget>.toDataModels(): List<BudgetEntity> {
-    return this.map { it.toDataModel() }
-}
-
-fun Budget.toDataModel(): BudgetEntity {
-    return BudgetEntity(
+fun Budget.toDataModel(): BudgetDataModel {
+    return BudgetDataModel(
         id = id,
         amountLimit = amountLimit,
         categoryId = category?.id ?: 0,
@@ -85,26 +27,44 @@ fun Budget.toDataModel(): BudgetEntity {
     )
 }
 
-
-fun List<Budget>.divideIntoBudgetsAndAssociations(): Pair<List<BudgetEntity>, List<BudgetAccountAssociation>> {
-    val budgetList = this.toDataModels()
-    val associationList = this.flatMap { budget ->
-        budget.linkedAccountsIds.map { accountId ->
-            BudgetAccountAssociation(budgetId = budget.id, accountId = accountId)
+fun Budget.toDataModelWithAssociations(): BudgetDataModelWithAssociations {
+    return BudgetDataModelWithAssociations(
+        budget = toDataModel(),
+        associations = linkedAccountIds.map { accountId ->
+            BudgetAccountAssociationDataModel(budgetId = id, accountId = accountId)
         }
-    }
-    return budgetList to associationList
-}
-
-
-fun BudgetsByType.toCheckedBudgetsByType(checkedBudgetsIds: List<Int>): CheckedBudgetsByType {
-    return CheckedBudgetsByType(
-        daily = daily.toCheckedBudgets(checkedBudgetsIds),
-        weekly = weekly.toCheckedBudgets(checkedBudgetsIds),
-        monthly = monthly.toCheckedBudgets(checkedBudgetsIds),
-        yearly = yearly.toCheckedBudgets(checkedBudgetsIds)
     )
 }
+
+fun BudgetDataModelWithAssociations.toDomainModel(
+    groupedCategoriesList: List<GroupedCategories>,
+    accounts: List<Account>
+): Budget? {
+    val categoryWithSubcategory = groupedCategoriesList.getCategoryWithSubcategoryById(
+        id = budget.categoryId
+    )
+    val linkedAccountsIds = associations.filter { it.budgetId == budget.id }.map { it.accountId }
+    val linkedAccounts = accounts.filter { linkedAccountsIds.contains(it.id) }
+
+    val repeatingPeriodEnum = enumValueOrNull<RepeatingPeriod>(budget.repeatingPeriod) ?: return null
+    val dateRange = repeatingPeriodEnum.toTimestampRange()
+
+    return Budget(
+        id = budget.id,
+        priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
+        usedAmount = 0.0,
+        amountLimit = budget.amountLimit,
+        usedPercentage = 0F,
+        category = categoryWithSubcategory?.getSubcategoryOrCategory(),
+        name = budget.name,
+        repeatingPeriod = repeatingPeriodEnum,
+        dateRange = dateRange,
+        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentDateAsGraphPercentage(),
+        currency = linkedAccounts.firstOrNull()?.currency ?: "",
+        linkedAccountIds = linkedAccounts.map { it.id }
+    )
+}
+
 
 fun List<Budget>.toCheckedBudgets(checkedBudgetsIds: List<Int>): List<CheckedBudget> {
     return this.map { budget ->
@@ -113,6 +73,15 @@ fun List<Budget>.toCheckedBudgets(checkedBudgetsIds: List<Int>): List<CheckedBud
             budget = budget
         )
     }
+}
+
+fun BudgetsByType.toCheckedBudgetsByType(checkedBudgetsIds: List<Int>): CheckedBudgetsByType {
+    return CheckedBudgetsByType(
+        daily = daily.toCheckedBudgets(checkedBudgetsIds),
+        weekly = weekly.toCheckedBudgets(checkedBudgetsIds),
+        monthly = monthly.toCheckedBudgets(checkedBudgetsIds),
+        yearly = yearly.toCheckedBudgets(checkedBudgetsIds)
+    )
 }
 
 
@@ -131,7 +100,7 @@ fun Budget.toDraft(accounts: List<Account>): BudgetDraft {
 
 fun BudgetDraft.toNewBudget(): Budget? {
     val newAmountLimit = amountLimit.toDoubleOrNull() ?: return null
-    val dateRange = newRepeatingPeriod.getLongDateRangeWithTime()
+    val dateRange = newRepeatingPeriod.toTimestampRange()
 
     return Budget(
         id = id,
@@ -143,9 +112,9 @@ fun BudgetDraft.toNewBudget(): Budget? {
         name = name,
         repeatingPeriod = newRepeatingPeriod,
         dateRange = dateRange,
-        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentTimeAsGraphPercentageInThisRange(),
+        currentTimeWithinRangeGraphPercentage = dateRange.getCurrentDateAsGraphPercentage(),
         currency = linkedAccounts.firstOrNull()?.currency ?: "",
-        linkedAccountsIds = linkedAccounts.map { it.id }
+        linkedAccountIds = linkedAccounts.map { it.id }
     )
 }
 
@@ -158,6 +127,6 @@ fun BudgetDraft.copyDataToBudget(budget: Budget): Budget {
         name = name,
         repeatingPeriod = newRepeatingPeriod,
         currency = linkedAccounts.firstOrNull()?.currency ?: "",
-        linkedAccountsIds = linkedAccounts.map { it.id }
+        linkedAccountIds = linkedAccounts.map { it.id }
     )
 }

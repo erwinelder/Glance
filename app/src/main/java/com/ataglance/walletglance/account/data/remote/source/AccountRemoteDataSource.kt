@@ -1,25 +1,25 @@
 package com.ataglance.walletglance.account.data.remote.source
 
-import com.ataglance.walletglance.account.data.remote.model.AccountRemoteEntity
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
+import com.ataglance.walletglance.account.data.remote.model.AccountCommandDto
+import com.ataglance.walletglance.account.data.remote.model.AccountQueryDto
 
 interface AccountRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: String): Long?
+    suspend fun getUpdateTime(userId: Int): Long?
 
-    suspend fun saveUpdateTime(timestamp: Long, userId: String)
-
-    suspend fun upsertAccounts(accounts: List<AccountRemoteEntity>, timestamp: Long, userId: String)
-
-    suspend fun synchroniseAccounts(
-        accountsToSync: EntitiesToSync<AccountRemoteEntity>,
+    suspend fun synchronizeAccounts(
+        accounts: List<AccountCommandDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int
+    ): List<AccountQueryDto>?
 
-    suspend fun getAccountsAfterTimestamp(
+    suspend fun synchronizeAccountsAndGetAfterTimestamp(
+        accounts: List<AccountCommandDto>,
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<AccountRemoteEntity>
+        userId: Int,
+        localTimestamp: Long
+    ): List<AccountQueryDto>?
+
+    suspend fun getAccountsAfterTimestamp(timestamp: Long, userId: Int): List<AccountQueryDto>
 
 }

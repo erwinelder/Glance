@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.domain.model.BudgetsByType
-import com.ataglance.walletglance.budget.domain.usecase.GetBudgetsUseCase
+import com.ataglance.walletglance.budget.domain.usecase.GetFilledBudgetsByTypeUseCase
 import com.ataglance.walletglance.budget.domain.usecase.SaveBudgetsUseCase
 import com.ataglance.walletglance.budget.domain.utils.groupByType
 import com.ataglance.walletglance.budget.mapper.budget.copyDataToBudget
@@ -20,13 +20,13 @@ import kotlinx.coroutines.launch
 
 class EditBudgetsViewModel(
     private val saveBudgetsUseCase: SaveBudgetsUseCase,
-    private val getBudgetsUseCase: GetBudgetsUseCase,
+    private val getFilledBudgetsByTypeUseCase: GetFilledBudgetsByTypeUseCase,
     private val changeAppSetupStageUseCase: ChangeAppSetupStageUseCase
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val budgetsByType = getBudgetsUseCase.getGroupedByType()
+            val budgetsByType = getFilledBudgetsByTypeUseCase.get()
             _budgetsByType.update { budgetsByType }
         }
     }
@@ -54,7 +54,7 @@ class EditBudgetsViewModel(
 
 
     suspend fun saveBudgets() {
-        saveBudgetsUseCase.save(
+        saveBudgetsUseCase.saveAndDeleteRest(
             budgets = budgetsByType.value.concatenate()
         )
     }

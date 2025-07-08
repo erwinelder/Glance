@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.core.domain.widgets.ExpensesIncomeWidgetUiState
-import com.ataglance.walletglance.record.domain.usecase.GetRecordStacksInDateRangeUseCase
-import com.ataglance.walletglance.record.domain.utils.filterByAccount
-import com.ataglance.walletglance.record.domain.utils.getTotalAmountByType
+import com.ataglance.walletglance.core.domain.date.TimestampRange
+import com.ataglance.walletglance.core.domain.widget.ExpensesIncomeWidgetUiState
+import com.ataglance.walletglance.transaction.domain.usecase.GetTransactionsInDateRangeUseCase
+import com.ataglance.walletglance.transaction.domain.utils.getTotalAmountByAccountAndType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,8 +19,8 @@ import kotlinx.coroutines.flow.update
 
 class ExpensesIncomeWidgetViewModel(
     activeAccount: Account?,
-    activeDateRange: LongDateRange,
-    private val getRecordStacksInDateRangeUseCase: GetRecordStacksInDateRangeUseCase
+    activeDateRange: TimestampRange,
+    private val getTransactionsInDateRangeUseCase: GetTransactionsInDateRangeUseCase
 ) : ViewModel() {
 
     private val _activeAccountId = MutableStateFlow(activeAccount?.id)
@@ -34,32 +33,37 @@ class ExpensesIncomeWidgetViewModel(
 
     private val _activeDateRange = MutableStateFlow(activeDateRange)
 
-    fun setActiveDateRange(dateRange: LongDateRange) {
+    fun setActiveDateRange(dateRange: TimestampRange) {
         if (_activeDateRange.value.equalsTo(dateRange)) return
+
         _activeDateRange.update { dateRange }
     }
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _recordsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
-        getRecordStacksInDateRangeUseCase.getFlow(range = dateRange)
+    private val _transactionsInDateRange = _activeDateRange.flatMapLatest { dateRange ->
+        getTransactionsInDateRangeUseCase.getAsFlow(range = dateRange)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
 
 
     val uiState: StateFlow<ExpensesIncomeWidgetUiState> = combine(
-        _recordsInDateRange,
+        _transactionsInDateRange,
         _activeAccountId
-    ) { stacks, accountId ->
-        stacks.filterByAccount(accountId).let {
-            ExpensesIncomeWidgetUiState.fromTotal(
-                expensesTotal = it.getTotalAmountByType(CategoryType.Expense),
-                incomeTotal = it.getTotalAmountByType(CategoryType.Income)
+    ) { transactions, accountId ->
+        if (accountId == null) return@combine ExpensesIncomeWidgetUiState()
+
+        ExpensesIncomeWidgetUiState.fromTotal(
+            expensesTotal = transactions.getTotalAmountByAccountAndType(
+                accountId = accountId, type = CategoryType.Expense
+            ),
+            incomeTotal = transactions.getTotalAmountByAccountAndType(
+                accountId = accountId, type = CategoryType.Income
             )
-        }
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),

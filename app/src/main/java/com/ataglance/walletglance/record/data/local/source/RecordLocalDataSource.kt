@@ -1,8 +1,6 @@
 package com.ataglance.walletglance.record.data.local.source
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntityWithItems
 import kotlinx.coroutines.flow.Flow
 
 interface RecordLocalDataSource {
@@ -11,31 +9,48 @@ interface RecordLocalDataSource {
 
     suspend fun saveUpdateTime(timestamp: Long)
 
-    suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long): List<RecordEntity>
+    suspend fun deleteUpdateTime()
 
-    suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long)
-
-    suspend fun deleteAllRecords(timestamp: Long)
-
-    suspend fun synchroniseRecords(
-        recordsToSync: EntitiesToSync<RecordEntity>,
+    suspend fun saveRecordsWithItems(
+        recordsWithItems: List<RecordEntityWithItems>,
         timestamp: Long
-    ): List<RecordEntity>
+    ): List<RecordEntityWithItems>
 
-    suspend fun deleteRecordsByAccounts(accountIds: List<Int>, timestamp: Long)
+    suspend fun deleteRecordsWithItems(
+        recordsWithItems: List<RecordEntityWithItems>,
+        timestamp: Long? = null
+    )
 
-    suspend fun getLastRecordNum(): Flow<Int?>
+    suspend fun deleteAndSaveRecordsWithItems(
+        toDelete: List<RecordEntityWithItems>,
+        toUpsert: List<RecordEntityWithItems>,
+        timestamp: Long
+    ): List<RecordEntityWithItems>
 
-    suspend fun getLastRecordsByTypeAndAccount(type: Char, accountId: Int): List<RecordEntity>
+    suspend fun getRecordsWithItemsAfterTimestamp(timestamp: Long): List<RecordEntityWithItems>
 
-    suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity>
+    suspend fun getRecordWithItems(id: Long): RecordEntityWithItems?
 
-    suspend fun getRecordsInDateRange(range: LongDateRange): Flow<List<RecordEntity>>
+    suspend fun getLastRecordWithItemsByTypeAndAccount(
+        type: Char,
+        accountId: Int
+    ): RecordEntityWithItems?
 
-    suspend fun getTotalAmountByCategoryAndAccountsInRange(
-        categoryId: Int,
-        linkedAccountsIds: List<Int>,
-        longDateRange: LongDateRange
+    fun getRecordsWithItemsInDateRangeAsFlow(
+        from: Long,
+        to: Long
+    ): Flow<List<RecordEntityWithItems>>
+
+    suspend fun getRecordsWithItemsInDateRange(
+        from: Long,
+        to: Long
+    ): List<RecordEntityWithItems>
+
+    suspend fun getTotalExpensesInDateRangeByAccountsAndCategory(
+        from: Long,
+        to: Long,
+        accountIds: List<Int>,
+        categoryId: Int
     ): Double
 
 }

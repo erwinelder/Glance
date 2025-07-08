@@ -8,21 +8,17 @@ import com.ataglance.walletglance.account.domain.utils.findById
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
 import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
-import com.ataglance.walletglance.core.domain.date.LongDateRange
+import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.utils.timeInMillisToTimestampWithoutSpecificTime
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.domain.usecase.GetWidgetsUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.theme.GetAppThemeConfigurationUseCase
+import com.ataglance.walletglance.personalization.domain.usecase.widgets.GetWidgetsUseCase
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
-import com.ataglance.walletglance.settings.domain.usecase.ApplyLanguageToSystemUseCase
 import com.ataglance.walletglance.settings.domain.usecase.ChangeAppSetupStageUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetAppThemeConfigurationUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetLanguagePreferenceUseCase
 import com.ataglance.walletglance.settings.domain.usecase.GetStartDestinationsBySetupStageUseCase
-import com.ataglance.walletglance.settings.domain.usecase.GetUserIdPreferenceUseCase
-import com.ataglance.walletglance.settings.domain.usecase.SaveLanguagePreferenceUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCase
+import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,11 +31,9 @@ import kotlinx.coroutines.launch
 class AppViewModel(
     private val getAppThemeConfigurationUseCase: GetAppThemeConfigurationUseCase,
     private val applyLanguageToSystemUseCase: ApplyLanguageToSystemUseCase,
-    private val saveLanguagePreferenceUseCase: SaveLanguagePreferenceUseCase,
     private val getLanguagePreferenceUseCase: GetLanguagePreferenceUseCase,
     private val changeAppSetupStageUseCase: ChangeAppSetupStageUseCase,
     getStartDestinationsBySetupStageUseCase: GetStartDestinationsBySetupStageUseCase,
-    getUserIdPreferenceUseCase: GetUserIdPreferenceUseCase,
 
     private val getAccountsUseCase: GetAccountsUseCase,
     private val getWidgetsUseCase: GetWidgetsUseCase
@@ -77,13 +71,11 @@ class AppViewModel(
 
     val appConfiguration = combine(
         getStartDestinationsBySetupStageUseCase.getFlow(),
-        getUserIdPreferenceUseCase.getFlow(),
         getLanguagePreferenceUseCase.getFlow(),
         _appTheme
-    ) { startDestinations, userId, language, appTheme ->
+    ) { startDestinations, language, appTheme ->
         AppConfiguration(
             isSetUp = startDestinations.first == MainScreens.Home,
-            isSignedIn = userId != null,
             mainStartDestination = startDestinations.first,
             settingsStartDestination = startDestinations.second,
             langCode = language,
@@ -98,7 +90,6 @@ class AppViewModel(
     private fun applyAppLanguage() {
         viewModelScope.launch {
             val langCode = getLanguagePreferenceUseCase.get()
-            saveLanguagePreferenceUseCase.save(langCode)
             applyLanguageToSystemUseCase.execute(langCode)
         }
     }
@@ -113,7 +104,7 @@ class AppViewModel(
 
     private fun fetchAccounts() {
         viewModelScope.launch {
-            getAccountsUseCase.getAllFlow().collect { accounts ->
+            getAccountsUseCase.getAllAsFlow().collect { accounts ->
                 _accountsAndActiveOne.update {
                     AccountsAndActiveOne.fromAccounts(accounts = accounts)
                 }
@@ -146,18 +137,18 @@ class AppViewModel(
     }
 
 
-    private val _dateRangeMenuUiState = MutableStateFlow(
-        DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth)
+    private val _dateRangeWithEnum = MutableStateFlow(
+        DateRangeWithEnum.fromEnum(enum = DateRangeEnum.ThisMonth)
     )
-    val dateRangeMenuUiState = _dateRangeMenuUiState.asStateFlow()
+    val dateRangeWithEnum = _dateRangeWithEnum.asStateFlow()
 
     fun selectDateRange(dateRangeEnum: DateRangeEnum) {
-        val currDateRangeWithEnum = dateRangeMenuUiState.value.dateRangeWithEnum
+        val currDateRangeWithEnum = dateRangeWithEnum.value
 
         if (currDateRangeWithEnum.enum == dateRangeEnum) return
 
-        _dateRangeMenuUiState.update {
-            DateRangeMenuUiState.fromEnum(
+        _dateRangeWithEnum.update {
+            DateRangeWithEnum.fromEnum(
                 enum = dateRangeEnum,
                 currentRange = currDateRangeWithEnum.dateRange
             )
@@ -169,17 +160,11 @@ class AppViewModel(
             return
         }
 
-        _dateRangeMenuUiState.update {
-            DateRangeMenuUiState(
-                startCalendarDateMillis = pastDateMillis,
-                endCalendarDateMillis = futureDateMillis,
-                dateRangeWithEnum = DateRangeWithEnum(
-                    enum = DateRangeEnum.Custom,
-                    dateRange = LongDateRange(
-                        from = timeInMillisToTimestampWithoutSpecificTime(pastDateMillis),
-                        to = timeInMillisToTimestampWithoutSpecificTime(futureDateMillis) + 2359
-                    )
-                )
+        _dateRangeWithEnum.update {
+            DateRangeWithEnum(
+                enum = DateRangeEnum.Custom,
+                dateRange = TimestampRange(from = pastDateMillis, to = futureDateMillis)
+                    .extendTimeRange()
             )
         }
     }
@@ -190,7 +175,7 @@ class AppViewModel(
 
     private fun fetchWidgets() {
         viewModelScope.launch {
-            getWidgetsUseCase.getFlow().collect { widgets ->
+            getWidgetsUseCase.getAsFlow().collect { widgets ->
                 _widgetNames.update { widgets }
             }
         }

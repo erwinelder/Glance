@@ -5,11 +5,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ataglance.walletglance.account.data.local.model.AccountEntity
-import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.utils.asChar
 
 @Entity(
-    tableName = "Record",
+    tableName = "record",
     foreignKeys = [
         ForeignKey(
             entity = AccountEntity::class,
@@ -22,24 +20,11 @@ import com.ataglance.walletglance.record.domain.utils.asChar
 )
 data class RecordEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val recordNum: Int,
+    val id: Long,
     val date: Long,
     val type: Char,
     val accountId: Int,
-    val amount: Double,
-    val quantity: Int?,
-    val categoryId: Int,
-    val subcategoryId: Int?,
-    val note: String?,
-    val includeInBudgets: Boolean
-) {
-
-    fun isExpense() = type == RecordType.Expense.asChar()
-    fun isIncome() = type == RecordType.Income.asChar()
-    fun isOutTransfer() = type == RecordType.OutTransfer.asChar()
-    fun isInTransfer() = type == RecordType.InTransfer.asChar()
-    fun isExpenseOrOutTransfer() = isExpense() || isOutTransfer()
-    fun isIncomeOrInTransfer() = isIncome() || isInTransfer()
-
-}
+    val includeInBudgets: Boolean,
+    val timestamp: Long,
+    val deleted: Boolean
+)

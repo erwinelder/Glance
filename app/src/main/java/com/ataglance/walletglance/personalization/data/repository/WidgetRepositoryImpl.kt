@@ -1,21 +1,18 @@
 package com.ataglance.walletglance.personalization.data.repository
 
 import com.ataglance.walletglance.core.data.model.DataSyncHelper
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.data.utils.synchroniseDataFromRemote
-import com.ataglance.walletglance.core.utils.getCurrentTimestamp
 import com.ataglance.walletglance.personalization.data.local.model.WidgetEntity
 import com.ataglance.walletglance.personalization.data.local.source.WidgetLocalDataSource
-import com.ataglance.walletglance.personalization.data.mapper.toLocalEntity
-import com.ataglance.walletglance.personalization.data.mapper.toRemoteEntity
-import com.ataglance.walletglance.personalization.data.remote.model.WidgetRemoteEntity
+import com.ataglance.walletglance.personalization.data.mapper.toDataModel
+import com.ataglance.walletglance.personalization.data.mapper.toDto
+import com.ataglance.walletglance.personalization.data.mapper.toEntity
+import com.ataglance.walletglance.personalization.data.model.WidgetDataModel
+import com.ataglance.walletglance.personalization.data.remote.model.WidgetDto
 import com.ataglance.walletglance.personalization.data.remote.source.WidgetRemoteDataSource
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class WidgetRepositoryImpl(
     private val localSource: WidgetLocalDataSource,
@@ -23,70 +20,126 @@ class WidgetRepositoryImpl(
     private val syncHelper: DataSyncHelper
 ) : WidgetRepository {
 
-    private suspend fun synchroniseWidgets() {
-        val userId = syncHelper.getUserIdForSync(TableName.Widget) ?: return
-
-        synchroniseDataFromRemote(
-            localUpdateTimeGetter = localSource::getUpdateTime,
-            remoteUpdateTimeGetter = { remoteSource.getUpdateTime(userId = userId) },
-            remoteDataGetter = { timestamp ->
+    private suspend fun synchronizeWidgets() {
+        syncHelper.synchronizeData(
+            tableName = TableName.Widget,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localDataGetter = { timestamp ->
+                localSource.getWidgetsAfterTimestamp(timestamp = timestamp)
+            },
+            remoteDataGetter = { timestamp, userId ->
                 remoteSource.getWidgetsAfterTimestamp(timestamp = timestamp, userId = userId)
             },
-            remoteDataToLocalDataMapper = WidgetRemoteEntity::toLocalEntity,
-            localSynchroniser = localSource::synchroniseWidgets
+            localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
+                localSource.deleteAndUpsertWidgets(
+                    toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
+                )
+            },
+            remoteSynchronizer = { data, timestamp, userId ->
+                remoteSource.synchronizeWidgets(
+                    widgets = data, timestamp = timestamp, userId = userId
+                )
+            },
+            entityDeletedPredicate = { it.deleted },
+            entityToCommandDtoMapper = WidgetEntity::toDto,
+            queryDtoToEntityMapper = WidgetDto::toEntity
         )
     }
 
 
-    override suspend fun upsertWidgets(widgets: List<WidgetEntity>) {
-        val timestamp = getCurrentTimestamp()
-
-        localSource.upsertWidgets(widgets = widgets, timestamp = timestamp)
-        syncHelper.tryToSyncToRemote(TableName.Widget) { userId ->
-            remoteSource.upsertWidgets(
-                widgets = widgets.map {
-                    it.toRemoteEntity(updateTime = timestamp, deleted = false)
-                },
-                timestamp = timestamp,
-                userId = userId
-            )
-        }
+    override suspend fun upsertWidgets(widgets: List<WidgetDataModel>) {
+        syncHelper.upsertData(
+            data = widgets,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localSoftCommand = { entities, timestamp ->
+                localSource.upsertWidgets(widgets = entities, timestamp = timestamp)
+                entities
+            },
+            remoteSoftCommand = { dtos, timestamp, userId ->
+                remoteSource.synchronizeWidgets(
+                    widgets = dtos, timestamp = timestamp, userId = userId
+                )
+            },
+            localDataAfterTimestampGetter = { timestamp ->
+                localSource.getWidgetsAfterTimestamp(timestamp = timestamp)
+            },
+            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, userId, localTimestamp ->
+                remoteSource.synchronizeWidgetsAndGetAfterTimestamp(
+                    widgets = dtos,
+                    timestamp = timestamp,
+                    userId = userId,
+                    localTimestamp = localTimestamp
+                )
+            },
+            dataModelToEntityMapper = WidgetDataModel::toEntity,
+            dataModelToCommandDtoMapper = WidgetDataModel::toDto,
+            entityToCommandDtoMapper = WidgetEntity::toDto,
+            queryDtoToEntityMapper = WidgetDto::toEntity
+        )
     }
 
     override suspend fun deleteAndUpsertWidgets(
-        toDelete: List<WidgetEntity>,
-        toUpsert: List<WidgetEntity>
+        toDelete: List<WidgetDataModel>,
+        toUpsert: List<WidgetDataModel>
     ) {
-        val timestamp = getCurrentTimestamp()
-        val widgetsToSync = EntitiesToSync(toDelete = toDelete, toUpsert = toUpsert)
-
-        localSource.synchroniseWidgets(widgetsToSync = widgetsToSync, timestamp = timestamp)
-        syncHelper.tryToSyncToRemote(TableName.Widget) { userId ->
-            remoteSource.synchroniseWidgets(
-                widgetsToSync = widgetsToSync.map { deleted ->
-                    toRemoteEntity(updateTime = timestamp, deleted = deleted)
-                },
-                timestamp = timestamp,
-                userId = userId
-            )
-        }
+        syncHelper.deleteAndUpsertData(
+            toDelete = toDelete,
+            toUpsert = toUpsert,
+            localTimestampGetter = { localSource.getUpdateTime() },
+            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            localSoftCommand = { entities, timestamp ->
+                localSource.upsertWidgets(widgets = entities, timestamp = timestamp)
+            },
+            localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
+                localSource.deleteAndUpsertWidgets(
+                    toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
+                )
+            },
+            localDeleteCommand = { entities ->
+                localSource.deleteWidgets(widgets = entities)
+            },
+            remoteSoftCommand = { dtos, timestamp, userId ->
+                remoteSource.synchronizeWidgets(
+                    widgets = dtos, timestamp = timestamp, userId = userId
+                )
+            },
+            localDataAfterTimestampGetter = { timestamp ->
+                localSource.getWidgetsAfterTimestamp(timestamp = timestamp)
+            },
+            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, userId, localTimestamp ->
+                remoteSource.synchronizeWidgetsAndGetAfterTimestamp(
+                    widgets = dtos,
+                    timestamp = timestamp,
+                    userId = userId,
+                    localTimestamp = localTimestamp
+                )
+            },
+            entityDeletedPredicate = { it.deleted },
+            dataModelToEntityMapper = WidgetDataModel::toEntity,
+            dataModelToCommandDtoMapper = WidgetDataModel::toDto,
+            entityToCommandDtoMapper = WidgetEntity::toDto,
+            queryDtoToEntityMapper = WidgetDto::toEntity
+        )
     }
 
     override suspend fun deleteAllWidgetsLocally() {
-        val timestamp = getCurrentTimestamp()
-        localSource.deleteAllWidgets(timestamp = timestamp)
+        localSource.deleteAllWidgets()
     }
 
-    override fun getAllWidgetsFlow(): Flow<List<WidgetEntity>> = flow {
-        coroutineScope {
-            launch { synchroniseWidgets() }
-            localSource.getAllWidgets().collect(::emit)
-        }
+    override fun getAllWidgetsAsFlow(): Flow<List<WidgetDataModel>> {
+        return localSource
+            .getAllWidgetsAsFlow()
+            .onStart { synchronizeWidgets() }
+            .map { widgets ->
+                widgets.map { it.toDataModel() }
+            }
     }
 
-    override suspend fun getAllWidgets(): List<WidgetEntity> {
-        synchroniseWidgets()
-        return localSource.getAllWidgets().firstOrNull().orEmpty()
+    override suspend fun getAllWidgets(): List<WidgetDataModel> {
+        synchronizeWidgets()
+        return localSource.getAllWidgets().map { it.toDataModel() }
     }
 
 }

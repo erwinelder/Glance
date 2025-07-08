@@ -35,28 +35,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
-import com.ataglance.walletglance.core.presentation.animation.StartAnimatedContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.modifiers.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.utils.plus
 
 @Composable
 fun StartSetupScreen(
+    screenPadding: PaddingValues = PaddingValues(),
     isAppThemeSetUp: Boolean,
     onManualSetupButton: () -> Unit
 ) {
+    SetBackHandler()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 12.dp, bottom = 50.dp)
+            .padding(
+                screenPadding + PaddingValues(top = 12.dp, bottom = 48.dp)
+            )
     ) {
         StartAnimatedContainer(isAppThemeSetUp, 200) {
             Text(
                 text = stringResource(R.string.app_name),
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 15.sp,
                 fontFamily = Manrope,
                 fontWeight = FontWeight.ExtraBold,
@@ -67,7 +74,7 @@ fun StartSetupScreen(
         StartAnimatedContainer(isAppThemeSetUp) {
             Text(
                 text = stringResource(R.string.hello) + "!",
-                color = GlanceColors.onSurface,
+                color = GlanciColors.onSurface,
                 fontSize = 55.sp,
                 fontFamily = NotoSans,
                 fontWeight = FontWeight.ExtraBold,
@@ -91,14 +98,14 @@ private fun StartButton(onClick: () -> Unit = {}) {
         contentAlignment = Alignment.Center,
         modifier = Modifier.bounceClickEffect(.97f)
     ) {
-        StartButtonShadow(GlanceColors.primaryGradientPair.first)
+        StartButtonShadow(GlanciColors.primaryGlassGradientPair.first)
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = GlanceColors.onPrimary,
+                contentColor = GlanciColors.onPrimary,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = GlanceColors.onPrimary,
+                disabledContentColor = GlanciColors.onPrimary,
             ),
             contentPadding = PaddingValues(22.dp),
             modifier = Modifier
@@ -106,7 +113,7 @@ private fun StartButton(onClick: () -> Unit = {}) {
                 .clip(RoundedCornerShape(30.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = GlanceColors.primaryGradient.reversed(),
+                        colors = GlanciColors.primaryGlassGradient.reversed(),
                         start = Offset(-25f, 101f),
                         end = Offset(124f, 30f)
                     )
@@ -140,8 +147,7 @@ private fun StartButtonShadow(color: Color) {
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun StartSetupScreenPreview(
-    appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true
+    appTheme: AppTheme = AppTheme.LightDefault
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         StartSetupScreen(

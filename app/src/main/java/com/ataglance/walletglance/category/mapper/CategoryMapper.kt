@@ -1,13 +1,12 @@
 package com.ataglance.walletglance.category.mapper
 
-import com.ataglance.walletglance.category.data.local.model.CategoryEntity
+import com.ataglance.walletglance.category.data.model.CategoryDataModel
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
-import com.ataglance.walletglance.category.domain.utils.asChar
 import com.ataglance.walletglance.category.domain.utils.findById
 import com.ataglance.walletglance.category.presentation.model.CheckedCategory
 import com.ataglance.walletglance.category.presentation.model.CheckedGroupedCategories
@@ -24,7 +23,7 @@ fun CategoryType.toCategoryCollectionType(): CategoryCollectionType {
 }
 
 
-fun CategoryEntity.toDomainModel(): Category? {
+fun CategoryDataModel.toDomainModel(): Category? {
     val categoryType = this.getCategoryType() ?: return null
 
     return Category(
@@ -38,13 +37,8 @@ fun CategoryEntity.toDomainModel(): Category? {
     )
 }
 
-fun List<CategoryEntity>.toDomainModels(): List<Category> {
-    return this.mapNotNull(CategoryEntity::toDomainModel)
-}
-
-
-fun Category.toDataModel(): CategoryEntity {
-    return CategoryEntity(
+fun Category.toDataModel(): CategoryDataModel {
+    return CategoryDataModel(
         id = id,
         type = type.asChar(),
         orderNum = orderNum,
@@ -71,7 +65,7 @@ fun List<Category>.toCheckedCategories(checkedCategoryList: List<Category>): Lis
 fun GroupedCategories.toEditingCategoryWithSubcategories(
     checkedCategoryList: List<Category>
 ): CheckedGroupedCategories {
-    val subcategoryList = subcategoryList.toCheckedCategories(checkedCategoryList)
+    val subcategoryList = subcategories.toCheckedCategories(checkedCategoryList)
     val (checkedSubcategories, uncheckedSubcategories) = subcategoryList.partition { it.checked }
 
     val checked = if (subcategoryList.isNotEmpty()) {
@@ -102,7 +96,7 @@ fun List<GroupedCategories>.toEditingCategoryWithSubcategoriesList(
 fun GroupedCategoriesByType.toCheckedCategoriesWithSubcategories(
     collection: CategoryCollectionWithCategories?
 ): CheckedGroupedCategoriesByType {
-    val (expenseCategories, incomeCategories) = collection?.categoryList.orEmpty()
+    val (expenseCategories, incomeCategories) = collection?.categories.orEmpty()
         .partition { it.isExpense() }
 
     return CheckedGroupedCategoriesByType(

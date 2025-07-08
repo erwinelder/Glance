@@ -1,0 +1,181 @@
+package com.ataglance.walletglance.auth.presentation.viewmodel
+
+import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.usecase.auth.CheckEmailVerificationUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.SignUpUseCase
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.errorHandling.domain.model.result.Result
+import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class SignUpViewModel(
+    email: String,
+    private val signUpUseCase: SignUpUseCase,
+    private val checkEmailVerificationUseCase: CheckEmailVerificationUseCase
+) : ViewModel() {
+
+    private val _nameState = MutableStateFlow(
+        ValidatedFieldState(
+            validationStates = UserDataValidator.validateName("").toUiStates()
+        )
+    )
+    val nameState = _nameState.asStateFlow()
+
+    fun updateAndValidateName(name: String) {
+        _nameState.update {
+            it.copy(
+                fieldText = name,
+                validationStates = UserDataValidator.validateName(name).toUiStates()
+            )
+        }
+    }
+
+
+    private val _emailState = MutableStateFlow(
+        ValidatedFieldState(
+            fieldText = email,
+            validationStates = UserDataValidator.validateEmail(email).toUiStates()
+        )
+    )
+    val emailState = _emailState.asStateFlow()
+
+    fun updateAndValidateEmail(email: String) {
+        _emailState.update {
+            it.copy(
+                fieldText = email,
+                validationStates = UserDataValidator.validateEmail(email).toUiStates()
+            )
+        }
+    }
+
+
+    private val _passwordState = MutableStateFlow(
+        ValidatedFieldState(
+            validationStates = UserDataValidator.validatePassword("").toUiStates()
+        )
+    )
+    val passwordState = _passwordState.asStateFlow()
+
+    fun updateAndValidatePassword(password: String) {
+        _passwordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = UserDataValidator.validatePassword(password).toUiStates()
+            )
+        }
+    }
+
+
+    private val _confirmPasswordState = MutableStateFlow(
+        ValidatedFieldState(
+            validationStates = UserDataValidator
+                .validateConfirmationPassword(password = "", confirmationPassword = "")
+                .toUiStates()
+        )
+    )
+    val confirmPasswordState = _confirmPasswordState.asStateFlow()
+
+    fun updateAndValidateConfirmPassword(password: String) {
+        _confirmPasswordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = UserDataValidator
+                    .validateConfirmationPassword(
+                        password = passwordState.value.fieldText, confirmationPassword = password
+                    )
+                    .toUiStates()
+            )
+        }
+    }
+
+
+    val signUpIsAllowed = combine(
+        nameState, emailState, passwordState, confirmPasswordState
+    ) { nameState, emailState, passwordState, confirmPasswordState ->
+        UserDataValidator.isValidName(name = nameState.fieldText) &&
+                UserDataValidator.isValidEmail(email = emailState.fieldText) &&
+                UserDataValidator.isValidPassword(password = passwordState.fieldText) &&
+                passwordState.fieldText.trim() == confirmPasswordState.fieldText.trim()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = false
+    )
+
+
+    suspend fun signUp(): Boolean {
+        if (!signUpIsAllowed.value) return false
+        setRequestLoadingState(messageRes = R.string.creating_your_identity_loader)
+
+        val result = signUpUseCase.execute(
+            name = nameState.value.getTrimmedText(),
+            email = emailState.value.getTrimmedText(),
+            password = passwordState.value.getTrimmedText()
+        )
+
+        return when (result) {
+            is Result.Success -> {
+                resetRequestState()
+                true
+            }
+            is Result.Error -> {
+                setRequestResultState(result = result.error.toResultWithButtonState())
+                false
+            }
+        }
+    }
+
+
+    private var checkVerificationJob: Job? = null
+
+    fun checkEmailVerification() {
+        setRequestLoadingState(messageRes = R.string.checking_email_verification_loader)
+
+        checkVerificationJob = viewModelScope.launch {
+            val result = checkEmailVerificationUseCase.execute(
+                email = emailState.value.getTrimmedText(),
+                password = passwordState.value.getTrimmedText()
+            )
+            setRequestResultState(result = result.toResultWithButtonState())
+        }
+    }
+
+    fun cancelEmailVerificationCheck() {
+        checkVerificationJob?.cancel()
+        checkVerificationJob = null
+        resetRequestState()
+    }
+
+
+    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
+    val requestState = _requestState.asStateFlow()
+
+    private fun setRequestLoadingState(@StringRes messageRes: Int) {
+        _requestState.update {
+            RequestState.Loading(messageRes = messageRes)
+        }
+    }
+
+    private fun setRequestResultState(result: ButtonState) {
+        _requestState.update { RequestState.Result(resultState = result) }
+    }
+
+    fun resetRequestState() {
+        _requestState.update { null }
+    }
+
+}

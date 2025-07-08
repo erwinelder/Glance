@@ -9,8 +9,8 @@ data class CategoryStatistics(
     val category: Category,
     val totalAmount: String,
     val currency: String,
-    val percentageFloat: Float,
     val percentageFormatted: String,
+    val percentageFloat: Float,
     val subcategoriesStatistics: List<CategoryStatistics>? = null
 ) {
 
@@ -28,8 +28,8 @@ data class CategoryStatistics(
                 category = categoriesStatsItem.category,
                 totalAmount = categoriesStatsItem.totalAmount.formatWithSpaces(),
                 currency = accountCurrency,
-                percentageFloat = percentage / 100,
                 percentageFormatted = percentage.roundToTwoDecimals(suffix = "%"),
+                percentageFloat = percentage / 100,
                 subcategoriesStatistics = subcategoriesStatistics?.values
                     ?.sortedByDescending { it.totalAmount }
                     ?.map {
@@ -39,6 +39,28 @@ data class CategoryStatistics(
                             categoriesStatsItem = it
                         )
                     }
+            )
+        }
+
+
+        fun fromStats(
+            category: Category,
+            totalAmount: Double,
+            generalTotalAmount: Double,
+            accountCurrency: String,
+            subcategoriesStats: List<CategoryStatistics>? = null
+        ): CategoryStatistics {
+            val percentage = if (generalTotalAmount != 0.0) {
+                (100 / generalTotalAmount * totalAmount).toFloat()
+            } else 0.0f
+
+            return CategoryStatistics(
+                category = category,
+                totalAmount = totalAmount.toString(),
+                currency = accountCurrency,
+                percentageFormatted = percentage.roundToTwoDecimals(suffix = "%"),
+                percentageFloat = percentage / 100,
+                subcategoriesStatistics = subcategoriesStats
             )
         }
 

@@ -2,19 +2,19 @@ package com.ataglance.walletglance.account.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ataglance.walletglance.account.domain.model.color.AccountColorName
 
-@Entity(tableName = "Account")
+@Entity(tableName = "account")
 data class AccountEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val orderNum: Int = 0,
-    val name: String = "USD",
-    val currency: String = "USD",
-    val balance: Double = 0.0,
-    val color: String = AccountColorName.Default.name,
-    val hide: Boolean = false,
-    val hideBalance: Boolean = false,
-    val withoutBalance: Boolean = false,
-    val isActive: Boolean = true
+    val id: Int,
+    val orderNum: Int,
+    val name: String,
+    val currency: String,
+    val balance: Double,
+    val color: String,
+    val hide: Boolean,
+    val hideBalance: Boolean,
+    val withoutBalance: Boolean,
+    val timestamp: Long,
+    val deleted: Boolean
 )

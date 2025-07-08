@@ -1,29 +1,20 @@
 package com.ataglance.walletglance.core.domain.date
 
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
-import com.ataglance.walletglance.core.utils.extractYear
-import com.ataglance.walletglance.core.utils.getLocalDateRangeByMonth
-import com.ataglance.walletglance.core.utils.getMonthFullNameRes
+import com.ataglance.walletglance.core.utils.timestampToYear
+import com.ataglance.walletglance.core.utils.toTimestampRange
+import com.ataglance.walletglance.core.utils.toLocalDateRangeByBasicValues
 
 data class DateRangeWithEnum(
     val enum: DateRangeEnum,
-    val dateRange: LongDateRange
+    val dateRange: TimestampRange
 ) {
 
     companion object {
 
-        fun fromEnum(enum: DateRangeEnum, currentRange: LongDateRange? = null): DateRangeWithEnum {
-            val dateRange = when (enum) {
-                DateRangeEnum.ThisWeek -> LocalDateRange.asThisWeek()
-                DateRangeEnum.SevenDays -> LocalDateRange.asSevenDays()
-                DateRangeEnum.ThisMonth -> LocalDateRange.asThisMonth()
-                DateRangeEnum.LastMonth -> LocalDateRange.asLastMonth()
-                DateRangeEnum.ThisYear -> LocalDateRange.asThisYear()
-                DateRangeEnum.LastYear -> LocalDateRange.asLastYear()
-                else -> enum.getLocalDateRangeByMonth(dateRange = currentRange)
-            }
-
-            return DateRangeWithEnum(enum = enum, dateRange = dateRange.toLongDateRange())
+        fun fromEnum(enum: DateRangeEnum, currentRange: TimestampRange? = null): DateRangeWithEnum {
+            val localDateRange = enum.toLocalDateRangeByBasicValues(timestampRange = currentRange)
+            return DateRangeWithEnum(enum = enum, dateRange = localDateRange.toTimestampRange())
         }
 
     }
@@ -42,13 +33,13 @@ data class DateRangeWithEnum(
             DateRangeEnum.July, DateRangeEnum.August, DateRangeEnum.September,
             DateRangeEnum.October, DateRangeEnum.November, DateRangeEnum.December ->
                 getFormattedMonth(resourceManager)
-            DateRangeEnum.Custom -> dateRange.formatAsDayMonthYear(resourceManager)
+            DateRangeEnum.Custom -> dateRange.formatAsDayMonthNameYear(resourceManager)
         }
     }
 
     private fun getFormattedMonth(resourceManager: ResourceManager): String {
-        val monthName = enum.getMonthFullNameRes()?.let { resourceManager.getString(it) } ?: ""
-        return "$monthName ${dateRange.from.extractYear()}"
+        val monthName = enum.getMonthFullNameRes()?.let(resourceManager::getString) ?: ""
+        return "$monthName ${dateRange.from.timestampToYear()}"
     }
 
 }

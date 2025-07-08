@@ -12,9 +12,11 @@ data class CategoryCollectionsWithIdsByType(
 
     companion object {
 
-        fun fromGroupedCollections(
-            map: Map<CategoryCollectionType, List<CategoryCollectionWithIds>>
+        fun fromCollections(
+            collections: List<CategoryCollectionWithIds>
         ): CategoryCollectionsWithIdsByType {
+            val map = collections.groupBy { it.type }
+
             return CategoryCollectionsWithIdsByType(
                 expense = map[CategoryCollectionType.Expense].orEmpty(),
                 income = map[CategoryCollectionType.Income].orEmpty(),

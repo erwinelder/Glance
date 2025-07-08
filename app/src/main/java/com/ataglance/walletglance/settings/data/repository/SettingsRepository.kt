@@ -7,11 +7,13 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -20,32 +22,33 @@ class SettingsRepository(
 ) {
 
     private companion object {
-        val USER_ID = stringPreferencesKey("userId")
+        val USER_PROFILE_TIMESTAMP = longPreferencesKey("userProfileTimestamp")
         val LANGUAGE = stringPreferencesKey("language")
         val SETUP_STAGE = intPreferencesKey("setupStage")
         val USE_DEVICE_THEME = booleanPreferencesKey("useDeviceTheme")
         val CHOSEN_LIGHT_THEME = stringPreferencesKey("chosenLightTheme")
         val CHOSEN_DARK_THEME = stringPreferencesKey("chosenDarkTheme")
         val LAST_CHOSEN_THEME = stringPreferencesKey("lastChosenTheme")
+        val TURN_ON_DAILY_RECORDS_REMINDER = booleanPreferencesKey("turnOnDailyRecordsReminder")
         const val TAG = "SettingsRepository"
     }
 
 
-    val userId: Flow<String?> = dataStore.data
+    val userProfileTimestamp: Flow<Long> = dataStore.data
         .catch {
             if (it is IOException) {
-                Log.e(TAG, "Error reading user id.", it)
+                Log.e(TAG, "Error reading user profile timestamp.", it)
                 emit(emptyPreferences())
             } else {
                 throw it
             }
         }
         .map { preferences ->
-            preferences[USER_ID]?.takeIf { it.isNotBlank() }
+            preferences[USER_PROFILE_TIMESTAMP] ?: 0
         }
 
-    suspend fun saveUserIdPreference(userId: String) {
-        dataStore.edit { it[USER_ID] = userId }
+    suspend fun saveUserProfileTimestamp(timestamp: Long) {
+        dataStore.edit { it[USER_PROFILE_TIMESTAMP] = timestamp }
     }
 
 
@@ -157,8 +160,30 @@ class SettingsRepository(
     }
 
 
+    val turnOnDailyRecordsReminder: Flow<Boolean> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.d(TAG, "Error reading turnOnDailyRecordsReminder", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[TURN_ON_DAILY_RECORDS_REMINDER] ?: false
+        }
+
+    suspend fun saveTurnOnDailyRecordsReminderPreference(turnOn: Boolean) {
+        dataStore.edit { it[TURN_ON_DAILY_RECORDS_REMINDER] = turnOn }
+    }
+
+
     suspend fun clearAllPreferences() {
+        val langCode = language.firstOrNull()
+
         dataStore.edit { it.clear() }
+
+        langCode?.let { saveLanguagePreference(langCode = it) }
     }
 
 }

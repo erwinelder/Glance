@@ -1,23 +1,27 @@
 package com.ataglance.walletglance.navigation.data.remote.source
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonRemoteEntity
+import com.ataglance.walletglance.navigation.data.remote.model.NavigationButtonDto
 
 interface NavigationButtonRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: String): Long?
+    suspend fun getUpdateTime(userId: Int): Long?
 
-    suspend fun saveUpdateTime(timestamp: Long, userId: String)
-
-    suspend fun upsertNavigationButtons(
-        buttons: List<NavigationButtonRemoteEntity>,
+    suspend fun synchronizeNavigationButtons(
+        buttons: List<NavigationButtonDto>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int
+    ): List<NavigationButtonDto>?
+
+    suspend fun synchronizeNavigationButtonsAndGetAfterTimestamp(
+        buttons: List<NavigationButtonDto>,
+        timestamp: Long,
+        userId: Int,
+        localTimestamp: Long
+    ): List<NavigationButtonDto>?
 
     suspend fun getNavigationButtonsAfterTimestamp(
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<NavigationButtonRemoteEntity>
+        userId: Int
+    ): List<NavigationButtonDto>?
 
 }

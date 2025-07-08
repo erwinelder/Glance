@@ -3,7 +3,6 @@ package com.ataglance.walletglance.settings.presentation.model
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.model.SignInCase
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
@@ -86,6 +85,15 @@ sealed class SettingsCategory(
         }
     )
 
+    data class Notifications(val appTheme: AppTheme) : SettingsCategory(
+        screen = SettingsScreens.Notifications,
+        stringRes = R.string.notifications,
+        iconRes = when (appTheme) {
+            AppTheme.LightDefault -> R.drawable.notifications_light_default_icon
+            AppTheme.DarkDefault -> R.drawable.notifications_dark_default_icon
+        }
+    )
+
     data class Language(val appTheme: AppTheme) : SettingsCategory(
         screen = SettingsScreens.Language,
         stringRes = R.string.language,
@@ -96,7 +104,7 @@ sealed class SettingsCategory(
     )
 
     data class SignIn(val appTheme: AppTheme) : SettingsCategory(
-        screen = AuthScreens.SignIn(SignInCase.Default.name),
+        screen = AuthScreens.SignIn(),
         stringRes = R.string.sign_in,
         iconRes = when (appTheme) {
             AppTheme.LightDefault -> R.drawable.sign_in_light_default
@@ -178,6 +186,7 @@ sealed class SettingsCategory(
                 Categories(appTheme),
                 CategoryCollections(appTheme),
                 Appearance(appTheme),
+                Notifications(appTheme),
                 Language(appTheme),
                 ResetData(appTheme),
             )

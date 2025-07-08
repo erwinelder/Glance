@@ -1,36 +1,41 @@
 [versions]
 # SDK
-android-compileSdk = "35"
+android-compileSdk = "36"
 android-minSdk = "28"
-android-targetSdk = "35"
+android-targetSdk = "36"
 # Core
-core = "1.15.0"
+core = "1.16.0"
 activityCompose = "1.10.1"
-appcompat = "1.7.0"
-coreSplashscreen = "1.0.1"
+appcompat = "1.7.1"
 # Lifecycle
-lifecycle = "2.8.7"
+lifecycle = "2.9.1"
 # Compose & Navigation
-composeBom = "2025.02.00"
-navigationCommonKtx = "2.8.8"
+composeBom = "2025.06.01"
+navigationCommonKtx = "2.9.1"
 # Google Play Services
 appUpdate = "2.1.0"
 assetDelivery = "2.3.0"
-googleBilling = "7.1.1"
+googleBilling = "8.0.0"
 featureDelivery = "2.1.0"
 review = "2.0.2"
+# WorkManager
+work = "2.10.2"
 # Room
-room = "2.6.1"
-# DataStore
-datastore = "1.1.3"
+room = "2.7.2"
+# Preferences
+datastore = "1.1.7"
+multiplatform-settings = "1.3.0"
+security-crypto = "1.1.0-beta01"
+# Ktor
+ktor = "3.2.1"
 # Firebase
-firebase = "33.10.0"
+firebase = "33.16.0"
 # Koin
-koin = "4.0.0"
+koin = "4.1.0"
 # Utilities
-kotlinxDateTime = "0.6.2"
-kotlinxSerializationJson = "1.8.0"
-gson = "2.10.1"
+kotlinxDateTime = "0.7.0"
+kotlinxSerializationJson = "1.9.0"
+gson = "2.13.1"
 # Test
 rules = "1.6.1"
 runner = "1.6.2"
@@ -38,25 +43,24 @@ androidxTestCoreKtx = "1.6.1"
 espressoCore = "3.6.1"
 junit = "4.13.2"
 junitKtx = "1.2.1"
-junitJupiter = "5.12.0"
+junitJupiter = "5.13.3"
 junitVersion = "1.2.1"
-kotlinxCoroutinesTest = "1.10.1"
-uiTestManifest = "1.7.8"
+kotlinxCoroutinesTest = "1.10.2"
+uiTestManifest = "1.8.3"
 # Mockito
-mockitoCore = "5.11.0"
-mockk = "1.13.10"
+mockitoCore = "5.18.0"
+mockk = "1.14.4"
 # Plugins
-androidGradlePlugin = "8.9.0"
-ksp = "2.1.10-1.0.31"
-googleServices = "4.4.2"
-kotlin = "2.1.10"
+androidGradlePlugin = "8.11.0"
+ksp = "2.2.0-2.0.2"
+googleServices = "4.4.3"
+kotlin = "2.2.0"
 
 [libraries]
 # Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 # Lifecycle
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -83,15 +87,24 @@ review = { module = "com.google.android.play:review", version.ref = "review" }
 review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "review" }
 google-billing = { module = "com.android.billingclient:billing", version.ref = "googleBilling" }
 google-billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "googleBilling" }
+# WorkManager
+androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work" }
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-# DataStore
+# Preferences
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatform-settings" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security-crypto" }
+# Ktor
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
-firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 # Koin

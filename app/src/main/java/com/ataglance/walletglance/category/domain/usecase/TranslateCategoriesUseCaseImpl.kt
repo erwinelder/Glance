@@ -17,6 +17,6 @@ class TranslateCategoriesUseCaseImpl(
             defaultCategoriesInNewLocale = defaultCategoriesInNewLocale,
             currCategoryList = currCategories
         )
-        saveCategoriesUseCase.upsert(categories = translatedCategories)
+        saveCategoriesUseCase.save(categories = translatedCategories)
     }
 }

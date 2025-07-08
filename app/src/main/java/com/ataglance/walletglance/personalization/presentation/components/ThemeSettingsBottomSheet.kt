@@ -6,8 +6,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.settings.domain.model.AppThemeConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,10 +22,10 @@ fun ThemeSettingsBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val backgroundColor by animateColorAsState(
-        targetValue = GlanceColors.background
+        targetValue = GlanciColors.background
     )
 
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = visible,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,

@@ -1,16 +1,17 @@
 package com.ataglance.walletglance.record.data.utils
 
-import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntityWithItems
+import com.ataglance.walletglance.record.data.local.model.RecordItemEntity
 
 
-fun List<RecordEntity>.getTotalAmountByType(type: CategoryType): Double {
-    return this
-        .filter {
-            type == CategoryType.Expense && it.isExpenseOrOutTransfer() ||
-                    type == CategoryType.Income && it.isIncomeOrInTransfer()
-        }
-        .fold(0.0) { total, record ->
-            total + record.amount
-        }
+fun List<RecordEntity>.zipWithItems(items: List<RecordItemEntity>): List<RecordEntityWithItems> {
+    val items = items.groupBy { it.recordId }
+
+    return mapNotNull { record ->
+        RecordEntityWithItems(
+            record = record,
+            items = items[record.id] ?: return@mapNotNull null
+        )
+    }
 }

@@ -2,6 +2,7 @@ package com.ataglance.walletglance.core.presentation.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
@@ -10,26 +11,31 @@ import com.ataglance.walletglance.account.domain.model.color.AccountColors
 import com.ataglance.walletglance.account.presentation.screen.CurrencyPickerScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenPreview
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
-import com.ataglance.walletglance.auth.domain.model.AuthResultSuccessScreenType
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.EmailVerificationErrorScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateEmailVerificationScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.FinishSignUpScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.RequestEmailUpdateScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignInScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.SignUpEmailVerificationScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignUpScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.UpdateEmailScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenPreview
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByRecords
-import com.ataglance.walletglance.budget.mapper.budget.toDomainModels
+import com.ataglance.walletglance.auth.presentation.screen.VerifyEmailUpdateScreenPreview
+import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociationDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
+import com.ataglance.walletglance.budget.domain.utils.fillUsedAmountsByTransactions
+import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
+import com.ataglance.walletglance.budget.presentation.component.widget.ChosenBudgetsWidgetPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetStatisticsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.BudgetsScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetScreenPreview
 import com.ataglance.walletglance.budget.presentation.screen.EditBudgetsScreenPreview
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.presentation.component.CategoriesStatisticsWidgetPreview
 import com.ataglance.walletglance.category.presentation.screen.CategoryStatisticsScreenPreview
 import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreenPreview
 import com.ataglance.walletglance.category.presentation.screen.EditCategoryScreenPreview
@@ -42,29 +48,33 @@ import com.ataglance.walletglance.categoryCollection.presentation.screen.EditCat
 import com.ataglance.walletglance.core.domain.app.AppLanguage
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
-import com.ataglance.walletglance.core.domain.date.DateRangeMenuUiState
+import com.ataglance.walletglance.core.domain.date.DateRangeWithEnum
 import com.ataglance.walletglance.core.domain.date.DateTimeState
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.domain.date.YearMonthDay
-import com.ataglance.walletglance.errorHandling.presentation.screen.AuthResultSuccessScreenPreview
+import com.ataglance.walletglance.core.presentation.component.widget.ExpensesIncomeWidgetPreview
+import com.ataglance.walletglance.core.utils.toTimestamp
+import com.ataglance.walletglance.notification.presentation.screen.NotificationsScreenPreview
 import com.ataglance.walletglance.personalization.domain.model.WidgetName
-import com.ataglance.walletglance.personalization.presentation.screen.PersonalisationScreenPreview
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.utils.asChar
-import com.ataglance.walletglance.record.mapper.toDomainModels
-import com.ataglance.walletglance.record.presentation.screen.RecordsScreenPreview
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraft
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftGeneral
-import com.ataglance.walletglance.recordCreation.presentation.model.record.RecordDraftItem
-import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraft
-import com.ataglance.walletglance.recordCreation.presentation.model.transfer.TransferDraftUnits
-import com.ataglance.walletglance.recordCreation.presentation.screen.RecordCreationScreenPreview
-import com.ataglance.walletglance.recordCreation.presentation.screen.TransferCreationScreenPreview
+import com.ataglance.walletglance.personalization.presentation.screen.PersonalizationScreenPreview
+import com.ataglance.walletglance.transaction.presentation.component.RecentRecordsWidgetPreview
+import com.ataglance.walletglance.record.presentation.model.RecordDraft
+import com.ataglance.walletglance.record.presentation.model.RecordDraftItem
+import com.ataglance.walletglance.record.presentation.model.RecordDraftWithItems
+import com.ataglance.walletglance.record.presentation.screen.RecordCreationScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.LanguageScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.ResetDataScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.SettingsHomeScreenPreview
 import com.ataglance.walletglance.settings.presentation.screen.StartSetupScreenPreview
+import com.ataglance.walletglance.transaction.domain.model.Record
+import com.ataglance.walletglance.transaction.domain.model.RecordItem
+import com.ataglance.walletglance.transaction.domain.model.RecordWithItems
+import com.ataglance.walletglance.transaction.domain.model.Transfer
+import com.ataglance.walletglance.transaction.domain.model.TransferItem
+import com.ataglance.walletglance.transaction.presentation.screen.TransactionsScreenPreview
+import com.ataglance.walletglance.transfer.presentation.model.TransferDraft
+import com.ataglance.walletglance.transfer.presentation.model.TransferDraftItem
+import com.ataglance.walletglance.transfer.presentation.screen.TransferCreationScreenPreview
+import kotlinx.datetime.LocalDateTime
 
 private const val device = "spec:width=1440px,height=3120px,dpi=560" // default
 //private const val device = "spec:width=1440px,height=2988px,dpi=560" // phone promo
@@ -74,9 +84,9 @@ private const val device = "spec:width=1440px,height=3120px,dpi=560" // default
 private val appTheme: AppTheme = AppTheme.LightDefault
 private const val langCode: String = "en"
 private const val isAppSetUp: Boolean = true
-private const val isBottomBarVisible: Boolean = true
 
-private val accountList = listOf(
+private val accounts = listOf(
+
     Account(
         id = 1,
         orderNum = 1,
@@ -115,156 +125,218 @@ private val accountList = listOf(
     ),
 )
 private val accountsAndActiveOne: AccountsAndActiveOne = AccountsAndActiveOne(
-    accounts = accountList,
-    activeAccount = accountList.find { it.isActive } ?: accountList.first()
+    accounts = accounts,
+    activeAccount = accounts.find { it.isActive } ?: accounts.first()
 )
-private val dateRangeMenuUiState = DateRangeMenuUiState.fromEnum(DateRangeEnum.ThisMonth)
+private val dateRangeWithEnum = DateRangeWithEnum.fromEnum(enum = DateRangeEnum.ThisMonth)
 private const val isCustomDateRangeWindowOpened = false
-private val recordEntityList = listOf(
-    RecordEntity(
+private val transactions = listOf(
+    RecordWithItems(
+        record = Record(
+            id = 1,
+            date = LocalDateTime(2024, 9, 24, 12, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount!!.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 1,
+                recordId = 1,
+                totalAmount = 68.43,
+                quantity = null,
+                categoryId = 1,
+                subcategoryId = 13,
+                note = "bread, milk"
+            ),
+            RecordItem(
+                id = 2,
+                recordId = 1,
+                totalAmount = 178.9,
+                quantity = null,
+                categoryId = 3,
+                subcategoryId = 24,
+                note = "shampoo"
+            )
+        )
+    ),
+    Transfer(
         id = 1,
-        recordNum = 1,
-        date = YearMonthDay(2024, 9, 24).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount!!.id,
-        amount = 68.43,
-        quantity = null,
-        categoryId = 1,
-        subcategoryId = 13,
-        note = "bread, milk",
+        date = LocalDateTime(2024, 9, 23, 0, 0).toTimestamp(),
+        sender = TransferItem(
+            accountId = accountsAndActiveOne.activeAccount.id,
+            amount = 3000.0,
+            rate = 1.0
+        ),
+        receiver = TransferItem(
+            accountId = accountsAndActiveOne.accounts[1].id,
+            amount = 3000.0,
+            rate = 1.0
+        ),
         includeInBudgets = true
     ),
-    RecordEntity(
-        id = 2,
-        recordNum = 1,
-        date = YearMonthDay(2024, 9, 24).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 178.9,
-        quantity = null,
-        categoryId = 3,
-        subcategoryId = 24,
-        note = "shampoo",
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 4,
+            date = LocalDateTime(2024, 9, 18, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 4,
+                recordId = 4,
+                totalAmount = 120.9,
+                quantity = null,
+                categoryId = 6,
+                subcategoryId = 40,
+                note = "Music platform"
+            )
+        )
     ),
-    RecordEntity(
-        id = 3,
-        recordNum = 2,
-        date = YearMonthDay(2024, 9, 23).concatenate(),
-        type = RecordType.OutTransfer.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 3000.0,
-        quantity = null,
-        categoryId = 3,
-        subcategoryId = 24,
-        note = accountsAndActiveOne.accounts[1].id.toString(),
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 5,
+            date = LocalDateTime(2024, 9, 15, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 5,
+                recordId = 5,
+                totalAmount = 799.9,
+                quantity = null,
+                categoryId = 3,
+                subcategoryId = 21,
+                note = null
+            )
+        )
     ),
-    RecordEntity(
-        id = 4,
-        recordNum = 3,
-        date = YearMonthDay(2024, 9, 18).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 120.9,
-        quantity = null,
-        categoryId = 6,
-        subcategoryId = 40,
-        note = "Music platform",
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 6,
+            date = LocalDateTime(2024, 9, 12, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 6,
+                recordId = 6,
+                totalAmount = 3599.9,
+                quantity = null,
+                categoryId = 1,
+                subcategoryId = 13,
+                note = null
+            )
+        )
     ),
-    RecordEntity(
-        id = 5,
-        recordNum = 4,
-        date = YearMonthDay(2024, 9, 15).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 799.9,
-        quantity = null,
-        categoryId = 3,
-        subcategoryId = 21,
-        note = null,
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 7,
+            date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 7,
+                recordId = 7,
+                totalAmount = 8500.0,
+                quantity = null,
+                categoryId = 2,
+                subcategoryId = 15,
+                note = null
+            )
+        )
     ),
-    RecordEntity(
-        id = 6,
-        recordNum = 5,
-        date = YearMonthDay(2024, 9, 12).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 3599.9,
-        quantity = null,
-        categoryId = 1,
-        subcategoryId = 13,
-        note = null,
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 8,
+            date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+            type = CategoryType.Income,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 8,
+                recordId = 8,
+                totalAmount = 42600.0,
+                quantity = null,
+                categoryId = 72,
+                subcategoryId = null,
+                note = null
+            )
+        )
     ),
-    RecordEntity(
-        id = 7,
-        recordNum = 6,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 8500.0,
-        quantity = null,
-        categoryId = 2,
-        subcategoryId = 15,
-        note = null,
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 9,
+            date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 9,
+                recordId = 9,
+                totalAmount = 799.9,
+                quantity = null,
+                categoryId = 6,
+                subcategoryId = 38,
+                note = null
+            )
+        )
     ),
-    RecordEntity(
-        id = 8,
-        recordNum = 7,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
-        type = RecordType.Income.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 42600.0,
-        quantity = null,
-        categoryId = 72,
-        subcategoryId = null,
-        note = null,
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 10,
+            date = LocalDateTime(2024, 6, 4, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.accounts[1].id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 10,
+                recordId = 10,
+                totalAmount = 450.41,
+                quantity = null,
+                categoryId = 9,
+                subcategoryId = 50,
+                note = null
+            )
+        )
     ),
-    RecordEntity(
-        id = 9,
-        recordNum = 8,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 799.9,
-        quantity = null,
-        categoryId = 6,
-        subcategoryId = 38,
-        note = null,
-        includeInBudgets = true
-    ),
-    RecordEntity(
-        id = 10,
-        recordNum = 9,
-        date = YearMonthDay(2024, 6, 4).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.accounts[1].id,
-        amount = 450.41,
-        quantity = null,
-        categoryId = 9,
-        subcategoryId = 50,
-        note = null,
-        includeInBudgets = true
-    ),
-    RecordEntity(
-        id = 10,
-        recordNum = 9,
-        date = YearMonthDay(2024, 9, 4).concatenate(),
-        type = RecordType.Expense.asChar(),
-        accountId = accountsAndActiveOne.activeAccount.id,
-        amount = 690.56,
-        quantity = null,
-        categoryId = 10,
-        subcategoryId = 58,
-        note = null,
-        includeInBudgets = true
+    RecordWithItems(
+        record = Record(
+            id = 10,
+            date = LocalDateTime(2024, 9, 4, 0, 0).toTimestamp(),
+            type = CategoryType.Expense,
+            accountId = accountsAndActiveOne.activeAccount.id,
+            includeInBudgets = true
+        ),
+        items = listOf(
+            RecordItem(
+                id = 10,
+                recordId = 10,
+                totalAmount = 690.56,
+                quantity = null,
+                categoryId = 10,
+                subcategoryId = 58,
+                note = null
+            )
+        )
     ),
 )
+
 private val categoryCollectionsWithIdsByType = CategoryCollectionsWithIdsByType(
     mixed = listOf(
         CategoryCollectionWithIds(
@@ -272,194 +344,250 @@ private val categoryCollectionsWithIdsByType = CategoryCollectionsWithIdsByType(
             orderNum = 1,
             type = CategoryCollectionType.Mixed,
             name = "Essentials",
-            categoriesIds = listOf(13, 14, 25, 30)
+            categoryIds = listOf(13, 14, 25, 30)
         ),
         CategoryCollectionWithIds(
             id = 2,
             orderNum = 2,
             type = CategoryCollectionType.Mixed,
             name = "Other",
-            categoriesIds = listOf(15, 16, 21, 30)
+            categoryIds = listOf(15, 16, 21, 30)
         ),
         CategoryCollectionWithIds(
             id = 3,
             orderNum = 3,
             type = CategoryCollectionType.Mixed,
             name = "All stuff",
-            categoriesIds = (13..34).toList()
+            categoryIds = (13..34).toList()
         )
     ),
 )
-private val budgetEntityList = listOf(
-    BudgetEntity(
-        id = 1,
-        amountLimit = 5000.0,
-        categoryId = 1,
-        name = "Food & drinks",
-        repeatingPeriod = RepeatingPeriod.Monthly.name,
+private val budgetDataModelsWithAssociations = listOf(
+    BudgetDataModelWithAssociations(
+        budget = BudgetDataModel(
+            id = 1,
+            amountLimit = 5000.0,
+            categoryId = 1,
+            name = "Food & drinks",
+            repeatingPeriod = RepeatingPeriod.Monthly.name,
+        ),
+        associations = listOf(
+            BudgetAccountAssociationDataModel(budgetId = 1, accountId = 1),
+            BudgetAccountAssociationDataModel(budgetId = 1, accountId = 4)
+        )
     ),
-    BudgetEntity(
-        id = 2,
-        amountLimit = 1000.0,
-        categoryId = 9,
-        name = "Travels",
-        repeatingPeriod = RepeatingPeriod.Yearly.name,
+    BudgetDataModelWithAssociations(
+        budget = BudgetDataModel(
+            id = 2,
+            amountLimit = 1000.0,
+            categoryId = 9,
+            name = "Travels",
+            repeatingPeriod = RepeatingPeriod.Yearly.name,
+        ),
+        associations = listOf(
+            BudgetAccountAssociationDataModel(budgetId = 2, accountId = 2)
+        )
     ),
-    BudgetEntity(
-        id = 3,
-        amountLimit = 1000.0,
-        categoryId = 6,
-        name = "Digital life",
-        repeatingPeriod = RepeatingPeriod.Monthly.name,
+    BudgetDataModelWithAssociations(
+        budget = BudgetDataModel(
+            id = 3,
+            amountLimit = 1000.0,
+            categoryId = 6,
+            name = "Digital life",
+            repeatingPeriod = RepeatingPeriod.Monthly.name,
+        ),
+        associations = listOf(
+            BudgetAccountAssociationDataModel(budgetId = 3, accountId = 1)
+        )
     ),
-    BudgetEntity(
-        id = 4,
-        amountLimit = 1500.0,
-        categoryId = 10,
-        name = "Entertainment",
-        repeatingPeriod = RepeatingPeriod.Monthly.name,
+    BudgetDataModelWithAssociations(
+        budget = BudgetDataModel(
+            id = 4,
+            amountLimit = 1500.0,
+            categoryId = 10,
+            name = "Entertainment",
+            repeatingPeriod = RepeatingPeriod.Monthly.name,
+        ),
+        associations = listOf(
+            BudgetAccountAssociationDataModel(budgetId = 4, accountId = 1)
+        )
     ),
 )
-private val budgetAccountAssociationList = listOf(
-    BudgetAccountAssociation(budgetId = 1, accountId = 1),
-    BudgetAccountAssociation(budgetId = 1, accountId = 4),
-    BudgetAccountAssociation(budgetId = 2, accountId = 2),
-    BudgetAccountAssociation(budgetId = 3, accountId = 1),
-    BudgetAccountAssociation(budgetId = 4, accountId = 1),
+
+
+
+@Preview(
+    name = "ExpensesIncomeWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
 )
+@Composable
+private fun ExpensesIncomeWidgetPreview_() {
+    ExpensesIncomeWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "RecentRecordsWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun RecentRecordsWidgetPreview_() {
+    RecentRecordsWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "CategoriesStatisticsWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun CategoriesStatisticsWidgetPreview_() {
+    CategoriesStatisticsWidgetPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "ChosenBudgetsWidget",
+    group = "Widgets",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun ChosenBudgetsWidgetPreview_() {
+    ChosenBudgetsWidgetPreview(
+        appTheme = appTheme
+    )
+}
 
 
 
 @Preview(
     name = "HomeScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentHomeScreenPreview() {
+private fun HomeScreenPreview_() {
     val defaultCategoriesPackage = DefaultCategoriesPackage(LocalContext.current)
         .getDefaultCategories()
+    val budgetsOnWidget = budgetDataModelsWithAssociations.mapNotNull { budget ->
+        budget.toDomainModel(
+            groupedCategoriesList = defaultCategoriesPackage.expense,
+            accounts = accountsAndActiveOne.accounts
+        )
+    }
+
     HomeScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         accountsAndActiveOne = accountsAndActiveOne,
-        dateRangeMenuUiState = dateRangeMenuUiState,
+        dateRangeWithEnum = dateRangeWithEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
-        recordList = recordEntityList,
-        budgetsOnWidget = budgetEntityList.toDomainModels(
-            groupedCategoriesList = defaultCategoriesPackage.expense,
-            associations = budgetAccountAssociationList,
-            accounts = accountsAndActiveOne.accounts
-        ).fillUsedAmountsByRecords(recordEntityList.toDomainModels()).take(1),
-        widgetNamesList = listOf(
+        budgetsOnWidget = budgetsOnWidget
+            .fillUsedAmountsByTransactions(transactions = transactions)
+            .take(1),
+        widgetNames = listOf(
             WidgetName.TotalForPeriod,
             WidgetName.ChosenBudgets,
-        )
+        ),
+        transactions = transactions
     )
 }
 
 @Preview(
     name = "RecordsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentRecordsScreenPreview() {
+private fun RecordsScreenPreview_() {
     val context = LocalContext.current
     val collectionType = CategoryCollectionType.Mixed
     val categoryCollectionWithIdsList = categoryCollectionsWithIdsByType
         .appendDefaultCollection(context.getString(R.string.all_categories))
         .getByType(collectionType)
 
-    RecordsScreenPreview(
+    TransactionsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsAndActiveOne.accounts,
-        currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+        accounts = accountsAndActiveOne.accounts,
+        currentDateRangeEnum = dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
         collectionType = collectionType,
         collectionList = categoryCollectionWithIdsList,
-        recordList = recordEntityList
+        transactions = transactions
     )
 }
 
 @Preview(
     name = "CategoryStatisticsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentCategoryStatisticsScreenPreview() {
-    val context = LocalContext.current
+private fun CategoryStatisticsScreenPreview_() {
+    val categoryType = CategoryType.Expense
     val currentCollectionType = CategoryCollectionType.Expense
     val categoryCollectionWithIdsList = categoryCollectionsWithIdsByType
-        .appendDefaultCollection(context.getString(R.string.all_categories))
-        .getByType(currentCollectionType)
+        .appendDefaultCollection(name = stringResource(R.string.all_categories))
+        .getByType(type = currentCollectionType)
 
     CategoryStatisticsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
-        accountList = accountsAndActiveOne.accounts,
-        currentDateRangeEnum = dateRangeMenuUiState.dateRangeWithEnum.enum,
+        accounts = accountsAndActiveOne.accounts,
+        currentDateRangeEnum = dateRangeWithEnum.enum,
+        categoryType = categoryType,
         currentCollectionType = currentCollectionType,
-        parentCategory = null,
         collectionList = categoryCollectionWithIdsList,
         selectedCollection = categoryCollectionWithIdsList[0],
-        recordEntityList = recordEntityList
+        transactions = transactions,
+        parentCategory = null
     )
 }
 
 @Preview(
     name = "BudgetsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentBudgetsScreenPreview() {
+private fun BudgetsScreenPreview_() {
     BudgetsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
-        budgetEntityList = budgetEntityList,
-        budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsAndActiveOne.accounts,
-        recordList = recordEntityList
+        budgetDataModelsWithAssociations = budgetDataModelsWithAssociations,
+        accounts = accountsAndActiveOne.accounts,
+        transactions = transactions
     )
 }
 
 @Preview(
     name = "BudgetStatisticsScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentBudgetStatisticsScreenPreview() {
+private fun BudgetStatisticsScreenPreview_() {
     val defaultCategories = DefaultCategoriesPackage(LocalContext.current).getDefaultCategories()
-    val budget = budgetEntityList
-        .toDomainModels(
-            groupedCategoriesList = defaultCategories.expense,
-            associations = budgetAccountAssociationList,
-            accounts = accountList
-        )
-        .fillUsedAmountsByRecords(recordEntityList.toDomainModels())[0]
+    val budget = budgetDataModelsWithAssociations
+        .mapNotNull {
+            it.toDomainModel(groupedCategoriesList = defaultCategories.expense, accounts = accounts)
+        }
+        .fillUsedAmountsByTransactions(transactions = transactions)[0]
 
     BudgetStatisticsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
         groupedCategoriesByType = defaultCategories,
         accountList = accountsAndActiveOne.accounts.let { listOf(it[0], it[3]) },
         budget = budget,
@@ -468,35 +596,18 @@ fun MainAppContentBudgetStatisticsScreenPreview() {
 }
 
 @Preview(
-    name = "FinishSetupScreen",
-    group = "MainScreens",
-    apiLevel = 34,
-    locale = langCode,
-    device = device
-)
-@Composable
-fun MainAppContentFinishSetupScreenPreview() {
-    SetupFinishScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-    )
-}
-
-@Preview(
     name = "RecordCreationScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentRecordCreationScreenPreview() {
+private fun RecordCreationScreenPreview_() {
     val categoriesWithSubcategories = DefaultCategoriesPackage(LocalContext.current)
         .getDefaultCategories()
-    val recordDraft = RecordDraft(
-        general = RecordDraftGeneral(
-            isNew = true,
-            recordNum = 1,
+    val recordDraftWithItems = RecordDraftWithItems(
+        record = RecordDraft(
+            recordId = 0,
             account = accountsAndActiveOne.activeAccount,
             type = CategoryType.Expense,
             dateTimeState = DateTimeState.fromCurrentTime()
@@ -504,7 +615,6 @@ fun MainAppContentRecordCreationScreenPreview() {
         items = listOf(
             RecordDraftItem(
                 lazyListKey = 0,
-                index = 0,
                 categoryWithSub = categoriesWithSubcategories.expense[0]
                     .getWithFirstSubcategory(),
                 note = "bread",
@@ -519,31 +629,28 @@ fun MainAppContentRecordCreationScreenPreview() {
         appTheme = appTheme,
         accountsAndActiveOne = accountsAndActiveOne,
         groupedCategoriesByType = categoriesWithSubcategories,
-        recordDraft = recordDraft
+        recordDraftWithItems = recordDraftWithItems
     )
 }
 
 @Preview(
     name = "TransferCreationScreen",
     group = "MainScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentTransferCreationScreenPreview() {
+private fun TransferCreationScreenPreview_() {
     val accountList = accountsAndActiveOne.accounts
     val transferDraft = TransferDraft(
-        isNew = true,
-        sender = TransferDraftUnits(
+        id = 0,
+        sender = TransferDraftItem(
             account = accountList[0],
-            recordNum = 0,
             amount = "3000.0",
             rate = "22.44"
         ),
-        receiver = TransferDraftUnits(
+        receiver = TransferDraftItem(
             account = accountList[1],
-            recordNum = 0,
             amount = "133.69",
             rate = "1.00"
         ),
@@ -562,43 +669,38 @@ fun MainAppContentTransferCreationScreenPreview() {
 @Preview(
     name = "StartSetupScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentStartSetupScreenPreview() {
+private fun StartSetupScreenPreview_() {
     StartSetupScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
 @Preview(
     name = "SettingsHomeScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentSettingHomeScreenPreview() {
+private fun SettingsHomeScreenPreview_() {
     SettingsHomeScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible,
+        isSignedIn = true
     )
 }
 
 @Preview(
     name = "EditAccountsScreen",
     group = "AccountsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditAccountsScreenPreview() {
+private fun EditAccountsScreenPreview_() {
     EditAccountsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -609,15 +711,13 @@ fun MainAppContentEditAccountsScreenPreview() {
 @Preview(
     name = "EditAccountScreen",
     group = "AccountsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditAccountScreenPreview() {
+private fun EditAccountScreenPreview_() {
     EditAccountScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         account = accountsAndActiveOne.accounts.first()
     )
 }
@@ -625,63 +725,55 @@ fun MainAppContentEditAccountScreenPreview() {
 @Preview(
     name = "CurrencyPickerScreen",
     group = "AccountsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentCurrencyPickerScreenPreview() {
+private fun CurrencyPickerScreenPreview_() {
     CurrencyPickerScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
 @Preview(
     name = "EditBudgetsScreen",
     group = "BudgetsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditBudgetsScreenPreview() {
+private fun EditBudgetsScreenPreview_() {
     EditBudgetsScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
-        budgetEntityList = budgetEntityList,
-        budgetAccountAssociationList = budgetAccountAssociationList,
-        accountList = accountsAndActiveOne.accounts
+        budgetDataModelsWithAssociations = budgetDataModelsWithAssociations,
+        accounts = accountsAndActiveOne.accounts
     )
 }
 
 @Preview(
     name = "EditBudgetScreen",
     group = "BudgetsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditBudgetScreenPreview() {
+private fun EditBudgetScreenPreview_() {
     EditBudgetScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         accountList = accountsAndActiveOne.accounts,
-        budgetEntity = budgetEntityList.first(),
-        budgetAccountAssociationList = budgetAccountAssociationList
+        budgetDataModelWithAssociations = budgetDataModelsWithAssociations.first()
     )
 }
 
 @Preview(
     name = "EditCategoriesScreen",
     group = "CategoriesSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditCategoriesScreenPreview() {
+private fun EditCategoriesScreenPreview_() {
     EditCategoriesScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -692,45 +784,39 @@ fun MainAppContentEditCategoriesScreenPreview() {
 @Preview(
     name = "EditSubcategoriesScreen",
     group = "CategoriesSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditSubcategoriesScreenPreview() {
+private fun EditSubcategoriesScreenPreview_() {
     EditSubcategoriesScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
 @Preview(
     name = "EditCategoryScreen",
     group = "CategoriesSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditCategoryScreenPreview() {
+private fun EditCategoryScreenPreview_() {
     EditCategoryScreenPreview(
-        appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
+        appTheme = appTheme
     )
 }
 
 @Preview(
     name = "EditCategoryCollectionsScreen",
     group = "CollectionsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditCategoryCollectionsScreenPreview() {
+private fun EditCategoryCollectionsScreenPreview_() {
     EditCategoryCollectionsScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         collectionType = CategoryCollectionType.Mixed,
         categoryCollectionsWithIdsByType = categoryCollectionsWithIdsByType,
     )
@@ -739,44 +825,52 @@ fun MainAppContentEditCategoryCollectionsScreenPreview() {
 @Preview(
     name = "EditCategoryCollectionScreen",
     group = "CollectionsSettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEditCategoryCollectionScreenPreview() {
+private fun EditCategoryCollectionScreenPreview_() {
     EditCategoryCollectionScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
         collectionWithIds = categoryCollectionsWithIdsByType.mixed.first()
     )
 }
 
 @Preview(
-    name = "AppearanceScreen",
+    name = "PersonalizationScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentAppearanceScreenPreview() {
-    PersonalisationScreenPreview(
+private fun PersonalizationScreenPreview_() {
+    PersonalizationScreenPreview(
         appTheme = appTheme,
-        isAppSetUp = isAppSetUp,
-        isBottomBarVisible = isBottomBarVisible
+        isAppSetUp = isAppSetUp
+    )
+}
+
+@Preview(
+    name = "NotificationsScreen",
+    group = "SettingsScreens",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun NotificationsScreenPreview_() {
+    NotificationsScreenPreview(
+        appTheme = appTheme
     )
 }
 
 @Preview(
     name = "LanguageScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentLanguageScreenPreview() {
+private fun LanguageScreenPreview_() {
     LanguageScreenPreview(
         appTheme = appTheme,
         isAppSetUp = isAppSetUp,
@@ -788,15 +882,13 @@ fun MainAppContentLanguageScreenPreview() {
 @Preview(
     name = "SettingsDataScreen",
     group = "SettingsScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentSettingsDataScreenPreview() {
+private fun ResetDataScreenPreview_() {
     ResetDataScreenPreview(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible,
+        appTheme = appTheme
     )
 }
 
@@ -804,12 +896,11 @@ fun MainAppContentSettingsDataScreenPreview() {
 @Preview(
     name = "SignInScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentSignInScreenPreview() {
+private fun SignInScreenPreview_() {
     SignInScreenPreview(
         appTheme = appTheme
     )
@@ -818,13 +909,38 @@ fun MainAppContentSignInScreenPreview() {
 @Preview(
     name = "SignUpScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentSignUpScreenPreview() {
+private fun SignUpScreenPreview_() {
     SignUpScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "EmailVerificationScreen",
+    group = "AuthScreens",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun SignUpEmailVerificationScreenPreview_() {
+    SignUpEmailVerificationScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "FinishSignUpScreen",
+    group = "AuthScreens",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun FinishSignUpScreenPreview_() {
+    FinishSignUpScreenPreview(
         appTheme = appTheme
     )
 }
@@ -832,27 +948,51 @@ fun MainAppContentSignUpScreenPreview() {
 @Preview(
     name = "ProfileScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentProfileScreenPreview() {
+private fun ProfileScreenPreview_() {
     ProfileScreenPreview(
         appTheme = appTheme
     )
 }
 
 @Preview(
-    name = "UpdateEmailScreen",
+    name = "RequestEmailUpdateScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentUpdateEmailScreenPreview() {
-    UpdateEmailScreenPreview(
+private fun RequestEmailUpdateScreenPreview_() {
+    RequestEmailUpdateScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "EmailUpdateEmailVerification",
+    group = "AuthScreens",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun EmailUpdateEmailVerificationScreenPreview_() {
+    EmailUpdateEmailVerificationScreenPreview(
+        appTheme = appTheme
+    )
+}
+
+@Preview(
+    name = "VerifyEmailUpdate",
+    group = "AuthScreens",
+    locale = langCode,
+    device = device
+)
+@Composable
+private fun VerifyEmailUpdateScreenPreview_() {
+    VerifyEmailUpdateScreenPreview(
         appTheme = appTheme
     )
 }
@@ -860,12 +1000,11 @@ fun MainAppContentUpdateEmailScreenPreview() {
 @Preview(
     name = "UpdatePasswordScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentUpdatePasswordScreenPreview() {
+private fun UpdatePasswordScreenPreview_() {
     UpdatePasswordScreenPreview(
         appTheme = appTheme
     )
@@ -874,12 +1013,11 @@ fun MainAppContentUpdatePasswordScreenPreview() {
 @Preview(
     name = "RequestPasswordResetScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentRequestPasswordResetScreenPreview() {
+private fun RequestPasswordResetScreenPreview_() {
     RequestPasswordResetScreenPreview(
         appTheme = appTheme
     )
@@ -888,12 +1026,11 @@ fun MainAppContentRequestPasswordResetScreenPreview() {
 @Preview(
     name = "ResetPasswordScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentResetPasswordScreenPreview() {
+private fun ResetPasswordScreenPreview_() {
     ResetPasswordScreenPreview(
         appTheme = appTheme
     )
@@ -902,42 +1039,25 @@ fun MainAppContentResetPasswordScreenPreview() {
 @Preview(
     name = "DeleteAccountScreen",
     group = "AuthScreens",
-    apiLevel = 34,
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentDeleteAccountScreenPreview() {
+private fun DeleteAccountScreenPreview_() {
     DeleteAccountScreenPreview(
         appTheme = appTheme
     )
 }
 
 @Preview(
-    name = "EmailVerificationFailedScreen",
-    group = "AuthScreens",
-    apiLevel = 34,
+    name = "FinishSetupScreen",
+    group = "MainScreens",
     locale = langCode,
     device = device
 )
 @Composable
-fun MainAppContentEmailVerificationFailedScreenPreview() {
-    EmailVerificationErrorScreenPreview(
+private fun FinishSetupScreenPreview_() {
+    FinishSetupScreenPreview(
         appTheme = appTheme
-    )
-}
-
-@Preview(
-    name = "AuthResultSuccessScreen",
-    group = "AuthScreens",
-    apiLevel = 34,
-    locale = langCode,
-    device = device
-)
-@Composable
-fun MainAppContentAuthResultSuccessScreenPreview() {
-    AuthResultSuccessScreenPreview(
-        appTheme = appTheme,
-        screenType = AuthResultSuccessScreenType.PasswordUpdate
     )
 }

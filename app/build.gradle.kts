@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -15,18 +15,12 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 83
-        versionName = "4.1.3"
+        versionCode = 84
+        versionName = "5.0 alpha 1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas"
-            }
         }
 
     }
@@ -48,16 +42,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-
-        java {
-            toolchain {
-                languageVersion.set(JavaLanguageVersion.of(17))
-            }
-        }
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        jvmToolchain(17)
+
+        compilerOptions {
+            freeCompilerArgs.add("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+        }
     }
 
     bundle {
@@ -84,8 +76,8 @@ android {
 
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -93,7 +85,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.splashscreen)
     // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -120,18 +111,26 @@ dependencies {
     implementation(libs.review.ktx)
     implementation(libs.google.billing)
     implementation(libs.google.billing.ktx)
+    // WorkManager
+    implementation(libs.androidx.work.runtime)
     // Room
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
-    // DataStore
+    // Preferences
+    implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.multiplatform.settings)
+    implementation(libs.androidx.security.crypto)
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
     // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.analytics)
-    testImplementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.firebase.firestore.ktx)
     // Koin
     implementation(project.dependencies.platform(libs.koin.bom))
@@ -166,4 +165,8 @@ dependencies {
     testImplementation(libs.mockk)
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

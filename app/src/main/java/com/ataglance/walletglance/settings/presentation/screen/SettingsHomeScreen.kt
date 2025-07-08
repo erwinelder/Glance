@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.settings.presentation.screen
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,12 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -26,22 +28,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanceColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.Manrope
-import com.ataglance.walletglance.core.presentation.theme.Typography
+import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsExpanded
-import com.ataglance.walletglance.navigation.domain.utils.isScreen
-import com.ataglance.walletglance.settings.presentation.components.NavigateToSettingsCategoryButton
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.settings.presentation.component.NavigateToSettingsCategoryButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
+import org.koin.compose.koinInject
+
+@Composable
+fun SettingsHomeScreenWrapper(
+    screenPadding: PaddingValues,
+    navController: NavHostController,
+    navViewModel: NavigationViewModel
+) {
+    val isSignedIn = koinInject<UserContext>().isSignedIn()
+
+    SettingsHomeScreen(
+        screenPadding = screenPadding,
+        isSignedIn = isSignedIn,
+        onNavigateToScreen = { screen ->
+            navViewModel.navigateToScreen(navController = navController, screen = screen)
+        }
+    )
+}
 
 @Composable
 fun SettingsHomeScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
     isSignedIn: Boolean,
     onNavigateToScreen: (Any) -> Unit
 ) {
@@ -54,7 +76,7 @@ fun SettingsHomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp)
+            .padding(top = 16.dp + screenPadding.calculateTopPadding())
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,12 +84,13 @@ fun SettingsHomeScreen(
         ) {
             Text(
                 text = stringResource(R.string.settings),
-                color = GlanceColors.onSurface,
-                style = Typography.titleMedium
+                color = GlanciColors.onSurface,
+                style = GlanciTypography.titleMedium,
+                fontFamily = NotoSans
             )
             Text(
-                text = stringResource(R.string.version) + " 4.1.3",
-                color = GlanceColors.onSurface,
+                text = stringResource(R.string.version) + " 5.0 alpha 1",
+                color = GlanciColors.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,
                 fontFamily = Manrope
@@ -76,13 +99,13 @@ fun SettingsHomeScreen(
         Spacer(modifier = Modifier.weight(1f))
         if (!WindowTypeIsExpanded) {
             CompactLayout(
-                scaffoldPadding = scaffoldPadding,
+                screenPadding = screenPadding,
                 settingsCategories = settingsCategories,
                 onNavigateToScreen = onNavigateToScreen
             )
         } else {
             ExpandedLayout(
-                scaffoldPadding = scaffoldPadding,
+                screenPadding = screenPadding,
                 settingsCategories = settingsCategories,
                 onNavigateToScreen = onNavigateToScreen
             )
@@ -92,38 +115,37 @@ fun SettingsHomeScreen(
 
 @Composable
 private fun CompactLayout(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
     onNavigateToScreen: (Any) -> Unit
 ) {
-    val gap = 16.dp
-    val scrollState = rememberScrollState(initial = 1800)
-    
+    val lazyListState = rememberLazyListState(initialFirstVisibleItemScrollOffset = 1800)
+
     val categories by remember(settingsCategories) {
         derivedStateOf { settingsCategories.reversed() }
     }
 
-    Column(
+    LazyColumn(
+        state = lazyListState,
+        contentPadding = PaddingValues(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(gap),
-        modifier = Modifier
-            .verticalScroll(scrollState)
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        categories.forEach { category ->
+        items(items = categories) { category ->
             NavigateToSettingsCategoryButton(
                 category = category,
                 onNavigateToScreen = onNavigateToScreen
             )
         }
-        BottomSpacer(scaffoldPadding.calculateBottomPadding())
+        item {
+            BottomSpacer(padding = screenPadding.calculateBottomPadding())
+        }
     }
 }
 
 @Composable
 private fun ExpandedLayout(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues,
     settingsCategories: List<SettingsCategory>,
     onNavigateToScreen: (Any) -> Unit
 ) {
@@ -139,21 +161,25 @@ private fun ExpandedLayout(
         modifier = Modifier.fillMaxWidth()
     ) {
         repeat(3) {
-            item { BottomSpacer(scaffoldPadding.calculateBottomPadding()) }
+            item {
+                BottomSpacer(padding = screenPadding.calculateBottomPadding())
+            }
         }
         items(items = settingsCategories) { category ->
-            NavigateToSettingsCategoryButton(category = category, onNavigateToScreen = onNavigateToScreen)
+            NavigateToSettingsCategoryButton(
+                category = category,
+                onNavigateToScreen = onNavigateToScreen
+            )
         }
     }
 }
 
 @Composable
-fun BottomSpacer(scaffoldBottomPadding: Dp) {
-    val bottomPadding by remember {
-        derivedStateOf { scaffoldBottomPadding }
-    }
+fun BottomSpacer(padding: Dp) {
+    val padding by animateDpAsState(targetValue = padding)
+
     Spacer(
-        modifier = Modifier.height(bottomPadding + 8.dp)
+        modifier = Modifier.height(padding + 8.dp)
     )
 }
 
@@ -162,18 +188,12 @@ fun BottomSpacer(scaffoldBottomPadding: Dp) {
 @Composable
 fun SettingsHomeScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
-    isBottomBarVisible: Boolean = true,
+    isSignedIn: Boolean = true
 ) {
-    PreviewWithMainScaffoldContainer(
-        appTheme = appTheme,
-        isBottomBarVisible = isBottomBarVisible,
-        anyScreenInHierarchyIsScreenProvider = { it.isScreen(MainScreens.Settings) },
-        currentScreenIsScreenProvider = { false }
-    ) { scaffoldPadding ->
+    PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         SettingsHomeScreen(
-            scaffoldPadding = scaffoldPadding,
-            isSignedIn = false,
+            screenPadding = scaffoldPadding,
+            isSignedIn = isSignedIn,
             onNavigateToScreen = {}
         )
     }

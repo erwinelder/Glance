@@ -2,7 +2,6 @@ package com.ataglance.walletglance.di
 
 import com.ataglance.walletglance.account.data.local.source.AccountLocalDataSource
 import com.ataglance.walletglance.account.data.local.source.getAccountLocalDataSource
-import com.ataglance.walletglance.account.data.remote.dao.AccountRemoteDao
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSource
 import com.ataglance.walletglance.account.data.remote.source.AccountRemoteDataSourceImpl
 import com.ataglance.walletglance.account.data.repository.AccountRepository
@@ -12,20 +11,12 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCaseImpl
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCase
 import com.ataglance.walletglance.account.domain.usecase.SaveAccountsUseCaseImpl
 import com.ataglance.walletglance.account.presentation.viewmodel.ActiveAccountCardViewModel
+import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
-import com.ataglance.walletglance.core.data.remote.FirestoreAdapterFactory
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val accountModule = module {
-
-    /* ---------- DAOs ---------- */
-
-    single {
-        AccountRemoteDao(
-            firestoreAdapter = get<FirestoreAdapterFactory>().getAccountFirestoreAdapter()
-        )
-    }
 
     /* ---------- Data Sources ---------- */
 
@@ -34,7 +25,7 @@ val accountModule = module {
     }
 
     single<AccountRemoteDataSource> {
-        AccountRemoteDataSourceImpl(accountDao = get(), updateTimeDao = get())
+        AccountRemoteDataSourceImpl()
     }
 
     /* ---------- Repositories ---------- */
@@ -52,8 +43,7 @@ val accountModule = module {
     single<SaveAccountsUseCase> {
         SaveAccountsUseCaseImpl(
             accountRepository = get(),
-            recordRepository = get(),
-            deleteBudgetAccountAssociationsByAccountsUseCase = get()
+            transformAccountTransactionsToRecords = get()
         )
     }
 
@@ -61,13 +51,17 @@ val accountModule = module {
         GetAccountsUseCaseImpl(accountRepository = get())
     }
 
-    /* ---------- View Models ---------- */
+    /* ---------- ViewModels ---------- */
 
     viewModel {
         EditAccountsViewModel(
             saveAccountsUseCase = get(),
             getAccountsUseCase = get()
         )
+    }
+
+    viewModel { params ->
+        CurrencyPickerViewModel(selectedCurrency = params.getOrNull<String>())
     }
 
     viewModel {

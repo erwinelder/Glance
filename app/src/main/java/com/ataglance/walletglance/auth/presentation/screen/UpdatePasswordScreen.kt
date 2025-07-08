@@ -1,47 +1,116 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.containers.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainerWithTitle
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.components.containers.ResultBottomSheet
-import com.ataglance.walletglance.errorHandling.presentation.components.fields.TextFieldWithLabelAndErrorMsg
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldUiState
+import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
+import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
+import com.ataglance.walletglance.core.presentation.component.screenContainer.state.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithBackNavButtonTitleAndGlassSurface
+import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun UpdatePasswordScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    navController: NavHostController,
+    navViewModel: NavigationViewModel
+) {
+    val viewModel = koinViewModel<UpdatePasswordViewModel>()
+
+    val currentPasswordState by viewModel.passwordState.collectAsStateWithLifecycle()
+    val newPasswordState by viewModel.newPasswordState.collectAsStateWithLifecycle()
+    val confirmNewPasswordState by viewModel.confirmNewPasswordState.collectAsStateWithLifecycle()
+    val passwordUpdateIsAllowed by viewModel.passwordUpdateIsAllowed.collectAsStateWithLifecycle()
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
+
+    UpdatePasswordScreen(
+        screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
+        currentPasswordState = currentPasswordState,
+        onCurrentPasswordChange = viewModel::updateAndValidatePassword,
+        newPasswordState = newPasswordState,
+        onNewPasswordChange = viewModel::updateAndValidateNewPassword,
+        newPasswordConfirmationState = confirmNewPasswordState,
+        onNewPasswordConfirmationChange = viewModel::updateAndValidateConfirmNewPassword,
+        passwordUpdateIsAllowed = passwordUpdateIsAllowed,
+        onUpdatePassword = viewModel::updatePassword,
+        onNavigateToRequestPasswordResetScreen = {
+            navViewModel.popBackStackAndNavigate(
+                navController = navController,
+                screen = AuthScreens.RequestPasswordReset()
+            )
+        },
+        requestState = requestState,
+        onCancelRequest = viewModel::cancelPasswordUpdate,
+        onSuccessClose = navController::popBackStack,
+        onErrorClose = viewModel::resetRequestState
+    )
+}
 
 @Composable
 fun UpdatePasswordScreen(
-    currentPasswordState: ValidatedFieldUiState,
+    screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
+    currentPasswordState: ValidatedFieldState,
     onCurrentPasswordChange: (String) -> Unit,
-    newPasswordState: ValidatedFieldUiState,
+    newPasswordState: ValidatedFieldState,
     onNewPasswordChange: (String) -> Unit,
-    newPasswordConfirmationState: ValidatedFieldUiState,
+    newPasswordConfirmationState: ValidatedFieldState,
     onNewPasswordConfirmationChange: (String) -> Unit,
     passwordUpdateIsAllowed: Boolean,
-    onUpdatePasswordButtonClick: () -> Unit,
+    onUpdatePassword: () -> Unit,
     onNavigateToRequestPasswordResetScreen: () -> Unit,
-    resultState: ResultUiState?,
-    onResultReset: () -> Unit
+    requestState: RequestState<ButtonState>?,
+    onCancelRequest: () -> Unit,
+    onSuccessClose: () -> Unit,
+    onErrorClose: () -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
+    val backButtonImageRes = DrawableResByTheme(
+        lightDefault = R.drawable.password_light_default,
+        darkDefault = R.drawable.password_dark_default,
+    ).getByTheme(CurrAppTheme)
+
+    if (requestState != null) {
+        SetBackHandler()
+    }
+
+    AnimatedScreenWithRequestState(
+        screenPadding = screenPadding,
+        requestState = requestState,
+        onCancelRequest = onCancelRequest,
+        onSuccessClose = onSuccessClose,
+        onErrorClose = onErrorClose
     ) {
-        GlassSurfaceScreenContainerWithTitle(
+        ScreenContainerWithBackNavButtonTitleAndGlassSurface(
+            onNavigateBack = onNavigateBack,
+            backButtonText = stringResource(R.string.update_password),
+            backButtonImageRes = backButtonImageRes,
             title = stringResource(R.string.update_your_password),
             glassSurfaceContent = {
                 GlassSurfaceContent(
@@ -50,62 +119,66 @@ fun UpdatePasswordScreen(
                     newPasswordState = newPasswordState,
                     onNewPasswordChange = onNewPasswordChange,
                     newPasswordConfirmationState = newPasswordConfirmationState,
-                    onNewPasswordConfirmationChange = onNewPasswordConfirmationChange
+                    onNewPasswordConfirmationChange = onNewPasswordConfirmationChange,
+                    onUpdatePassword = onUpdatePassword
                 )
             },
-            buttonUnderGlassSurface = {
+            buttonBlockUnderGlassSurface = {
                 PrimaryButton(
                     text = stringResource(R.string.update_password),
                     enabled = passwordUpdateIsAllowed,
-                    onClick = onUpdatePasswordButtonClick
+                    onClick = onUpdatePassword
                 )
             },
-            bottomButton = {
+            bottomButtonBlock = {
                 SecondaryButton(
                     text = stringResource(R.string.reset_password),
                     onClick = onNavigateToRequestPasswordResetScreen
                 )
             }
         )
-        ResultBottomSheet(
-            resultState = resultState,
-            onDismissRequest = onResultReset
-        )
     }
 }
 
 @Composable
 private fun GlassSurfaceContent(
-    currentPasswordState: ValidatedFieldUiState,
+    currentPasswordState: ValidatedFieldState,
     onCurrentPasswordChange: (String) -> Unit,
-    newPasswordState: ValidatedFieldUiState,
+    newPasswordState: ValidatedFieldState,
     onNewPasswordChange: (String) -> Unit,
-    newPasswordConfirmationState: ValidatedFieldUiState,
-    onNewPasswordConfirmationChange: (String) -> Unit
+    newPasswordConfirmationState: ValidatedFieldState,
+    onNewPasswordConfirmationChange: (String) -> Unit,
+    onUpdatePassword: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     GlassSurfaceContentColumnWrapper(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.verticalScroll(scrollState)
     ) {
-        TextFieldWithLabelAndErrorMsg(
+        SmallTextFieldWithLabelAndMessages(
             state = currentPasswordState,
             onValueChange = onCurrentPasswordChange,
-            keyboardType = KeyboardType.Password,
+            labelText = stringResource(R.string.current_password),
             placeholderText = stringResource(R.string.password),
-            labelText = stringResource(R.string.current_password)
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
         )
-        TextFieldWithLabelAndErrorMsg(
+        SmallTextFieldWithLabelAndMessages(
             state = newPasswordState,
             onValueChange = onNewPasswordChange,
-            keyboardType = KeyboardType.Password,
+            labelText = stringResource(R.string.new_password),
             placeholderText = stringResource(R.string.password),
-            labelText = stringResource(R.string.new_password)
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
         )
-        TextFieldWithLabelAndErrorMsg(
+        SmallTextFieldWithLabelAndMessages(
             state = newPasswordConfirmationState,
             onValueChange = onNewPasswordConfirmationChange,
-            keyboardType = KeyboardType.Password,
+            labelText = stringResource(R.string.new_password_confirmation),
             placeholderText = stringResource(R.string.password),
-            labelText = stringResource(R.string.new_password_confirmation)
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Go,
+            onGoKeyboardAction = onUpdatePassword
         )
     }
 }
@@ -117,33 +190,34 @@ private fun GlassSurfaceContent(
 fun UpdatePasswordScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
 ) {
-    val userDataValidator = UserDataValidator()
-
     val newPassword = "_Password1"
-    val newPasswordConfirmation = "_Password11"
+    val confirmNewPassword = "_Password11"
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         UpdatePasswordScreen(
-            currentPasswordState = ValidatedFieldUiState(),
+            onNavigateBack = {},
+            currentPasswordState = ValidatedFieldState(),
             onCurrentPasswordChange = {},
-            newPasswordState = ValidatedFieldUiState(
+            newPasswordState = ValidatedFieldState(
                 fieldText = newPassword,
-                validationStates = userDataValidator.validatePassword(newPassword)
+                validationStates = UserDataValidator.validatePassword(newPassword)
                     .toUiStates()
             ),
             onNewPasswordChange = {},
-            newPasswordConfirmationState = ValidatedFieldUiState(
-                fieldText = newPasswordConfirmation,
-                validationStates = userDataValidator
-                    .validateConfirmationPassword(newPassword, newPasswordConfirmation)
+            newPasswordConfirmationState = ValidatedFieldState(
+                fieldText = confirmNewPassword,
+                validationStates = UserDataValidator
+                    .validateConfirmationPassword(newPassword, confirmNewPassword)
                     .toUiStates()
             ),
             onNewPasswordConfirmationChange = {},
             passwordUpdateIsAllowed = true,
-            onUpdatePasswordButtonClick = {},
+            onUpdatePassword = {},
             onNavigateToRequestPasswordResetScreen = {},
-            resultState = null,
-            onResultReset = {}
+            requestState = null,
+            onCancelRequest = {},
+            onSuccessClose = {},
+            onErrorClose = {}
         )
     }
 }

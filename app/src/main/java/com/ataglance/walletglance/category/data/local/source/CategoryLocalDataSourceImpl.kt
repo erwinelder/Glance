@@ -4,9 +4,9 @@ import com.ataglance.walletglance.category.data.local.dao.CategoryLocalDao
 import com.ataglance.walletglance.category.data.local.model.CategoryEntity
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 class CategoryLocalDataSourceImpl(
     private val categoryDao: CategoryLocalDao,
@@ -21,29 +21,47 @@ class CategoryLocalDataSourceImpl(
         updateTimeDao.saveUpdateTime(tableName = TableName.Category.name, timestamp = timestamp)
     }
 
-    override suspend fun upsertCategories(categories: List<CategoryEntity>, timestamp: Long) {
-        categoryDao.upsertCategories(categories = categories)
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun deleteUpdateTime() {
+        updateTimeDao.deleteUpdateTime(tableName = TableName.Category.name)
     }
 
-    override suspend fun deleteAllCategories(timestamp: Long) {
-        categoryDao.deleteAllCategories()
-        saveUpdateTime(timestamp = timestamp)
-    }
-
-    override suspend fun synchroniseCategories(
-        categoriesToSync: EntitiesToSync<CategoryEntity>,
+    override suspend fun saveCategories(
+        categories: List<CategoryEntity>,
         timestamp: Long
-    ) {
-        categoryDao.deleteAndUpsertCategories(
-            toDelete = categoriesToSync.toDelete,
-            toUpsert = categoriesToSync.toUpsert
-        )
-        saveUpdateTime(timestamp = timestamp)
+    ): List<CategoryEntity> {
+        return categoryDao.saveCategories(categories = categories).also {
+            saveUpdateTime(timestamp = timestamp)
+        }
     }
 
-    override fun getAllCategories(): Flow<List<CategoryEntity>> {
-        return categoryDao.getAllCategories()
+    override suspend fun deleteCategories(categories: List<CategoryEntity>) {
+        categoryDao.deleteCategories(categories = categories)
+    }
+
+    override suspend fun deleteAllCategories() {
+        categoryDao.deleteAllCategories()
+        deleteUpdateTime()
+    }
+
+    override suspend fun deleteAndSaveCategories(
+        toDelete: List<CategoryEntity>,
+        toUpsert: List<CategoryEntity>,
+        timestamp: Long
+    ): List<CategoryEntity> {
+        return categoryDao.deleteAndSaveCategories(toDelete = toDelete, toSave = toUpsert)
+            .also { saveUpdateTime(timestamp = timestamp) }
+    }
+
+    override suspend fun getCategoriesAfterTimestamp(timestamp: Long): List<CategoryEntity> {
+        return categoryDao.getCategoriesAfterTimestamp(timestamp = timestamp)
+    }
+
+    override fun getAllCategoriesAsFlow(): Flow<List<CategoryEntity>> {
+        return categoryDao.getAllCategoriesAsFlow()
+    }
+
+    override suspend fun getAllCategories(): List<CategoryEntity> {
+        return categoryDao.getAllCategoriesAsFlow().firstOrNull().orEmpty()
     }
 
     override suspend fun getCategoriesByType(type: Char): List<CategoryEntity> {
@@ -51,7 +69,6 @@ class CategoryLocalDataSourceImpl(
     }
 
 }
-
 
 fun getCategoryLocalDataSource(appDatabase: AppDatabase): CategoryLocalDataSource {
     return CategoryLocalDataSourceImpl(

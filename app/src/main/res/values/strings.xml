@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Glance</string>
+    <string name="app_name">Glanci</string>
 
     <!-- navigation bar buttons -->
     <string name="home">Home</string>
@@ -16,17 +16,14 @@
     <string name="chosen_budgets">Chosen budgets</string>
 
     <!-- Buttons -->
-    <string name="sign_in">Sign in</string>
-    <string name="sign_up">Sign up</string>
-    <string name="sign_out">Sign out</string>
-    <string name="send_email">Send email</string>
-    <string name="update_email">Update email</string>
-    <string name="reset_password">Reset password</string>
-    <string name="update_password">Update password</string>
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
+    <string name="update">Update</string>
     <string name="confirm">Confirm</string>
+    <string name="check">Check</string>
+    <string name="check_verification">Check verification</string>
+    <string name="verify">Verify</string>
     <string name="cancel">Cancel</string>
     <string name="_continue">Continue</string>
     <string name="save_and_continue">Save and continue</string>
@@ -41,6 +38,7 @@
     <string name="add_subcategory">Add subcategory</string>
     <string name="add_collection">Add collection</string>
     <string name="add_budget">Add budget</string>
+    <string name="create_record">Create record</string>
     <string name="save_record">Save record</string>
     <string name="make_transfer">Make transfer</string>
     <string name="repeat">Repeat</string>
@@ -52,6 +50,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="preferences">Preferences</string>
+    <string name="adjust">Adjust</string>
     <string name="include_in_budgets">Include in budgets</string>
 
     <!-- Settings categories -->
@@ -64,29 +63,34 @@
     <string name="color_theme">Color theme</string>
     <string name="navigation_buttons">Navigation buttons</string>
     <string name="widgets">Widgets</string>
+    <string name="notifications">Notifications</string>
     <string name="language">Language</string>
     <string name="reset_data">Reset data</string>
     <string name="profile">Profile</string>
     <string name="delete_account">Delete account</string>
     <string name="manage_subscriptions">Manage subscriptions</string>
 
-    <!-- Setting up -->
+    <!-- Settings -->
     <string name="start">Start</string>
     <string name="finish">Finish</string>
     <string name="_import">Import</string>
     <string name="start_setup">Start setup</string>
-    <string name="sign_in_to_your_account">Sign in to your account</string>
-    <string name="create_new_account">Create a new account</string>
-    <string name="update_your_email">Update your email</string>
-    <string name="update_your_password">Update your password</string>
-    <string name="request_password_reset">Request password reset</string>
-    <string name="reset_your_password">Reset your password</string>
-    <string name="welcome_back_to_glance">Welcome back to Glance!</string>
-    <string name="welcome_to_glance">Welcome to Glance!</string>
     <string name="continue_to_app">Continue to app</string>
-    <string name="continue_as_guest">Continue as guest</string>
     <string name="continue_setup">Continue setup</string>
+    <string name="adjust_app_notifications">Adjust app notifications</string>
     <string name="choose_app_language">Choose app language</string>
+
+    <!-- Settings loaders -->
+    <string name="saving_language_loader">Saving language…</string>
+
+    <!-- Settings error -->
+    <string name="not_saved">Not saved</string>
+
+    <!-- Settings Notifications -->
+    <string name="daily_reminders_to_record_expenses">Daily reminders to record your expenses</string>
+
+    <!-- Budgets -->
+    <string name="budget_statistics_title">Budget statistics</string>
 
     <!-- Fields -->
     <string name="email">E-mail</string>
@@ -129,7 +133,9 @@
     <!-- Field validation -->
     <string name="required_field">required field</string>
     <string name="is_valid">is valid</string>
-    <string name="not_valid_email">not a valid email</string>
+    <string name="is_not_valid">is not valid</string>
+    <string name="too_short">too short</string>
+    <string name="too_long">too long</string>
     <string name="at_least_8_chars">at least 8 characters</string>
     <string name="at_least_1_spec_char">at least 1 special character</string>
     <string name="at_least_1_digit">at least 1 digit</string>
@@ -138,36 +144,75 @@
     <string name="passwords_do_match">Passwords do match</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
 
-    <!-- Auth error handling -->
+    <!-- Auth -->
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_out">Sign out</string>
+    <string name="send_email">Send email</string>
+    <string name="update_email">Update email</string>
+    <string name="reset_password">Reset password</string>
+    <string name="update_password">Update password</string>
+    <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="create_new_account">Create a new account</string>
+    <string name="update_your_email">Update your email</string>
+    <string name="update_your_password">Update your password</string>
+    <string name="request_password_reset">Request password reset</string>
+    <string name="reset_your_password">Reset your password</string>
+    <string name="continue_as_guest">Continue as guest</string>
+    <string name="email_verification">Email verification</string>
     <string name="all_set">All set!</string>
     <string name="oops">Oops!</string>
-    <string name="user_already_exists_error">User already exists</string>
-    <string name="user_not_created_error">User creation failed</string>
-    <string name="user_data_not_saved_error">User data was not saved</string>
-    <string name="user_not_found_error">User not found</string>
-    <string name="user_not_signed_in_error">User is not signed in</string>
-    <string name="invalid_email_error">Invalid email</string>
-    <string name="invalid_code_error">Invalid code</string>
-    <string name="wrong_credentials_error">Wrong credentials</string>
-    <string name="sign_in_error">Error during sign in</string>
-    <string name="reauthentication_error">Error during reauthentication</string>
-    <string name="sign_up_email_verification_error">An error occurred while sending the verification email</string>
-    <string name="email_for_password_reset_error">An error occurred while sending the email for password reset</string>
-    <string name="password_update_success">Password has been updated successfully</string>
-    <string name="password_updated">Password updated!</string>
-    <string name="password_reset_error">Password reset failed</string>
-    <string name="update_password_error">Error during updating password</string>
-    <string name="email_sent">Email sent!</string>
-    <string name="sign_up_email_verification_sent">A verification email for sign-up has been sent. Please follow the link in the email to complete your registration.</string>
-    <string name="update_email_email_verification_sent">A verification email to update your email address has been sent. Please follow the link in the email to complete the update.</string>
-    <string name="email_update_success">Email has been updated successfully</string>
-    <string name="email_verification_error">Email verification failed</string>
-    <string name="reset_password_email_sent">An email for password reset has been sent. Please follow the link in the email.</string>
+    <string name="verify_email">Verify email</string>
+    <string name="sign_up_verify_email_description">Verify your email to finish your registration.</string>
+    <string name="email_update_verify_email_description">Verify your email to finish email update.</string>
     <string name="sign_out_of_your_account">Sign out of your account? You will need to sign in again to access your data.</string>
+
+    <!-- Auth loaders -->
+    <string name="verifying_your_credentials_loader">Verifying your credentials…</string>
+    <string name="creating_your_identity_loader">Creating your identity…</string>
+    <string name="checking_email_verification_loader">Checking email verification…</string>
+    <string name="finishing_your_registration_loader">Finishing your registration…</string>
+    <string name="requesting_email_update_loader">Requesting email update…</string>
+    <string name="verifying_your_email_loader">Verifying your email…</string>
+    <string name="updating_your_password_loader">Updating your password…</string>
+    <string name="requesting_password_reset_loader">Requesting password reset…</string>
+    <string name="deleting_your_account_loader">Deleting your account…</string>
+
+    <!-- Auth success -->
+    <string name="welcome_back_to_glance">Welcome back to Glanci!</string>
+    <string name="welcome_to_glance">Welcome to Glanci!</string>
+    <string name="email_sent">Email sent!</string>
     <string name="account_deleted">Account deleted!</string>
-    <string name="your_account_has_been_deleted_successfully">Your account has been deleted successfully</string>
-    <string name="deleting_user_account_error">An error occurred while deleting user account</string>
-    <string name="deleting_user_data_error">An error occurred while deleting user data</string>
+    <string name="sign_up_email_verification_sent_message">A verification email for sign-up has been sent. Please follow the link in the email to complete your registration.</string>
+    <string name="update_email_email_verification_sent_message">A verification email to update your email address has been sent. Please follow the link in the email to complete the update.</string>
+    <string name="email_updated_successfully_message">Email has been updated successfully.</string>
+    <string name="password_updated_successfully_message">Password has been updated successfully.</string>
+    <string name="reset_password_email_sent_message">An email for password reset has been sent. Please follow the link in the email.</string>
+    <string name="your_account_deleted_successfully_message">Your account has been deleted successfully.</string>
+
+    <!-- Auth error -->
+    <string name="user_not_signed_in_message">User is not signed in.</string>
+    <string name="request_contains_invalid_data_message">The request contains invalid data.</string>
+    <string name="your_session_expired_message">Your session has expired.</string>
+    <string name="update_required">Update required</string>
+    <string name="app_update_required_message">The new app version is available. Please update the app to ensure all features work correctly.</string>
+    <string name="credentials_are_invalid_message">Credentials are invalid.</string>
+    <string name="reauthentication_error">Error during reauthentication.</string>
+    <string name="email_not_verified_message">Email is not verified.</string>
+    <string name="user_not_found_message">User not found.</string>
+    <string name="sign_in_failed_message">An error occurred during sign-in.</string>
+    <string name="user_already_exists_message">User already exists.</string>
+    <string name="sign_up_email_verification_failed_message">An error occurred while sending the verification email.</string>
+    <string name="sign_up_failed_message">An error occurred during sign-up.</string>
+    <string name="email_verification_check_failed_message">An error occurred while checking email verification.</string>
+    <string name="verification_code_invalid_or_expired_message">Verification code is invalid or expired.</string>
+    <string name="sign_up_completing_failed_message">An error occurred while completing sign-up.</string>
+    <string name="email_update_request_failed_message">An error occurred while requesting an email update.</string>
+    <string name="email_update_failed_message">An error occurred while updating your email.</string>
+    <string name="password_update_failed_message">An error occurred while updating your password.</string>
+    <string name="password_reset_request_failed_message">An error occurred while requesting a password reset.</string>
+    <string name="password_reset_failed_message">An error occurred while resetting your password.</string>
+    <string name="account_deletion_failed_message">An error occurred while deleting your account.</string>
 
     <!-- Billing error handling -->
     <string name="subscribed_successfully">Subscribed successfully</string>
@@ -176,11 +221,28 @@
     <string name="no_network">No network connection</string>
     <string name="subscription_purchase_error">An error occurred while handling the purchase</string>
 
+    <!-- Budgets -->
+    <string name="budget">Budget</string>
+
+    <!-- Category Collections -->
+    <string name="category_collection">Category collection</string>
+
+    <!-- Notifications -->
+    <string name="general_notifications_channel_name">General notifications</string>
+    <string name="notifications_denied_title">Notifications denied</string>
+    <string name="notifications_denied_message">You have denied notifications from Glanci. To allow this type of notification, please turn them on in your system settings.</string>
+    <string name="daily_records_reminder_notification_title">Daily Records Reminder</string>
+    <string name="daily_records_reminder_notification_message">Just don\'t forget to record your daily expenses.</string>
+
     <!-- Widgets -->
     <string name="greetings_title_morning">Good morning!</string>
+    <string name="greetings_title_morning_username">Good morning, %s!</string>
     <string name="greetings_title_afternoon">Good afternoon!</string>
+    <string name="greetings_title_afternoon_username">Good afternoon, %s!</string>
     <string name="greetings_title_evening">Good evening!</string>
+    <string name="greetings_title_evening_username">Good evening, %s!</string>
     <string name="greetings_title_night">Good evening!</string>
+    <string name="greetings_title_night_username">Good evening, %s!</string>
     <string name="greetings_empty_message">No expenses yet today</string>
     <string name="greetings_expenses_message">Today you spent %s %s</string>
     <string name="from_capital">From</string>

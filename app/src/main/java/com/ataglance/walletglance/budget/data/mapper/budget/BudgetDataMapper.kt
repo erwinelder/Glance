@@ -1,95 +1,145 @@
 package com.ataglance.walletglance.budget.data.mapper.budget
 
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociationEntity
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
-import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountRemoteAssociation
-import com.ataglance.walletglance.budget.data.remote.model.BudgetRemoteEntity
-import com.ataglance.walletglance.core.utils.convertToDoubleOrZero
-import com.ataglance.walletglance.core.utils.convertToIntOrZero
+import com.ataglance.walletglance.budget.data.local.model.BudgetEntityWithAssociations
+import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociationDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModel
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
+import com.ataglance.walletglance.budget.data.remote.model.BudgetAccountAssociationDto
+import com.ataglance.walletglance.budget.data.remote.model.BudgetDto
+import com.ataglance.walletglance.budget.data.remote.model.BudgetDtoWithAssociations
 
 
-fun BudgetEntity.toRemoteEntity(updateTime: Long, deleted: Boolean): BudgetRemoteEntity {
-    return BudgetRemoteEntity(
-        updateTime = updateTime,
-        deleted = deleted,
-        id = id,
-        amountLimit = amountLimit,
-        categoryId = categoryId,
-        name = name,
-        repeatingPeriod = repeatingPeriod
+fun BudgetDataModel.withAssociations(
+    associations: List<BudgetAccountAssociationDataModel> = emptyList()
+): BudgetDataModelWithAssociations {
+    return BudgetDataModelWithAssociations(
+        budget = this,
+        associations = associations
     )
 }
 
-fun BudgetRemoteEntity.toLocalEntity(): BudgetEntity {
+
+fun BudgetDataModel.toEntity(timestamp: Long, deleted: Boolean): BudgetEntity {
     return BudgetEntity(
         id = id,
         amountLimit = amountLimit,
         categoryId = categoryId,
         name = name,
+        repeatingPeriod = repeatingPeriod,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun BudgetAccountAssociationDataModel.toEntity(): BudgetAccountAssociationEntity {
+    return BudgetAccountAssociationEntity(budgetId = budgetId, accountId = accountId)
+}
+
+fun BudgetDataModelWithAssociations.toEntityWithAssociations(
+    timestamp: Long,
+    deleted: Boolean
+): BudgetEntityWithAssociations {
+    return BudgetEntityWithAssociations(
+        budget = budget.toEntity(timestamp = timestamp, deleted = deleted),
+        associations = associations.map { it.toEntity() }
+    )
+}
+
+
+fun BudgetEntity.toDataModel(): BudgetDataModel {
+    return BudgetDataModel(
+        id = id,
+        amountLimit = amountLimit,
+        categoryId = categoryId,
+        name = name,
         repeatingPeriod = repeatingPeriod
     )
 }
 
+fun BudgetAccountAssociationEntity.toDataModel(): BudgetAccountAssociationDataModel {
+    return BudgetAccountAssociationDataModel(budgetId = budgetId, accountId = accountId)
+}
 
-fun BudgetAccountAssociation.toRemoteAssociation(
-    updateTime: Long,
+fun BudgetEntityWithAssociations.toDataModelWithAssociations(): BudgetDataModelWithAssociations {
+    return BudgetDataModelWithAssociations(
+        budget = budget.toDataModel(),
+        associations = associations.map { it.toDataModel() }
+    )
+}
+
+
+fun BudgetDataModel.toDto(timestamp: Long, deleted: Boolean): BudgetDto {
+    return BudgetDto(
+        id = id,
+        amountLimit = amountLimit,
+        categoryId = categoryId,
+        name = name,
+        repeatingPeriod = repeatingPeriod,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun BudgetAccountAssociationDataModel.toDto(): BudgetAccountAssociationDto {
+    return BudgetAccountAssociationDto(budgetId = budgetId, accountId = accountId)
+}
+
+fun BudgetDataModelWithAssociations.toDtoWithAssociations(
+    timestamp: Long,
     deleted: Boolean
-): BudgetAccountRemoteAssociation {
-    return BudgetAccountRemoteAssociation(
-        updateTime = updateTime,
-        deleted = deleted,
-        budgetId = budgetId,
-        accountId = accountId
-    )
-}
-
-fun BudgetAccountRemoteAssociation.toLocalAssociation(): BudgetAccountAssociation {
-    return BudgetAccountAssociation(
-        budgetId = budgetId,
-        accountId = accountId
+): BudgetDtoWithAssociations {
+    return BudgetDtoWithAssociations(
+        budget = budget.toDto(timestamp = timestamp, deleted = deleted),
+        associations = associations.map { it.toDto() }
     )
 }
 
 
-fun BudgetRemoteEntity.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "id" to id,
-        "amountLimit" to amountLimit,
-        "categoryId" to categoryId,
-        "name" to name,
-        "repeatingPeriod" to repeatingPeriod,
+fun BudgetEntity.toDto(): BudgetDto {
+    return BudgetDto(
+        id = id,
+        amountLimit = amountLimit,
+        categoryId = categoryId,
+        name = name,
+        repeatingPeriod = repeatingPeriod,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }
 
-fun Map<String, Any?>.toBudgetRemoteEntity(): BudgetRemoteEntity {
-    return BudgetRemoteEntity(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        id = this["id"].convertToIntOrZero(),
-        amountLimit = this["amountLimit"].convertToDoubleOrZero(),
-        categoryId = this["categoryId"].convertToIntOrZero(),
-        name = this["name"] as String,
-        repeatingPeriod = this["repeatingPeriod"] as String,
+fun BudgetAccountAssociationEntity.toDto(): BudgetAccountAssociationDto {
+    return BudgetAccountAssociationDto(budgetId = budgetId, accountId = accountId)
+}
+
+fun BudgetEntityWithAssociations.toDtoWithAssociations(): BudgetDtoWithAssociations {
+    return BudgetDtoWithAssociations(
+        budget = budget.toDto(),
+        associations = associations.map { it.toDto() }
     )
 }
 
 
-fun BudgetAccountRemoteAssociation.toMap(): HashMap<String, Any> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "budgetId" to budgetId,
-        "accountId" to accountId
+fun BudgetDto.toEntity(): BudgetEntity {
+    return BudgetEntity(
+        id = id,
+        amountLimit = amountLimit,
+        categoryId = categoryId,
+        name = name,
+        repeatingPeriod = repeatingPeriod,
+        timestamp = timestamp,
+        deleted = deleted
     )
 }
 
-fun Map<String, Any?>.toBudgetAccountRemoteAssociation(): BudgetAccountRemoteAssociation {
-    return BudgetAccountRemoteAssociation(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        budgetId = this["budgetId"].convertToIntOrZero(),
-        accountId = this["accountId"].convertToIntOrZero()
+fun BudgetAccountAssociationDto.toEntity(): BudgetAccountAssociationEntity {
+    return BudgetAccountAssociationEntity(budgetId = budgetId, accountId = accountId)
+}
+
+fun BudgetDtoWithAssociations.toEntityWithAssociations(): BudgetEntityWithAssociations {
+    return BudgetEntityWithAssociations(
+        budget = budget.toEntity(),
+        associations = associations.map { it.toEntity() }
     )
 }

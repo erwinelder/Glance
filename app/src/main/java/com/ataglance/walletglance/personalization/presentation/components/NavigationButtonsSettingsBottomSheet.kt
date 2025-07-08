@@ -8,23 +8,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.presentation.components.containers.GlanceBottomSheet
-import com.ataglance.walletglance.core.presentation.components.containers.ReorderableListStyled
-import com.ataglance.walletglance.core.presentation.components.dividers.SmallDivider
-import com.ataglance.walletglance.core.presentation.components.other.ScreenNameWithIconComponent
-import com.ataglance.walletglance.navigation.domain.model.BottomBarNavigationButton
+import com.ataglance.walletglance.core.presentation.component.bottomSheet.BottomSheetComponent
+import com.ataglance.walletglance.core.presentation.component.container.reorderable.ReorderableListStyled
+import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
+import com.ataglance.walletglance.core.presentation.component.other.ScreenNameWithIconComponent
+import com.ataglance.walletglance.navigation.presentation.model.BottomNavBarButtonState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationButtonsSettingsBottomSheet(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    navigationButtonList: List<BottomBarNavigationButton>,
+    navigationButtonList: List<BottomNavBarButtonState>,
     onMoveButtons: (Int, Int) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
 
-    GlanceBottomSheet(
+    BottomSheetComponent(
         visible = visible,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest
@@ -33,7 +33,7 @@ fun NavigationButtonsSettingsBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
-            ScreenNameWithIconComponent(navigationButton = BottomBarNavigationButton.Home)
+            ScreenNameWithIconComponent(navigationButton = BottomNavBarButtonState.Home())
             SmallDivider(modifier = Modifier.padding(top = 16.dp))
             ReorderableListStyled(
                 list = navigationButtonList,
@@ -46,7 +46,7 @@ fun NavigationButtonsSettingsBottomSheet(
                 )
             }
             SmallDivider(modifier = Modifier.padding(bottom = 16.dp))
-            ScreenNameWithIconComponent(navigationButton = BottomBarNavigationButton.Settings)
+            ScreenNameWithIconComponent(navigationButton = BottomNavBarButtonState.Settings())
         }
     }
 }

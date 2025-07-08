@@ -7,13 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
 import com.ataglance.walletglance.billing.domain.model.AppSubscriptions
 import com.ataglance.walletglance.billing.domain.model.BillingSubscriptionManager
+import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiState
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiStateList
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
-import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.mapper.toUiState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultUiState
+import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -49,7 +48,7 @@ class SubscriptionViewModel(
     }
 
 
-    private val _purchaseResult: MutableStateFlow<ResultUiState?> = MutableStateFlow(null)
+    private val _purchaseResult: MutableStateFlow<ResultTitleWithMessageState?> = MutableStateFlow(null)
     val purchaseResult = _purchaseResult.asStateFlow()
 
     private fun observeNewPurchase() {
@@ -59,9 +58,9 @@ class SubscriptionViewModel(
                     is ResultData.Success -> ResultData.Success(purchaseResult.data)
                     is ResultData.Error -> ResultData.Error(purchaseResult.error)
                 }
-                _purchaseResult.update {
-                    result.toUiState()
-                }
+//                _purchaseResult.update {
+//                    result.toResultState()
+//                }
             }
         }
     }

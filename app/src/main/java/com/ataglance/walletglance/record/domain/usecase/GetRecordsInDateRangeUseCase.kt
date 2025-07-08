@@ -1,13 +1,13 @@
 package com.ataglance.walletglance.record.domain.usecase
 
-import com.ataglance.walletglance.core.domain.date.LongDateRange
-import com.ataglance.walletglance.record.domain.model.Record
+import com.ataglance.walletglance.core.domain.date.TimestampRange
+import com.ataglance.walletglance.transaction.domain.model.RecordWithItems
 import kotlinx.coroutines.flow.Flow
 
 interface GetRecordsInDateRangeUseCase {
 
-    fun getFlow(range: LongDateRange): Flow<List<Record>>
+    fun getAsFlow(range: TimestampRange): Flow<List<RecordWithItems>>
 
-    suspend fun get(range: LongDateRange): List<Record>
+    suspend fun get(range: TimestampRange): List<RecordWithItems>
 
 }

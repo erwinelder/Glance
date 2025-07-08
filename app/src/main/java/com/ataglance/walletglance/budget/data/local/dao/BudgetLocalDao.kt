@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
+import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociationEntity
 import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
 
 @Dao
@@ -17,52 +17,52 @@ interface BudgetLocalDao {
     @Delete
     suspend fun deleteBudgets(budgets: List<BudgetEntity>)
 
-    @Transaction
-    suspend fun deleteAndUpsertBudgets(toDelete: List<BudgetEntity>, toUpsert: List<BudgetEntity>) {
-        deleteBudgets(toDelete)
-        upsertBudgets(toUpsert)
-    }
+    @Query("SELECT * FROM budget WHERE timestamp > :timestamp")
+    suspend fun getBudgetsAfterTimestamp(timestamp: Long): List<BudgetEntity>
 
-    @Query("SELECT * FROM Budget WHERE id = :id")
+    @Query("SELECT * FROM budget WHERE id = :id AND deleted = 0")
     suspend fun getBudget(id: Int): BudgetEntity?
 
-    @Query("SELECT * FROM Budget")
+    @Query("SELECT * FROM budget WHERE deleted = 0")
     suspend fun getAllBudgets(): List<BudgetEntity>
 
 
     @Upsert
-    suspend fun upsertBudgetAccountAssociations(associations: List<BudgetAccountAssociation>)
+    suspend fun upsertBudgetAccountAssociations(associations: List<BudgetAccountAssociationEntity>)
 
     @Delete
-    suspend fun deleteBudgetAccountAssociations(associations: List<BudgetAccountAssociation>)
+    suspend fun deleteBudgetAccountAssociations(associations: List<BudgetAccountAssociationEntity>)
+
+    @Query("SELECT * FROM budget_account_association WHERE budgetId = :budgetId")
+    suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociationEntity>
+
+    @Query("SELECT * FROM budget_account_association WHERE budgetId IN (:budgetIds)")
+    suspend fun getBudgetAccountAssociations(budgetIds: List<Int>): List<BudgetAccountAssociationEntity>
+
+    @Query("SELECT * FROM budget_account_association")
+    suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociationEntity>
+
 
     @Transaction
-    suspend fun deleteAndUpsertBudgetAccountAssociations(
-        toDelete: List<BudgetAccountAssociation>,
-        toUpsert: List<BudgetAccountAssociation>
+    suspend fun upsertBudgetsAndAssociations(
+        budgets: List<BudgetEntity>,
+        associations: List<BudgetAccountAssociationEntity>
     ) {
-        deleteBudgetAccountAssociations(toDelete)
-        upsertBudgetAccountAssociations(toUpsert)
+        upsertBudgets(budgets = budgets)
+        upsertBudgetAccountAssociations(associations = associations)
     }
-
-    @Query("SELECT * FROM BudgetAccountAssociation WHERE budgetId = :budgetId")
-    suspend fun getBudgetAccountAssociations(budgetId: Int): List<BudgetAccountAssociation>
-
-    @Query("SELECT * FROM BudgetAccountAssociation")
-    suspend fun getAllBudgetAccountAssociations(): List<BudgetAccountAssociation>
-
 
     @Transaction
     suspend fun deleteAndUpsertBudgetsAndAssociations(
         budgetsToDelete: List<BudgetEntity>,
         budgetsToUpsert: List<BudgetEntity>,
-        associationsToDelete: List<BudgetAccountAssociation>,
-        associationsToUpsert: List<BudgetAccountAssociation>
+        associationsToUpsert: List<BudgetAccountAssociationEntity>,
+        associationsToDelete: List<BudgetAccountAssociationEntity>
     ) {
-        deleteBudgets(budgetsToDelete)
-        upsertBudgets(budgetsToUpsert)
-        deleteBudgetAccountAssociations(associationsToDelete)
-        upsertBudgetAccountAssociations(associationsToUpsert)
+        deleteBudgets(budgets = budgetsToDelete)
+        upsertBudgets(budgets = budgetsToUpsert)
+        upsertBudgetAccountAssociations(associations = associationsToUpsert)
+        deleteBudgetAccountAssociations(associations = associationsToDelete)
     }
 
 }

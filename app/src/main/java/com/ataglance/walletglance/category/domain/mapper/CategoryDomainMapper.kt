@@ -24,7 +24,7 @@ fun List<Category>.group(): List<GroupedCategories> {
     return categories.map { category ->
         GroupedCategories(
             category = category,
-            subcategoryList = subcategoryMap[category.id].orEmpty()
+            subcategories = subcategoryMap[category.id].orEmpty()
         )
     }
 }

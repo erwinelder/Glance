@@ -1,93 +1,177 @@
 package com.ataglance.walletglance.record.data.mapper
 
-import com.ataglance.walletglance.core.utils.convertToCharOrNull
-import com.ataglance.walletglance.core.utils.convertToDoubleOrZero
-import com.ataglance.walletglance.core.utils.convertToIntOrNull
-import com.ataglance.walletglance.core.utils.convertToIntOrZero
 import com.ataglance.walletglance.record.data.local.model.RecordEntity
-import com.ataglance.walletglance.record.data.remote.model.RecordRemoteEntity
-import com.ataglance.walletglance.record.domain.model.RecordType
-import com.ataglance.walletglance.record.domain.utils.asChar
+import com.ataglance.walletglance.record.data.local.model.RecordEntityWithItems
+import com.ataglance.walletglance.record.data.local.model.RecordItemEntity
+import com.ataglance.walletglance.record.data.model.RecordDataModel
+import com.ataglance.walletglance.record.data.model.RecordDataModelWithItems
+import com.ataglance.walletglance.record.data.model.RecordItemDataModel
+import com.ataglance.walletglance.record.data.remote.model.RecordCommandDto
+import com.ataglance.walletglance.record.data.remote.model.RecordCommandDtoWithItems
+import com.ataglance.walletglance.record.data.remote.model.RecordItemDto
+import com.ataglance.walletglance.record.data.remote.model.RecordQueryDto
+import com.ataglance.walletglance.record.data.remote.model.RecordQueryDtoWithItems
 
 
-fun RecordEntity.toRemoteEntity(updateTime: Long, deleted: Boolean): RecordRemoteEntity {
-    return RecordRemoteEntity(
-        updateTime = updateTime,
-        deleted = deleted,
-        id = id,
-        recordNum = recordNum,
-        date = date,
-        type = type,
-        accountId = accountId,
-        amount = amount,
-        quantity = quantity,
-        categoryId = categoryId,
-        subcategoryId = subcategoryId,
-        note = note,
-        includeInBudgets = includeInBudgets
-    )
-}
-
-fun RecordRemoteEntity.toLocalEntity(): RecordEntity {
+fun RecordDataModel.toEntity(timestamp: Long, deleted: Boolean): RecordEntity {
     return RecordEntity(
         id = id,
-        recordNum = recordNum,
         date = date,
         type = type,
         accountId = accountId,
-        amount = amount,
+        includeInBudgets = includeInBudgets,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun RecordItemDataModel.toEntity(): RecordItemEntity {
+    return RecordItemEntity(
+        id = id,
+        recordId = recordId,
+        totalAmount = totalAmount,
         quantity = quantity,
         categoryId = categoryId,
         subcategoryId = subcategoryId,
-        note = note,
+        note = note
+    )
+}
+
+fun RecordDataModelWithItems.toEntityWithItems(
+    timestamp: Long,
+    deleted: Boolean
+): RecordEntityWithItems {
+    return RecordEntityWithItems(
+        record = record.toEntity(timestamp = timestamp, deleted = deleted),
+        items = items.map { it.toEntity() }
+    )
+}
+
+
+fun RecordEntity.toDataModel(): RecordDataModel {
+    return RecordDataModel(
+        id = id,
+        date = date,
+        type = type,
+        accountId = accountId,
         includeInBudgets = includeInBudgets
     )
 }
 
-
-fun RecordRemoteEntity.toMap(): HashMap<String, Any?> {
-    return hashMapOf(
-        "updateTime" to updateTime,
-        "deleted" to deleted,
-        "id" to id,
-        "recordNum" to recordNum,
-        "date" to date,
-        "type" to type,
-        "accountId" to accountId,
-        "amount" to amount,
-        "quantity" to quantity,
-        "categoryId" to categoryId,
-        "subcategoryId" to subcategoryId,
-        "note" to note,
-        "includeInBudgets" to includeInBudgets
+fun RecordItemEntity.toDataModel(): RecordItemDataModel {
+    return RecordItemDataModel(
+        id = id,
+        recordId = recordId,
+        totalAmount = totalAmount,
+        quantity = quantity,
+        categoryId = categoryId,
+        subcategoryId = subcategoryId,
+        note = note
     )
 }
 
-fun Map<String, Any?>.toRecordRemoteEntity(): RecordRemoteEntity {
-    return RecordRemoteEntity(
-        updateTime = this["updateTime"] as Long,
-        deleted = this["deleted"] as Boolean,
-        id = this["id"].convertToIntOrZero(),
-        recordNum = this["recordNum"].convertToIntOrZero(),
-        date = this["date"] as Long,
-        type = this["type"]?.convertToCharOrNull() ?: ' ',
-        accountId = this["accountId"].convertToIntOrZero(),
-        amount = this["amount"].convertToDoubleOrZero(),
-        quantity = this["quantity"]?.convertToIntOrNull(),
-        categoryId = this["categoryId"].convertToIntOrZero(),
-        subcategoryId = this["subcategoryId"]?.convertToIntOrNull(),
-        note = this["note"] as String?,
-        includeInBudgets = this["includeInBudgets"] as Boolean
+fun RecordEntityWithItems.toDataModelWithItems(): RecordDataModelWithItems {
+    return RecordDataModelWithItems(
+        record = record.toDataModel(),
+        items = items.map { it.toDataModel() }
     )
 }
 
 
-fun RecordRemoteEntity.convertTransferToRecord(timestamp: Long): RecordRemoteEntity {
-    return copy(
-        updateTime = timestamp,
-        type = if (isOutTransfer()) RecordType.Expense.asChar() else RecordType.Income.asChar(),
-        categoryId = if (isOutTransfer()) 12 else 77,
-        subcategoryId = if (isOutTransfer()) 66 else null,
-        note = null
+fun RecordDataModel.toCommandDto(timestamp: Long, deleted: Boolean): RecordCommandDto {
+    return RecordCommandDto(
+        id = id,
+        date = date,
+        type = type,
+        accountId = accountId,
+        includeInBudgets = includeInBudgets,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun RecordItemDataModel.toDto(): RecordItemDto {
+    return RecordItemDto(
+        id = id,
+        recordId = recordId,
+        totalAmount = totalAmount,
+        quantity = quantity,
+        categoryId = categoryId,
+        subcategoryId = subcategoryId,
+        note = note
+    )
+}
+
+fun RecordDataModelWithItems.toCommandDtoWithItems(
+    timestamp: Long,
+    deleted: Boolean
+): RecordCommandDtoWithItems {
+    return RecordCommandDtoWithItems(
+        record = record.toCommandDto(timestamp = timestamp, deleted = deleted),
+        items = items.map { it.toDto() }
+    )
+}
+
+
+fun RecordEntity.toCommandDto(): RecordCommandDto {
+    return RecordCommandDto(
+        id = id,
+        date = date,
+        type = type,
+        accountId = accountId,
+        includeInBudgets = includeInBudgets,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun RecordItemEntity.toDto(): RecordItemDto {
+    return RecordItemDto(
+        id = id,
+        recordId = recordId,
+        totalAmount = totalAmount,
+        quantity = quantity,
+        categoryId = categoryId,
+        subcategoryId = subcategoryId,
+        note = note
+    )
+}
+
+fun RecordEntityWithItems.toCommandDtoWithItems(): RecordCommandDtoWithItems {
+    return RecordCommandDtoWithItems(
+        record = record.toCommandDto(),
+        items = items.map { it.toDto() }
+    )
+}
+
+
+fun RecordQueryDto.toEntity(): RecordEntity {
+    return RecordEntity(
+        id = id,
+        date = date,
+        type = type,
+        accountId = accountId,
+        includeInBudgets = includeInBudgets,
+        timestamp = timestamp,
+        deleted = deleted
+    )
+}
+
+fun RecordItemDto.toEntity(): RecordItemEntity {
+    return RecordItemEntity(
+        id = id,
+        recordId = recordId,
+        totalAmount = totalAmount,
+        quantity = quantity,
+        categoryId = categoryId,
+        subcategoryId = subcategoryId,
+        note = note
+    )
+}
+
+fun RecordQueryDtoWithItems.toEntityWithItems(): RecordEntityWithItems {
+    return RecordEntityWithItems(
+        record = record.toEntity(),
+        items = items.map { it.toEntity() }
     )
 }

@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.core.domain.app
 
 data class FilledWidthByScreenType(
-    val compact: Float = .9f,
+    val compact: Float = .88f,
     val medium: Float = .67f,
     val expanded: Float = .44f
 ) {

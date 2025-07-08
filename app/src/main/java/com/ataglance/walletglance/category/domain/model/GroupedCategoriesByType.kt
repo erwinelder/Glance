@@ -54,15 +54,24 @@ data class GroupedCategoriesByType(
     }
 
     fun getFirstCategoryWithSubByType(type: CategoryType?): CategoryWithSub? {
-        return type?.let { getByTypeOrAll(it).firstOrNull()?.getWithFirstSubcategory() }
+        return type?.let { getByTypeOrAll(type = it).firstOrNull()?.getWithFirstSubcategory() }
     }
 
     fun getLastCategoryWithSubByType(type: CategoryType?): CategoryWithSub? {
-        return type?.let { getByTypeOrAll(it).lastOrNull()?.getWithLastSubcategory() }
+        return type?.let { getByTypeOrAll(type = it).lastOrNull()?.getWithLastSubcategory() }
     }
 
-    fun findById(id: Int, type: CategoryType? = null): GroupedCategories? {
-        return getByTypeOrAll(type).firstOrNull { it.category.id == id }
+    fun getGroupedCategories(categoryId: Int, type: CategoryType? = null): GroupedCategories? {
+        return getByTypeOrAll(type = type).find { it.category.id == categoryId }
+    }
+
+    fun getCategoryWithSub(
+        categoryId: Int,
+        subcategoryId: Int?,
+        type: CategoryType? = null
+    ): CategoryWithSub? {
+        return getGroupedCategories(categoryId = categoryId, type = type)
+            ?.getWithSubcategory(id = subcategoryId)
     }
 
     fun appendNewCategory(category: Category): GroupedCategoriesByType {
@@ -79,7 +88,7 @@ data class GroupedCategoriesByType(
         val groupedCategoriesList = getByType(category.type).map {
             it.takeUnless { it.category.id == category.id } ?: it.copy(
                 category = category,
-                subcategoryList = it.changeSubcategoriesColorTo(category.color)
+                subcategories = it.changeSubcategoriesColorTo(category.color)
             )
         }
 

@@ -16,12 +16,12 @@ import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
-import com.ataglance.walletglance.auth.data.model.UserContext
+import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.billing.domain.mapper.getProductDetails
 import com.ataglance.walletglance.billing.domain.mapper.getProductsDetails
 import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
+import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.billing.domain.usecase.UpdateUserSubscriptionUseCase
-import com.ataglance.walletglance.errorHandling.domain.model.result.BillingError
 import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -96,7 +96,7 @@ class BillingSubscriptionManager(
     private fun updateUserSubscription(
         productDetails: ProductDetails
     ): ResultData<Unit, BillingError> {
-        val userId = userContext.getUserId() ?: return ResultData.Error(BillingError.UserNotSignedIn)
+        val userId = userContext.getUserIdOld() ?: return ResultData.Error(BillingError.UserNotSignedIn)
 
         coroutineScope.launch {
             updateUserSubscriptionUseCase.execute(
@@ -155,12 +155,12 @@ class BillingSubscriptionManager(
     /** Set up the billing client and connect it to Google Play.
      */
     private fun initializeBillingClient() {
-        billingClient = BillingClient.newBuilder(context)
-            .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
-            .build()
-
-        startConnection()
+//        billingClient = BillingClient.newBuilder(context)
+//            .setListener(purchasesUpdatedListener)
+//            .enablePendingPurchases()
+//            .build()
+//
+//        startConnection()
     }
 
     /** Start the connection to Google Play.
@@ -229,9 +229,9 @@ class BillingSubscriptionManager(
             .build()
 
         billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-            if (billingResult.responseCode == BillingResponseCode.OK) {
-                this.productDetailsList = productDetailsList
-            }
+//            if (billingResult.responseCode == BillingResponseCode.OK) {
+//                this.productDetailsList = productDetailsList
+//            }
         }
     }
 

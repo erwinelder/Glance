@@ -22,14 +22,17 @@ interface NavigationButtonLocalDao {
         toDelete: List<NavigationButtonEntity>,
         toUpsert: List<NavigationButtonEntity>
     ) {
-        deleteButtons(toDelete)
-        upsertButtons(toUpsert)
+        deleteButtons(buttons = toDelete)
+        upsertButtons(buttons = toUpsert)
     }
 
-    @Query("DELETE FROM NavigationButton")
+    @Query("DELETE FROM navigation_button")
     suspend fun deleteAllNavigationButtons()
 
-    @Query("SELECT * FROM NavigationButton ORDER BY orderNum ASC")
-    fun getAllNavigationButtons(): Flow<List<NavigationButtonEntity>>
+    @Query("SELECT * FROM navigation_button WHERE timestamp > :timestamp ORDER BY orderNum ASC")
+    suspend fun getNavigationButtonsAfterTimestamp(timestamp: Long): List<NavigationButtonEntity>
+
+    @Query("SELECT * FROM navigation_button WHERE deleted = 0 ORDER BY orderNum ASC")
+    fun getAllNavigationButtonsAsFlow(): Flow<List<NavigationButtonEntity>>
 
 }

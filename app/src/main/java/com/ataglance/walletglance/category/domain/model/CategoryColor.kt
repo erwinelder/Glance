@@ -6,13 +6,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.category.domain.mapper.toColorWithName
-import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.category.presentation.model.SetupCategoriesUiState
+import com.ataglance.walletglance.category.presentation.screen.EditCategoriesScreen
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.color.ColorWithName
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColors
 import com.ataglance.walletglance.core.domain.color.LighterDarkerColorsByTheme
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewContainer
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 
 sealed class CategoryColor(val name: CategoryColorName, val color: LighterDarkerColorsByTheme) {
 
@@ -223,7 +223,8 @@ private fun Preview() {
 
     PreviewContainer(appTheme = AppTheme.DarkDefault) {
         EditCategoriesScreen(
-            scaffoldPadding = PaddingValues(),
+            screenPadding = PaddingValues(),
+            onNavigateBack = {},
             isAppSetUp = true,
             uiState = SetupCategoriesUiState(
                 groupedCategoriesByType = categoriesWithSubcategories

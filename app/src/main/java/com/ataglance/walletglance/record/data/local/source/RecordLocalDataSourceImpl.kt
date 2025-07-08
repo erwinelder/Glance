@@ -2,11 +2,9 @@ package com.ataglance.walletglance.record.data.local.source
 
 import com.ataglance.walletglance.core.data.local.dao.LocalUpdateTimeDao
 import com.ataglance.walletglance.core.data.local.database.AppDatabase
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
 import com.ataglance.walletglance.core.data.model.TableName
-import com.ataglance.walletglance.core.domain.date.LongDateRange
 import com.ataglance.walletglance.record.data.local.dao.RecordLocalDao
-import com.ataglance.walletglance.record.data.local.model.RecordEntity
+import com.ataglance.walletglance.record.data.local.model.RecordEntityWithItems
 import kotlinx.coroutines.flow.Flow
 
 class RecordLocalDataSourceImpl(
@@ -22,76 +20,79 @@ class RecordLocalDataSourceImpl(
         updateTimeDao.saveUpdateTime(tableName = TableName.Record.name, timestamp = timestamp)
     }
 
-    override suspend fun upsertRecords(records: List<RecordEntity>, timestamp: Long): List<RecordEntity> {
-        return recordDao.upsertRecords(records = records).also {
-            saveUpdateTime(timestamp = timestamp)
-        }
+    override suspend fun deleteUpdateTime() {
+        updateTimeDao.deleteUpdateTime(tableName = TableName.Record.name)
     }
 
-    override suspend fun deleteRecords(records: List<RecordEntity>, timestamp: Long) {
-        recordDao.deleteRecords(records = records)
-        saveUpdateTime(timestamp = timestamp)
-    }
-
-    override suspend fun deleteAllRecords(timestamp: Long) {
-        recordDao.deleteAllRecords()
-        saveUpdateTime(timestamp = timestamp)
-    }
-
-    override suspend fun synchroniseRecords(
-        recordsToSync: EntitiesToSync<RecordEntity>,
+    override suspend fun saveRecordsWithItems(
+        recordsWithItems: List<RecordEntityWithItems>,
         timestamp: Long
-    ): List<RecordEntity> {
-        return recordDao.deleteAndUpsertRecords(
-            toDelete = recordsToSync.toDelete,
-            toUpsert = recordsToSync.toUpsert
-        ).also {
+    ): List<RecordEntityWithItems> {
+        return recordDao.saveRecordsWithItems(recordsWithItems = recordsWithItems).also {
             saveUpdateTime(timestamp = timestamp)
         }
     }
 
-    override suspend fun deleteRecordsByAccounts(accountIds: List<Int>, timestamp: Long) {
-        recordDao.deleteRecordsByAccounts(accountIds = accountIds)
-        recordDao.convertTransfersToRecords(noteValues = accountIds.map { it.toString() })
-        saveUpdateTime(timestamp = timestamp)
+    override suspend fun deleteRecordsWithItems(
+        recordsWithItems: List<RecordEntityWithItems>,
+        timestamp: Long?
+    ) {
+        recordDao.deleteRecordsWithItems(recordsWithItems = recordsWithItems)
+        timestamp?.let { saveUpdateTime(timestamp = it) }
     }
 
-    override suspend fun getLastRecordNum(): Flow<Int?> {
-        return recordDao.getLastRecordOrderNum()
+    override suspend fun deleteAndSaveRecordsWithItems(
+        toDelete: List<RecordEntityWithItems>,
+        toUpsert: List<RecordEntityWithItems>,
+        timestamp: Long
+    ): List<RecordEntityWithItems> {
+        return recordDao.deleteAndSaveRecordsWithItems(toDelete = toDelete, toUpsert = toUpsert)
+            .also { saveUpdateTime(timestamp = timestamp) }
     }
 
-    override suspend fun getLastRecordsByTypeAndAccount(
+    override suspend fun getRecordsWithItemsAfterTimestamp(
+        timestamp: Long
+    ): List<RecordEntityWithItems> {
+        return recordDao.getRecordsWithItemsAfterTimestamp(timestamp = timestamp)
+    }
+
+    override suspend fun getRecordWithItems(id: Long): RecordEntityWithItems? {
+        return recordDao.getRecordWithItems(id = id)
+    }
+
+    override suspend fun getLastRecordWithItemsByTypeAndAccount(
         type: Char,
         accountId: Int
-    ): List<RecordEntity> {
-        return recordDao.getLastRecordsByTypeAndAccount(type = type, accountId = accountId)
-            .takeIf { it.isNotEmpty() }
-            ?: recordDao.getLastRecordsByType(type = type)
+    ): RecordEntityWithItems? {
+        return recordDao.getLastRecordWithItemsByTypeAndAccount(type = type, accountId = accountId)
     }
 
-    override suspend fun getRecordsByRecordNum(recordNum: Int): List<RecordEntity> {
-        return recordDao.getRecordsByRecordNum(recordNum = recordNum)
+    override fun getRecordsWithItemsInDateRangeAsFlow(
+        from: Long,
+        to: Long
+    ): Flow<List<RecordEntityWithItems>> {
+        return recordDao.getRecordsWithItemsInDateRangeAsFlow(from = from, to = to)
     }
 
-    override suspend fun getRecordsInDateRange(
-        range: LongDateRange
-    ): Flow<List<RecordEntity>> {
-        return recordDao.getRecordsInDateRange(
-            startPastDate = range.from, endFutureDate = range.to
-        )
+    override suspend fun getRecordsWithItemsInDateRange(
+        from: Long,
+        to: Long
+    ): List<RecordEntityWithItems> {
+        return recordDao.getRecordsWithItemsInDateRange(from = from, to = to)
     }
 
-    override suspend fun getTotalAmountByCategoryAndAccountsInRange(
-        categoryId: Int,
-        linkedAccountsIds: List<Int>,
-        longDateRange: LongDateRange
+    override suspend fun getTotalExpensesInDateRangeByAccountsAndCategory(
+        from: Long,
+        to: Long,
+        accountIds: List<Int>,
+        categoryId: Int
     ): Double {
-        return recordDao.getTotalAmountByCategoryAndAccountsInRange(
-            categoryId = categoryId,
-            linkedAccountsIds = linkedAccountsIds,
-            from = longDateRange.from,
-            to = longDateRange.to
-        ) ?: 0.0
+        return recordDao.getTotalExpensesInDateRangeByAccountsAndCategory(
+            from = from,
+            to = to,
+            accountIds = accountIds,
+            categoryId = categoryId
+        )
     }
 
 }

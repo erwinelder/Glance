@@ -1,27 +1,28 @@
 package com.ataglance.walletglance.record.data.remote.source
 
-import com.ataglance.walletglance.core.data.model.EntitiesToSync
-import com.ataglance.walletglance.record.data.remote.model.RecordRemoteEntity
+import com.ataglance.walletglance.record.data.remote.model.RecordCommandDtoWithItems
+import com.ataglance.walletglance.record.data.remote.model.RecordQueryDtoWithItems
 
 interface RecordRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: String): Long?
+    suspend fun getUpdateTime(userId: Int): Long?
 
-    suspend fun saveUpdateTime(timestamp: Long, userId: String)
-
-    suspend fun upsertRecords(records: List<RecordRemoteEntity>, timestamp: Long, userId: String)
-
-    suspend fun synchroniseRecords(
-        recordsToSync: EntitiesToSync<RecordRemoteEntity>,
+    suspend fun synchronizeRecordsWithItems(
+        recordsWithItems: List<RecordCommandDtoWithItems>,
         timestamp: Long,
-        userId: String
-    )
+        userId: Int
+    ): List<RecordQueryDtoWithItems>?
 
-    suspend fun deleteRecordsByAccounts(accountIds: List<Int>, timestamp: Long, userId: String)
-
-    suspend fun getRecordsAfterTimestamp(
+    suspend fun synchronizeRecordsWithItemsAndGetAfterTimestamp(
+        recordsWithItems: List<RecordCommandDtoWithItems>,
         timestamp: Long,
-        userId: String
-    ): EntitiesToSync<RecordRemoteEntity>
+        userId: Int,
+        localTimestamp: Long
+    ): List<RecordQueryDtoWithItems>?
+
+    suspend fun getRecordsWithItemsAfterTimestamp(
+        timestamp: Long,
+        userId: Int
+    ): List<RecordQueryDtoWithItems>?
 
 }

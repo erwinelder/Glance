@@ -1,6 +1,5 @@
 package com.ataglance.walletglance.budget.presentation.screen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,39 +26,82 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.account.domain.model.Account
 import com.ataglance.walletglance.account.domain.model.color.AccountColors
-import com.ataglance.walletglance.account.presentation.components.AccountNameWithCurrencyComposable
-import com.ataglance.walletglance.budget.data.local.model.BudgetAccountAssociation
-import com.ataglance.walletglance.budget.data.local.model.BudgetEntity
+import com.ataglance.walletglance.account.presentation.component.AccountNameWithCurrencyComposable
+import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
 import com.ataglance.walletglance.budget.mapper.budget.toDomainModel
 import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetViewModel
+import com.ataglance.walletglance.budget.presentation.viewmodel.EditBudgetsViewModel
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
-import com.ataglance.walletglance.category.presentation.components.CategoryField
-import com.ataglance.walletglance.category.presentation.components.CategoryPicker
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
+import com.ataglance.walletglance.category.presentation.component.CategoryFieldWithLabelAnimated
+import com.ataglance.walletglance.category.presentation.component.CategoryPicker
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
-import com.ataglance.walletglance.core.presentation.components.buttons.PrimaryButton
-import com.ataglance.walletglance.core.presentation.components.buttons.SecondaryButton
-import com.ataglance.walletglance.core.presentation.components.checkboxes.TwoStateCheckbox
-import com.ataglance.walletglance.core.presentation.components.fields.FieldLabel
-import com.ataglance.walletglance.core.presentation.components.fields.FieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.fields.TextFieldWithLabel
-import com.ataglance.walletglance.core.presentation.components.pickers.PopupFloatingPicker
-import com.ataglance.walletglance.core.presentation.components.screenContainers.GlassSurfaceScreenContainer
-import com.ataglance.walletglance.core.presentation.components.screenContainers.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.utils.asStringRes
-import com.ataglance.walletglance.core.utils.letIfNoneIsNull
-import com.ataglance.walletglance.core.utils.takeComposableIf
+import com.ataglance.walletglance.core.domain.date.asStringRes
+import com.ataglance.walletglance.core.presentation.component.button.TertiaryButton
+import com.ataglance.walletglance.core.presentation.component.checkbox.TwoStateCheckbox
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
+import com.ataglance.walletglance.core.presentation.component.field.FieldLabel
+import com.ataglance.walletglance.core.presentation.component.field.FieldWithLabelWrapper
+import com.ataglance.walletglance.core.presentation.component.field.SmallTextFieldWithLabel
+import com.ataglance.walletglance.core.presentation.component.picker.PopupPicker
+import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButtonAndPrimaryButton
+import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
+import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
+import com.ataglance.walletglance.core.utils.takeRowComposableIf
+import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
+
+@Composable
+fun EditBudgetScreenWrapper(
+    screenPadding: PaddingValues = PaddingValues(),
+    backStack: NavBackStackEntry,
+    navController: NavHostController
+) {
+    val budgetsViewModel = backStack.sharedKoinNavViewModel<EditBudgetsViewModel>(navController)
+    val budgetViewModel = backStack.sharedKoinNavViewModel<EditBudgetViewModel>(navController)
+
+    val budget by budgetViewModel.budget.collectAsStateWithLifecycle()
+
+    EditBudgetScreen(
+        screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
+        budget = budget,
+        accountList = budgetViewModel.accounts,
+        groupedCategoriesByType = budgetViewModel.groupedCategoriesByType,
+        onNameChange = budgetViewModel::changeName,
+        onCategoryChange = budgetViewModel::changeCategory,
+        onAmountLimitChange = budgetViewModel::changeAmountLimit,
+        onRepeatingPeriodChange = budgetViewModel::changeRepeatingPeriod,
+        onLinkAccount = budgetViewModel::linkWithAccount,
+        onUnlinkAccount = budgetViewModel::unlinkWithAccount,
+        onDeleteButton = {
+            budgetsViewModel.deleteBudget(
+                id = budget.id, repeatingPeriod = budget.currRepeatingPeriod
+            )
+            navController.popBackStack()
+        },
+        onSaveButton = {
+            budgetsViewModel.applyBudget(budgetDraft = budgetViewModel.getBudgetDraft())
+            navController.popBackStack()
+        }
+    )
+}
 
 @Composable
 fun EditBudgetScreen(
-    scaffoldPadding: PaddingValues,
+    screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     budget: BudgetDraft,
     accountList: List<Account>,
     groupedCategoriesByType: GroupedCategoriesByType,
@@ -71,24 +114,35 @@ fun EditBudgetScreen(
     onDeleteButton: () -> Unit,
     onSaveButton: () -> Unit
 ) {
+    val settingsCategory = SettingsCategory.Budgets(appTheme = CurrAppTheme)
+    val backNavButtonText = budget.name.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.budget)
+
     var showCategoryPicker by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        GlassSurfaceScreenContainer(
-            topPadding = scaffoldPadding.calculateTopPadding(),
-            fillGlassSurface = false,
-            topButton = takeComposableIf(!budget.isNew) {
-                SecondaryButton(
+        ScreenContainerWithTopBackNavButtonAndPrimaryButton(
+            screenPadding = screenPadding,
+            backNavButtonText = backNavButtonText,
+            backNavButtonImageRes = settingsCategory.iconRes,
+            onBackNavButtonClick = onNavigateBack,
+            backNavButtonCompanionComponent = takeRowComposableIf(!budget.isNew) {
+                TertiaryButton(
                     text = stringResource(R.string.delete),
+                    iconRes = R.drawable.trash_icon,
                     onClick = onDeleteButton
                 )
             },
-            glassSurfaceContent = {
+            primaryButtonText = stringResource(if (budget.isNew) R.string.create else R.string.save),
+            primaryButtonEnabled = budget.allowSaving(),
+            onPrimaryButtonClick = onSaveButton
+        ) {
+            GlassSurface {
                 GlassSurfaceContent(
-                    budget = budget,
+                    budgetDraft = budget,
                     accountList = accountList,
                     onNameChange = onNameChange,
                     onCategoryFieldClick = { showCategoryPicker = true },
@@ -97,15 +151,8 @@ fun EditBudgetScreen(
                     onLinkAccount = onLinkAccount,
                     onUnlinkAccount = onUnlinkAccount
                 )
-            },
-            primaryBottomButton = {
-                PrimaryButton(
-                    text = stringResource(if (budget.isNew) R.string.create else R.string.save),
-                    enabled = budget.allowSaving(),
-                    onClick = onSaveButton
-                )
             }
-        )
+        }
         CategoryPicker(
             visible = showCategoryPicker,
             groupedCategoriesByType = groupedCategoriesByType,
@@ -119,7 +166,7 @@ fun EditBudgetScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    budget: BudgetDraft,
+    budgetDraft: BudgetDraft,
     accountList: List<Account>,
     onNameChange: (String) -> Unit,
     onCategoryFieldClick: () -> Unit,
@@ -128,7 +175,9 @@ private fun GlassSurfaceContent(
     onLinkAccount: (Account) -> Unit,
     onUnlinkAccount: (Account) -> Unit
 ) {
-    val context = LocalContext.current
+    val repeatingPeriodList by remember {
+        derivedStateOf { RepeatingPeriod.asList() }
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -137,44 +186,33 @@ private fun GlassSurfaceContent(
         modifier = Modifier.fillMaxWidth()
     ) {
         item {
-            FieldWithLabel(stringResource(R.string.repeating_period)) {
-                PopupFloatingPicker(
-                    selectedItemText = stringResource(budget.newRepeatingPeriod.asStringRes()),
-                    itemList = listOf(
-                        RepeatingPeriod.Daily,
-                        RepeatingPeriod.Weekly,
-                        RepeatingPeriod.Monthly,
-                        RepeatingPeriod.Yearly,
-                    ),
-                    itemToString = { context.getString(it.asStringRes()) },
-                    onItemSelect = onRepeatingPeriodChange
+            FieldWithLabelWrapper(stringResource(R.string.repeating_period)) {
+                PopupPicker(
+                    selectedItem = budgetDraft.newRepeatingPeriod,
+                    itemList = repeatingPeriodList,
+                    itemToStringMapper = { stringResource(it.asStringRes()) },
+                    onItemSelect = onRepeatingPeriodChange,
+                    outerPadding = PaddingValues(horizontal = 16.dp)
                 )
             }
         }
         item {
             Spacer(modifier = Modifier.height(4.dp))
         }
-        budget.category?.let { category ->
+        budgetDraft.category?.let { category ->
             item {
-                FieldWithLabel(stringResource(R.string.category)) {
-                    AnimatedContent(
-                        targetState = category,
-                        label = "category field at the edit budget screen"
-                    ) { targetCategory ->
-                        CategoryField(
-                            category = targetCategory,
-                            onClick = onCategoryFieldClick
-                        )
-                    }
-                }
+                CategoryFieldWithLabelAnimated(
+                    category = category,
+                    onClick = onCategoryFieldClick
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
         item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-        item {
-            TextFieldWithLabel(
-                text = budget.name,
+            SmallTextFieldWithLabel(
+                text = budgetDraft.name,
                 onValueChange = onNameChange,
                 labelText = stringResource(R.string.budget_name),
                 placeholderText = stringResource(R.string.name)
@@ -184,19 +222,19 @@ private fun GlassSurfaceContent(
             Spacer(modifier = Modifier.height(4.dp))
         }
         item {
-            TextFieldWithLabel(
-                text = budget.amountLimit,
+            SmallTextFieldWithLabel(
+                text = budgetDraft.amountLimit,
                 onValueChange = onAmountLimitChange,
-                keyboardType = KeyboardType.Number,
                 labelText = stringResource(R.string.budget_limit),
-                placeholderText = "0.00"
+                placeholderText = "0.00",
+                keyboardType = KeyboardType.Number
             )
         }
         item {
             Spacer(modifier = Modifier.height(4.dp))
         }
         accountCheckedList(
-            budget = budget,
+            budget = budgetDraft,
             accountList = accountList,
             onAccountCheck = onLinkAccount,
             onAccountUncheck = onUnlinkAccount
@@ -242,7 +280,6 @@ private fun LazyListScope.accountCheckedList(
 @Composable
 fun EditBudgetScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault,
-    isAppSetUp: Boolean = true,
     groupedCategoriesByType: GroupedCategoriesByType = DefaultCategoriesPackage(
         LocalContext.current
     ).getDefaultCategories(),
@@ -251,16 +288,14 @@ fun EditBudgetScreenPreview(
         Account(id = 2, color = AccountColors.Blue),
         Account(id = 3, color = AccountColors.Default, currency = "CZK"),
     ),
-    budgetEntity: BudgetEntity? = null,
-    budgetAccountAssociationList: List<BudgetAccountAssociation>? = null,
-    budgetUiState: BudgetDraft = (budgetEntity to budgetAccountAssociationList)
-        .letIfNoneIsNull { (budget, associations) ->
-            budget.toDomainModel(
-                groupedCategoriesList = groupedCategoriesByType.expense,
-                associations = associations,
-                accounts = accountList
-            )?.toDraft(accounts = accountList)
-        } ?: BudgetDraft(
+    budgetDataModelWithAssociations: BudgetDataModelWithAssociations? = null,
+    budgetUiState: BudgetDraft = budgetDataModelWithAssociations
+        ?.toDomainModel(
+            groupedCategoriesList = groupedCategoriesByType.expense,
+            accounts = accountList
+        )
+        ?.toDraft(accounts = accountList)
+        ?: BudgetDraft(
             isNew = true,
             amountLimit = "4000",
             category = groupedCategoriesByType.expense[0].category,
@@ -270,7 +305,8 @@ fun EditBudgetScreenPreview(
 ) {
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         EditBudgetScreen(
-            scaffoldPadding = scaffoldPadding,
+            screenPadding = scaffoldPadding,
+            onNavigateBack = {},
             budget = budgetUiState,
             accountList = accountList,
             groupedCategoriesByType = groupedCategoriesByType,

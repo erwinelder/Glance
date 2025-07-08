@@ -5,7 +5,7 @@ import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.utils.formatWithSpaces
 import com.ataglance.walletglance.core.utils.getAverage
-import com.ataglance.walletglance.core.utils.getColumnNameForColumnChart
+import com.ataglance.walletglance.core.domain.date.getColumnNameForColumnChart
 import kotlin.math.pow
 
 @Stable
@@ -28,7 +28,9 @@ data class ColumnChartUiState(
 
             val rowsNumbers = getRowsNumbers(rowsCount = rowsCount, generalMaxAmount = maxAmount)
             val columnsNames = totalAmountsByRanges.map { amountByRange ->
-                repeatingPeriod.getColumnNameForColumnChart(amountByRange.dateRange, resourceManager)
+                repeatingPeriod.getColumnNameForColumnChart(
+                    dateRange = amountByRange.dateRange, resourceManager = resourceManager
+                )
             }
 
             val columnChartItemUiStateList = getColumnsUiStates(
