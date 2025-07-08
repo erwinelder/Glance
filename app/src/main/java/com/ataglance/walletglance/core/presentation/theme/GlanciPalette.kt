@@ -224,7 +224,7 @@ sealed class GlanciPalette(
             Color(23, 23, 23, 128)
         ),
         glassBorderGradient = listOf(
-            Color(255, 255, 255, 20),
+            Color(217, 217, 217, 20),
             Color(102, 102, 102, 20)
         ),
         glassShadow = Pair(
@@ -246,7 +246,7 @@ sealed class GlanciPalette(
         ),
 
         background = Color(18, 18, 18),
-        surface = Color(33, 33, 33, 255),
+        surface = Color(26, 26, 26, 255),
         surfaceGradient = listOf(
             Color(22, 22, 22, 255),
             Color(29, 29, 29, 255)
