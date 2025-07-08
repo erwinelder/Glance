@@ -43,6 +43,7 @@ import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.divider.BigDivider
 import com.ataglance.walletglance.core.presentation.component.screenContainer.GlassSurfaceScreenContainerWithFilters
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
+import com.ataglance.walletglance.core.presentation.utils.bottom
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -172,7 +173,7 @@ fun CategoryStatisticsScreen(
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp + screenPadding.bottom),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(

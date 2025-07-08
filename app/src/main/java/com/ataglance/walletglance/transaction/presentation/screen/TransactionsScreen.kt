@@ -36,6 +36,7 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Gl
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.utils.bottom
 import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.utils.toTimestamp
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -89,7 +90,7 @@ fun TransactionsScreenWrapper(
 
     TransactionsScreen(
         screenPadding = screenPadding,
-        accountList = appUiState.accountsAndActiveOne.accounts,
+        accounts = appUiState.accountsAndActiveOne.accounts,
         onAccountClick = appViewModel::applyActiveAccount,
         currentDateRangeEnum = appUiState.dateRangeWithEnum.enum,
         isCustomDateRangeWindowOpened = openCustomDateRangeWindow,
@@ -111,7 +112,7 @@ fun TransactionsScreenWrapper(
 @Composable
 fun TransactionsScreen(
     screenPadding: PaddingValues = PaddingValues(),
-    accountList: List<Account>,
+    accounts: List<Account>,
     onAccountClick: (Int) -> Unit,
     currentDateRangeEnum: DateRangeEnum,
     isCustomDateRangeWindowOpened: Boolean,
@@ -129,7 +130,7 @@ fun TransactionsScreen(
 
     GlassSurfaceScreenContainerWithFilters(
         screenPadding = screenPadding,
-        accountList = accountList,
+        accountList = accounts,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,
@@ -151,20 +152,17 @@ fun TransactionsScreen(
             )
         },
         onDimBackgroundChange = onDimBackgroundChange
-    ) { (targetRecordStacks, _) ->
+    ) { (transactions, _) ->
         LazyColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp + screenPadding.bottom),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth(
                 FilledWidthByScreenType().getByType(CurrWindowType)
             )
         ) {
-            items(
-                items = targetRecordStacks,
-//                key = { it.recordNum } // TODO
-            ) { transaction ->
+            items(items = transactions) { transaction ->
                 when (transaction) {
                     is RecordUiState -> {
                         RecordGlassComponent(uiState = transaction) { id ->
@@ -421,7 +419,7 @@ fun TransactionsScreenPreview(
     PreviewWithMainScaffoldContainer(appTheme = appTheme) { scaffoldPadding ->
         TransactionsScreen(
             screenPadding = scaffoldPadding,
-            accountList = accounts,
+            accounts = accounts,
             onAccountClick = {},
             currentDateRangeEnum = currentDateRangeEnum,
             isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,

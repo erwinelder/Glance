@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -278,7 +279,8 @@ private fun GlassSurfaceContent(
             labelText = stringResource(R.string.rate),
             placeholderText = "1.00",
             fontSize = 18.sp,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
         )
         SmallTextFieldWithLabel(
             text = transferDraft.sender.amount,
@@ -286,7 +288,8 @@ private fun GlassSurfaceContent(
             labelText = stringResource(R.string.start_amount),
             placeholderText = "0.00",
             fontSize = 20.sp,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
         )
         SmallTextFieldWithLabel(
             text = transferDraft.receiver.amount,
@@ -294,7 +297,8 @@ private fun GlassSurfaceContent(
             labelText = stringResource(R.string.final_amount),
             placeholderText = "0.00",
             fontSize = 20.sp,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
         )
         SmallTextFieldWithLabel(
             text = transferDraft.receiver.rate,

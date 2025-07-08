@@ -1,12 +1,10 @@
 package com.ataglance.walletglance.record.presentation.component
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -14,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceOnGlassSurface
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
@@ -34,41 +32,39 @@ fun RecordDraftItemControlPanel(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(spaceSize),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(start = 3.dp)
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .bounceClickEffect(.98f)
-                .clip(RoundedCornerShape(17.dp))
-                .background(GlanciColors.surface)
-                .padding(horizontal = 4.dp)
+        GlassSurfaceOnGlassSurface(
+            cornerSize = 18.dp,
+            contentPadding = PaddingValues(horizontal = 4.dp)
         ) {
-            SubrecordControlPanelButton(
-                iconRes = R.drawable.trash_icon,
-                iconContentDescription = "delete",
-                enabled = lastIndex != 0,
-                onClick = { onDeleteButtonClick(thisIndex) }
-            )
-            SubrecordControlPanelButton(
-                iconRes = R.drawable.short_arrow_up_icon,
-                iconContentDescription = "move up",
-                enabled = thisIndex > 0,
-                onClick = { onSwapButtonsClick(thisIndex, thisIndex - 1) }
-            )
-            SubrecordControlPanelButton(
-                iconRes = R.drawable.short_arrow_down_icon,
-                iconContentDescription = "move down",
-                enabled = thisIndex < lastIndex,
-                onClick = { onSwapButtonsClick(thisIndex, thisIndex + 1) }
-            )
+            Row {
+                ControlPanelButton(
+                    iconRes = R.drawable.trash_icon,
+                    iconContentDescription = "delete",
+                    enabled = lastIndex != 0,
+                    onClick = { onDeleteButtonClick(thisIndex) }
+                )
+                ControlPanelButton(
+                    iconRes = R.drawable.short_arrow_up_icon,
+                    iconContentDescription = "move up",
+                    enabled = thisIndex > 0,
+                    onClick = { onSwapButtonsClick(thisIndex, thisIndex - 1) }
+                )
+                ControlPanelButton(
+                    iconRes = R.drawable.short_arrow_down_icon,
+                    iconContentDescription = "move down",
+                    enabled = thisIndex < lastIndex,
+                    onClick = { onSwapButtonsClick(thisIndex, thisIndex + 1) }
+                )
+            }
         }
         collapseExpandButton()
     }
 }
 
 @Composable
-private fun SubrecordControlPanelButton(
+private fun ControlPanelButton(
     iconRes: Int,
     iconContentDescription: String,
     enabled: Boolean = true,

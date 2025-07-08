@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -164,6 +165,8 @@ fun RecordCreationScreen(
     onRepeatButton: () -> Unit,
     onDeleteButton: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.create_record_light_default,
         darkDefault = R.drawable.create_record_dark_default
@@ -192,24 +195,21 @@ fun RecordCreationScreen(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
-                    RecordCreationTopBar(
-                        recordDraft = recordDraft,
-                        accounts = accounts,
-                        onSelectCategoryType = onSelectCategoryType,
-                        onIncludeInBudgetsChange = onIncludeInBudgetsChange,
-                        onDateFieldClick = { showDatePicker = true },
-                        onToggleAccounts = onToggleAccounts,
-                        onSelectAccount = onSelectAccount,
-                        onDimBackgroundChange = onDimBackgroundChange,
-                    )
-                }
-                KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 16.dp)
                 RecordCreationScreenContent(
+                    keyboardInFocus = keyboardInFocus,
+                    recordDraft = recordDraft,
+                    accounts = accounts,
+                    onSelectCategoryType = onSelectCategoryType,
+                    onIncludeInBudgetsChange = onIncludeInBudgetsChange,
+                    onDateFieldClick = { showDatePicker = true },
+                    onToggleAccounts = onToggleAccounts,
+                    onSelectAccount = onSelectAccount,
+                    onDimBackgroundChange = onDimBackgroundChange,
+
                     recordDraftItems = recordDraftItems,
-                    selectedAccount = recordDraft.account,
                     onAmountChange = onAmountChange,
                     onCategoryFieldClick = { index ->
+                        focusManager.clearFocus()
                         selectedItemIndex = index
                         showCategoryPicker = true
                     },
@@ -271,8 +271,17 @@ fun RecordCreationScreen(
 
 @Composable
 private fun RecordCreationScreenContent(
+    keyboardInFocus: Boolean,
+    recordDraft: RecordDraft,
+    accounts: List<Account>,
+    onSelectCategoryType: (CategoryType) -> Unit,
+    onIncludeInBudgetsChange: (Boolean) -> Unit,
+    onDateFieldClick: () -> Unit,
+    onToggleAccounts: () -> Unit,
+    onSelectAccount: (Account) -> Unit,
+    onDimBackgroundChange: (Boolean) -> Unit,
+
     recordDraftItems: List<RecordDraftItem>,
-    selectedAccount: Account?,
     onAmountChange: (Int, String) -> Unit,
     onCategoryFieldClick: (Int) -> Unit,
     onNoteChange: (Int, String) -> Unit,
@@ -289,10 +298,29 @@ private fun RecordCreationScreenContent(
         state = lazyListState,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(vertical = 16.dp),
+        contentPadding = PaddingValues(bottom = 16.dp),
         modifier = Modifier
             .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
     ) {
+        item {
+            Column(
+                modifier = Modifier.animateItem()
+            ) {
+                KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+                    RecordCreationTopBar(
+                        recordDraft = recordDraft,
+                        accounts = accounts,
+                        onSelectCategoryType = onSelectCategoryType,
+                        onIncludeInBudgetsChange = onIncludeInBudgetsChange,
+                        onDateFieldClick = onDateFieldClick,
+                        onToggleAccounts = onToggleAccounts,
+                        onSelectAccount = onSelectAccount,
+                        onDimBackgroundChange = onDimBackgroundChange,
+                    )
+                }
+                KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 16.dp)
+            }
+        }
         itemsIndexed(
             items = recordDraftItems,
             key = { _, item -> item.lazyListKey }
@@ -300,7 +328,7 @@ private fun RecordCreationScreenContent(
             RecordDraftItemComponent(
                 recordDraftItem = item,
                 index = index,
-                accountCurrency = selectedAccount?.currency,
+                accountCurrency = recordDraft.account?.currency,
                 onAmountChange = { onAmountChange(index, it) },
                 onCategoryFieldClick = { onCategoryFieldClick(index) },
                 onNoteChange = { onNoteChange(index, it) },

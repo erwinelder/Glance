@@ -31,6 +31,7 @@ fun GlassSurfaceOnGlassSurfaceFilled(
     shrinkScale: Float = .98f,
     filledWidths: FilledWidthByScreenType? = null,
     cornerSize: Dp = 26.dp,
+    borderSize: Dp = 1.dp,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(4.dp),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     gradientColor: List<Color> = GlanciColors.glassGradientOnGlass,
@@ -43,6 +44,7 @@ fun GlassSurfaceOnGlassSurfaceFilled(
         shrinkScale = shrinkScale,
         filledWidth = filledWidths?.getByType(CurrWindowType),
         cornerSize = cornerSize,
+        borderSize = borderSize,
         verticalArrangement = verticalArrangement,
         contentPadding = contentPadding,
         gradientColor = gradientColor,
@@ -58,6 +60,7 @@ fun GlassSurfaceOnGlassSurface(
     shrinkScale: Float = .98f,
     filledWidth: Float? = null,
     cornerSize: Dp = 26.dp,
+    borderSize: Dp = 1.dp,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(4.dp),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     gradientColor: List<Color> = GlanciColors.glassGradientOnGlass,
@@ -86,11 +89,11 @@ fun GlassSurfaceOnGlassSurface(
                 )
             )
             .border(
-                width = 1.dp,
+                width = borderSize,
                 color = GlanciColors.glassGradientOnGlassBorder,
                 shape = RoundedCornerShape(cornerSize)
             )
-            .padding(1.dp)
+            .padding(borderSize)
             .padding(contentPadding)
     ) {
         content()
