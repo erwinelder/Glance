@@ -409,12 +409,12 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
             val note = rCursor.getStringOrNull(8)
             val includeInBudgets = rCursor.getInt(9) == 1
             db.execSQL(
-                "INSERT INTO record (id, date, type, accountId, includeInBudgets, timestamp, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                arrayOf<Any?>(recordNum + 1, date, type, accountId, includeInBudgets, timestamp, false)
+                "INSERT OR REPLACE INTO record (id, date, type, accountId, includeInBudgets, timestamp, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                arrayOf<Any?>(recordNum, date, type, accountId, includeInBudgets, timestamp, false)
             )
             db.execSQL(
                 "INSERT INTO record_item (recordId, totalAmount, quantity, categoryId, subcategoryId, note) VALUES (?, ?, ?, ?, ?, ?)",
-                arrayOf<Any?>(recordNum + 1, amount, quantity, categoryId, subcategoryId, note)
+                arrayOf<Any?>(recordNum, amount, quantity, categoryId, subcategoryId, note)
             )
         }
         rCursor.close()
@@ -456,7 +456,7 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
 
             val rCursor = db.query(
                 """
-                    SELECT id, date, type, accountId, amount, includeInBudgets
+                    SELECT date, type, accountId, amount, includeInBudgets
                     FROM legacy_record
                     WHERE recordNum = ?
                     ORDER BY type DESC
