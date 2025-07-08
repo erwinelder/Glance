@@ -217,7 +217,7 @@ class DataSyncHelper(
         // Data cannot be synchronized with remote, hard save locally
         if (userId == null) {
             val entitiesToDelete = toDelete.map { dataModelToEntityMapper(it, timestamp, true) }
-            val entitiesToUpsert = toDelete.map { dataModelToEntityMapper(it, timestamp, false) }
+            val entitiesToUpsert = toUpsert.map { dataModelToEntityMapper(it, timestamp, false) }
             localHardCommand(entitiesToDelete, entitiesToUpsert, timestamp)
             return
         }
