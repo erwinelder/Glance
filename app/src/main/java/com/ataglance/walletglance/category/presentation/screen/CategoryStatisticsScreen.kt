@@ -141,7 +141,7 @@ fun CategoryStatisticsScreen(
 ) {
     GlassSurfaceScreenContainerWithFilters(
         screenPadding = screenPadding,
-        accountList = accountList,
+        accounts = accountList,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,

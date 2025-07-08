@@ -130,7 +130,7 @@ fun TransactionsScreen(
 
     GlassSurfaceScreenContainerWithFilters(
         screenPadding = screenPadding,
-        accountList = accounts,
+        accounts = accounts,
         onAccountClick = onAccountClick,
         currentDateRangeEnum = currentDateRangeEnum,
         isCustomDateRangeWindowOpened = isCustomDateRangeWindowOpened,

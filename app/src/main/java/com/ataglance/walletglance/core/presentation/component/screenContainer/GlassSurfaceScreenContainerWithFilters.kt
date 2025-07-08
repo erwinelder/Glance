@@ -27,12 +27,14 @@ import com.ataglance.walletglance.categoryCollection.presentation.model.Category
 import com.ataglance.walletglance.core.domain.date.DateRangeEnum
 import com.ataglance.walletglance.core.presentation.component.container.DateFilterBar
 import com.ataglance.walletglance.core.presentation.component.container.MessageContainer
+import com.ataglance.walletglance.core.presentation.utils.bottom
+import com.ataglance.walletglance.core.presentation.utils.top
 
 @Composable
 fun <S> GlassSurfaceScreenContainerWithFilters(
     screenPadding: PaddingValues = PaddingValues(),
 
-    accountList: List<Account>,
+    accounts: List<Account>,
     onAccountClick: (Int) -> Unit,
 
     currentDateRangeEnum: DateRangeEnum,
@@ -51,8 +53,8 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
     onDimBackgroundChange: (Boolean) -> Unit = {},
     animatedContent: @Composable (S) -> Unit
 ) {
-    val visibleAccounts by remember(accountList) {
-        derivedStateOf { accountList.filterNot { it.hide } }
+    val visibleAccounts by remember(accounts) {
+        derivedStateOf { accounts.filterNot { it.hide } }
     }
 
     Column(
@@ -60,7 +62,7 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = screenPadding.calculateTopPadding() + 12.dp)
+            .padding(top = screenPadding.top + 12.dp)
     ) {
         if (visibleAccounts.size > 1) {
             AccountsFilterBar(
@@ -92,13 +94,18 @@ fun <S> GlassSurfaceScreenContainerWithFilters(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = screenPadding.bottom)
             ) {
                 AnimatedVisibility(
                     visible = visibleNoDataMessage,
-                    enter = fadeIn(tween(220, delayMillis = 90)) +
-                            scaleIn(tween(220, delayMillis = 90), .92f),
-                    exit = fadeOut(animationSpec = tween(90)),
+                    enter = fadeIn(tween(durationMillis = 220, delayMillis = 90)) +
+                            scaleIn(
+                                animationSpec = tween(durationMillis = 220, delayMillis = 90),
+                                initialScale = .92f
+                            ),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 90)),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     MessageContainer(message = stringResource(noDataMessageRes))
