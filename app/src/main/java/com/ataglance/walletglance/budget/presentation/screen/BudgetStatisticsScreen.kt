@@ -97,7 +97,7 @@ fun BudgetStatisticsScreen(
     val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.budgets_light_default_icon,
         darkDefault = R.drawable.budgets_dark_default_icon,
-    ).getByTheme(CurrAppTheme)
+    ).get(CurrAppTheme)
 
     ScreenContainerWithTopBackNavButton(
         screenPadding = screenPadding,

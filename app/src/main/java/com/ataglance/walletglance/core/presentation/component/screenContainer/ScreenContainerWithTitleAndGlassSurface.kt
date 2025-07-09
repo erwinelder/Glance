@@ -25,6 +25,7 @@ import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.GlanciTypography
 import com.ataglance.walletglance.core.presentation.theme.NotoSans
 import com.ataglance.walletglance.core.presentation.utils.getKeyboardBottomPaddingAnimated
+import com.ataglance.walletglance.core.presentation.utils.isKeyboardVisible
 
 @Composable
 fun ScreenContainerWithTitleAndGlassSurface(
@@ -37,8 +38,8 @@ fun ScreenContainerWithTitleAndGlassSurface(
     bottomButtonBlock: @Composable () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val isKeyboardVisible by isKeyboardVisible()
     val bottomPadding by getKeyboardBottomPaddingAnimated(minPadding = 24.dp)
-    val keyboardInFocus = bottomPadding > 50.dp
 
     ScreenContainer(
         screenPadding = screenPadding,
@@ -54,7 +55,7 @@ fun ScreenContainerWithTitleAndGlassSurface(
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+            KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
                 Text(
                     text = title,
                     style = GlanciTypography.titleLarge,
@@ -79,15 +80,15 @@ fun ScreenContainerWithTitleAndGlassSurface(
                     filledWidths = glassSurfaceFilledWidths,
                     content = glassSurfaceContent
                 )
-                buttonBlockUnderGlassSurface?.invoke(keyboardInFocus)
+                buttonBlockUnderGlassSurface?.invoke(isKeyboardVisible)
             }
 
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 16.dp)
+        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !isKeyboardVisible, height = 16.dp)
 
-        KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+        KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
             bottomButtonBlock()
         }
 

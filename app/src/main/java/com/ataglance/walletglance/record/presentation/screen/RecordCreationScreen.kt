@@ -170,7 +170,7 @@ fun RecordCreationScreen(
     val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.create_record_light_default,
         darkDefault = R.drawable.create_record_dark_default
-    ).getByTheme(CurrAppTheme)
+    ).get(CurrAppTheme)
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }

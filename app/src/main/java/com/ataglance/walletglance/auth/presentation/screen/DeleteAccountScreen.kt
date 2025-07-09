@@ -79,7 +79,7 @@ fun DeleteAccountScreen(
     val backButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.profile_light_default,
         darkDefault = R.drawable.profile_dark_default,
-    ).getByTheme(CurrAppTheme)
+    ).get(CurrAppTheme)
 
     if (requestState != null) {
         SetBackHandler()

@@ -73,7 +73,7 @@ fun EmailUpdateEmailVerificationScreen(
     val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.email_light_default,
         darkDefault = R.drawable.email_dark_default,
-    ).getByTheme(CurrAppTheme)
+    ).get(CurrAppTheme)
 
     if (requestState != null) {
         SetBackHandler()

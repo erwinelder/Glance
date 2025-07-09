@@ -94,7 +94,7 @@ fun UpdatePasswordScreen(
     val backButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.password_light_default,
         darkDefault = R.drawable.password_dark_default,
-    ).getByTheme(CurrAppTheme)
+    ).get(CurrAppTheme)
 
     if (requestState != null) {
         SetBackHandler()
