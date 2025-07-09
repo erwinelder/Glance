@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.auth.data.repository
 
-import com.ataglance.walletglance.auth.data.model.CheckAppVersionRequestDto
+import com.ataglance.walletglance.auth.data.model.CurrentAppVersion
 import com.ataglance.walletglance.auth.data.model.EmailUpdateRequestDto
 import com.ataglance.walletglance.auth.data.model.ResetPasswordRequestDto
 import com.ataglance.walletglance.auth.data.model.SaveLanguageRequestDto
@@ -33,7 +33,7 @@ class AuthRepositoryImpl(
 ) : AuthRepository {
 
     override suspend fun checkTokenValidity(token: String): ResultData<UserDto, AuthError> {
-        val appVersion = CheckAppVersionRequestDto(4, 2, 0)
+        val appVersion = CurrentAppVersion()
 
         val response = try {
             httpClient.post(

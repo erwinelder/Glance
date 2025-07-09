@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,10 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
+}
+
+val localProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -23,6 +29,7 @@ android {
             useSupportLibrary = true
         }
 
+        buildConfigField("String", "GLANCI_BACKEND_URL", "\"${localProperties.getProperty("GLANCI_BACKEND_URL")}\"")
     }
 
     buildTypes {
@@ -64,6 +71,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
