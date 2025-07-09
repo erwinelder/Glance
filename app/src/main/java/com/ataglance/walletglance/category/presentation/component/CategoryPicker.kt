@@ -39,22 +39,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryType
-import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
 import com.ataglance.walletglance.category.domain.model.DefaultCategoriesPackage
+import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.theme.GlanciColors
-import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
-import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsMedium
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideFromBottomTransition
 import com.ataglance.walletglance.core.presentation.animation.dialogSlideToBottomTransition
 import com.ataglance.walletglance.core.presentation.component.button.CloseButton
 import com.ataglance.walletglance.core.presentation.component.divider.SmallDivider
-import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
+import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
+import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 
 @Composable
 fun CategoryPicker(
@@ -105,40 +105,36 @@ fun CategoryPicker(
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
                 .background(GlanciColors.surface)
                 .fillMaxWidth(
-                    when {
-                        WindowTypeIsCompact -> .9f
-                        WindowTypeIsMedium -> .6f
-                        else -> .5f
-                    }
+                    FilledWidthByScreenType(.9f, .6f, .5f).getByType(CurrWindowType)
                 )
         ) {
             items(
                 items = groupedCategoriesByType.getByType(type),
                 key = { it.category.id }
-            ) { categoryWithSubcategories ->
-                if (categoryWithSubcategories.category.orderNum != 1) {
+            ) { groupedCategories ->
+                if (groupedCategories.category.orderNum != 1) {
                     SmallDivider()
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CategoryListItem(categoryWithSubcategories.category) {
+                    CategoryListItem(groupedCategories.category) {
                         if (
-                            categoryWithSubcategories.subcategories.isNotEmpty() &&
+                            groupedCategories.subcategories.isNotEmpty() &&
                                 !allowChoosingParentCategory
                         ) {
-                            chosenGroupedCategories = categoryWithSubcategories
+                            chosenGroupedCategories = groupedCategories
                         } else {
                             onCategoryChoose(
-                                CategoryWithSub(categoryWithSubcategories.category)
+                                CategoryWithSub(groupedCategories.category)
                             )
                             onDismissRequest()
                         }
                     }
                     if (allowChoosingParentCategory) {
                         FilledIconButton(
-                            enabled = categoryWithSubcategories.subcategories.isNotEmpty(),
+                            enabled = groupedCategories.subcategories.isNotEmpty(),
                             shape = RoundedCornerShape(30),
                             colors = IconButtonColors(
                                 containerColor = Color.Transparent,
@@ -147,7 +143,7 @@ fun CategoryPicker(
                                 disabledContentColor = GlanciColors.outline.copy(.3f)
                             ),
                             onClick = {
-                                chosenGroupedCategories = categoryWithSubcategories
+                                chosenGroupedCategories = groupedCategories
                             },
                             modifier = Modifier.bounceClickEffect()
                         ) {
@@ -159,7 +155,7 @@ fun CategoryPicker(
                                     .border(
                                         width = 1.dp,
                                         color = if (
-                                            categoryWithSubcategories.subcategories.isEmpty()
+                                            groupedCategories.subcategories.isEmpty()
                                         ) {
                                             GlanciColors.outline.copy(.3f)
                                         } else {
@@ -187,11 +183,7 @@ fun CategoryPicker(
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
                 .background(GlanciColors.surface)
                 .fillMaxWidth(
-                    when {
-                        WindowTypeIsCompact -> .9f
-                        WindowTypeIsMedium -> .6f
-                        else -> .5f
-                    }
+                    FilledWidthByScreenType(.9f, .6f, .5f).getByType(CurrWindowType)
                 )
                 .padding(bottom = 4.dp)
         ) {

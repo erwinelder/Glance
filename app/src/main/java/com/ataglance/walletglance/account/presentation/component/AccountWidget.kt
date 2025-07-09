@@ -101,6 +101,7 @@ fun AccountWidget(
     onHideBalanceButton: () -> Unit = {}
 ) {
     val (accountColor, onAccountColor) = account.color.getColorAndColorOnByTheme(CurrAppTheme)
+    val onAccountGradient = listOf(onAccountColor.copy(.05f), onAccountColor.copy(.1f))
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -137,14 +138,19 @@ fun AccountWidget(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                BalanceRow(account, onAccountColor)
-                TodayStatistic(todayExpenses, account.currency, onAccountColor)
+                BalanceRow(account = account, onAccountColor = onAccountColor)
+                TodayStatistic(
+                    todayExpenses = todayExpenses,
+                    currency = account.currency,
+                    onAccountColor = onAccountColor
+                )
             }
             SmallFilledIconButton(
                 iconRes = if (account.hideBalance) R.drawable.hide_icon else R.drawable.show_icon,
                 iconContendDescription = "show or hide balance",
-                containerColor = onAccountColor.copy(.1f),
+                gradientColor = onAccountGradient,
                 contentColor = onAccountColor,
+                borderSize = 0.dp,
                 enabled = !account.withoutBalance,
                 onClick = onHideBalanceButton
             )

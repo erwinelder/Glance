@@ -43,31 +43,31 @@ interface TransferLocalDao {
         return saveTransfers(transfers = toUpsert)
     }
 
-    @Query("SELECT * FROM transfer WHERE timestamp > :timestamp ORDER BY timestamp DESC")
+    @Query("SELECT * FROM transfer WHERE timestamp > :timestamp ORDER BY date DESC")
     suspend fun getTransfersAfterTimestamp(timestamp: Long): List<TransferEntity>
 
     @Query("SELECT * FROM transfer WHERE id = :id")
     suspend fun getTransfer(id: Long): TransferEntity?
 
-    @Query("SELECT * FROM transfer WHERE timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
+    @Query("SELECT * FROM transfer WHERE date BETWEEN :from AND :to ORDER BY date DESC")
     fun getTransfersInDateRangeAsFlow(
         from: Long,
         to: Long
     ): Flow<List<TransferEntity>>
 
-    @Query("SELECT * FROM transfer WHERE timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
+    @Query("SELECT * FROM transfer WHERE date BETWEEN :from AND :to ORDER BY date DESC")
     suspend fun getTransfersInDateRange(from: Long, to: Long): List<TransferEntity>
 
     @Query("""
         SELECT * FROM transfer
         WHERE senderAccountId IN (:accountIds) OR receiverAccountId IN (:accountIds)
-        ORDER BY timestamp DESC
+        ORDER BY date DESC
     """)
     suspend fun getTransfersByAccounts(accountIds: List<Int>): List<TransferEntity>
 
     @Query("""
         SELECT SUM(senderAmount) FROM transfer
-        WHERE timestamp BETWEEN :from AND :to AND senderAccountId IN (:accountIds)
+        WHERE date BETWEEN :from AND :to AND senderAccountId IN (:accountIds)
     """)
     suspend fun getTotalExpensesInDateRangeByAccounts(
         from: Long,

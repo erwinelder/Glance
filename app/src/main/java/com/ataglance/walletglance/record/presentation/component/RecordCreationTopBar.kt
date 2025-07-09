@@ -52,7 +52,9 @@ fun RecordCreationTopBar(
 ) {
     val scrollState = rememberScrollState()
 
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
