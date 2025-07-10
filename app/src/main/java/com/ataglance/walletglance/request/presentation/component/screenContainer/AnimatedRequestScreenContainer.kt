@@ -38,6 +38,7 @@ fun AnimatedRequestScreenContainer(
     onCancelRequest: (() -> Unit)? = null,
     onSuccessButton: () -> Unit = {},
     onErrorButton: () -> Unit,
+    screenTopContent: @Composable (() -> Unit)? = null,
     screenCenterContent: @Composable (isKeyboardVisible: Boolean) -> Unit,
     screenBottomContent: @Composable (() -> Unit)? = null
 ) {
@@ -47,9 +48,9 @@ fun AnimatedRequestScreenContainer(
         is RequestState.Error -> GlanciColors.iconErrorGlassGradientPair
     }
     val iconSize = when (requestStateButton) {
-        null -> 40.dp
+        null -> 48.dp
         is RequestState.Loading -> 80.dp
-        is RequestState.Success, is RequestState.Error -> 100.dp
+        is RequestState.Success, is RequestState.Error -> 104.dp
     }
 
     val weight by animateFloatAsState(
@@ -71,6 +72,17 @@ fun AnimatedRequestScreenContainer(
         padding = PaddingValues(top = 8.dp, bottom = bottomPadding),
         modifier = Modifier.clickable { focusManager.clearFocus() }
     ) {
+
+        AnimatedContent(
+            targetState = requestStateButton,
+            contentAlignment = Alignment.Center
+        ) { requestState ->
+            if (requestState == null && screenTopContent != null) {
+                KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
+                    screenTopContent()
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -103,7 +115,8 @@ fun AnimatedRequestScreenContainer(
                 is RequestState.Loading -> {
                     LoadingStateComponent(
                         message = stringResource(requestState.messageRes),
-                        onCancel = onCancelRequest
+                        onCancel = onCancelRequest,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
                 is RequestState.Success -> {

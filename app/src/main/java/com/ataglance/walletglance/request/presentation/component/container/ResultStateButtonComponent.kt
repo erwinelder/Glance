@@ -1,8 +1,9 @@
 package com.ataglance.walletglance.request.presentation.component.container
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,15 +30,17 @@ fun ResultStateButtonComponent(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
         modifier = Modifier.fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
     ) {
+
         Title(
             text = stringResource(state.titleRes),
             modifier = Modifier
                 .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
         )
+
         state.messageRes?.let {
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(it),
                 color = GlanciColors.onSurface,
@@ -47,6 +50,9 @@ fun ResultStateButtonComponent(
                 textAlign = TextAlign.Center
             )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         if (usePrimaryButtonInstead) {
             SmallPrimaryButton(
                 text = stringResource(state.buttonTextRes),
@@ -60,5 +66,6 @@ fun ResultStateButtonComponent(
                 onClick = onButtonClick
             )
         }
+
     }
 }

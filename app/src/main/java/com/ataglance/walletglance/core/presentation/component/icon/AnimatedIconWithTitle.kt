@@ -23,7 +23,7 @@ fun AnimatedIconWithTitle(
     animate: Boolean = false,
     isTitleVisible: Boolean = true,
     iconGradientColor: Pair<Color, Color> = GlanciColors.iconPrimaryGlassGradientPair,
-    iconSize: Dp = 40.dp
+    iconSize: Dp = 48.dp
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally

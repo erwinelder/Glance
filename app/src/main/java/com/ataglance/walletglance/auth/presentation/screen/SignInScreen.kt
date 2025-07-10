@@ -33,6 +33,7 @@ import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
+import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
@@ -75,6 +76,7 @@ fun SignInScreenWrapper(
 
     SignInScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         emailState = emailState,
         onEmailChange = viewModel::updateAndValidateEmail,
         passwordState = passwordState,
@@ -118,6 +120,7 @@ fun SignInScreenWrapper(
 @Composable
 fun SignInScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     emailState: ValidatedFieldState,
     onEmailChange: (String) -> Unit,
     passwordState: ValidatedFieldState,
@@ -141,6 +144,13 @@ fun SignInScreen(
         onCancelRequest = onCancelRequest,
         onSuccessButton = onSuccessButton,
         onErrorButton = onErrorButton,
+        screenTopContent = {
+            GlassSurfaceTopNavButtonBlock(
+                text = stringResource(R.string.sign_in),
+                imageRes = null,
+                onClick = onNavigateBack
+            )
+        },
         screenCenterContent = { isKeyboardVisible ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -266,6 +276,7 @@ fun SignInScreenPreview(
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         SignInScreen(
+            onNavigateBack = {},
             emailState = emailState,
             onEmailChange = {},
             passwordState = passwordState,

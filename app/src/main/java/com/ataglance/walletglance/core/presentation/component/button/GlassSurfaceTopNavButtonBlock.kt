@@ -34,7 +34,7 @@ import com.ataglance.walletglance.core.presentation.theme.Manrope
 fun GlassSurfaceTopNavButtonBlock(
     text: String,
     @DrawableRes imageRes: Int? = null,
-    filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(1f, .75f, .75f),
+    filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(.96f, .75f, .75f),
     onClick: () -> Unit,
     companionComponent: @Composable (RowScope.() -> Unit)? = null
 ) {
@@ -60,7 +60,7 @@ fun GlassSurfaceTopNavButtonBlock(
 fun GlassSurfaceTopNavButtonBlock(
     text: String,
     iconComponent: @Composable (() -> Unit)? = null,
-    filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(1f, .75f, .75f),
+    filledWidths: FilledWidthByScreenType = FilledWidthByScreenType(.96f, .75f, .75f),
     onClick: () -> Unit,
     companionComponent: @Composable (RowScope.() -> Unit)? = null
 ) {
@@ -113,7 +113,7 @@ private fun RowScope.GlassSurfaceNavigationButton(
 ) {
     GlassSurface(
         filledWidths = null,
-        cornerSize = if (shrink) 22.dp else 24.dp,
+        cornerSize = if (shrink || iconComponent == null) 22.dp else 24.dp,
         modifier = Modifier
             .bounceClickEffect(.98f, onClick = onClick)
             .weight(1f, fill = !shrink)

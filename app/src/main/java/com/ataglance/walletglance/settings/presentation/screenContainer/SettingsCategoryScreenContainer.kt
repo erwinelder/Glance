@@ -22,7 +22,7 @@ import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Typography
 import com.ataglance.walletglance.core.presentation.theme.WindowTypeIsCompact
 import com.ataglance.walletglance.core.presentation.utils.plus
-import com.ataglance.walletglance.settings.presentation.component.NavigateBackSettingsCategoryButton
+import com.ataglance.walletglance.settings.presentation.component.SettingsCategoryTopNavBackButton
 import com.ataglance.walletglance.settings.presentation.model.SettingsCategory
 
 @Composable
@@ -51,7 +51,7 @@ fun SettingsCategoryScreenContainer(
             )
     ) {
         if (onNavigateBack != null && WindowTypeIsCompact) {
-            NavigateBackSettingsCategoryButton(thisCategory, onNavigateBack)
+            SettingsCategoryTopNavBackButton(thisCategory, onNavigateBack)
         }
 
         Box(

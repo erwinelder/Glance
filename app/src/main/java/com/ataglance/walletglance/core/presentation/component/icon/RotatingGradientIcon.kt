@@ -9,7 +9,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +44,7 @@ fun RotatingGradientIcon(
     iconPathsRes: IconPathsRes,
     animate: Boolean,
     iconGradientColor: Pair<Color, Color> = GlanciColors.iconPrimaryGlassGradientPair,
-    iconSize: Dp = 40.dp
+    iconSize: Dp = 48.dp
 ) {
     val firstGradientColor by animateColorAsState(targetValue = iconGradientColor.first)
     val secondGradientColor by animateColorAsState(targetValue = iconGradientColor.second)
@@ -56,9 +55,7 @@ fun RotatingGradientIcon(
     )
     val angleDeg by getAnimatedAngleAsState(isLoading = animate)
 
-    val modifier = Modifier.Companion
-        .padding(vertical = 6.dp)
-        .size(iconSize)
+    val modifier = Modifier.Companion.size(iconSize)
 
     val paths = remember(iconPathsRes.paths) {
         iconPathsRes.paths.map { PathParser().parsePathString(pathData = it).toPath() }
@@ -153,7 +150,7 @@ private fun Rect.encompass(other: Rect): Rect {
 @Composable
 private fun RotatingGradientIconPreview() {
     var animate by remember { mutableStateOf(false) }
-    val iconSize by animateDpAsState(targetValue = if (animate) 80.dp else 40.dp)
+    val iconSize by animateDpAsState(targetValue = if (animate) 80.dp else 48.dp)
 
     PreviewColumnContainer(appTheme = AppTheme.LightDefault) {
         RotatingGradientIcon(

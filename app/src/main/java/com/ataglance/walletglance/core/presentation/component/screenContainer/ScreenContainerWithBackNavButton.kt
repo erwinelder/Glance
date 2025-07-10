@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilityContainer
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilitySpacer
@@ -49,7 +48,6 @@ fun ScreenContainerWithTopBackNavButton(
             GlassSurfaceTopNavButtonBlock(
                 text = backNavButtonText,
                 imageRes = backNavButtonImageRes,
-                filledWidths = FilledWidthByScreenType(.96f, .75f, .75f),
                 onClick = onBackNavButtonClick,
                 companionComponent = backNavButtonCompanionComponent
             )
@@ -90,7 +88,6 @@ fun ScreenContainerWithTopBackNavButton(
             GlassSurfaceTopNavButtonBlock(
                 text = backNavButtonText,
                 iconComponent = backNavButtonIconComponent,
-                filledWidths = FilledWidthByScreenType(.96f, .75f, .75f),
                 onClick = onBackNavButtonClick,
                 companionComponent = backNavButtonCompanionComponent
             )

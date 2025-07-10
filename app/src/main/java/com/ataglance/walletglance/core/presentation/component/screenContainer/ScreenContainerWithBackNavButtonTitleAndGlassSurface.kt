@@ -61,7 +61,6 @@ fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
                 GlassSurfaceTopNavButtonBlock(
                     text = backButtonText,
                     imageRes = backButtonImageRes,
-                    filledWidths = FilledWidthByScreenType(.96f, .75f, .54f),
                     onClick = onNavigateBack
                 )
             }
@@ -76,8 +75,7 @@ fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
                     fontFamily = NotoSans,
                     overflow = TextOverflow.Clip,
                     modifier = Modifier
-                        .fillMaxWidth(FilledWidthByScreenType(compact = .86f)
-                            .get(CurrWindowType))
+                        .fillMaxWidth(FilledWidthByScreenType(compact = .86f).get(CurrWindowType))
                         .padding(vertical = 16.dp)
                 )
             }
