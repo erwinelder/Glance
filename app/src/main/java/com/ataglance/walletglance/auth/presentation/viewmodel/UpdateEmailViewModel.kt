@@ -7,12 +7,12 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.usecase.auth.CheckEmailVerificationUseCase
 import com.ataglance.walletglance.auth.domain.usecase.auth.RequestEmailUpdateUseCase
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
+import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.auth.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

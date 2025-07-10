@@ -41,7 +41,7 @@ fun GlassSurfaceTopNavButtonBlock(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(filledWidths.getByType(CurrWindowType))
+        modifier = Modifier.fillMaxWidth(filledWidths.get(CurrWindowType))
     ) {
         GlassSurfaceNavigationButton(
             text = text,
@@ -67,7 +67,7 @@ fun GlassSurfaceTopNavButtonBlock(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(filledWidths.getByType(CurrWindowType))
+        modifier = Modifier.fillMaxWidth(filledWidths.get(CurrWindowType))
     ) {
         GlassSurfaceNavigationButton(
             text = text,

@@ -63,7 +63,7 @@ fun ScreenContainerWithTitleAndGlassSurface(
                     fontFamily = NotoSans,
                     overflow = TextOverflow.Clip,
                     modifier = Modifier
-                        .fillMaxWidth(FilledWidthByScreenType(.86f).getByType(CurrWindowType))
+                        .fillMaxWidth(FilledWidthByScreenType(.86f).get(CurrWindowType))
                         .padding(vertical = 16.dp)
                 )
             }

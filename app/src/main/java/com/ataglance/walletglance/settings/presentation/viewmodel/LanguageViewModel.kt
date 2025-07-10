@@ -8,9 +8,9 @@ import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUse
 import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.MessageState
+import com.ataglance.walletglance.request.domain.model.result.ResultData
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.MessageState
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageLocallyUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCase
 import com.ataglance.walletglance.settings.mapper.toResultWithMessageState

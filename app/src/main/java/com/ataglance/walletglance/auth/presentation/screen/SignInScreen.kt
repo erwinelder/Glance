@@ -3,9 +3,15 @@ package com.ataglance.walletglance.auth.presentation.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -17,28 +23,34 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilityContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.state.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.model.IconPathsRes
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
-import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.utils.takeActionIf
-import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
+import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.modelNew.RequestState
+import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -88,7 +100,7 @@ fun SignInScreenWrapper(
         },
         requestState = requestState,
         onCancelRequest = viewModel::cancelSignIn,
-        onSuccessClose = {
+        onSuccessButton = {
             if (appConfiguration.isSetUp) {
                 navViewModel.navigateToScreenPoppingToStartDestination(
                     navController = navController, screenToNavigateTo = AuthScreens.Profile
@@ -99,7 +111,7 @@ fun SignInScreenWrapper(
                 )
             }
         },
-        onErrorClose = viewModel::resetRequestState
+        onErrorButton = viewModel::resetRequestState
     )
 }
 
@@ -115,70 +127,45 @@ fun SignInScreen(
     onNavigateToRequestPasswordResetScreen: () -> Unit,
     onNavigateToSignUpScreen: (() -> Unit)?,
     onContinueAsGuest: (() -> Unit)?,
-    requestState: RequestState<ButtonState>?,
-    onCancelRequest: () -> Unit,
-    onSuccessClose: () -> Unit,
-    onErrorClose: () -> Unit
-) {
-    if (requestState != null) {
-        SetBackHandler()
-    }
 
-    AnimatedScreenWithRequestState(
+    requestState: RequestState<ButtonState, ButtonState>?,
+    onCancelRequest: () -> Unit,
+    onSuccessButton: () -> Unit,
+    onErrorButton: () -> Unit
+) {
+    AnimatedRequestScreenContainer(
         screenPadding = screenPadding,
-        requestState = requestState,
+        iconPathsRes = IconPathsRes.User,
+        title = stringResource(R.string.sign_in_to_your_account),
+        requestStateButton = requestState,
         onCancelRequest = onCancelRequest,
-        onSuccessClose = onSuccessClose,
-        onErrorClose = onErrorClose
-    ) {
-        ScreenContainerWithTitleAndGlassSurface(
-            title = stringResource(R.string.sign_in_to_your_account),
-            glassSurfaceContent = {
-                GlassSurfaceContent(
-                    emailState = emailState,
-                    onEmailChange = onEmailChange,
-                    passwordState = passwordState,
-                    onPasswordChange = onPasswordChange,
-                    onSignIn = onSignIn
-                )
-            },
-            buttonBlockUnderGlassSurface = { keyboardInFocus ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+        onSuccessButton = onSuccessButton,
+        onErrorButton = onErrorButton,
+        screenCenterContent = { isKeyboardVisible ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                GlassSurface(
+                    modifier = Modifier.weight(1f, fill = false),
+                    filledWidths = FilledWidthByScreenType(compact = .86f),
                 ) {
-                    PrimaryButton(
-                        text = stringResource(R.string.sign_in),
-                        enabled = signInIsAllowed,
-                        onClick = onSignIn
+                    GlassSurfaceContent(
+                        emailState = emailState,
+                        onEmailChange = onEmailChange,
+                        passwordState = passwordState,
+                        onPasswordChange = onPasswordChange,
+                        onSignIn = onSignIn
                     )
-                    if (onNavigateToSignUpScreen != null) {
-                        KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
-                            SecondaryButton(
-                                text = stringResource(R.string.reset_password),
-                                onClick = onNavigateToRequestPasswordResetScreen
-                            )
-                        }
-                    }
                 }
-            },
-            bottomButtonBlock = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    if (onNavigateToSignUpScreen != null) {
-                        SecondaryButton(
-                            text = stringResource(R.string.sign_up),
-                            onClick = onNavigateToSignUpScreen
-                        )
-                    }
-                    if (onNavigateToSignUpScreen != null && onContinueAsGuest != null) {
-                        SecondaryButton(
-                            text = stringResource(R.string.continue_as_guest),
-                            onClick = onContinueAsGuest
-                        )
-                    }
-                    if (onNavigateToSignUpScreen == null) {
+                PrimaryButton(
+                    text = stringResource(R.string.sign_in),
+                    enabled = signInIsAllowed,
+                    onClick = onSignIn
+                )
+                if (onNavigateToSignUpScreen != null) {
+                    KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
                         SecondaryButton(
                             text = stringResource(R.string.reset_password),
                             onClick = onNavigateToRequestPasswordResetScreen
@@ -186,8 +173,32 @@ fun SignInScreen(
                     }
                 }
             }
-        )
-    }
+        },
+        screenBottomContent = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                if (onNavigateToSignUpScreen != null) {
+                    SecondaryButton(
+                        text = stringResource(R.string.sign_up),
+                        onClick = onNavigateToSignUpScreen
+                    )
+                }
+                if (onNavigateToSignUpScreen != null && onContinueAsGuest != null) {
+                    SecondaryButton(
+                        text = stringResource(R.string.continue_as_guest),
+                        onClick = onContinueAsGuest
+                    )
+                }
+                if (onNavigateToSignUpScreen == null) {
+                    SecondaryButton(
+                        text = stringResource(R.string.reset_password),
+                        onClick = onNavigateToRequestPasswordResetScreen
+                    )
+                }
+            }
+        }
+    )
 }
 
 @Composable
@@ -227,33 +238,60 @@ fun SignInScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
 ) {
     val email = "example@domain.com"
+    val emailState = ValidatedFieldState(
+        fieldText = email,
+        validationStates = UserDataValidator.validateEmail(email).toUiStates()
+    )
     val password = "_Password1"
+    val passwordState = ValidatedFieldState(
+        fieldText = password,
+        validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password).toUiStates()
+    )
+    val signInIsAllowed = UserDataValidator.isValidEmail(email) &&
+            UserDataValidator.isValidPassword(password)
+
+    val coroutineScope = rememberCoroutineScope()
+    var job = remember<Job?> { null }
+    var requestState by remember {
+        mutableStateOf<RequestState<ButtonState, ButtonState>?>(
+            null
+//            RequestState.Success(
+//                state = AuthSuccess.SignedIn.toResultStateButton()
+//            )
+//            RequestState.Error(
+//                state = AuthError.SignInError.toResultStateButton()
+//            )
+        )
+    }
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         SignInScreen(
-            emailState = ValidatedFieldState(
-                fieldText = email,
-                validationStates = UserDataValidator.validateEmail(email).toUiStates()
-            ),
+            emailState = emailState,
             onEmailChange = {},
-            passwordState = ValidatedFieldState(
-                fieldText = password,
-                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password)
-                    .toUiStates()
-            ),
+            passwordState = passwordState,
             onPasswordChange = {},
-            signInIsAllowed = UserDataValidator.isValidEmail(email) &&
-                    UserDataValidator.isValidPassword(password),
-            onSignIn = {},
+            signInIsAllowed = signInIsAllowed,
+            onSignIn = {
+                job = coroutineScope.launch {
+                    requestState = RequestState.Loading(
+                        messageRes = R.string.creating_your_identity_loader
+                    )
+                    delay(2000)
+                    requestState = RequestState.Success(
+                        state = AuthSuccess.SignedIn.toResultStateButton()
+                    )
+                }
+            },
             onNavigateToRequestPasswordResetScreen = {},
             onNavigateToSignUpScreen = {},
             onContinueAsGuest = {},
-            requestState = null,
-//            requestState = RequestState.Loading(messageRes = R.string.verifying_your_credentials_loader),
-//            requestState = RequestState.Result(resultState = AuthSuccess.SignedIn.toResultWithButtonState()),
-            onCancelRequest = {},
-            onSuccessClose = {},
-            onErrorClose = {}
+            requestState = requestState,
+            onCancelRequest = {
+                requestState = null
+                job?.cancel()
+            },
+            onSuccessButton = { requestState = null },
+            onErrorButton = { requestState = null }
         )
     }
 }

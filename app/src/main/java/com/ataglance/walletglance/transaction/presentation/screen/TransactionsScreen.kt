@@ -159,7 +159,7 @@ fun TransactionsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth(
-                FilledWidthByScreenType().getByType(CurrWindowType)
+                FilledWidthByScreenType().get(CurrWindowType)
             )
         ) {
             items(items = transactions) { transaction ->

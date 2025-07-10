@@ -77,7 +77,7 @@ fun ScreenContainerWithBackNavButtonTitleAndGlassSurface(
                     overflow = TextOverflow.Clip,
                     modifier = Modifier
                         .fillMaxWidth(FilledWidthByScreenType(compact = .86f)
-                            .getByType(CurrWindowType))
+                            .get(CurrWindowType))
                         .padding(vertical = 16.dp)
                 )
             }

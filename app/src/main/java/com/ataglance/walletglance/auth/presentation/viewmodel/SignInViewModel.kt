@@ -3,13 +3,16 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.usecase.auth.SignInWithEmailAndPasswordUseCase
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
-import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.domain.usecase.auth.SignInWithEmailAndPasswordUseCase
 import com.ataglance.walletglance.auth.mapper.toUiStates
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
+import com.ataglance.walletglance.request.domain.model.result.Result
+import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.modelNew.RequestState
+import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -83,7 +86,7 @@ class SignInViewModel(
                 email = emailState.value.getTrimmedText(),
                 password = passwordState.value.getTrimmedText()
             )
-            setRequestResultState(result = result.toResultWithButtonState())
+            setRequestResultState(result = result)
         }
     }
 
@@ -94,7 +97,7 @@ class SignInViewModel(
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
+    private val _requestState = MutableStateFlow<RequestState<ButtonState, ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
@@ -103,8 +106,17 @@ class SignInViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ButtonState) {
-        _requestState.update { RequestState.Result(resultState = result) }
+    private fun setRequestResultState(result: Result<AuthSuccess, AuthError>) {
+        _requestState.update {
+            when (result) {
+                is Result.Success -> RequestState.Success(
+                    state = result.success.toResultStateButton()
+                )
+                is Result.Error -> RequestState.Error(
+                    state = result.error.toResultStateButton()
+                )
+            }
+        }
     }
 
     fun resetRequestState() {

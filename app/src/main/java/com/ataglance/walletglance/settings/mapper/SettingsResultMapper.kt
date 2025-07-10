@@ -2,8 +2,8 @@ package com.ataglance.walletglance.settings.mapper
 
 import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
+import com.ataglance.walletglance.request.domain.model.result.ResultData
+import com.ataglance.walletglance.request.presentation.model.ResultState
 import com.ataglance.walletglance.settings.errorHandling.SettingsError
 
 

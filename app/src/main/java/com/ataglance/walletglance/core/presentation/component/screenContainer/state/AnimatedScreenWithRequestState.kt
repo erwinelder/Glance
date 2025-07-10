@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 
 @Composable
 fun AnimatedScreenWithRequestState(

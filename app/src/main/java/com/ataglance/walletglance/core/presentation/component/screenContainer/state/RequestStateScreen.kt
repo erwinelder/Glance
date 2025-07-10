@@ -7,9 +7,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.ataglance.walletglance.core.presentation.component.container.LoadingStateComponent
-import com.ataglance.walletglance.errorHandling.presentation.component.container.ResultStateComponentWithButton
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.component.container.ResultStateComponentWithButton
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 
 @Composable
 fun RequestStateScreen(

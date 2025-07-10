@@ -4,8 +4,8 @@ import androidx.annotation.StringRes
 import com.android.billingclient.api.ProductDetails
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
+import com.ataglance.walletglance.request.domain.model.result.ResultData
+import com.ataglance.walletglance.request.presentation.model.ResultTitleWithMessageState
 
 fun ResultData<ProductDetails, BillingError>.toResultState(): ResultTitleWithMessageState {
     return when (this) {

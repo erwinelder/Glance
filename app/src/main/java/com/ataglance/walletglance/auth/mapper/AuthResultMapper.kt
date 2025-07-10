@@ -5,8 +5,8 @@ import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState
+import com.ataglance.walletglance.request.domain.model.result.Result
+import com.ataglance.walletglance.request.presentation.model.ResultState
 
 
 fun Result<AuthSuccess, AuthError>.toResultWithButtonState(): ResultState.ButtonState {

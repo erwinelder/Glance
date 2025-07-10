@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.errorHandling.presentation.component.screenContainer.ResultSuccessScreenContainer
+import com.ataglance.walletglance.request.presentation.component.screenContainer.ResultSuccessScreenContainer
 
 @Composable
 fun SetupFinishScreen(

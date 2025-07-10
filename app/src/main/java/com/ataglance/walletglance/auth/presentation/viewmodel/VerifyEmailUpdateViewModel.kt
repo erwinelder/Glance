@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.usecase.auth.VerifyEmailUpdateUseCase
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

@@ -52,7 +52,14 @@ sealed class GlanciPalette(
         glassButtonGradient[0], glassButtonGradient[1]
     ),
 
-    val animatedIconGradient: List<Color>,
+    val iconPrimaryGlassGradient: List<Color>,
+    val iconPrimaryGlassGradientPair: Pair<Color, Color> = Pair(
+        iconPrimaryGlassGradient[0], iconPrimaryGlassGradient[1]
+    ),
+    val iconErrorGlassGradient: List<Color>,
+    val iconErrorGlassGradientPair: Pair<Color, Color> = Pair(
+        iconErrorGlassGradient[0], iconErrorGlassGradient[1]
+    ),
 
     val background: Color,
     val surface: Color,
@@ -142,9 +149,13 @@ sealed class GlanciPalette(
             Color(233, 233, 233, 90)
         ),
 
-        animatedIconGradient = listOf(
+        iconPrimaryGlassGradient = listOf(
             Color(181, 100, 142, 204),
-            Color(219, 99, 161, 38)
+            Color(219, 99, 161, 51)
+        ),
+        iconErrorGlassGradient = listOf(
+            Color(213, 75, 75, 204),
+            Color(252, 63, 63, 51),
         ),
 
         background = Color(240, 240, 240),
@@ -252,9 +263,13 @@ sealed class GlanciPalette(
             Color(63, 63, 63, 10)
         ),
 
-        animatedIconGradient = listOf(
+        iconPrimaryGlassGradient = listOf(
             Color(194, 114, 155, 204),
             Color(232, 114, 175, 77)
+        ),
+        iconErrorGlassGradient = listOf(
+            Color(201, 62, 62, 204),
+            Color(240, 50, 50, 77),
         ),
 
         background = Color(18, 18, 18),

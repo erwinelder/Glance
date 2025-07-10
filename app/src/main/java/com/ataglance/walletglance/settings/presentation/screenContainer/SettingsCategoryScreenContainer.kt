@@ -57,7 +57,7 @@ fun SettingsCategoryScreenContainer(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
+                .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
                 .weight(topBottomSpacingProportion.first)
         ) {
             title?.let {
@@ -76,7 +76,7 @@ fun SettingsCategoryScreenContainer(
                 .run {
                     if (allowScroll) verticalScroll(scrollState) else this
                 }
-                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
+                .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
         ) {
             mainScreenContent()
         }

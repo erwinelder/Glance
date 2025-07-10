@@ -24,10 +24,10 @@ import com.ataglance.walletglance.core.presentation.component.screenContainer.Sc
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
-import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import org.koin.compose.viewmodel.koinViewModel

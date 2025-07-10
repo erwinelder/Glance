@@ -42,7 +42,7 @@ fun GlassSurfaceOnGlassSurfaceFilled(
         onClick = onClick,
         clickEnabled = clickEnabled,
         shrinkScale = shrinkScale,
-        filledWidth = filledWidths?.getByType(CurrWindowType),
+        filledWidth = filledWidths?.get(CurrWindowType),
         cornerSize = cornerSize,
         borderSize = borderSize,
         verticalArrangement = verticalArrangement,

@@ -114,7 +114,7 @@ fun AccountWidget(
                     end = Offset(40f, -100f)
                 )
             )
-            .fillMaxWidth(FilledWidthByScreenType(.9f, .6f, .42f).getByType(CurrWindowType))
+            .fillMaxWidth(FilledWidthByScreenType(.9f, .6f, .42f).get(CurrWindowType))
             .padding(horizontal = 22.dp, vertical = 18.dp)
     ) {
         Row(

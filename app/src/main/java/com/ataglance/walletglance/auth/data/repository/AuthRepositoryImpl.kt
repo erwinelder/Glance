@@ -14,9 +14,9 @@ import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.data.remote.glanciBackendUrl
 import com.ataglance.walletglance.core.data.remote.httpClient
-import com.ataglance.walletglance.errorHandling.domain.model.result.Error
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
+import com.ataglance.walletglance.request.domain.model.result.Error
+import com.ataglance.walletglance.request.domain.model.result.Result
+import com.ataglance.walletglance.request.domain.model.result.ResultData
 import com.ataglance.walletglance.settings.errorHandling.SettingsError
 import io.ktor.client.request.get
 import io.ktor.client.request.header
