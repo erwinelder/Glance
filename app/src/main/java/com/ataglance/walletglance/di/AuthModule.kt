@@ -39,6 +39,8 @@ import com.ataglance.walletglance.auth.presentation.viewmodel.ProfileViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.RequestPasswordResetViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.ResetPasswordViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpEmailVerificationViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpRequestViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdateEmailViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
@@ -151,11 +153,15 @@ val authModule = module {
     }
 
     viewModel { params ->
-        SignUpViewModel(
-            email = params.get(),
-            signUpUseCase = get(),
-            checkEmailVerificationUseCase = get()
-        )
+        SignUpViewModel(email = params.get())
+    }
+
+    viewModel {
+        SignUpRequestViewModel(signUpUseCase = get())
+    }
+
+    viewModel {
+        SignUpEmailVerificationViewModel(checkEmailVerificationUseCase = get())
     }
 
     viewModel { params ->

@@ -3,6 +3,7 @@ package com.ataglance.walletglance.request.presentation.component.screenContaine
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,10 +37,10 @@ fun AnimatedRequestScreenContainer(
     title: String? = null,
     requestStateButton: RequestState<ButtonState, ButtonState>?,
     onCancelRequest: (() -> Unit)? = null,
-    onSuccessButton: () -> Unit = {},
+    onSuccessButton: (() -> Unit)? = null,
     onErrorButton: () -> Unit,
     screenTopContent: @Composable (() -> Unit)? = null,
-    screenCenterContent: @Composable (isKeyboardVisible: Boolean) -> Unit,
+    screenCenterContent: @Composable ((isKeyboardVisible: Boolean) -> Unit)? = null,
     screenBottomContent: @Composable (() -> Unit)? = null
 ) {
     val iconGradientColor = when (requestStateButton) {
@@ -84,63 +85,74 @@ fun AnimatedRequestScreenContainer(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f, fill = false)
+        ) {
 
-        if (title != null) {
+            Spacer(modifier = Modifier.weight(1f))
 
-            KeyboardTypingAnimatedVisibilityContainer(
-                isVisible = !isKeyboardVisible,
-                modifier = Modifier
-                    .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
-                    .padding(bottom = 8.dp)
-            ) {
-                AnimatedIconWithTitle(
-                    iconPathsRes = iconPathsRes,
-                    title = title,
-                    animate = requestStateButton is RequestState.Loading,
-                    isTitleVisible = requestStateButton == null,
-                    iconGradientColor = iconGradientColor,
-                    iconSize = iconSize
-                )
+            if (title != null) {
+
+                KeyboardTypingAnimatedVisibilityContainer(
+                    isVisible = !isKeyboardVisible,
+                    modifier = Modifier
+                        .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
+                        .padding(bottom = 8.dp)
+                ) {
+                    AnimatedIconWithTitle(
+                        iconPathsRes = iconPathsRes,
+                        title = title,
+                        animate = requestStateButton is RequestState.Loading,
+                        isTitleVisible = requestStateButton == null,
+                        iconGradientColor = iconGradientColor,
+                        iconSize = iconSize
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(weight))
+
             }
 
-            Spacer(modifier = Modifier.weight(weight))
-
-        }
-
-        AnimatedContent(
-            targetState = requestStateButton,
-            contentAlignment = Alignment.Center
-        ) { requestState ->
-            when (requestState) {
-                null -> {
-                    screenCenterContent(isKeyboardVisible)
-                }
-                is RequestState.Loading -> {
-                    LoadingStateComponent(
-                        message = stringResource(requestState.messageRes),
-                        onCancel = onCancelRequest,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
-                is RequestState.Success -> {
-                    ResultStateButtonComponent(
-                        state = requestState.state,
-                        usePrimaryButtonInstead = true,
-                        onButtonClick = onSuccessButton
-                    )
-                }
-                is RequestState.Error -> {
-                    ResultStateButtonComponent(
-                        state = requestState.state,
-                        usePrimaryButtonInstead = false,
-                        onButtonClick = onErrorButton
-                    )
+            AnimatedContent(
+                targetState = requestStateButton,
+                contentAlignment = Alignment.Center
+            ) { requestState ->
+                when (requestState) {
+                    null -> {
+                        screenCenterContent?.invoke(isKeyboardVisible)
+                    }
+                    is RequestState.Loading -> {
+                        LoadingStateComponent(
+                            message = stringResource(requestState.messageRes),
+                            onCancel = onCancelRequest,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    is RequestState.Success -> {
+                        if (onSuccessButton != null) {
+                            ResultStateButtonComponent(
+                                state = requestState.state,
+                                usePrimaryButtonInstead = true,
+                                onButtonClick = onSuccessButton
+                            )
+                        }
+                    }
+                    is RequestState.Error -> {
+                        ResultStateButtonComponent(
+                            state = requestState.state,
+                            usePrimaryButtonInstead = false,
+                            onButtonClick = onErrorButton
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
+
+        }
 
         AnimatedContent(
             targetState = requestStateButton,

@@ -4,12 +4,12 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.usecase.auth.CheckEmailVerificationUseCase
 import com.ataglance.walletglance.auth.domain.usecase.auth.RequestEmailUpdateUseCase
-import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
-import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.auth.mapper.toUiStates
+import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.presentation.model.RequestState
 import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
@@ -79,8 +79,8 @@ class UpdateEmailViewModel(
         setRequestLoadingState(messageRes = R.string.requesting_email_update_loader)
 
         val result = requestEmailUpdateUseCase.execute(
-            password = passwordState.value.getTrimmedText(),
-            newEmail = newEmailState.value.getTrimmedText()
+            password = passwordState.value.trimmedText,
+            newEmail = newEmailState.value.trimmedText
         )
 
         return when (result) {
@@ -103,8 +103,8 @@ class UpdateEmailViewModel(
 
         checkVerificationJob = viewModelScope.launch {
             val result = checkEmailVerificationUseCase.execute(
-                email = newEmailState.value.getTrimmedText(),
-                password = passwordState.value.getTrimmedText()
+                email = newEmailState.value.trimmedText,
+                password = passwordState.value.trimmedText
             )
             setRequestResultState(result = result.toResultWithButtonState())
         }

@@ -8,12 +8,16 @@ data class ValidatedFieldState(
     val validationStates: List<ValidationState> = emptyList()
 ) {
 
+    val trimmedText: String
+        get() = fieldText.trim()
+
+
     fun isValid(): Boolean {
         return validationStates.all { it.isValid }
     }
 
-    fun getTrimmedText(): String {
-        return fieldText.trim()
+    fun isInvalid(): Boolean {
+        return validationStates.any { !it.isValid }
     }
 
 }

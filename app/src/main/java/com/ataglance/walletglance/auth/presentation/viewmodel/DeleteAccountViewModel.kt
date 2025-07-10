@@ -3,8 +3,8 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.usecase.auth.DeleteAccountUseCase
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.usecase.auth.DeleteAccountUseCase
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.request.presentation.model.RequestState
@@ -58,7 +58,7 @@ class DeleteAccountViewModel(
 
         accountDeletionJob = viewModelScope.launch {
             val result = deleteAccountUseCase.execute(
-                password = passwordState.value.getTrimmedText()
+                password = passwordState.value.trimmedText
             )
             setRequestResultState(result = result.toResultWithButtonState())
         }

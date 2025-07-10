@@ -3,8 +3,8 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.domain.usecase.auth.ResetPasswordUseCase
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.usecase.auth.ResetPasswordUseCase
 import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.request.presentation.model.RequestState
@@ -85,7 +85,7 @@ class ResetPasswordViewModel(
         passwordResetJob = viewModelScope.launch {
             val result = resetPasswordUseCase.execute(
                 oobCode = oobCode,
-                newPassword = newPasswordState.value.getTrimmedText()
+                newPassword = newPasswordState.value.trimmedText
             )
             setRequestResultState(result = result.toResultWithButtonState())
         }

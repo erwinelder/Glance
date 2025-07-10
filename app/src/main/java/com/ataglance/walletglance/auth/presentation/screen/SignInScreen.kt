@@ -158,8 +158,8 @@ fun SignInScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 GlassSurface(
-                    modifier = Modifier.weight(1f, fill = false),
                     filledWidths = FilledWidthByScreenType(compact = .86f),
+                    modifier = Modifier.weight(1f, fill = false)
                 ) {
                     GlassSurfaceContent(
                         emailState = emailState,
@@ -262,16 +262,9 @@ fun SignInScreenPreview(
 
     val coroutineScope = rememberCoroutineScope()
     var job = remember<Job?> { null }
+    val initialRequestState = null
     var requestState by remember {
-        mutableStateOf<RequestState<ButtonState, ButtonState>?>(
-            null
-//            RequestState.Success(
-//                state = AuthSuccess.SignedIn.toResultStateButton()
-//            )
-//            RequestState.Error(
-//                state = AuthError.SignInError.toResultStateButton()
-//            )
-        )
+        mutableStateOf<RequestState<ButtonState, ButtonState>?>(initialRequestState)
     }
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
@@ -285,7 +278,7 @@ fun SignInScreenPreview(
             onSignIn = {
                 job = coroutineScope.launch {
                     requestState = RequestState.Loading(
-                        messageRes = R.string.creating_your_identity_loader
+                        messageRes = R.string.verifying_your_credentials_loader
                     )
                     delay(2000)
                     requestState = RequestState.Success(
@@ -298,11 +291,11 @@ fun SignInScreenPreview(
             onContinueAsGuest = {},
             requestState = requestState,
             onCancelRequest = {
-                requestState = null
+                requestState = initialRequestState
                 job?.cancel()
             },
-            onSuccessButton = { requestState = null },
-            onErrorButton = { requestState = null }
+            onSuccessButton = { requestState = initialRequestState },
+            onErrorButton = { requestState = initialRequestState }
         )
     }
 }

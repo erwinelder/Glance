@@ -83,8 +83,8 @@ class SignInViewModel(
 
         signInJob = viewModelScope.launch {
             val result = signInUseCase.execute(
-                email = emailState.value.getTrimmedText(),
-                password = passwordState.value.getTrimmedText()
+                email = emailState.value.trimmedText,
+                password = passwordState.value.trimmedText
             )
             setRequestResultState(result = result)
         }
