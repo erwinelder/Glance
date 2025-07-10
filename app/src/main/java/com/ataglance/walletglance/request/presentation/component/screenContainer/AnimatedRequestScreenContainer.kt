@@ -33,7 +33,7 @@ import com.ataglance.walletglance.request.presentation.modelNew.ResultState.Butt
 fun AnimatedRequestScreenContainer(
     screenPadding: PaddingValues = PaddingValues(),
     iconPathsRes: IconPathsRes,
-    title: String,
+    title: String? = null,
     requestStateButton: RequestState<ButtonState, ButtonState>?,
     onCancelRequest: (() -> Unit)? = null,
     onSuccessButton: () -> Unit = {},
@@ -86,23 +86,27 @@ fun AnimatedRequestScreenContainer(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        KeyboardTypingAnimatedVisibilityContainer(
-            isVisible = !isKeyboardVisible,
-            modifier = Modifier
-                .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
-                .padding(bottom = 8.dp)
-        ) {
-            AnimatedIconWithTitle(
-                iconPathsRes = iconPathsRes,
-                title = title,
-                animate = requestStateButton is RequestState.Loading,
-                isTitleVisible = requestStateButton == null,
-                iconGradientColor = iconGradientColor,
-                iconSize = iconSize
-            )
-        }
+        if (title != null) {
 
-        Spacer(modifier = Modifier.weight(weight))
+            KeyboardTypingAnimatedVisibilityContainer(
+                isVisible = !isKeyboardVisible,
+                modifier = Modifier
+                    .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
+                    .padding(bottom = 8.dp)
+            ) {
+                AnimatedIconWithTitle(
+                    iconPathsRes = iconPathsRes,
+                    title = title,
+                    animate = requestStateButton is RequestState.Loading,
+                    isTitleVisible = requestStateButton == null,
+                    iconGradientColor = iconGradientColor,
+                    iconSize = iconSize
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(weight))
+
+        }
 
         AnimatedContent(
             targetState = requestStateButton,
