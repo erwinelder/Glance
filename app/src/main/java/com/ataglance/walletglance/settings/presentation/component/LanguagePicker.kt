@@ -37,7 +37,7 @@ fun LanguagePicker(
     GlassSurface {
         LazyColumn(
             state = rememberLazyListState(),
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp),
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()

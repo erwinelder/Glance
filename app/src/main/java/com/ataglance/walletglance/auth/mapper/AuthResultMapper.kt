@@ -5,21 +5,11 @@ import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
-import com.ataglance.walletglance.request.domain.model.result.Result
-import com.ataglance.walletglance.request.presentation.model.ResultState
+import com.ataglance.walletglance.request.presentation.modelNew.ResultState
 
 
-fun Result<AuthSuccess, AuthError>.toResultWithButtonState(): ResultState.ButtonState {
-    return when (this) {
-        is Result.Success -> success.toResultWithButtonState()
-        is Result.Error -> error.toResultWithButtonState()
-    }
-}
-
-
-fun AuthSuccess.toResultWithButtonState(): ResultState.ButtonState {
+fun AuthSuccess.toResultStateButton(): ResultState.ButtonState {
     return ResultState.ButtonState(
-        isSuccessful = true,
         titleRes = this.asTitleRes(),
         messageRes = this.asMessageResOrNull(),
         buttonTextRes = this.asButtonTextRes(),
@@ -28,9 +18,8 @@ fun AuthSuccess.toResultWithButtonState(): ResultState.ButtonState {
 }
 
 
-fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
+fun AuthError.toResultStateButton(): ResultState.ButtonState {
     return ResultState.ButtonState(
-        isSuccessful = false,
         titleRes = this.asTitleRes(),
         messageRes = this.asMessageResOrNull(),
         buttonTextRes = this.asButtonTextRes(),

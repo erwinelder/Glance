@@ -8,7 +8,7 @@ import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.usecase.auth.RequestPasswordResetUseCase
 import com.ataglance.walletglance.auth.mapper.toUiStates
-import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
+import com.ataglance.walletglance.auth.mapper.toResultStateButton
 import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.request.presentation.modelNew.RequestState

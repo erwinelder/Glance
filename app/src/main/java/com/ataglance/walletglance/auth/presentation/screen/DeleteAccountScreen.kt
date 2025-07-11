@@ -18,7 +18,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.mapper.toUiStates
-import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
+import com.ataglance.walletglance.auth.mapper.toResultStateButton
 import com.ataglance.walletglance.auth.presentation.viewmodel.DeleteAccountViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
