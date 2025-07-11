@@ -218,7 +218,7 @@ private fun RecordItemCreationComponentExpanded(
             labelText = stringResource(R.string.note),
             placeholderText = stringResource(R.string.note_placeholder),
             fontSize = 18.sp,
-            keyboardType = KeyboardType.Number,
+            keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         )
 
