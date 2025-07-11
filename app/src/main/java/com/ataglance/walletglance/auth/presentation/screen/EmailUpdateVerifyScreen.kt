@@ -24,8 +24,8 @@ import com.ataglance.walletglance.core.presentation.model.IconPathsRes
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
-import com.ataglance.walletglance.request.presentation.modelNew.RequestState
-import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel

@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
-import com.ataglance.walletglance.request.presentation.modelNew.ResultState
+import com.ataglance.walletglance.request.presentation.model.ResultState
 
 
 fun AuthSuccess.toResultStateButton(): ResultState.ButtonState {
@@ -115,7 +115,7 @@ fun AuthError.toResultStateButton(): ResultState.ButtonState {
     }
 }
 
-@StringRes private fun AuthError.asMessageResOrNull(): Int {
+@StringRes private fun AuthError.asMessageResOrNull(): Int? {
     return when (this) {
         AuthError.UserNotSignedIn -> R.string.user_not_signed_in_message
         AuthError.RequestDataNotValid -> R.string.request_contains_invalid_data_message

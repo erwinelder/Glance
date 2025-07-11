@@ -11,8 +11,8 @@ import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.mapper.toResultStateButton
 import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
-import com.ataglance.walletglance.request.presentation.modelNew.RequestState
-import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

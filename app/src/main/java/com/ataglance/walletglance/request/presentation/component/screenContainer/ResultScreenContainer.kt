@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.request.presentation.component.screenContainer
 
-import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,20 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
-import com.ataglance.walletglance.core.presentation.component.container.icon.LargePrimaryIconWithMessage
+import com.ataglance.walletglance.core.presentation.component.icon.AnimatedIconWithTitle
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.model.IconPathsRes
+import com.ataglance.walletglance.core.presentation.model.RotatingGradientAnimState
 
 @Composable
 fun ResultScreenContainer(
     screenPadding: PaddingValues = PaddingValues(),
+    iconPathsRes: IconPathsRes,
     title: String,
-    @DrawableRes iconRes: Int,
-    iconDescription: String,
-    iconBackgroundGradient: List<Color> = GlanciColors.primaryGlassGradient,
+    iconGradientColor: Pair<Color, Color>,
     buttonText: String,
-    onContinueButtonClick: () -> Unit
+    onPrimaryButtonClick: () -> Unit
 ) {
     ScreenContainer(screenPadding = screenPadding) {
         Box(
@@ -30,16 +31,17 @@ fun ResultScreenContainer(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            LargePrimaryIconWithMessage(
+            AnimatedIconWithTitle(
+                iconPathsRes = iconPathsRes,
                 title = title,
-                iconRes = iconRes,
-                iconDescription = iconDescription,
-                gradientColor = iconBackgroundGradient,
+                animState = RotatingGradientAnimState.Calm,
+                iconGradientColor = iconGradientColor,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             )
         }
         PrimaryButton(
             text = buttonText,
-            onClick = onContinueButtonClick
+            onClick = onPrimaryButtonClick
         )
     }
 }

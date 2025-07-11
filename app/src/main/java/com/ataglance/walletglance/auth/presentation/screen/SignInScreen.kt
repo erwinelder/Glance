@@ -26,14 +26,13 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.mapper.toResultStateButton
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.domain.navigation.MainScreens
-import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
@@ -44,10 +43,10 @@ import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaff
 import com.ataglance.walletglance.core.utils.takeActionIf
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
+import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainerWithTopNavBackButton
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
-import com.ataglance.walletglance.request.presentation.modelNew.RequestState
-import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -136,7 +135,7 @@ fun SignInScreen(
     onSuccessButton: () -> Unit,
     onErrorButton: () -> Unit
 ) {
-    AnimatedRequestScreenContainer(
+    AnimatedRequestScreenContainerWithTopNavBackButton(
         screenPadding = screenPadding,
         iconPathsRes = IconPathsRes.User,
         title = stringResource(R.string.sign_in_to_your_account),
@@ -144,13 +143,8 @@ fun SignInScreen(
         onCancelRequest = onCancelRequest,
         onSuccessButton = onSuccessButton,
         onErrorButton = onErrorButton,
-        screenTopContent = {
-            GlassSurfaceTopNavButtonBlock(
-                text = stringResource(R.string.sign_in),
-                imageRes = null,
-                onClick = onNavigateBack
-            )
-        },
+        backButtonText = stringResource(R.string.sign_in),
+        onBackButtonClick = onNavigateBack,
         screenCenterContent = { isKeyboardVisible ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

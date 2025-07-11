@@ -35,8 +35,8 @@ import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationVi
 import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
-import com.ataglance.walletglance.request.presentation.modelNew.RequestState
-import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

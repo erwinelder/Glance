@@ -31,17 +31,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.modifier.bounceClickEffect
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
-import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.RequestErrorState
 import com.ataglance.walletglance.request.presentation.model.ResultState.MessageState
 
 @Composable
 fun SmallPrimaryButtonWithRequestState(
     text: String,
-    requestState: RequestState<MessageState>?,
+    requestErrorState: RequestErrorState<MessageState>?,
     @DrawableRes iconRes: Int? = null,
     enabled: Boolean = true,
     enabledGradient: Pair<Color, Color> = GlanciColors.primaryGlassGradientPair,
@@ -49,11 +49,11 @@ fun SmallPrimaryButtonWithRequestState(
     onClick: () -> Unit
 ) {
     val lighterGradientColor by animateColorAsState(
-        targetValue = if (enabled && requestState == null) enabledGradient.first else
+        targetValue = if (enabled && requestErrorState == null) enabledGradient.first else
             GlanciColors.disabledGlassGradientPair.first
     )
     val darkerGradientColor by animateColorAsState(
-        targetValue = if (enabled && requestState == null) enabledGradient.second else
+        targetValue = if (enabled && requestErrorState == null) enabledGradient.second else
             GlanciColors.disabledGlassGradientPair.second
     )
 
@@ -79,7 +79,7 @@ fun SmallPrimaryButtonWithRequestState(
             )
     ) {
         AnimatedContent(
-            targetState = requestState
+            targetState = requestErrorState
         ) { state ->
             when (state) {
                 null -> {
@@ -100,16 +100,16 @@ fun SmallPrimaryButtonWithRequestState(
                         )
                     }
                 }
-                is RequestState.Loading -> {
+                is RequestErrorState.Loading -> {
                     Text(
                         text = stringResource(state.messageRes),
                         fontSize = fontSize,
                         fontFamily = Manrope
                     )
                 }
-                is RequestState.Result -> {
+                is RequestErrorState.Error -> {
                     Text(
-                        text = stringResource(state.resultState.messageRes),
+                        text = stringResource(state.state.messageRes),
                         fontSize = fontSize,
                         fontFamily = Manrope
                     )
@@ -123,13 +123,11 @@ fun SmallPrimaryButtonWithRequestState(
 @Composable
 private fun PreviewPrimarySmallButton() {
     val requestState = null
-//    val requestState = RequestState.Loading<MessageState>(R.string.saving_language_loader)
-//    val requestState = RequestState.Result<MessageState>(MessageState(false, R.string.not_saved))
 
     PreviewContainer(appTheme = AppTheme.LightDefault) {
         SmallPrimaryButtonWithRequestState(
             text = "ApplyApplyApply",
-            requestState = requestState,
+            requestErrorState = requestState,
             iconRes = R.drawable.close_icon,
             onClick = {}
         )

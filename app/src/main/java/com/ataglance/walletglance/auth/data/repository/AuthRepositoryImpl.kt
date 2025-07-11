@@ -17,7 +17,7 @@ import com.ataglance.walletglance.core.data.remote.httpClient
 import com.ataglance.walletglance.request.domain.model.result.Error
 import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.domain.model.result.ResultData
-import com.ataglance.walletglance.settings.errorHandling.SettingsError
+import com.ataglance.walletglance.settings.error.SettingsError
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -325,15 +325,15 @@ class AuthRepositoryImpl(
                 setBody(saveLanguageRequest)
             }
         } catch (_: Exception) {
-            return ResultData.Error(SettingsError.NotSaved)
+            return ResultData.Error(SettingsError.LanguageNotSavedRemotely)
         }
 
         return when (response.status) {
             HttpStatusCode.OK -> ResultData.Success(Unit)
             HttpStatusCode.BadRequest -> ResultData.Error(AuthError.RequestDataNotValid)
             HttpStatusCode.Unauthorized -> ResultData.Error(AuthError.SessionExpired)
-            HttpStatusCode.InternalServerError -> ResultData.Error(SettingsError.NotSaved)
-            else -> ResultData.Error(SettingsError.NotSaved)
+            HttpStatusCode.InternalServerError -> ResultData.Error(SettingsError.LanguageNotSavedRemotely)
+            else -> ResultData.Error(SettingsError.LanguageNotSavedRemotely)
         }
     }
 

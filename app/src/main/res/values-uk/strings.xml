@@ -83,7 +83,7 @@
     <string name="saving_language_loader">Збереження мови…</string>
 
     <!-- Settings error -->
-    <string name="not_saved">Не збережено</string>
+    <string name="language_not_saved_remotely_message">Мову не вдалося зберегти на сервері. Glanci спробує зберегти її пізніше.</string>
 
     <!-- Settings Notifications -->
     <string name="daily_reminders_to_record_expenses">Щоденні нагадування фіксувати витрати</string>

@@ -28,12 +28,11 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
-import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.mapper.toResultStateButton
+import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
-import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
@@ -43,10 +42,10 @@ import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaff
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
+import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainerWithTopNavBackButton
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
-import com.ataglance.walletglance.request.presentation.modelNew.RequestState
-import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -131,7 +130,7 @@ fun SignUpScreen(
     onCancelRequest: () -> Unit,
     onErrorButton: () -> Unit
 ) {
-    AnimatedRequestScreenContainer(
+    AnimatedRequestScreenContainerWithTopNavBackButton(
         screenPadding = screenPadding,
         iconPathsRes = IconPathsRes.User,
         title = stringResource(R.string.create_new_account),
@@ -139,13 +138,8 @@ fun SignUpScreen(
         onCancelRequest = onCancelRequest,
         onSuccessButton = null,
         onErrorButton = onErrorButton,
-        screenTopContent = {
-            GlassSurfaceTopNavButtonBlock(
-                text = stringResource(R.string.sign_up),
-                imageRes = null,
-                onClick = onNavigateBack
-            )
-        },
+        backButtonText = stringResource(R.string.sign_up),
+        onBackButtonClick = onNavigateBack,
         screenCenterContent = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

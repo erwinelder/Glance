@@ -1,7 +1,7 @@
-package com.ataglance.walletglance.settings.errorHandling
+package com.ataglance.walletglance.settings.error
 
 import com.ataglance.walletglance.request.domain.model.result.Error
 
 enum class SettingsError : Error {
-    NotSaved
+    LanguageNotSavedRemotely
 }

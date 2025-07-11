@@ -77,7 +77,7 @@ fun NavGraphBuilder.settingsGraph(
             navController = navController,
             navViewModel = navViewModel
         )
-        composable<SettingsScreens.Personalisation> {
+        composable<SettingsScreens.Personalization> {
             PersonalizationScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
