@@ -166,7 +166,7 @@ sealed class GlanciPalette(
         ),
         onSurface = Color(31, 26, 28),
 
-        outline = Color(140, 133, 137),
+        outline = Color(140, 112, 129, 255),
         outlineSemiTransparent = Color(180, 171, 175, 128),
 
         success = Color(92, 180, 85),
@@ -280,7 +280,7 @@ sealed class GlanciPalette(
         ),
         onSurface = Color(217, 208, 210, 255),
 
-        outline = Color(122, 115, 119),
+        outline = Color(117, 99, 110, 255),
         outlineSemiTransparent = Color(122, 115, 119, 128),
 
         success = Color(82, 161, 76),

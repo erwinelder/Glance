@@ -8,10 +8,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
+import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
 import com.ataglance.walletglance.core.presentation.theme.Manrope
 
@@ -30,7 +34,7 @@ fun LoadingStateComponent(
             text = message,
             color = GlanciColors.outline,
             fontSize = 18.sp,
-            fontWeight = FontWeight.W400,
+            fontWeight = FontWeight.W300,
             fontFamily = Manrope
         )
         onCancel?.let {
@@ -40,5 +44,18 @@ fun LoadingStateComponent(
                 onClick = onCancel
             )
         }
+    }
+}
+
+
+
+@Preview(device = PIXEL_7_PRO)
+@Composable
+private fun LoadingStateComponentPreview() {
+    PreviewContainer(appTheme = AppTheme.LightDefault) {
+        LoadingStateComponent(
+            message = "Loading, please wait...",
+            onCancel = {}
+        )
     }
 }
