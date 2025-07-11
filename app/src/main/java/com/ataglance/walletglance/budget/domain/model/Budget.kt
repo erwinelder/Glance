@@ -3,6 +3,7 @@ package com.ataglance.walletglance.budget.domain.model
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.domain.date.TimestampRange
+import com.ataglance.walletglance.core.utils.roundToTwoDecimals
 import com.ataglance.walletglance.core.utils.roundToTwoDecimalsAsFloat
 
 data class Budget(
@@ -22,7 +23,7 @@ data class Budget(
 
     fun applyUsedAmount(amount: Double): Budget {
         return this.copy(
-            usedAmount = amount,
+            usedAmount = amount.roundToTwoDecimals(),
             usedPercentage = (100 / amountLimit * amount).roundToTwoDecimalsAsFloat()
         )
     }

@@ -22,13 +22,6 @@ class EditCategoryCollectionViewModel(
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
-        }
-    }
-
-
     private var groupedCategoriesByType = GroupedCategoriesByType()
 
 
@@ -99,6 +92,13 @@ class EditCategoryCollectionViewModel(
                 name = it.name.trim(),
                 categories = checkedGroupedCategoriesByType.value.getCheckedCategories()
             )
+        }
+    }
+
+
+    init {
+        viewModelScope.launch {
+            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
         }
     }
 

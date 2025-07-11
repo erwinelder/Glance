@@ -7,11 +7,6 @@ import com.ataglance.walletglance.core.domain.date.TimestampRange
 import com.ataglance.walletglance.transaction.domain.model.Transaction
 
 
-fun List<Budget>.findById(id: Int): Budget? {
-    return find { it.id == id }
-}
-
-
 fun List<Budget>.getMaxIdOrZero(): Int {
     return maxOfOrNull { it.id } ?: 0
 }

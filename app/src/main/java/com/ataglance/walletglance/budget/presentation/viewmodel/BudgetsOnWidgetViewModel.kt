@@ -13,6 +13,10 @@ class BudgetsOnWidgetViewModel(
     private val getBudgetsOnWidgetUseCase: GetBudgetsOnWidgetUseCase
 ) : ViewModel() {
 
+    private val _budgets = MutableStateFlow<List<Budget>>(emptyList())
+    val budgets = _budgets.asStateFlow()
+
+
     init {
         viewModelScope.launch {
             getBudgetsOnWidgetUseCase.getAsFlow().collect { budgets ->
@@ -20,9 +24,5 @@ class BudgetsOnWidgetViewModel(
             }
         }
     }
-
-
-    private val _budgets = MutableStateFlow<List<Budget>>(emptyList())
-    val budgets = _budgets.asStateFlow()
 
 }
