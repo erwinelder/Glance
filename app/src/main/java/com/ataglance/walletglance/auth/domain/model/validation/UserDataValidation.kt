@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.auth.domain.model.validation
 
-import com.ataglance.walletglance.errorHandling.domain.model.validation.Validation
+import com.ataglance.walletglance.request.domain.model.validation.Validation
 
 enum class UserDataValidation: Validation {
     IsValid,

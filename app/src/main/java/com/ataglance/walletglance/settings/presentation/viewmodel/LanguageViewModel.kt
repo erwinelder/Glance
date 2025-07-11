@@ -8,13 +8,13 @@ import com.ataglance.walletglance.category.domain.usecase.TranslateCategoriesUse
 import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.utils.getCurrentTimestamp
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.MessageState
+import com.ataglance.walletglance.request.domain.model.result.ResultData
+import com.ataglance.walletglance.request.presentation.model.RequestErrorState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.settings.error.SettingsError
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageLocallyUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.SaveLanguageRemotelyUseCase
-import com.ataglance.walletglance.settings.mapper.toResultWithMessageState
-import kotlinx.coroutines.delay
+import com.ataglance.walletglance.settings.mapper.toResultStateButton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -60,32 +60,35 @@ class LanguageViewModel(
 
             if (userContext.isSignedIn()) {
                 setRequestLoadingState()
+
                 val result = saveLanguageRemotelyUseCase.execute(
                     langCode = langCode, timestamp = timestamp
                 )
 
-                (result as? ResultData.Error)?.toResultWithMessageState()?.let {
-                    setRequestResultState(result = it)
-                    delay(1000)
-                }
-
-                resetRequestState()
+                setRequestResultState(result = result)
             }
         }
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState<MessageState>?>(null)
+    private val _requestState = MutableStateFlow<RequestErrorState<ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
         _requestState.update {
-            RequestState.Loading(messageRes = R.string.saving_language_loader)
+            RequestErrorState.Loading(messageRes = R.string.saving_language_loader)
         }
     }
 
-    private fun setRequestResultState(result: MessageState) {
-        _requestState.update { RequestState.Result(resultState = result) }
+    private fun setRequestResultState(result: ResultData<Unit, SettingsError>) {
+        _requestState.update {
+            when (result) {
+                is ResultData.Success -> null
+                is ResultData.Error -> RequestErrorState.Error(
+                    state = result.error.toResultStateButton()
+                )
+            }
+        }
     }
 
     fun resetRequestState() {

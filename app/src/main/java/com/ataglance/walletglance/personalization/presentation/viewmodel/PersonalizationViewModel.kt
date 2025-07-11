@@ -32,13 +32,6 @@ class PersonalizationViewModel(
     private val userContext: UserContext
 ) : ViewModel() {
 
-    init {
-        fetchAppThemeConfiguration()
-        fetchWidgets()
-        fetchNavButtons()
-    }
-
-
     private val _showThemeSettings = MutableStateFlow(false)
     val showThemeSettings = _showThemeSettings.asStateFlow()
 
@@ -167,6 +160,13 @@ class PersonalizationViewModel(
 
     fun isUserSignedIn(): Boolean {
         return userContext.isSignedIn()
+    }
+
+
+    init {
+        fetchAppThemeConfiguration()
+        fetchWidgets()
+        fetchNavButtons()
     }
 
 }

@@ -83,7 +83,7 @@
     <string name="saving_language_loader">Сохранение языка…</string>
 
     <!-- Settings error -->
-    <string name="not_saved">Не сохранено</string>
+    <string name="language_not_saved_remotely_message">Язык не был сохранён на сервере. Glanci попытается сохранить его позже.</string>
 
     <!-- Settings Notifications -->
     <string name="daily_reminders_to_record_expenses">Ежедневные напоминания о записи расходов</string>
@@ -306,7 +306,7 @@
     <string name="no_preferences">Нет настроек</string>
     <string name="reset_data_action">Сбросить все данные приложения. Ваш аккаунт не будет удален.</string>
     <string name="reset_data_confirmation">Вы уверены, что хотите сбросить все данные?</string>
-    <string name="delete_your_account_with_all_data">Удалите свой аккаунт со всеми данными</string>
+    <string name="delete_your_account_with_all_data">Удалить ваш аккаунт со всеми данными?</string>
     <string name="you_have_no_records_in_date_range">У вас нет записей за этот период</string>
     <string name="you_have_no_expenses_in_date_range">У вас нет расходов за этот период</string>
     <string name="you_have_no_income_in_date_range">У вас нет доходов за этот период</string>

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun KeyboardTypingAnimatedVisibilityContainer(
     isVisible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     AnimatedContent(
@@ -31,7 +32,7 @@ fun KeyboardTypingAnimatedVisibilityContainer(
         if (visible) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = modifier.fillMaxWidth()
             ) {
                 content()
             }

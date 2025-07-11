@@ -2,12 +2,12 @@ package com.ataglance.walletglance.category.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.Category
 import com.ataglance.walletglance.category.domain.model.CategoryColor
 import com.ataglance.walletglance.category.domain.model.CategoryIcon
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.GroupedCategories
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.category.domain.usecase.SaveCategoriesUseCase
 import com.ataglance.walletglance.category.presentation.model.DefaultCategoriesPackage
@@ -24,19 +24,6 @@ class EditCategoriesViewModel(
     private val saveCategoriesUseCase: SaveCategoriesUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
-
-    init {
-        viewModelScope.launch {
-            val categories = getCategoriesUseCase.getGrouped()
-                .takeIf { it.expense.isNotEmpty() && it.income.isNotEmpty() }
-                ?: defaultCategoriesPackage.get()
-
-            initialGroupedCategoriesByType = categories
-            _uiState.update {
-                it.copy(groupedCategoriesByType = categories)
-            }
-        }
-    }
 
     private var initialGroupedCategoriesByType = GroupedCategoriesByType()
 
@@ -184,6 +171,20 @@ class EditCategoriesViewModel(
             .fixParentCategoriesOrderNums()
             .asList()
         saveCategoriesUseCase.saveAndDeleteRest(categories = categories)
+    }
+
+
+    init {
+        viewModelScope.launch {
+            val categories = getCategoriesUseCase.getGrouped()
+                .takeIf { it.expense.isNotEmpty() && it.income.isNotEmpty() }
+                ?: defaultCategoriesPackage.get()
+
+            initialGroupedCategoriesByType = categories
+            _uiState.update {
+                it.copy(groupedCategoriesByType = categories)
+            }
+        }
     }
 
 }

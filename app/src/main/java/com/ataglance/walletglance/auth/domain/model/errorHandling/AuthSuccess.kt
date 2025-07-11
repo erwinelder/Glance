@@ -1,14 +1,16 @@
 package com.ataglance.walletglance.auth.domain.model.errorHandling
 
-import com.ataglance.walletglance.errorHandling.domain.model.result.Success
+import com.ataglance.walletglance.request.domain.model.result.Success
 
 enum class AuthSuccess : Success {
     SignedIn,
-    SignedUp,
     SignUpEmailVerificationSent,
-    UpdateEmailEmailVerificationSent,
+    SignUpVerificationCodeReceived,
+    SignedUp,
+    EmailUpdateEmailVerificationSent,
+    EmailUpdateVerificationCodeReceived,
     EmailUpdated,
-    PasswordUpdated,
     ResetPasswordEmailSent,
+    PasswordUpdated,
     AccountDeleted
 }

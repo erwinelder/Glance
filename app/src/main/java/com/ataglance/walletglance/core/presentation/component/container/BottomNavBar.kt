@@ -204,7 +204,7 @@ private fun BottomBarButton(
         transitionSpec = { fadeIn() togetherWith fadeOut() }
     ) { buttonIconRes ->
         Image(
-            painter = painterResource(buttonIconRes.getByTheme(CurrAppTheme)),
+            painter = painterResource(buttonIconRes.get(CurrAppTheme)),
             contentDescription = "bottom bar ${button.screen} icon",
             modifier = Modifier
                 .bounceClickEffect {
@@ -289,7 +289,7 @@ private fun ListBarButton(
                 }
         ) {
             Image(
-                painter = painterResource(buttonIconRes.getByTheme(CurrAppTheme)),
+                painter = painterResource(buttonIconRes.get(CurrAppTheme)),
                 contentDescription = "bottom bar ${button.screen} icon",
                 modifier = Modifier.size(36.dp)
             )

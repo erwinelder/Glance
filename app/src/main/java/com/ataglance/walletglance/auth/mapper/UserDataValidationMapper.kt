@@ -2,8 +2,8 @@ package com.ataglance.walletglance.auth.mapper
 
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidation
-import com.ataglance.walletglance.errorHandling.domain.model.validation.ValidationResult
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidationState
+import com.ataglance.walletglance.request.domain.model.validation.ValidationResult
+import com.ataglance.walletglance.request.presentation.model.ValidationState
 
 
 fun List<ValidationResult<UserDataValidation>>.toUiStates(): List<ValidationState> {

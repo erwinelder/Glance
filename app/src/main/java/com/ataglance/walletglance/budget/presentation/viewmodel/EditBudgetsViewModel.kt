@@ -24,14 +24,6 @@ class EditBudgetsViewModel(
     private val changeAppSetupStageUseCase: ChangeAppSetupStageUseCase
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            val budgetsByType = getFilledBudgetsByTypeUseCase.get()
-            _budgetsByType.update { budgetsByType }
-        }
-    }
-
-
     private val _budgetsByType = MutableStateFlow(BudgetsByType())
     val budgetsByType: StateFlow<BudgetsByType> = _budgetsByType.asStateFlow()
 
@@ -69,6 +61,14 @@ class EditBudgetsViewModel(
 
     suspend fun preFinishSetup() {
         changeAppSetupStageUseCase.preFinishSetup()
+    }
+
+
+    init {
+        viewModelScope.launch {
+            val budgetsByType = getFilledBudgetsByTypeUseCase.get()
+            _budgetsByType.update { budgetsByType }
+        }
     }
 
 }

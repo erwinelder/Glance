@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,10 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
+}
+
+val localProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -15,14 +21,15 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 85
-        versionName = "5.0 alpha 2"
+        versionCode = 86
+        versionName = "5.0 alpha 3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
 
+        buildConfigField("String", "GLANCI_BACKEND_URL", "\"${localProperties.getProperty("GLANCI_BACKEND_URL")}\"")
     }
 
     buildTypes {
@@ -64,6 +71,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {

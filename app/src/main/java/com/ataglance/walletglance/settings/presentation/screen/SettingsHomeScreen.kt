@@ -89,7 +89,7 @@ fun SettingsHomeScreen(
                 fontFamily = NotoSans
             )
             Text(
-                text = stringResource(R.string.version) + " 5.0 alpha 2",
+                text = stringResource(R.string.version) + " 5.0 alpha 3",
                 color = GlanciColors.onSurface,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp,

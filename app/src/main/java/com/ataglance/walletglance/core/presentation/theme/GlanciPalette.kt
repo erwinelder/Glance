@@ -52,6 +52,15 @@ sealed class GlanciPalette(
         glassButtonGradient[0], glassButtonGradient[1]
     ),
 
+    val iconPrimaryGlassGradient: List<Color>,
+    val iconPrimaryGlassGradientPair: Pair<Color, Color> = Pair(
+        iconPrimaryGlassGradient[0], iconPrimaryGlassGradient[1]
+    ),
+    val iconErrorGlassGradient: List<Color>,
+    val iconErrorGlassGradientPair: Pair<Color, Color> = Pair(
+        iconErrorGlassGradient[0], iconErrorGlassGradient[1]
+    ),
+
     val background: Color,
     val surface: Color,
     val surfaceGradient: List<Color>,
@@ -140,6 +149,15 @@ sealed class GlanciPalette(
             Color(233, 233, 233, 90)
         ),
 
+        iconPrimaryGlassGradient = listOf(
+            Color(181, 100, 142, 204),
+            Color(219, 99, 161, 51)
+        ),
+        iconErrorGlassGradient = listOf(
+            Color(213, 75, 75, 204),
+            Color(252, 63, 63, 51),
+        ),
+
         background = Color(240, 240, 240),
         surface = Color(247, 247, 247),
         surfaceGradient = listOf(
@@ -148,7 +166,7 @@ sealed class GlanciPalette(
         ),
         onSurface = Color(31, 26, 28),
 
-        outline = Color(140, 133, 137),
+        outline = Color(140, 112, 129, 255),
         outlineSemiTransparent = Color(180, 171, 175, 128),
 
         success = Color(92, 180, 85),
@@ -245,6 +263,15 @@ sealed class GlanciPalette(
             Color(63, 63, 63, 10)
         ),
 
+        iconPrimaryGlassGradient = listOf(
+            Color(194, 114, 155, 204),
+            Color(232, 114, 175, 77)
+        ),
+        iconErrorGlassGradient = listOf(
+            Color(201, 62, 62, 204),
+            Color(240, 50, 50, 77),
+        ),
+
         background = Color(18, 18, 18),
         surface = Color(26, 26, 26, 255),
         surfaceGradient = listOf(
@@ -253,7 +280,7 @@ sealed class GlanciPalette(
         ),
         onSurface = Color(217, 208, 210, 255),
 
-        outline = Color(122, 115, 119),
+        outline = Color(117, 99, 110, 255),
         outlineSemiTransparent = Color(122, 115, 119, 128),
 
         success = Color(82, 161, 76),

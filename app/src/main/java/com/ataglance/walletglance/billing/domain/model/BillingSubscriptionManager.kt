@@ -22,7 +22,7 @@ import com.ataglance.walletglance.billing.domain.mapper.getProductsDetails
 import com.ataglance.walletglance.billing.domain.mapper.subsToProductDetailsParamsList
 import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingError
 import com.ataglance.walletglance.billing.domain.usecase.UpdateUserSubscriptionUseCase
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
+import com.ataglance.walletglance.request.domain.model.result.ResultData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

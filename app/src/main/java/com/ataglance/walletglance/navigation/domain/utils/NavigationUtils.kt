@@ -62,7 +62,7 @@ fun NavBackStackEntry?.anyScreenInHierarchyIs(screen: Any): Boolean {
 @StringRes fun NavBackStackEntry?.getSetupProgressTopBarTitleRes(): Int {
     return when {
         this.currentScreenIs(SettingsScreens.Language) -> R.string.language
-        this.currentScreenIs(SettingsScreens.Personalisation) -> R.string.appearance
+        this.currentScreenIs(SettingsScreens.Personalization) -> R.string.appearance
         this.currentScreenIs(AccountsSettingsScreens.EditAccounts) ||
                 this.currentScreenIs(AccountsSettingsScreens.EditAccount) ||
                 this.currentScreenIs(AccountsSettingsScreens.EditAccountCurrency) -> R.string.accounts

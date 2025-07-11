@@ -1,6 +1,6 @@
 package com.ataglance.walletglance.auth.data.repository
 
-import com.ataglance.walletglance.auth.data.model.CheckAppVersionRequestDto
+import com.ataglance.walletglance.auth.data.model.CurrentAppVersion
 import com.ataglance.walletglance.auth.data.model.EmailUpdateRequestDto
 import com.ataglance.walletglance.auth.data.model.ResetPasswordRequestDto
 import com.ataglance.walletglance.auth.data.model.SaveLanguageRequestDto
@@ -14,10 +14,10 @@ import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.data.remote.glanciBackendUrl
 import com.ataglance.walletglance.core.data.remote.httpClient
-import com.ataglance.walletglance.errorHandling.domain.model.result.Error
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.settings.errorHandling.SettingsError
+import com.ataglance.walletglance.request.domain.model.result.Error
+import com.ataglance.walletglance.request.domain.model.result.Result
+import com.ataglance.walletglance.request.domain.model.result.ResultData
+import com.ataglance.walletglance.settings.error.SettingsError
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -33,7 +33,7 @@ class AuthRepositoryImpl(
 ) : AuthRepository {
 
     override suspend fun checkTokenValidity(token: String): ResultData<UserDto, AuthError> {
-        val appVersion = CheckAppVersionRequestDto(4, 2, 0)
+        val appVersion = CurrentAppVersion()
 
         val response = try {
             httpClient.post(
@@ -180,7 +180,7 @@ class AuthRepositoryImpl(
         }
 
         return when (response.status) {
-            HttpStatusCode.Accepted -> Result.Success(AuthSuccess.UpdateEmailEmailVerificationSent)
+            HttpStatusCode.Accepted -> Result.Success(AuthSuccess.EmailUpdateEmailVerificationSent)
             HttpStatusCode.Unauthorized -> Result.Error(AuthError.SessionExpired)
             HttpStatusCode.BadRequest -> Result.Error(AuthError.RequestDataNotValid)
             HttpStatusCode.NotFound -> Result.Error(AuthError.UserNotFound)
@@ -325,15 +325,15 @@ class AuthRepositoryImpl(
                 setBody(saveLanguageRequest)
             }
         } catch (_: Exception) {
-            return ResultData.Error(SettingsError.NotSaved)
+            return ResultData.Error(SettingsError.LanguageNotSavedRemotely)
         }
 
         return when (response.status) {
             HttpStatusCode.OK -> ResultData.Success(Unit)
             HttpStatusCode.BadRequest -> ResultData.Error(AuthError.RequestDataNotValid)
             HttpStatusCode.Unauthorized -> ResultData.Error(AuthError.SessionExpired)
-            HttpStatusCode.InternalServerError -> ResultData.Error(SettingsError.NotSaved)
-            else -> ResultData.Error(SettingsError.NotSaved)
+            HttpStatusCode.InternalServerError -> ResultData.Error(SettingsError.LanguageNotSavedRemotely)
+            else -> ResultData.Error(SettingsError.LanguageNotSavedRemotely)
         }
     }
 

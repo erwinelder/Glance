@@ -56,7 +56,7 @@ data class CategoryStatistics(
 
             return CategoryStatistics(
                 category = category,
-                totalAmount = totalAmount.toString(),
+                totalAmount = totalAmount.formatWithSpaces(),
                 currency = accountCurrency,
                 percentageFormatted = percentage.roundToTwoDecimals(suffix = "%"),
                 percentageFloat = percentage / 100,

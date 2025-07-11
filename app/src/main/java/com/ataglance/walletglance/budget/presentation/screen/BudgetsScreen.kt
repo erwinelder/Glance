@@ -92,7 +92,7 @@ fun BudgetsScreen(
             BudgetListsByPeriodComponent(
                 budgetsByType = budgetsByType,
                 contentPadding = screenPadding + PaddingValues(vertical = 24.dp),
-                textDividerFilledWidth = FilledWidthByScreenType(.76f).getByType(CurrWindowType)
+                textDividerFilledWidth = FilledWidthByScreenType(.76f).get(CurrWindowType)
             ) { budget ->
                 BudgetWithStatsGlassComponent(
                     budget = budget, resourceManager = resourceManager, onClick = onBudgetClick

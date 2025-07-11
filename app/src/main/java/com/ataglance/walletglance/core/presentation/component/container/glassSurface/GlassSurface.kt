@@ -41,7 +41,7 @@ fun GlassSurface(
         contentAlignment = contentAlignment,
         modifier = modifier
             .run {
-                filledWidths?.let { fillMaxWidth(it.getByType(CurrWindowType)) } ?: this
+                filledWidths?.let { fillMaxWidth(it.get(CurrWindowType)) } ?: this
             }
             .clip(RoundedCornerShape(cornerSize))
             .background(

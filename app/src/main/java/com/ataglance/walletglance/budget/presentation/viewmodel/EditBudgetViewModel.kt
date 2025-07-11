@@ -7,9 +7,9 @@ import com.ataglance.walletglance.account.domain.usecase.GetAccountsUseCase
 import com.ataglance.walletglance.budget.domain.model.Budget
 import com.ataglance.walletglance.budget.mapper.budget.toDraft
 import com.ataglance.walletglance.budget.presentation.model.BudgetDraft
-import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.model.CategoryType
 import com.ataglance.walletglance.category.domain.model.CategoryWithSub
+import com.ataglance.walletglance.category.domain.model.GroupedCategoriesByType
 import com.ataglance.walletglance.category.domain.usecase.GetCategoriesUseCase
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.isPositiveNumberWithDecimal
@@ -22,14 +22,6 @@ class EditBudgetViewModel(
     private val getAccountsUseCase: GetAccountsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
-
-    init {
-        viewModelScope.launch {
-            getAccountsUseCase.getAll().let { accounts = it }
-            getCategoriesUseCase.getGrouped().let { groupedCategoriesByType = it }
-        }
-    }
-
 
     var accounts = emptyList<Account>()
         private set
@@ -111,6 +103,14 @@ class EditBudgetViewModel(
 
     fun getBudgetDraft(): BudgetDraft {
         return budget.value
+    }
+
+
+    init {
+        viewModelScope.launch {
+            getAccountsUseCase.getAll().let { accounts = it }
+            getCategoriesUseCase.getGrouped().let { groupedCategoriesByType = it }
+        }
     }
 
 }

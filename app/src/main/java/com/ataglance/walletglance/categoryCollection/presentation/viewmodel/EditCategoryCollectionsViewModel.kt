@@ -23,25 +23,6 @@ class EditCategoryCollectionsViewModel(
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            val categories = getCategoriesUseCase.getAsList()
-            val collections = getCategoryCollectionsUseCase.get().toCollectionsWithCategories(
-                allCategories = categories
-            )
-
-            _collectionsWithCategories.update { collections }
-            _collectionType.update {
-                when {
-                    collections.expense.isNotEmpty() -> CategoryCollectionType.Expense
-                    collections.income.isNotEmpty() -> CategoryCollectionType.Income
-                    else -> CategoryCollectionType.Mixed
-                }
-            }
-        }
-    }
-
-
     private val _collectionsWithCategories = MutableStateFlow(CategoryCollectionsWithCategories())
 
 
@@ -93,6 +74,25 @@ class EditCategoryCollectionsViewModel(
         saveCategoryCollectionsUseCase.saveAndDeleteRest(
             collections = _collectionsWithCategories.value.concatenateLists()
         )
+    }
+
+
+    init {
+        viewModelScope.launch {
+            val categories = getCategoriesUseCase.getAsList()
+            val collections = getCategoryCollectionsUseCase.get().toCollectionsWithCategories(
+                allCategories = categories
+            )
+
+            _collectionsWithCategories.update { collections }
+            _collectionType.update {
+                when {
+                    collections.expense.isNotEmpty() -> CategoryCollectionType.Expense
+                    collections.income.isNotEmpty() -> CategoryCollectionType.Income
+                    else -> CategoryCollectionType.Mixed
+                }
+            }
+        }
     }
 
 }

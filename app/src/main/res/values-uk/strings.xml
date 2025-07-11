@@ -83,7 +83,7 @@
     <string name="saving_language_loader">Збереження мови…</string>
 
     <!-- Settings error -->
-    <string name="not_saved">Не збережено</string>
+    <string name="language_not_saved_remotely_message">Мову не вдалося зберегти на сервері. Glanci спробує зберегти її пізніше.</string>
 
     <!-- Settings Notifications -->
     <string name="daily_reminders_to_record_expenses">Щоденні нагадування фіксувати витрати</string>
@@ -306,7 +306,7 @@
     <string name="no_preferences">Немає налаштувань</string>
     <string name="reset_data_action">Скинути всі дані додатка. Ваш акаунт не буде видалено.</string>
     <string name="reset_data_confirmation">Ви впевнені, що хочете скинути всі дані?</string>
-    <string name="delete_your_account_with_all_data">Видаліть свій акаунт разом із усіма даними</string>
+    <string name="delete_your_account_with_all_data">Видалити ваш акаунт разом із усіма даними?</string>
     <string name="you_have_no_records_in_date_range">У вас немає записів за цей період</string>
     <string name="you_have_no_expenses_in_date_range">У вас немає витрат за цей період</string>
     <string name="you_have_no_income_in_date_range">У вас немає доходів за цей період</string>

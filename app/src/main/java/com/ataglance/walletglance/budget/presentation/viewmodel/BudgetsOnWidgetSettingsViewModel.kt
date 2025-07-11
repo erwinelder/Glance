@@ -23,20 +23,6 @@ class BudgetsOnWidgetSettingsViewModel(
     private val getFilledBudgetsByTypeUseCase: GetFilledBudgetsByTypeUseCase
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            getFilledBudgetsByTypeUseCase.getAsFlow().collect { budgetsByType ->
-                _budgetsByType.update { budgetsByType }
-            }
-        }
-        viewModelScope.launch {
-            getBudgetIdsOnWidgetUseCase.getAsFlow().collect { budgetsIds ->
-                _budgetsOnWidget.update { budgetsIds }
-            }
-        }
-    }
-
-
     private val _openedWidgetSettings: MutableStateFlow<WidgetName?> = MutableStateFlow(null)
     val openedWidgetSettings = _openedWidgetSettings.asStateFlow()
 
@@ -89,6 +75,20 @@ class BudgetsOnWidgetSettingsViewModel(
     fun saveCurrentBudgetsOnWidget() {
         viewModelScope.launch {
             saveBudgetsOnWidgetUseCase.execute(budgetsIds = _budgetsOnWidget.value)
+        }
+    }
+
+
+    init {
+        viewModelScope.launch {
+            getFilledBudgetsByTypeUseCase.getAsFlow().collect { budgetsByType ->
+                _budgetsByType.update { budgetsByType }
+            }
+        }
+        viewModelScope.launch {
+            getBudgetIdsOnWidgetUseCase.getAsFlow().collect { budgetsIds ->
+                _budgetsOnWidget.update { budgetsIds }
+            }
         }
     }
 

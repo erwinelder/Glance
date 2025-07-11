@@ -33,7 +33,7 @@ fun LargePrimaryIconWithMessage(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxWidth(filledWidth?.getByType(CurrWindowType) ?: 1f)
+        modifier = Modifier.fillMaxWidth(filledWidth?.get(CurrWindowType) ?: 1f)
     ) {
         LargePrimaryIcon(
             iconRes = iconRes,
@@ -46,7 +46,7 @@ fun LargePrimaryIconWithMessage(
             color = GlanciColors.onSurface,
             fontFamily = NotoSans,
             modifier = Modifier
-                .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
+                .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
         )
         message?.let {
             Text(

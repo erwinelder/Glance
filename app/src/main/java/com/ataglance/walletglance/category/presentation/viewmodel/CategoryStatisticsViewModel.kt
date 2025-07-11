@@ -41,20 +41,6 @@ class CategoryStatisticsViewModel(
     private val getTransactionsInDateRangeUseCase: GetTransactionsInDateRangeUseCase
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-
-            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
-
-            getCategoryCollectionsUseCase.getFlow().collect { collections ->
-                collectionsByType = collections
-                setCategoryCollections(collections = collections)
-            }
-
-        }
-    }
-
-
     private var initialParentCategoryId: Int? = initialCategoryId
 
     private var groupedCategoriesByType = GroupedCategoriesByType()
@@ -193,5 +179,19 @@ class CategoryStatisticsViewModel(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = GroupedCategoryStatistics()
     )
+
+
+    init {
+        viewModelScope.launch {
+
+            groupedCategoriesByType = getCategoriesUseCase.getGrouped()
+
+            getCategoryCollectionsUseCase.getFlow().collect { collections ->
+                collectionsByType = collections
+                setCategoryCollections(collections = collections)
+            }
+
+        }
+    }
 
 }

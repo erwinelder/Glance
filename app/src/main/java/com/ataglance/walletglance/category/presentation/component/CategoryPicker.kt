@@ -105,7 +105,7 @@ fun CategoryPicker(
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
                 .background(GlanciColors.surface)
                 .fillMaxWidth(
-                    FilledWidthByScreenType(.9f, .6f, .5f).getByType(CurrWindowType)
+                    FilledWidthByScreenType(.9f, .6f, .5f).get(CurrWindowType)
                 )
         ) {
             items(
@@ -183,7 +183,7 @@ fun CategoryPicker(
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.dialog_corner_size)))
                 .background(GlanciColors.surface)
                 .fillMaxWidth(
-                    FilledWidthByScreenType(.9f, .6f, .5f).getByType(CurrWindowType)
+                    FilledWidthByScreenType(.9f, .6f, .5f).get(CurrWindowType)
                 )
                 .padding(bottom = 4.dp)
         ) {

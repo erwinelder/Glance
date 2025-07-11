@@ -23,15 +23,6 @@ class EditAccountsViewModel(
     private val getAccountsUseCase: GetAccountsUseCase
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            val accounts = getAccountsUseCase.getAll().takeIf { it.isNotEmpty() }
-                ?: listOf(Account(id = 1, orderNum = 1))
-            _accounts.update { accounts }
-        }
-    }
-
-
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts = _accounts.asStateFlow()
 
@@ -100,5 +91,14 @@ class EditAccountsViewModel(
         started = SharingStarted.WhileSubscribed(),
         initialValue = false
     )
+
+
+    init {
+        viewModelScope.launch {
+            val accounts = getAccountsUseCase.getAll().takeIf { it.isNotEmpty() }
+                ?: listOf(Account(id = 1, orderNum = 1))
+            _accounts.update { accounts }
+        }
+    }
 
 }

@@ -83,7 +83,7 @@
     <string name="saving_language_loader">Sprache wird gespeichert…</string>
 
     <!-- Settings error -->
-    <string name="not_saved">Nicht gespeichert</string>
+    <string name="language_not_saved_remotely_message">Die Sprache wurde nicht auf dem Server gespeichert. Glanci wird versuchen, sie später zu speichern.</string>
 
     <!-- Settings Notifications -->
     <string name="daily_reminders_to_record_expenses">Tägliche Erinnerungen zum Erfassen der Ausgaben</string>
@@ -306,7 +306,7 @@
     <string name="no_preferences">Keine Präferenzen</string>
     <string name="reset_data_action">Setzen Sie alle App-Daten zurück. Ihr Konto wird nicht gelöscht.</string>
     <string name="reset_data_confirmation">Sind Sie sicher, dass Sie alle Ihre Daten zurücksetzen möchten?</string>
-    <string name="delete_your_account_with_all_data">Löschen Sie Ihr Konto mit allen Ihren Daten.</string>
+    <string name="delete_your_account_with_all_data">Ihr Konto mit allen Daten löschen?</string>
     <string name="you_have_no_records_in_date_range">Sie haben keine Einträge in diesem Zeitraum</string>
     <string name="you_have_no_expenses_in_date_range">Sie haben keine Ausgaben in diesem Zeitraum</string>
     <string name="you_have_no_income_in_date_range">Sie haben kein Einkommen in diesem Zeitraum</string>

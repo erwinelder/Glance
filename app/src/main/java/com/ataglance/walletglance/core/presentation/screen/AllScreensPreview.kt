@@ -13,16 +13,16 @@ import com.ataglance.walletglance.account.presentation.screen.EditAccountScreenP
 import com.ataglance.walletglance.account.presentation.screen.EditAccountsScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateEmailVerificationScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.FinishSignUpScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.SignUpFinishScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.RequestEmailUpdateScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateRequestScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.PasswordResetRequestScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.PasswordResetScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignInScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignUpEmailVerificationScreenPreview
 import com.ataglance.walletglance.auth.presentation.screen.SignUpScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenPreview
-import com.ataglance.walletglance.auth.presentation.screen.VerifyEmailUpdateScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.PasswordUpdateScreenPreview
+import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateVerifyScreenPreview
 import com.ataglance.walletglance.budget.data.model.BudgetAccountAssociationDataModel
 import com.ataglance.walletglance.budget.data.model.BudgetDataModel
 import com.ataglance.walletglance.budget.data.model.BudgetDataModelWithAssociations
@@ -940,7 +940,7 @@ private fun SignUpEmailVerificationScreenPreview_() {
 )
 @Composable
 private fun FinishSignUpScreenPreview_() {
-    FinishSignUpScreenPreview(
+    SignUpFinishScreenPreview(
         appTheme = appTheme
     )
 }
@@ -966,7 +966,7 @@ private fun ProfileScreenPreview_() {
 )
 @Composable
 private fun RequestEmailUpdateScreenPreview_() {
-    RequestEmailUpdateScreenPreview(
+    EmailUpdateRequestScreenPreview(
         appTheme = appTheme
     )
 }
@@ -992,7 +992,7 @@ private fun EmailUpdateEmailVerificationScreenPreview_() {
 )
 @Composable
 private fun VerifyEmailUpdateScreenPreview_() {
-    VerifyEmailUpdateScreenPreview(
+    EmailUpdateVerifyScreenPreview(
         appTheme = appTheme
     )
 }
@@ -1005,7 +1005,7 @@ private fun VerifyEmailUpdateScreenPreview_() {
 )
 @Composable
 private fun UpdatePasswordScreenPreview_() {
-    UpdatePasswordScreenPreview(
+    PasswordUpdateScreenPreview(
         appTheme = appTheme
     )
 }
@@ -1018,7 +1018,7 @@ private fun UpdatePasswordScreenPreview_() {
 )
 @Composable
 private fun RequestPasswordResetScreenPreview_() {
-    RequestPasswordResetScreenPreview(
+    PasswordResetRequestScreenPreview(
         appTheme = appTheme
     )
 }
@@ -1031,7 +1031,7 @@ private fun RequestPasswordResetScreenPreview_() {
 )
 @Composable
 private fun ResetPasswordScreenPreview_() {
-    ResetPasswordScreenPreview(
+    PasswordResetScreenPreview(
         appTheme = appTheme
     )
 }

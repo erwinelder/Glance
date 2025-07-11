@@ -7,7 +7,7 @@ data class DrawableResByTheme(
     @DrawableRes val darkDefault: Int
 ) {
 
-    fun getByTheme(theme: AppTheme?): Int {
+    fun get(theme: AppTheme?): Int {
         return when (theme) {
             AppTheme.DarkDefault -> darkDefault
             else -> lightDefault

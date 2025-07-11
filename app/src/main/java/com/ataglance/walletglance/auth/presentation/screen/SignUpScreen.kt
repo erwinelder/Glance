@@ -1,6 +1,9 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -9,36 +12,42 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
+import com.ataglance.walletglance.auth.mapper.toResultStateButton
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainer.state.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.model.IconPathsRes
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
-import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.errorHandling.presentation.component.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
-import com.ataglance.walletglance.errorHandling.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainerWithTopNavBackButton
+import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 
@@ -49,36 +58,37 @@ fun SignUpScreenWrapper(
     navViewModel: NavigationViewModel,
     backStack: NavBackStackEntry
 ) {
-    val viewModel = backStack.sharedKoinNavViewModel<SignUpViewModel>(navController) {
+    val signUpViewModel = backStack.sharedKoinNavViewModel<SignUpViewModel>(navController) {
         parametersOf(
             backStack.toRoute<AuthScreens.SignUp>().email
         )
     }
 
-    val nameState by viewModel.nameState.collectAsStateWithLifecycle()
-    val emailState by viewModel.emailState.collectAsStateWithLifecycle()
-    val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
-    val confirmPasswordState by viewModel.confirmPasswordState.collectAsStateWithLifecycle()
-    val signUpIsAllowed by viewModel.signUpIsAllowed.collectAsStateWithLifecycle()
-    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
+    val nameState by signUpViewModel.nameState.collectAsStateWithLifecycle()
+    val emailState by signUpViewModel.emailState.collectAsStateWithLifecycle()
+    val passwordState by signUpViewModel.passwordState.collectAsStateWithLifecycle()
+    val confirmPasswordState by signUpViewModel.confirmPasswordState.collectAsStateWithLifecycle()
+    val signUpIsAllowed by signUpViewModel.signUpIsAllowed.collectAsStateWithLifecycle()
+    val requestState by signUpViewModel.signUpRequestState.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
     var job by remember { mutableStateOf<Job?>(null) }
 
     SignUpScreen(
         screenPadding = screenPadding,
+        onNavigateBack = navController::popBackStack,
         nameState = nameState,
-        onNameChange = viewModel::updateAndValidateName,
+        onNameChange = signUpViewModel::updateAndValidateName,
         emailState = emailState,
-        onEmailChange = viewModel::updateAndValidateEmail,
+        onEmailChange = signUpViewModel::updateAndValidateEmail,
         passwordState = passwordState,
-        onPasswordChange = viewModel::updateAndValidatePassword,
+        onPasswordChange = signUpViewModel::updateAndValidatePassword,
         confirmPasswordState = confirmPasswordState,
-        onConfirmPasswordChange = viewModel::updateAndValidateConfirmPassword,
+        onConfirmPasswordChange = signUpViewModel::updateAndValidateConfirmPassword,
         signUpIsAllowed = signUpIsAllowed,
         onSignUp = {
             job = coroutineScope.launch {
-                if (!viewModel.signUp()) return@launch
+                if (!signUpViewModel.signUp()) return@launch
                 navViewModel.navigateToScreen(
                     navController = navController, screen = AuthScreens.SignUpEmailVerification
                 )
@@ -94,15 +104,16 @@ fun SignUpScreenWrapper(
         onCancelRequest = {
             job?.cancel()
             job = null
-            viewModel.resetRequestState()
+            signUpViewModel.resetSignUpRequestState()
         },
-        onErrorClose = viewModel::resetRequestState,
+        onErrorButton = signUpViewModel::resetSignUpRequestState,
     )
 }
 
 @Composable
 fun SignUpScreen(
     screenPadding: PaddingValues = PaddingValues(),
+    onNavigateBack: () -> Unit,
     nameState: ValidatedFieldState,
     onNameChange: (String) -> Unit,
     emailState: ValidatedFieldState,
@@ -114,50 +125,57 @@ fun SignUpScreen(
     signUpIsAllowed: Boolean,
     onSignUp: () -> Unit,
     onNavigateToSignInScreen: () -> Unit,
-    requestState: RequestState<ButtonState>?,
-    onCancelRequest: () -> Unit,
-    onErrorClose: () -> Unit
-) {
-    if (requestState != null) {
-        SetBackHandler()
-    }
 
-    AnimatedScreenWithRequestState(
+    requestState: RequestState<ButtonState, ButtonState>?,
+    onCancelRequest: () -> Unit,
+    onErrorButton: () -> Unit
+) {
+    AnimatedRequestScreenContainerWithTopNavBackButton(
         screenPadding = screenPadding,
-        requestState = requestState,
+        iconPathsRes = IconPathsRes.User,
+        title = stringResource(R.string.create_new_account),
+        requestStateButton = requestState,
         onCancelRequest = onCancelRequest,
-        onErrorClose = onErrorClose
-    ) {
-        ScreenContainerWithTitleAndGlassSurface(
-            title = stringResource(R.string.create_new_account),
-            glassSurfaceContent = {
-                GlassSurfaceContent(
-                    nameState = nameState,
-                    onNameChange = onNameChange,
-                    emailState = emailState,
-                    onEmailChange = onEmailChange,
-                    passwordState = passwordState,
-                    onPasswordChange = onPasswordChange,
-                    confirmPasswordState = confirmPasswordState,
-                    onConfirmPasswordChange = onConfirmPasswordChange,
-                    onSignUp = onSignUp
-                )
-            },
-            buttonBlockUnderGlassSurface = {
+        onSuccessButton = null,
+        onErrorButton = onErrorButton,
+        backButtonText = stringResource(R.string.sign_up),
+        onBackButtonClick = onNavigateBack,
+        screenCenterContent = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                GlassSurface(
+                    filledWidths = FilledWidthByScreenType(compact = .86f),
+                    modifier = Modifier.weight(1f, fill = false)
+                ) {
+                    GlassSurfaceContent(
+                        nameState = nameState,
+                        onNameChange = onNameChange,
+                        emailState = emailState,
+                        onEmailChange = onEmailChange,
+                        passwordState = passwordState,
+                        onPasswordChange = onPasswordChange,
+                        confirmPasswordState = confirmPasswordState,
+                        onConfirmPasswordChange = onConfirmPasswordChange,
+                        onSignUp = onSignUp
+                    )
+                }
                 PrimaryButton(
                     text = stringResource(R.string.sign_up),
                     enabled = signUpIsAllowed,
                     onClick = onSignUp
                 )
-            },
-            bottomButtonBlock = {
-                SecondaryButton(
-                    text = stringResource(R.string.sign_in),
-                    onClick = onNavigateToSignInScreen
-                )
             }
-        )
-    }
+        },
+        screenBottomContent = {
+            SecondaryButton(
+                text = stringResource(R.string.sign_in),
+                onClick = onNavigateToSignInScreen
+            )
+        }
+    )
 }
 
 @Composable
@@ -223,7 +241,6 @@ fun SignUpScreenPreview(
     val email = "example@domain.com"
     val password = "_Password1"
     val confirmPassword = "_Password111111"
-    val passwordsMatch = true
 
     val nameState = ValidatedFieldState(
         fieldText = name,
@@ -243,9 +260,20 @@ fun SignUpScreenPreview(
             .validateConfirmationPassword(password, confirmPassword)
             .toUiStates()
     )
+    val signUpIsAllowed = UserDataValidator.isValidName(name) &&
+            UserDataValidator.isValidEmail(email) &&
+            UserDataValidator.isValidPassword(password)
+
+    val coroutineScope = rememberCoroutineScope()
+    var job = remember<Job?> { null }
+    val initialRequestState = null
+    var requestState by remember {
+        mutableStateOf<RequestState<ButtonState, ButtonState>?>(initialRequestState)
+    }
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         SignUpScreen(
+            onNavigateBack = {},
             nameState = nameState,
             onNameChange = {},
             emailState = emailState,
@@ -254,15 +282,25 @@ fun SignUpScreenPreview(
             onPasswordChange = {},
             confirmPasswordState = confirmPasswordState,
             onConfirmPasswordChange = {},
-            signUpIsAllowed = UserDataValidator.isValidName(name) &&
-                    UserDataValidator.isValidEmail(email) &&
-                    UserDataValidator.isValidPassword(password) &&
-                    passwordsMatch,
-            onSignUp = {},
+            signUpIsAllowed = signUpIsAllowed,
+            onSignUp = {
+                job = coroutineScope.launch {
+                    requestState = RequestState.Loading(
+                        messageRes = R.string.creating_your_identity_loader
+                    )
+                    delay(2000)
+                    requestState = RequestState.Success(
+                        state = AuthSuccess.SignUpEmailVerificationSent.toResultStateButton()
+                    )
+                }
+            },
             onNavigateToSignInScreen = {},
-            requestState = null,
-            onCancelRequest = {},
-            onErrorClose = {}
+            requestState = requestState,
+            onCancelRequest = {
+                requestState = initialRequestState
+                job?.cancel()
+            },
+            onErrorButton = { requestState = initialRequestState }
         )
     }
 }

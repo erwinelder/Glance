@@ -4,7 +4,7 @@ import com.ataglance.walletglance.auth.data.model.SignUpFormDto
 import com.ataglance.walletglance.auth.data.repository.AuthRepository
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
+import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.settings.domain.usecase.language.GetLanguagePreferenceUseCase
 
 class SignUpUseCaseImpl(

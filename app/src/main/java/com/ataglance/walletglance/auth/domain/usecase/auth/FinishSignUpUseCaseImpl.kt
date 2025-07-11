@@ -5,7 +5,7 @@ import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.auth.mapper.toDomainModel
-import com.ataglance.walletglance.errorHandling.domain.model.result.Result
+import com.ataglance.walletglance.request.domain.model.result.Result
 
 class FinishSignUpUseCaseImpl(
     private val authRepository: AuthRepository,

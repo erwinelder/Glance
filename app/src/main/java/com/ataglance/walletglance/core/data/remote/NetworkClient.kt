@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.data.remote
 
+import com.ataglance.walletglance.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -12,4 +13,4 @@ val httpClient = HttpClient(CIO) {
     }
 }
 
-const val glanciBackendUrl = "https://walletglance-backend-hgddf5fwckbqf8bf.northeurope-01.azurewebsites.net"
+const val glanciBackendUrl = BuildConfig.GLANCI_BACKEND_URL

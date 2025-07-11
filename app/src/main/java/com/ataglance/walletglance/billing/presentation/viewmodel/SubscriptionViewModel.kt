@@ -1,6 +1,8 @@
 package com.ataglance.walletglance.billing.presentation.viewmodel
 
 import android.app.Activity
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -11,8 +13,7 @@ import com.ataglance.walletglance.billing.domain.model.errorHandling.BillingErro
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiState
 import com.ataglance.walletglance.billing.mapper.toSubscriptionUiStateList
 import com.ataglance.walletglance.billing.presentation.model.SubscriptionUiState
-import com.ataglance.walletglance.errorHandling.domain.model.result.ResultData
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultTitleWithMessageState
+import com.ataglance.walletglance.request.domain.model.result.ResultData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -85,6 +86,13 @@ class SubscriptionViewModel(
     }
 
 }
+
+@Stable
+data class ResultTitleWithMessageState(
+    val isSuccessful: Boolean,
+    @StringRes val titleRes: Int,
+    @StringRes val messageRes: Int?
+)
 
 class SubscriptionViewModelFactory(
     private val billingSubscriptionManager: BillingSubscriptionManager

@@ -1,36 +1,33 @@
 package com.ataglance.walletglance.auth.presentation.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
-import com.ataglance.walletglance.auth.presentation.viewmodel.UpdateEmailViewModel
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
+import com.ataglance.walletglance.auth.mapper.toResultStateButton
+import com.ataglance.walletglance.auth.presentation.viewmodel.EmailUpdateViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
-import com.ataglance.walletglance.core.domain.app.DrawableResByTheme
-import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
-import com.ataglance.walletglance.core.presentation.component.container.icon.LargePrimaryIconWithMessage
-import com.ataglance.walletglance.core.presentation.component.screenContainer.state.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.model.IconPathsRes
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTopBackNavButton
-import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
-import com.ataglance.walletglance.core.presentation.theme.CurrAppTheme
 import com.ataglance.walletglance.core.presentation.viewmodel.sharedKoinNavViewModel
-import com.ataglance.walletglance.errorHandling.presentation.model.RequestState
-import com.ataglance.walletglance.errorHandling.presentation.model.ResultState.ButtonState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
+import com.ataglance.walletglance.request.presentation.model.RequestState
+import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
 import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun EmailUpdateEmailVerificationScreenWrapper(
@@ -39,89 +36,47 @@ fun EmailUpdateEmailVerificationScreenWrapper(
     navViewModel: NavigationViewModel,
     backStack: NavBackStackEntry
 ) {
-    val viewModel = backStack.sharedKoinNavViewModel<UpdateEmailViewModel>(navController)
+    val viewModel = backStack.sharedKoinNavViewModel<EmailUpdateViewModel>(navController)
 
-    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
+    val requestState by viewModel.emailVerificationRequestState.collectAsStateWithLifecycle()
 
     EmailUpdateEmailVerificationScreen(
         screenPadding = screenPadding,
-        onNavigateBack = navController::popBackStack,
-        onCheckEmailVerification = viewModel::checkEmailVerification,
         requestState = requestState,
         onCancelRequest = viewModel::cancelEmailVerificationCheck,
-        onSuccessClose = {
-            navViewModel.navigateAndPopUpTo(
-                navController = navController,
-                screenToNavigateTo = SettingsScreens.Accounts,
-                inclusive = false
-            )
+        onSuccessButton = {
+            if (viewModel.isEmailVerified()) {
+                navViewModel.navigateAndPopUpTo(
+                    navController = navController,
+                    screenToNavigateTo = SettingsScreens.Accounts,
+                    inclusive = false
+                )
+            } else {
+                viewModel.checkEmailVerification()
+            }
         },
-        onErrorClose = viewModel::resetRequestState
+        onErrorButton = viewModel::resetEmailVerificationRequestState
     )
 }
 
 @Composable
 fun EmailUpdateEmailVerificationScreen(
     screenPadding: PaddingValues = PaddingValues(),
-    onNavigateBack: () -> Unit,
-    onCheckEmailVerification: () -> Unit,
-    requestState: RequestState<ButtonState>?,
+
+    requestState: RequestState<ButtonState, ButtonState>?,
     onCancelRequest: () -> Unit,
-    onSuccessClose: () -> Unit,
-    onErrorClose: () -> Unit
+    onSuccessButton: () -> Unit,
+    onErrorButton: () -> Unit
 ) {
-    val backNavButtonImageRes = DrawableResByTheme(
-        lightDefault = R.drawable.email_light_default,
-        darkDefault = R.drawable.email_dark_default,
-    ).getByTheme(CurrAppTheme)
-
-    if (requestState != null) {
-        SetBackHandler()
-    }
-
-    AnimatedScreenWithRequestState(
+    AnimatedRequestScreenContainer(
         screenPadding = screenPadding,
-        requestState = requestState,
+        iconPathsRes = IconPathsRes.Email,
+        title = "",
+        requestStateButton = requestState,
         onCancelRequest = onCancelRequest,
-        onSuccessClose = onSuccessClose,
-        onErrorClose = onErrorClose
-    ) {
-        ScreenContainerWithTopBackNavButton(
-            screenPadding = screenPadding,
-            backNavButtonText = stringResource(R.string.email_verification),
-            backNavButtonImageRes = backNavButtonImageRes,
-            onBackNavButtonClick = onNavigateBack
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .weight(1f)
-            ) {
-                EmailVerificationPromptedComponent(onCheck = onCheckEmailVerification)
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmailVerificationPromptedComponent(onCheck: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        LargePrimaryIconWithMessage(
-            title = stringResource(R.string.email_sent),
-            message = stringResource(R.string.update_email_email_verification_sent_message),
-            iconRes = R.drawable.email_large_icon,
-            iconDescription = "Email sent icon"
-        )
-        SmallPrimaryButton(
-            text = stringResource(R.string.check_verification),
-            onClick = onCheck
-        )
-    }
+        onSuccessButton = onSuccessButton,
+        onErrorButton = onErrorButton
+    )
 }
 
 
@@ -131,14 +86,37 @@ private fun EmailVerificationPromptedComponent(onCheck: () -> Unit) {
 fun EmailUpdateEmailVerificationScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    var job = remember<Job?> { null }
+    val initialRequestState = RequestState.Success<ButtonState, ButtonState>(
+        state = AuthSuccess.EmailUpdateEmailVerificationSent.toResultStateButton()
+    )
+//    val initialRequestState = RequestState.Loading<ButtonState, ButtonState>(
+//        messageRes = R.string.checking_email_verification_loader
+//    )
+    var requestState by remember {
+        mutableStateOf<RequestState<ButtonState, ButtonState>?>(initialRequestState)
+    }
+
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
         EmailUpdateEmailVerificationScreen(
-            onNavigateBack = {},
-            onCheckEmailVerification = {},
-            requestState = null,
-            onCancelRequest = {},
-            onSuccessClose = {},
-            onErrorClose = {}
+            requestState = requestState,
+            onCancelRequest = {
+                requestState = initialRequestState
+                job?.cancel()
+            },
+            onSuccessButton = {
+                job = coroutineScope.launch {
+                    requestState = RequestState.Loading(
+                        messageRes = R.string.checking_email_verification_loader
+                    )
+                    delay(2000)
+                    requestState = RequestState.Success(
+                        state = AuthSuccess.EmailUpdated.toResultStateButton()
+                    )
+                }
+            },
+            onErrorButton = { requestState = initialRequestState }
         )
     }
 }

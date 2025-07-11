@@ -45,7 +45,7 @@ fun TransactionCreationWidget(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
+            .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
     ) {
         TransactionCreationWidgetButton(
             iconRes = R.drawable.create_record_dark_default,

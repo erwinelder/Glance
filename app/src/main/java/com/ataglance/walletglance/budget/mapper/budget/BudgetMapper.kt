@@ -14,6 +14,8 @@ import com.ataglance.walletglance.category.domain.model.GroupedCategories
 import com.ataglance.walletglance.category.domain.utils.getCategoryWithSubcategoryById
 import com.ataglance.walletglance.core.domain.date.RepeatingPeriod
 import com.ataglance.walletglance.core.utils.enumValueOrNull
+import com.ataglance.walletglance.core.utils.roundToTwoDecimals
+import com.ataglance.walletglance.core.utils.roundToTwoDecimalsAsString
 import com.ataglance.walletglance.core.utils.toTimestampRange
 
 
@@ -53,7 +55,7 @@ fun BudgetDataModelWithAssociations.toDomainModel(
         id = budget.id,
         priorityNum = categoryWithSubcategory?.groupParentAndSubcategoryOrderNums() ?: 0.0,
         usedAmount = 0.0,
-        amountLimit = budget.amountLimit,
+        amountLimit = budget.amountLimit.roundToTwoDecimals(),
         usedPercentage = 0F,
         category = categoryWithSubcategory?.getSubcategoryOrCategory(),
         name = budget.name,
@@ -89,7 +91,7 @@ fun Budget.toDraft(accounts: List<Account>): BudgetDraft {
     return BudgetDraft(
         isNew = false,
         id = id,
-        amountLimit = amountLimit.toString(),
+        amountLimit = amountLimit.roundToTwoDecimalsAsString(),
         category = category,
         name = name,
         currRepeatingPeriod = repeatingPeriod,
@@ -105,7 +107,7 @@ fun BudgetDraft.toNewBudget(): Budget? {
     return Budget(
         id = id,
         priorityNum = priorityNum,
-        amountLimit = newAmountLimit,
+        amountLimit = newAmountLimit.roundToTwoDecimals(),
         usedAmount = 0.0,
         usedPercentage = 0F,
         category = category,
@@ -122,7 +124,7 @@ fun BudgetDraft.copyDataToBudget(budget: Budget): Budget {
     val newAmountLimit = amountLimit.toDoubleOrNull() ?: return budget
 
     return budget.copy(
-        amountLimit = newAmountLimit,
+        amountLimit = newAmountLimit.roundToTwoDecimals(),
         category = category,
         name = name,
         repeatingPeriod = newRepeatingPeriod,

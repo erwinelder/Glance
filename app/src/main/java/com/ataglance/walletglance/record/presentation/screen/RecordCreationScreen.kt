@@ -170,7 +170,7 @@ fun RecordCreationScreen(
     val backNavButtonImageRes = DrawableResByTheme(
         lightDefault = R.drawable.create_record_light_default,
         darkDefault = R.drawable.create_record_dark_default
-    ).getByTheme(CurrAppTheme)
+    ).get(CurrAppTheme)
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -300,7 +300,7 @@ private fun RecordCreationScreenContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(bottom = 16.dp),
         modifier = Modifier
-            .fillMaxWidth(FilledWidthByScreenType().getByType(CurrWindowType))
+            .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
     ) {
         item {
             Column(

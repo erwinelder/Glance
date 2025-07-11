@@ -31,7 +31,7 @@ fun ScreenNameWithIconComponent(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(navigationButton.iconRes.getByTheme(CurrAppTheme)),
+            painter = painterResource(navigationButton.iconRes.get(CurrAppTheme)),
             contentDescription = "$screenName screen icon",
             modifier = Modifier.size(36.dp)
         )
