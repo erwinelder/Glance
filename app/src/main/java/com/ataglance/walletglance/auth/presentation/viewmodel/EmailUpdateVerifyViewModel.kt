@@ -5,56 +5,49 @@ import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
-import com.ataglance.walletglance.auth.domain.usecase.auth.CheckEmailVerificationUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.VerifyEmailUpdateUseCase
 import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
 import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.presentation.modelNew.RequestState
 import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SignUpEmailVerificationViewModel(
-    private val checkEmailVerificationUseCase: CheckEmailVerificationUseCase
+class EmailUpdateVerifyViewModel(
+    private val oobCode: String,
+    private val verifyEmailUpdateUseCase: VerifyEmailUpdateUseCase
 ) : ViewModel() {
 
-    private val _emailVerified = MutableStateFlow(false)
-    val emailVerified = _emailVerified.asStateFlow()
+    private var emailVerified = false
+
+    fun isEmailVerified(): Boolean = emailVerified
 
 
-    private var checkVerificationJob: Job? = null
-
-    fun checkEmailVerification(email: String, password: String) {
+    fun verifyEmail() {
         setRequestLoadingState()
 
-        checkVerificationJob = viewModelScope.launch {
-            val result = checkEmailVerificationUseCase.execute(email = email, password = password)
+        viewModelScope.launch {
+            val result = verifyEmailUpdateUseCase.execute(oobCode = oobCode)
 
-            if (result is Result.Success) {
-                _emailVerified.update { true }
-            }
+            if (result is Result.Success) emailVerified = true
 
             setRequestResultState(result = result)
         }
     }
 
-    fun cancelEmailVerificationCheck() {
-        checkVerificationJob?.cancel()
-        checkVerificationJob = null
-        resetRequestState()
-    }
-
 
     private val _requestState = MutableStateFlow<RequestState<ButtonState, ButtonState>>(
-        RequestState.Success(state = AuthSuccess.SignUpEmailVerificationSent.toResultStateButton())
+        RequestState.Success(
+            state = AuthSuccess.EmailUpdateVerificationCodeReceived.toResultStateButton()
+        )
     )
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
         _requestState.update {
-            RequestState.Loading(messageRes = R.string.checking_email_verification_loader)
+            RequestState.Loading(messageRes = R.string.verifying_your_email_loader)
         }
     }
 
@@ -74,10 +67,14 @@ class SignUpEmailVerificationViewModel(
     fun resetRequestState() {
         _requestState.update {
             RequestState.Success(
-                state = AuthSuccess.SignUpEmailVerificationSent.toResultStateButton()
+                state = AuthSuccess.EmailUpdateVerificationCodeReceived.toResultStateButton()
             )
         }
-        _emailVerified.update { false }
+    }
+
+
+    init {
+        verifyEmail()
     }
 
 }

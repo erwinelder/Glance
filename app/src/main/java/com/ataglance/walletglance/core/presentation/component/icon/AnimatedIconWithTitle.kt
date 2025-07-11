@@ -10,29 +10,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.component.text.Title
 import com.ataglance.walletglance.core.presentation.model.IconPathsRes
-import com.ataglance.walletglance.core.presentation.theme.GlanciColors
+import com.ataglance.walletglance.core.presentation.model.RotatingGradientAnimState
 
 @Composable
 fun AnimatedIconWithTitle(
     iconPathsRes: IconPathsRes,
     title: String,
-    animate: Boolean = false,
-    isTitleVisible: Boolean = true,
-    iconGradientColor: Pair<Color, Color> = GlanciColors.iconPrimaryGlassGradientPair,
-    iconSize: Dp = 48.dp
+    animState: RotatingGradientAnimState,
+    isTitleVisible: Boolean,
+    iconGradientColor: Pair<Color, Color>
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         RotatingGradientIcon(
             iconPathsRes = iconPathsRes,
-            animate = animate,
-            iconGradientColor = iconGradientColor,
-            iconSize = iconSize
+            animState = animState,
+            iconGradientColor = iconGradientColor
         )
         AnimatedContent(
             targetState = isTitleVisible,

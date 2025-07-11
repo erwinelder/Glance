@@ -242,7 +242,7 @@ private fun GlassSurfaceContent(
 
 
 
-@Preview(device = Devices.PIXEL_7_PRO)
+@Preview(device = Devices.PIXEL_7_PRO, locale = "en")
 @Composable
 fun SignInScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
@@ -263,6 +263,9 @@ fun SignInScreenPreview(
     val coroutineScope = rememberCoroutineScope()
     var job = remember<Job?> { null }
     val initialRequestState = null
+//    val initialRequestState = RequestState.Loading<ButtonState, ButtonState>(
+//        messageRes = R.string.verifying_your_credentials_loader
+//    )
     var requestState by remember {
         mutableStateOf<RequestState<ButtonState, ButtonState>?>(initialRequestState)
     }
@@ -289,6 +292,7 @@ fun SignInScreenPreview(
             onNavigateToRequestPasswordResetScreen = {},
             onNavigateToSignUpScreen = {},
             onContinueAsGuest = {},
+
             requestState = requestState,
             onCancelRequest = {
                 requestState = initialRequestState

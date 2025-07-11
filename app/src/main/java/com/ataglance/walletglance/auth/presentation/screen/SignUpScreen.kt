@@ -30,7 +30,6 @@ import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
-import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpRequestViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
@@ -51,7 +50,6 @@ import com.ataglance.walletglance.request.presentation.modelNew.ResultState.Butt
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -66,14 +64,13 @@ fun SignUpScreenWrapper(
             backStack.toRoute<AuthScreens.SignUp>().email
         )
     }
-    val signUpRequestViewModel = koinViewModel<SignUpRequestViewModel>()
 
     val nameState by signUpViewModel.nameState.collectAsStateWithLifecycle()
     val emailState by signUpViewModel.emailState.collectAsStateWithLifecycle()
     val passwordState by signUpViewModel.passwordState.collectAsStateWithLifecycle()
     val confirmPasswordState by signUpViewModel.confirmPasswordState.collectAsStateWithLifecycle()
     val signUpIsAllowed by signUpViewModel.signUpIsAllowed.collectAsStateWithLifecycle()
-    val requestState by signUpRequestViewModel.requestState.collectAsStateWithLifecycle()
+    val requestState by signUpViewModel.signUpRequestState.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
     var job by remember { mutableStateOf<Job?>(null) }
@@ -92,13 +89,7 @@ fun SignUpScreenWrapper(
         signUpIsAllowed = signUpIsAllowed,
         onSignUp = {
             job = coroutineScope.launch {
-                val result = signUpRequestViewModel.signUp(
-                    name = nameState.trimmedText,
-                    email = emailState.trimmedText,
-                    password = passwordState.trimmedText,
-                    confirmPassword = confirmPasswordState.trimmedText
-                )
-                if (!result) return@launch
+                if (!signUpViewModel.signUp()) return@launch
                 navViewModel.navigateToScreen(
                     navController = navController, screen = AuthScreens.SignUpEmailVerification
                 )
@@ -114,9 +105,9 @@ fun SignUpScreenWrapper(
         onCancelRequest = {
             job?.cancel()
             job = null
-            signUpRequestViewModel.resetRequestState()
+            signUpViewModel.resetSignUpRequestState()
         },
-        onErrorButton = signUpRequestViewModel::resetRequestState,
+        onErrorButton = signUpViewModel::resetSignUpRequestState,
     )
 }
 
@@ -135,6 +126,7 @@ fun SignUpScreen(
     signUpIsAllowed: Boolean,
     onSignUp: () -> Unit,
     onNavigateToSignInScreen: () -> Unit,
+
     requestState: RequestState<ButtonState, ButtonState>?,
     onCancelRequest: () -> Unit,
     onErrorButton: () -> Unit
@@ -304,7 +296,7 @@ fun SignUpScreenPreview(
                     )
                     delay(2000)
                     requestState = RequestState.Success(
-                        state = AuthSuccess.SignedIn.toResultStateButton()
+                        state = AuthSuccess.SignUpEmailVerificationSent.toResultStateButton()
                     )
                 }
             },

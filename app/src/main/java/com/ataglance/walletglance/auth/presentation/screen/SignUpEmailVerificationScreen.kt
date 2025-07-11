@@ -15,7 +15,6 @@ import androidx.navigation.NavHostController
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
-import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpEmailVerificationViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.model.IconPathsRes
@@ -29,7 +28,6 @@ import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SignUpEmailVerificationScreenWrapper(
@@ -39,39 +37,33 @@ fun SignUpEmailVerificationScreenWrapper(
     backStack: NavBackStackEntry
 ) {
     val signUpViewModel = backStack.sharedKoinNavViewModel<SignUpViewModel>(navController)
-    val signUpEmailVerificationViewModel = koinViewModel<SignUpEmailVerificationViewModel>()
 
-    val emailState by signUpViewModel.emailState.collectAsStateWithLifecycle()
-    val passwordState by signUpViewModel.passwordState.collectAsStateWithLifecycle()
-    val emailVerified by signUpEmailVerificationViewModel.emailVerified.collectAsStateWithLifecycle()
-    val requestState by signUpEmailVerificationViewModel.requestState.collectAsStateWithLifecycle()
+    val requestState by signUpViewModel.emailVerificationRequestState.collectAsStateWithLifecycle()
 
     SignUpEmailVerificationScreen(
         screenPadding = screenPadding,
         requestState = requestState,
-        onCancelRequest = signUpEmailVerificationViewModel::cancelEmailVerificationCheck,
+        onCancelRequest = signUpViewModel::cancelEmailVerificationCheck,
         onSuccessButton = {
-            if (emailVerified) {
+            if (signUpViewModel.isEmailVerified()) {
                 navViewModel.navigateAndPopUpTo(
                     navController = navController,
                     screenToNavigateTo = SettingsScreens.Accounts,
                     inclusive = false
                 )
             } else {
-                signUpEmailVerificationViewModel.checkEmailVerification(
-                    email = emailState.trimmedText,
-                    password = passwordState.trimmedText
-                )
+                signUpViewModel.checkEmailVerification()
             }
         },
-        onErrorButton = signUpEmailVerificationViewModel::resetRequestState
+        onErrorButton = signUpViewModel::resetEmailVerificationRequestState
     )
 }
 
 @Composable
 fun SignUpEmailVerificationScreen(
     screenPadding: PaddingValues = PaddingValues(),
-    requestState: RequestState<ButtonState, ButtonState>,
+
+    requestState: RequestState<ButtonState, ButtonState>?,
     onCancelRequest: () -> Unit,
     onSuccessButton: () -> Unit,
     onErrorButton: () -> Unit

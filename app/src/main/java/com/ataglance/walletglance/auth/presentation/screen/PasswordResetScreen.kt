@@ -3,6 +3,10 @@ package com.ataglance.walletglance.auth.presentation.screen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -13,35 +17,41 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.mapper.toUiStates
-import com.ataglance.walletglance.auth.presentation.viewmodel.ResetPasswordViewModel
+import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
+import com.ataglance.walletglance.auth.presentation.viewmodel.PasswordResetViewModel
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.core.domain.app.AppTheme
+import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
+import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
-import com.ataglance.walletglance.core.presentation.component.screenContainer.state.AnimatedScreenWithRequestState
+import com.ataglance.walletglance.core.presentation.model.IconPathsRes
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainerWithTitleAndGlassSurface
-import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
-import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
-import com.ataglance.walletglance.request.presentation.model.RequestState
-import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
-import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
+import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
+import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
+import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.modelNew.RequestState
+import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ResetPasswordScreenWrapper(
+fun PasswordResetScreenWrapper(
     screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     navViewModel: NavigationViewModel,
     appConfiguration: AppConfiguration,
     backStack: NavBackStackEntry
 ) {
-    val viewModel = koinViewModel<ResetPasswordViewModel> {
+    val viewModel = koinViewModel<PasswordResetViewModel> {
         parametersOf(
             backStack.toRoute<AuthScreens.ResetPassword>().obbCode
         )
@@ -52,7 +62,7 @@ fun ResetPasswordScreenWrapper(
     val passwordUpdateIsAllowed by viewModel.passwordResetIsAllowed.collectAsStateWithLifecycle()
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
-    ResetPasswordScreen(
+    PasswordResetScreen(
         screenPadding = screenPadding,
         newPasswordState = newPasswordState,
         onNewPasswordChange = viewModel::updateAndValidateNewPassword,
@@ -60,9 +70,10 @@ fun ResetPasswordScreenWrapper(
         onNewPasswordConfirmationChange = viewModel::updateAndValidateConfirmNewPassword,
         passwordResetIsAllowed = passwordUpdateIsAllowed,
         onResetPassword = viewModel::resetPassword,
+
         requestState = requestState,
         onCancelRequest = viewModel::cancelPasswordReset,
-        onSuccessClose = {
+        onSuccessButton = {
             navViewModel.navigateAndPopUpTo(
                 navController = navController,
                 screenToNavigateTo = if (appConfiguration.isSetUp) {
@@ -72,12 +83,12 @@ fun ResetPasswordScreenWrapper(
                 }
             )
         },
-        onErrorClose = viewModel::resetRequestState
+        onErrorButton = viewModel::resetRequestState
     )
 }
 
 @Composable
-fun ResetPasswordScreen(
+fun PasswordResetScreen(
     screenPadding: PaddingValues = PaddingValues(),
     newPasswordState: ValidatedFieldState,
     onNewPasswordChange: (String) -> Unit,
@@ -85,23 +96,24 @@ fun ResetPasswordScreen(
     onNewPasswordConfirmationChange: (String) -> Unit,
     passwordResetIsAllowed: Boolean,
     onResetPassword: () -> Unit,
-    requestState: RequestState<ButtonState>?,
-    onCancelRequest: () -> Unit,
-    onSuccessClose: () -> Unit,
-    onErrorClose: () -> Unit
-) {
-    SetBackHandler()
 
-    AnimatedScreenWithRequestState(
+    requestState: RequestState<ButtonState, ButtonState>?,
+    onCancelRequest: () -> Unit,
+    onSuccessButton: () -> Unit,
+    onErrorButton: () -> Unit
+) {
+    AnimatedRequestScreenContainer(
         screenPadding = screenPadding,
-        requestState = requestState,
+        iconPathsRes = IconPathsRes.Password,
+        title = stringResource(R.string.reset_your_password),
+        requestStateButton = requestState,
         onCancelRequest = onCancelRequest,
-        onSuccessClose = onSuccessClose,
-        onErrorClose = onErrorClose
-    ) {
-        ScreenContainerWithTitleAndGlassSurface(
-            title = stringResource(R.string.reset_your_password),
-            glassSurfaceContent = {
+        onSuccessButton = onSuccessButton,
+        onErrorButton = onErrorButton,
+        screenCenterContent = {
+            GlassSurface(
+                filledWidths = FilledWidthByScreenType(compact = .86f)
+            ) {
                 GlassSurfaceContent(
                     newPasswordState = newPasswordState,
                     onNewPasswordChange = onNewPasswordChange,
@@ -109,16 +121,16 @@ fun ResetPasswordScreen(
                     onNewPasswordConfirmationChange = onNewPasswordConfirmationChange,
                     onResetPassword = onResetPassword
                 )
-            },
-            bottomButtonBlock = {
-                PrimaryButton(
-                    text = stringResource(R.string.reset),
-                    enabled = passwordResetIsAllowed,
-                    onClick = onResetPassword
-                )
             }
-        )
-    }
+        },
+        screenBottomContent = {
+            PrimaryButton(
+                text = stringResource(R.string.reset),
+                enabled = passwordResetIsAllowed,
+                onClick = onResetPassword
+            )
+        }
+    )
 }
 
 @Composable
@@ -154,32 +166,58 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun ResetPasswordScreenPreview(
+fun PasswordResetScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
 ) {
     val newPassword = "_Password1"
-    val newPasswordConfirmation = "_Password11"
+    val newPasswordState = ValidatedFieldState(
+        fieldText = newPassword,
+        validationStates = UserDataValidator.validatePassword(newPassword).toUiStates()
+    )
+    val confirmNewPassword = "_Password11"
+    val confirmNewPasswordState = ValidatedFieldState(
+        fieldText = confirmNewPassword,
+        validationStates = UserDataValidator
+            .validateConfirmationPassword(newPassword, confirmNewPassword)
+            .toUiStates()
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+    var job = remember<Job?> { null }
+    val initialRequestState = null
+//    val initialRequestState = RequestState.Loading<ButtonState, ButtonState>(
+//        messageRes = R.string.updating_your_password_loader
+//    )
+    var requestState by remember {
+        mutableStateOf<RequestState<ButtonState, ButtonState>?>(initialRequestState)
+    }
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
-        ResetPasswordScreen(
-            newPasswordState = ValidatedFieldState(
-                fieldText = newPassword,
-                validationStates = UserDataValidator.validatePassword(newPassword).toUiStates()
-            ),
+        PasswordResetScreen(
+            newPasswordState = newPasswordState,
             onNewPasswordChange = {},
-            newPasswordConfirmationState = ValidatedFieldState(
-                fieldText = newPasswordConfirmation,
-                validationStates = UserDataValidator
-                    .validateConfirmationPassword(newPassword, newPasswordConfirmation)
-                    .toUiStates()
-            ),
+            newPasswordConfirmationState = confirmNewPasswordState,
             onNewPasswordConfirmationChange = {},
             passwordResetIsAllowed = true,
-            onResetPassword = {},
-            requestState = null,
-            onCancelRequest = {},
-            onSuccessClose = {},
-            onErrorClose = {}
+            onResetPassword = {
+                job = coroutineScope.launch {
+                    requestState = RequestState.Loading(
+                        messageRes = R.string.updating_your_password_loader
+                    )
+                    delay(2000)
+                    requestState = RequestState.Success(
+                        state = AuthSuccess.PasswordUpdated.toResultStateButton()
+                    )
+                }
+            },
+
+            requestState = requestState,
+            onCancelRequest = {
+                requestState = initialRequestState
+                job?.cancel()
+            },
+            onSuccessButton = { requestState = initialRequestState },
+            onErrorButton = { requestState = initialRequestState }
         )
     }
 }

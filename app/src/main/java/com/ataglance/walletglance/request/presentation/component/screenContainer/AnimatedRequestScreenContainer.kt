@@ -21,6 +21,7 @@ import com.ataglance.walletglance.core.presentation.component.container.keyboard
 import com.ataglance.walletglance.core.presentation.component.icon.AnimatedIconWithTitle
 import com.ataglance.walletglance.core.presentation.component.screenContainer.ScreenContainer
 import com.ataglance.walletglance.core.presentation.model.IconPathsRes
+import com.ataglance.walletglance.core.presentation.model.RotatingGradientAnimState
 import com.ataglance.walletglance.core.presentation.navigation.SetBackHandler
 import com.ataglance.walletglance.core.presentation.theme.CurrWindowType
 import com.ataglance.walletglance.core.presentation.theme.GlanciColors
@@ -43,15 +44,15 @@ fun AnimatedRequestScreenContainer(
     screenCenterContent: @Composable ((isKeyboardVisible: Boolean) -> Unit)? = null,
     screenBottomContent: @Composable (() -> Unit)? = null
 ) {
+    val animState = when (requestStateButton) {
+        null -> RotatingGradientAnimState.Idle
+        is RequestState.Loading -> RotatingGradientAnimState.Active
+        is RequestState.Success, is RequestState.Error -> RotatingGradientAnimState.Calm
+    }
     val iconGradientColor = when (requestStateButton) {
         null, is RequestState.Loading, is RequestState.Success ->
             GlanciColors.iconPrimaryGlassGradientPair
         is RequestState.Error -> GlanciColors.iconErrorGlassGradientPair
-    }
-    val iconSize = when (requestStateButton) {
-        null -> 48.dp
-        is RequestState.Loading -> 80.dp
-        is RequestState.Success, is RequestState.Error -> 104.dp
     }
 
     val weight by animateFloatAsState(
@@ -70,13 +71,14 @@ fun AnimatedRequestScreenContainer(
 
     ScreenContainer(
         screenPadding = screenPadding,
-        padding = PaddingValues(top = 8.dp, bottom = bottomPadding),
+        padding = PaddingValues(bottom = bottomPadding),
         modifier = Modifier.clickable { focusManager.clearFocus() }
     ) {
 
         AnimatedContent(
             targetState = requestStateButton,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(top = 8.dp)
         ) { requestState ->
             if (requestState == null && screenTopContent != null) {
                 KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
@@ -99,16 +101,15 @@ fun AnimatedRequestScreenContainer(
                 KeyboardTypingAnimatedVisibilityContainer(
                     isVisible = !isKeyboardVisible,
                     modifier = Modifier
-                        .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
-                        .padding(bottom = 8.dp)
+                        .fillMaxWidth(FilledWidthByScreenType(.84f).get(CurrWindowType))
+                        .padding(vertical = 16.dp)
                 ) {
                     AnimatedIconWithTitle(
                         iconPathsRes = iconPathsRes,
                         title = title,
-                        animate = requestStateButton is RequestState.Loading,
+                        animState = animState,
                         isTitleVisible = requestStateButton == null,
-                        iconGradientColor = iconGradientColor,
-                        iconSize = iconSize
+                        iconGradientColor = iconGradientColor
                     )
                 }
 
@@ -127,8 +128,7 @@ fun AnimatedRequestScreenContainer(
                     is RequestState.Loading -> {
                         LoadingStateComponent(
                             message = stringResource(requestState.messageRes),
-                            onCancel = onCancelRequest,
-                            modifier = Modifier.padding(top = 8.dp)
+                            onCancel = onCancelRequest
                         )
                     }
                     is RequestState.Success -> {
@@ -159,7 +159,10 @@ fun AnimatedRequestScreenContainer(
             contentAlignment = Alignment.Center
         ) { requestState ->
             if (requestState == null && screenBottomContent != null) {
-                KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
+                KeyboardTypingAnimatedVisibilityContainer(
+                    isVisible = !isKeyboardVisible,
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
                     screenBottomContent()
                 }
             }

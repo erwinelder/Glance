@@ -3,13 +3,16 @@ package com.ataglance.walletglance.auth.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ataglance.walletglance.R
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
+import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
-import com.ataglance.walletglance.auth.domain.usecase.auth.UpdatePasswordUseCase
-import com.ataglance.walletglance.auth.mapper.toResultWithButtonState
+import com.ataglance.walletglance.auth.domain.usecase.auth.ResetPasswordUseCase
 import com.ataglance.walletglance.auth.mapper.toUiStates
-import com.ataglance.walletglance.request.presentation.model.RequestState
-import com.ataglance.walletglance.request.presentation.model.ResultState.ButtonState
+import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
+import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
+import com.ataglance.walletglance.request.presentation.modelNew.RequestState
+import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,26 +22,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class UpdatePasswordViewModel(
-    private val updatePasswordUseCase: UpdatePasswordUseCase
+class PasswordResetViewModel(
+    private val oobCode: String,
+    private val resetPasswordUseCase: ResetPasswordUseCase
 ) : ViewModel() {
 
-    private val _passwordState = MutableStateFlow(
-        ValidatedFieldState(
-            validationStates = UserDataValidator.validateRequiredFieldIsNotBlank("").toUiStates()
-        )
-    )
-    val passwordState = _passwordState.asStateFlow()
-
-    fun updateAndValidatePassword(password: String) {
-        _passwordState.update {
-            it.copy(
-                fieldText = password,
-                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password).toUiStates()
-            )
-        }
-    }
-
+    /* ---------- Fields' states ---------- */
 
     private val _newPasswordState = MutableStateFlow(
         ValidatedFieldState(
@@ -80,42 +69,44 @@ class UpdatePasswordViewModel(
     }
 
 
-    val passwordUpdateIsAllowed = combine(
-        passwordState, newPasswordState, confirmNewPasswordState
-    ) { passwordState, newPasswordState, confirmNewPasswordState ->
-        passwordState.fieldText.isNotBlank() &&
-                UserDataValidator.isValidPassword(password = newPasswordState.fieldText) &&
-                newPasswordState.fieldText.trim() == confirmNewPasswordState.fieldText.trim()
+    val passwordResetIsAllowed = combine(
+        newPasswordState, confirmNewPasswordState
+    ) { newPasswordState, confirmNewPasswordState ->
+        UserDataValidator.isValidPassword(password = newPasswordState.fieldText) &&
+                newPasswordState.trimmedText == confirmNewPasswordState.trimmedText
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
+        started = SharingStarted.WhileSubscribed(5000),
         initialValue = false
     )
 
 
-    private var passwordUpdateJob: Job? = null
+    /* ---------- Password reset request state ---------- */
 
-    fun updatePassword() {
-        if (!passwordUpdateIsAllowed.value) return
+    private var passwordResetJob: Job? = null
+
+    fun resetPassword() {
+        if (!passwordResetIsAllowed.value) return
+
         setRequestLoadingState()
 
-        passwordUpdateJob = viewModelScope.launch {
-            val result = updatePasswordUseCase.execute(
-                password = passwordState.value.trimmedText,
+        passwordResetJob = viewModelScope.launch {
+            val result = resetPasswordUseCase.execute(
+                oobCode = oobCode,
                 newPassword = newPasswordState.value.trimmedText
             )
-            setRequestResultState(result = result.toResultWithButtonState())
+            setRequestResultState(result = result)
         }
     }
 
-    fun cancelPasswordUpdate() {
-        passwordUpdateJob?.cancel()
-        passwordUpdateJob = null
+    fun cancelPasswordReset() {
+        passwordResetJob?.cancel()
+        passwordResetJob = null
         resetRequestState()
     }
 
 
-    private val _requestState = MutableStateFlow<RequestState<ButtonState>?>(null)
+    private val _requestState = MutableStateFlow<RequestState<ButtonState, ButtonState>?>(null)
     val requestState = _requestState.asStateFlow()
 
     private fun setRequestLoadingState() {
@@ -124,8 +115,17 @@ class UpdatePasswordViewModel(
         }
     }
 
-    private fun setRequestResultState(result: ButtonState) {
-        _requestState.update { RequestState.Result(resultState = result) }
+    private fun setRequestResultState(result: Result<AuthSuccess, AuthError>) {
+        _requestState.update {
+            when (result) {
+                is Result.Success -> RequestState.Success(
+                    state = result.success.toResultStateButton()
+                )
+                is Result.Error -> RequestState.Error(
+                    state = result.error.toResultStateButton()
+                )
+            }
+        }
     }
 
     fun resetRequestState() {

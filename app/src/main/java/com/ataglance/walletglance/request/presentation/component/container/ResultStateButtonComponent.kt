@@ -30,7 +30,7 @@ fun ResultStateButtonComponent(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
+        modifier = Modifier.fillMaxWidth(FilledWidthByScreenType(.84f).get(CurrWindowType))
     ) {
 
         Title(

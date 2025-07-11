@@ -27,6 +27,8 @@ class SignInViewModel(
     private val signInUseCase: SignInWithEmailAndPasswordUseCase
 ) : ViewModel() {
 
+    /* ---------- Fields' states ---------- */
+
     private val _emailState = MutableStateFlow(
         ValidatedFieldState(
             fieldText = email,
@@ -70,10 +72,12 @@ class SignInViewModel(
                 passwordState.fieldText.isNotBlank()
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
+        started = SharingStarted.WhileSubscribed(5000),
         initialValue = false
     )
 
+
+    /* ---------- Sign in request state ---------- */
 
     private var signInJob: Job? = null
 

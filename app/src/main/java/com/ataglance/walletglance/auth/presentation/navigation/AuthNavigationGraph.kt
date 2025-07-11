@@ -8,16 +8,16 @@ import androidx.navigation.navigation
 import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.presentation.screen.DeleteAccountScreenWrapper
 import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateEmailVerificationScreenWrapper
-import com.ataglance.walletglance.auth.presentation.screen.FinishSignUpScreenWrapper
+import com.ataglance.walletglance.auth.presentation.screen.SignUpFinishScreenWrapper
 import com.ataglance.walletglance.auth.presentation.screen.ProfileScreenWrapper
-import com.ataglance.walletglance.auth.presentation.screen.RequestEmailUpdateScreenWrapper
-import com.ataglance.walletglance.auth.presentation.screen.RequestPasswordResetScreenWrapper
-import com.ataglance.walletglance.auth.presentation.screen.ResetPasswordScreenWrapper
+import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateRequestScreenWrapper
+import com.ataglance.walletglance.auth.presentation.screen.PasswordResetRequestScreenWrapper
+import com.ataglance.walletglance.auth.presentation.screen.PasswordResetScreenWrapper
 import com.ataglance.walletglance.auth.presentation.screen.SignInScreenWrapper
 import com.ataglance.walletglance.auth.presentation.screen.SignUpEmailVerificationScreenWrapper
 import com.ataglance.walletglance.auth.presentation.screen.SignUpScreenWrapper
-import com.ataglance.walletglance.auth.presentation.screen.UpdatePasswordScreenWrapper
-import com.ataglance.walletglance.auth.presentation.screen.VerifyEmailUpdateScreenWrapper
+import com.ataglance.walletglance.auth.presentation.screen.PasswordUpdateScreenWrapper
+import com.ataglance.walletglance.auth.presentation.screen.EmailUpdateVerifyScreenWrapper
 import com.ataglance.walletglance.billing.presentation.screen.SubscriptionsScreenWrapper
 import com.ataglance.walletglance.core.domain.app.AppConfiguration
 import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
@@ -58,7 +58,7 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthScreens.FinishSignUp> { backStack ->
-            FinishSignUpScreenWrapper(
+            SignUpFinishScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 navViewModel = navViewModel,
@@ -73,7 +73,7 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthScreens.UpdateEmail> { backStack ->
-            RequestEmailUpdateScreenWrapper(
+            EmailUpdateRequestScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 navViewModel = navViewModel,
@@ -89,7 +89,7 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthScreens.VerifyEmailUpdate> { backStack ->
-            VerifyEmailUpdateScreenWrapper(
+            EmailUpdateVerifyScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 navViewModel = navViewModel,
@@ -97,21 +97,21 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthScreens.UpdatePassword> { backStack ->
-            UpdatePasswordScreenWrapper(
+            PasswordUpdateScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 navViewModel = navViewModel
             )
         }
         composable<AuthScreens.RequestPasswordReset> { backStack ->
-            RequestPasswordResetScreenWrapper(
+            PasswordResetRequestScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 backStack = backStack
             )
         }
         composable<AuthScreens.ResetPassword> { backStack ->
-            ResetPasswordScreenWrapper(
+            PasswordResetScreenWrapper(
                 screenPadding = screenPadding,
                 navController = navController,
                 navViewModel = navViewModel,

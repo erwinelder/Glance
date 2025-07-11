@@ -180,7 +180,7 @@ class AuthRepositoryImpl(
         }
 
         return when (response.status) {
-            HttpStatusCode.Accepted -> Result.Success(AuthSuccess.UpdateEmailEmailVerificationSent)
+            HttpStatusCode.Accepted -> Result.Success(AuthSuccess.EmailUpdateEmailVerificationSent)
             HttpStatusCode.Unauthorized -> Result.Error(AuthError.SessionExpired)
             HttpStatusCode.BadRequest -> Result.Error(AuthError.RequestDataNotValid)
             HttpStatusCode.NotFound -> Result.Error(AuthError.UserNotFound)

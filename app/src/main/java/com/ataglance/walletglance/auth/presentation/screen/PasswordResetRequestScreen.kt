@@ -13,13 +13,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
 import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
+import com.ataglance.walletglance.auth.domain.navigation.AuthScreens
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
-import com.ataglance.walletglance.auth.presentation.viewmodel.DeleteAccountViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.PasswordResetRequestViewModel
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.domain.app.FilledWidthByScreenType
 import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
@@ -28,58 +31,56 @@ import com.ataglance.walletglance.core.presentation.component.container.glassSur
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurfaceContentColumnWrapper
 import com.ataglance.walletglance.core.presentation.model.IconPathsRes
 import com.ataglance.walletglance.core.presentation.preview.PreviewWithMainScaffoldContainer
-import com.ataglance.walletglance.core.presentation.theme.GlanciColors
-import com.ataglance.walletglance.navigation.presentation.viewmodel.NavigationViewModel
 import com.ataglance.walletglance.request.presentation.component.field.SmallTextFieldWithLabelAndMessages
 import com.ataglance.walletglance.request.presentation.component.screenContainer.AnimatedRequestScreenContainer
 import com.ataglance.walletglance.request.presentation.model.ValidatedFieldState
 import com.ataglance.walletglance.request.presentation.modelNew.RequestState
 import com.ataglance.walletglance.request.presentation.modelNew.ResultState.ButtonState
-import com.ataglance.walletglance.settings.domain.navigation.SettingsScreens
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun DeleteAccountScreenWrapper(
+fun PasswordResetRequestScreenWrapper(
     screenPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
-    navViewModel: NavigationViewModel
+    backStack: NavBackStackEntry
 ) {
-    val viewModel = koinViewModel<DeleteAccountViewModel>()
+    val viewModel = koinViewModel<PasswordResetRequestViewModel> {
+        parametersOf(
+            backStack.toRoute<AuthScreens.RequestPasswordReset>().email
+        )
+    }
 
-    val passwordState by viewModel.passwordState.collectAsStateWithLifecycle()
-    val deletionIsAllowed by viewModel.deletionIsAllowed.collectAsStateWithLifecycle()
+    val emailState by viewModel.emailState.collectAsStateWithLifecycle()
+    val requestIsAllowed by viewModel.requestIsAllowed.collectAsStateWithLifecycle()
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
-    DeleteAccountScreen(
+    PasswordResetRequestScreen(
         screenPadding = screenPadding,
+        emailState = emailState,
         onNavigateBack = navController::popBackStack,
-        passwordState = passwordState,
-        onPasswordChange = viewModel::updateAndValidatePassword,
-        deletionIsAllowed = deletionIsAllowed,
-        onDeleteAccount = viewModel::deleteAccount,
+        onEmailChange = viewModel::updateAndValidateEmail,
+        requestIsAllowed = requestIsAllowed,
+        onRequestPasswordReset = viewModel::requestPasswordReset,
+
         requestState = requestState,
-        onCancelRequest = viewModel::cancelAccountDeletion,
-        onSuccessButton = {
-            navViewModel.navigateAndPopUpTo(
-                navController = navController,
-                screenToNavigateTo = SettingsScreens.Start
-            )
-        },
+        onCancelRequest = viewModel::cancelPasswordResetRequest,
+        onSuccessButton = navController::popBackStack,
         onErrorButton = viewModel::resetRequestState
     )
 }
 
 @Composable
-fun DeleteAccountScreen(
+fun PasswordResetRequestScreen(
     screenPadding: PaddingValues = PaddingValues(),
     onNavigateBack: () -> Unit,
-    passwordState: ValidatedFieldState,
-    onPasswordChange: (String) -> Unit,
-    deletionIsAllowed: Boolean,
-    onDeleteAccount: () -> Unit,
+    emailState: ValidatedFieldState,
+    onEmailChange: (String) -> Unit,
+    requestIsAllowed: Boolean,
+    onRequestPasswordReset: () -> Unit,
 
     requestState: RequestState<ButtonState, ButtonState>?,
     onCancelRequest: () -> Unit,
@@ -88,15 +89,15 @@ fun DeleteAccountScreen(
 ) {
     AnimatedRequestScreenContainer(
         screenPadding = screenPadding,
-        iconPathsRes = IconPathsRes.DeleteUser,
-        title = stringResource(R.string.delete_your_account_with_all_data),
+        iconPathsRes = IconPathsRes.Password,
+        title = stringResource(R.string.request_password_reset),
         requestStateButton = requestState,
         onCancelRequest = onCancelRequest,
         onSuccessButton = onSuccessButton,
         onErrorButton = onErrorButton,
         screenTopContent = {
             GlassSurfaceTopNavButtonBlock(
-                text = stringResource(R.string.delete_account),
+                text = stringResource(R.string.reset_password),
                 imageRes = null,
                 onClick = onNavigateBack
             )
@@ -106,18 +107,17 @@ fun DeleteAccountScreen(
                 filledWidths = FilledWidthByScreenType(compact = .86f)
             ) {
                 GlassSurfaceContent(
-                    passwordState = passwordState,
-                    onPasswordChange = onPasswordChange,
-                    onDeleteAccount = onDeleteAccount
+                    emailState = emailState,
+                    onEmailChange = onEmailChange,
+                    onRequestPasswordReset = onRequestPasswordReset
                 )
             }
         },
         screenBottomContent = {
             PrimaryButton(
-                text = stringResource(R.string.delete_account),
-                enabled = deletionIsAllowed,
-                gradientColor = GlanciColors.errorGradientPair,
-                onClick = onDeleteAccount
+                text = stringResource(R.string.send_email),
+                enabled = requestIsAllowed,
+                onClick = onRequestPasswordReset
             )
         }
     )
@@ -125,19 +125,19 @@ fun DeleteAccountScreen(
 
 @Composable
 private fun GlassSurfaceContent(
-    passwordState: ValidatedFieldState,
-    onPasswordChange: (String) -> Unit,
-    onDeleteAccount: () -> Unit
+    emailState: ValidatedFieldState,
+    onEmailChange: (String) -> Unit,
+    onRequestPasswordReset: () -> Unit
 ) {
     GlassSurfaceContentColumnWrapper {
         SmallTextFieldWithLabelAndMessages(
-            state = passwordState,
-            onValueChange = onPasswordChange,
-            labelText = stringResource(R.string.password),
-            placeholderText = stringResource(R.string.password),
-            keyboardType = KeyboardType.Password,
+            state = emailState,
+            onValueChange = onEmailChange,
+            labelText = stringResource(R.string.email),
+            placeholderText = stringResource(R.string.email),
+            keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Go,
-            onGoKeyboardAction = onDeleteAccount
+            onGoKeyboardAction = onRequestPasswordReset
         )
     }
 }
@@ -146,40 +146,39 @@ private fun GlassSurfaceContent(
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
-fun DeleteAccountScreenPreview(
+fun PasswordResetRequestScreenPreview(
     appTheme: AppTheme = AppTheme.LightDefault
 ) {
-    val password = "_Password1"
-    val passwordState = ValidatedFieldState(
-        fieldText = password,
-        validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password).toUiStates()
+    val email = "example@domain.com"
+    val emailState = ValidatedFieldState(
+        fieldText = email,
+        validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(email).toUiStates()
     )
-    val deletionIsAllowed = password.isNotBlank()
 
     val coroutineScope = rememberCoroutineScope()
     var job = remember<Job?> { null }
     val initialRequestState = null
 //    val initialRequestState = RequestState.Loading<ButtonState, ButtonState>(
-//        messageRes = R.string.deleting_your_account_loader
+//        messageRes = R.string.requesting_password_reset_loader
 //    )
     var requestState by remember {
         mutableStateOf<RequestState<ButtonState, ButtonState>?>(initialRequestState)
     }
 
     PreviewWithMainScaffoldContainer(appTheme = appTheme) {
-        DeleteAccountScreen(
+        PasswordResetRequestScreen(
             onNavigateBack = {},
-            passwordState = passwordState,
-            onPasswordChange = {},
-            deletionIsAllowed = deletionIsAllowed,
-            onDeleteAccount = {
+            emailState = emailState,
+            onEmailChange = {},
+            requestIsAllowed = true,
+            onRequestPasswordReset = {
                 job = coroutineScope.launch {
                     requestState = RequestState.Loading(
-                        messageRes = R.string.deleting_your_account_loader
+                        messageRes = R.string.requesting_password_reset_loader
                     )
                     delay(2000)
                     requestState = RequestState.Success(
-                        state = AuthSuccess.AccountDeleted.toResultStateButton()
+                        state = AuthSuccess.ResetPasswordEmailSent.toResultStateButton()
                     )
                 }
             },

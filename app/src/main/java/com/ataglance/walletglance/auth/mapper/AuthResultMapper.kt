@@ -42,12 +42,14 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
 @StringRes private fun AuthSuccess.asTitleRes(): Int {
     return when (this) {
         AuthSuccess.SignedIn -> R.string.welcome_back_to_glance
-        AuthSuccess.SignedUp -> R.string.welcome_to_glance
         AuthSuccess.SignUpEmailVerificationSent -> R.string.email_sent
-        AuthSuccess.UpdateEmailEmailVerificationSent -> R.string.email_sent
+        AuthSuccess.SignUpVerificationCodeReceived -> R.string.verify_email
+        AuthSuccess.SignedUp -> R.string.welcome_to_glance
+        AuthSuccess.EmailUpdateEmailVerificationSent -> R.string.email_sent
+        AuthSuccess.EmailUpdateVerificationCodeReceived -> R.string.verify_email
         AuthSuccess.EmailUpdated -> R.string.all_set
-        AuthSuccess.PasswordUpdated -> R.string.all_set
         AuthSuccess.ResetPasswordEmailSent -> R.string.email_sent
+        AuthSuccess.PasswordUpdated -> R.string.all_set
         AuthSuccess.AccountDeleted -> R.string.account_deleted
     }
 }
@@ -55,12 +57,14 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
 @StringRes private fun AuthSuccess.asMessageResOrNull(): Int? {
     return when (this) {
         AuthSuccess.SignedIn -> null
-        AuthSuccess.SignedUp -> null
         AuthSuccess.SignUpEmailVerificationSent -> R.string.sign_up_email_verification_sent_message
-        AuthSuccess.UpdateEmailEmailVerificationSent -> R.string.update_email_email_verification_sent_message
+        AuthSuccess.SignUpVerificationCodeReceived -> R.string.sign_up_verify_email_description
+        AuthSuccess.SignedUp -> null
+        AuthSuccess.EmailUpdateEmailVerificationSent -> R.string.update_email_email_verification_sent_message
+        AuthSuccess.EmailUpdateVerificationCodeReceived -> R.string.email_update_verify_email_description
         AuthSuccess.EmailUpdated -> R.string.email_updated_successfully_message
-        AuthSuccess.PasswordUpdated -> R.string.password_updated_successfully_message
         AuthSuccess.ResetPasswordEmailSent -> R.string.reset_password_email_sent_message
+        AuthSuccess.PasswordUpdated -> R.string.password_updated_successfully_message
         AuthSuccess.AccountDeleted -> R.string.your_account_deleted_successfully_message
     }
 }
@@ -68,12 +72,14 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
 @StringRes private fun AuthSuccess.asButtonTextRes(): Int {
     return when (this) {
         AuthSuccess.SignedIn -> R.string.continue_to_app
-        AuthSuccess.SignedUp -> R.string.continue_setup
         AuthSuccess.SignUpEmailVerificationSent -> R.string.check
-        AuthSuccess.UpdateEmailEmailVerificationSent -> R.string.check
+        AuthSuccess.SignUpVerificationCodeReceived -> R.string.verify
+        AuthSuccess.SignedUp -> R.string.continue_setup
+        AuthSuccess.EmailUpdateEmailVerificationSent -> R.string.check
+        AuthSuccess.EmailUpdateVerificationCodeReceived -> R.string.verify
         AuthSuccess.EmailUpdated -> R.string._continue
-        AuthSuccess.PasswordUpdated -> R.string._continue
         AuthSuccess.ResetPasswordEmailSent -> R.string.back
+        AuthSuccess.PasswordUpdated -> R.string._continue
         AuthSuccess.AccountDeleted -> R.string._continue
     }
 }
@@ -81,12 +87,14 @@ fun AuthError.toResultWithButtonState(): ResultState.ButtonState {
 @DrawableRes private fun AuthSuccess.asButtonIconResOrNull(): Int? {
     return when (this) {
         AuthSuccess.SignedIn -> null
-        AuthSuccess.SignedUp -> null
         AuthSuccess.SignUpEmailVerificationSent -> null
-        AuthSuccess.UpdateEmailEmailVerificationSent -> null
+        AuthSuccess.SignUpVerificationCodeReceived -> null
+        AuthSuccess.SignedUp -> null
+        AuthSuccess.EmailUpdateEmailVerificationSent -> null
+        AuthSuccess.EmailUpdateVerificationCodeReceived -> null
         AuthSuccess.EmailUpdated -> null
-        AuthSuccess.PasswordUpdated -> null
         AuthSuccess.ResetPasswordEmailSent -> R.drawable.short_arrow_left_icon
+        AuthSuccess.PasswordUpdated -> null
         AuthSuccess.AccountDeleted -> null
     }
 }

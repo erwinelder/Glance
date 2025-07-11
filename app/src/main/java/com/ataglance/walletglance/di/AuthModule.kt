@@ -34,17 +34,15 @@ import com.ataglance.walletglance.auth.domain.usecase.authToken.GetAuthTokenFrom
 import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCase
 import com.ataglance.walletglance.auth.domain.usecase.authToken.SaveAuthTokenToSecureStorageUseCaseImpl
 import com.ataglance.walletglance.auth.presentation.viewmodel.DeleteAccountViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.FinishSignUpViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.EmailUpdateVerifyViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.EmailUpdateViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.PasswordResetRequestViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.PasswordResetViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.PasswordUpdateViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.ProfileViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.RequestPasswordResetViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.ResetPasswordViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignInViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpEmailVerificationViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpRequestViewModel
+import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpFinishViewModel
 import com.ataglance.walletglance.auth.presentation.viewmodel.SignUpViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.UpdateEmailViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.UpdatePasswordViewModel
-import com.ataglance.walletglance.auth.presentation.viewmodel.VerifyEmailUpdateViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -153,51 +151,47 @@ val authModule = module {
     }
 
     viewModel { params ->
-        SignUpViewModel(email = params.get())
-    }
-
-    viewModel {
-        SignUpRequestViewModel(signUpUseCase = get())
-    }
-
-    viewModel {
-        SignUpEmailVerificationViewModel(checkEmailVerificationUseCase = get())
+        SignUpViewModel(
+            email = params.get(),
+            signUpUseCase = get(),
+            checkEmailVerificationUseCase = get()
+        )
     }
 
     viewModel { params ->
-        FinishSignUpViewModel(
+        SignUpFinishViewModel(
             oobCode = params.get(),
             finishSignUpUseCase = get()
         )
     }
 
     viewModel {
-        UpdateEmailViewModel(
+        EmailUpdateViewModel(
             requestEmailUpdateUseCase = get(),
             checkEmailVerificationUseCase = get()
         )
     }
 
     viewModel { params ->
-        VerifyEmailUpdateViewModel(
+        EmailUpdateVerifyViewModel(
             oobCode = params.get(),
             verifyEmailUpdateUseCase = get()
         )
     }
 
     viewModel {
-        UpdatePasswordViewModel(updatePasswordUseCase = get())
+        PasswordUpdateViewModel(updatePasswordUseCase = get())
     }
 
     viewModel { params ->
-        RequestPasswordResetViewModel(
+        PasswordResetRequestViewModel(
             email = params.get(),
             requestPasswordResetUseCase = get()
         )
     }
 
     viewModel { params ->
-        ResetPasswordViewModel(
+        PasswordResetViewModel(
             oobCode = params.get(),
             resetPasswordUseCase = get()
         )

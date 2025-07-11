@@ -6,7 +6,7 @@ import com.ataglance.walletglance.R
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.validation.UserDataValidator
-import com.ataglance.walletglance.auth.domain.usecase.auth.DeleteAccountUseCase
+import com.ataglance.walletglance.auth.domain.usecase.auth.UpdatePasswordUseCase
 import com.ataglance.walletglance.auth.mapper.toUiStates
 import com.ataglance.walletglance.auth.mapperNew.toResultStateButton
 import com.ataglance.walletglance.request.domain.model.result.Result
@@ -17,13 +17,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DeleteAccountViewModel(
-    private val deleteAccountUseCase: DeleteAccountUseCase
+class PasswordUpdateViewModel(
+    private val updatePasswordUseCase: UpdatePasswordUseCase
 ) : ViewModel() {
 
     /* ---------- Fields' states ---------- */
@@ -39,15 +39,58 @@ class DeleteAccountViewModel(
         _passwordState.update {
             it.copy(
                 fieldText = password,
-                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password)
+                validationStates = UserDataValidator.validateRequiredFieldIsNotBlank(password).toUiStates()
+            )
+        }
+    }
+
+
+    private val _newPasswordState = MutableStateFlow(
+        ValidatedFieldState(
+            validationStates = UserDataValidator.validatePassword("").toUiStates()
+        )
+    )
+    val newPasswordState = _newPasswordState.asStateFlow()
+
+    fun updateAndValidateNewPassword(password: String) {
+        _newPasswordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = UserDataValidator.validatePassword(password).toUiStates()
+            )
+        }
+    }
+
+
+    private val _confirmNewPasswordState = MutableStateFlow(
+        ValidatedFieldState(
+            validationStates = UserDataValidator
+                .validateConfirmationPassword(password = "", confirmationPassword = "")
+                .toUiStates()
+        )
+    )
+    val confirmNewPasswordState = _confirmNewPasswordState.asStateFlow()
+
+    fun updateAndValidateConfirmNewPassword(password: String) {
+        _confirmNewPasswordState.update {
+            it.copy(
+                fieldText = password,
+                validationStates = UserDataValidator
+                    .validateConfirmationPassword(
+                        password = newPasswordState.value.fieldText, confirmationPassword = password
+                    )
                     .toUiStates()
             )
         }
     }
 
 
-    val deletionIsAllowed = passwordState.map { passwordState ->
-        passwordState.fieldText.isNotBlank()
+    val passwordUpdateIsAllowed = combine(
+        passwordState, newPasswordState, confirmNewPasswordState
+    ) { passwordState, newPasswordState, confirmNewPasswordState ->
+        passwordState.fieldText.isNotBlank() &&
+                UserDataValidator.isValidPassword(password = newPasswordState.fieldText) &&
+                newPasswordState.fieldText.trim() == confirmNewPasswordState.fieldText.trim()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -55,24 +98,26 @@ class DeleteAccountViewModel(
     )
 
 
-    /* ---------- Account deletion request state ---------- */
+    /* ---------- Password update request state ---------- */
 
-    private var accountDeletionJob: Job? = null
+    private var passwordUpdateJob: Job? = null
 
-    fun deleteAccount() {
-        if (!deletionIsAllowed.value) return
-
+    fun updatePassword() {
+        if (!passwordUpdateIsAllowed.value) return
         setRequestLoadingState()
 
-        accountDeletionJob = viewModelScope.launch {
-            val result = deleteAccountUseCase.execute(password = passwordState.value.trimmedText)
+        passwordUpdateJob = viewModelScope.launch {
+            val result = updatePasswordUseCase.execute(
+                password = passwordState.value.trimmedText,
+                newPassword = newPasswordState.value.trimmedText
+            )
             setRequestResultState(result = result)
         }
     }
 
-    fun cancelAccountDeletion() {
-        accountDeletionJob?.cancel()
-        accountDeletionJob = null
+    fun cancelPasswordUpdate() {
+        passwordUpdateJob?.cancel()
+        passwordUpdateJob = null
         resetRequestState()
     }
 
@@ -82,7 +127,7 @@ class DeleteAccountViewModel(
 
     private fun setRequestLoadingState() {
         _requestState.update {
-            RequestState.Loading(messageRes = R.string.deleting_your_account_loader)
+            RequestState.Loading(messageRes = R.string.updating_your_password_loader)
         }
     }
 
