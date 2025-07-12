@@ -10,7 +10,7 @@ interface CategoryCollectionRemoteDataSource {
         collections: List<CategoryCollectionDtoWithAssociations>,
         timestamp: Long,
         userId: Int
-    ): List<CategoryCollectionDtoWithAssociations>?
+    ): Boolean
 
     suspend fun synchronizeCollectionsWithAssociationsAndGetAfterTimestamp(
         collections: List<CategoryCollectionDtoWithAssociations>,

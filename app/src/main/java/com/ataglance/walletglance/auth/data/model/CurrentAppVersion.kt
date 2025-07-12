@@ -7,7 +7,7 @@ data class CurrentAppVersion(
     val primaryVersion: Int = 5,
     val secondaryVersion: Int = 0,
     val tertiaryVersion: Int = 0,
-    val alphaVersion: Int? = null,
+    val alphaVersion: Int? = 4,
     val betaVersion: Int? = null,
     val releaseCandidateVersion: Int? = null
 )

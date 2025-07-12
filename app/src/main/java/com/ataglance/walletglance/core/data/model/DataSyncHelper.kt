@@ -61,7 +61,7 @@ class DataSyncHelper(
         localTimestampGetter: suspend () -> Long?,
         remoteTimestampGetter: suspend (userId: Int) -> Long?,
         localSoftCommand: suspend (entities: List<E>, timestamp: Long) -> List<E>,
-        remoteSoftCommand: suspend (dtos: List<CD>, timestamp: Long, userId: Int) -> List<QD>?,
+        remoteSoftCommand: suspend (dtos: List<CD>, timestamp: Long, userId: Int) -> Unit,
         localDataAfterTimestampGetter: suspend (timestamp: Long) -> List<E>,
         remoteSoftCommandAndDataAfterTimestampGetter: suspend (
             dtos: List<CD>,
@@ -120,7 +120,7 @@ class DataSyncHelper(
         localSoftCommand: suspend (entities: List<E>, timestamp: Long) -> Unit,
         localHardCommand: suspend (toDelete: List<E>, toUpsert: List<E>, timestamp: Long) -> Unit,
         localDeleteCommand: suspend (entities: List<E>, timestamp: Long?) -> Unit,
-        remoteSoftCommand: suspend (dtos: List<CD>, timestamp: Long, userId: Int) -> List<QD>?,
+        remoteSoftCommand: suspend (dtos: List<CD>, timestamp: Long, userId: Int) -> Boolean,
         localDataAfterTimestampGetter: suspend (timestamp: Long) -> List<E>,
         remoteSoftCommandAndDataAfterTimestampGetter: suspend (
             dtos: List<CD>,
@@ -153,12 +153,13 @@ class DataSyncHelper(
                 val entitiesToDelete = data.map { dataModelToEntityMapper(it, timestamp, true) }
                 localSoftCommand(entitiesToDelete, timestamp)
 
-                val dtos = localDataAfterTimestampGetter(remoteTimestamp)
-                    .map(entityToCommandDtoMapper)
-                remoteSoftCommand(dtos, timestamp, userId)
-                    ?.map(queryDtoToEntityMapper)
-                    ?.filter(entityDeletedPredicate)
-                    ?.let { localDeleteCommand(it, null) }
+                val entities = localDataAfterTimestampGetter(remoteTimestamp)
+                val dtos = entities.map(entityToCommandDtoMapper)
+                val result = remoteSoftCommand(dtos, timestamp, userId)
+
+                if (result) {
+                    localDeleteCommand(entitiesToDelete, null)
+                }
             }
             // Remote data is newer, save remotely and synchronize from remote to local
             localTimestamp < remoteTimestamp -> {
@@ -177,12 +178,12 @@ class DataSyncHelper(
             // Data is up to date, save locally and remotely
             else -> {
                 val dtos = data.map { dataModelToCommandDtoMapper(it, timestamp, true) }
-                val entities = remoteSoftCommand(dtos, timestamp, userId)?.map(queryDtoToEntityMapper)
+                val result = remoteSoftCommand(dtos, timestamp, userId)
 
-                if (entities != null) {
-                    localDeleteCommand(entities, timestamp)
+                val entitiesToDelete = data.map { dataModelToEntityMapper(it, timestamp, true) }
+                if (result) {
+                    localDeleteCommand(entitiesToDelete, timestamp)
                 } else {
-                    val entitiesToDelete = data.map { dataModelToEntityMapper(it, timestamp, true) }
                     localSoftCommand(entitiesToDelete, timestamp)
                 }
             }
@@ -194,10 +195,10 @@ class DataSyncHelper(
         toUpsert: List<DM>,
         localTimestampGetter: suspend () -> Long?,
         remoteTimestampGetter: suspend (userId: Int) -> Long?,
-        localSoftCommand: suspend (entities: List<E>, timestamp: Long) -> Unit,
+        localSoftCommand: suspend (entities: List<E>, timestamp: Long) -> List<E>,
         localHardCommand: suspend (toDelete: List<E>, toUpsert: List<E>, timestamp: Long) -> Unit,
         localDeleteCommand: suspend (entities: List<E>) -> Unit,
-        remoteSoftCommand: suspend (dtos: List<CD>, timestamp: Long, userId: Int) -> List<QD>?,
+        remoteSoftCommand: suspend (dtos: List<CD>, timestamp: Long, userId: Int) -> Boolean,
         localDataAfterTimestampGetter: suspend (timestamp: Long) -> List<E>,
         remoteSoftCommandAndDataAfterTimestampGetter: suspend (
             dtos: List<CD>,
@@ -232,12 +233,13 @@ class DataSyncHelper(
                 val entitiesToUpsert = toUpsert.map { dataModelToEntityMapper(it, timestamp, false) }
                 localSoftCommand(entitiesToDelete + entitiesToUpsert, timestamp)
 
-                val dtos = localDataAfterTimestampGetter(remoteTimestamp)
-                    .map(entityToCommandDtoMapper)
-                remoteSoftCommand(dtos, timestamp, userId)
-                    ?.map(queryDtoToEntityMapper)
-                    ?.filter(entityDeletedPredicate)
-                    ?.let { localDeleteCommand(it) }
+                val entities = localDataAfterTimestampGetter(remoteTimestamp)
+                val dtos = entities.map(entityToCommandDtoMapper)
+                val result = remoteSoftCommand(dtos, timestamp, userId)
+
+                if (result) {
+                    localDeleteCommand(entities.filter(entityDeletedPredicate))
+                }
             }
             // Remote data is newer, save remotely and synchronize from remote to local
             localTimestamp < remoteTimestamp -> {
@@ -258,17 +260,16 @@ class DataSyncHelper(
             }
             // Data is up to date, save locally and remotely
             else -> {
+                val entitiesToDelete = toDelete.map { dataModelToEntityMapper(it, timestamp, true) }
+                val entitiesToUpsert = toUpsert.map { dataModelToEntityMapper(it, timestamp, false) }
+                localSoftCommand(entitiesToDelete + entitiesToUpsert, timestamp)
+
                 val dtos = toDelete.map { dataModelToCommandDtoMapper(it, timestamp, true) } +
                         toUpsert.map { dataModelToCommandDtoMapper(it, timestamp, false) }
-                val entities = remoteSoftCommand(dtos, timestamp, userId)?.map(queryDtoToEntityMapper)
+                val result = remoteSoftCommand(dtos, timestamp, userId)
 
-                if (entities != null) {
-                    val (entitiesToDelete, entitiesToUpsert) = entities.partition(entityDeletedPredicate)
-                    localHardCommand(entitiesToDelete, entitiesToUpsert, timestamp)
-                } else {
-                    val entitiesToDelete = toDelete.map { dataModelToEntityMapper(it, timestamp, true) }
-                    val entitiesToUpsert = toUpsert.map { dataModelToEntityMapper(it, timestamp, false) }
-                    localSoftCommand(entitiesToDelete + entitiesToUpsert, timestamp)
+                if (result) {
+                    localDeleteCommand(entitiesToDelete)
                 }
             }
         }

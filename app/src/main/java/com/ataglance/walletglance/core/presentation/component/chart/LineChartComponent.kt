@@ -43,7 +43,7 @@ fun LineChartComponent(
         Spacer(
             modifier = Modifier
                 .shadow(
-                    elevation = height / 2,
+                    elevation = height / 4,
                     spotColor = shadowColor,
                     shape = RoundedCornerShape(50)
                 )

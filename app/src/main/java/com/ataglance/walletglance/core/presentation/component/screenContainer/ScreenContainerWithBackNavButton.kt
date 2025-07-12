@@ -1,5 +1,6 @@
 package com.ataglance.walletglance.core.presentation.component.screenContainer
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -17,7 +18,10 @@ import androidx.compose.ui.unit.dp
 import com.ataglance.walletglance.core.presentation.component.button.GlassSurfaceTopNavButtonBlock
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilityContainer
 import com.ataglance.walletglance.core.presentation.component.container.keyboardManagement.KeyboardTypingAnimatedVisibilitySpacer
+import com.ataglance.walletglance.core.presentation.utils.bottom
+import com.ataglance.walletglance.core.presentation.utils.copy
 import com.ataglance.walletglance.core.presentation.utils.getKeyboardBottomPaddingAnimated
+import com.ataglance.walletglance.core.presentation.utils.isKeyboardVisible
 import com.ataglance.walletglance.core.presentation.utils.plus
 
 @Composable
@@ -28,11 +32,17 @@ fun ScreenContainerWithTopBackNavButton(
     backNavButtonImageRes: Int? = null,
     onBackNavButtonClick: () -> Unit,
     backNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
+    gap: Dp = 24.dp,
     content: @Composable ColumnScope.(keyboardInFocus: Boolean) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val isKeyboardVisible by isKeyboardVisible()
     val bottomPadding by getKeyboardBottomPaddingAnimated(minPadding = bottomPadding)
-    val keyboardInFocus = bottomPadding > 50.dp
+
+    val screenBottomPadding by animateDpAsState(
+        targetValue = if (isKeyboardVisible) 0.dp else screenPadding.bottom
+    )
+    val screenPadding = screenPadding.copy(bottom = 0.dp)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,11 +50,14 @@ fun ScreenContainerWithTopBackNavButton(
             .clickable { focusManager.clearFocus() }
             .fillMaxSize()
             .padding(
-                paddingValues = screenPadding + PaddingValues(top = 8.dp, bottom = bottomPadding)
+                paddingValues = screenPadding + PaddingValues(
+                    top = 8.dp,
+                    bottom = bottomPadding + screenBottomPadding
+                )
             )
     ) {
 
-        KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+        KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
             GlassSurfaceTopNavButtonBlock(
                 text = backNavButtonText,
                 imageRes = backNavButtonImageRes,
@@ -53,9 +66,9 @@ fun ScreenContainerWithTopBackNavButton(
             )
         }
 
-        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !isKeyboardVisible, height = gap)
 
-        content(keyboardInFocus)
+        content(isKeyboardVisible)
 
     }
 }
@@ -68,11 +81,12 @@ fun ScreenContainerWithTopBackNavButton(
     backNavButtonIconComponent: @Composable (() -> Unit)? = null,
     onBackNavButtonClick: () -> Unit,
     backNavButtonCompanionComponent: @Composable (RowScope.() -> Unit)? = null,
+    gap: Dp = 24.dp,
     content: @Composable ColumnScope.(keyboardInFocus: Boolean) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val isKeyboardVisible by isKeyboardVisible()
     val bottomPadding by getKeyboardBottomPaddingAnimated(minPadding = bottomPadding)
-    val keyboardInFocus = bottomPadding > 50.dp
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,7 +98,7 @@ fun ScreenContainerWithTopBackNavButton(
             )
     ) {
 
-        KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+        KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
             GlassSurfaceTopNavButtonBlock(
                 text = backNavButtonText,
                 iconComponent = backNavButtonIconComponent,
@@ -93,9 +107,9 @@ fun ScreenContainerWithTopBackNavButton(
             )
         }
 
-        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+        KeyboardTypingAnimatedVisibilitySpacer(isVisible = !isKeyboardVisible, height = gap)
 
-        content(keyboardInFocus)
+        content(isKeyboardVisible)
 
     }
 }

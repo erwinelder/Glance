@@ -11,7 +11,7 @@ interface TransferRemoteDataSource {
         transfers: List<TransferCommandDto>,
         timestamp: Long,
         userId: Int
-    ): List<TransferQueryDto>?
+    ): Boolean
 
     suspend fun synchronizeTransfersAndGetAfterTimestamp(
         transfers: List<TransferCommandDto>,

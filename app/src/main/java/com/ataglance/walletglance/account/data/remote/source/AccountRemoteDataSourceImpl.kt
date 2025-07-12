@@ -14,9 +14,9 @@ class AccountRemoteDataSourceImpl() : AccountRemoteDataSource {
         accounts: List<AccountCommandDto>,
         timestamp: Long,
         userId: Int
-    ): List<AccountQueryDto>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeAccountsAndGetAfterTimestamp(

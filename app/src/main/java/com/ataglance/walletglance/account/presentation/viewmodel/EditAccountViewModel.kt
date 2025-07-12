@@ -32,6 +32,8 @@ class EditAccountViewModel : ViewModel() {
     }
 
     fun changeName(value: String) {
+        val value = value.trimStart().takeIf { it.length <= 50 } ?: return
+
         _accountDraft.update {
             it.copy(name = value)
         }
@@ -45,6 +47,7 @@ class EditAccountViewModel : ViewModel() {
 
     fun changeBalance(value: String) {
         val balance = value.takeIf { value.isNumberWithDecimalOptionalNegative() } ?: return
+
         _accountDraft.update {
             it.copy(balance = balance)
         }

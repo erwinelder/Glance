@@ -13,9 +13,9 @@ class WidgetRemoteDataSourceImpl() : WidgetRemoteDataSource {
         widgets: List<WidgetDto>,
         timestamp: Long,
         userId: Int
-    ): List<WidgetDto>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeWidgetsAndGetAfterTimestamp(

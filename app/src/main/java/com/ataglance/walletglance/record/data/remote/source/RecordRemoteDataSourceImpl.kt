@@ -14,9 +14,9 @@ class RecordRemoteDataSourceImpl : RecordRemoteDataSource {
         recordsWithItems: List<RecordCommandDtoWithItems>,
         timestamp: Long,
         userId: Int
-    ): List<RecordQueryDtoWithItems>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeRecordsWithItemsAndGetAfterTimestamp(

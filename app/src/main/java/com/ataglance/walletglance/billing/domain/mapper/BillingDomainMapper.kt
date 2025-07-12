@@ -32,7 +32,7 @@ fun List<Purchase>.getProductsDetails(
 
 fun AppSubscriptionBasePlan.asAppSubscription(): AppSubscription {
     return when (this) {
-        AppSubscriptionBasePlan.Free -> AppSubscription.Free
+        AppSubscriptionBasePlan.Free -> AppSubscription.Base
         AppSubscriptionBasePlan.PlusMonthly -> AppSubscription.Premium
         AppSubscriptionBasePlan.PlusMonthlyFreeTrial -> AppSubscription.Premium
         AppSubscriptionBasePlan.PlusYearly -> AppSubscription.Premium

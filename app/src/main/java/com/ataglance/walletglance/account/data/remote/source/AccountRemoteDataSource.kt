@@ -11,7 +11,7 @@ interface AccountRemoteDataSource {
         accounts: List<AccountCommandDto>,
         timestamp: Long,
         userId: Int
-    ): List<AccountQueryDto>?
+    ): Boolean
 
     suspend fun synchronizeAccountsAndGetAfterTimestamp(
         accounts: List<AccountCommandDto>,

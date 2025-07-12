@@ -9,7 +9,7 @@ import com.ataglance.walletglance.billing.presentation.utils.getFormattedPrice
 
 fun AppSubscriptionDto.toDomainModel(): AppSubscription {
     return when (this) {
-        AppSubscriptionDto.Free -> AppSubscription.Free
+        AppSubscriptionDto.Base -> AppSubscription.Base
         AppSubscriptionDto.Premium -> AppSubscription.Premium
     }
 }

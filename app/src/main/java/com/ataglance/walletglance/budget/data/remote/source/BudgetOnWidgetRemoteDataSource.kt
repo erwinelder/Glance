@@ -10,7 +10,7 @@ interface BudgetOnWidgetRemoteDataSource {
         budgets: List<BudgetOnWidgetDto>,
         timestamp: Long,
         userId: Int
-    ): List<BudgetOnWidgetDto>?
+    ): Boolean
 
     suspend fun synchronizeBudgetsOnWidgetAndGetAfterTimestamp(
         budgets: List<BudgetOnWidgetDto>,
