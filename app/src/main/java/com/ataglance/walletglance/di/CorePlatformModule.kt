@@ -1,7 +1,7 @@
 package com.ataglance.walletglance.di
 
 import android.content.Context
-import com.ataglance.walletglance.core.data.local.preferences.getSecureStorage
+import com.ataglance.walletglance.core.data.local.preferences.SecureStorageWithKeyGenerator
 import com.ataglance.walletglance.core.presentation.model.ResourceManager
 import com.ataglance.walletglance.core.presentation.model.ResourceManagerImpl
 import com.ataglance.walletglance.core.presentation.vibration.Vibrator
@@ -16,7 +16,7 @@ val corePlatformModule = module {
     /* ---------- Other ---------- */
 
     single<Settings> {
-        getSecureStorage(context = get())
+        SecureStorageWithKeyGenerator(context = get())
     }
 
     single {

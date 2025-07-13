@@ -59,11 +59,9 @@ class UserContext(
     }
 
 
-
-    private var userIdString: String? = null
-
+    @Deprecated("")
     fun getUserIdOld(): String? {
-        return userIdString
+        return null
     }
 
 

@@ -9,8 +9,6 @@ import com.ataglance.walletglance.core.presentation.viewmodel.AppViewModel
 import com.ataglance.walletglance.core.presentation.viewmodel.ExpensesIncomeWidgetViewModel
 import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCase
 import com.ataglance.walletglance.settings.domain.usecase.language.ApplyLanguageToSystemUseCaseImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,10 +26,6 @@ val coreModule = module {
 
     single {
         DataSyncHelper(userContext = get())
-    }
-
-    factory {
-        CoroutineScope(Dispatchers.IO)
     }
 
     /* ---------- Use Cases ---------- */

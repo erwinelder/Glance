@@ -30,6 +30,8 @@ security-crypto = "1.1.0-beta01"
 ktor = "3.2.1"
 # Firebase
 firebase = "33.16.0"
+# kRPC
+krpc-version = "0.8.1"
 # Koin
 koin = "4.1.0"
 # Utilities
@@ -107,6 +109,10 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+# kRPC
+krpc-client = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-client", version.ref = "krpc-version" }
+krpc-ktor-client = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client", version.ref = "krpc-version" }
+krpc-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json", version.ref = "krpc-version" }
 # Koin
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
@@ -146,3 +152,4 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+krpc = { id = "org.jetbrains.kotlinx.rpc.plugin", version.ref = "krpc-version" }
