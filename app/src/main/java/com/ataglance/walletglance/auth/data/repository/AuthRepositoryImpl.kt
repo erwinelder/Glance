@@ -13,11 +13,11 @@ import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthError
 import com.ataglance.walletglance.auth.domain.model.errorHandling.AuthSuccess
 import com.ataglance.walletglance.auth.domain.model.user.UserContext
 import com.ataglance.walletglance.core.data.remote.glanciBackendUrl
-import com.ataglance.walletglance.core.data.remote.httpClient
 import com.ataglance.walletglance.request.domain.model.result.Error
 import com.ataglance.walletglance.request.domain.model.result.Result
 import com.ataglance.walletglance.request.domain.model.result.ResultData
 import com.ataglance.walletglance.settings.error.SettingsError
+import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -29,11 +29,12 @@ import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
 
 class AuthRepositoryImpl(
-    private val userContext: UserContext
+    private val userContext: UserContext,
+    private val httpClient: HttpClient
 ) : AuthRepository {
 
     override suspend fun checkTokenValidity(token: String): ResultData<UserDto, AuthError> {
-        val appVersion = CurrentAppVersion()
+        val appVersion = CurrentAppVersion(5, 0, 0, null, null, null)
 
         val response = try {
             httpClient.post(

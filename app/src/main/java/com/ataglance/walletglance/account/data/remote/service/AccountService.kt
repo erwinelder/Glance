@@ -1,4 +1,4 @@
-package com.ataglance.walletglance.account.data.remote.service
+package com.glanci.account.shared.service
 
 import com.ataglance.walletglance.account.data.remote.model.AccountCommandDto
 import com.ataglance.walletglance.account.data.remote.model.AccountQueryDto

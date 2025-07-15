@@ -14,6 +14,7 @@ import com.ataglance.walletglance.account.presentation.viewmodel.ActiveAccountCa
 import com.ataglance.walletglance.account.presentation.viewmodel.CurrencyPickerViewModel
 import com.ataglance.walletglance.account.presentation.viewmodel.EditAccountsViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val accountModule = module {
@@ -25,7 +26,11 @@ val accountModule = module {
     }
 
     single<AccountRemoteDataSource> {
-        AccountRemoteDataSourceImpl()
+        AccountRemoteDataSourceImpl(
+            client = get {
+                parametersOf("account")
+            }
+        )
     }
 
     /* ---------- Repositories ---------- */

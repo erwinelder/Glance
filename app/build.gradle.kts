@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.ktor)
     alias(libs.plugins.krpc)
 }
 
@@ -31,6 +32,7 @@ android {
         }
 
         buildConfigField("String", "GLANCI_BACKEND_URL", "\"${localProperties.getProperty("GLANCI_BACKEND_URL")}\"")
+        buildConfigField("String", "GLANCI_BACKEND_WEBSOCKET_PORT", "\"${localProperties.getProperty("GLANCI_BACKEND_WEBSOCKET_PORT")}\"")
     }
 
     buildTypes {
@@ -133,18 +135,23 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     // Ktor
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.websockets)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
+    // kRPC
+    implementation(libs.krpc.core)
+    implementation(libs.krpc.client)
+    implementation(libs.krpc.ktor.client)
+    implementation(libs.krpc.serialization.json)
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.firebase.firestore.ktx)
-    // kRPC
-    implementation(libs.krpc.client)
-    implementation(libs.krpc.ktor.client)
-    implementation(libs.krpc.serialization.json)
     // Koin
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
@@ -155,6 +162,7 @@ dependencies {
     implementation(libs.koin.compose.viewmodel.navigation)
     // Utilities
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
     // Testing

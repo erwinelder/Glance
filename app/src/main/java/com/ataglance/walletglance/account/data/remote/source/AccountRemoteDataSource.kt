@@ -5,21 +5,21 @@ import com.ataglance.walletglance.account.data.remote.model.AccountQueryDto
 
 interface AccountRemoteDataSource {
 
-    suspend fun getUpdateTime(userId: Int): Long?
+    suspend fun getUpdateTime(token: String): Long?
 
     suspend fun synchronizeAccounts(
         accounts: List<AccountCommandDto>,
         timestamp: Long,
-        userId: Int
+        token: String
     ): Boolean
+
+    suspend fun getAccountsAfterTimestamp(timestamp: Long, token: String): List<AccountQueryDto>?
 
     suspend fun synchronizeAccountsAndGetAfterTimestamp(
         accounts: List<AccountCommandDto>,
         timestamp: Long,
-        userId: Int,
-        localTimestamp: Long
+        localTimestamp: Long,
+        token: String
     ): List<AccountQueryDto>?
-
-    suspend fun getAccountsAfterTimestamp(timestamp: Long, userId: Int): List<AccountQueryDto>
 
 }
