@@ -13,9 +13,9 @@ class CategoryCollectionRemoteDataSourceImpl() : CategoryCollectionRemoteDataSou
         collections: List<CategoryCollectionDtoWithAssociations>,
         timestamp: Long,
         userId: Int
-    ): List<CategoryCollectionDtoWithAssociations>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeCollectionsWithAssociationsAndGetAfterTimestamp(

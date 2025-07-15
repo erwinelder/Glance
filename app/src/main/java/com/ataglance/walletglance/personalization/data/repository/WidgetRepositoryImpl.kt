@@ -91,6 +91,7 @@ class WidgetRepositoryImpl(
             remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
             localSoftCommand = { entities, timestamp ->
                 localSource.upsertWidgets(widgets = entities, timestamp = timestamp)
+                entities
             },
             localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
                 localSource.deleteAndUpsertWidgets(

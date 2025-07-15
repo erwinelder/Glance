@@ -49,11 +49,12 @@ fun RecordCreationTopBar(
     onToggleAccounts: () -> Unit,
     onSelectAccount: (Account) -> Unit,
     onDimBackgroundChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -61,6 +61,20 @@ fun PaddingValues.plusBottomPadding(padding: Dp): PaddingValues {
     )
 }
 
+fun PaddingValues.copy(
+    start: Dp = this.start,
+    top: Dp = this.top,
+    end: Dp = this.end,
+    bottom: Dp = this.bottom
+): PaddingValues {
+    return PaddingValues(
+        start = start,
+        top = top,
+        end = end,
+        bottom = bottom
+    )
+}
+
 val PaddingValues.start: Dp
     get() = calculateStartPadding(LayoutDirection.Ltr)
 

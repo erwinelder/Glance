@@ -19,7 +19,7 @@ class UserContext(
         private set
     var role: UserRole = UserRole.User
         private set
-    var subscription: AppSubscription = AppSubscription.Free
+    var subscription: AppSubscription = AppSubscription.Base
         private set
 
 
@@ -53,22 +53,20 @@ class UserContext(
         email = null
         name = null
         role = UserRole.User
-        subscription = AppSubscription.Free
+        subscription = AppSubscription.Base
 
         deleteAuthTokenFromSecureStorageUseCase.execute()
     }
 
 
-
-    private var userIdString: String? = null
-
+    @Deprecated("")
     fun getUserIdOld(): String? {
-        return userIdString
+        return null
     }
 
 
     fun isEligibleForDataSync(): Boolean {
-        return isSignedIn() && subscription != AppSubscription.Free
+        return isSignedIn() && subscription != AppSubscription.Base
     }
 
     fun getUserIdIfEligibleForDataSync(): Int? {

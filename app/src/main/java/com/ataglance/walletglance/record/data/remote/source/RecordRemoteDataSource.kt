@@ -11,7 +11,7 @@ interface RecordRemoteDataSource {
         recordsWithItems: List<RecordCommandDtoWithItems>,
         timestamp: Long,
         userId: Int
-    ): List<RecordQueryDtoWithItems>?
+    ): Boolean
 
     suspend fun synchronizeRecordsWithItemsAndGetAfterTimestamp(
         recordsWithItems: List<RecordCommandDtoWithItems>,

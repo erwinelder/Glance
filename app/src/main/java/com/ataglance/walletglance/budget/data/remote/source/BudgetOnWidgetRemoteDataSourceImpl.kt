@@ -13,9 +13,9 @@ class BudgetOnWidgetRemoteDataSourceImpl() : BudgetOnWidgetRemoteDataSource {
         budgets: List<BudgetOnWidgetDto>,
         timestamp: Long,
         userId: Int
-    ): List<BudgetOnWidgetDto>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeBudgetsOnWidgetAndGetAfterTimestamp(

@@ -21,24 +21,24 @@ class AccountRepositoryImpl(
 ) : AccountRepository {
 
     private suspend fun synchronizeAccounts() {
-        syncHelper.synchronizeData(
+        syncHelper.synchronizeDataToken(
             tableName = TableName.Account,
             localTimestampGetter = { localSource.getUpdateTime() },
-            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            remoteTimestampGetter = { token -> remoteSource.getUpdateTime(token = token) },
             localDataGetter = { timestamp ->
                 localSource.getAccountsAfterTimestamp(timestamp = timestamp)
             },
-            remoteDataGetter = { timestamp, userId ->
-                remoteSource.getAccountsAfterTimestamp(timestamp = timestamp, userId = userId)
+            remoteDataGetter = { timestamp, token ->
+                remoteSource.getAccountsAfterTimestamp(timestamp = timestamp, token = token)
             },
             localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
                 localSource.deleteAndSaveAccounts(
                     toDelete = entitiesToDelete, toUpsert = entitiesToUpsert, timestamp = timestamp
                 )
             },
-            remoteSynchronizer = { data, timestamp, userId ->
+            remoteSynchronizer = { data, timestamp, token ->
                 remoteSource.synchronizeAccounts(
-                    accounts = data, timestamp = timestamp, userId = userId
+                    accounts = data, timestamp = timestamp, token = token
                 )
             },
             entityDeletedPredicate = { it.deleted },
@@ -48,27 +48,28 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun upsertAccounts(accounts: List<AccountDataModel>) {
-        syncHelper.upsertData(
+        syncHelper.upsertDataToken(
+            tableName = TableName.Account,
             data = accounts,
             localTimestampGetter = { localSource.getUpdateTime() },
-            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            remoteTimestampGetter = { token -> remoteSource.getUpdateTime(token = token) },
             localSoftCommand = { entities, timestamp ->
                 localSource.saveAccounts(accounts = entities, timestamp = timestamp)
             },
-            remoteSoftCommand = { dtos, timestamp, userId ->
+            remoteSoftCommand = { dtos, timestamp, token ->
                 remoteSource.synchronizeAccounts(
-                    accounts = dtos, timestamp = timestamp, userId = userId
+                    accounts = dtos, timestamp = timestamp, token = token
                 )
             },
             localDataAfterTimestampGetter = { timestamp ->
                 localSource.getAccountsAfterTimestamp(timestamp = timestamp)
             },
-            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, userId, localTimestamp ->
+            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, localTimestamp, token ->
                 remoteSource.synchronizeAccountsAndGetAfterTimestamp(
                     accounts = dtos,
                     timestamp = timestamp,
-                    userId = userId,
-                    localTimestamp = localTimestamp
+                    localTimestamp = localTimestamp,
+                    token = token
                 )
             },
             dataModelToEntityMapper = AccountDataModel::toEntity,
@@ -82,11 +83,12 @@ class AccountRepositoryImpl(
         toDelete: List<AccountDataModel>,
         toUpsert: List<AccountDataModel>
     ) {
-        syncHelper.deleteAndUpsertData(
+        syncHelper.deleteAndUpsertDataToken(
+            tableName = TableName.Account,
             toDelete = toDelete,
             toUpsert = toUpsert,
             localTimestampGetter = { localSource.getUpdateTime() },
-            remoteTimestampGetter = { userId -> remoteSource.getUpdateTime(userId = userId) },
+            remoteTimestampGetter = { token -> remoteSource.getUpdateTime(token = token) },
             localSoftCommand = { entities, timestamp ->
                 localSource.saveAccounts(accounts = entities, timestamp = timestamp)
             },
@@ -98,20 +100,20 @@ class AccountRepositoryImpl(
             localDeleteCommand = { entities ->
                 localSource.deleteAccounts(accounts = entities)
             },
-            remoteSoftCommand = { dtos, timestamp, userId ->
+            remoteSoftCommand = { dtos, timestamp, token ->
                 remoteSource.synchronizeAccounts(
-                    accounts = dtos, timestamp = timestamp, userId = userId
+                    accounts = dtos, timestamp = timestamp, token = token
                 )
             },
             localDataAfterTimestampGetter = { timestamp ->
                 localSource.getAccountsAfterTimestamp(timestamp = timestamp)
             },
-            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, userId, localTimestamp ->
+            remoteSoftCommandAndDataAfterTimestampGetter = { dtos, timestamp, localTimestamp, token ->
                 remoteSource.synchronizeAccountsAndGetAfterTimestamp(
                     accounts = dtos,
                     timestamp = timestamp,
-                    userId = userId,
-                    localTimestamp = localTimestamp
+                    localTimestamp = localTimestamp,
+                    token = token
                 )
             },
             entityDeletedPredicate = { it.deleted },

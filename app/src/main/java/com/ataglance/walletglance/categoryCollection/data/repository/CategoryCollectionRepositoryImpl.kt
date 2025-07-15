@@ -69,6 +69,7 @@ class CategoryCollectionRepositoryImpl(
                 localSource.upsertCollectionsWithAssociations(
                     collectionsWithAssociations = entities, timestamp = timestamp
                 )
+                entities
             },
             localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
                 localSource.deleteAndUpsertCollectionsWithAssociations(

@@ -14,9 +14,9 @@ class CategoryRemoteDataSourceImpl() : CategoryRemoteDataSource {
         categories: List<CategoryCommandDto>,
         timestamp: Long,
         userId: Int
-    ): List<CategoryQueryDto>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeCategoriesAndGetAfterTimestamp(

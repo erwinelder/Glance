@@ -11,7 +11,7 @@ interface CategoryRemoteDataSource {
         categories: List<CategoryCommandDto>,
         timestamp: Long,
         userId: Int
-    ): List<CategoryQueryDto>?
+    ): Boolean
 
     suspend fun synchronizeCategoriesAndGetAfterTimestamp(
         categories: List<CategoryCommandDto>,

@@ -1,21 +1,19 @@
-package com.ataglance.walletglance.account.data.remote.source
+package com.glanci.account.shared.service
 
 import com.ataglance.walletglance.account.data.remote.model.AccountCommandDto
 import com.ataglance.walletglance.account.data.remote.model.AccountQueryDto
+import kotlinx.rpc.annotations.Rpc
 
-interface AccountRemoteDataSource {
+@Rpc
+interface AccountService {
 
     suspend fun getUpdateTime(token: String): Long?
 
-    suspend fun synchronizeAccounts(
-        accounts: List<AccountCommandDto>,
-        timestamp: Long,
-        token: String
-    ): Boolean
+    suspend fun saveAccounts(accounts: List<AccountCommandDto>, timestamp: Long, token: String)
 
     suspend fun getAccountsAfterTimestamp(timestamp: Long, token: String): List<AccountQueryDto>?
 
-    suspend fun synchronizeAccountsAndGetAfterTimestamp(
+    suspend fun saveAccountsAndGetAfterTimestamp(
         accounts: List<AccountCommandDto>,
         timestamp: Long,
         localTimestamp: Long,

@@ -61,7 +61,10 @@ val authModule = module {
     /* ---------- Repositories ---------- */
 
     single<AuthRepository> {
-        AuthRepositoryImpl(userContext = get())
+        AuthRepositoryImpl(
+            userContext = get(),
+            httpClient = get()
+        )
     }
 
     /* ---------- Use Cases ---------- */

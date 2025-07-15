@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -186,8 +187,9 @@ fun RecordCreationScreen(
             screenPadding = screenPadding,
             backNavButtonText = stringResource(R.string.create_record),
             backNavButtonImageRes = backNavButtonImageRes,
-            onBackNavButtonClick = onNavigateBack
-        ) { keyboardInFocus ->
+            onBackNavButtonClick = onNavigateBack,
+            gap = 8.dp
+        ) { isKeyboardVisible ->
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -196,7 +198,7 @@ fun RecordCreationScreen(
                     .fillMaxWidth()
             ) {
                 RecordCreationScreenContent(
-                    keyboardInFocus = keyboardInFocus,
+                    keyboardInFocus = isKeyboardVisible,
                     recordDraft = recordDraft,
                     accounts = accounts,
                     onSelectCategoryType = onSelectCategoryType,
@@ -222,9 +224,9 @@ fun RecordCreationScreen(
                 )
             }
 
-            KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 24.dp)
+            KeyboardTypingAnimatedVisibilitySpacer(isVisible = !isKeyboardVisible, height = 16.dp)
 
-            KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+            KeyboardTypingAnimatedVisibilityContainer(isVisible = !isKeyboardVisible) {
                 TransactionCreationBottomButtonsBlock(
                     showOnlySaveButton = recordDraft.isNew,
                     singlePrimaryButtonStringRes = R.string.save_record,
@@ -298,27 +300,23 @@ private fun RecordCreationScreenContent(
         state = lazyListState,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(bottom = 16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         modifier = Modifier
             .fillMaxWidth(FilledWidthByScreenType().get(CurrWindowType))
     ) {
         item {
-            Column(
-                modifier = Modifier.animateItem()
-            ) {
-                KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
-                    RecordCreationTopBar(
-                        recordDraft = recordDraft,
-                        accounts = accounts,
-                        onSelectCategoryType = onSelectCategoryType,
-                        onIncludeInBudgetsChange = onIncludeInBudgetsChange,
-                        onDateFieldClick = onDateFieldClick,
-                        onToggleAccounts = onToggleAccounts,
-                        onSelectAccount = onSelectAccount,
-                        onDimBackgroundChange = onDimBackgroundChange,
-                    )
-                }
-                KeyboardTypingAnimatedVisibilitySpacer(isVisible = !keyboardInFocus, height = 16.dp)
+            KeyboardTypingAnimatedVisibilityContainer(isVisible = !keyboardInFocus) {
+                RecordCreationTopBar(
+                    recordDraft = recordDraft,
+                    accounts = accounts,
+                    onSelectCategoryType = onSelectCategoryType,
+                    onIncludeInBudgetsChange = onIncludeInBudgetsChange,
+                    onDateFieldClick = onDateFieldClick,
+                    onToggleAccounts = onToggleAccounts,
+                    onSelectAccount = onSelectAccount,
+                    onDimBackgroundChange = onDimBackgroundChange,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
             }
         }
         itemsIndexed(

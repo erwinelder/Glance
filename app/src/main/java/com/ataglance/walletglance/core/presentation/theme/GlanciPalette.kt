@@ -12,19 +12,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ataglance.walletglance.R
 import com.ataglance.walletglance.core.domain.app.AppTheme
 import com.ataglance.walletglance.core.presentation.component.button.PrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SecondaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallPrimaryButton
 import com.ataglance.walletglance.core.presentation.component.button.SmallSecondaryButton
 import com.ataglance.walletglance.core.presentation.component.container.glassSurface.GlassSurface
-import com.ataglance.walletglance.core.presentation.component.other.LargePrimaryIcon
+import com.ataglance.walletglance.core.presentation.component.icon.RotatingGradientIcon
+import com.ataglance.walletglance.core.presentation.model.IconPathsRes
+import com.ataglance.walletglance.core.presentation.model.RotatingGradientAnimState
 import com.ataglance.walletglance.core.presentation.preview.PreviewContainer
 
 sealed class GlanciPalette(
     val primary: Color,
-    val primaryGradient: List<Color>,
     val primaryGlassGradient: List<Color>,
     val primaryGlassGradientPair: Pair<Color, Color> = Pair(
         primaryGlassGradient[0], primaryGlassGradient[1]
@@ -42,7 +42,6 @@ sealed class GlanciPalette(
     val glassGradient: List<Color>,
     val glassGradientPair: Pair<Color, Color> = Pair(glassGradient[0], glassGradient[1]),
     val glassBorderGradient: List<Color>,
-    val glassShadow: Pair<Color, Color>,
 
     val glassGradientOnGlass: List<Color>,
     val glassGradientOnGlassBorder: Color,
@@ -95,28 +94,24 @@ sealed class GlanciPalette(
 ) {
 
     data object LightDefault : GlanciPalette(
-        primary = Color(165, 93, 135),
-        primaryGradient = listOf(
-            Color(192, 97, 146, 204),
-            Color(164, 77, 131, 204)
-        ),
+        primary = Color(166, 94, 131, 255),
         primaryGlassGradient = listOf(
-            Color(181, 100, 142, 204),
-            Color(153, 83, 126, 204)
+            Color(181, 109, 146, 191),
+            Color(161, 92, 126, 191)
         ),
         primaryGlassBorderGradient = listOf(
             Color(255, 255, 255, 77),
-            Color(255, 255, 255, 64)
+            Color(255, 242, 249, 64)
         ),
         primarySemiTransparentGlassBorderGradient = listOf(
             Color(191, 98, 146, 112),
-            Color(163, 77, 130, 79)
+            Color(168, 79, 125, 79)
         ),
         onPrimary = Color(255, 255, 255),
 
         disabledGlassGradient = listOf(
-            Color(161, 161, 161, 204),
-            Color(138, 138, 138, 204)
+            Color(153, 145, 149, 204),
+            Color(140, 133, 137, 204)
         ),
         disabledSemiTransparentGlassBorderGradient = listOf(
             Color(163, 163, 163, 204),
@@ -124,18 +119,12 @@ sealed class GlanciPalette(
         ),
 
         glassGradient = listOf(
-            Color(252, 252, 252, 128),
-            Color(240, 240, 240, 128)
+            Color(250, 250, 250, 128),
+            Color(237, 237, 237, 128)
         ),
         glassBorderGradient = listOf(
             Color(255, 255, 255, 140),
             Color(240, 240, 240, 140)
-        ),
-        glassShadow = Pair(
-//            Color(255, 255, 255, 138),
-//            Color(0, 0, 0, 43)
-            Color(0, 0, 0, 0),
-            Color(0, 0, 0, 0)
         ),
 
         glassGradientOnGlass = listOf(
@@ -150,8 +139,8 @@ sealed class GlanciPalette(
         ),
 
         iconPrimaryGlassGradient = listOf(
-            Color(181, 100, 142, 204),
-            Color(219, 99, 161, 51)
+            Color(181, 98, 141, 204),
+            Color(219, 125, 174, 51)
         ),
         iconErrorGlassGradient = listOf(
             Color(213, 75, 75, 204),
@@ -209,47 +198,37 @@ sealed class GlanciPalette(
     )
 
     data object DarkDefault : GlanciPalette(
-        primary = Color(154, 92, 128),
-        primaryGradient = listOf(
-            Color(199, 113, 160, 204),
-            Color(183, 108, 139, 204)
-        ),
+        primary = Color(158, 96, 127, 255),
         primaryGlassGradient = listOf(
-            Color(194, 114, 155, 204),
-            Color(166, 91, 137, 204)
+            Color(176, 109, 144, 204),
+            Color(163, 93, 129, 204)
         ),
         primaryGlassBorderGradient = listOf(
-            Color(255, 255, 255, 31),
+            Color(255, 255, 255, 28),
             Color(255, 255, 255, 15)
         ),
         primarySemiTransparentGlassBorderGradient = listOf(
-            Color(212, 114, 168, 51),
-            Color(168, 89, 126, 38)
+            Color(212, 114, 165, 51),
+            Color(168, 89, 130, 38)
         ),
         onPrimary = Color(231, 212, 225),
 
         disabledGlassGradient = listOf(
-            Color(89, 89, 89, 204),
-            Color(77, 77, 77, 204)
+            Color(77, 73, 75, 204),
+            Color(64, 61, 62, 204)
         ),
         disabledSemiTransparentGlassBorderGradient = listOf(
-            Color(56, 56, 56, 204),
-            Color(46, 46, 46, 204)
+            Color(38, 38, 38, 204),
+            Color(26, 26, 26, 204)
         ),
 
         glassGradient = listOf(
-            Color(31, 31, 31, 128),
-            Color(23, 23, 23, 128)
+            Color(28, 28, 28, 128),
+            Color(20, 20, 20, 128)
         ),
         glassBorderGradient = listOf(
-            Color(217, 217, 217, 20),
-            Color(102, 102, 102, 20)
-        ),
-        glassShadow = Pair(
-//            Color(255, 255, 255, 41),
-//            Color(0, 0, 0, 46)
-            Color(0, 0, 0, 0),
-            Color(0, 0, 0, 0)
+            Color(212, 212, 212, 20),
+            Color(99, 99, 99, 20)
         ),
 
         glassGradientOnGlass = listOf(
@@ -280,7 +259,7 @@ sealed class GlanciPalette(
         ),
         onSurface = Color(217, 208, 210, 255),
 
-        outline = Color(117, 99, 110, 255),
+        outline = Color(117, 103, 112, 255),
         outlineSemiTransparent = Color(122, 115, 119, 128),
 
         success = Color(82, 161, 76),
@@ -343,10 +322,10 @@ private fun PreviewColorsLightDefault() {
                         .fillMaxWidth()
                         .padding(vertical = 32.dp)
                 ) {
-                    LargePrimaryIcon(
-                        iconRes = R.drawable.error_large_icon,
-                        gradientColor = GlanciColors.errorGradient,
-                        iconDescription = ""
+                    RotatingGradientIcon(
+                        iconPathsRes = IconPathsRes.Email,
+                        animState = RotatingGradientAnimState.Calm,
+                        iconGradientColor = GlanciColors.iconPrimaryGlassGradientPair
                     )
                     Text(
                         text = "Outlined text",
@@ -382,10 +361,10 @@ private fun PreviewColorsDarkDefault() {
                         .fillMaxWidth()
                         .padding(vertical = 32.dp)
                 ) {
-                    LargePrimaryIcon(
-                        iconRes = R.drawable.error_large_icon,
-                        gradientColor = GlanciColors.errorGradient,
-                        iconDescription = ""
+                    RotatingGradientIcon(
+                        iconPathsRes = IconPathsRes.Email,
+                        animState = RotatingGradientAnimState.Calm,
+                        iconGradientColor = GlanciColors.iconPrimaryGlassGradientPair
                     )
                     Text(
                         text = "Outlined text",

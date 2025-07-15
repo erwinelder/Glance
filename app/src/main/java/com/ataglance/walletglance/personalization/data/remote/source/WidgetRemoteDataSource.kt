@@ -10,7 +10,7 @@ interface WidgetRemoteDataSource {
         widgets: List<WidgetDto>,
         timestamp: Long,
         userId: Int
-    ): List<WidgetDto>?
+    ): Boolean
 
     suspend fun synchronizeWidgetsAndGetAfterTimestamp(
         widgets: List<WidgetDto>,

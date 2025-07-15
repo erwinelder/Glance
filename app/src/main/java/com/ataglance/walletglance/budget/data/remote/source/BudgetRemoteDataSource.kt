@@ -10,7 +10,7 @@ interface BudgetRemoteDataSource {
         budgets: List<BudgetDtoWithAssociations>,
         timestamp: Long,
         userId: Int
-    ): List<BudgetDtoWithAssociations>?
+    ): Boolean
 
     suspend fun synchronizeBudgetsWithAssociationsAndGetAfterTimestamp(
         budgets: List<BudgetDtoWithAssociations>,

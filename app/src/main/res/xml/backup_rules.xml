@@ -10,4 +10,5 @@
    <include domain="sharedpref" path="."/>
    <exclude domain="sharedpref" path="device.xml"/>
 -->
+    <exclude domain="sharedpref" path="glanci_secure_storage.xml"/>
 </full-backup-content>

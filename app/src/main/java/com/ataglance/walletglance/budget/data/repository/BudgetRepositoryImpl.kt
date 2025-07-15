@@ -62,6 +62,7 @@ class BudgetRepositoryImpl(
                 localSource.upsertBudgetsWithAssociations(
                     budgetsWithAssociations = entities, timestamp = timestamp
                 )
+                entities
             },
             localHardCommand = { entitiesToDelete, entitiesToUpsert, timestamp ->
                 localSource.deleteAndUpsertBudgetsWithAssociations(

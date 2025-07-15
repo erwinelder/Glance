@@ -14,9 +14,9 @@ class TransferRemoteDataSourceImpl : TransferRemoteDataSource {
         transfers: List<TransferCommandDto>,
         timestamp: Long,
         userId: Int
-    ): List<TransferQueryDto>? {
+    ): Boolean {
         // TODO("Not yet implemented")
-        return null
+        return false
     }
 
     override suspend fun synchronizeTransfersAndGetAfterTimestamp(
