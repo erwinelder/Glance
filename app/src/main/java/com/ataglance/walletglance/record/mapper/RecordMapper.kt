@@ -157,7 +157,7 @@ fun RecordDraftItem.toDomainModel(recordId: Long): RecordItem? {
         quantity = quantity.toIntOrNull(),
         categoryId = categoryWithSub.categoryId,
         subcategoryId = categoryWithSub.subcategoryId,
-        note = note
+        note = note.trim()
     )
 }
 
