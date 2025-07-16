@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.ktor)
     alias(libs.plugins.krpc)
 }
 
@@ -23,8 +22,8 @@ android {
         applicationId = "com.ataglance.walletglance"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 87
-        versionName = "5.0 alpha 4"
+        versionCode = 90
+        versionName = "5.0 alpha 5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
