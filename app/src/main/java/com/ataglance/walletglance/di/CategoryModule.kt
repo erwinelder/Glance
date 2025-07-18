@@ -29,7 +29,11 @@ val categoryModule = module {
     }
 
     single<CategoryRemoteDataSource> {
-        CategoryRemoteDataSourceImpl()
+        CategoryRemoteDataSourceImpl(
+            client = get {
+                parametersOf("category")
+            }
+        )
     }
 
     /* ---------- Repositories ---------- */
